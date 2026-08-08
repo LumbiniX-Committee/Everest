@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { CameraView } from 'expo-camera';
@@ -7,9 +7,11 @@ import * as FileSystem from 'expo-file-system/legacy';
 import { Button, Screen, Text } from '@/components/ui';
 import { EmptyState } from '@/components/common';
 import { Reticle } from '@/components/reticle';
+import { YoloVisionOverlay, PathologySummaryCard } from '@/components/observation';
 import { findSite, findVantage } from '@/data';
 import { useAlignment, useCurrentPosition } from '@/hooks';
 import { camera as cameraService, database } from '@/services';
+import { runYoloScan, type YoloScanResult } from '@/services/ai/yoloEngine';
 import { usePermission, usePreferences } from '@/store';
 import { colors, layers, radii, spacing } from '@/theme';
 import { formatBearing, formatDelta, formatDistance } from '@/utils';
@@ -35,12 +37,25 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
   const { state: cameraPermission, request: requestCamera, openSettings } = usePermission('camera');
   const { preferences } = usePreferences();
   const [nudgeDeg, setNudgeDeg] = useState(0);
+  const [aiScanOn, setAiScanOn] = useState(true);
+  const [yoloResult, setYoloResult] = useState<YoloScanResult | null>(null);
 
   const alignment = useAlignment({ vantage, nudgeDeg });
   const { coordinate: observerCoord } = useCurrentPosition({ watch: true, highAccuracy: true });
   const cameraRef = useRef<CameraView>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Run YOLO scan when AI toggle is active
+  useEffect(() => {
+    let active = true;
+    if (aiScanOn) {
+      runYoloScan().then((res) => { if (active) setYoloResult(res); });
+    } else {
+      setYoloResult(null);
+    }
+    return () => { active = false; };
+  }, [aiScanOn]);
 
   if (!vantage) {
     return (
@@ -168,12 +183,29 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
           <Pressable style={styles.backBtn} onPress={() => router.back()}>
             <Text variant="body">‹ Back</Text>
           </Pressable>
-          <View style={styles.hudBadge}>
-            <Text variant="caption" tone={locked ? 'sandstone' : 'secondary'}>
-              {site?.name ?? 'Vantage'} · {vantage.label}
+          <Pressable
+            style={[styles.hudBadge, aiScanOn && styles.hudBadgeActive]}
+            onPress={() => setAiScanOn((v) => !v)}
+          >
+            <Text variant="caption" tone={aiScanOn ? 'sandstone' : 'secondary'}>
+              {aiScanOn ? '✨ YOLO AI: ON' : 'YOLO AI: OFF'}
+            </Text>
+          </Pressable>
+        </View>
+
+        {/* YOLO AI Damage Detection Overlay */}
+        {yoloResult ? (
+          <YoloVisionOverlay detections={yoloResult.detections} visible={aiScanOn} />
+        ) : null}
+
+        {/* YOLO Pathology Pill */}
+        {aiScanOn && yoloResult && yoloResult.detections.length > 0 ? (
+          <View style={styles.pathologyPill}>
+            <Text variant="caption" style={styles.pillText}>
+              {yoloResult.detections.length} Defects · Integrity {yoloResult.surfaceHealth}%
             </Text>
           </View>
-        </View>
+        ) : null}
 
         {/* Center Alignment Reticle HUD */}
         <View style={[StyleSheet.absoluteFill, styles.overlay]} pointerEvents="none">
@@ -183,6 +215,11 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
 
       {/* Floating Bottom Control Deck */}
       <View style={styles.controls}>
+        {/* YOLO AI Pathology Summary Card */}
+        {aiScanOn && yoloResult ? (
+          <PathologySummaryCard result={yoloResult} />
+        ) : null}
+
         <View style={styles.readoutRow}>
           <Text variant="mono" tone={locked ? 'locked' : 'seeking'}>
             {formatDistance(alignment.distanceM)}
@@ -294,6 +331,22 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
+  hudBadgeActive: {
+    borderColor: colors.sandstone,
+  },
+  pathologyPill: {
+    position: 'absolute',
+    bottom: spacing.base,
+    alignSelf: 'center',
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: radii.full,
+    backgroundColor: 'rgba(14, 21, 18, 0.85)',
+    borderWidth: 1,
+    borderColor: colors.sandstone,
+    zIndex: 45,
+  },
+  pillText: { color: '#fff', fontWeight: '700', fontSize: 11 },
   controls: {
     paddingHorizontal: spacing.gutter,
     paddingTop: spacing.lg,
