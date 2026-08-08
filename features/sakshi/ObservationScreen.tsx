@@ -5,14 +5,17 @@ import { Image, StyleSheet, View } from 'react-native';
 import { Button, Divider, MetaRow, Screen, Text } from '@/components/ui';
 import { EmptyState, LoadingState } from '@/components/common';
 import { ConditionSheet, type ConditionDraft } from '@/components/observation';
+import { MeritAcknowledgement } from '@/components/practice';
 import { findSite, findVantage } from '@/data';
 import { database } from '@/services';
+import { usePractice } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 import { formatBearing, formatCoordinate, formatDelta, formatDistance, formatTimestamp } from '@/utils';
 import {
   CONDITION_CATEGORY_LABELS,
   SEVERITY_LABELS,
   type ConditionReport,
+  type MeritEvent,
   type Observation,
 } from '@/types';
 
@@ -34,6 +37,8 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
   const [sheetOpen, setSheetOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [merit, setMerit] = useState<MeritEvent | null>(null);
+  const { recognise, summary } = usePractice();
 
   useEffect(() => {
     let active = true;
@@ -69,10 +74,32 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
     try {
       await database.setObservationAssessment(observation.id, 'no-change');
       setObservation({ ...observation, assessment: 'no-change' });
+      await acknowledge(observation);
     } catch {
       setSaveError('That could not be saved. Your photograph is safe on this device.');
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  /**
+   * Recognition, after the finding is safely written.
+   *
+   * Its failure is swallowed on purpose. Puṇya is an acknowledgement of
+   * something that has already been saved, so losing it costs the record
+   * nothing — and an error about a merit event would tell the person their
+   * observation failed when it did not.
+   */
+  const acknowledge = async (saved: Observation) => {
+    try {
+      const event = await recognise({
+        kind: 'observation',
+        siteId: saved.siteId,
+        observationId: saved.id,
+      });
+      setMerit(event);
+    } catch {
+      setMerit(null);
     }
   };
 
@@ -96,6 +123,7 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
       setReports((previous) => [report, ...previous]);
       setObservation({ ...observation, assessment: 'reported' });
       setSheetOpen(false);
+      await acknowledge(observation);
     } catch {
       // The sheet stays open so the person does not lose what they chose.
       setSaveError('That could not be saved. Your photograph is safe on this device.');
@@ -261,6 +289,25 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
             This frame joins the record for {site?.name ?? 'this site'}. Someone comparing it in ten
             years will know exactly where you stood.
           </Text>
+
+          {merit ? <MeritAcknowledgement event={merit} /> : null}
+
+          {/*
+            Shown when the finding saved but no puṇya followed, because the
+            day's practice was already complete. Stated as a closing rather
+            than a refusal — the observation was recorded in full, and the
+            only thing withheld is being told so again.
+          */}
+          {!merit && summary.dayComplete ? (
+            <View style={styles.enough}>
+              <Text variant="bodyLarge" center>
+                You’ve done enough today.
+              </Text>
+              <Text variant="caption" tone="secondary" center>
+                Your observation is recorded in full. Puṇya rests until tomorrow.
+              </Text>
+            </View>
+          ) : null}
         </View>
       ) : null}
 
@@ -283,7 +330,8 @@ const styles = StyleSheet.create({
   choiceActions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   report: { gap: spacing.xxs },
   reportNote: { marginTop: spacing.xs },
-  complete: { paddingVertical: spacing.xl, gap: spacing.sm },
+  complete: { paddingVertical: spacing.xl, gap: spacing.base },
+  enough: { gap: spacing.xs, paddingTop: spacing.sm },
   head: { paddingTop: spacing.lg, paddingBottom: spacing.lg, gap: spacing.xs },
   photo: {
     width: '100%',
