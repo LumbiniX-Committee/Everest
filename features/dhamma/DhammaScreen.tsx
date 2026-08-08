@@ -56,17 +56,20 @@ export function DhammaScreen() {
           onSubmitEditing={askTyped}
           accessibilityLabel="Your question"
         />
-        <Button
-          label={voice.isListening ? 'Stop listening' : 'Ask by voice'}
-          variant="secondary"
-          onPress={() => (voice.isListening ? voice.stop() : void voice.start('ne'))}
-        />
         {voice.error ? (
           <Text variant="caption" tone="muted">
             {voice.error}
           </Text>
         ) : null}
-        <Button label="Ask" onPress={askTyped} disabled={!question.trim()} />
+        <View style={styles.askActions}>
+          <Button label="Ask" onPress={askTyped} disabled={!question.trim()} />
+          <Button
+            label={voice.isListening ? 'Stop voice' : 'Voice'}
+            variant="secondary"
+            onPress={() => (voice.isListening ? voice.stop() : void voice.start('ne'))}
+            accessibilityHint="Speak a Nepali question into the microphone"
+          />
+        </View>
         {/*
           Said before asking, not after refusing. Someone who knows the corpus
           is four narrow collections reads a refusal as a fact about the
@@ -120,6 +123,7 @@ export function DhammaScreen() {
 
 const styles = StyleSheet.create({
   ask: { paddingTop: spacing.lg, gap: spacing.md },
+  askActions: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   input: {
     minHeight: 88,
     borderRadius: radii.md,
