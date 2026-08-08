@@ -89,6 +89,14 @@ export function SiteMap3D({ height = 320, onSelectSite }: SiteMap3DProps) {
         attribution
         logo={false}
         compass
+        // Inert, for the same reason the WebView preview is: this panel lives
+        // inside a scrolling page, and a map that consumes drags competes with
+        // the page for them. Panning and zooming belong to the full-screen map,
+        // which this preview opens.
+        dragPan={false}
+        touchZoom={false}
+        doubleTapZoom={false}
+        touchRotate={false}
         onDidFailLoadingMap={() => setFailed(true)}
       >
         <Camera

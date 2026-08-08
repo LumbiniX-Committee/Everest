@@ -11,6 +11,17 @@ export type MapHtmlOptions = {
   avatar?: boolean;
   /** Fills the viewport, so the camera sits lower and closer. */
   fullscreen?: boolean;
+  /**
+   * Whether the map handles gestures at all.
+   *
+   * Off for the inline panel. That panel lives inside a scrolling page, and a
+   * map that consumes touches there competes with the page for every drag —
+   * the ScrollView generally wins on Android, so pinch-zoom lands
+   * intermittently and panning fights scrolling. An inert preview scrolls
+   * cleanly and opens the full-screen map, where gestures have the surface to
+   * themselves.
+   */
+  interactive?: boolean;
 };
 
 /**
@@ -30,7 +41,11 @@ export type MapHtmlOptions = {
  * possible through GL JS and a custom layer. That is a capability difference,
  * not a preference.
  */
-export function buildMapHtml({ avatar = false, fullscreen = false }: MapHtmlOptions = {}): string {
+export function buildMapHtml({
+  avatar = false,
+  fullscreen = false,
+  interactive = fullscreen,
+}: MapHtmlOptions = {}): string {
   const zoom = fullscreen ? MAP_HOME.zoom + 1.5 : MAP_HOME.zoom;
   const pitch = fullscreen ? 65 : MAP_HOME.pitch;
 
@@ -39,6 +54,8 @@ export function buildMapHtml({ avatar = false, fullscreen = false }: MapHtmlOpti
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<!-- user-scalable=no disables *page* zoom only; MapLibre handles map zoom itself,
+     and leaving page zoom on makes a pinch ambiguous between the two. -->
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 ${avatar ? '<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>' : ''}
@@ -59,8 +76,18 @@ ${avatar ? '<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></s
       zoom: ${zoom},
       pitch: ${pitch},
       bearing: ${MAP_HOME.bearing},
-      attributionControl: { compact: true }
+      attributionControl: { compact: true },
+      interactive: ${interactive},
+      // Lumbini is a few square kilometres; there is no reason to allow a
+      // whole-planet zoom-out that loses the place entirely.
+      minZoom: 12,
+      maxZoom: 19,
+      // A pinch that also rotates makes a small map feel unsteady. Zoom is the
+      // gesture people actually want here; rotation stays on the compass.
+      pitchWithRotate: ${interactive},
+      dragRotate: ${interactive}
     });
+${interactive ? INTERACTIVE_CONTROLS : ''}
     map.on('error', function(e){ post({ type:'error', message: String((e && e.error && e.error.message) || 'map error') }); });
 
     map.on('load', function(){
@@ -115,6 +142,48 @@ ${avatar ? AVATAR_LAYER : ''}
 </body>
 </html>`;
 }
+
+/**
+ * Controls and sizing for the interactive map.
+ *
+ * The zoom buttons are not a fallback for broken gestures — they are the
+ * primary control for anyone holding a phone one-handed with a bag on the other
+ * shoulder, which is most people walking a heritage site. Pinch still works;
+ * this means it does not have to.
+ *
+ * `resize()` on a ResizeObserver is what makes the map responsive rather than
+ * merely stretched: MapLibre sizes its canvas once at construction and will not
+ * notice a rotation, a split screen, or a container that grew, so the canvas
+ * and the viewport drift apart and the map renders letterboxed or clipped.
+ */
+const INTERACTIVE_CONTROLS = `
+      map.addControl(new maplibregl.NavigationControl({
+        showZoom: true,
+        showCompass: true,
+        visualizePitch: true
+      }), 'top-right');
+
+      map.addControl(new maplibregl.GeolocateControl({
+        positionOptions: { enableHighAccuracy: true },
+        trackUserLocation: true,
+        showAccuracyCircle: true
+      }), 'top-right');
+
+      // Double-tap to zoom in, two-finger tap to zoom out — the conventions a
+      // phone user already has, and neither needs a precise pinch.
+      map.doubleClickZoom.enable();
+      map.touchZoomRotate.enable();
+      map.touchZoomRotate.disableRotation();
+
+      if (window.ResizeObserver) {
+        var ro = new ResizeObserver(function () { map.resize(); });
+        ro.observe(document.getElementById('map'));
+      }
+      window.addEventListener('orientationchange', function () {
+        // The container has not settled at the moment the event fires.
+        setTimeout(function () { map.resize(); }, 150);
+      });
+`;
 
 /**
  * A figure standing on the map, at the reported position.

@@ -46,8 +46,10 @@ export function MapWebView({
   const webRef = useRef<WebView>(null);
 
   const wantsFigure = coordinate != null;
+  // Interactive only when it fills the screen. Inline, the map is a preview
+  // that opens the full-screen one — see MapHtmlOptions.interactive.
   const html = useMemo(
-    () => buildMapHtml({ avatar: wantsFigure, fullscreen: fill }),
+    () => buildMapHtml({ avatar: wantsFigure, fullscreen: fill, interactive: fill }),
     [wantsFigure, fill],
   );
 
@@ -92,9 +94,12 @@ export function MapWebView({
         style={styles.web}
         originWhitelist={['*']}
         source={{ html }}
-        // The panel version sits inside a scrolling page; without this the
-        // WebView swallows vertical drags and the page stops scrolling past it.
-        nestedScrollEnabled={!fill}
+        // Inline, the map is inert, so the page owns every gesture and scrolls
+        // straight through it. Full screen, the map owns them instead.
+        scrollEnabled={fill}
+        nestedScrollEnabled={fill}
+        // An inert preview must not intercept the tap that opens the full map.
+        pointerEvents={fill ? 'auto' : 'none'}
         javaScriptEnabled
         domStorageEnabled
         onError={() => setFailed(true)}

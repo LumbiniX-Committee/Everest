@@ -45,12 +45,18 @@ export function TirthaScreen() {
 
       <ArrivalWisdom coordinate={coordinate} />
 
-      {/* The map is not wrapped in a Pressable. It contains a WebView or a
-          native map view, both of which consume their own gestures — a parent
-          Pressable either swallows the pan and the monument taps, or fires
-          "open full screen" when someone meant to drag. The affordance is an
-          explicit control underneath instead. */}
-      <SiteMap3D onSelectSite={(id) => router.push(`/(main)/tirtha/site/${id}`)} />
+      {/* Wrapping the map is safe again: inline it is built inert, so it
+          consumes no gestures and cannot fight this Pressable or the page's
+          own scrolling. Panning and zooming happen on the full-screen map,
+          where nothing competes for the touches. */}
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Open the full screen map"
+        accessibilityHint="Shows the map full screen, where you can pan and zoom"
+        onPress={() => router.push('/(main)/tirtha/map')}
+      >
+        <SiteMap3D onSelectSite={(id) => router.push(`/(main)/tirtha/site/${id}`)} />
+      </Pressable>
 
       <Pressable
         accessibilityRole="button"
