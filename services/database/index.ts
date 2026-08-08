@@ -202,6 +202,13 @@ const migrations: string[] = [
   `ALTER TABLE quest_submissions ADD COLUMN synced INTEGER NOT NULL DEFAULT 0;
    CREATE INDEX IF NOT EXISTS idx_submissions_unsynced
      ON quest_submissions (synced) WHERE synced = 0;`,
+
+  // Provenance for condition reports. ai_assisted marks a report that was
+  // pre-filled from an on-device damage-detection candidate and then confirmed by
+  // the observer. DEFAULT 0 is truthful for rows written before the detector
+  // existed — they were made entirely by hand — and backfilling them as assisted
+  // would credit a machine with findings a person made unaided.
+  `ALTER TABLE condition_reports ADD COLUMN ai_assisted INTEGER NOT NULL DEFAULT 0;`,
 ];
 
 async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
@@ -382,6 +389,7 @@ type ConditionReportRow = {
   severity: string;
   note: string | null;
   recorded_at: string;
+  ai_assisted: number;
   synced: number;
 };
 
@@ -398,6 +406,7 @@ function toConditionReport(row: ConditionReportRow): ConditionReport {
     severity: row.severity as ConditionReport['severity'],
     note: row.note ?? undefined,
     recordedAt: row.recorded_at,
+    aiAssisted: row.ai_assisted === 1,
     synced: row.synced === 1,
   };
 }
@@ -414,8 +423,8 @@ export async function insertConditionReport(report: ConditionReport): Promise<vo
   await db.withTransactionAsync(async () => {
     await db.runAsync(
       `INSERT OR REPLACE INTO condition_reports
-         (id, observation_id, site_id, category, subtype, severity, note, recorded_at, synced)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         (id, observation_id, site_id, category, subtype, severity, note, recorded_at, ai_assisted, synced)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       report.id,
       report.observationId,
       report.siteId,
@@ -424,6 +433,7 @@ export async function insertConditionReport(report: ConditionReport): Promise<vo
       report.severity,
       report.note ?? null,
       report.recordedAt,
+      report.aiAssisted ? 1 : 0,
       report.synced ? 1 : 0,
     );
     await db.runAsync(

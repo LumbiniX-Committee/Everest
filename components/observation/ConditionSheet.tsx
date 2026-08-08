@@ -29,7 +29,8 @@ export type ConditionSheetProps = {
   onSubmit: (draft: ConditionDraft) => void;
   /** Disables the controls while the write is in flight. */
   submitting?: boolean;
-  /** Pre-fill from YOLO AI scan. When set, opens at the note step. */
+  /** Pre-fill from a damage-detection candidate. Opens at the first step the
+   * draft has not answered — for an AI pre-fill, that is 'severity'. */
   initialDraft?: Partial<ConditionDraft>;
 };
 
@@ -49,11 +50,35 @@ const STEPS: Step[] = ['category', 'subtype', 'severity', 'note'];
  * selection and asking for confirmation of a tap is a step that earns nothing.
  */
 export function ConditionSheet({ visible, onClose, onSubmit, submitting = false, initialDraft }: ConditionSheetProps) {
-  const [step, setStep] = useState<Step>(initialDraft?.category ? 'note' : 'category');
+  // Open at the first thing the draft has not answered. A manual report starts at
+  // 'category'; an AI pre-fill (category and kind supplied, severity left out on
+  // purpose) opens straight at 'severity', so the person judges urgency — the one
+  // call the model must not make — rather than tapping past pre-filled steps.
+  const firstUnfilledStep = (): Step => {
+    if (!initialDraft?.category) return 'category';
+    if (!initialDraft?.subtype) return 'subtype';
+    if (!initialDraft?.severity) return 'severity';
+    return 'note';
+  };
+
+  const [step, setStep] = useState<Step>(firstUnfilledStep());
   const [category, setCategory] = useState<ConditionCategory | null>(initialDraft?.category ?? null);
   const [subtype, setSubtype] = useState<string | null>(initialDraft?.subtype ?? null);
   const [severity, setSeverity] = useState<ConditionSeverity | null>(initialDraft?.severity ?? null);
   const [note, setNote] = useState(initialDraft?.note ?? '');
+
+  // The sheet stays mounted, so its fields are re-seeded from the draft each time
+  // it opens rather than only once. Without this, a pre-fill chosen after the
+  // sheet first mounted would land on a stale blank form.
+  useEffect(() => {
+    if (!visible) return;
+    setCategory(initialDraft?.category ?? null);
+    setSubtype(initialDraft?.subtype ?? null);
+    setSeverity(initialDraft?.severity ?? null);
+    setNote(initialDraft?.note ?? '');
+    setStep(firstUnfilledStep());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible]);
 
   const reset = () => {
     setStep('category');
@@ -86,6 +111,8 @@ export function ConditionSheet({ visible, onClose, onSubmit, submitting = false,
       // An untouched box is not a note. Trimmed so whitespace does not become
       // an observer's comment on the state of a temple.
       note: note.trim() ? note.trim() : undefined,
+      // Carried through so a confirmed AI candidate is recorded as assisted.
+      aiAssisted: initialDraft?.aiAssisted,
     });
   };
 
@@ -97,6 +124,15 @@ export function ConditionSheet({ visible, onClose, onSubmit, submitting = false,
       subtitle={subtitles[step]}
       scroll
     >
+      {initialDraft?.aiAssisted ? (
+        <View style={styles.aiBanner}>
+          <Text variant="caption" tone="secondary">
+            Filled from an AI candidate. You’re confirming it — change anything that’s wrong, and
+            you decide how urgent it is.
+          </Text>
+        </View>
+      ) : null}
+
       {step === 'category' ? (
         <View style={styles.stack}>
           {CONDITION_CATEGORIES.map((option) => (
@@ -204,6 +240,12 @@ const subtitles: Record<Step, string> = {
 };
 
 const styles = StyleSheet.create({
+  aiBanner: {
+    padding: spacing.sm,
+    borderRadius: radii.md,
+    backgroundColor: colors.surfaceSecondary,
+    marginBottom: spacing.sm,
+  },
   stack: { gap: spacing.sm },
   wide: { alignSelf: 'stretch' },
   severityRow: { gap: spacing.xs, marginBottom: spacing.sm },

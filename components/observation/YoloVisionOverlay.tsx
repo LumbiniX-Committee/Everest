@@ -10,10 +10,12 @@ export type YoloVisionOverlayProps = {
 };
 
 /**
- * YOLO AI Damage Detection overlay.
+ * Damage-detection overlay.
  *
- * Renders coloured bounding boxes with confidence tags and corner brackets
- * over a camera preview or an observation photograph. All coordinates are
+ * Draws the boxes the model actually produced over an observation photograph,
+ * with the real confidence beside each. The boxes are dashed on purpose: these
+ * are *candidates* for a person to confirm, not verified findings — the styling
+ * should never let a machine guess read as a settled fact. Coordinates are
  * normalised 0–1, so the overlay scales to any container size.
  */
 export function YoloVisionOverlay({ detections, visible = true }: YoloVisionOverlayProps) {
@@ -59,6 +61,7 @@ const styles = StyleSheet.create({
   box: {
     position: 'absolute',
     borderWidth: 1.5,
+    borderStyle: 'dashed',
     borderRadius: radii.sm,
     backgroundColor: 'rgba(0,0,0,0.12)',
     zIndex: 40,

@@ -1,35 +1,83 @@
-import type { ConditionCategory, ConditionSeverity } from '@/types';
+import { useCallback } from 'react';
+import { Image } from 'react-native';
+
+import { filterByScore, normalizeBbox, type RawBbox } from '@/core/vision/detect';
+import type { ConditionCategory } from '@/types';
+
+import { useObjectDetection, type RawDetection } from './executorch';
 
 /**
- * YOLOv8n-seg INT8 Heritage Masonry Pathology Detection Engine.
+ * On-device damage detection — the honest engine.
  *
- * Runs 5-class damage classification & instance segmentation:
- *   crack, biological growth, spalling, water ingress, surface erosion.
+ * This replaced a fabricator that hashed the image *filename* into invented
+ * boxes, confidence scores and a "surface integrity %". Nothing here invents a
+ * finding. When a trained model is present it runs real inference and returns
+ * what the model actually saw; when it is not, it says so (`no-model`) rather
+ * than making something up. A candidate is offered to the surveyor to confirm —
+ * it never writes a condition report on its own, and it never claims a
+ * conservator-grade assessment.
  *
- * Performs REAL canvas/pixel analysis on image URIs to dynamically discover
- * green moss colonization, high-contrast structural cracks, and surface spalling.
+ * The model itself is trained and exported separately (see docs/DAMAGE-MODEL.md)
+ * and dropped in via `DAMAGE_MODEL.source`. Until then the feature is simply
+ * absent from the UI — honest by omission.
  */
 
 export type YoloPathology = 'crack' | 'biological' | 'spalling' | 'water' | 'surface';
 
+/** A single detection the model produced, in normalised 0–1 image space. */
 export type YoloDetection = {
   id: string;
   conditionCategory: ConditionCategory;
   pathology: YoloPathology;
   label: string;
+  /** The model's real score, 0–1. Never fabricated. */
   confidence: number;
   bbox: { x: number; y: number; w: number; h: number };
   color: string;
+  /** One of `CONDITION_SUBTYPES[conditionCategory]`, for one-tap pre-fill. */
   suggestedSubtype: string;
 };
 
+export type ScanStatus = 'ok' | 'no-model' | 'error';
+
+/**
+ * Which model produced a result. `mAP50` is the model's *own* reported accuracy
+ * from its training run — shown in the UI so a reader can weigh a detection
+ * honestly. Null when unknown; never a flattering guess.
+ */
+export type ModelInfo = {
+  name: string;
+  version: string;
+  classes: YoloPathology[];
+  mAP50: number | null;
+  runtime: 'executorch' | 'onnx';
+};
+
 export type YoloScanResult = {
+  status: ScanStatus;
   detections: YoloDetection[];
-  inferenceMs: number;
-  surfaceHealth: number;
-  primaryCategory: ConditionCategory;
-  primarySubtype: string;
-  suggestedSeverity: ConditionSeverity;
+  /** Real measured inference time, or null when no inference ran. */
+  inferenceMs: number | null;
+  model: ModelInfo | null;
+  error?: string;
+};
+
+export type DetectorStatus = 'loading' | 'ready' | 'no-model' | 'unsupported' | 'error';
+
+export type DamageDetector = {
+  status: DetectorStatus;
+  model: ModelInfo | null;
+  scanning: boolean;
+  scan: (imageUri: string) => Promise<YoloScanResult>;
+};
+
+/** A one-tap pre-fill suggestion. Severity is deliberately absent — urgency is a
+ * human judgment, not something a vision model should assert. */
+export type ConditionSuggestion = {
+  category: ConditionCategory;
+  subtype: string;
+  note: string;
+  aiAssisted: true;
 };
 
 export const PATHOLOGY_COLORS: Record<YoloPathology, string> = {
@@ -40,7 +88,7 @@ export const PATHOLOGY_COLORS: Record<YoloPathology, string> = {
   surface: '#F97316',
 };
 
-const PATHOLOGY_TO_CONDITION: Record<YoloPathology, ConditionCategory> = {
+const PATHOLOGY_TO_CATEGORY: Record<YoloPathology, ConditionCategory> = {
   crack: 'structural',
   biological: 'biology',
   spalling: 'surface',
@@ -48,6 +96,8 @@ const PATHOLOGY_TO_CONDITION: Record<YoloPathology, ConditionCategory> = {
   surface: 'surface',
 };
 
+// Each maps to a real entry in CONDITION_SUBTYPES[category] so pre-fill lands on
+// an existing chip rather than an orphan string.
 const PATHOLOGY_TO_SUBTYPE: Record<YoloPathology, string> = {
   crack: 'New crack',
   biological: 'Moss or algae',
@@ -57,102 +107,190 @@ const PATHOLOGY_TO_SUBTYPE: Record<YoloPathology, string> = {
 };
 
 const PATHOLOGY_LABELS: Record<YoloPathology, string> = {
-  crack: 'Structural Crack',
-  biological: 'Biological Growth',
-  spalling: 'Surface Spalling',
-  water: 'Water Ingress',
-  surface: 'Material Erosion',
+  crack: 'Crack',
+  biological: 'Biological growth',
+  spalling: 'Spalling',
+  water: 'Water ingress',
+  surface: 'Surface erosion',
 };
 
-function hashString(str: string): number {
-  let hash = 5381;
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash * 33) ^ str.charCodeAt(i);
-  }
-  return Math.abs(hash);
+// Model class names → our pathology set. Forgiving about spelling so a model
+// trained with slightly different class strings still maps cleanly.
+const LABEL_TO_PATHOLOGY: Record<string, YoloPathology> = {
+  crack: 'crack',
+  cracks: 'crack',
+  fracture: 'crack',
+  biological: 'biological',
+  biological_growth: 'biological',
+  moss: 'biological',
+  algae: 'biological',
+  vegetation: 'biological',
+  spalling: 'spalling',
+  spall: 'spalling',
+  flaking: 'spalling',
+  water: 'water',
+  seepage: 'water',
+  damp: 'water',
+  moisture: 'water',
+  erosion: 'surface',
+  discolouration: 'surface',
+  discoloration: 'surface',
+  surface: 'surface',
+  weathering: 'surface',
+};
+
+/** Detections below this score are dropped before they reach the UI. */
+const SCORE_THRESHOLD = 0.35;
+
+/**
+ * The trained model, dropped in after training (see docs/DAMAGE-MODEL.md).
+ *
+ * `source: null` is the honest current state — no model shipped, so the feature
+ * does not appear. To activate: place the exported model under assets/models/,
+ * set `source: require('../../assets/models/crack-seg.pte')`, fill in `mAP50`
+ * with the number your training run reported, `npm i react-native-executorch`,
+ * and rebuild the dev client.
+ */
+export const DAMAGE_MODEL: { source: string | number | null; info: ModelInfo } = {
+  source: null,
+  info: {
+    name: 'YOLOv8n crack detector',
+    version: '0.1.0',
+    classes: ['crack'],
+    mAP50: null,
+    runtime: 'executorch',
+  },
+};
+
+const NO_MODEL_RESULT: YoloScanResult = {
+  status: 'no-model',
+  detections: [],
+  inferenceMs: null,
+  model: null,
+};
+
+function labelToPathology(label: string): YoloPathology {
+  return LABEL_TO_PATHOLOGY[label.trim().toLowerCase()] ?? 'surface';
+}
+
+function imageSize(uri: string): Promise<{ width: number; height: number }> {
+  return new Promise((resolve) => {
+    Image.getSize(
+      uri,
+      (width, height) => resolve({ width, height }),
+      () => resolve({ width: 0, height: 0 }),
+    );
+  });
+}
+
+function toDetection(raw: RawDetection, imageW: number, imageH: number, index: number): YoloDetection {
+  const pathology = labelToPathology(raw.label);
+  return {
+    id: `det-${index}-${Math.round(raw.score * 1000)}`,
+    conditionCategory: PATHOLOGY_TO_CATEGORY[pathology],
+    pathology,
+    label: PATHOLOGY_LABELS[pathology],
+    confidence: raw.score,
+    bbox: normalizeBbox(raw.bbox as RawBbox, imageW, imageH),
+    color: PATHOLOGY_COLORS[pathology],
+    suggestedSubtype: PATHOLOGY_TO_SUBTYPE[pathology],
+  };
 }
 
 /**
- * Run real dynamic YOLO pathology scan on any image URI or live camera frame.
- *
- * Computes image-unique features by hashing unique image strings and
- * analyzing canvas pixel variations. Guaranteed non-repeating results!
+ * The highest-confidence detection as a pre-fill suggestion, or null if the scan
+ * found nothing. Category and subtype come from the model; severity is left for
+ * the surveyor to set.
  */
-export async function runYoloScan(imageUri?: string): Promise<YoloScanResult> {
-  const t0 = Date.now();
-
-  // Fast INT8 NPU timing (18ms - 35ms)
-  const seed = imageUri ? hashString(imageUri) : Math.floor(Math.random() * 1000000) + Date.now();
-  const latency = 18 + (seed % 18);
-  await new Promise((r) => setTimeout(r, latency));
-
-  const pathologyPool: YoloPathology[] = ['crack', 'biological', 'spalling', 'water', 'surface'];
-
-  // Dynamically vary defect count: 0, 1, 2, 3, or 4 defects depending on seed
-  const defectCount = (seed % 5); // Can be 0, 1, 2, 3, or 4!
-
-  const detections: YoloDetection[] = [];
-
-  for (let i = 0; i < defectCount; i++) {
-    // Generate distinct pathology types per defect
-    const pathIdx = (seed + i * 7 + (i > 0 ? 2 : 0)) % pathologyPool.length;
-    const pathology = pathologyPool[pathIdx];
-
-    // Calculate unique non-overlapping bounding boxes (x, y, w, h)
-    const rawX = 0.08 + (((seed * 13 + i * 37) % 65) / 100);
-    const rawY = 0.12 + (((seed * 19 + i * 43) % 55) / 100);
-    const rawW = 0.18 + (((seed * 7 + i * 29) % 28) / 100);
-    const rawH = 0.14 + (((seed * 11 + i * 31) % 26) / 100);
-
-    // Keep bounding boxes within bounds
-    const x = Math.min(0.70, Math.max(0.05, rawX));
-    const y = Math.min(0.70, Math.max(0.05, rawY));
-    const w = Math.min(0.35, Math.max(0.12, rawW));
-    const h = Math.min(0.35, Math.max(0.12, rawH));
-
-    const confidence = 0.72 + (((seed * 17 + i * 11) % 26) / 100);
-
-    detections.push({
-      id: `yolo-${seed}-${i}-${Date.now()}`,
-      conditionCategory: PATHOLOGY_TO_CONDITION[pathology],
-      pathology,
-      label: PATHOLOGY_LABELS[pathology],
-      confidence: parseFloat(confidence.toFixed(2)),
-      bbox: {
-        x: parseFloat(x.toFixed(2)),
-        y: parseFloat(y.toFixed(2)),
-        w: parseFloat(w.toFixed(2)),
-        h: parseFloat(h.toFixed(2)),
-      },
-      color: PATHOLOGY_COLORS[pathology],
-      suggestedSubtype: PATHOLOGY_TO_SUBTYPE[pathology],
-    });
-  }
-
-  // Calculate dynamic surface integrity score based on total detected area
-  let surfaceHealth = 100;
-  if (detections.length === 0) {
-    surfaceHealth = 98;
-  } else {
-    const totalAreaRatio = detections.reduce((sum, d) => sum + d.bbox.w * d.bbox.h, 0);
-    surfaceHealth = Math.round(Math.max(38, Math.min(96, (1 - totalAreaRatio * 1.8) * 100)));
-  }
-
-  let suggestedSeverity: ConditionSeverity = 'noted';
-  if (surfaceHealth < 60) {
-    suggestedSeverity = 'urgent';
-  } else if (surfaceHealth < 82) {
-    suggestedSeverity = 'concerning';
-  }
-
-  const primaryDet = detections[0];
-
+export function scanToSuggestion(result: YoloScanResult): ConditionSuggestion | null {
+  const top = result.detections.reduce<YoloDetection | null>(
+    (best, d) => (!best || d.confidence > best.confidence ? d : best),
+    null,
+  );
+  if (!top) return null;
   return {
-    detections,
-    inferenceMs: Date.now() - t0,
-    surfaceHealth,
-    primaryCategory: primaryDet ? primaryDet.conditionCategory : 'surface',
-    primarySubtype: primaryDet ? primaryDet.suggestedSubtype : 'Discolouration',
-    suggestedSeverity,
+    category: top.conditionCategory,
+    subtype: top.suggestedSubtype,
+    note: `AI-assisted: candidate ${top.label.toLowerCase()} at about ${Math.round(
+      top.confidence * 100,
+    )}% confidence. Confirm and set how urgent it seems.`,
+    aiAssisted: true,
   };
 }
+
+// Which detector implementation is used is fixed at module load by whether a
+// model and the native runtime are present, so hook order never changes between
+// renders — one branch is a hook, the other returns a constant.
+const UNAVAILABLE_STATUS: DetectorStatus = useObjectDetection == null ? 'unsupported' : 'no-model';
+
+const UNAVAILABLE_DETECTOR: DamageDetector = {
+  status: UNAVAILABLE_STATUS,
+  model: null,
+  scanning: false,
+  scan: async () => NO_MODEL_RESULT,
+};
+
+function makeExecutorchDetectorHook(
+  source: string | number,
+  useDetection: NonNullable<typeof useObjectDetection>,
+): () => DamageDetector {
+  return function useExecutorchDamageDetector(): DamageDetector {
+    const handle = useDetection({ modelSource: source });
+
+    const scan = useCallback(
+      async (imageUri: string): Promise<YoloScanResult> => {
+        if (!handle.isReady) {
+          return {
+            status: 'error',
+            detections: [],
+            inferenceMs: null,
+            model: DAMAGE_MODEL.info,
+            error: 'The model is still loading.',
+          };
+        }
+        const started = Date.now();
+        try {
+          const raw = await handle.forward(imageUri);
+          // Assumes the runtime returns boxes in original-image pixel space. If a
+          // device test shows model-input space instead, adjust only here.
+          const { width, height } = await imageSize(imageUri);
+          const detections = filterByScore(raw, SCORE_THRESHOLD).map((d, i) =>
+            toDetection(d, width, height, i),
+          );
+          return {
+            status: 'ok',
+            detections,
+            inferenceMs: Date.now() - started,
+            model: DAMAGE_MODEL.info,
+          };
+        } catch (caught) {
+          return {
+            status: 'error',
+            detections: [],
+            inferenceMs: null,
+            model: DAMAGE_MODEL.info,
+            error: caught instanceof Error ? caught.message : 'The scan failed.',
+          };
+        }
+      },
+      [handle],
+    );
+
+    const status: DetectorStatus = handle.error ? 'error' : handle.isReady ? 'ready' : 'loading';
+    return { status, model: DAMAGE_MODEL.info, scanning: handle.isGenerating, scan };
+  };
+}
+
+/**
+ * The damage detector for the current build.
+ *
+ * Returns a live executorch-backed detector when a model and runtime are
+ * present; otherwise a constant detector reporting 'no-model'/'unsupported' whose
+ * `scan` resolves honestly to an empty, no-model result.
+ */
+const MODEL_SOURCE = DAMAGE_MODEL.source;
+
+export const useDamageDetector: () => DamageDetector =
+  MODEL_SOURCE != null && useObjectDetection != null
+    ? makeExecutorchDetectorHook(MODEL_SOURCE, useObjectDetection)
+    : () => UNAVAILABLE_DETECTOR;

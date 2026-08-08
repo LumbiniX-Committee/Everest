@@ -110,5 +110,13 @@ export type ConditionReport = {
   note?: string;
   /** ISO 8601, UTC. */
   recordedAt: string;
+  /**
+   * True when the report was pre-filled from an on-device damage-detection
+   * candidate and then confirmed by the observer. The observer still chose to
+   * file it; this only records that a machine suggested it first, so a later
+   * reader can weigh assisted findings against unaided ones. Absent/false means
+   * entirely by hand.
+   */
+  aiAssisted?: boolean;
   synced: boolean;
 };

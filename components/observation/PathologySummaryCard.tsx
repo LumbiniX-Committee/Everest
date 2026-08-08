@@ -10,18 +10,32 @@ export type PathologySummaryCardProps = {
 };
 
 /**
- * Pathology summary card.
+ * What the model found, stated honestly.
  *
- * Shown below the camera viewfinder or on the observation detail screen.
- * Displays defect count, surface health score, inference time, and a
- * colour-coded legend for each detected pathology class.
+ * Everything the old version invented is gone: no "surface integrity %", no fake
+ * "INT8 · NPU" timing, no confidence numbers pulled from a hash. This shows the
+ * real model, its real reported accuracy, the actual inference time, and the
+ * candidates it produced — framed as candidates the surveyor confirms, not a
+ * verdict. Pre-fill hands those candidates to an editable report; it never files
+ * one.
  */
 export function PathologySummaryCard({ result, onApplyAiSuggestion }: PathologySummaryCardProps) {
-  const { detections, surfaceHealth, inferenceMs } = result;
+  const { detections, inferenceMs, model, status } = result;
 
-  if (detections.length === 0) return null;
+  if (status === 'error') {
+    return (
+      <View style={styles.card}>
+        <Text variant="label" tone="sandstone" uppercase>
+          Damage scan
+        </Text>
+        <Text variant="body" tone="secondary">
+          {result.error ?? 'The scan could not run. You can still report by hand.'}
+        </Text>
+      </View>
+    );
+  }
 
-  // De-duplicate pathology classes for the legend
+  // De-duplicate pathology classes for the legend.
   const seen = new Set<string>();
   const legend = detections.filter((d) => {
     if (seen.has(d.pathology)) return false;
@@ -31,51 +45,64 @@ export function PathologySummaryCard({ result, onApplyAiSuggestion }: PathologyS
 
   return (
     <View style={styles.card}>
-      {/* Header row */}
       <View style={styles.headerRow}>
         <Text variant="label" tone="sandstone" uppercase>
-          YOLOv8n-seg INT8 Scan
+          {model?.name ?? 'Damage scan'}
         </Text>
-        <Text variant="mono" tone="secondary" style={styles.timing}>
-          {inferenceMs}ms · NPU
-        </Text>
-      </View>
-
-      {/* Stats row */}
-      <View style={styles.statsRow}>
-        <View style={styles.stat}>
-          <Text variant="title" style={styles.statNum}>{detections.length}</Text>
-          <Text variant="caption" tone="secondary">Defects</Text>
-        </View>
-        <View style={styles.stat}>
-          <Text variant="title" style={[styles.statNum, surfaceHealth < 70 && styles.warn]}>
-            {surfaceHealth}%
+        {inferenceMs != null ? (
+          <Text variant="mono" tone="secondary" style={styles.timing}>
+            {inferenceMs} ms · on-device
           </Text>
-          <Text variant="caption" tone="secondary">Surface Integrity</Text>
-        </View>
+        ) : null}
       </View>
 
-      {/* Legend */}
-      <View style={styles.legend}>
-        {legend.map((det) => (
-          <View key={det.pathology} style={styles.legendItem}>
-            <View style={[styles.dot, { backgroundColor: det.color }]} />
-            <Text variant="caption">
-              {det.label} ({(det.confidence * 100).toFixed(0)}%)
-            </Text>
+      {detections.length === 0 ? (
+        <Text variant="body" tone="secondary">
+          No candidate damage found. That is not a clean bill of health — inspect the photograph
+          yourself and report anything the model missed.
+        </Text>
+      ) : (
+        <>
+          <View style={styles.statsRow}>
+            <View style={styles.stat}>
+              <Text variant="title" style={styles.statNum}>
+                {detections.length}
+              </Text>
+              <Text variant="caption" tone="secondary">
+                {detections.length === 1 ? 'Candidate' : 'Candidates'}
+              </Text>
+            </View>
           </View>
-        ))}
-      </View>
 
-      {onApplyAiSuggestion ? (
-        <View style={styles.btnWrap}>
-          <Button
-            label="✨ Pre-fill Condition Report"
-            onPress={() => onApplyAiSuggestion(result)}
-            block
-          />
-        </View>
-      ) : null}
+          <View style={styles.legend}>
+            {legend.map((det) => (
+              <View key={det.pathology} style={styles.legendItem}>
+                <View style={[styles.dot, { backgroundColor: det.color }]} />
+                <Text variant="caption">
+                  {det.label} ({Math.round(det.confidence * 100)}%)
+                </Text>
+              </View>
+            ))}
+          </View>
+
+          <Text variant="caption" tone="muted">
+            Candidates for you to verify — not a conservator's assessment.
+            {model?.mAP50 != null
+              ? ` Model accuracy on its test set (mAP@50): ${model.mAP50.toFixed(2)}.`
+              : ' This model has not reported its accuracy.'}
+          </Text>
+
+          {onApplyAiSuggestion ? (
+            <View style={styles.btnWrap}>
+              <Button
+                label="Pre-fill condition report"
+                onPress={() => onApplyAiSuggestion(result)}
+                block
+              />
+            </View>
+          ) : null}
+        </>
+      )}
     </View>
   );
 }
@@ -102,7 +129,6 @@ const styles = StyleSheet.create({
   },
   stat: { alignItems: 'center' },
   statNum: { fontSize: 28, fontWeight: '800' },
-  warn: { color: '#EF4444' },
   legend: { gap: spacing.xs },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
   dot: { width: 10, height: 10, borderRadius: 5 },
