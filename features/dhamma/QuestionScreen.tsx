@@ -3,7 +3,8 @@ import { StyleSheet, View } from 'react-native';
 
 import { Divider, Screen, Text } from '@/components/ui';
 import { EmptyState } from '@/components/common';
-import { findDhammaEntry } from '@/data';
+import { SourceCard } from '@/components/source';
+import { findDhammaEntry, findSource } from '@/data';
 import { colors, radii, spacing } from '@/theme';
 
 /**
@@ -55,11 +56,18 @@ export function QuestionScreen({ questionId }: { questionId: string }) {
 
       <View style={styles.block}>
         <Text variant="label" tone="muted" uppercase>
-          Source
+          {entry.citations.length === 1 ? 'Source' : 'Sources'}
         </Text>
-        <Text variant="body" tone="secondary">
-          {entry.citation}
-        </Text>
+        {/*
+          Rendered through the same SourceCard the heritage surfaces use. Each
+          source carries its own caveat, so a limitation of the evidence is
+          stated wherever that evidence appears rather than only here.
+        */}
+        {entry.citations.map((citation) => {
+          const source = findSource(citation.sourceId);
+          if (!source) return null;
+          return <SourceCard key={citation.sourceId} source={source} citation={citation} />;
+        })}
       </View>
 
       {entry.caveat ? (
@@ -71,6 +79,24 @@ export function QuestionScreen({ questionId }: { questionId: string }) {
             </Text>
             <Text variant="body" tone="secondary">
               {entry.caveat}
+            </Text>
+          </View>
+        </>
+      ) : null}
+
+      {entry.reflectionPrompt ? (
+        <>
+          <Divider />
+          <View style={styles.block}>
+            <Text variant="label" tone="muted" uppercase>
+              To sit with
+            </Text>
+            {/*
+              A question, left open. No input, no save — §14 ends the sequence
+              at reflection, and giving it a text box would turn it into a task.
+            */}
+            <Text variant="bodyLarge" tone="secondary">
+              {entry.reflectionPrompt}
             </Text>
           </View>
         </>

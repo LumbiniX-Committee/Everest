@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { Card, Screen, Text } from '@/components/ui';
 import { ScreenHeader } from '@/components/common';
-import { demoDhammaEntries } from '@/data';
+import { demoDhammaEntries, findSource } from '@/data';
 import { spacing } from '@/theme';
 
 /**
@@ -28,20 +28,31 @@ export function DhammaScreen() {
       />
 
       <View style={styles.list}>
-        {demoDhammaEntries.map((entry) => (
-          <Card
-            key={entry.id}
-            onPress={() =>
-              router.push({ pathname: '/(main)/dhamma/question', params: { questionId: entry.id } })
-            }
-            accessibilityLabel={entry.question}
-          >
-            <Text variant="heading">{entry.question}</Text>
-            <Text variant="caption" tone="muted" style={styles.source}>
-              {entry.citation}
-            </Text>
-          </Card>
-        ))}
+        {demoDhammaEntries.map((entry) => {
+          // The first citation stands for the entry in the list. Showing what an
+          // answer rests on before it is opened is what makes this a collection
+          // of evidence rather than a list of assertions.
+          const source = findSource(entry.citations[0]?.sourceId);
+          return (
+            <Card
+              key={entry.id}
+              onPress={() =>
+                router.push({
+                  pathname: '/(main)/dhamma/question',
+                  params: { questionId: entry.id },
+                })
+              }
+              accessibilityLabel={entry.question}
+            >
+              <Text variant="heading">{entry.question}</Text>
+              {source ? (
+                <Text variant="caption" tone="muted" style={styles.source}>
+                  {source.title} · {source.attribution}
+                </Text>
+              ) : null}
+            </Card>
+          );
+        })}
       </View>
     </Screen>
   );

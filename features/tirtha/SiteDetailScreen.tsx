@@ -4,7 +4,8 @@ import { StyleSheet, View } from 'react-native';
 import { ConditionBadge, Divider, MetaRow, Screen, SourceBadge, Text } from '@/components/ui';
 import { EmptyState } from '@/components/common';
 import { VantageListItem } from '@/components/site';
-import { findSite, vantagesForSite } from '@/data';
+import { SourceCard } from '@/components/source';
+import { findSite, resolveSources, vantagesForSite } from '@/data';
 import { useCurrentPosition } from '@/hooks';
 import { spacing } from '@/theme';
 import { distanceMeters, formatCoordinate, formatDistance } from '@/utils';
@@ -35,6 +36,7 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
   }
 
   const vantages = vantagesForSite(site.id);
+  const sources = resolveSources(site.sourceIds ?? []);
   const distanceM = coordinate ? distanceMeters(coordinate, site.coordinate) : null;
 
   return (
@@ -68,10 +70,26 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
           <MetaRow label="Elevation" value={`${site.elevation} m`} />
         ) : null}
         {distanceM != null ? <MetaRow label="Distance" value={formatDistance(distanceM)} /> : null}
-        {site.sourceNote ? (
-          <MetaRow label="Source" value={site.sourceNote} mono={false} tone="secondary" />
-        ) : null}
       </View>
+
+      {sources.length > 0 ? (
+        <>
+          <Divider />
+          <View style={styles.sourceBlock}>
+            <Text variant="heading">
+              {sources.length === 1 ? 'Source' : 'Sources'}
+            </Text>
+            {/*
+              The same SourceCard the Dhamma surface uses. A reader who has
+              learned to read a citation on one surface can read it on the
+              other — which is the entire reason the registry is shared.
+            */}
+            {sources.map((source) => (
+              <SourceCard key={source.id} source={source} />
+            ))}
+          </View>
+        </>
+      ) : null}
 
       <Divider />
 
@@ -109,6 +127,7 @@ const styles = StyleSheet.create({
   badges: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginTop: spacing.xs },
   description: { paddingBottom: spacing.lg },
   meta: { paddingVertical: spacing.lg },
+  sourceBlock: { paddingVertical: spacing.lg, gap: spacing.md },
   vantageBlock: { paddingTop: spacing.lg, gap: spacing.md },
   vantageList: { gap: spacing.md },
 });

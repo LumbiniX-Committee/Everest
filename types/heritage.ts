@@ -26,8 +26,13 @@ export type HeritageSite = {
   /** Metres above sea level, where surveyed. */
   elevation?: number;
   sourceTier: SourceTier;
-  /** Free-text provenance, e.g. "Lumbini Development Trust survey, 2019". */
-  sourceNote?: string;
+  /**
+   * Ids into the shared source registry, resolved with `resolveSources`.
+   *
+   * Ids rather than prose so the same artefact cited here and by a Dhamma
+   * answer resolves to one record, and a correction lands in one place.
+   */
+  sourceIds?: string[];
   condition: ConditionStatus;
   /** Vantage point ids belonging to this site. */
   vantageIds: string[];
