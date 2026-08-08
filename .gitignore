@@ -18,6 +18,10 @@ expo-env.d.ts
 *.key
 *.mobileprovision
 
+# Store submission credentials. The Play service account JSON grants release
+# rights to the app — it is a secret, and *.key above does not cover a .json.
+google-play-service-account.json
+
 # Metro
 .metro-health-check*
 
