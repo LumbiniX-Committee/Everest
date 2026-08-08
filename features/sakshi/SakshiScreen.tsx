@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
-import { Button, Card, Screen, Text } from '@/components/ui';
+import { Button, Card, Chip, Screen, Text } from '@/components/ui';
 import { EmptyState, ScreenHeader, SettingsButton } from '@/components/common';
 import { VantageListItem } from '@/components/site';
 import { PracticeSummaryCard } from '@/components/practice';
@@ -10,21 +10,23 @@ import { demoVantages, findSite } from '@/data';
 import { useCurrentPosition } from '@/hooks';
 import { database } from '@/services';
 import { usePractice } from '@/store';
-import { spacing } from '@/theme';
-import { distanceMeters, formatTimestamp } from '@/utils';
+import { colors, radii, spacing } from '@/theme';
+import { distanceMeters, formatDistance, formatTimestamp } from '@/utils';
 import type { Observation, ObservationAssessment } from '@/types';
+
+type TabMode = 'vantages' | 'records' | 'register';
 
 /**
  * Sākṣī — the witnessing surface.
  *
- * Two halves: what you have already recorded, and where you could record next.
- * Your own record comes first. The point of the app is the series you are
- * building, not a catalogue of things to go and do.
+ * Organized as a native mobile app dashboard with segmented navigation tabs,
+ * hero quick witness card, and structured observation cards.
  */
 export function SakshiScreen() {
   const router = useRouter();
   const { coordinate } = useCurrentPosition({ watch: true });
   const [observations, setObservations] = useState<Observation[]>([]);
+  const [activeTab, setActiveTab] = useState<TabMode>('vantages');
   const { summary, refresh: refreshPractice } = usePractice();
 
   // Re-read on focus: an observation may have been recorded since we last looked.
@@ -36,13 +38,7 @@ export function SakshiScreen() {
         .then((rows) => {
           if (active) setObservations(rows);
         })
-        .catch(() => {
-          // A read failure leaves the previous list standing rather than
-          // blanking a record the user knows they made.
-        });
-      // Re-read the summary too: the day may have rolled over while the app
-      // sat in the background, and a stale "day complete" would tell someone
-      // they were finished before they had begun.
+        .catch(() => {});
       void refreshPractice();
       return () => {
         active = false;
@@ -57,6 +53,10 @@ export function SakshiScreen() {
       )
     : demoVantages;
 
+  const nearestVantage = vantages[0];
+  const nearestSite = nearestVantage ? findSite(nearestVantage.siteId) : null;
+  const nearestDistance = coordinate && nearestVantage ? distanceMeters(coordinate, nearestVantage.coordinate) : null;
+
   return (
     <Screen scroll>
       <ScreenHeader
@@ -67,58 +67,122 @@ export function SakshiScreen() {
         rightAction={<SettingsButton />}
       />
 
-      <View style={styles.section}>
-        <PracticeSummaryCard summary={summary} />
-        <Button
-          label="Open your register"
-          variant="quiet"
-          onPress={() => router.push('/(main)/sakshi/register' as any)}
-        />
+      {/* Hero Quick Witness Card */}
+      {nearestVantage ? (
+        <View style={styles.heroCard}>
+          <View style={styles.heroHeader}>
+            <Chip label="NEAREST VANTAGE" />
+            {nearestDistance != null ? (
+              <Text variant="mono" tone="sandstone" style={styles.heroDistance}>
+                {formatDistance(nearestDistance)}
+              </Text>
+            ) : null}
+          </View>
+          <Text variant="heading" style={styles.heroTitle}>
+            {nearestSite?.name ?? 'Sacred Site'} — {nearestVantage.label}
+          </Text>
+          <Text variant="caption" tone="secondary" style={styles.heroSub}>
+            Tolerance: ±{nearestVantage.positionToleranceM} m · ±{nearestVantage.bearingToleranceDeg}°
+          </Text>
+          <Button
+            label="Align & Witness Now"
+            onPress={() =>
+              router.push({
+                pathname: '/(main)/sakshi/vantage',
+                params: { vantageId: nearestVantage.id },
+              })
+            }
+          />
+        </View>
+      ) : null}
+
+      {/* Segmented Mobile Tab Navigation Bar */}
+      <View style={styles.tabBar}>
+        <Pressable
+          style={[styles.tabItem, activeTab === 'vantages' && styles.tabItemActive]}
+          onPress={() => setActiveTab('vantages')}
+        >
+          <Text variant="label" tone={activeTab === 'vantages' ? 'sandstone' : 'muted'} uppercase>
+            Vantages ({vantages.length})
+          </Text>
+        </Pressable>
+        <Pressable
+          style={[styles.tabItem, activeTab === 'records' && styles.tabItemActive]}
+          onPress={() => setActiveTab('records')}
+        >
+          <Text variant="label" tone={activeTab === 'records' ? 'sandstone' : 'muted'} uppercase>
+            Records ({observations.length})
+          </Text>
+        </Pressable>
+        <Pressable
+          style={[styles.tabItem, activeTab === 'register' && styles.tabItemActive]}
+          onPress={() => setActiveTab('register')}
+        >
+          <Text variant="label" tone={activeTab === 'register' ? 'sandstone' : 'muted'} uppercase>
+            Practice
+          </Text>
+        </Pressable>
       </View>
 
-      <View style={styles.section}>
-        <Text variant="heading">Your record</Text>
-        {observations.length === 0 ? (
-          <EmptyState
-            title="Nothing recorded yet"
-            body="A series begins with one observation. Choose a vantage below and go and stand in it."
-          />
-        ) : (
+      {/* Tab Content 1: Vantages */}
+      {activeTab === 'vantages' ? (
+        <View style={styles.section}>
           <View style={styles.list}>
-            {observations.slice(0, 5).map((observation) => (
-              <ObservationRow
-                key={observation.id}
-                observation={observation}
+            {vantages.map((vantage) => (
+              <VantageListItem
+                key={vantage.id}
+                vantage={vantage}
+                distanceM={coordinate ? distanceMeters(coordinate, vantage.coordinate) : null}
                 onPress={() =>
                   router.push({
-                    pathname: '/(main)/sakshi/observation',
-                    params: { observationId: observation.id },
+                    pathname: '/(main)/sakshi/vantage',
+                    params: { vantageId: vantage.id },
                   })
                 }
               />
             ))}
           </View>
-        )}
-      </View>
-
-      <View style={styles.section}>
-        <Text variant="heading">Vantage points</Text>
-        <View style={styles.list}>
-          {vantages.map((vantage) => (
-            <VantageListItem
-              key={vantage.id}
-              vantage={vantage}
-              distanceM={coordinate ? distanceMeters(coordinate, vantage.coordinate) : null}
-              onPress={() =>
-                router.push({
-                  pathname: '/(main)/sakshi/vantage',
-                  params: { vantageId: vantage.id },
-                })
-              }
-            />
-          ))}
         </View>
-      </View>
+      ) : null}
+
+      {/* Tab Content 2: Your Records */}
+      {activeTab === 'records' ? (
+        <View style={styles.section}>
+          {observations.length === 0 ? (
+            <EmptyState
+              title="Nothing recorded yet"
+              body="A series begins with one observation. Choose a vantage point and stand in it."
+            />
+          ) : (
+            <View style={styles.list}>
+              {observations.map((observation) => (
+                <ObservationRow
+                  key={observation.id}
+                  observation={observation}
+                  onPress={() =>
+                    router.push({
+                      pathname: '/(main)/sakshi/observation',
+                      params: { observationId: observation.id },
+                    })
+                  }
+                />
+              ))}
+            </View>
+          )}
+        </View>
+      ) : null}
+
+      {/* Tab Content 3: Practice & Register */}
+      {activeTab === 'register' ? (
+        <View style={styles.section}>
+          <PracticeSummaryCard summary={summary} />
+          <Button
+            label="Open complete site register"
+            variant="secondary"
+            onPress={() => router.push('/(main)/sakshi/register' as any)}
+          />
+        </View>
+      ) : null}
     </Screen>
   );
 }
@@ -141,15 +205,10 @@ function ObservationRow({
             {formatTimestamp(observation.capturedAt)}
           </Text>
         </View>
-        {/*
-          The assessment, not the sync state. Someone who pressed the shutter
-          and then walked off has an unreviewed frame, and this row is the only
-          route back to finishing it — sync status can wait for the detail
-          screen.
-        */}
-        <Text variant="label" tone={assessmentTone[observation.assessment]} uppercase>
-          {assessmentLabel[observation.assessment]}
-        </Text>
+        <Chip
+          label={assessmentLabel[observation.assessment]}
+          selected={observation.assessment !== 'unreviewed'}
+        />
       </View>
     </Card>
   );
@@ -168,8 +227,54 @@ const assessmentTone: Record<ObservationAssessment, 'seeking' | 'resolved' | 'op
 };
 
 const styles = StyleSheet.create({
-  section: { paddingTop: spacing.lg, gap: spacing.md },
+  heroCard: {
+    marginTop: spacing.md,
+    padding: spacing.base,
+    borderRadius: radii.lg,
+    backgroundColor: colors.surfaceSecondary,
+    borderWidth: 1.5,
+    borderColor: colors.sandstone,
+    gap: spacing.sm,
+  },
+  heroHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  heroDistance: {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  heroTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  heroSub: {
+    fontSize: 12,
+  },
+  tabBar: {
+    flexDirection: 'row',
+    marginTop: spacing.lg,
+    marginBottom: spacing.xs,
+    backgroundColor: colors.surfaceSecondary,
+    borderRadius: radii.md,
+    padding: 3,
+    gap: 3,
+  },
+  tabItem: {
+    flex: 1,
+    paddingVertical: spacing.sm,
+    alignItems: 'center',
+    borderRadius: radii.sm,
+  },
+  tabItemActive: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  section: { paddingTop: spacing.md, gap: spacing.md },
   list: { gap: spacing.md },
   observationRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: spacing.md },
   observationText: { flexShrink: 1, gap: spacing.xxs },
 });
+

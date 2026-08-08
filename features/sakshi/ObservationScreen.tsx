@@ -5,10 +5,11 @@ import { Image, StyleSheet, View } from 'react-native';
 import { Button, Divider, MetaRow, Screen, Text } from '@/components/ui';
 import { TimeSeriesScrubber } from '@/components';
 import { EmptyState, LoadingState } from '@/components/common';
-import { ConditionSheet, type ConditionDraft } from '@/components/observation';
+import { ConditionSheet, type ConditionDraft, YoloVisionOverlay, PathologySummaryCard } from '@/components/observation';
 import { MeritAcknowledgement } from '@/components/practice';
 import { findSite, findVantage } from '@/data';
 import { database } from '@/services';
+import { runYoloScan, type YoloScanResult } from '@/services/ai/yoloEngine';
 import { usePractice } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 import { formatBearing, formatCoordinate, formatDelta, formatDistance, formatTimestamp } from '@/utils';
@@ -40,6 +41,8 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
   const [saveError, setSaveError] = useState<string | null>(null);
   const [merit, setMerit] = useState<MeritEvent | null>(null);
   const [seriesObservations, setSeriesObservations] = useState<Observation[]>([]);
+  const [yoloResult, setYoloResult] = useState<YoloScanResult | null>(null);
+  const [yoloScanning, setYoloScanning] = useState(false);
   const { recognise, summary } = usePractice();
 
   useEffect(() => {
@@ -186,12 +189,38 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
         </Text>
       </View>
 
-      <Image
-        source={{ uri: observation.photoUri }}
-        style={styles.photo}
-        resizeMode="cover"
-        accessibilityLabel={`Observation recorded ${formatTimestamp(observation.capturedAt)}`}
-      />
+      <View style={styles.photoWrap}>
+        <Image
+          source={{ uri: observation.photoUri }}
+          style={styles.photo}
+          resizeMode="cover"
+          accessibilityLabel={`Observation recorded ${formatTimestamp(observation.capturedAt)}`}
+        />
+        {yoloResult ? (
+          <YoloVisionOverlay detections={yoloResult.detections} />
+        ) : null}
+      </View>
+
+      {/* YOLO AI Analysis */}
+      {!yoloResult ? (
+        <View style={styles.aiRow}>
+          <Button
+            label={yoloScanning ? 'Scanning...' : '✨ Analyze with YOLO AI'}
+            loading={yoloScanning}
+            onPress={async () => {
+              setYoloScanning(true);
+              const result = await runYoloScan(observation.photoUri);
+              setYoloResult(result);
+              setYoloScanning(false);
+            }}
+            block
+          />
+        </View>
+      ) : (
+        <View style={styles.aiRow}>
+          <PathologySummaryCard result={yoloResult} />
+        </View>
+      )}
 
       <View style={styles.meta}>
         <MetaRow label="Recorded" value={formatTimestamp(observation.capturedAt)} />
@@ -394,4 +423,6 @@ const styles = StyleSheet.create({
   meta: { paddingVertical: spacing.lg, gap: spacing.xxs },
   accuracyNote: { paddingTop: spacing.sm },
   actions: { paddingTop: spacing.lg, gap: spacing.md },
+  photoWrap: { position: 'relative' },
+  aiRow: { paddingVertical: spacing.sm },
 });
