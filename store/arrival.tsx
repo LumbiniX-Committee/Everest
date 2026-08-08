@@ -9,7 +9,7 @@ import {
 } from 'react';
 
 import { demoPrecincts } from '@/data';
-import { arrival, geofencing, notifications } from '@/services';
+import { arrival, geofencing, integrity, notifications } from '@/services';
 import type { Precinct } from '@/types';
 
 /**
@@ -54,6 +54,10 @@ export function ArrivalProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let active = true;
+
+    // Checked before anything reads the content, so a dangling site id is
+    // reported at launch rather than discovered when an arrival does nothing.
+    integrity.assertContentIntegrity();
 
     void (async () => {
       await notifications.configure();
