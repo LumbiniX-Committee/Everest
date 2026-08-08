@@ -81,13 +81,28 @@ inherited:
    `supabase/migrations/0001_observation_sync.sql` for why update is needed at
    all.
 
-The smallest honest step is an **anonymous device identity**: a UUID generated
-on first launch, stored on device, and written onto every row. It does not
-authenticate anyone — a device id is not a person and must never be presented as
-one — but it groups a series, survives across observations, and makes
-"same contributor" answerable. Real accounts (Supabase Auth) are what let RLS
-say *"you may only update rows you wrote"*, which is the actual fix for the
-update policy above.
+**Done: an anonymous device identity.** `services/device` generates an id on
+first launch, stores it on device, and every synced row now carries it
+(migration `0004`). It answers "did the same device record this vantage before"
+and nothing else.
+
+It is worth being exact about what that did *not* buy, because a device id is
+easy to over-read:
+
+- **It is not a person.** A phone is handed to a friend; a person carries two.
+  It groups captures, it does not attribute them.
+- **It is not authentication.** It arrives as an ordinary column from a client
+  holding the publishable key, so any value can be claimed. RLS still cannot be
+  scoped to it, and a policy written as though it could would be theatre.
+- **It is not stable across a reinstall.** Clearing storage yields a new id, so
+  a break in a series may be a new device or the same one starting over. No
+  query should imply otherwise.
+
+So points 2 and 3 above stand unchanged. Real accounts (Supabase Auth) are what
+let RLS say *"you may only update rows you wrote"*, which remains the actual fix
+for the update policy — and the id is generated with `Math.random`, which is
+adequate for a grouping key and would have to be replaced the moment it carried
+any authority.
 
 ---
 
@@ -122,6 +137,37 @@ mode nobody recorded, which is the same fabrication the flag exists to prevent.
 **A null `gate_mode` means unknown, and its error columns should be read with
 the same caution as `manual`** — not as measurements.
 
+### The same mistake, from the other end
+
+The remote schema declared `position_error_m` and `bearing_error_deg` **NOT
+NULL**, because that is what `sync.ts` looked like it sent. It was not.
+`toObservation()` reports both as null exactly when `gate_mode` is `manual` —
+null being how the app says *unmeasured*, as against zero, which would say
+*perfectly measured*.
+
+So every by-eye capture was posted into two NOT NULL columns and rejected
+`23502`, permanently. And the loop re-threw on the first failure, so that one
+record aborted the pass before every observation and condition report behind
+it. **One unsyncable row stranded the entire queue, on every attempt.**
+
+Migration `0003` drops both constraints, and `sync.ts` now isolates a failing
+record instead of re-throwing — a poisoned row costs one row. Dropping the
+constraints is not a loosening: it restores the meaning the columns already had
+on the device. The alternative was to keep rejecting the observation or write a
+zero, and the second is worse than losing a record, because it is a false one.
+
+In its place is a constraint that enforces the honesty invariant rather than
+fighting it:
+
+```sql
+check (gate_mode is distinct from 'aligned'
+       or (position_error_m is not null and bearing_error_deg is not null))
+```
+
+A row claiming the tolerance gate passed must carry the measurements that claim
+rests on. `manual` and null gate modes assert nothing, so they constrain
+nothing.
+
 ---
 
 ## 5. Target schema
@@ -140,15 +186,24 @@ which makes retry idempotent.
 
 ### Next, in order of value
 
-1. ~~**`0002` — the honesty columns.**~~ Done: migration `0002` plus the matching
-   change to `sync.ts`. Cheapest fix for the most serious problem.
-2. **`device_id` on both record tables.** Groups a series without pretending to
-   identify a person.
-3. **Sites and vantages as reference tables.** Lets a coordinate be corrected
+1. ~~**`0002` — the honesty columns.**~~ Done, with the matching `sync.ts`
+   change. Cheapest fix for the most serious problem.
+2. ~~**`0003` — by-eye captures can sync at all.**~~ Done. Was silently losing
+   every manually framed observation, and everything queued behind it.
+3. ~~**`0004` — `device_id` on both record tables.**~~ Done. Groups a series
+   without pretending to identify a person.
+4. ~~**`0005` — quest evidence syncs.**~~ Done. Closes the gap named in §7.
+5. **Sites and vantages as reference tables.** Lets a coordinate be corrected
    without an app release, and gives observations a real foreign key instead of
-   a free-text `site_id` that nothing validates.
-4. **Auth, then author-scoped RLS.** Replaces the blanket `anon` update policy.
-5. **Personal-data sync**, only once 4 exists.
+   a free-text `site_id` that nothing validates. Needs the app to read
+   remote-with-bundle-fallback, so it is a change to the offline guarantee and
+   not only to the schema.
+6. **Auth, then author-scoped RLS.** Replaces the blanket `anon` update policy,
+   and is the only thing that makes personal data survive a reinstall. Wants a
+   product decision first — anonymous sign-in gets an `auth.uid()` with no UI at
+   all, real accounts need a sign-in people will meet before they have any
+   reason to trust the app.
+7. **Personal-data sync**, only once 6 exists.
 
 ### Deliberately not planned
 
@@ -192,13 +247,20 @@ index in the array is the schema version, and an existing entry is never edited.
 |---|---|---|
 | `observations` | record | yes (all fifteen columns, since `0002` — §4) |
 | `condition_reports` | record | yes |
-| `quest_submissions` | record¹ | **no** |
+| `quest_submissions` | record | yes, since `0005` |
 | `merit_events` | personal | no, by design |
 | `site_visits` | personal | no |
 | `quest_progress` | personal | no |
 | `quest_completions` | personal | no |
 | `quests` | reference | seeded locally |
 
-¹ Quest submissions contain photographs and counts taken on site. They are
-evidence, and belong with the record rather than with personal state — they are
-listed here as record and *not syncing* because that is a gap, not a decision.
+Quest submissions contain photographs and counts taken on site. They are
+evidence and belong with the record rather than with personal state, which is
+why they now sync: what someone actually saw cannot be retaken, and it used to
+end its life on the phone.
+
+Their remote key is `(device_id, quest_id, task_id)`, not the device's own
+`(quest_id, task_id)`. That pair is unique on one phone and not on a shared
+table — two devices working the same quest produce the same key, and an upsert
+would have let the second silently overwrite the first. A quiet deletion, in a
+database whose first principle is that nothing is deleted.
