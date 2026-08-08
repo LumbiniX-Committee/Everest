@@ -10,7 +10,7 @@
     },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "dark",
+    "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "org.lumbinix.sakshi"
@@ -45,7 +45,7 @@
           "image": "./assets/splash-icon.png",
           "imageWidth": 180,
           "resizeMode": "contain",
-          "backgroundColor": "#0E1512"
+          "backgroundColor": "#F5F3EE"
         }
       ],
       [
@@ -58,7 +58,7 @@
         "expo-notifications",
         {
           "icon": "./assets/android-icon-monochrome.png",
-          "color": "#B79B72"
+          "color": "#8E7657"
         }
       ],
       [

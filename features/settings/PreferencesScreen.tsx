@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { StyleSheet } from 'react-native';
 
 import { LoadingState, ScreenHeader } from '@/components/common';
 import { Button, Screen, Text } from '@/components/ui';
 import { usePreferences } from '@/store';
+import { spacing } from '@/theme';
 import {
   ALIGNMENT_TOLERANCE_OPTIONS,
   DISTANCE_UNIT_OPTIONS,
@@ -100,7 +102,7 @@ export function PreferencesScreen() {
 
       {confirmingReset ? (
         <SettingsSection title="Reset">
-          <Text variant="body" tone="secondary" style={{ padding: 16 }}>
+          <Text variant="body" tone="secondary" style={styles.resetBody}>
             Restore all seven preferences to their defaults? Your observations, quests and
             condition reports are not affected.
           </Text>
@@ -116,3 +118,7 @@ export function PreferencesScreen() {
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  resetBody: { padding: spacing.base },
+});

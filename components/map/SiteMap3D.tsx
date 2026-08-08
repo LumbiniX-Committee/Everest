@@ -108,7 +108,9 @@ export function SiteMap3D({ height = 320, onSelectSite }: SiteMap3DProps) {
               // Low: an enclosure to read across, not a wall to hide behind.
               'fill-extrusion-height': 6,
               'fill-extrusion-base': 0,
-              'fill-extrusion-opacity': 0.35,
+              // 0.5, not 0.35: on the dark ground 0.35 measured 2.20:1 and the
+              // enclosure read as a smudge rather than a wall.
+              'fill-extrusion-opacity': 0.5,
             }}
           />
         </GeoJSONSource>
@@ -128,7 +130,11 @@ export function SiteMap3D({ height = 320, onSelectSite }: SiteMap3DProps) {
               'circle-radius': 6,
               'circle-color': colors.earth,
               'circle-stroke-width': 2,
-              'circle-stroke-color': colors.background,
+              // The ring is the ground colour, so the dot is separated from
+              // whatever terrain sits under it. On the light palette a sand
+              // ring measured 2.19:1 against the brick dot and stopped
+              // separating anything; white gives 5.79:1.
+              'circle-stroke-color': colors.surface,
             }}
           />
           <Layer

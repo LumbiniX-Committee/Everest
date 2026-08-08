@@ -1,7 +1,7 @@
 import { colors } from './colors';
 
 /**
- * The map, in Sākṣī's palette.
+ * The map, in Sākṣī's palette — the spec's dark instrument.
  *
  * Built here rather than fetched as a hosted style so the map obeys the same
  * rule as every other surface: no component names a hex value, and the ground
@@ -44,22 +44,24 @@ export const sakshiMapStyle = {
       'source-layer': 'landcover',
       filter: ['==', ['get', 'class'], 'wood'],
       // Lumbini's sacred garden is heavily planted; the tree cover is most of
-      // what distinguishes the precinct from the plain around it.
-      paint: { 'fill-color': colors.resolved, 'fill-opacity': 0.18 },
+      // what distinguishes the precinct from the plain around it. Full opacity
+      // on a dedicated token — at 0.18 over this ground it came out at 1.19:1
+      // and simply was not there.
+      paint: { 'fill-color': colors.mapVegetation },
     },
     {
       id: 'park',
       type: 'fill' as const,
       source: 'openmaptiles',
       'source-layer': 'park',
-      paint: { 'fill-color': colors.resolved, 'fill-opacity': 0.12 },
+      paint: { 'fill-color': colors.mapVegetation, 'fill-opacity': 0.7 },
     },
     {
       id: 'water',
       type: 'fill' as const,
       source: 'openmaptiles',
       'source-layer': 'water',
-      paint: { 'fill-color': colors.alignmentLocked, 'fill-opacity': 0.28 },
+      paint: { 'fill-color': colors.mapWater },
     },
     {
       id: 'waterway',
@@ -68,14 +70,14 @@ export const sakshiMapStyle = {
       'source-layer': 'waterway',
       // The Kenzo Tange master plan is organised around a central canal — it is
       // the strongest line in the whole site and worth drawing explicitly.
-      paint: { 'line-color': colors.alignmentLocked, 'line-opacity': 0.4, 'line-width': 2 },
+      paint: { 'line-color': colors.mapWater, 'line-width': 2 },
     },
     {
       id: 'landuse',
       type: 'fill' as const,
       source: 'openmaptiles',
       'source-layer': 'landuse',
-      paint: { 'fill-color': colors.surfaceSecondary, 'fill-opacity': 0.6 },
+      paint: { 'fill-color': colors.mapLanduse },
     },
     {
       id: 'path',
@@ -84,9 +86,8 @@ export const sakshiMapStyle = {
       'source-layer': 'transportation',
       filter: ['==', ['get', 'class'], 'path'],
       paint: {
-        'line-color': colors.sandstone,
+        'line-color': colors.mapPath,
         'line-width': ['interpolate', ['linear'], ['zoom'], 14, 0.6, 18, 3],
-        'line-opacity': 0.9,
       },
     },
     {
@@ -96,7 +97,7 @@ export const sakshiMapStyle = {
       'source-layer': 'transportation',
       filter: ['in', ['get', 'class'], ['literal', ['minor', 'service', 'track']]],
       paint: {
-        'line-color': colors.surface,
+        'line-color': colors.mapRoad,
         'line-width': ['interpolate', ['linear'], ['zoom'], 13, 1, 18, 8],
       },
     },
@@ -107,7 +108,7 @@ export const sakshiMapStyle = {
       'source-layer': 'transportation',
       filter: ['in', ['get', 'class'], ['literal', ['primary', 'secondary', 'tertiary', 'trunk']]],
       paint: {
-        'line-color': colors.surface,
+        'line-color': colors.mapRoadMajor,
         'line-width': ['interpolate', ['linear'], ['zoom'], 11, 1.5, 18, 14],
       },
     },
