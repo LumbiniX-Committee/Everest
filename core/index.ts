@@ -46,3 +46,7 @@ export * from './copy/failure-lines.ts';
 
 // --- The coordinate seam: {latitude,longitude} <-> {lat,lon} -----------------
 export * from './adapters/coords.ts';
+
+// --- Dhamma Engine: Bilara corpus, RRF retrieval, Grounding Gate, Reflection --
+export * from './dhamma/index';
+
