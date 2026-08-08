@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Image, ImageSourcePropType, StyleSheet, View } from 'react-native';
-import GestureHandler, { PanGestureHandler, PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
+import { PanGestureHandler, PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
 
 import { Text } from '@/components/ui';
 import { colors, radii, spacing } from '@/theme';
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(14, 21, 18, 0.85)',
     borderRadius: radii.md,
     padding: spacing.base,
-    gap: spacing.xs,
+    gap: spacing.sm,
     borderWidth: 1,
     borderColor: colors.border,
   },
@@ -116,23 +116,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     overflow: 'visible',
     position: 'relative',
-    marginVertical: spacing.xs,
+    marginVertical: spacing.sm,
   },
   fill: {
     height: '100%',
-    backgroundColor: colors.primarySandFaint,
+    backgroundColor: colors.sandstoneDeep,
     borderRadius: radii.sm,
   },
   thumb: {
     position: 'absolute',
     width: 24,
     height: 36,
-    backgroundColor: colors.primarySand,
-    borderRadius: radii.xs,
+    backgroundColor: colors.sandstone,
+    borderRadius: radii.sm,
     borderWidth: 2,
     borderColor: colors.textPrimary,
   },
   metaLabel: {
-    marginTop: spacing.xs,
+    marginTop: spacing.sm,
   },
 });

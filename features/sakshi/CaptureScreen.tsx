@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { useRouter } from 'expo-router';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { CameraView } from 'expo-camera';
 
 import { Button, Screen, Text } from '@/components/ui';
@@ -120,9 +120,9 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
         <CameraView ref={cameraRef} style={StyleSheet.absoluteFill} facing="back" />
 
         {/* Phase 1 Dissolve Plate Overlay */}
-        {showDissolve && vantage.referenceImageUri ? (
+        {showDissolve && (vantage.referenceUrl || vantage.referenceLocal) ? (
           <Image
-            source={{ uri: vantage.referenceImageUri }}
+            source={{ uri: vantage.referenceUrl || vantage.referenceLocal }}
             style={[StyleSheet.absoluteFill, { opacity: dissolveOpacity }]}
             resizeMode="cover"
           />

@@ -54,6 +54,9 @@ export type Vantage = {
   note?: string;
   /** Timestamp of the earliest observation in the series, if any. */
   seriesBegan?: string;
+  /** Historical/reference image URI for dissolve slider and ghost overlay. */
+  referenceUrl?: string;
+  referenceLocal?: string;
 };
 
 /** A single recorded witness event at a vantage. */

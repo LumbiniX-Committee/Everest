@@ -3,54 +3,18 @@ import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native
 
 import { Button, Chip, Divider, Text } from '@/components/ui';
 import { colors, radii, spacing } from '@/theme';
-import type { ConditionCategory, ConditionReportInput } from '@/types/condition';
+import type { ConditionCategory, ConditionReport, ConditionSeverity } from '@/types/condition';
+import { CONDITION_CATEGORIES, CONDITION_CATEGORY_LABELS, CONDITION_SUBTYPES } from '@/types/condition';
 
-export const CONDITION_TAXONOMY: {
+export type ConditionReportInput = {
+  siteId: string;
+  vantageId: string;
+  observationId: string;
   category: ConditionCategory;
-  label: string;
-  subtypes: string[];
-}[] = [
-  {
-    category: 'biological_growth',
-    label: 'Biological growth',
-    subtypes: ['moss', 'lichen', 'algae', 'root intrusion', 'vegetation in masonry'],
-  },
-  {
-    category: 'structural',
-    label: 'Structural',
-    subtypes: ['cracking', 'spalling', 'displacement', 'subsidence', 'leaning'],
-  },
-  {
-    category: 'water',
-    label: 'Water',
-    subtypes: ['ingress', 'staining', 'pooling', 'drainage failure', 'flood damage'],
-  },
-  {
-    category: 'surface',
-    label: 'Surface',
-    subtypes: ['erosion', 'efflorescence', 'salt crystallisation', 'delamination'],
-  },
-  {
-    category: 'human_impact',
-    label: 'Human impact',
-    subtypes: ['graffiti', 'vandalism', 'touch-wear', 'unauthorised offerings', 'litter'],
-  },
-  {
-    category: 'encroachment',
-    label: 'Encroachment',
-    subtypes: ['unauthorised construction', 'vehicle intrusion', 'boundary violation'],
-  },
-  {
-    category: 'environmental',
-    label: 'Environmental',
-    subtypes: ['deposition', 'tree loss', 'habitat disturbance'],
-  },
-  {
-    category: 'management',
-    label: 'Management',
-    subtypes: ['signage failure', 'barrier damage', 'lighting', 'waste handling'],
-  },
-];
+  subtype: string;
+  severity: ConditionSeverity;
+  note?: string;
+};
 
 export type ConditionReportFormProps = {
   siteId: string;
@@ -73,12 +37,11 @@ export function ConditionReportForm({
   onSkip,
 }: ConditionReportFormProps) {
   const [selectedCategory, setSelectedCategory] = useState<ConditionCategory>('structural');
-  const [selectedSubtype, setSelectedSubtype] = useState<string>('cracking');
-  const [severity, setSeverity] = useState<number>(2);
-  const [reporterConf, setReporterConf] = useState<number>(3);
+  const [selectedSubtype, setSelectedSubtype] = useState<string>('New crack');
+  const [severity, setSeverity] = useState<ConditionSeverity>('concerning');
   const [note, setNote] = useState<string>('');
 
-  const currentTaxonomy = CONDITION_TAXONOMY.find((t) => t.category === selectedCategory);
+  const currentSubtypes = CONDITION_SUBTYPES[selectedCategory] ?? [];
 
   const handleSubmit = () => {
     onSubmitReport({
@@ -88,7 +51,6 @@ export function ConditionReportForm({
       category: selectedCategory,
       subtype: selectedSubtype,
       severity,
-      reporterConfidence: reporterConf,
       note: note.trim() || undefined,
     });
   };
@@ -122,19 +84,22 @@ export function ConditionReportForm({
         Category Taxonomy (Select One)
       </Text>
       <View style={styles.categoryGrid}>
-        {CONDITION_TAXONOMY.map((item) => {
-          const active = item.category === selectedCategory;
+        {CONDITION_CATEGORIES.map((cat) => {
+          const active = cat === selectedCategory;
           return (
             <Pressable
-              key={item.category}
+              key={cat}
               onPress={() => {
-                setSelectedCategory(item.category);
-                setSelectedSubtype(item.subtypes[0] ?? '');
+                setSelectedCategory(cat);
+                const sub = CONDITION_SUBTYPES[cat];
+                if (sub && sub.length > 0) {
+                  setSelectedSubtype(sub[0]);
+                }
               }}
               style={[styles.categoryTile, active && styles.categoryTileActive]}
             >
               <Text variant="body" tone={active ? 'primary' : 'secondary'}>
-                {item.label}
+                {CONDITION_CATEGORY_LABELS[cat]}
               </Text>
             </Pressable>
           );
@@ -142,13 +107,13 @@ export function ConditionReportForm({
       </View>
 
       {/* Subtype Selection Chips */}
-      {currentTaxonomy ? (
+      {currentSubtypes.length > 0 ? (
         <View style={styles.section}>
           <Text variant="label" tone="muted" uppercase>
             Subtype
           </Text>
           <View style={styles.chipRow}>
-            {currentTaxonomy.subtypes.map((st) => (
+            {currentSubtypes.map((st) => (
               <Chip
                 key={st}
                 label={st}
@@ -160,40 +125,20 @@ export function ConditionReportForm({
         </View>
       ) : null}
 
-      {/* Severity Selector 1-5 */}
+      {/* Severity Selector */}
       <View style={styles.section}>
         <Text variant="label" tone="muted" uppercase>
-          Severity Level (1 = Minor, 5 = Critical)
+          Severity Level
         </Text>
         <View style={styles.ratingRow}>
-          {[1, 2, 3, 4, 5].map((lvl) => (
+          {(['noted', 'concerning', 'urgent'] as ConditionSeverity[]).map((lvl) => (
             <Pressable
               key={lvl}
               onPress={() => setSeverity(lvl)}
               style={[styles.ratingPill, severity === lvl && styles.ratingPillActive]}
             >
               <Text variant="body" tone={severity === lvl ? 'primary' : 'secondary'}>
-                {lvl}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
-      </View>
-
-      {/* Reporter Confidence 1-3 */}
-      <View style={styles.section}>
-        <Text variant="label" tone="muted" uppercase>
-          Observer Confidence (1 = Low, 3 = High)
-        </Text>
-        <View style={styles.ratingRow}>
-          {[1, 2, 3].map((lvl) => (
-            <Pressable
-              key={lvl}
-              onPress={() => setReporterConf(lvl)}
-              style={[styles.ratingPill, reporterConf === lvl && styles.ratingPillActive]}
-            >
-              <Text variant="body" tone={reporterConf === lvl ? 'primary' : 'secondary'}>
-                {lvl === 1 ? 'Low' : lvl === 2 ? 'Medium' : 'High'}
+                {lvl === 'noted' ? 'Noted' : lvl === 'concerning' ? 'Concerning' : 'Urgent'}
               </Text>
             </Pressable>
           ))}
@@ -248,8 +193,8 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   categoryTileActive: {
-    borderColor: colors.primarySand,
-    backgroundColor: colors.surfacePressed,
+    borderColor: colors.sandstone,
+    backgroundColor: colors.surface,
   },
   section: { gap: spacing.xs },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs },
@@ -264,8 +209,8 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   ratingPillActive: {
-    borderColor: colors.primarySand,
-    backgroundColor: colors.surfacePressed,
+    borderColor: colors.sandstone,
+    backgroundColor: colors.surface,
   },
   textInput: {
     backgroundColor: colors.surfaceSecondary,
