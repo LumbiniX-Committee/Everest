@@ -8,7 +8,7 @@
     "android": "expo start",
     "ios": "expo start",
     "dev-client": "expo start --dev-client",
-    "build:development": "npx eas build --profile development --platform android",
+    "build:development": "npx eas-cli@latest build --profile development --platform android",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
     "lint": "expo lint",
