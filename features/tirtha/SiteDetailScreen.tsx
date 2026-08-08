@@ -1,16 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import { Button, ConditionBadge, Divider, MetaRow, Screen, SourceBadge, Text } from '@/components/ui';
 import { EmptyState } from '@/components/common';
 import { VantageListItem } from '@/components/site';
-import { SourceCard } from '@/components/source';
+import { SourceCard, SourceDetailSheet } from '@/components/source';
 import { findSite, historicalImagesForSite, resolveSources, vantagesForSite } from '@/data';
 import { useCurrentPosition } from '@/hooks';
 import { database } from '@/services';
 import { SITE_VISIT_RADIUS_M } from '@/constants';
 import { spacing } from '@/theme';
+import type { Source } from '@/types';
 import { distanceMeters, formatCoordinate, formatDistance } from '@/utils';
 
 /**
@@ -24,6 +25,7 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
   const router = useRouter();
   const site = findSite(siteId);
   const { coordinate } = useCurrentPosition();
+  const [openSource, setOpenSource] = useState<Source | null>(null);
 
   /**
    * Marks the register when the reader is actually standing here.
@@ -131,7 +133,11 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
               other — which is the entire reason the registry is shared.
             */}
             {sources.map((source) => (
-              <SourceCard key={source.id} source={source} />
+              <SourceCard
+                key={source.id}
+                source={source}
+                onPress={() => setOpenSource(source)}
+              />
             ))}
           </View>
         </>
@@ -164,6 +170,8 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
           </View>
         )}
       </View>
+
+      <SourceDetailSheet source={openSource} onClose={() => setOpenSource(null)} />
     </Screen>
   );
 }
