@@ -60,7 +60,7 @@ export function buildMapHtml({
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 ${avatar ? '<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>' : ''}
 <style>
-  html,body,#map{margin:0;padding:0;height:100%;width:100%;background:${colors.background}}
+  html,body,#map{margin:0;padding:0;height:100%;width:100%;background:${colors.mapBase}}
   .maplibregl-ctrl-attrib{font-size:10px}
 </style>
 </head>
@@ -113,7 +113,7 @@ ${interactive ? INTERACTIVE_CONTROLS : ''}
       map.addLayer({
         id:'monument-massing', type:'fill-extrusion', source:'monuments',
         paint:{
-          'fill-extrusion-color': ${JSON.stringify(colors.surface)},
+          'fill-extrusion-color': ${JSON.stringify(colors.mapBuildingRoof)},
           'fill-extrusion-height': ['get','height'],
           'fill-extrusion-base': 0,
           'fill-extrusion-opacity': 0.95,

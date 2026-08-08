@@ -135,7 +135,7 @@ export function SiteMap3D({ height = 320, onSelectSite }: SiteMap3DProps) {
             id="monument-massing"
             type="fill-extrusion"
             paint={{
-              'fill-extrusion-color': colors.surface,
+              'fill-extrusion-color': colors.mapBuildingRoof,
               'fill-extrusion-height': ['get', 'height'],
               'fill-extrusion-base': 0,
               'fill-extrusion-opacity': 0.95,
