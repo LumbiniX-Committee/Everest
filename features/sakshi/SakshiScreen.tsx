@@ -70,7 +70,7 @@ export function SakshiScreen() {
         <Button
           label="Open your register"
           variant="quiet"
-          onPress={() => router.push('/(main)/sakshi/register')}
+          onPress={() => router.push('/(main)/sakshi/register' as any)}
         />
       </View>
 
