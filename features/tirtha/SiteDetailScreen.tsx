@@ -1,11 +1,11 @@
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
-import { ConditionBadge, Divider, MetaRow, Screen, SourceBadge, Text } from '@/components/ui';
+import { Button, ConditionBadge, Divider, MetaRow, Screen, SourceBadge, Text } from '@/components/ui';
 import { EmptyState } from '@/components/common';
 import { VantageListItem } from '@/components/site';
 import { SourceCard } from '@/components/source';
-import { findSite, resolveSources, vantagesForSite } from '@/data';
+import { findSite, historicalImagesForSite, resolveSources, vantagesForSite } from '@/data';
 import { useCurrentPosition } from '@/hooks';
 import { spacing } from '@/theme';
 import { distanceMeters, formatCoordinate, formatDistance } from '@/utils';
@@ -37,6 +37,7 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
 
   const vantages = vantagesForSite(site.id);
   const sources = resolveSources(site.sourceIds ?? []);
+  const historical = historicalImagesForSite(site.id);
   const distanceM = coordinate ? distanceMeters(coordinate, site.coordinate) : null;
 
   return (
@@ -71,6 +72,31 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
         ) : null}
         {distanceM != null ? <MetaRow label="Distance" value={formatDistance(distanceM)} /> : null}
       </View>
+
+      {historical.length > 0 ? (
+        <>
+          <Divider />
+          <View style={styles.sourceBlock}>
+            <Text variant="heading">Then / Now</Text>
+            <Text variant="body" tone="secondary">
+              {historical.length === 1
+                ? 'One historical image has been matched to this site.'
+                : `${historical.length} historical images have been matched to this site.`}{' '}
+              Compare them against the view today.
+            </Text>
+            <Button
+              label="Compare across time"
+              variant="secondary"
+              onPress={() =>
+                router.push({
+                  pathname: '/(main)/tirtha/then-now/[siteId]',
+                  params: { siteId: site.id },
+                })
+              }
+            />
+          </View>
+        </>
+      ) : null}
 
       {sources.length > 0 ? (
         <>

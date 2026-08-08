@@ -97,8 +97,16 @@ export type HistoricalImage = {
   siteId: string;
   /** The vantage this was shot from, where that is known. */
   vantageId?: string;
-  /** Bundled asset (`require(...)`) or a remote/local URI. */
-  image: number | string;
+  /**
+   * Bundled asset (`require(...)`) or a remote/local URI.
+   *
+   * Optional so the comparison can be built and reviewed before the archive
+   * imagery is cleared. When absent the UI draws a labelled placeholder that
+   * says so — it never dresses a stand-in up as a photograph, because a
+   * comparison the reader cannot trust is worse than one that is honestly
+   * incomplete.
+   */
+  image?: number | string;
   /** Free-form: "1899", "c. 1930", "March 1975". Displayed, not parsed. */
   date: string;
   /** ISO 8601 where the exact date is known, for ordering the series. */
