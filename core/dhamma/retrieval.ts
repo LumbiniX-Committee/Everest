@@ -214,9 +214,9 @@ export function hybridRetrieve(query: string, topK = 5): RetrievalResult[] {
 
   // Cross-language: translate Nepali to English for retrieval
   const effectiveQuery = isNepaliQuery(query) ? translateNepali(query) : query;
-  const tokens = tokenize(effectiveQuery);
+  const searchTerms = tokenize(effectiveQuery);
 
-  if (tokens.length === 0) {
+  if (searchTerms.length === 0) {
     return [];
   }
 
@@ -227,7 +227,7 @@ export function hybridRetrieve(query: string, topK = 5): RetrievalResult[] {
 
   // 1. BM25 score & rank
   const bm25Scored = chunks
-    .map((chunk) => ({ chunk, score: scoreBM25(tokens, chunk) }))
+    .map((chunk) => ({ chunk, score: scoreBM25(searchTerms, chunk) }))
     .sort((a, b) => b.score - a.score);
 
   const bm25Ranks = new Map<string, number>();
@@ -235,7 +235,7 @@ export function hybridRetrieve(query: string, topK = 5): RetrievalResult[] {
 
   // 2. Vector score & rank
   const vectorScored = chunks
-    .map((chunk) => ({ chunk, score: scoreVectorSimilarity(tokens, chunk) }))
+    .map((chunk) => ({ chunk, score: scoreVectorSimilarity(searchTerms, chunk) }))
     .sort((a, b) => b.score - a.score);
 
   const vectorRanks = new Map<string, number>();
