@@ -2,9 +2,11 @@ import type { ReactNode } from 'react';
 
 import { AppStateProvider } from './app-state';
 import { PermissionsProvider } from './permissions';
+import { PracticeProvider } from './practice';
 
 export { AppStateProvider, useAppState } from './app-state';
 export { PermissionsProvider, usePermissions, usePermission } from './permissions';
+export { PracticeProvider, usePractice } from './practice';
 
 /**
  * Single mounting point for app-wide state, so the root layout composes one
@@ -13,7 +15,9 @@ export { PermissionsProvider, usePermissions, usePermission } from './permission
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <AppStateProvider>
-      <PermissionsProvider>{children}</PermissionsProvider>
+      <PermissionsProvider>
+        <PracticeProvider>{children}</PracticeProvider>
+      </PermissionsProvider>
     </AppStateProvider>
   );
 }

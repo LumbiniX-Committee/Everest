@@ -2,15 +2,17 @@ import { useCallback, useState } from 'react';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
-import { Card, Screen, Text } from '@/components/ui';
+import { Button, Card, Screen, Text } from '@/components/ui';
 import { EmptyState, ScreenHeader } from '@/components/common';
 import { VantageListItem } from '@/components/site';
+import { PracticeSummaryCard } from '@/components/practice';
 import { demoVantages, findSite } from '@/data';
 import { useCurrentPosition } from '@/hooks';
 import { database } from '@/services';
+import { usePractice } from '@/store';
 import { spacing } from '@/theme';
 import { distanceMeters, formatTimestamp } from '@/utils';
-import type { Observation } from '@/types';
+import type { Observation, ObservationAssessment } from '@/types';
 
 /**
  * Sākṣī — the witnessing surface.
@@ -23,6 +25,7 @@ export function SakshiScreen() {
   const router = useRouter();
   const { coordinate } = useCurrentPosition({ watch: true });
   const [observations, setObservations] = useState<Observation[]>([]);
+  const { summary, refresh: refreshPractice } = usePractice();
 
   // Re-read on focus: an observation may have been recorded since we last looked.
   useFocusEffect(
@@ -37,10 +40,14 @@ export function SakshiScreen() {
           // A read failure leaves the previous list standing rather than
           // blanking a record the user knows they made.
         });
+      // Re-read the summary too: the day may have rolled over while the app
+      // sat in the background, and a stale "day complete" would tell someone
+      // they were finished before they had begun.
+      void refreshPractice();
       return () => {
         active = false;
       };
-    }, []),
+    }, [refreshPractice]),
   );
 
   const vantages = coordinate
@@ -57,6 +64,15 @@ export function SakshiScreen() {
         title="Witness"
         subtitle="Return to a fixed viewpoint, align, and record what is there today."
       />
+
+      <View style={styles.section}>
+        <PracticeSummaryCard summary={summary} />
+        <Button
+          label="Open your register"
+          variant="quiet"
+          onPress={() => router.push('/(main)/sakshi/register')}
+        />
+      </View>
 
       <View style={styles.section}>
         <Text variant="heading">Your record</Text>
@@ -123,13 +139,31 @@ function ObservationRow({
             {formatTimestamp(observation.capturedAt)}
           </Text>
         </View>
-        <Text variant="label" tone={observation.synced ? 'resolved' : 'seeking'} uppercase>
-          {observation.synced ? 'Synced' : 'On device'}
+        {/*
+          The assessment, not the sync state. Someone who pressed the shutter
+          and then walked off has an unreviewed frame, and this row is the only
+          route back to finishing it — sync status can wait for the detail
+          screen.
+        */}
+        <Text variant="label" tone={assessmentTone[observation.assessment]} uppercase>
+          {assessmentLabel[observation.assessment]}
         </Text>
       </View>
     </Card>
   );
 }
+
+const assessmentLabel: Record<ObservationAssessment, string> = {
+  unreviewed: 'Needs review',
+  'no-change': 'No change',
+  reported: 'Reported',
+};
+
+const assessmentTone: Record<ObservationAssessment, 'seeking' | 'resolved' | 'open'> = {
+  unreviewed: 'seeking',
+  'no-change': 'resolved',
+  reported: 'open',
+};
 
 const styles = StyleSheet.create({
   section: { paddingTop: spacing.lg, gap: spacing.md },
