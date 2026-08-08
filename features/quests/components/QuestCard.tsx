@@ -69,7 +69,11 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.xs },
   badges: { flexDirection: 'row', gap: spacing.xs },
   statusTag: { paddingHorizontal: spacing.sm, paddingVertical: spacing.xxs, borderRadius: 12 },
-  statusCompleted: { backgroundColor: '#EAF2EC' },
+  statusCompleted: {
+    backgroundColor: colors.surfaceSecondary,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.resolved,
+  },
   statusActive: { backgroundColor: colors.surfaceSecondary },
   title: { marginTop: spacing.xs },
   subtitle: { marginTop: spacing.xxs },
