@@ -1,7 +1,12 @@
 import * as SQLite from 'expo-sqlite';
 
 import { DATABASE_NAME } from '@/constants';
-import type { Observation } from '@/types';
+import type {
+  ConditionReport,
+  MeritEvent,
+  Observation,
+  ObservationAssessment,
+} from '@/types';
 
 /**
  * Local observation store.
@@ -37,6 +42,64 @@ const migrations: string[] = [
      ON observations (vantage_id, captured_at DESC);
    CREATE INDEX IF NOT EXISTS idx_observations_unsynced
      ON observations (synced) WHERE synced = 0;`,
+
+  // Condition reporting. The assessment column defaults to 'unreviewed' so
+  // observations recorded before this migration keep a truthful state — they
+  // were never reviewed, and backfilling them as 'no-change' would invent a
+  // finding nobody made.
+  `ALTER TABLE observations
+     ADD COLUMN assessment TEXT NOT NULL DEFAULT 'unreviewed';
+
+   CREATE TABLE IF NOT EXISTS condition_reports (
+     id TEXT PRIMARY KEY NOT NULL,
+     observation_id TEXT NOT NULL,
+     site_id TEXT NOT NULL,
+     category TEXT NOT NULL,
+     subtype TEXT NOT NULL,
+     severity TEXT NOT NULL,
+     note TEXT,
+     recorded_at TEXT NOT NULL,
+     synced INTEGER NOT NULL DEFAULT 0,
+     FOREIGN KEY (observation_id) REFERENCES observations (id) ON DELETE CASCADE
+   );
+   CREATE INDEX IF NOT EXISTS idx_reports_observation
+     ON condition_reports (observation_id);
+   CREATE INDEX IF NOT EXISTS idx_reports_site
+     ON condition_reports (site_id, recorded_at DESC);
+   CREATE INDEX IF NOT EXISTS idx_reports_unsynced
+     ON condition_reports (synced) WHERE synced = 0;`,
+
+  // Puṇya. Note what is absent: no score, no weight, no running total column.
+  // A merit event records that an act of attention happened, and the only
+  // aggregate anyone computes from it is a count.
+  `CREATE TABLE IF NOT EXISTS merit_events (
+     id TEXT PRIMARY KEY NOT NULL,
+     kind TEXT NOT NULL,
+     occurred_at TEXT NOT NULL,
+     site_id TEXT,
+     observation_id TEXT,
+     acknowledgement TEXT NOT NULL
+   );
+   CREATE INDEX IF NOT EXISTS idx_merit_occurred
+     ON merit_events (occurred_at DESC);
+   -- One recognition per observation. The uniqueness is enforced here rather
+   -- than in the caller so a retried write cannot double-count a single act.
+   CREATE UNIQUE INDEX IF NOT EXISTS idx_merit_observation
+     ON merit_events (observation_id) WHERE observation_id IS NOT NULL;`,
+
+  // Site visits, for the Chaityāvalī register.
+  //
+  // A visit is recorded only when the device was actually near the site, so
+  // "visited" means stood there — not "tapped on". Without this table the
+  // register could only distinguish witnessed from unwitnessed, and marking a
+  // site visited because someone read about it on a bus would be a small lie
+  // in a product whose whole claim is first-hand evidence.
+  `CREATE TABLE IF NOT EXISTS site_visits (
+     site_id TEXT PRIMARY KEY NOT NULL,
+     first_visited_at TEXT NOT NULL,
+     last_visited_at TEXT NOT NULL,
+     visit_count INTEGER NOT NULL DEFAULT 1
+   );`,
 ];
 
 async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
@@ -56,6 +119,10 @@ export function getDatabase(): Promise<SQLite.SQLiteDatabase> {
     dbPromise = (async () => {
       const db = await SQLite.openDatabaseAsync(DATABASE_NAME);
       await db.execAsync('PRAGMA journal_mode = WAL');
+      // Off by default in sqlite, per connection. Without it the ON DELETE
+      // CASCADE on condition_reports is decorative and deleting an observation
+      // would strand its report pointing at a row that no longer exists.
+      await db.execAsync('PRAGMA foreign_keys = ON');
       await migrate(db);
       return db;
     })().catch((error) => {
@@ -80,6 +147,7 @@ type ObservationRow = {
   position_error_m: number;
   bearing_error_deg: number;
   note: string | null;
+  assessment: string;
   synced: number;
 };
 
@@ -96,8 +164,16 @@ function toObservation(row: ObservationRow): Observation {
     positionErrorM: row.position_error_m,
     bearingErrorDeg: row.bearing_error_deg,
     note: row.note ?? undefined,
+    // Widened from TEXT. An unrecognised value means a newer build wrote a
+    // state this one does not know; treating it as unreviewed is the reading
+    // that cannot invent a finding.
+    assessment: isAssessment(row.assessment) ? row.assessment : 'unreviewed',
     synced: row.synced === 1,
   };
+}
+
+function isAssessment(value: string): value is ObservationAssessment {
+  return value === 'unreviewed' || value === 'no-change' || value === 'reported';
 }
 
 export async function insertObservation(observation: Observation): Promise<void> {
@@ -105,8 +181,8 @@ export async function insertObservation(observation: Observation): Promise<void>
   await db.runAsync(
     `INSERT OR REPLACE INTO observations
        (id, vantage_id, site_id, captured_at, photo_uri, latitude, longitude,
-        bearing, pitch, position_error_m, bearing_error_deg, note, synced)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        bearing, pitch, position_error_m, bearing_error_deg, note, assessment, synced)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     observation.id,
     observation.vantageId,
     observation.siteId,
@@ -119,7 +195,28 @@ export async function insertObservation(observation: Observation): Promise<void>
     observation.positionErrorM,
     observation.bearingErrorDeg,
     observation.note ?? null,
+    observation.assessment,
     observation.synced ? 1 : 0,
+  );
+}
+
+/**
+ * Records what the observer said they saw.
+ *
+ * Separate from the insert because the photograph and the judgement happen at
+ * different moments — the shutter is pressed in the field, the assessment a few
+ * seconds later while looking at the result. Writing the observation first
+ * means a person who walks away mid-flow still keeps their photograph.
+ */
+export async function setObservationAssessment(
+  observationId: string,
+  assessment: ObservationAssessment,
+): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync(
+    'UPDATE observations SET assessment = ? WHERE id = ?',
+    assessment,
+    observationId,
   );
 }
 
@@ -144,6 +241,212 @@ export async function getObservation(id: string): Promise<Observation | null> {
     id,
   );
   return row ? toObservation(row) : null;
+}
+
+type ConditionReportRow = {
+  id: string;
+  observation_id: string;
+  site_id: string;
+  category: string;
+  subtype: string;
+  severity: string;
+  note: string | null;
+  recorded_at: string;
+  synced: number;
+};
+
+function toConditionReport(row: ConditionReportRow): ConditionReport {
+  return {
+    id: row.id,
+    observationId: row.observation_id,
+    siteId: row.site_id,
+    // Cast rather than validate: unlike assessment there is no safe default —
+    // an unrecognised category cannot be silently rewritten into another one
+    // without misfiling somebody's report.
+    category: row.category as ConditionReport['category'],
+    subtype: row.subtype,
+    severity: row.severity as ConditionReport['severity'],
+    note: row.note ?? undefined,
+    recordedAt: row.recorded_at,
+    synced: row.synced === 1,
+  };
+}
+
+/**
+ * Writes the report and flips the observation to 'reported' in one transaction.
+ *
+ * Together or not at all: an observation marked 'reported' with no report is a
+ * dead end in the UI, and a report attached to an observation that still reads
+ * 'unreviewed' would prompt the person to report the same thing twice.
+ */
+export async function insertConditionReport(report: ConditionReport): Promise<void> {
+  const db = await getDatabase();
+  await db.withTransactionAsync(async () => {
+    await db.runAsync(
+      `INSERT OR REPLACE INTO condition_reports
+         (id, observation_id, site_id, category, subtype, severity, note, recorded_at, synced)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      report.id,
+      report.observationId,
+      report.siteId,
+      report.category,
+      report.subtype,
+      report.severity,
+      report.note ?? null,
+      report.recordedAt,
+      report.synced ? 1 : 0,
+    );
+    await db.runAsync(
+      "UPDATE observations SET assessment = 'reported' WHERE id = ?",
+      report.observationId,
+    );
+  });
+}
+
+/** Reports for one observation, or every report newest first. */
+export async function listConditionReports(observationId?: string): Promise<ConditionReport[]> {
+  const db = await getDatabase();
+  const rows = observationId
+    ? await db.getAllAsync<ConditionReportRow>(
+        'SELECT * FROM condition_reports WHERE observation_id = ? ORDER BY recorded_at DESC',
+        observationId,
+      )
+    : await db.getAllAsync<ConditionReportRow>(
+        'SELECT * FROM condition_reports ORDER BY recorded_at DESC',
+      );
+  return rows.map(toConditionReport);
+}
+
+type MeritEventRow = {
+  id: string;
+  kind: string;
+  occurred_at: string;
+  site_id: string | null;
+  observation_id: string | null;
+  acknowledgement: string;
+};
+
+function toMeritEvent(row: MeritEventRow): MeritEvent {
+  return {
+    id: row.id,
+    kind: row.kind as MeritEvent['kind'],
+    occurredAt: row.occurred_at,
+    siteId: row.site_id ?? undefined,
+    observationId: row.observation_id ?? undefined,
+    acknowledgement: row.acknowledgement,
+  };
+}
+
+/**
+ * Records one recognised act.
+ *
+ * `INSERT OR IGNORE` rather than `OR REPLACE`: the unique index on
+ * observation_id means a second attempt for the same observation is a
+ * duplicate, and the right response to a duplicate act of recognition is to
+ * keep the first one, not overwrite it with a later timestamp.
+ *
+ * Returns false when the insert was ignored, so the caller can tell a fresh
+ * recognition from a repeat and avoid acknowledging the same thing twice.
+ */
+export async function insertMeritEvent(event: MeritEvent): Promise<boolean> {
+  const db = await getDatabase();
+  const result = await db.runAsync(
+    `INSERT OR IGNORE INTO merit_events
+       (id, kind, occurred_at, site_id, observation_id, acknowledgement)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    event.id,
+    event.kind,
+    event.occurredAt,
+    event.siteId ?? null,
+    event.observationId ?? null,
+    event.acknowledgement,
+  );
+  return result.changes > 0;
+}
+
+/** Newest first. `since` is an ISO instant; omit for the whole record. */
+export async function listMeritEvents(since?: string): Promise<MeritEvent[]> {
+  const db = await getDatabase();
+  const rows = since
+    ? await db.getAllAsync<MeritEventRow>(
+        'SELECT * FROM merit_events WHERE occurred_at >= ? ORDER BY occurred_at DESC',
+        since,
+      )
+    : await db.getAllAsync<MeritEventRow>('SELECT * FROM merit_events ORDER BY occurred_at DESC');
+  return rows.map(toMeritEvent);
+}
+
+export async function countMeritEvents(since?: string): Promise<number> {
+  const db = await getDatabase();
+  const row = since
+    ? await db.getFirstAsync<{ n: number }>(
+        'SELECT COUNT(*) AS n FROM merit_events WHERE occurred_at >= ?',
+        since,
+      )
+    : await db.getFirstAsync<{ n: number }>('SELECT COUNT(*) AS n FROM merit_events');
+  return row?.n ?? 0;
+}
+
+/** Distinct sites with at least one observation. Used by the practice summary. */
+export async function countSitesWitnessed(): Promise<number> {
+  const db = await getDatabase();
+  const row = await db.getFirstAsync<{ n: number }>(
+    'SELECT COUNT(DISTINCT site_id) AS n FROM observations',
+  );
+  return row?.n ?? 0;
+}
+
+/** ISO instant of the earliest recognised act, or null if there is none. */
+export async function firstMeritAt(): Promise<string | null> {
+  const db = await getDatabase();
+  const row = await db.getFirstAsync<{ t: string | null }>(
+    'SELECT MIN(occurred_at) AS t FROM merit_events',
+  );
+  return row?.t ?? null;
+}
+
+export type SiteVisit = {
+  siteId: string;
+  firstVisitedAt: string;
+  lastVisitedAt: string;
+  visitCount: number;
+};
+
+/**
+ * Notes that the observer was physically at a site.
+ *
+ * Upsert rather than a row per visit: the register only needs first, last and
+ * how many. Keeping one row per site also means a phone left sitting at a
+ * vantage cannot inflate the record into a log of hundreds of arrivals.
+ */
+export async function recordSiteVisit(siteId: string, at = new Date().toISOString()): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync(
+    `INSERT INTO site_visits (site_id, first_visited_at, last_visited_at, visit_count)
+     VALUES (?, ?, ?, 1)
+     ON CONFLICT (site_id) DO UPDATE SET
+       last_visited_at = excluded.last_visited_at,
+       visit_count = visit_count + 1`,
+    siteId,
+    at,
+    at,
+  );
+}
+
+export async function listSiteVisits(): Promise<SiteVisit[]> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<{
+    site_id: string;
+    first_visited_at: string;
+    last_visited_at: string;
+    visit_count: number;
+  }>('SELECT * FROM site_visits ORDER BY last_visited_at DESC');
+  return rows.map((row) => ({
+    siteId: row.site_id,
+    firstVisitedAt: row.first_visited_at,
+    lastVisitedAt: row.last_visited_at,
+    visitCount: row.visit_count,
+  }));
 }
 
 export async function countObservations(): Promise<number> {

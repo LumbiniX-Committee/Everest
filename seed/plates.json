@@ -1,0 +1,169 @@
+[
+  {
+    "id": "ashokan-pillar.1899-south",
+    "site_id": "ashokan-pillar",
+    "caption": {
+      "en": "Lumbini ruins viewed from the south, 1899",
+      "ne": "दक्षिणबाट देखिएको लुम्बिनीका भग्नावशेष, १८९९"
+    },
+    "image": "ashokan-pillar.1899-south.webp",
+    "evidence_tier": "historical_photograph",
+    "year": 1899,
+    "licence": "Public Domain (published 1901; author died >70 years ago)",
+    "attribution": "P. C. Mukherji, Archaeological Survey of India, 1901",
+    "sources": [
+      {
+        "title": "Mukherji 1901, ASI Imperial Series XXVI/1 — Antiquities in the Tarai, Nepal",
+        "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ",
+        "locator": "photographic plate, Lumbini from the south"
+      }
+    ]
+  },
+  {
+    "id": "maya-devi-temple.mukherji-1899-plan",
+    "site_id": "maya-devi-temple",
+    "caption": {
+      "en": "Measured ground plan of the Maya Devi Temple ruins, Mukherji survey",
+      "ne": "मायादेवी मन्दिर भग्नावशेषको नापी योजना, मुखर्जी सर्वेक्षण"
+    },
+    "image": "maya-devi-temple.mukherji-1899-plan.webp",
+    "evidence_tier": "survey_drawing",
+    "year": 1901,
+    "licence": "Public Domain (published 1901)",
+    "attribution": "P. C. Mukherji, Archaeological Survey of India, 1901",
+    "sources": [
+      {
+        "title": "Mukherji 1901, ASI Imperial Series XXVI/1",
+        "url": "https://archive.org/details/in.ernet.dli.2015.115950",
+        "locator": "measured plan plate"
+      }
+    ]
+  },
+  {
+    "id": "maya-devi-temple.nativity-sculpture",
+    "site_id": "maya-devi-temple",
+    "caption": {
+      "en": "The worn Nativity Sculpture: Queen Maya Devi grasping a sal branch",
+      "ne": "क्षयग्रस्त जन्म-मूर्ति: सालको हाँगा समातेकी माया देवी"
+    },
+    "image": "maya-devi-temple.nativity-sculpture.webp",
+    "evidence_tier": "historical_photograph",
+    "licence": "pending — resolved from harvest LICENCES.md at build",
+    "attribution": "pending harvest (Wikimedia Commons contributor)",
+    "sources": [
+      {
+        "title": "UNESCO WHC — Lumbini (666rev)",
+        "url": "https://whc.unesco.org/en/list/666"
+      }
+    ]
+  },
+  {
+    "id": "puskarini.1899-view",
+    "site_id": "puskarini",
+    "caption": {
+      "en": "The Puskarini tank, 1899 survey view",
+      "ne": "पुष्करिणी पोखरी, १८९९ सर्वेक्षण दृश्य"
+    },
+    "image": "puskarini.1899-view.webp",
+    "evidence_tier": "historical_photograph",
+    "year": 1899,
+    "licence": "Public Domain (published 1901)",
+    "attribution": "P. C. Mukherji, Archaeological Survey of India, 1901",
+    "sources": [
+      {
+        "title": "Mukherji 1901, ASI Imperial Series XXVI/1",
+        "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ",
+        "locator": "Puskarini plate"
+      }
+    ]
+  },
+  {
+    "id": "ashokan-pillar.rummindei-inscription",
+    "site_id": "ashokan-pillar",
+    "caption": {
+      "en": "Facsimile of the Rummindei (Lumbini) Pillar Edict in Brahmi",
+      "ne": "रुम्मिनदेई (लुम्बिनी) स्तम्भ अभिलेखको ब्राह्मी प्रतिलिपि"
+    },
+    "image": "ashokan-pillar.rummindei-inscription.webp",
+    "evidence_tier": "survey_drawing",
+    "year": 1925,
+    "licence": "Public Domain (published 1925)",
+    "attribution": "E. Hultzsch, Inscriptions of Asoka (CII Vol. I), 1925",
+    "sources": [
+      {
+        "title": "Hultzsch, Inscriptions of Asoka (Corpus Inscriptionum Indicarum, Vol. I, 1925)",
+        "url": "https://archive.org/details/inscriptionsofas035106mbp",
+        "locator": "Rummindei Pillar Edict facsimile"
+      }
+    ]
+  },
+  {
+    "id": "ashokan-pillar.horse-capital",
+    "site_id": "ashokan-pillar",
+    "caption": {
+      "en": "Reconstruction: the pillar's lost horse capital",
+      "ne": "पुनर्निर्माण: स्तम्भको हराएको घोडा-शीर्ष"
+    },
+    "image": "ashokan-pillar.horse-capital.webp",
+    "evidence_tier": "conditioned_reconstruction",
+    "conditioned_on": {
+      "title": "Mauryan animal capitals as comparanda (Rampurva bull, Sankissa elephant) + Xuanzang's account of a horse capital at Lumbini",
+      "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ",
+      "locator": "capital form conditioned on surviving Mauryan capitals; the horse is attested, the object itself is lost"
+    },
+    "licence": "CC BY-SA 4.0 (Sākṣī reconstruction — clearly labelled, not a photograph)",
+    "attribution": "Sākṣī team, image-to-image conditioned on cited Mauryan comparanda",
+    "sources": [
+      {
+        "title": "Mukherji 1901, ASI Imperial Series XXVI/1",
+        "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ"
+      }
+    ]
+  },
+  {
+    "id": "ashokan-pillar.pre1896-jungle",
+    "site_id": "ashokan-pillar",
+    "caption": {
+      "en": "Before rediscovery: the pillar as a jungle-covered mound, pre-1896",
+      "ne": "पुनः पत्ता लाग्नुअघि: जंगलले ढाकिएको डँगुरका रूपमा स्तम्भ, १८९६ अघि"
+    },
+    "image": "ashokan-pillar.pre1896-jungle.webp",
+    "evidence_tier": "conditioned_reconstruction",
+    "conditioned_on": {
+      "title": "Führer & Mukherji rediscovery accounts of an overgrown, buried mound; comparanda from unexcavated Tarai stupa mounds",
+      "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ",
+      "locator": "overgrowth and burial conditioned on documented pre-1896 state and regional unexcavated mounds"
+    },
+    "licence": "CC BY-SA 4.0 (Sākṣī reconstruction — clearly labelled)",
+    "attribution": "Sākṣī team, image-to-image conditioned on cited accounts and comparanda",
+    "sources": [
+      {
+        "title": "UNESCO WHC — Lumbini (666rev)",
+        "url": "https://whc.unesco.org/en/list/666"
+      }
+    ]
+  },
+  {
+    "id": "vihara-remains.votive-stupas-1957",
+    "site_id": "vihara-remains",
+    "caption": {
+      "en": "Sixteen votive stupas recorded in 1957, since demolished",
+      "ne": "सन् १९५७ मा अभिलेख गरिएका सोह्र मन्नत-स्तूप, पछि भत्काइएका"
+    },
+    "image": "vihara-remains.votive-stupas-1957.webp",
+    "evidence_tier": "conditioned_reconstruction",
+    "conditioned_on": {
+      "title": "Debala Mitra's 1957 survey record of sixteen small votive stupas in the Sacred Garden",
+      "url": "https://whc.unesco.org/en/list/666",
+      "locator": "forms conditioned on Mitra 1957; the loss between two expert visits is the documented fact"
+    },
+    "licence": "CC BY-SA 4.0 (Sākṣī reconstruction — clearly labelled)",
+    "attribution": "Sākṣī team, image-to-image conditioned on Debala Mitra 1957",
+    "sources": [
+      {
+        "title": "UNESCO WHC — Lumbini (666rev)",
+        "url": "https://whc.unesco.org/en/list/666"
+      }
+    ]
+  }
+]

@@ -31,10 +31,13 @@ before shipping, per 05-CONTENT-SPEC §1) and on plate ids not yet produced.
 node tools/lint-vocab.mjs
 ```
 
-Fails the build if any banned gamification word (points, tokens, streak,
-leaderboard, collect, catch, …) appears in `seed/`, `core/` or `deck/`. This
-is TEAM-CHARTER's vocabulary rule made enforceable. Suppress a justified use
-with a trailing `lint-vocab:allow` comment.
+Two scopes. In our own content (`seed/`, `core/`, `deck/`) the **full** banned
+list applies (points, tokens, streak, leaderboard, collect, catch, loop, …). In
+the app (`features/`, `components/`, `app/`, …) only the **unambiguous**
+gamification terms are enforced (xp, leaderboard, streak, grind, rewards,
+check-in, …), so "vantage point", the "witness loop" and "colour tokens" stay
+legal. This is TEAM-CHARTER's vocabulary rule made enforceable. Suppress a
+justified use with a trailing `lint-vocab:allow` comment.
 
 ## Optional: richer harness (needs npm)
 

@@ -217,7 +217,9 @@
     ],
     "plates": [
       "ashokan-pillar.horse-capital",
-      "ashokan-pillar.1899-south"
+      "ashokan-pillar.1899-south",
+      "ashokan-pillar.rummindei-inscription",
+      "ashokan-pillar.pre1896-jungle"
     ],
     "vantages": [
       "ashokan-pillar.v1",
@@ -473,7 +475,9 @@
       "reconstruction-1933",
       "reexcavation-1992"
     ],
-    "plates": [],
+    "plates": [
+      "vihara-remains.votive-stupas-1957"
+    ],
     "vantages": [],
     "dhamma_links": [],
     "sources": [

@@ -1,12 +1,17 @@
+import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
-import { ConditionBadge, Divider, MetaRow, Screen, SourceBadge, Text } from '@/components/ui';
+import { Button, ConditionBadge, Divider, MetaRow, Screen, SourceBadge, Text } from '@/components/ui';
 import { EmptyState } from '@/components/common';
 import { VantageListItem } from '@/components/site';
-import { findSite, vantagesForSite } from '@/data';
+import { SourceCard, SourceDetailSheet } from '@/components/source';
+import { findSite, historicalImagesForSite, resolveSources, vantagesForSite } from '@/data';
 import { useCurrentPosition } from '@/hooks';
+import { database } from '@/services';
+import { SITE_VISIT_RADIUS_M } from '@/constants';
 import { spacing } from '@/theme';
+import type { Source } from '@/types';
 import { distanceMeters, formatCoordinate, formatDistance } from '@/utils';
 
 /**
@@ -20,6 +25,24 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
   const router = useRouter();
   const site = findSite(siteId);
   const { coordinate } = useCurrentPosition();
+  const [openSource, setOpenSource] = useState<Source | null>(null);
+
+  /**
+   * Marks the register when the reader is actually standing here.
+   *
+   * Gated on distance rather than on opening the screen: "visited" has to mean
+   * you were there. Reading about a site on the bus is not a visit, and a
+   * register that says otherwise is worthless in an app built on first-hand
+   * evidence.
+   *
+   * Failure is ignored. Missing a register mark is a small loss; an error
+   * banner over a site's history for it would be a larger one.
+   */
+  useEffect(() => {
+    if (!site || !coordinate) return;
+    if (distanceMeters(coordinate, site.coordinate) > SITE_VISIT_RADIUS_M) return;
+    void database.recordSiteVisit(site.id).catch(() => undefined);
+  }, [site, coordinate]);
 
   if (!site) {
     return (
@@ -35,6 +58,8 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
   }
 
   const vantages = vantagesForSite(site.id);
+  const sources = resolveSources(site.sourceIds ?? []);
+  const historical = historicalImagesForSite(site.id);
   const distanceM = coordinate ? distanceMeters(coordinate, site.coordinate) : null;
 
   return (
@@ -68,10 +93,55 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
           <MetaRow label="Elevation" value={`${site.elevation} m`} />
         ) : null}
         {distanceM != null ? <MetaRow label="Distance" value={formatDistance(distanceM)} /> : null}
-        {site.sourceNote ? (
-          <MetaRow label="Source" value={site.sourceNote} mono={false} tone="secondary" />
-        ) : null}
       </View>
+
+      {historical.length > 0 ? (
+        <>
+          <Divider />
+          <View style={styles.sourceBlock}>
+            <Text variant="heading">Then / Now</Text>
+            <Text variant="body" tone="secondary">
+              {historical.length === 1
+                ? 'One historical image has been matched to this site.'
+                : `${historical.length} historical images have been matched to this site.`}{' '}
+              Compare them against the view today.
+            </Text>
+            <Button
+              label="Compare across time"
+              variant="secondary"
+              onPress={() =>
+                router.push({
+                  pathname: '/(main)/tirtha/then-now/[siteId]',
+                  params: { siteId: site.id },
+                })
+              }
+            />
+          </View>
+        </>
+      ) : null}
+
+      {sources.length > 0 ? (
+        <>
+          <Divider />
+          <View style={styles.sourceBlock}>
+            <Text variant="heading">
+              {sources.length === 1 ? 'Source' : 'Sources'}
+            </Text>
+            {/*
+              The same SourceCard the Dhamma surface uses. A reader who has
+              learned to read a citation on one surface can read it on the
+              other — which is the entire reason the registry is shared.
+            */}
+            {sources.map((source) => (
+              <SourceCard
+                key={source.id}
+                source={source}
+                onPress={() => setOpenSource(source)}
+              />
+            ))}
+          </View>
+        </>
+      ) : null}
 
       <Divider />
 
@@ -100,6 +170,8 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
           </View>
         )}
       </View>
+
+      <SourceDetailSheet source={openSource} onClose={() => setOpenSource(null)} />
     </Screen>
   );
 }
@@ -109,6 +181,7 @@ const styles = StyleSheet.create({
   badges: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginTop: spacing.xs },
   description: { paddingBottom: spacing.lg },
   meta: { paddingVertical: spacing.lg },
+  sourceBlock: { paddingVertical: spacing.lg, gap: spacing.md },
   vantageBlock: { paddingTop: spacing.lg, gap: spacing.md },
   vantageList: { gap: spacing.md },
 });

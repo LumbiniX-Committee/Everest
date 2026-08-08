@@ -97,6 +97,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
         positionErrorM: alignment.distanceM ?? 0,
         bearingErrorDeg: Math.abs(alignment.bearingDeltaDeg ?? 0),
         note: isNoChange ? 'Nothing has changed — verified stability.' : undefined,
+        assessment: 'unreviewed',
         synced: false,
       };
 

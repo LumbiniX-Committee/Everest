@@ -26,8 +26,13 @@ export type HeritageSite = {
   /** Metres above sea level, where surveyed. */
   elevation?: number;
   sourceTier: SourceTier;
-  /** Free-text provenance, e.g. "Lumbini Development Trust survey, 2019". */
-  sourceNote?: string;
+  /**
+   * Ids into the shared source registry, resolved with `resolveSources`.
+   *
+   * Ids rather than prose so the same artefact cited here and by a Dhamma
+   * answer resolves to one record, and a correction lands in one place.
+   */
+  sourceIds?: string[];
   condition: ConditionStatus;
   /** Vantage point ids belonging to this site. */
   vantageIds: string[];
@@ -59,6 +64,22 @@ export type Vantage = {
   referenceLocal?: string;
 };
 
+/**
+ * Whether the observer has said what they saw.
+ *
+ * `no-change` is a finding, not an absence of one. In condition monitoring a
+ * dated photograph with "nothing has changed here" attached is evidence of
+ * stability, and a series of them is how you establish that a site is holding.
+ * Collapsing it into `unreviewed` would throw that away.
+ */
+export type ObservationAssessment =
+  /** Recorded, but the observer has not yet said what they saw. */
+  | 'unreviewed'
+  /** Looked, and found nothing changed. A positive finding. */
+  | 'no-change'
+  /** Something was noticed; a condition report is attached. */
+  | 'reported';
+
 /** A single recorded witness event at a vantage. */
 export type Observation = {
   id: string;
@@ -78,6 +99,8 @@ export type Observation = {
   bearingErrorDeg: number;
   /** Observer's own note on what changed. */
   note?: string;
+  /** What the observer said about what they saw. */
+  assessment: ObservationAssessment;
   /** False until the observation has left the device. */
   synced: boolean;
 };
@@ -95,8 +118,16 @@ export type HistoricalImage = {
   siteId: string;
   /** The vantage this was shot from, where that is known. */
   vantageId?: string;
-  /** Bundled asset (`require(...)`) or a remote/local URI. */
-  image: number | string;
+  /**
+   * Bundled asset (`require(...)`) or a remote/local URI.
+   *
+   * Optional so the comparison can be built and reviewed before the archive
+   * imagery is cleared. When absent the UI draws a labelled placeholder that
+   * says so — it never dresses a stand-in up as a photograph, because a
+   * comparison the reader cannot trust is worse than one that is honestly
+   * incomplete.
+   */
+  image?: number | string;
   /** Free-form: "1899", "c. 1930", "March 1975". Displayed, not parsed. */
   date: string;
   /** ISO 8601 where the exact date is known, for ordering the series. */
