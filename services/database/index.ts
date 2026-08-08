@@ -1,7 +1,12 @@
 import * as SQLite from 'expo-sqlite';
 
 import { DATABASE_NAME } from '@/constants';
-import type { ConditionReport, Observation, ObservationAssessment } from '@/types';
+import type {
+  ConditionReport,
+  MeritEvent,
+  Observation,
+  ObservationAssessment,
+} from '@/types';
 
 /**
  * Local observation store.
@@ -63,6 +68,24 @@ const migrations: string[] = [
      ON condition_reports (site_id, recorded_at DESC);
    CREATE INDEX IF NOT EXISTS idx_reports_unsynced
      ON condition_reports (synced) WHERE synced = 0;`,
+
+  // Puṇya. Note what is absent: no score, no weight, no running total column.
+  // A merit event records that an act of attention happened, and the only
+  // aggregate anyone computes from it is a count.
+  `CREATE TABLE IF NOT EXISTS merit_events (
+     id TEXT PRIMARY KEY NOT NULL,
+     kind TEXT NOT NULL,
+     occurred_at TEXT NOT NULL,
+     site_id TEXT,
+     observation_id TEXT,
+     acknowledgement TEXT NOT NULL
+   );
+   CREATE INDEX IF NOT EXISTS idx_merit_occurred
+     ON merit_events (occurred_at DESC);
+   -- One recognition per observation. The uniqueness is enforced here rather
+   -- than in the caller so a retried write cannot double-count a single act.
+   CREATE UNIQUE INDEX IF NOT EXISTS idx_merit_observation
+     ON merit_events (observation_id) WHERE observation_id IS NOT NULL;`,
 ];
 
 async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
@@ -278,6 +301,94 @@ export async function listConditionReports(observationId?: string): Promise<Cond
         'SELECT * FROM condition_reports ORDER BY recorded_at DESC',
       );
   return rows.map(toConditionReport);
+}
+
+type MeritEventRow = {
+  id: string;
+  kind: string;
+  occurred_at: string;
+  site_id: string | null;
+  observation_id: string | null;
+  acknowledgement: string;
+};
+
+function toMeritEvent(row: MeritEventRow): MeritEvent {
+  return {
+    id: row.id,
+    kind: row.kind as MeritEvent['kind'],
+    occurredAt: row.occurred_at,
+    siteId: row.site_id ?? undefined,
+    observationId: row.observation_id ?? undefined,
+    acknowledgement: row.acknowledgement,
+  };
+}
+
+/**
+ * Records one recognised act.
+ *
+ * `INSERT OR IGNORE` rather than `OR REPLACE`: the unique index on
+ * observation_id means a second attempt for the same observation is a
+ * duplicate, and the right response to a duplicate act of recognition is to
+ * keep the first one, not overwrite it with a later timestamp.
+ *
+ * Returns false when the insert was ignored, so the caller can tell a fresh
+ * recognition from a repeat and avoid acknowledging the same thing twice.
+ */
+export async function insertMeritEvent(event: MeritEvent): Promise<boolean> {
+  const db = await getDatabase();
+  const result = await db.runAsync(
+    `INSERT OR IGNORE INTO merit_events
+       (id, kind, occurred_at, site_id, observation_id, acknowledgement)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    event.id,
+    event.kind,
+    event.occurredAt,
+    event.siteId ?? null,
+    event.observationId ?? null,
+    event.acknowledgement,
+  );
+  return result.changes > 0;
+}
+
+/** Newest first. `since` is an ISO instant; omit for the whole record. */
+export async function listMeritEvents(since?: string): Promise<MeritEvent[]> {
+  const db = await getDatabase();
+  const rows = since
+    ? await db.getAllAsync<MeritEventRow>(
+        'SELECT * FROM merit_events WHERE occurred_at >= ? ORDER BY occurred_at DESC',
+        since,
+      )
+    : await db.getAllAsync<MeritEventRow>('SELECT * FROM merit_events ORDER BY occurred_at DESC');
+  return rows.map(toMeritEvent);
+}
+
+export async function countMeritEvents(since?: string): Promise<number> {
+  const db = await getDatabase();
+  const row = since
+    ? await db.getFirstAsync<{ n: number }>(
+        'SELECT COUNT(*) AS n FROM merit_events WHERE occurred_at >= ?',
+        since,
+      )
+    : await db.getFirstAsync<{ n: number }>('SELECT COUNT(*) AS n FROM merit_events');
+  return row?.n ?? 0;
+}
+
+/** Distinct sites with at least one observation. Used by the practice summary. */
+export async function countSitesWitnessed(): Promise<number> {
+  const db = await getDatabase();
+  const row = await db.getFirstAsync<{ n: number }>(
+    'SELECT COUNT(DISTINCT site_id) AS n FROM observations',
+  );
+  return row?.n ?? 0;
+}
+
+/** ISO instant of the earliest recognised act, or null if there is none. */
+export async function firstMeritAt(): Promise<string | null> {
+  const db = await getDatabase();
+  const row = await db.getFirstAsync<{ t: string | null }>(
+    'SELECT MIN(occurred_at) AS t FROM merit_events',
+  );
+  return row?.t ?? null;
 }
 
 export async function countObservations(): Promise<number> {
