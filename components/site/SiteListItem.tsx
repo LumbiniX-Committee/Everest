@@ -1,9 +1,10 @@
 import { StyleSheet, View } from 'react-native';
 
 import { Card, ConditionBadge, Text } from '@/components/ui';
+import type { SiteWithDistance } from '@/hooks';
+import { usePreferences } from '@/store';
 import { spacing } from '@/theme';
 import { formatDistance } from '@/utils';
-import type { SiteWithDistance } from '@/hooks';
 
 export function SiteListItem({
   site,
@@ -12,6 +13,8 @@ export function SiteListItem({
   site: SiteWithDistance;
   onPress: () => void;
 }) {
+  const { preferences } = usePreferences();
+
   return (
     <Card onPress={onPress} accessibilityLabel={`${site.name}. ${site.summary}`}>
       <View style={styles.headRow}>
@@ -25,7 +28,7 @@ export function SiteListItem({
         </View>
         {site.distanceM != null ? (
           <Text variant="mono" tone="secondary">
-            {formatDistance(site.distanceM)}
+            {formatDistance(site.distanceM, preferences.distanceUnit)}
           </Text>
         ) : null}
       </View>

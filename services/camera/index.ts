@@ -1,3 +1,5 @@
+import type { PhotoQuality } from '@/types';
+
 /**
  * Camera service.
  *
@@ -25,6 +27,13 @@ export const OBSERVATION_CAPTURE: CaptureOptions = {
   exif: true,
   mirror: false,
 };
+
+export function getCaptureOptions(qualityPreference: PhotoQuality = 'standard'): CaptureOptions {
+  return {
+    ...OBSERVATION_CAPTURE,
+    quality: qualityPreference === 'high' ? 0.9 : 0.7,
+  };
+}
 
 /** What a capture must produce before it can become an Observation. */
 export type CaptureResult = {

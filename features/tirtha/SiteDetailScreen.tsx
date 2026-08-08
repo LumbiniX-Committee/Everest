@@ -9,6 +9,7 @@ import { SourceCard, SourceDetailSheet } from '@/components/source';
 import { audioForSite, findSite, historicalImagesForSite, narrationForSite, resolveSources, vantagesForSite } from '@/data';
 import { useCurrentPosition } from '@/hooks';
 import { database } from '@/services';
+import { usePreferences } from '@/store';
 import { SITE_VISIT_RADIUS_M } from '@/constants';
 import { spacing } from '@/theme';
 import type { Source } from '@/types';
@@ -62,6 +63,7 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
   const historical = historicalImagesForSite(site.id);
   const audioSource = audioForSite(site.id);
   const narration = narrationForSite(site.id);
+  const { preferences } = usePreferences();
   const distanceM = coordinate ? distanceMeters(coordinate, site.coordinate) : null;
 
   return (
@@ -101,7 +103,9 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
         {site.elevation != null ? (
           <MetaRow label="Elevation" value={`${site.elevation} m`} />
         ) : null}
-        {distanceM != null ? <MetaRow label="Distance" value={formatDistance(distanceM)} /> : null}
+        {distanceM != null ? (
+          <MetaRow label="Distance" value={formatDistance(distanceM, preferences.distanceUnit)} />
+        ) : null}
       </View>
 
       {historical.length > 0 ? (

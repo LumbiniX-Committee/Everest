@@ -1,8 +1,17 @@
-import type { Coordinate } from '@/types';
+import type { Coordinate, DistanceUnit } from '@/types';
 
-/** Distance for display. Metres under a kilometre, then one decimal of km. */
-export function formatDistance(meters: number | null | undefined): string {
+/** Distance for display. Metres/km or feet/mi depending on user preference. */
+export function formatDistance(
+  meters: number | null | undefined,
+  unit: DistanceUnit = 'metric',
+): string {
   if (meters == null || !Number.isFinite(meters)) return '—';
+  if (unit === 'imperial') {
+    const feet = meters * 3.28084;
+    if (feet < 2640) return `${Math.round(feet)} ft`;
+    const miles = meters / 1609.344;
+    return `${miles.toFixed(1)} mi`;
+  }
   if (meters < 1000) return `${Math.round(meters)} m`;
   return `${(meters / 1000).toFixed(1)} km`;
 }

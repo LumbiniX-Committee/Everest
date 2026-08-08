@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
@@ -5,7 +6,7 @@ import { Button, Divider, MetaRow, Screen, Text } from '@/components/ui';
 import { EmptyState } from '@/components/common';
 import { AlignmentReadout, Reticle } from '@/components/reticle';
 import { findSite, findVantage } from '@/data';
-import { useAlignment } from '@/hooks';
+import { useAlignment, useHaptics } from '@/hooks';
 import { usePermission } from '@/store';
 import { spacing } from '@/theme';
 import { formatCoordinate } from '@/utils';
@@ -23,6 +24,7 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
   const router = useRouter();
   const vantage = findVantage(vantageId);
   const { state: locationPermission, request: requestLocation } = usePermission('location');
+  const { pulse } = useHaptics();
 
   const alignment = useAlignment({ vantage });
 
@@ -42,6 +44,12 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
   const site = findSite(vantage.siteId);
   const locked = alignment.phase === 'locked';
   const needsLocation = locationPermission.status !== 'granted';
+
+  useEffect(() => {
+    if (locked) {
+      pulse();
+    }
+  }, [locked, pulse]);
 
   // A real lock records as an aligned capture; anything else is an honest
   // "match by eye" — the capture screen records which, and never fakes a lock.

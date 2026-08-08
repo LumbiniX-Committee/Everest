@@ -10,7 +10,7 @@ import { Reticle } from '@/components/reticle';
 import { findSite, findVantage } from '@/data';
 import { useAlignment, useCurrentPosition } from '@/hooks';
 import { camera as cameraService, database } from '@/services';
-import { usePermission } from '@/store';
+import { usePermission, usePreferences } from '@/store';
 import { colors, layers, radii, spacing } from '@/theme';
 import { formatBearing, formatDelta, formatDistance } from '@/utils';
 import type { Observation } from '@/types';
@@ -33,6 +33,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
   const vantage = findVantage(vantageId);
   const site = vantage ? findSite(vantage.siteId) : undefined;
   const { state: cameraPermission, request: requestCamera, openSettings } = usePermission('camera');
+  const { preferences } = usePreferences();
   const [nudgeDeg, setNudgeDeg] = useState(0);
 
   const alignment = useAlignment({ vantage, nudgeDeg });
@@ -83,7 +84,8 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
     setError(null);
 
     try {
-      const photo = await cameraRef.current?.takePictureAsync(cameraService.OBSERVATION_CAPTURE);
+      const captureOptions = cameraService.getCaptureOptions(preferences.photoQuality);
+      const photo = await cameraRef.current?.takePictureAsync(captureOptions);
       if (!photo?.uri) throw new Error('The camera returned no image.');
 
       // Persist the frame out of the camera cache, which the OS can evict —
