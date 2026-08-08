@@ -94,10 +94,10 @@ export function buildRegister(
     };
   });
 
-  // Engagement first, alphabetical within a tier. A register is read to find
-  // what you have done and what is left, so the two ends both need to be
-  // findable — sorting purely by name buries your own work among places you
-  // have never been.
+  // Most-advanced register state first, alphabetical within a state. A register
+  // is read to find what you have done and what is left, so the two ends both
+  // need to be findable — sorting purely by name buries your own work among
+  // places you have never been.
   const rank: Record<RegisterState, number> = {
     resurveyed: 0,
     witnessed: 1,

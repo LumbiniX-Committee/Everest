@@ -39,6 +39,8 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
   const [submitting, setSubmitting] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [merit, setMerit] = useState<MeritEvent | null>(null);
+  const [seriesObservations, setSeriesObservations] = useState<Observation[]>([]);
+  const [showConditionForm, setShowConditionForm] = useState(false);
   const { recognise, summary } = usePractice();
 
   useEffect(() => {
@@ -62,6 +64,13 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
       active = false;
     };
   }, [observationId]);
+
+  // Kept above the early returns below so hook order is stable across the
+  // loading → ready transition. Guards on `observation` internally.
+  useEffect(() => {
+    if (!observation) return;
+    database.listObservations(observation.vantageId).then(setSeriesObservations).catch(() => {});
+  }, [observation]);
 
   /**
    * "Nothing changed" is written, not merely skipped. A dated photograph with a
@@ -160,14 +169,6 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
     vantage != null &&
     observation.positionErrorM <= vantage.positionToleranceM &&
     observation.bearingErrorDeg <= vantage.bearingToleranceDeg;
-
-  const [seriesObservations, setSeriesObservations] = useState<Observation[]>([]);
-  const [showConditionForm, setShowConditionForm] = useState(false);
-
-  useEffect(() => {
-    if (!observation) return;
-    database.listObservations(observation.vantageId).then(setSeriesObservations).catch(() => {});
-  }, [observation]);
 
   if (showConditionForm && observation) {
     return (

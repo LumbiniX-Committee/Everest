@@ -18,7 +18,7 @@ export type PracticeSummaryCardProps = {
  * mean "goal achieved".
  *
  * Nothing here compares the person to anyone, to their own past, or to a
- * streak. The lifetime numbers are stated as a record, in the same register as
+ * streak. The lifetime numbers are stated as a record, in the same register as [lint-vocab:allow — naming the anti-pattern we refuse]
  * the rest of the app's metadata.
  */
 export function PracticeSummaryCard({ summary }: PracticeSummaryCardProps) {

@@ -77,4 +77,4 @@ harvest/_hires/
 harvest/_crops/
 
 # generated narration audio (robotic SAPI placeholders; regenerate via tools/make-narration-audio.ps1)
-app/assets/audio/*.opus
+assets/audio/*.opus

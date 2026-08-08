@@ -162,7 +162,7 @@ export interface Plate {
   id: string;
   site_id: string;
   caption: LocalisedText;
-  /** Relative path under app/assets/plates/. */
+  /** Relative path under assets/plates/. */
   image: string;
   /** Never optional. See Charter #6. */
   evidence_tier: EvidenceTier;

@@ -28,7 +28,7 @@ import {
  *
  * Getting this backwards would be the worst bug in the product. Conservation
  * data is the reason the app exists; a wellbeing feature must never be able to
- * refuse it. The limit exists to remove the incentive to grind, not to cap what
+ * refuse it. The limit exists to remove the incentive to grind, not to cap what [lint-vocab:allow — naming the anti-pattern we refuse]
  * a site can have observed about it in a day.
  */
 
