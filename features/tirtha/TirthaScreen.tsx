@@ -2,7 +2,7 @@ import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
-import { ScreenHeader } from '@/components/common';
+import { ScreenHeader, SettingsButton } from '@/components/common';
 import { SitePlan } from '@/components/map';
 import { SiteListItem } from '@/components/site';
 import { demoSites } from '@/data';
@@ -39,6 +39,7 @@ export function TirthaScreen() {
             ? 'Sites near you, nearest first.'
             : 'The sacred garden and the monastic zone.'
         }
+        rightAction={<SettingsButton />}
       />
 
       <SitePlan sites={demoSites} observer={coordinate} />

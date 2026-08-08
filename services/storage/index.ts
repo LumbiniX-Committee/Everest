@@ -1,5 +1,16 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { PreferenceKeys } from '@/constants';
+import {
+  ALIGNMENT_TOLERANCE_OPTIONS,
+  DEFAULT_USER_PREFERENCES,
+  DISTANCE_UNIT_OPTIONS,
+  OFFLINE_SYNC_OPTIONS,
+  PHOTO_QUALITY_OPTIONS,
+  SCRIPT_OPTIONS,
+  type UserPreferences,
+} from '@/types';
+
 /**
  * Key–value storage for small preferences and flags.
  *
@@ -59,4 +70,69 @@ export async function remove(key: string): Promise<void> {
   } catch {
     // Non-fatal by design.
   }
+}
+
+/* ------------------------------------------------------------------------- *
+ * User preferences
+ * ------------------------------------------------------------------------- */
+
+/**
+ * Reads every preference at once.
+ *
+ * Each value is validated against its allowed set rather than cast. A key can
+ * hold anything — an older build's vocabulary, a half-written value, a manual
+ * edit — and a bad one must degrade to its default rather than reach a screen
+ * that will switch on it.
+ */
+export async function getUserPreferences(): Promise<UserPreferences> {
+  const entries = await Promise.all(
+    (Object.keys(PreferenceKeys) as (keyof UserPreferences)[]).map(
+      async (field) => [field, await getString(PreferenceKeys[field])] as const,
+    ),
+  );
+
+  const raw = Object.fromEntries(entries) as Record<keyof UserPreferences, string | null>;
+
+  return {
+    alignmentTolerance: oneOf(raw.alignmentTolerance, ALIGNMENT_TOLERANCE_OPTIONS, 'alignmentTolerance'),
+    hapticsEnabled: bool(raw.hapticsEnabled, 'hapticsEnabled'),
+    autoCapture: bool(raw.autoCapture, 'autoCapture'),
+    scriptPreference: oneOf(raw.scriptPreference, SCRIPT_OPTIONS, 'scriptPreference'),
+    distanceUnit: oneOf(raw.distanceUnit, DISTANCE_UNIT_OPTIONS, 'distanceUnit'),
+    offlineSyncMode: oneOf(raw.offlineSyncMode, OFFLINE_SYNC_OPTIONS, 'offlineSyncMode'),
+    photoQuality: oneOf(raw.photoQuality, PHOTO_QUALITY_OPTIONS, 'photoQuality'),
+  };
+}
+
+function oneOf<K extends keyof UserPreferences, V extends string>(
+  raw: string | null,
+  options: { value: V }[],
+  field: K,
+): UserPreferences[K] {
+  const match = options.find((o) => o.value === raw);
+  return (match ? match.value : DEFAULT_USER_PREFERENCES[field]) as UserPreferences[K];
+}
+
+function bool(raw: string | null, field: keyof UserPreferences): boolean {
+  if (raw === 'true') return true;
+  if (raw === 'false') return false;
+  return DEFAULT_USER_PREFERENCES[field] as boolean;
+}
+
+export async function setUserPreference<K extends keyof UserPreferences>(
+  field: K,
+  value: UserPreferences[K],
+): Promise<void> {
+  await setString(PreferenceKeys[field], String(value));
+}
+
+/**
+ * Clears every preference key so the next read returns defaults.
+ *
+ * Deliberately removes rather than writing the defaults back: an absent key and
+ * a key holding its default value then mean the same thing, and a later change
+ * to a default reaches everyone who never chose otherwise.
+ */
+export async function resetUserPreferences(): Promise<void> {
+  await Promise.all(Object.values(PreferenceKeys).map((key) => remove(key)));
 }

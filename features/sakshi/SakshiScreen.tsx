@@ -3,7 +3,7 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
-import { EmptyState, ScreenHeader } from '@/components/common';
+import { EmptyState, ScreenHeader, SettingsButton } from '@/components/common';
 import { VantageListItem } from '@/components/site';
 import { PracticeSummaryCard } from '@/components/practice';
 import { demoVantages, findSite } from '@/data';
@@ -63,6 +63,7 @@ export function SakshiScreen() {
         eyebrow="Sākṣī"
         title="Witness"
         subtitle="Return to a fixed viewpoint, align, and record what is there today."
+        rightAction={<SettingsButton />}
       />
 
       <View style={styles.section}>
