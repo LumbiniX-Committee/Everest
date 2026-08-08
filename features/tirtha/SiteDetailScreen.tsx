@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
@@ -7,6 +8,8 @@ import { VantageListItem } from '@/components/site';
 import { SourceCard } from '@/components/source';
 import { findSite, historicalImagesForSite, resolveSources, vantagesForSite } from '@/data';
 import { useCurrentPosition } from '@/hooks';
+import { database } from '@/services';
+import { SITE_VISIT_RADIUS_M } from '@/constants';
 import { spacing } from '@/theme';
 import { distanceMeters, formatCoordinate, formatDistance } from '@/utils';
 
@@ -21,6 +24,23 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
   const router = useRouter();
   const site = findSite(siteId);
   const { coordinate } = useCurrentPosition();
+
+  /**
+   * Marks the register when the reader is actually standing here.
+   *
+   * Gated on distance rather than on opening the screen: "visited" has to mean
+   * you were there. Reading about a site on the bus is not a visit, and a
+   * register that says otherwise is worthless in an app built on first-hand
+   * evidence.
+   *
+   * Failure is ignored. Missing a register mark is a small loss; an error
+   * banner over a site's history for it would be a larger one.
+   */
+  useEffect(() => {
+    if (!site || !coordinate) return;
+    if (distanceMeters(coordinate, site.coordinate) > SITE_VISIT_RADIUS_M) return;
+    void database.recordSiteVisit(site.id).catch(() => undefined);
+  }, [site, coordinate]);
 
   if (!site) {
     return (

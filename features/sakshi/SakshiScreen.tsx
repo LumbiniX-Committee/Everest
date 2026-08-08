@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
-import { Card, Screen, Text } from '@/components/ui';
+import { Button, Card, Screen, Text } from '@/components/ui';
 import { EmptyState, ScreenHeader } from '@/components/common';
 import { VantageListItem } from '@/components/site';
 import { PracticeSummaryCard } from '@/components/practice';
@@ -67,6 +67,11 @@ export function SakshiScreen() {
 
       <View style={styles.section}>
         <PracticeSummaryCard summary={summary} />
+        <Button
+          label="Open your register"
+          variant="quiet"
+          onPress={() => router.push('/(main)/sakshi/register')}
+        />
       </View>
 
       <View style={styles.section}>

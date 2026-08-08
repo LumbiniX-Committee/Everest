@@ -86,6 +86,20 @@ const migrations: string[] = [
    -- than in the caller so a retried write cannot double-count a single act.
    CREATE UNIQUE INDEX IF NOT EXISTS idx_merit_observation
      ON merit_events (observation_id) WHERE observation_id IS NOT NULL;`,
+
+  // Site visits, for the Chaityāvalī register.
+  //
+  // A visit is recorded only when the device was actually near the site, so
+  // "visited" means stood there — not "tapped on". Without this table the
+  // register could only distinguish witnessed from unwitnessed, and marking a
+  // site visited because someone read about it on a bus would be a small lie
+  // in a product whose whole claim is first-hand evidence.
+  `CREATE TABLE IF NOT EXISTS site_visits (
+     site_id TEXT PRIMARY KEY NOT NULL,
+     first_visited_at TEXT NOT NULL,
+     last_visited_at TEXT NOT NULL,
+     visit_count INTEGER NOT NULL DEFAULT 1
+   );`,
 ];
 
 async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
@@ -389,6 +403,50 @@ export async function firstMeritAt(): Promise<string | null> {
     'SELECT MIN(occurred_at) AS t FROM merit_events',
   );
   return row?.t ?? null;
+}
+
+export type SiteVisit = {
+  siteId: string;
+  firstVisitedAt: string;
+  lastVisitedAt: string;
+  visitCount: number;
+};
+
+/**
+ * Notes that the observer was physically at a site.
+ *
+ * Upsert rather than a row per visit: the register only needs first, last and
+ * how many. Keeping one row per site also means a phone left sitting at a
+ * vantage cannot inflate the record into a log of hundreds of arrivals.
+ */
+export async function recordSiteVisit(siteId: string, at = new Date().toISOString()): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync(
+    `INSERT INTO site_visits (site_id, first_visited_at, last_visited_at, visit_count)
+     VALUES (?, ?, ?, 1)
+     ON CONFLICT (site_id) DO UPDATE SET
+       last_visited_at = excluded.last_visited_at,
+       visit_count = visit_count + 1`,
+    siteId,
+    at,
+    at,
+  );
+}
+
+export async function listSiteVisits(): Promise<SiteVisit[]> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<{
+    site_id: string;
+    first_visited_at: string;
+    last_visited_at: string;
+    visit_count: number;
+  }>('SELECT * FROM site_visits ORDER BY last_visited_at DESC');
+  return rows.map((row) => ({
+    siteId: row.site_id,
+    firstVisitedAt: row.first_visited_at,
+    lastVisitedAt: row.last_visited_at,
+    visitCount: row.visit_count,
+  }));
 }
 
 export async function countObservations(): Promise<number> {

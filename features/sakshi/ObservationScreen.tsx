@@ -312,6 +312,19 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
       ) : null}
 
       <View style={styles.actions}>
+        {observation.assessment !== 'unreviewed' ? (
+          <Button
+            label="See this site's record"
+            variant="secondary"
+            block
+            onPress={() =>
+              router.push({
+                pathname: '/(main)/sakshi/register/[siteId]',
+                params: { siteId: observation.siteId },
+              })
+            }
+          />
+        ) : null}
         <Button label="Done" block onPress={() => router.replace('/(main)/sakshi')} />
       </View>
 
@@ -341,5 +354,5 @@ const styles = StyleSheet.create({
   },
   meta: { paddingVertical: spacing.lg, gap: spacing.xxs },
   accuracyNote: { paddingTop: spacing.sm },
-  actions: { paddingTop: spacing.lg },
+  actions: { paddingTop: spacing.lg, gap: spacing.md },
 });
