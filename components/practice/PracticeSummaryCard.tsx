@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { ProgressIndicator, Text } from '@/components/ui';
 import { colors, spacing } from '@/theme';
-import { DAILY_PRACTICE_LIMIT, type PracticeSummary } from '@/types';
+import { DAILY_MERIT_CAP, type PracticeSummary } from '@/types';
 
 export type PracticeSummaryCardProps = {
   summary: PracticeSummary;
@@ -25,8 +25,8 @@ export function PracticeSummaryCard({ summary }: PracticeSummaryCardProps) {
   return (
     <View style={styles.wrap}>
       <ProgressIndicator
-        value={summary.todayCount}
-        total={DAILY_PRACTICE_LIMIT}
+        value={summary.todayMerit}
+        total={DAILY_MERIT_CAP}
         label="Today"
         color={summary.dayComplete ? colors.resolved : colors.sandstone}
       />
@@ -34,15 +34,15 @@ export function PracticeSummaryCard({ summary }: PracticeSummaryCardProps) {
       <Text variant="body" tone={summary.dayComplete ? 'primary' : 'secondary'}>
         {summary.dayComplete
           ? 'You’ve done enough today. The record will keep.'
-          : summary.todayCount === 0
+          : summary.todayMerit === 0
             ? 'Nothing recorded yet today.'
             : 'A day’s practice does not have to be a long one.'}
       </Text>
 
-      {summary.totalCount > 0 ? (
+      {summary.balance > 0 ? (
         <View style={styles.record}>
           <Text variant="caption" tone="muted">
-            {summary.totalCount} {summary.totalCount === 1 ? 'act' : 'acts'} recognised
+            {summary.balance} puṇya
             {summary.sitesWitnessed > 0
               ? ` · ${summary.sitesWitnessed} ${summary.sitesWitnessed === 1 ? 'site' : 'sites'} witnessed`
               : ''}

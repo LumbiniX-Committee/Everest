@@ -32,15 +32,40 @@ export const MERIT_LABELS: Record<MeritKind, string> = {
 };
 
 /**
+ * Puṇya awarded per kind (05-CONTENT-SPEC §6).
+ *
+ * Weighted by the kind of attention, never by outcome — a stability finding and
+ * a damage finding award the same (Charter #9, rule 5), so there is no incentive
+ * to hope for damage. The daily cap, not scarcity between kinds, is what removes
+ * the pull to optimise; reaching it says "enough", and that is the whole point.
+ */
+export const MERIT_WEIGHTS: Record<MeritKind, number> = {
+  witness: 50,
+  observation: 25,
+  resurvey: 50,
+  study: 30,
+  reflection: 70,
+};
+
+/**
+ * The daily puṇya cap. Reaching it completes the day and stops recognition —
+ * never recording. "You've done enough today", and it must be true.
+ */
+export const DAILY_MERIT_CAP = 200;
+
+/**
  * One recognised act.
  *
- * There is no numeric weight. Counting acts is enough to show a practice; giving
- * them different point values immediately invites optimising for the expensive
- * ones, which is the behaviour this product exists to avoid.
+ * `amount` is the puṇya awarded — clipped to whatever remained under the daily
+ * cap, so it can be 0 when the day was already complete. The event is still
+ * written: the append-only ledger records that the act of attention happened,
+ * even when no further merit followed.
  */
 export type MeritEvent = {
   id: string;
   kind: MeritKind;
+  /** Puṇya awarded for this act, after the daily cap. May be 0. */
+  amount: number;
   /** ISO 8601, UTC. */
   occurredAt: string;
   /** What it was for. Absent for reflection and study. */
@@ -50,21 +75,13 @@ export type MeritEvent = {
   acknowledgement: string;
 };
 
-/**
- * How many recognised acts constitute a day's practice.
- *
- * Low on purpose. Reaching it should be normal, not aspirational — the message
- * at the end is "you've done enough today", and that has to be true.
- */
-export const DAILY_PRACTICE_LIMIT = 5;
-
 export type PracticeSummary = {
-  /** Acts recognised today, local time. */
-  todayCount: number;
-  /** True once `todayCount >= DAILY_PRACTICE_LIMIT`. */
+  /** Puṇya recognised today, local time. */
+  todayMerit: number;
+  /** True once `todayMerit >= DAILY_MERIT_CAP`. */
   dayComplete: boolean;
-  /** Lifetime total. Shown as a record, never as a target. */
-  totalCount: number;
+  /** Lifetime puṇya. Shown as a record, never as a target. Never spent. */
+  balance: number;
   /** Distinct sites witnessed at least once. */
   sitesWitnessed: number;
   /** ISO date of the first recognised act, if any. */

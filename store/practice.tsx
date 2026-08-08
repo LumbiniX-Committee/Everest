@@ -10,7 +10,8 @@ import {
 
 import { database } from '@/services';
 import {
-  DAILY_PRACTICE_LIMIT,
+  DAILY_MERIT_CAP,
+  MERIT_WEIGHTS,
   type MeritEvent,
   type MeritKind,
   type PracticeSummary,
@@ -56,25 +57,27 @@ type PracticeContextValue = {
 };
 
 const emptySummary: PracticeSummary = {
-  todayCount: 0,
+  todayMerit: 0,
   dayComplete: false,
-  totalCount: 0,
+  balance: 0,
   sitesWitnessed: 0,
 };
 
 const PracticeContext = createContext<PracticeContextValue | null>(null);
 
 /**
- * Midnight this morning, local time, as an absolute instant.
+ * Today's date key, YYYY-MM-DD in local time.
  *
  * Local rather than UTC because "today" means the observer's day. In Nepal
  * (UTC+05:45) a UTC boundary would roll over at a quarter to six in the
  * morning, ending someone's practice while they are still out walking.
  */
-function startOfLocalDay(): string {
-  const start = new Date();
-  start.setHours(0, 0, 0, 0);
-  return start.toISOString();
+function localDayKey(): string {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
 }
 
 export function PracticeProvider({ children }: { children: ReactNode }) {
@@ -84,19 +87,20 @@ export function PracticeProvider({ children }: { children: ReactNode }) {
 
   const refresh = useCallback(async () => {
     try {
-      const dayStart = startOfLocalDay();
-      const [allEvents, todayCount, sitesWitnessed, began] = await Promise.all([
+      const dayKey = localDayKey();
+      const [allEvents, todayMerit, sitesWitnessed, balance, began] = await Promise.all([
         database.listMeritEvents(),
-        database.countMeritEvents(dayStart),
+        database.sumMeritForDay(dayKey),
         database.countSitesWitnessed(),
+        database.totalMerit(),
         database.firstMeritAt(),
       ]);
 
       setEvents(allEvents);
       setSummary({
-        todayCount,
-        dayComplete: todayCount >= DAILY_PRACTICE_LIMIT,
-        totalCount: allEvents.length,
+        todayMerit,
+        dayComplete: todayMerit >= DAILY_MERIT_CAP,
+        balance,
         sitesWitnessed,
         practiceBegan: began ?? undefined,
       });
@@ -118,25 +122,28 @@ export function PracticeProvider({ children }: { children: ReactNode }) {
       // Recomputed here rather than read from state: the app may have been open
       // across midnight, and a stale boundary would either deny a new day's
       // first recognition or extend yesterday's allowance into today.
-      const dayStart = startOfLocalDay();
-      const todayCount = await database.countMeritEvents(dayStart);
-      if (todayCount >= DAILY_PRACTICE_LIMIT) {
-        await refresh();
-        return null;
-      }
+      const dayKey = localDayKey();
+      const todayMerit = await database.sumMeritForDay(dayKey);
+      const remaining = Math.max(0, DAILY_MERIT_CAP - todayMerit);
+      // Clip the award to what remained under the cap — possibly 0.
+      const amount = Math.min(MERIT_WEIGHTS[kind], remaining);
 
       const event: MeritEvent = {
         id: `merit-${Date.now()}`,
         kind,
+        amount,
         occurredAt: new Date().toISOString(),
         siteId,
         observationId,
         acknowledgement: acknowledgements[kind],
       };
 
-      const created = await database.insertMeritEvent(event);
+      // Always write the event — the act of attention happened even when the day
+      // was already complete (amount 0). The append-only ledger must not lie by
+      // omission. Only surface the acknowledgement when merit actually followed.
+      const created = await database.insertMeritEvent(event, dayKey);
       await refresh();
-      return created ? event : null;
+      return created && amount > 0 ? event : null;
     },
     [refresh],
   );

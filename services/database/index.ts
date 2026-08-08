@@ -145,6 +145,15 @@ const migrations: string[] = [
   `ALTER TABLE observations ADD COLUMN align_score REAL;
    ALTER TABLE observations ADD COLUMN gps_acc_m REAL;
    ALTER TABLE observations ADD COLUMN gate_mode TEXT;`,
+
+  // Weighted puṇya (05-CONTENT-SPEC §6). amount is the merit awarded after the
+  // daily cap; day_key (local YYYY-MM-DD) is what the cap sums over. DEFAULT 0 is
+  // truthful for rows written before weights existed — those acts predate the
+  // model, and backfilling invented amounts would fabricate history. Charter #9
+  // holds: no spend, no transfer, no stored balance — balance is SUM(amount).
+  `ALTER TABLE merit_events ADD COLUMN amount INTEGER NOT NULL DEFAULT 0;
+   ALTER TABLE merit_events ADD COLUMN day_key TEXT NOT NULL DEFAULT '';
+   CREATE INDEX IF NOT EXISTS idx_merit_day ON merit_events (day_key);`,
 ];
 
 async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
@@ -405,7 +414,9 @@ export async function markConditionReportSynced(id: string): Promise<void> {
 type MeritEventRow = {
   id: string;
   kind: string;
+  amount: number;
   occurred_at: string;
+  day_key: string;
   site_id: string | null;
   observation_id: string | null;
   acknowledgement: string;
@@ -415,6 +426,7 @@ function toMeritEvent(row: MeritEventRow): MeritEvent {
   return {
     id: row.id,
     kind: row.kind as MeritEvent['kind'],
+    amount: row.amount,
     occurredAt: row.occurred_at,
     siteId: row.site_id ?? undefined,
     observationId: row.observation_id ?? undefined,
@@ -433,20 +445,39 @@ function toMeritEvent(row: MeritEventRow): MeritEvent {
  * Returns false when the insert was ignored, so the caller can tell a fresh
  * recognition from a repeat and avoid acknowledging the same thing twice.
  */
-export async function insertMeritEvent(event: MeritEvent): Promise<boolean> {
+export async function insertMeritEvent(event: MeritEvent, dayKey: string): Promise<boolean> {
   const db = await getDatabase();
   const result = await db.runAsync(
     `INSERT OR IGNORE INTO merit_events
-       (id, kind, occurred_at, site_id, observation_id, acknowledgement)
-     VALUES (?, ?, ?, ?, ?, ?)`,
+       (id, kind, amount, occurred_at, day_key, site_id, observation_id, acknowledgement)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
     event.id,
     event.kind,
+    event.amount,
     event.occurredAt,
+    dayKey,
     event.siteId ?? null,
     event.observationId ?? null,
     event.acknowledgement,
   );
   return result.changes > 0;
+}
+
+/** Puṇya awarded on a given local day (YYYY-MM-DD). The cap sums over this. */
+export async function sumMeritForDay(dayKey: string): Promise<number> {
+  const db = await getDatabase();
+  const row = await db.getFirstAsync<{ n: number | null }>(
+    'SELECT SUM(amount) AS n FROM merit_events WHERE day_key = ?',
+    dayKey,
+  );
+  return row?.n ?? 0;
+}
+
+/** Lifetime puṇya balance. Derived, never stored — Charter #9. */
+export async function totalMerit(): Promise<number> {
+  const db = await getDatabase();
+  const row = await db.getFirstAsync<{ n: number | null }>('SELECT SUM(amount) AS n FROM merit_events');
+  return row?.n ?? 0;
 }
 
 /** Newest first. `since` is an ISO instant; omit for the whole record. */

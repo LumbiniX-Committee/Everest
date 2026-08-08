@@ -23,7 +23,7 @@ export function MeritAcknowledgement({ event }: MeritAcknowledgementProps) {
   return (
     <View style={styles.wrap}>
       <Text variant="label" tone="sandstone" uppercase>
-        Puṇya · {MERIT_LABELS[event.kind]}
+        Puṇya +{event.amount} · {MERIT_LABELS[event.kind]}
       </Text>
       <Text variant="bodyLarge">{event.acknowledgement}</Text>
     </View>
