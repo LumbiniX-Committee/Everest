@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 
+import { Text } from '@/components/ui';
 import { demoSites } from '@/data';
-import { colors, radii } from '@/theme';
+import { colors, radii, spacing } from '@/theme';
 import type { Coordinate } from '@/types';
 
 import { buildMapHtml } from './mapHtml';
@@ -14,8 +15,17 @@ export type MapWebViewProps = {
   /** Fills its parent instead of sitting at a fixed height. */
   fill?: boolean;
   onSelectSite?: (siteId: string) => void;
-  /** Live position. Drives the figure; omit and no figure is drawn. */
+  /** Live position, pushed into the running page. */
   coordinate?: Coordinate | null;
+  /**
+   * Draw the figure at all.
+   *
+   * A declared intent, not derived from whether a fix has arrived yet. Deriving
+   * it meant the document was built without the figure, then rebuilt the moment
+   * GPS returned — a full teardown and CDN reload a few seconds after opening,
+   * repeating whenever the fix dropped. That is what "stuck" looked like.
+   */
+  showFigure?: boolean;
   /** Degrees from true north. Turns the figure to face the way you are going. */
   heading?: number | null;
   /** Keep the camera on the figure as it moves. */
@@ -40,17 +50,33 @@ export function MapWebView({
   coordinate,
   heading,
   follow = true,
+  showFigure = false,
 }: MapWebViewProps) {
   const [failed, setFailed] = useState(false);
   const [ready, setReady] = useState(false);
   const webRef = useRef<WebView>(null);
 
-  const wantsFigure = coordinate != null;
+  /**
+   * Give up waiting after this long and show the plan instead.
+   *
+   * The document is inline, so it always loads and `onError` never fires — a
+   * MapLibre script that hangs on a slow connection leaves a blank container
+   * with nothing to report it. Without this the screen simply never resolves.
+   */
+  useEffect(() => {
+    if (ready || failed) return;
+    const timer = setTimeout(() => setFailed(true), 15_000);
+    return () => clearTimeout(timer);
+  }, [ready, failed]);
+
   // Interactive only when it fills the screen. Inline, the map is a preview
   // that opens the full-screen one — see MapHtmlOptions.interactive.
+  //
+  // Depends only on props that do not change while the screen is open, so the
+  // document is built once and never rebuilt underneath a running map.
   const html = useMemo(
-    () => buildMapHtml({ avatar: wantsFigure, fullscreen: fill, interactive: fill }),
-    [wantsFigure, fill],
+    () => buildMapHtml({ avatar: showFigure, fullscreen: fill, interactive: fill }),
+    [showFigure, fill],
   );
 
   /**
@@ -89,6 +115,15 @@ export function MapWebView({
 
   return (
     <View style={[fill ? styles.fillWrap : styles.wrap, frame]}>
+      {!ready ? (
+        <View style={[StyleSheet.absoluteFill, styles.loading]} pointerEvents="none">
+          <ActivityIndicator color={colors.sandstoneDeep} />
+          <Text variant="caption" tone="muted">
+            Drawing the ground
+          </Text>
+        </View>
+      ) : null}
+
       <WebView
         ref={webRef}
         style={styles.web}
@@ -129,5 +164,12 @@ const styles = StyleSheet.create({
   },
   fillWrap: { overflow: 'hidden', backgroundColor: colors.surfaceSecondary },
   fill: { flex: 1 },
-  web: { flex: 1, backgroundColor: colors.background },
+  web: { flex: 1, backgroundColor: colors.mapBase },
+  loading: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.sm,
+    backgroundColor: colors.mapBase,
+    zIndex: 1,
+  },
 });

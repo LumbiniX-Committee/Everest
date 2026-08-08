@@ -60,6 +60,7 @@ export function SakshiScreen() {
   return (
     <Screen scroll>
       <ScreenHeader
+        canGoBack={false}
         eyebrow="Sākṣī"
         title="Witness"
         subtitle="Return to a fixed viewpoint, align, and record what is there today."

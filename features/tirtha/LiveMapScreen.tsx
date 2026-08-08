@@ -34,6 +34,7 @@ export function LiveMapScreen() {
     <View style={styles.root}>
       <MapWebView
         fill
+        showFigure
         coordinate={coordinate}
         heading={typeof heading === 'number' ? heading : null}
         follow={follow}
