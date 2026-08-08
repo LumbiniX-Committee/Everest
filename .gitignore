@@ -47,6 +47,13 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
+# Agent working files. Coordination state and throwaway verification scripts
+# from automated sessions — the code they produced is committed, the scaffolding
+# around it is not. PROJECT.md and TEST_INFRA.md are kept: those are documents
+# about the project rather than about a run.
+.agents/
+scratch/
+
 # generated native folders
 /ios
 /android
