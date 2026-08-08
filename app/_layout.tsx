@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
+import { AppState } from 'react-native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';
 
+import { syncPendingObservations } from '@/services/sync';
 import { AppProviders, useAppState } from '@/store';
 import { colors, useAppFonts } from '@/theme';
 
@@ -33,6 +35,15 @@ function RootNavigator() {
       void SplashScreen.hideAsync();
     }
   }, [fontsReady, hydrated]);
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextState) => {
+      if (nextState === 'active') {
+        void syncPendingObservations().catch(() => undefined);
+      }
+    });
+    return () => subscription.remove();
+  }, []);
 
   // Rendering nothing here keeps the splash in place rather than showing a
   // half-styled frame; the effect above lifts it once both are settled.

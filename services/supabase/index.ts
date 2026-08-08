@@ -25,7 +25,9 @@ let client: SupabaseClient | null = null;
 
 /** True when the app is configured to talk to Supabase at all. */
 export function isConfigured(): boolean {
-  return Boolean(url && key);
+  if (!url || !key) return false;
+  if (url.includes('your-project.supabase.co') || key.includes('your-publishable-key')) return false;
+  return true;
 }
 
 /**
@@ -33,7 +35,7 @@ export function isConfigured(): boolean {
  * offline should check `isConfigured()` first rather than catching this.
  */
 export function getSupabase(): SupabaseClient {
-  if (!url || !key) {
+  if (!isConfigured()) {
     throw new Error(
       'Supabase is not configured. Set EXPO_PUBLIC_SUPABASE_URL and ' +
         'EXPO_PUBLIC_SUPABASE_KEY in .env.local — see .env.example.',
@@ -41,7 +43,7 @@ export function getSupabase(): SupabaseClient {
   }
 
   if (!client) {
-    client = createClient(url, key, {
+    client = createClient(url!, key!, {
       auth: {
         // React Native has no localStorage; sessions persist through AsyncStorage.
         storage: AsyncStorage,

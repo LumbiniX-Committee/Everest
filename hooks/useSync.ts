@@ -1,6 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
-import { syncData, SyncState } from '@/services/supabase/sync';
-import { getUnsyncedObservations, getUnsyncedConditionReports } from '@/services/database';
+import { useCallback, useEffect, useState } from 'react';
+
+import { getUnsyncedConditionReports, getUnsyncedObservations } from '@/services/database';
+import { isConfigured } from '@/services/supabase';
+import { syncData, type SyncState } from '@/services/supabase/sync';
 
 export function useSync() {
   const [syncState, setSyncState] = useState<SyncState>('offline');
@@ -12,26 +14,33 @@ export function useSync() {
       const reps = await getUnsyncedConditionReports();
       const total = obs.length + reps.length;
       setPendingCount(total);
-      
+
       if (total === 0) {
         setSyncState('synced');
+      } else if (!isConfigured()) {
+        setSyncState('offline');
       } else if (syncState === 'synced') {
-        // We have pending items, go back to offline/ready state
         setSyncState('offline');
       }
-    } catch {
-      // Ignore
+    } catch (err) {
+      console.warn('[useSync] checkPending failed:', err);
     }
   }, [syncState]);
 
   const triggerSync = useCallback(async () => {
+    if (!isConfigured()) {
+      console.warn('[useSync] Cannot sync: Supabase is not configured in .env.local');
+      setSyncState('offline');
+      return;
+    }
     if (pendingCount === 0) return;
-    
+
     setSyncState('syncing');
     try {
       await syncData();
       await checkPending();
     } catch (error) {
+      console.warn('[useSync] Sync failed:', error);
       setSyncState('failed');
     }
   }, [pendingCount, checkPending]);
