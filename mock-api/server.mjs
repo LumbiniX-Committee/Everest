@@ -26,6 +26,24 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const SEED = join(__dirname, '..', 'seed');
 const PORT = Number(process.env.PORT) || 8000;
 
+// --- Dhamma Engine (lazy-loaded from core — TypeScript but Node strips types) -
+let _dhammaReady = false;
+let _askDhamma, _processReflection;
+async function loadDhamma() {
+  if (_dhammaReady) return;
+  try {
+    const mod = await import('../core/dhamma/index.ts');
+    _askDhamma = mod.askDhamma;
+    _processReflection = mod.processReflection;
+    _dhammaReady = true;
+    console.log('[dhamma] engine loaded ✓');
+  } catch (e) {
+    console.warn('[dhamma] engine unavailable — falling back to stub:', e.message);
+  }
+}
+// Kick off background load
+loadDhamma().catch(() => {});
+
 // --- seed (read once at boot) ----------------------------------------------
 const readSeed = (f) => JSON.parse(readFileSync(join(SEED, f), 'utf8'));
 const sites = readSeed('sites.json');
@@ -49,6 +67,8 @@ const state = {
   meritEvents: [],
   allocations: [],
   questCompletions: [],
+  acknowledgements: [],
+  dhammaLog: [],        // audit trail: question, refusal, citations, tier
 };
 
 // --- geo (inlined; the mock cannot import the TS shared/geo.ts directly) -----
@@ -327,8 +347,27 @@ on('POST', '/quests/:id/complete', (_req, res, p, _q, body) => {
   json(res, 200, { merit_awarded: awarded, evidence_id, merit_capped: before === 0 });
 });
 
-// POST /dhamma/ask → passages-only degraded tier (the mock never generates)
-on('POST', '/dhamma/ask', (_req, res, _p, _q, body) => {
+// POST /dhamma/ask → real engine if loaded, passage-only stub otherwise
+on('POST', '/dhamma/ask', async (_req, res, _p, _q, body) => {
+  const question = String(body.question || '').trim();
+  if (!question) return err(res, 400, 'question is required');
+
+  if (_askDhamma) {
+    try {
+      const result = _askDhamma(question, body.site_id || null);
+      // audit trail
+      state.dhammaLog.push({
+        id: randomUUID(), ts: now(), question,
+        refused: result.refused, tier: result.tier,
+        citation_count: result.citations?.length ?? 0,
+      });
+      return json(res, 200, result);
+    } catch (e) {
+      console.error('[dhamma] engine error:', e);
+    }
+  }
+
+  // Stub fallback: surfaces passages but makes no claim
   json(res, 200, {
     answer: null,
     refused: false,
@@ -342,12 +381,62 @@ on('POST', '/dhamma/ask', (_req, res, _p, _q, body) => {
       licence: 'CC0-1.0',
     }],
     tier: 'passages_only',
-    _note: `mock echo of question: ${JSON.stringify(body.question || '')}`,
+    _note: `engine unavailable — stub response for: ${JSON.stringify(question)}`,
   });
 });
 
-// GET /dashboard
-on('GET', '/dashboard', (_req, res) => {
+// POST /dhamma/reflect → Socratic four-truths reflection companion
+on('POST', '/dhamma/reflect', async (_req, res, _p, _q, body) => {
+  if (_processReflection) {
+    try {
+      const result = _processReflection({
+        site_id: body.site_id,
+        stage: body.stage ?? 1,
+        user_input: body.user_input,
+        language: body.language ?? 'en',
+      });
+      return json(res, 200, result);
+    } catch (e) {
+      console.error('[dhamma/reflect] error:', e);
+    }
+  }
+  // Stub fallback
+  json(res, 200, {
+    inquiry: 'What are you carrying today that feels heavy?',
+    stage: body.stage ?? 1,
+    completed: false,
+    distress_override: false,
+    disclaimer: 'This is a reflective inquiry tool. It is not counselling, therapy, or mental health treatment.',
+    _note: 'engine unavailable — stub response',
+  });
+});
+
+// POST /custodian/acknowledgements → custodian acknowledges a report
+on('POST', '/custodian/acknowledgements', (_req, res, _p, _q, body) => {
+  const report = state.reports.find((r) => r.id === body.report_id);
+  if (!report) return err(res, 404, `no report '${body.report_id}'`);
+  report.acknowledged_at = now();
+  report.custodian_note = body.note ?? null;
+  report.status = body.status ?? 'acknowledged';
+  const ack = {
+    id: randomUUID(),
+    report_id: body.report_id,
+    custodian_id: body.custodian_id || 'lumbini-trust',
+    note: report.custodian_note,
+    status: report.status,
+    acknowledged_at: report.acknowledged_at,
+  };
+  state.acknowledgements.push(ack);
+  json(res, 201, ack);
+});
+
+// GET /dhamma/log → audit trail of questions asked (last 50)
+on('GET', '/dhamma/log', (_req, res) => {
+  json(res, 200, state.dhammaLog.slice(-50).reverse());
+});
+
+// GET /dashboard  (also aliased as /dashboard/summary)
+function dashboardData() {
   const activeVantages = vantages.filter((v) => v.active);
   const surveyed = new Set(state.captures.map((c) => c.vantage_id));
   const surveyedCount = activeVantages.filter((v) => surveyed.has(v.id)).length;
@@ -355,16 +444,48 @@ on('GET', '/dashboard', (_req, res) => {
   const median = scores.length ? scores[Math.floor(scores.length / 2)] : 0;
   const byStatus = { open: 0, corroborated: 0, acknowledged: 0, in_progress: 0, resolved: 0 };
   for (const r of state.reports) byStatus[r.status] = (byStatus[r.status] || 0) + 1;
-  json(res, 200, {
+
+  // Median acknowledgement hours (open → acknowledged)
+  const ackHours = state.acknowledgements
+    .map((a) => {
+      const rep = state.reports.find((r) => r.id === a.report_id);
+      if (!rep) return null;
+      return (new Date(a.acknowledged_at) - new Date(rep.created_at)) / 3_600_000;
+    })
+    .filter(Boolean)
+    .sort((a, b) => a - b);
+  const medianAckHours = ackHours.length ? Number(ackHours[Math.floor(ackHours.length / 2)].toFixed(1)) : null;
+
+  // Per-site capture heatmap
+  const heatmap = {};
+  for (const c of state.captures) {
+    const v = vantageById.get(c.vantage_id);
+    if (!v) continue;
+    heatmap[v.site_id] = (heatmap[v.site_id] || 0) + 1;
+  }
+
+  // Dhamma stats
+  const dhammaTotal = state.dhammaLog.length;
+  const dhammaRefused = state.dhammaLog.filter((l) => l.refused).length;
+
+  return {
     coverage_pct: activeVantages.length ? Math.round((surveyedCount / activeVantages.length) * 100) : 0,
     vantages_total: activeVantages.length,
     vantages_surveyed: surveyedCount,
     captures_total: state.captures.length,
     median_align_score: Number(median.toFixed(2)),
     reports_by_status: byStatus,
-    median_ack_hours: null,
-  });
-});
+    median_ack_hours: medianAckHours,
+    capture_heatmap: heatmap,
+    dhamma_questions_total: dhammaTotal,
+    dhamma_refusal_rate: dhammaTotal > 0 ? Number((dhammaRefused / dhammaTotal).toFixed(3)) : null,
+    merit_balance: meritSummary().balance,
+    active_pilgrims: 1, // demo single user
+    generated_at: now(),
+  };
+}
+on('GET', '/dashboard', (_req, res) => json(res, 200, dashboardData()));
+on('GET', '/dashboard/summary', (_req, res) => json(res, 200, dashboardData()));
 
 // GET /export?format=csv|geojson|crm
 on('GET', '/export', (_req, res, _p, q) => {
