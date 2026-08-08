@@ -3,10 +3,11 @@
  * attention worth paying. It does not gate content — nothing is locked behind
  * one — and completing it grants no score.
  *
- * There is deliberately no reward amount here. Completion calls
- * `usePractice().recognise()`, which records one merit event and takes no
- * quantity; merit_events has no weight column and the only aggregate read from
- * it is a count. A number on this type could be displayed but never honoured.
+ * There is no reward amount on the quest itself. Completion calls
+ * `usePractice().recognise()`, which awards puṇya weighted by the *kind* of
+ * attention (see MERIT_WEIGHTS) — never by quest, difficulty, or outcome — and
+ * clips to the daily cap. Putting a number here would invite tuning quests for
+ * points; the weighting lives with the act, not the quest.
  */
 export type QuestCategory = 'survey' | 'epigraphy' | 'ecology' | 'monastic';
 
