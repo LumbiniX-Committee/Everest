@@ -81,3 +81,6 @@ harvest/_crops/
 # these broke the bundle for everyone who had not run the generator locally.
 # Generate with tools/make-narration-audio.ps1, then commit the output and
 # register each file in data/audio.ts.
+
+# Claude Code local settings
+.claude/settings.local.json
