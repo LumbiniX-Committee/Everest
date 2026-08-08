@@ -10,6 +10,23 @@ it sounds like someone talking beside you rather than a label being read out.
 **Pre-generate every clip as a bundled asset. Never run live text-to-speech at a
 venue** — no network, no latency, no surprises on stage (09-PITCH §5).
 
+### The generator
+
+`tools/make-narration-audio.ps1` reads this manifest and writes
+`<site-id>.<lang>.opus` into `app/assets/audio/` for you:
+
+```powershell
+powershell -File tools/make-narration-audio.ps1 -Lang en
+powershell -File tools/make-narration-audio.ps1 -Lang ne   # needs a Nepali voice installed
+```
+
+It picks the best installed voice for the language and pipes through the ffmpeg
+Opus command below. **The Windows SAPI voices it falls back to (David/Zira) are
+robotic placeholders** — they prove the pipeline and make the player demoable
+offline, but they are git-ignored and must be replaced with a good neural voice
+before any real demo. There is no Nepali SAPI voice, so the `ne` track cannot be
+generated this way at all — use a neural Nepali TTS for it.
+
 1. Synthesize each `en` and `ne` string with a good TTS voice. Use a Nepali
    voice for the `ne` track — an English voice reading Devanagari is worse than
    no audio.
