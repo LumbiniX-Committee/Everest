@@ -243,6 +243,20 @@ export async function getObservation(id: string): Promise<Observation | null> {
   return row ? toObservation(row) : null;
 }
 
+export async function getUnsyncedObservations(): Promise<Observation[]> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<ObservationRow>(
+    'SELECT * FROM observations WHERE synced = 0 ORDER BY captured_at ASC'
+  );
+  return rows.map(toObservation);
+}
+
+export async function markObservationSynced(id: string): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync('UPDATE observations SET synced = 1 WHERE id = ?', id);
+}
+
+
 type ConditionReportRow = {
   id: string;
   observation_id: string;
@@ -303,7 +317,6 @@ export async function insertConditionReport(report: ConditionReport): Promise<vo
   });
 }
 
-/** Reports for one observation, or every report newest first. */
 export async function listConditionReports(observationId?: string): Promise<ConditionReport[]> {
   const db = await getDatabase();
   const rows = observationId
@@ -315,6 +328,19 @@ export async function listConditionReports(observationId?: string): Promise<Cond
         'SELECT * FROM condition_reports ORDER BY recorded_at DESC',
       );
   return rows.map(toConditionReport);
+}
+
+export async function getUnsyncedConditionReports(): Promise<ConditionReport[]> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<ConditionReportRow>(
+    'SELECT * FROM condition_reports WHERE synced = 0 ORDER BY recorded_at ASC'
+  );
+  return rows.map(toConditionReport);
+}
+
+export async function markConditionReportSynced(id: string): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync('UPDATE condition_reports SET synced = 1 WHERE id = ?', id);
 }
 
 type MeritEventRow = {
