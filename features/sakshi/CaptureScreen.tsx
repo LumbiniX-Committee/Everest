@@ -31,7 +31,11 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
   const router = useRouter();
   const vantage = findVantage(vantageId);
   const { state: cameraPermission, request: requestCamera, openSettings } = usePermission('camera');
-  const alignment = useAlignment({ vantage });
+  const [nudgeDeg, setNudgeDeg] = useState(0);
+  const [showDissolve, setShowDissolve] = useState(false);
+  const [dissolveOpacity, setDissolveOpacity] = useState(0.35);
+
+  const alignment = useAlignment({ vantage, nudgeDeg });
   const cameraRef = useRef<CameraView>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -72,7 +76,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
     );
   }
 
-  const onCapture = async () => {
+  const onCapture = async (isNoChange = false) => {
     if (saving) return;
     setSaving(true);
     setError(null);
@@ -92,6 +96,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
         pitch: vantage.pitch - (alignment.pitchDeltaDeg ?? 0),
         positionErrorM: alignment.distanceM ?? 0,
         bearingErrorDeg: Math.abs(alignment.bearingDeltaDeg ?? 0),
+        note: isNoChange ? 'Nothing has changed — verified stability.' : undefined,
         synced: false,
       };
 
@@ -101,8 +106,6 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
         params: { observationId: observation.id },
       });
     } catch (caught) {
-      // The photograph may be irreplaceable, so failure is surfaced and the
-      // screen stays put rather than navigating away from a lost capture.
       setError(caught instanceof Error ? caught.message : 'The capture failed.');
     } finally {
       setSaving(false);
@@ -115,6 +118,15 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
     <Screen bleed edges={['top', 'bottom']} contentStyle={styles.frame}>
       <View style={styles.viewfinder}>
         <CameraView ref={cameraRef} style={StyleSheet.absoluteFill} facing="back" />
+
+        {/* Phase 1 Dissolve Plate Overlay */}
+        {showDissolve && vantage.referenceImageUri ? (
+          <Image
+            source={{ uri: vantage.referenceImageUri }}
+            style={[StyleSheet.absoluteFill, { opacity: dissolveOpacity }]}
+            resizeMode="cover"
+          />
+        ) : null}
 
         <View style={[StyleSheet.absoluteFill, styles.overlay]} pointerEvents="none">
           <Reticle size={240} progress={alignment.progress} phase={alignment.phase} />
@@ -134,29 +146,61 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
           </Text>
         </View>
 
+        {/* Manual Compass Heading Nudge & Dissolve Controls (Task 1.3 & 2.7) */}
+        <View style={styles.nudgeRow}>
+          <Button
+            label="Dissolve 1899"
+            variant={showDissolve ? 'secondary' : 'quiet'}
+            onPress={() => setShowDissolve(!showDissolve)}
+          />
+          <Button
+            label={`Nudge -5°`}
+            variant="quiet"
+            onPress={() => setNudgeDeg((prev) => prev - 5)}
+          />
+          <Text variant="mono" tone="secondary">
+            {nudgeDeg === 0 ? 'Compass 0°' : `${nudgeDeg > 0 ? '+' : ''}${nudgeDeg}°`}
+          </Text>
+          <Button
+            label={`Nudge +5°`}
+            variant="quiet"
+            onPress={() => setNudgeDeg((prev) => prev + 5)}
+          />
+        </View>
+
         {error ? (
           <Text variant="caption" tone="open" center>
             {error}
           </Text>
         ) : null}
 
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Record observation"
-          accessibilityState={{ disabled: !locked || saving, busy: saving }}
-          disabled={!locked || saving}
-          onPress={onCapture}
-          style={({ pressed }) => [
-            styles.shutter,
-            locked ? styles.shutterReady : styles.shutterWaiting,
-            pressed && styles.shutterPressed,
-          ]}
-        >
-          <View style={[styles.shutterCore, locked && styles.shutterCoreReady]} />
-        </Pressable>
+        <View style={styles.buttonGroup}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Record observation"
+            accessibilityState={{ disabled: !locked || saving, busy: saving }}
+            disabled={!locked || saving}
+            onPress={() => onCapture(false)}
+            style={({ pressed }) => [
+              styles.shutter,
+              locked ? styles.shutterReady : styles.shutterWaiting,
+              pressed && styles.shutterPressed,
+            ]}
+          >
+            <View style={[styles.shutterCore, locked && styles.shutterCoreReady]} />
+          </Pressable>
+
+          {/* Task 3.5: "Nothing has changed" one-tap action */}
+          <Button
+            label="Nothing has changed"
+            variant="quiet"
+            onPress={() => onCapture(true)}
+            accessibilityHint="Record stable observation with identical merit award"
+          />
+        </View>
 
         <Text variant="caption" tone="muted" center>
-          {locked ? 'Aligned. Record when the light is right.' : 'Move until the reticle closes.'}
+          {locked ? 'Aligned. Record when the light is right.' : 'Move or use manual nudge until reticle locks.'}
         </Text>
       </View>
     </Screen>
@@ -180,6 +224,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignSelf: 'stretch',
+  },
+  nudgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.xs,
+  },
+  buttonGroup: {
+    alignItems: 'center',
+    gap: spacing.sm,
   },
   shutter: {
     width: 72,

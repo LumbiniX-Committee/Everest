@@ -41,11 +41,13 @@ export type AlignmentInput = {
   vantage: Vantage | null | undefined;
   /** Pass false to release the sensors when the screen is not visible. */
   active?: boolean;
+  /** Manual heading nudge offset in degrees for compass drift correction. */
+  nudgeDeg?: number;
 };
 
-export function useAlignment({ vantage, active = true }: AlignmentInput): AlignmentState {
+export function useAlignment({ vantage, active = true, nudgeDeg = 0 }: AlignmentInput): AlignmentState {
   const { coordinate } = useCurrentPosition({ watch: active, highAccuracy: true });
-  const heading = useHeading(active);
+  const heading = useHeading(active, nudgeDeg);
   const pitch = usePitch(active);
 
   return useMemo(
