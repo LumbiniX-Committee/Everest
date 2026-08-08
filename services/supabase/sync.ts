@@ -1,3 +1,4 @@
+import { ensureSession } from './auth';
 import { getSupabase, isConfigured } from './index';
 import {
   getUnsyncedObservations,
@@ -56,8 +57,19 @@ export async function syncData(): Promise<void> {
   if (!isConfigured()) return;
 
   const supabase = getSupabase();
-  // Groups this device's records on the server. Not a person and not
-  // authentication — see services/device.
+
+  // Establishes who is writing, so RLS can scope rows to their author rather
+  // than to a role. `user_id` is never sent from here — the column defaults to
+  // auth.uid() from the token, which is precisely why the client cannot claim
+  // someone else's authorship.
+  //
+  // A null session is a working state, not an error: the anon write policies
+  // are still in place (0006), so a device that cannot sign in still syncs.
+  await ensureSession();
+
+  // Groups this device's records on the server. Kept alongside user_id rather
+  // than replaced by it: an account is per-install too, but device_id survives
+  // a sign-out and distinguishes two phones sharing one future account.
   const deviceId = await getDeviceId();
 
   const failures: string[] = [];

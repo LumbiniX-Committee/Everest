@@ -61,25 +61,51 @@ against. That is a real limitation, not an oversight — see §3.
 
 ---
 
-## 3. The identity gap
+## 3. Identity
 
-**There is no authentication.** Every observation reaching the server is
-anonymous, and the app writes with the publishable key that ships inside the
-APK.
+Originally this section recorded a gap: there was no authentication at all,
+every row arrived from the `anon` role, and three things followed from that —
+provenance was unrecorded, personal data could not survive a reinstall, and RLS
+could only be scoped to a role rather than an author, which is why `anon` held
+update on every row.
 
-Three things follow, and they should be decided deliberately rather than
-inherited:
+Two of the three are now addressed.
 
-1. **Provenance is unrecorded.** A conservation record whose entries have no
-   author is much weaker evidence. "Who took this, and had they done it before?"
-   is a question a reviewer will ask, and the schema currently cannot answer it.
-2. **Personal data cannot survive a reinstall.** Quest progress and merit are
-   tied to a device, not a person.
-3. **RLS is unaided.** With no user, policies cannot be scoped to an author —
-   only to a role. The current tables therefore grant `anon` insert *and update*,
-   which means a leaked key can overwrite an existing row. See
-   `supabase/migrations/0001_observation_sync.sql` for why update is needed at
-   all.
+### Anonymous sessions (`0006`)
+
+`services/supabase/auth.ts` signs in anonymously and every record carries a
+`user_id` filled by a column default from the token. The client never sends it,
+which is exactly why it cannot claim someone else's authorship — `auth.uid()`
+comes from a signed JWT rather than from the request body, so `user_id =
+auth.uid()` is a claim the database can check rather than a convention it hopes
+the client honours.
+
+Anonymous rather than a sign-up form, deliberately. Someone standing at the Maya
+Devi temple with a photograph to record should not first have to make an
+account; the account exists to own rows, not to identify a person.
+
+**Provenance is now recorded** and **RLS is now author-scoped**. Point 2 is not
+fixed: an anonymous session lives in the app's own storage, so a reinstall is a
+new account and the old records stay under an id nobody holds. Supabase supports
+adding an email to an anonymous user in place, and that — not a second account
+system — is the path when reinstall survival is worth asking people for.
+
+### The cutover is two-phase
+
+`0006` **added** author-scoped policies and left the `anon` ones in place.
+`0007` removes them and is **written but not applied**, because dropping the
+unauthenticated path early breaks everything:
+
+- Anonymous sign-in is a project setting. Until it is enabled the app cannot get
+  a session at all and every write arrives as `anon`.
+- Updates reach devices over the air, not all at once. A phone on an older
+  bundle has no auth code, and it is holding photographs that cannot be retaken.
+
+`ensureSession()` returning null is therefore a working state rather than a
+failure. `0007` carries the readiness query that says when it is safe to run.
+
+Until `0007` is applied the old weakness is still live: `anon` can update any
+row, and the publishable key ships inside the APK.
 
 **Done: an anonymous device identity.** `services/device` generates an id on
 first launch, stores it on device, and every synced row now carries it
@@ -198,12 +224,14 @@ which makes retry idempotent.
    a free-text `site_id` that nothing validates. Needs the app to read
    remote-with-bundle-fallback, so it is a change to the offline guarantee and
    not only to the schema.
-6. **Auth, then author-scoped RLS.** Replaces the blanket `anon` update policy,
-   and is the only thing that makes personal data survive a reinstall. Wants a
-   product decision first — anonymous sign-in gets an `auth.uid()` with no UI at
-   all, real accounts need a sign-in people will meet before they have any
-   reason to trust the app.
-7. **Personal-data sync**, only once 6 exists.
+6. ~~**`0006` — auth, then author-scoped RLS.**~~ Done, as anonymous sessions.
+   **`0007` retires the `anon` write path and is not yet applied** — see §3 for
+   the two preconditions.
+7. **An upgrade path from anonymous to a real credential.** What actually makes
+   personal data survive a reinstall, and what turns "this device recorded it"
+   into "this person did". Adding an email to the existing anonymous user keeps
+   the rows; a separate account system would strand them.
+8. **Personal-data sync**, only once 7 exists.
 
 ### Deliberately not planned
 
@@ -232,9 +260,15 @@ Two things to decide before the archive grows:
 
 - **Retention.** Nothing is deleted, so storage grows without bound. That is
   correct for the record and needs a budget rather than a policy change.
-- **Reading them back.** The bucket is private and there is no read policy, so
-  today photographs are retrievable only through the dashboard or a service
-  role. A conservator-facing view will need signed URLs, not a public bucket.
+- **Reading them back.** Both buckets are private and no read policy exists, so
+  photographs are retrievable only through the dashboard or a service role. A
+  conservator-facing view will need signed URLs, not a public bucket.
+- **Object paths are not owner-scoped.** An observation is stored at
+  `<site_id>/<id>.<ext>`, chosen so the archive reads by place rather than by
+  person, which means the write policies grant an authenticated client the whole
+  bucket rather than its own objects. Scoping would need the user id in the
+  path, and repathing would orphan every file already recorded in a row — so it
+  is left as it is, on purpose, and written down rather than assumed.
 
 ---
 
