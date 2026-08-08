@@ -26,6 +26,20 @@ export type Attitude = {
   roll: number;
 };
 
+type MagnetometerData = {
+  x: number;
+  y: number;
+  z?: number;
+};
+
+type DeviceMotionData = {
+  rotation?: {
+    alpha?: number;
+    beta: number;
+    gamma: number;
+  };
+};
+
 /**
  * Circular exponential smoothing. Averaging 359° and 1° must give 0°, not 180°,
  * so we smooth the unit vector rather than the angle.
@@ -57,7 +71,7 @@ export function watchHeading(onHeading: (heading: Heading) => void, intervalMs =
     }
 
     Magnetometer.setUpdateInterval?.(intervalMs);
-    const subscription = Magnetometer.addListener(({ x, y }) => {
+    const subscription = Magnetometer.addListener(({ x, y }: MagnetometerData) => {
       const raw = normalizeBearing((Math.atan2(y, x) * 180) / Math.PI);
       smoothed = smoothAngle(smoothed, raw, HEADING_SMOOTHING);
       onHeading({ degrees: smoothed });
@@ -81,7 +95,7 @@ export function watchAttitude(onAttitude: (attitude: Attitude) => void, interval
     }
 
     DeviceMotion.setUpdateInterval?.(intervalMs);
-    const subscription = DeviceMotion.addListener(({ rotation }) => {
+    const subscription = DeviceMotion.addListener(({ rotation }: DeviceMotionData) => {
       if (!rotation) return;
       const toDeg = 180 / Math.PI;
       pitch = smoothAngle(pitch, rotation.beta * toDeg, PITCH_SMOOTHING);
