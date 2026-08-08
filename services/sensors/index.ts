@@ -46,46 +46,62 @@ const HEADING_SMOOTHING = 0.15;
 const PITCH_SMOOTHING = 0.2;
 
 /**
- * Stream a smoothed compass heading. Returns an unsubscribe function that is
- * safe to call unconditionally.
+ * Stream a smoothed compass heading. Safe on all platforms (web fallback).
  */
 export function watchHeading(onHeading: (heading: Heading) => void, intervalMs = 100): () => void {
   let smoothed: number | null = null;
 
-  Magnetometer.setUpdateInterval(intervalMs);
-  const subscription = Magnetometer.addListener(({ x, y }) => {
-    // atan2(y, x) gives the angle to magnetic north in the device plane.
-    const raw = normalizeBearing((Math.atan2(y, x) * 180) / Math.PI);
-    smoothed = smoothAngle(smoothed, raw, HEADING_SMOOTHING);
-    onHeading({ degrees: smoothed });
-  });
+  try {
+    if (typeof Magnetometer?.addListener !== 'function') {
+      return () => {};
+    }
 
-  return () => subscription.remove();
+    Magnetometer.setUpdateInterval?.(intervalMs);
+    const subscription = Magnetometer.addListener(({ x, y }) => {
+      const raw = normalizeBearing((Math.atan2(y, x) * 180) / Math.PI);
+      smoothed = smoothAngle(smoothed, raw, HEADING_SMOOTHING);
+      onHeading({ degrees: smoothed });
+    });
+
+    return () => subscription?.remove?.();
+  } catch (err) {
+    console.warn('[sensors] watchHeading unavailable on this platform:', err);
+    return () => {};
+  }
 }
 
-/** Stream a smoothed pitch and roll. */
+/** Stream a smoothed pitch and roll. Safe on all platforms (web fallback). */
 export function watchAttitude(onAttitude: (attitude: Attitude) => void, intervalMs = 100): () => void {
   let pitch: number | null = null;
   let roll: number | null = null;
 
-  DeviceMotion.setUpdateInterval(intervalMs);
-  const subscription = DeviceMotion.addListener(({ rotation }) => {
-    if (!rotation) return;
-    const toDeg = 180 / Math.PI;
-    pitch = smoothAngle(pitch, rotation.beta * toDeg, PITCH_SMOOTHING);
-    roll = smoothAngle(roll, rotation.gamma * toDeg, PITCH_SMOOTHING);
-    // Report in −180…180 so "level" reads as 0, not 360.
-    onAttitude({
-      pitch: pitch > 180 ? pitch - 360 : pitch,
-      roll: roll > 180 ? roll - 360 : roll,
-    });
-  });
+  try {
+    if (typeof DeviceMotion?.addListener !== 'function') {
+      return () => {};
+    }
 
-  return () => subscription.remove();
+    DeviceMotion.setUpdateInterval?.(intervalMs);
+    const subscription = DeviceMotion.addListener(({ rotation }) => {
+      if (!rotation) return;
+      const toDeg = 180 / Math.PI;
+      pitch = smoothAngle(pitch, rotation.beta * toDeg, PITCH_SMOOTHING);
+      roll = smoothAngle(roll, rotation.gamma * toDeg, PITCH_SMOOTHING);
+      onAttitude({
+        pitch: pitch > 180 ? pitch - 360 : pitch,
+        roll: roll > 180 ? roll - 360 : roll,
+      });
+    });
+
+    return () => subscription?.remove?.();
+  } catch (err) {
+    console.warn('[sensors] watchAttitude unavailable on this platform:', err);
+    return () => {};
+  }
 }
 
 export async function isHeadingAvailable(): Promise<boolean> {
   try {
+    if (typeof Magnetometer?.isAvailableAsync !== 'function') return false;
     return await Magnetometer.isAvailableAsync();
   } catch {
     return false;
@@ -94,6 +110,7 @@ export async function isHeadingAvailable(): Promise<boolean> {
 
 export async function isAttitudeAvailable(): Promise<boolean> {
   try {
+    if (typeof DeviceMotion?.isAvailableAsync !== 'function') return false;
     return await DeviceMotion.isAvailableAsync();
   } catch {
     return false;
