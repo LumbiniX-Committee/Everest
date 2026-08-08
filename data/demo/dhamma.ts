@@ -60,7 +60,7 @@ export const demoDhammaEntries: DhammaEntry[] = [
     // The inscription is on the pillar and names the spot the temple marks.
     // Not linked to the pond or the Bodhi tree: the passage says nothing about
     // either, and arriving at one is no reason to be handed the other.
-    siteIds: ['ashoka-pillar', 'maya-devi-temple'],
+    siteIds: ['ashokan-pillar', 'maya-devi-temple'],
   },
   {
     id: 'appamada',

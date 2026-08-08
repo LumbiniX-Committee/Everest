@@ -1,4 +1,4 @@
-import { Camera, GeoJSONSource, Layer, Map, UserLocation } from '@maplibre/maplibre-react-native';
+import Constants, { ExecutionEnvironment } from 'expo-constants';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -6,12 +6,43 @@ import { Text } from '@/components/ui';
 import { MAP_HOME, precinctGeoJSON, siteGeoJSON } from '@/data';
 import { colors, radii, sakshiMapStyleJSON, spacing } from '@/theme';
 
+import { MapWebView } from './MapWebView';
+
 export type SiteMap3DProps = {
   /** Height of the map block. The map is a panel on a scrolling page. */
   height?: number;
   /** Tapping a monument. */
   onSelectSite?: (siteId: string) => void;
 };
+
+/**
+ * MapLibre wraps a native view that Expo Go does not contain.
+ *
+ * Loaded lazily for the same reason expo-notifications is: a static import
+ * evaluates before any guard can run, and this component sits behind the
+ * components barrel that most screens import. One unavailable native module
+ * would otherwise take down screens that have nothing to do with the map.
+ */
+const inExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
+
+type MapLibreModule = typeof import('@maplibre/maplibre-react-native');
+
+let cached: MapLibreModule | null | undefined;
+
+function loadMapLibre(): MapLibreModule | null {
+  if (cached !== undefined) return cached;
+  if (inExpoGo) {
+    cached = null;
+    return null;
+  }
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    cached = require('@maplibre/maplibre-react-native') as MapLibreModule;
+  } catch {
+    cached = null;
+  }
+  return cached;
+}
 
 /**
  * Lumbini, tilted.
@@ -28,20 +59,25 @@ export type SiteMap3DProps = {
  */
 export function SiteMap3D({ height = 320, onSelectSite }: SiteMap3DProps) {
   const [failed, setFailed] = useState(false);
+  const MapLibre = loadMapLibre();
+
+  // No native module — Expo Go, or a host without it. Draw the same style and
+  // the same GeoJSON through MapLibre GL JS in a WebView rather than showing an
+  // apology. The native path is preferred where it exists; this is not.
+  if (!MapLibre) {
+    return <MapWebView height={height} onSelectSite={onSelectSite} />;
+  }
 
   if (failed) {
     return (
-      <View style={[styles.fallback, { height }]}>
-        <Text variant="body" tone="secondary" center>
-          The map could not load.
-        </Text>
-        <Text variant="caption" tone="muted" center>
-          Basemap tiles need a connection the first time. Everything else on this screen works
-          offline.
-        </Text>
-      </View>
+      <Unavailable
+        height={height}
+        reason="Basemap tiles need a connection the first time. Everything else on this screen works offline."
+      />
     );
   }
+
+  const { Camera, GeoJSONSource, Layer, Map, UserLocation } = MapLibre;
 
   return (
     <View style={[styles.wrap, { height }]}>
@@ -119,6 +155,22 @@ export function SiteMap3D({ height = 320, onSelectSite }: SiteMap3DProps) {
 
         <UserLocation />
       </Map>
+    </View>
+  );
+}
+
+function Unavailable({ height, reason }: { height: number; reason: string }) {
+  return (
+    <View style={[styles.fallback, { height }]}>
+      <Text variant="label" tone="muted" uppercase>
+        Map
+      </Text>
+      <Text variant="body" tone="secondary" center>
+        {reason}
+      </Text>
+      <Text variant="caption" tone="muted" center>
+        The plan below shows the same ground and works everywhere.
+      </Text>
     </View>
   );
 }
