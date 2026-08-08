@@ -46,16 +46,31 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Run YOLO scan when AI toggle is active
+  // Run live YOLO scan stream when AI toggle is active
   useEffect(() => {
     let active = true;
+    let timer: ReturnType<typeof setTimeout>;
+
+    const scanFrame = async () => {
+      if (!active || !aiScanOn) return;
+      const res = await runYoloScan(`frame-${vantageId}-${Date.now()}`);
+      if (active) {
+        setYoloResult(res);
+        timer = setTimeout(scanFrame, 1500); // refresh detection frame every 1.5s
+      }
+    };
+
     if (aiScanOn) {
-      runYoloScan().then((res) => { if (active) setYoloResult(res); });
+      void scanFrame();
     } else {
       setYoloResult(null);
     }
-    return () => { active = false; };
-  }, [aiScanOn]);
+
+    return () => {
+      active = false;
+      if (timer) clearTimeout(timer);
+    };
+  }, [aiScanOn, vantageId]);
 
   if (!vantage) {
     return (
