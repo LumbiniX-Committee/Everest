@@ -10,7 +10,7 @@ import { demoSites } from '@/data';
 import { QuestCard } from '@/features/quests';
 import { useCurrentPosition, useNearbySites } from '@/hooks';
 import { usePermission, useQuests } from '@/store';
-import { spacing } from '@/theme';
+import { colors, radii, spacing } from '@/theme';
 
 /**
  * Tīrtha — explore Lumbini.
@@ -45,12 +45,23 @@ export function TirthaScreen() {
 
       <ArrivalWisdom coordinate={coordinate} />
 
+      {/* The map is not wrapped in a Pressable. It contains a WebView or a
+          native map view, both of which consume their own gestures — a parent
+          Pressable either swallows the pan and the monument taps, or fires
+          "open full screen" when someone meant to drag. The affordance is an
+          explicit control underneath instead. */}
+      <SiteMap3D onSelectSite={(id) => router.push(`/(main)/tirtha/site/${id}`)} />
+
       <Pressable
         accessibilityRole="button"
         accessibilityLabel="Open the full screen map"
+        accessibilityHint="Shows the map full screen with your position on it"
         onPress={() => router.push('/(main)/tirtha/map')}
+        style={({ pressed }) => [styles.mapCta, pressed && styles.mapCtaPressed]}
       >
-        <SiteMap3D onSelectSite={(id) => router.push(`/(main)/tirtha/site/${id}`)} />
+        <Text variant="body" tone="sandstone">
+          Open full screen map
+        </Text>
       </Pressable>
 
       {/* The flat plan stays: it renders with no network and no tiles, and it
@@ -101,6 +112,18 @@ export function TirthaScreen() {
 }
 
 const styles = StyleSheet.create({
+  mapCta: {
+    minHeight: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: spacing.sm,
+    paddingHorizontal: spacing.base,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  mapCtaPressed: { backgroundColor: colors.surfaceSecondary },
   offer: { marginTop: spacing.lg, gap: spacing.md, alignItems: 'flex-start' },
   offerText: { paddingRight: spacing.xl },
   questSection: { marginTop: spacing.lg, gap: spacing.xs },
