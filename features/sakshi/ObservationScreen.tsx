@@ -3,14 +3,10 @@ import { useRouter } from 'expo-router';
 import { Image, StyleSheet, View } from 'react-native';
 
 import { Button, Divider, MetaRow, Screen, Text } from '@/components/ui';
-<<<<<<< HEAD
 import { ConditionReportForm, TimeSeriesScrubber } from '@/components';
-import { EmptyState } from '@/components/common';
-=======
 import { EmptyState, LoadingState } from '@/components/common';
 import { ConditionSheet, type ConditionDraft } from '@/components/observation';
 import { MeritAcknowledgement } from '@/components/practice';
->>>>>>> origin/main
 import { findSite, findVantage } from '@/data';
 import { database } from '@/services';
 import { usePractice } from '@/store';
