@@ -120,26 +120,18 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
 
       <View style={styles.actions}>
         <Button
-          label={locked ? 'Witness (Open Camera)' : 'Align to witness'}
+          label={locked ? 'Witness (Open Camera)' : 'Open Camera (Test / Match by Eye)'}
           block
-          disabled={!locked}
           onPress={openCapture}
-          accessibilityHint="Opens the camera to record an observation"
+          accessibilityHint="Opens the camera to record an observation or test ghost overlay"
         />
 
-        {/* Match by Eye Escape Hatch (Demo Insurance) */}
         {!locked ? (
-          <>
-            <Button
-              label="Match by eye (Override Gate)"
-              variant="quiet"
-              onPress={openCapture}
-              accessibilityHint="Demo escape hatch: bypass alignment gate to test camera & dissolve"
-            />
-            <Text variant="caption" tone="muted" center>
-              Capture opens when position, bearing and tilt match. Use "Simulate" or "Match by eye" to test indoors.
-            </Text>
-          </>
+          <Text variant="caption" tone="muted" center>
+            {alignment.phase === 'unavailable'
+              ? 'GPS/Compass signal missing. Tap Open Camera above to test ghost overlay.'
+              : 'Sensors active. Tap Open Camera above or align reticle.'}
+          </Text>
         ) : null}
       </View>
     </Screen>
