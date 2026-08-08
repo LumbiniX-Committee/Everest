@@ -49,7 +49,11 @@ export function TirthaScreen() {
 
       {/* The flat plan stays: it renders with no network and no tiles, and it
           is the only view that works when the basemap cannot load. */}
-      <SitePlan sites={demoSites} observer={coordinate} />
+      <SitePlan
+          sites={demoSites}
+          observer={coordinate}
+          onSelectSite={(id) => router.push(`/(main)/tirtha/site/${id}`)}
+        />
 
       {showLocationOffer ? (
         <View style={styles.offer}>
