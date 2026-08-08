@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { StyleSheet, TextInput, View } from 'react-native';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
-import { ScreenHeader } from '@/components/common';
+import { ScreenHeader, SettingsButton } from '@/components/common';
 import { demoDhammaEntries, findSource } from '@/data';
 import { colors, radii, spacing } from '@/theme';
 
@@ -34,6 +34,7 @@ export function DhammaScreen() {
         eyebrow="Dhamma"
         title="Questions"
         subtitle="Everything here carries a citation you can go and check."
+        rightAction={<SettingsButton />}
       />
 
       <View style={styles.ask}>

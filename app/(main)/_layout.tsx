@@ -23,6 +23,9 @@ export default function MainLayout() {
       <Tabs.Screen name="tirtha" options={{ title: SURFACE_LABELS.tirtha }} />
       <Tabs.Screen name="sakshi" options={{ title: SURFACE_LABELS.sakshi }} />
       <Tabs.Screen name="dhamma" options={{ title: SURFACE_LABELS.dhamma }} />
+      {/* Registered so its routes resolve, hidden so the model stays at three
+          surfaces. Reached from the header control on each of them. */}
+      <Tabs.Screen name="settings" options={{ href: null }} />
     </Tabs>
   );
 }

@@ -32,6 +32,17 @@ export function SurfaceTabBar({ state, descriptors, navigation }: BottomTabBarPr
       {state.routes.map((route, index) => {
         const focused = state.index === index;
         const { options } = descriptors[route.key];
+
+        // A route registered with `href: null` is addressable but is not a
+        // destination — Settings pushes over the surfaces rather than joining
+        // them. Skipped here rather than filtered above so `index` still lines
+        // up with `state.index` for the focused check.
+        //
+        // expo-router adds `href` to the screen options at runtime but does not
+        // widen BottomTabNavigationOptions to declare it, hence the narrowing.
+        const { href } = options as typeof options & { href?: string | null };
+        if (href === null) return null;
+
         const label = SURFACE_LABELS[route.name as Surface] ?? route.name;
 
         const onPress = () => {
