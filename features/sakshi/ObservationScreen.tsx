@@ -43,6 +43,7 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
   const [seriesObservations, setSeriesObservations] = useState<Observation[]>([]);
   const [yoloResult, setYoloResult] = useState<YoloScanResult | null>(null);
   const [yoloScanning, setYoloScanning] = useState(false);
+  const [aiDraft, setAiDraft] = useState<Partial<ConditionDraft> | undefined>(undefined);
   const { recognise, summary } = usePractice();
 
   useEffect(() => {
@@ -218,7 +219,18 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
         </View>
       ) : (
         <View style={styles.aiRow}>
-          <PathologySummaryCard result={yoloResult} />
+          <PathologySummaryCard
+            result={yoloResult}
+            onApplyAiSuggestion={(res) => {
+              setAiDraft({
+                category: res.primaryCategory,
+                subtype: res.primarySubtype,
+                severity: res.suggestedSeverity,
+                note: `AI Detected ${res.detections.length} defect(s). Surface integrity at ${res.surfaceHealth}%.`,
+              });
+              setSheetOpen(true);
+            }}
+          />
         </View>
       )}
 
@@ -398,9 +410,13 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
 
       <ConditionSheet
         visible={sheetOpen}
-        onClose={() => setSheetOpen(false)}
+        onClose={() => {
+          setSheetOpen(false);
+          setAiDraft(undefined);
+        }}
         onSubmit={recordCondition}
         submitting={submitting}
+        initialDraft={aiDraft}
       />
     </Screen>
   );

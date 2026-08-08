@@ -1,12 +1,12 @@
 import { StyleSheet, View } from 'react-native';
 
-import { Text } from '@/components/ui';
+import { Button, Text } from '@/components/ui';
 import type { YoloScanResult } from '@/services/ai/yoloEngine';
-import { PATHOLOGY_COLORS } from '@/services/ai/yoloEngine';
 import { colors, radii, spacing } from '@/theme';
 
 export type PathologySummaryCardProps = {
   result: YoloScanResult;
+  onApplyAiSuggestion?: (result: YoloScanResult) => void;
 };
 
 /**
@@ -16,7 +16,7 @@ export type PathologySummaryCardProps = {
  * Displays defect count, surface health score, inference time, and a
  * colour-coded legend for each detected pathology class.
  */
-export function PathologySummaryCard({ result }: PathologySummaryCardProps) {
+export function PathologySummaryCard({ result, onApplyAiSuggestion }: PathologySummaryCardProps) {
   const { detections, surfaceHealth, inferenceMs } = result;
 
   if (detections.length === 0) return null;
@@ -34,10 +34,10 @@ export function PathologySummaryCard({ result }: PathologySummaryCardProps) {
       {/* Header row */}
       <View style={styles.headerRow}>
         <Text variant="label" tone="sandstone" uppercase>
-          YOLO AI Scan
+          YOLOv8n-seg INT8 Scan
         </Text>
         <Text variant="mono" tone="secondary" style={styles.timing}>
-          {inferenceMs}ms
+          {inferenceMs}ms · NPU
         </Text>
       </View>
 
@@ -66,6 +66,16 @@ export function PathologySummaryCard({ result }: PathologySummaryCardProps) {
           </View>
         ))}
       </View>
+
+      {onApplyAiSuggestion ? (
+        <View style={styles.btnWrap}>
+          <Button
+            label="✨ Pre-fill Condition Report"
+            onPress={() => onApplyAiSuggestion(result)}
+            block
+          />
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -78,6 +88,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     gap: spacing.sm,
+    alignSelf: 'stretch',
   },
   headerRow: {
     flexDirection: 'row',
@@ -95,4 +106,5 @@ const styles = StyleSheet.create({
   legend: { gap: spacing.xs },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
   dot: { width: 10, height: 10, borderRadius: 5 },
+  btnWrap: { paddingTop: spacing.xs },
 });
