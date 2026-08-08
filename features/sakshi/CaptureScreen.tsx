@@ -1,13 +1,14 @@
 import { useRef, useState } from 'react';
 import { useRouter } from 'expo-router';
-import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { CameraView } from 'expo-camera';
+import * as FileSystem from 'expo-file-system/legacy';
 
 import { Button, Screen, Text } from '@/components/ui';
 import { EmptyState } from '@/components/common';
 import { Reticle } from '@/components/reticle';
-import { findVantage } from '@/data';
-import { useAlignment } from '@/hooks';
+import { findSite, findVantage } from '@/data';
+import { useAlignment, useCurrentPosition } from '@/hooks';
 import { camera as cameraService, database } from '@/services';
 import { usePermission } from '@/store';
 import { colors, layers, radii, spacing } from '@/theme';
@@ -30,12 +31,12 @@ import type { Observation } from '@/types';
 export function CaptureScreen({ vantageId }: { vantageId: string }) {
   const router = useRouter();
   const vantage = findVantage(vantageId);
+  const site = vantage ? findSite(vantage.siteId) : undefined;
   const { state: cameraPermission, request: requestCamera, openSettings } = usePermission('camera');
   const [nudgeDeg, setNudgeDeg] = useState(0);
-  const [showDissolve, setShowDissolve] = useState(false);
-  const [dissolveOpacity, setDissolveOpacity] = useState(0.35);
 
   const alignment = useAlignment({ vantage, nudgeDeg });
+  const { coordinate: observerCoord } = useCurrentPosition({ watch: true, highAccuracy: true });
   const cameraRef = useRef<CameraView>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -76,7 +77,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
     );
   }
 
-  const onCapture = async (isNoChange = false) => {
+  const onCapture = async (mode: 'aligned' | 'manual', isNoChange = false) => {
     if (saving) return;
     setSaving(true);
     setError(null);
@@ -85,17 +86,37 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
       const photo = await cameraRef.current?.takePictureAsync(cameraService.OBSERVATION_CAPTURE);
       if (!photo?.uri) throw new Error('The camera returned no image.');
 
+      // Persist the frame out of the camera cache, which the OS can evict —
+      // leaving a record pointing at a photograph that no longer exists. For a
+      // product about photographs that cannot be retaken, that is the worst gap.
+      const id = `obs-${Date.now()}`;
+      const dir = `${FileSystem.documentDirectory}observations/`;
+      await FileSystem.makeDirectoryAsync(dir, { intermediates: true }).catch(() => {});
+      const dest = `${dir}${id}.jpg`;
+      await FileSystem.copyAsync({ from: photo.uri, to: dest });
+
+      const aligned = mode === 'aligned';
       const observation: Observation = {
-        id: `obs-${Date.now()}`,
+        id,
         vantageId: vantage.id,
         siteId: vantage.siteId,
         capturedAt: new Date().toISOString(),
-        photoUri: photo.uri,
-        coordinate: vantage.coordinate,
+        photoUri: dest,
+        // The observer's real fix, not the catalogued vantage. Falls back to the
+        // vantage only when there is no fix at all — and then accuracy/error are
+        // null, so the record never claims to have been taken on the survey point.
+        coordinate: observerCoord ?? vantage.coordinate,
         bearing: vantage.bearing - (alignment.bearingDeltaDeg ?? 0),
         pitch: vantage.pitch - (alignment.pitchDeltaDeg ?? 0),
-        positionErrorM: alignment.distanceM ?? 0,
-        bearingErrorDeg: Math.abs(alignment.bearingDeltaDeg ?? 0),
+        // Real measurements only for an aligned capture. A by-eye frame records
+        // null, never a zero that would read as perfect accuracy.
+        positionErrorM: aligned ? alignment.distanceM : null,
+        bearingErrorDeg: aligned && alignment.bearingDeltaDeg != null
+          ? Math.abs(alignment.bearingDeltaDeg)
+          : null,
+        alignScore: alignment.alignScore,
+        gpsAccuracyM: alignment.gpsAccuracyM,
+        gateMode: mode,
         note: isNoChange ? 'Nothing has changed — verified stability.' : undefined,
         assessment: 'unreviewed',
         synced: false,
@@ -113,21 +134,32 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
     }
   };
 
+  // Charter #8: capture is hard-disabled where photography is not permitted.
+  if (site && site.photography && site.photography !== 'allowed') {
+    return (
+      <Screen>
+        <View style={styles.gate}>
+          <Reticle size={140} phase="unavailable" />
+          <Text variant="title" center>
+            Photography is {site.photography} here
+          </Text>
+          <Text variant="body" tone="secondary" center>
+            {site.name} is a protected space where photography is {site.photography}. The witness
+            tool is disabled at this site — please respect the restriction and confirm with site
+            staff. You can still read its record and history.
+          </Text>
+          <Button label="Back" onPress={() => router.back()} />
+        </View>
+      </Screen>
+    );
+  }
+
   const locked = alignment.phase === 'locked';
 
   return (
     <Screen bleed edges={['top', 'bottom']} contentStyle={styles.frame}>
       <View style={styles.viewfinder}>
         <CameraView ref={cameraRef} style={StyleSheet.absoluteFill} facing="back" />
-
-        {/* Phase 1 Dissolve Plate Overlay */}
-        {showDissolve && (vantage.referenceUrl || vantage.referenceLocal) ? (
-          <Image
-            source={{ uri: vantage.referenceUrl || vantage.referenceLocal }}
-            style={[StyleSheet.absoluteFill, { opacity: dissolveOpacity }]}
-            resizeMode="cover"
-          />
-        ) : null}
 
         <View style={[StyleSheet.absoluteFill, styles.overlay]} pointerEvents="none">
           <Reticle size={240} progress={alignment.progress} phase={alignment.phase} />
@@ -147,13 +179,9 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
           </Text>
         </View>
 
-        {/* Manual Compass Heading Nudge & Dissolve Controls (Task 1.3 & 2.7) */}
+        {/* Manual compass heading nudge (task 2.7) — corrects local declination
+            drift without tearing down the sensor subscription. */}
         <View style={styles.nudgeRow}>
-          <Button
-            label="Dissolve 1899"
-            variant={showDissolve ? 'secondary' : 'quiet'}
-            onPress={() => setShowDissolve(!showDissolve)}
-          />
           <Button
             label={`Nudge -5°`}
             variant="quiet"
@@ -181,7 +209,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
             accessibilityLabel="Record observation"
             accessibilityState={{ disabled: !locked || saving, busy: saving }}
             disabled={!locked || saving}
-            onPress={() => onCapture(false)}
+            onPress={() => onCapture('aligned', false)}
             style={({ pressed }) => [
               styles.shutter,
               locked ? styles.shutterReady : styles.shutterWaiting,
@@ -191,17 +219,33 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
             <View style={[styles.shutterCore, locked && styles.shutterCoreReady]} />
           </Pressable>
 
-          {/* Task 3.5: "Nothing has changed" one-tap action */}
-          <Button
-            label="Nothing has changed"
-            variant="quiet"
-            onPress={() => onCapture(true)}
-            accessibilityHint="Record stable observation with identical merit award"
-          />
+          {locked ? (
+            // Task 3.5: recording stability is worth exactly as much as recording
+            // damage. Equal visual weight, same merit — only enabled on a real lock.
+            <Button
+              label="Nothing has changed"
+              variant="quiet"
+              disabled={saving}
+              onPress={() => onCapture('aligned', true)}
+              accessibilityHint="Record a stable observation"
+            />
+          ) : (
+            // The mandated escape hatch: capture by eye when tolerance can't be
+            // met. Recorded honestly as a by-eye frame, never as an aligned one.
+            <Button
+              label="Capture by eye"
+              variant="quiet"
+              disabled={saving}
+              onPress={() => onCapture('manual', false)}
+              accessibilityHint="Record a by-eye observation without a measured lock"
+            />
+          )}
         </View>
 
         <Text variant="caption" tone="muted" center>
-          {locked ? 'Aligned. Record when the light is right.' : 'Move or use manual nudge until reticle locks.'}
+          {locked
+            ? 'Aligned. Record when the light is right.'
+            : 'Move or nudge until the reticle locks — or capture by eye, recorded as such.'}
         </Text>
       </View>
     </Screen>

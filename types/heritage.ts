@@ -119,14 +119,31 @@ export type Observation = {
   capturedAt: string;
   /** Local file URI of the photograph. */
   photoUri: string;
+  /** The observer's own GPS fix at capture — not the catalogued vantage point. */
   coordinate: Coordinate;
   /** Bearing actually recorded at capture. */
   bearing: number;
   pitch: number;
-  /** Metres between the observer and the vantage at capture. */
-  positionErrorM: number;
-  /** Degrees between recorded and target bearing at capture. */
-  bearingErrorDeg: number;
+  /**
+   * Metres between the observer and the vantage at capture. Null when there was
+   * no position fix (a by-eye capture) — a missing signal is not zero error.
+   */
+  positionErrorM: number | null;
+  /** Degrees between recorded and target bearing. Null on a by-eye capture. */
+  bearingErrorDeg: number | null;
+  /**
+   * The weighted alignment score at the moment of capture (0–1), or null if
+   * there was no signal. Persisted so "median align score 0.86 across N" is real.
+   */
+  alignScore?: number | null;
+  /** GPS accuracy in metres at capture, or null when unknown. */
+  gpsAccuracyM?: number | null;
+  /**
+   * How the shot was framed: `aligned` passed the tolerance gate; `manual` was
+   * framed by eye with the gate bypassed. Never faked — a manual capture does
+   * not claim to be comparable within tolerance.
+   */
+  gateMode?: 'aligned' | 'manual';
   /** Observer's own note on what changed. */
   note?: string;
   /** What the observer said about what they saw. */

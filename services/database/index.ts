@@ -135,6 +135,16 @@ const migrations: string[] = [
    );
    CREATE INDEX IF NOT EXISTS idx_quest_progress_status
      ON quest_progress (status);`,
+
+  // Capture integrity. The weighted alignment score, GPS accuracy and gate mode
+  // recorded at capture. gate_mode is the source of truth for honesty: 'aligned'
+  // means the tolerance gate passed and the error columns are real measurements;
+  // 'manual' means framed by eye, and the reader treats the errors as unknown
+  // rather than as a claim of perfect accuracy. Nullable throughout so rows
+  // written before this migration keep a truthful "not recorded" state.
+  `ALTER TABLE observations ADD COLUMN align_score REAL;
+   ALTER TABLE observations ADD COLUMN gps_acc_m REAL;
+   ALTER TABLE observations ADD COLUMN gate_mode TEXT;`,
 ];
 
 async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
@@ -183,6 +193,9 @@ type ObservationRow = {
   bearing_error_deg: number;
   note: string | null;
   assessment: string;
+  align_score: number | null;
+  gps_acc_m: number | null;
+  gate_mode: string | null;
   synced: number;
 };
 
@@ -196,8 +209,13 @@ function toObservation(row: ObservationRow): Observation {
     coordinate: { latitude: row.latitude, longitude: row.longitude },
     bearing: row.bearing,
     pitch: row.pitch,
-    positionErrorM: row.position_error_m,
-    bearingErrorDeg: row.bearing_error_deg,
+    // A by-eye capture makes no claim of measured accuracy: report the errors as
+    // unknown rather than as the zeroes stored to satisfy the NOT NULL columns.
+    positionErrorM: row.gate_mode === 'manual' ? null : row.position_error_m,
+    bearingErrorDeg: row.gate_mode === 'manual' ? null : row.bearing_error_deg,
+    alignScore: row.align_score,
+    gpsAccuracyM: row.gps_acc_m,
+    gateMode: row.gate_mode === 'aligned' || row.gate_mode === 'manual' ? row.gate_mode : undefined,
     note: row.note ?? undefined,
     // Widened from TEXT. An unrecognised value means a newer build wrote a
     // state this one does not know; treating it as unreviewed is the reading
@@ -216,8 +234,9 @@ export async function insertObservation(observation: Observation): Promise<void>
   await db.runAsync(
     `INSERT OR REPLACE INTO observations
        (id, vantage_id, site_id, captured_at, photo_uri, latitude, longitude,
-        bearing, pitch, position_error_m, bearing_error_deg, note, assessment, synced)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        bearing, pitch, position_error_m, bearing_error_deg, note, assessment,
+        align_score, gps_acc_m, gate_mode, synced)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     observation.id,
     observation.vantageId,
     observation.siteId,
@@ -226,11 +245,16 @@ export async function insertObservation(observation: Observation): Promise<void>
     observation.coordinate.latitude,
     observation.coordinate.longitude,
     observation.bearing,
+    // The error columns are NOT NULL; a missing measurement is stored as 0 but
+    // recovered as null on read via gate_mode — never surfaced as real accuracy.
     observation.pitch,
-    observation.positionErrorM,
-    observation.bearingErrorDeg,
+    observation.positionErrorM ?? 0,
+    observation.bearingErrorDeg ?? 0,
     observation.note ?? null,
     observation.assessment,
+    observation.alignScore ?? null,
+    observation.gpsAccuracyM ?? null,
+    observation.gateMode ?? null,
     observation.synced ? 1 : 0,
   );
 }

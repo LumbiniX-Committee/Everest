@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { Image, StyleSheet, View } from 'react-native';
 
 import { Button, Divider, MetaRow, Screen, Text } from '@/components/ui';
-import { ConditionReportForm, TimeSeriesScrubber } from '@/components';
+import { TimeSeriesScrubber } from '@/components';
 import { EmptyState, LoadingState } from '@/components/common';
 import { ConditionSheet, type ConditionDraft } from '@/components/observation';
 import { MeritAcknowledgement } from '@/components/practice';
@@ -40,7 +40,6 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
   const [saveError, setSaveError] = useState<string | null>(null);
   const [merit, setMerit] = useState<MeritEvent | null>(null);
   const [seriesObservations, setSeriesObservations] = useState<Observation[]>([]);
-  const [showConditionForm, setShowConditionForm] = useState(false);
   const { recognise, summary } = usePractice();
 
   useEffect(() => {
@@ -165,25 +164,15 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
 
   const vantage = findVantage(observation.vantageId);
   const site = findSite(observation.siteId);
+  const framedByEye =
+    observation.gateMode === 'manual' ||
+    observation.positionErrorM == null ||
+    observation.bearingErrorDeg == null;
   const withinTolerance =
+    !framedByEye &&
     vantage != null &&
-    observation.positionErrorM <= vantage.positionToleranceM &&
-    observation.bearingErrorDeg <= vantage.bearingToleranceDeg;
-
-  if (showConditionForm && observation) {
-    return (
-      <Screen scroll>
-        <ConditionReportForm
-          siteId={observation.siteId}
-          vantageId={observation.vantageId}
-          observationId={observation.id}
-          onSubmitReport={() => setShowConditionForm(false)}
-          onNoChangeReport={() => setShowConditionForm(false)}
-          onSkip={() => setShowConditionForm(false)}
-        />
-      </Screen>
-    );
-  }
+    observation.positionErrorM! <= vantage.positionToleranceM &&
+    observation.bearingErrorDeg! <= vantage.bearingToleranceDeg;
 
   return (
     <Screen scroll>
@@ -213,17 +202,6 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
 
       <Divider />
 
-      {/* Task 3.4: Condition Reporting Form Access */}
-      <View style={styles.actions}>
-        <Button
-          label="Add Structured Condition Report"
-          variant="secondary"
-          onPress={() => setShowConditionForm(true)}
-        />
-      </View>
-
-      <Divider />
-
       {/* Task 3.6: Vantage Time Series Scrubber */}
       {seriesObservations.length > 0 ? (
         <TimeSeriesScrubber
@@ -238,21 +216,36 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
         <Text variant="label" tone="muted" uppercase>
           Accuracy at capture
         </Text>
-        <MetaRow
-          label="Position error"
-          value={formatDistance(observation.positionErrorM)}
-          tone={withinTolerance ? 'locked' : 'seeking'}
-        />
-        <MetaRow
-          label="Bearing error"
-          value={`${observation.bearingErrorDeg.toFixed(1)}°`}
-          tone={withinTolerance ? 'locked' : 'seeking'}
-        />
-        <Text variant="caption" tone="secondary" style={styles.accuracyNote}>
-          {withinTolerance
-            ? 'Within the vantage tolerance. This frame is directly comparable with the rest of the series.'
-            : 'Outside the vantage tolerance. Still part of the record, but flag it when comparing.'}
-        </Text>
+        {framedByEye ? (
+          <>
+            <MetaRow label="Alignment" value="Framed by eye" tone="seeking" />
+            {observation.alignScore != null ? (
+              <MetaRow label="Align score" value={observation.alignScore.toFixed(2)} tone="seeking" />
+            ) : null}
+            <Text variant="caption" tone="secondary" style={styles.accuracyNote}>
+              Framed by eye — not measured within the vantage tolerance. It is part of the record,
+              but is not directly comparable frame-to-frame the way an aligned capture is.
+            </Text>
+          </>
+        ) : (
+          <>
+            <MetaRow
+              label="Position error"
+              value={formatDistance(observation.positionErrorM)}
+              tone={withinTolerance ? 'locked' : 'seeking'}
+            />
+            <MetaRow
+              label="Bearing error"
+              value={`${observation.bearingErrorDeg!.toFixed(1)}°`}
+              tone={withinTolerance ? 'locked' : 'seeking'}
+            />
+            <Text variant="caption" tone="secondary" style={styles.accuracyNote}>
+              {withinTolerance
+                ? 'Within the vantage tolerance. This frame is directly comparable with the rest of the series.'
+                : 'Outside the vantage tolerance. Still part of the record, but flag it when comparing.'}
+            </Text>
+          </>
+        )}
       </View>
 
       <Divider />

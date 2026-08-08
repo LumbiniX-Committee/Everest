@@ -93,8 +93,14 @@ export function TimeSeriesScrubber({
       {activeObs ? (
         <View style={styles.metaBlock}>
           <MetaRow label="Recorded" value={formatTimestamp(activeObs.capturedAt)} />
-          <MetaRow label="Position error" value={formatDistance(activeObs.positionErrorM)} />
-          <MetaRow label="Bearing error" value={`${activeObs.bearingErrorDeg.toFixed(1)}°`} />
+          <MetaRow
+            label="Position error"
+            value={activeObs.positionErrorM != null ? formatDistance(activeObs.positionErrorM) : 'by eye'}
+          />
+          <MetaRow
+            label="Bearing error"
+            value={activeObs.bearingErrorDeg != null ? `${activeObs.bearingErrorDeg.toFixed(1)}°` : 'by eye'}
+          />
           {activeObs.note ? (
             <Text variant="caption" tone="secondary" style={styles.noteText}>
               Note: {activeObs.note}
