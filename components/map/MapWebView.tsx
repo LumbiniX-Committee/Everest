@@ -1,45 +1,75 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 import { Text } from '@/components/ui';
 import { colors, radii, spacing } from '@/theme';
+import type { Coordinate } from '@/types';
 
 import { buildMapHtml } from './mapHtml';
 
 export type MapWebViewProps = {
-  height: number;
+  height?: number;
+  /** Fills its parent instead of sitting at a fixed height. */
+  fill?: boolean;
   onSelectSite?: (siteId: string) => void;
+  /** Live position. Drives the figure; omit and no figure is drawn. */
+  coordinate?: Coordinate | null;
+  /** Degrees from true north. Turns the figure to face the way you are going. */
+  heading?: number | null;
+  /** Keep the camera on the figure as it moves. */
+  follow?: boolean;
 };
 
 /**
- * The same map, drawn by MapLibre GL JS inside a WebView.
+ * The map, drawn by MapLibre GL JS inside a WebView.
  *
- * This exists because MapLibre's native module is not in Expo Go, and no amount
- * of guarding changes that — the fallback said "you need a development build",
- * which is true and useless to someone trying to see the map now. GL JS reads
- * the identical style spec and the identical GeoJSON, so `sakshiMapStyle`,
- * `precinctGeoJSON` and `siteGeoJSON` are passed through untouched. The
- * fill-extrusion, the 55° pitch and the palette are the same objects the native
- * path uses.
+ * Used wherever the native module is absent — Expo Go, and any host without it
+ * — and *always* where a figure is wanted, because MapLibre Native has no 3D
+ * model support at all. That is a capability difference rather than a
+ * preference: the character is only possible here.
  *
- * The trade is real: a WebView costs a bridge hop per interaction and cannot
- * share the native location puck, so this is the fallback rather than the
- * default. Where the native module exists, it is used.
- *
- * maplibre-gl loads from a CDN. That is acceptable *here* specifically because
- * the basemap tiles already require a network — a WebView map with no
- * connection has nothing to draw either way. It does mean this path is not an
- * offline map, which is why Tīrtha keeps the flat SitePlan below.
+ * The trade is real elsewhere: a WebView costs a bridge hop per interaction and
+ * cannot share the native location puck.
  */
-export function MapWebView({ height, onSelectSite }: MapWebViewProps) {
+export function MapWebView({
+  height = 320,
+  fill = false,
+  onSelectSite,
+  coordinate,
+  heading,
+  follow = true,
+}: MapWebViewProps) {
   const [failed, setFailed] = useState(false);
+  const [ready, setReady] = useState(false);
+  const webRef = useRef<WebView>(null);
 
-  const html = useMemo(() => buildMapHtml(), []);
+  const wantsFigure = coordinate != null;
+  const html = useMemo(
+    () => buildMapHtml({ avatar: wantsFigure, fullscreen: fill }),
+    [wantsFigure, fill],
+  );
+
+  /**
+   * Position is pushed in rather than re-rendering the document.
+   *
+   * Rebuilding the HTML on every fix would tear down and reload the map several
+   * times a minute, which loses the tiles, the camera and any interaction in
+   * progress. injectJavaScript reaches the running page instead.
+   */
+  useEffect(() => {
+    if (!ready || !coordinate) return;
+    const { latitude, longitude } = coordinate;
+    webRef.current?.injectJavaScript(
+      `window.sakshiSetPose && window.sakshiSetPose(${longitude}, ${latitude}, ${heading ?? 0}, ${follow}); true;`,
+    );
+  }, [ready, coordinate, heading, follow]);
+
+  const frame = fill ? styles.fill : { height };
 
   if (failed) {
     return (
-      <View style={[styles.fallback, { height }]}>
+      <View style={[styles.fallback, frame]}>
         <Text variant="label" tone="muted" uppercase>
           Map
         </Text>
@@ -54,14 +84,15 @@ export function MapWebView({ height, onSelectSite }: MapWebViewProps) {
   }
 
   return (
-    <View style={[styles.wrap, { height }]}>
+    <View style={[fill ? styles.fillWrap : styles.wrap, frame]}>
       <WebView
+        ref={webRef}
         style={styles.web}
         originWhitelist={['*']}
         source={{ html }}
-        // The map is a panel inside a scrolling page; without this the WebView
-        // swallows vertical drags and the page stops scrolling past it.
-        nestedScrollEnabled
+        // The panel version sits inside a scrolling page; without this the
+        // WebView swallows vertical drags and the page stops scrolling past it.
+        nestedScrollEnabled={!fill}
         javaScriptEnabled
         domStorageEnabled
         onError={() => setFailed(true)}
@@ -69,6 +100,7 @@ export function MapWebView({ height, onSelectSite }: MapWebViewProps) {
         onMessage={(event) => {
           try {
             const msg = JSON.parse(event.nativeEvent.data);
+            if (msg.type === 'ready') setReady(true);
             if (msg.type === 'site' && typeof msg.id === 'string') onSelectSite?.(msg.id);
             if (msg.type === 'error') setFailed(true);
           } catch {
@@ -88,6 +120,8 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     backgroundColor: colors.surfaceSecondary,
   },
+  fillWrap: { overflow: 'hidden', backgroundColor: colors.surfaceSecondary },
+  fill: { flex: 1 },
   web: { flex: 1, backgroundColor: colors.background },
   fallback: {
     borderRadius: radii.lg,

@@ -76,5 +76,8 @@ harvest/_pages/
 harvest/_hires/
 harvest/_crops/
 
-# generated narration audio (robotic SAPI placeholders; regenerate via tools/make-narration-audio.ps1)
-assets/audio/*.opus
+# Narration audio is NOT ignored. Metro resolves require() at bundle time, so
+# an asset the app statically requires must be in the repository — ignoring
+# these broke the bundle for everyone who had not run the generator locally.
+# Generate with tools/make-narration-audio.ps1, then commit the output and
+# register each file in data/audio.ts.
