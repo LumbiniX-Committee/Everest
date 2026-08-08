@@ -3,6 +3,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { BottomTabBarProps } from 'expo-router/js-tabs';
 
 import { Text } from '@/components/ui';
+import { OfflineBanner } from '@/components/common';
+import { useSync } from '@/hooks';
 import { colors, spacing } from '@/theme';
 import { SURFACE_LABELS, type Surface } from '@/constants';
 
@@ -19,9 +21,14 @@ import { SURFACE_LABELS, type Surface } from '@/constants';
  */
 export function SurfaceTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
+  const { syncState, pendingCount, triggerSync } = useSync();
 
   return (
-    <View style={[styles.bar, { paddingBottom: Math.max(insets.bottom, spacing.md) }]}>
+    <View style={[styles.container, { paddingBottom: Math.max(insets.bottom, spacing.md) }]}>
+      <View style={styles.bannerContainer}>
+        <OfflineBanner state={syncState} pending={pendingCount} onRetry={triggerSync} />
+      </View>
+      <View style={styles.bar}>
       {state.routes.map((route, index) => {
         const focused = state.index === index;
         const { options } = descriptors[route.key];
@@ -55,11 +62,19 @@ export function SurfaceTabBar({ state, descriptors, navigation }: BottomTabBarPr
           </Pressable>
         );
       })}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.background,
+  },
+  bannerContainer: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
   bar: {
     flexDirection: 'row',
     backgroundColor: colors.background,

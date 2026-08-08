@@ -17,5 +17,15 @@ export const LUMBINI_BOUNDS = {
 /** Metres. Beyond this from the centre, the app treats you as "not on site". */
 export const ON_SITE_RADIUS_M = 4000;
 
+/**
+ * Metres. Inside this of a site, opening it counts as having been there.
+ *
+ * Generous on purpose. Consumer GPS under tree cover in the sacred garden is
+ * routinely out by twenty metres or more, and the cost of the two errors is not
+ * symmetric: failing to record a real visit quietly loses something from
+ * somebody's register, while a slightly early mark costs nothing that matters.
+ */
+export const SITE_VISIT_RADIUS_M = 80;
+
 /** Earth mean radius, metres. Used by the haversine helper. */
 export const EARTH_RADIUS_M = 6371008.8;

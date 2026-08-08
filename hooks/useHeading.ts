@@ -9,7 +9,7 @@ import { sensors } from '@/services';
  * actually visible — the magnetometer is cheap but not free, and leaving it
  * running behind a navigation stack drains battery for nothing.
  */
-export function useHeading(enabled = true): number | null {
+export function useHeading(enabled = true, nudgeDeg = 0): number | null {
   const [heading, setHeading] = useState<number | null>(null);
 
   useEffect(() => {
@@ -23,14 +23,18 @@ export function useHeading(enabled = true): number | null {
 
     sensors.isHeadingAvailable().then((available) => {
       if (cancelled || !available) return;
-      unsubscribe = sensors.watchHeading(({ degrees }) => setHeading(degrees));
+      unsubscribe = sensors.watchHeading(({ degrees }) => {
+        // Apply manual nudge offset (persisted or user-dragged)
+        const nudged = (degrees + nudgeDeg + 360) % 360;
+        setHeading(nudged);
+      });
     });
 
     return () => {
       cancelled = true;
       unsubscribe?.();
     };
-  }, [enabled]);
+  }, [enabled, nudgeDeg]);
 
   return heading;
 }

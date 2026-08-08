@@ -1,2 +1,2 @@
 export { DhammaScreen } from './DhammaScreen';
-export { QuestionScreen } from './QuestionScreen';
+export { AnswerScreen } from './AnswerScreen';

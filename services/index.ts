@@ -5,3 +5,5 @@ export * as location from './location';
 export * as sensors from './sensors';
 export * as camera from './camera';
 export * as supabase from './supabase';
+export * as sync from './sync';
+export * as dhamma from './dhamma';

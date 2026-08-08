@@ -6,8 +6,9 @@ import { ScreenHeader } from '@/components/common';
 import { SitePlan } from '@/components/map';
 import { SiteListItem } from '@/components/site';
 import { demoSites } from '@/data';
+import { QuestCard } from '@/features/quests';
 import { useCurrentPosition, useNearbySites } from '@/hooks';
-import { usePermission } from '@/store';
+import { usePermission, useQuests } from '@/store';
 import { spacing } from '@/theme';
 
 /**
@@ -23,8 +24,10 @@ export function TirthaScreen() {
   const { coordinate } = useCurrentPosition({ watch: true });
   const sites = useNearbySites(coordinate);
   const { state, request } = usePermission('location');
+  const { inProgressQuests, availableQuests } = useQuests();
 
   const showLocationOffer = state.status === 'undetermined' || state.status === 'denied';
+  const featuredQuest = inProgressQuests[0] ?? availableQuests[0];
 
   return (
     <Screen scroll>
@@ -49,6 +52,23 @@ export function TirthaScreen() {
         </View>
       ) : null}
 
+      {featuredQuest ? (
+        <View style={styles.questSection}>
+          <View style={styles.sectionHeader}>
+            <Text variant="heading">Featured Quest</Text>
+            <Button
+              label="View All Quests"
+              variant="quiet"
+              onPress={() => router.push('/(main)/tirtha/quests')}
+            />
+          </View>
+          <QuestCard
+            quest={featuredQuest}
+            onPress={() => router.push(`/(main)/tirtha/quests/${featuredQuest.id}`)}
+          />
+        </View>
+      ) : null}
+
       <View style={styles.list}>
         {sites.map((site) => (
           <SiteListItem
@@ -65,5 +85,12 @@ export function TirthaScreen() {
 const styles = StyleSheet.create({
   offer: { marginTop: spacing.lg, gap: spacing.md, alignItems: 'flex-start' },
   offerText: { paddingRight: spacing.xl },
+  questSection: { marginTop: spacing.lg, gap: spacing.xs },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: spacing.xs,
+  },
   list: { marginTop: spacing.lg, gap: spacing.md },
 });

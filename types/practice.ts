@@ -71,47 +71,4 @@ export type PracticeSummary = {
   practiceBegan?: string;
 };
 
-/**
- * Quests.
- *
- * §13: lightweight, and secondary. A quest names a kind of attention worth
- * paying; it does not gate content, and nothing is locked behind one.
- */
-export type QuestCategory =
-  | 'witness'
-  | 'attention'
-  | 'pilgrimage'
-  | 'stewardship'
-  | 'dhamma'
-  | 'reflection';
 
-export const QUEST_CATEGORY_LABELS: Record<QuestCategory, string> = {
-  witness: 'Witness',
-  attention: 'Attention',
-  pilgrimage: 'Pilgrimage',
-  stewardship: 'Stewardship',
-  dhamma: 'Dhamma',
-  reflection: 'Reflection',
-};
-
-export type Quest = {
-  id: string;
-  category: QuestCategory;
-  title: string;
-  /** What this asks of the person, in one or two sentences. */
-  description: string;
-  /** Why it is worth doing. The part that distinguishes this from a checklist. */
-  intention: string;
-  /** How many qualifying acts complete it. */
-  target: number;
-  /** Site ids this quest concerns, when it is site-specific. */
-  siteIds?: string[];
-};
-
-export type QuestProgress = {
-  questId: string;
-  /** Acts completed so far, 0…target. */
-  completed: number;
-  /** ISO 8601, UTC. Set once, when `completed` first reaches `target`. */
-  completedAt?: string;
-};

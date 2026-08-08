@@ -1,0 +1,49 @@
+@import 'tailwindcss';
+
+/*
+ * Tokens mirror theme/colors.ts in the app — "Lumbini stone under daylight".
+ * The page ground is the app's ground, so the site and the app read as one
+ * thing rather than a marketing skin bolted onto a product.
+ */
+@theme {
+  --color-ground: #f4f1e8;
+  --color-ground-deep: #ece8db;
+  --color-surface: #ffffff;
+  --color-surface-secondary: #e9e6dc;
+  --color-line: #d8d2c5;
+
+  --color-sandstone: #b79b72;
+  --color-sandstone-deep: #8e7657;
+  --color-earth: #8a5a45;
+
+  --color-ink: #252a27;
+  --color-ink-soft: #62645e;
+  --color-ink-muted: #8d8d84;
+
+  /* Pillar accents, taken from the app's semantic tokens. */
+  --color-tirtha: #63816b;
+  --color-sakshi: #557fa5;
+  --color-dhamma: #c89432;
+
+  /*
+   * Diacritics carry meaning in every name on this page — Sākṣī, Tīrtha,
+   * Chaityāvalī. The Noto/DejaVu fallbacks are not decorative: Georgia has no
+   * glyph for ṣ (U+1E63) or ṇ, and without them the app's own name renders as
+   * tofu on a plain Linux or Windows box.
+   */
+  --font-display: Georgia, 'Iowan Old Style', 'Noto Serif', 'DejaVu Serif',
+    ui-serif, serif;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', 'Noto Sans', 'DejaVu Sans',
+    sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-ground);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
