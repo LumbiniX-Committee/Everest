@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { Button, Text } from '@/components/ui';
 import { Reticle } from '@/components/reticle';
+import { HeritageVideo } from '@/components/media/HeritageVideo';
 import { APP_EPIGRAPH, APP_NAME, APP_SUBTITLE } from '@/constants';
 import { spacing } from '@/theme';
 
@@ -32,6 +33,8 @@ export function WelcomeScreen() {
     >
       <View style={styles.body}>
         <Reticle size={168} idleAnimation />
+
+        <HeritageVideo />
 
         <View style={styles.wordmark}>
           <Text variant="display" center>

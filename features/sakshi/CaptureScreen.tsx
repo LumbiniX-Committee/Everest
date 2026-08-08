@@ -126,7 +126,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
 
       await database.insertObservation(observation);
       router.replace({
-        pathname: '/(main)/sakshi/observation',
+        pathname: '/(main)/sakshi/review',
         params: { observationId: observation.id },
       });
     } catch (caught) {

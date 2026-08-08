@@ -75,7 +75,9 @@
         }
       ],
       "@maplibre/maplibre-react-native",
-      "expo-audio"
+      "expo-audio",
+      "expo-asset",
+      "expo-video"
     ],
     "experiments": {
       "typedRoutes": true,

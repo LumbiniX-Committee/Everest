@@ -84,6 +84,7 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
       await database.setObservationAssessment(observation.id, 'no-change');
       setObservation({ ...observation, assessment: 'no-change' });
       await acknowledge(observation);
+      router.replace({ pathname: '/(main)/sakshi/confirmation', params: { observationId: observation.id } });
     } catch {
       setSaveError('That could not be saved. Your photograph is safe on this device.');
     } finally {
@@ -133,6 +134,7 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
       setObservation({ ...observation, assessment: 'reported' });
       setSheetOpen(false);
       await acknowledge(observation);
+      router.replace({ pathname: '/(main)/sakshi/confirmation', params: { observationId: observation.id } });
     } catch {
       // The sheet stays open so the person does not lose what they chose.
       setSaveError('That could not be saved. Your photograph is safe on this device.');

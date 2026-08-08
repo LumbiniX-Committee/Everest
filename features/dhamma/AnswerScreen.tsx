@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import { Button, Divider, Screen, Text } from '@/components/ui';
+import { ReflectionPresence } from '@/components/media/ReflectionPresence';
 import { EmptyState, LoadingState } from '@/components/common';
 import { Citation, SourceDetailSheet } from '@/components/source';
 import { findDhammaEntry, findSource } from '@/data';
@@ -91,6 +92,7 @@ export function AnswerScreen({ questionId, query }: { questionId?: string; query
 
       {isGrounded(answer) ? (
         <>
+          <ReflectionPresence />
           <Text variant="bodyLarge" style={styles.answer}>
             {answer.text}
           </Text>
