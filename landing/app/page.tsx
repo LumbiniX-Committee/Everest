@@ -16,7 +16,7 @@ import {
  */
 const APK_URL =
   process.env.NEXT_PUBLIC_APK_URL ??
-  'https://expo.dev/accounts/siddantasodari/projects/sakshi/builds/730c9b55-7aa9-4792-9146-94f78c06a529';
+  'https://expo.dev/artifacts/eas/8LnVlkGBWa9QJd2eEmTqlIWrL9gSjaRNvPqJkH_qTi4.apk';
 
 const pillars = [
   {
