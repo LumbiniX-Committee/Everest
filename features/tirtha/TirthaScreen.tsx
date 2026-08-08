@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
 import { ScreenHeader, SettingsButton } from '@/components/common';
@@ -45,7 +45,13 @@ export function TirthaScreen() {
 
       <ArrivalWisdom coordinate={coordinate} />
 
-      <SiteMap3D onSelectSite={(id) => router.push(`/(main)/tirtha/site/${id}`)} />
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Open the full screen map"
+        onPress={() => router.push('/(main)/tirtha/map')}
+      >
+        <SiteMap3D onSelectSite={(id) => router.push(`/(main)/tirtha/site/${id}`)} />
+      </Pressable>
 
       {/* The flat plan stays: it renders with no network and no tiles, and it
           is the only view that works when the basemap cannot load. */}
