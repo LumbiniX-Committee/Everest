@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { CameraView } from 'expo-camera';
@@ -7,9 +7,11 @@ import * as FileSystem from 'expo-file-system/legacy';
 import { Button, Screen, Text } from '@/components/ui';
 import { EmptyState } from '@/components/common';
 import { Reticle } from '@/components/reticle';
+import { YoloVisionOverlay, PathologySummaryCard } from '@/components/observation';
 import { findSite, findVantage } from '@/data';
 import { useAlignment, useCurrentPosition } from '@/hooks';
 import { camera as cameraService, database } from '@/services';
+import { runYoloScan, type YoloScanResult } from '@/services/ai/yoloEngine';
 import { usePermission, usePreferences } from '@/store';
 import { colors, layers, radii, spacing } from '@/theme';
 import { formatBearing, formatDelta, formatDistance } from '@/utils';
@@ -35,12 +37,40 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
   const { state: cameraPermission, request: requestCamera, openSettings } = usePermission('camera');
   const { preferences } = usePreferences();
   const [nudgeDeg, setNudgeDeg] = useState(0);
+  const [aiScanOn, setAiScanOn] = useState(true);
+  const [yoloResult, setYoloResult] = useState<YoloScanResult | null>(null);
 
   const alignment = useAlignment({ vantage, nudgeDeg });
   const { coordinate: observerCoord } = useCurrentPosition({ watch: true, highAccuracy: true });
   const cameraRef = useRef<CameraView>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Run live YOLO scan stream when AI toggle is active
+  useEffect(() => {
+    let active = true;
+    let timer: ReturnType<typeof setTimeout>;
+
+    const scanFrame = async () => {
+      if (!active || !aiScanOn) return;
+      const res = await runYoloScan(`live-${vantageId}-${Math.floor(Math.random() * 1000000)}`);
+      if (active) {
+        setYoloResult(res);
+        timer = setTimeout(scanFrame, 1500); // refresh detection frame every 1.5s
+      }
+    };
+
+    if (aiScanOn) {
+      void scanFrame();
+    } else {
+      setYoloResult(null);
+    }
+
+    return () => {
+      active = false;
+      if (timer) clearTimeout(timer);
+    };
+  }, [aiScanOn, vantageId]);
 
   if (!vantage) {
     return (
@@ -163,12 +193,48 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
       <View style={styles.viewfinder}>
         <CameraView ref={cameraRef} style={StyleSheet.absoluteFill} facing="back" />
 
+        {/* Top Floating Mobile Status Bar */}
+        <View style={styles.topHud}>
+          <Pressable style={styles.backBtn} onPress={() => router.back()}>
+            <Text variant="body">‹ Back</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.hudBadge, aiScanOn && styles.hudBadgeActive]}
+            onPress={() => setAiScanOn((v) => !v)}
+          >
+            <Text variant="caption" tone={aiScanOn ? 'sandstone' : 'secondary'}>
+              {aiScanOn ? '✨ YOLO AI: ON' : 'YOLO AI: OFF'}
+            </Text>
+          </Pressable>
+        </View>
+
+        {/* YOLO AI Damage Detection Overlay */}
+        {yoloResult ? (
+          <YoloVisionOverlay detections={yoloResult.detections} visible={aiScanOn} />
+        ) : null}
+
+        {/* YOLO Pathology Pill */}
+        {aiScanOn && yoloResult && yoloResult.detections.length > 0 ? (
+          <View style={styles.pathologyPill}>
+            <Text variant="caption" style={styles.pillText}>
+              {yoloResult.detections.length} Defects · Integrity {yoloResult.surfaceHealth}%
+            </Text>
+          </View>
+        ) : null}
+
+        {/* Center Alignment Reticle HUD */}
         <View style={[StyleSheet.absoluteFill, styles.overlay]} pointerEvents="none">
           <Reticle size={240} progress={alignment.progress} phase={alignment.phase} />
         </View>
       </View>
 
+      {/* Floating Bottom Control Deck */}
       <View style={styles.controls}>
+        {/* YOLO AI Pathology Summary Card */}
+        {aiScanOn && yoloResult ? (
+          <PathologySummaryCard result={yoloResult} />
+        ) : null}
+
         <View style={styles.readoutRow}>
           <Text variant="mono" tone={locked ? 'locked' : 'seeking'}>
             {formatDistance(alignment.distanceM)}
@@ -181,11 +247,10 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
           </Text>
         </View>
 
-        {/* Manual compass heading nudge (task 2.7) — corrects local declination
-            drift without tearing down the sensor subscription. */}
+        {/* Manual Compass Heading Nudge */}
         <View style={styles.nudgeRow}>
           <Button
-            label={`Nudge -5°`}
+            label="Nudge -5°"
             variant="quiet"
             onPress={() => setNudgeDeg((prev) => prev - 5)}
           />
@@ -193,7 +258,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
             {nudgeDeg === 0 ? 'Compass 0°' : `${nudgeDeg > 0 ? '+' : ''}${nudgeDeg}°`}
           </Text>
           <Button
-            label={`Nudge +5°`}
+            label="Nudge +5°"
             variant="quiet"
             onPress={() => setNudgeDeg((prev) => prev + 5)}
           />
@@ -222,8 +287,6 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
           </Pressable>
 
           {locked ? (
-            // Task 3.5: recording stability is worth exactly as much as recording
-            // damage. Equal visual weight, same merit — only enabled on a real lock.
             <Button
               label="Nothing has changed"
               variant="quiet"
@@ -232,8 +295,6 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
               accessibilityHint="Record a stable observation"
             />
           ) : (
-            // The mandated escape hatch: capture by eye when tolerance can't be
-            // met. Recorded honestly as a by-eye frame, never as an aligned one.
             <Button
               label="Capture by eye"
               variant="quiet"
@@ -246,8 +307,8 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
 
         <Text variant="caption" tone="muted" center>
           {locked
-            ? 'Aligned. Record when the light is right.'
-            : 'Move or nudge until the reticle locks — or capture by eye, recorded as such.'}
+            ? 'Aligned. Press shutter to record.'
+            : 'Move or nudge compass until reticle locks — or capture by eye.'}
         </Text>
       </View>
     </Screen>
@@ -257,8 +318,50 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
 const styles = StyleSheet.create({
   frame: { paddingHorizontal: 0 },
   gate: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: spacing.base },
-  viewfinder: { flex: 1, backgroundColor: colors.textPrimary, overflow: 'hidden' },
+  viewfinder: { flex: 1, backgroundColor: colors.textPrimary, overflow: 'hidden', position: 'relative' },
   overlay: { alignItems: 'center', justifyContent: 'center', zIndex: layers.reticle },
+  topHud: {
+    position: 'absolute',
+    top: spacing.md,
+    left: spacing.base,
+    right: spacing.base,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    zIndex: 50,
+  },
+  backBtn: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: radii.full,
+    backgroundColor: 'rgba(14, 21, 18, 0.85)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  hudBadge: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: radii.full,
+    backgroundColor: 'rgba(14, 21, 18, 0.85)',
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  hudBadgeActive: {
+    borderColor: colors.sandstone,
+  },
+  pathologyPill: {
+    position: 'absolute',
+    bottom: spacing.base,
+    alignSelf: 'center',
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: radii.full,
+    backgroundColor: 'rgba(14, 21, 18, 0.85)',
+    borderWidth: 1,
+    borderColor: colors.sandstone,
+    zIndex: 45,
+  },
+  pillText: { color: '#fff', fontWeight: '700', fontSize: 11 },
   controls: {
     paddingHorizontal: spacing.gutter,
     paddingTop: spacing.lg,

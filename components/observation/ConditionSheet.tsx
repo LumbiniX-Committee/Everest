@@ -27,6 +27,8 @@ export type ConditionSheetProps = {
   onSubmit: (draft: ConditionDraft) => void;
   /** Disables the controls while the write is in flight. */
   submitting?: boolean;
+  /** Pre-fill from YOLO AI scan. When set, opens at the note step. */
+  initialDraft?: Partial<ConditionDraft>;
 };
 
 type Step = 'category' | 'subtype' | 'severity' | 'note';
@@ -44,12 +46,12 @@ const STEPS: Step[] = ['category', 'subtype', 'severity', 'note'];
  * "next" button until the note, because everything before it is a single
  * selection and asking for confirmation of a tap is a step that earns nothing.
  */
-export function ConditionSheet({ visible, onClose, onSubmit, submitting = false }: ConditionSheetProps) {
-  const [step, setStep] = useState<Step>('category');
-  const [category, setCategory] = useState<ConditionCategory | null>(null);
-  const [subtype, setSubtype] = useState<string | null>(null);
-  const [severity, setSeverity] = useState<ConditionSeverity | null>(null);
-  const [note, setNote] = useState('');
+export function ConditionSheet({ visible, onClose, onSubmit, submitting = false, initialDraft }: ConditionSheetProps) {
+  const [step, setStep] = useState<Step>(initialDraft?.category ? 'note' : 'category');
+  const [category, setCategory] = useState<ConditionCategory | null>(initialDraft?.category ?? null);
+  const [subtype, setSubtype] = useState<string | null>(initialDraft?.subtype ?? null);
+  const [severity, setSeverity] = useState<ConditionSeverity | null>(initialDraft?.severity ?? null);
+  const [note, setNote] = useState(initialDraft?.note ?? '');
 
   const reset = () => {
     setStep('category');

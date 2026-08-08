@@ -2,23 +2,22 @@ import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
-import { Button, Divider, MetaRow, Screen, Text } from '@/components/ui';
+import { Button, Chip, Divider, MetaRow, Screen, Text } from '@/components/ui';
 import { EmptyState } from '@/components/common';
 import { AlignmentReadout, Reticle } from '@/components/reticle';
+import { SpeakButton } from '@/components/voice/SpeakButton';
 import { findSite, findVantage } from '@/data';
 import { useAlignment, useHaptics } from '@/hooks';
 import { usePermission } from '@/store';
-import { spacing } from '@/theme';
+import { colors, radii, spacing } from '@/theme';
 import { formatCoordinate } from '@/utils';
+import { alignmentHint } from '@/utils/alignmentHint';
 
 /**
  * Align to a vantage.
  *
- * The live alignment screen: reticle above, numeric readout below, capture
- * unlocked only on a true lock. Degradation is layered rather than all-or-
- * nothing — without motion the reticle stops moving but the written bearing
- * still guides; without location nothing can be computed and the screen says so
- * plainly instead of showing a reticle that will never close.
+ * Designed as a clean native mobile instrument: reticle HUD above,
+ * numeric readout in floating mobile cards below, capture unlocked on alignment.
  */
 export function VantageScreen({ vantageId }: { vantageId: string }) {
   const router = useRouter();
@@ -44,6 +43,7 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
   const site = findSite(vantage.siteId);
   const locked = alignment.phase === 'locked';
   const needsLocation = locationPermission.status !== 'granted';
+  const spokenHint = alignmentHint(alignment);
 
   useEffect(() => {
     if (locked) {
@@ -51,8 +51,6 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
     }
   }, [locked, pulse]);
 
-  // A real lock records as an aligned capture; anything else is an honest
-  // "match by eye" — the capture screen records which, and never fakes a lock.
   const openCapture = () => {
     router.push({
       pathname: '/(main)/sakshi/capture',
@@ -63,32 +61,34 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
   return (
     <Screen scroll>
       <View style={styles.head}>
-        <Text variant="label" tone="muted" uppercase>
-          {site?.name ?? 'Vantage'}
-        </Text>
+        <View style={styles.badgeRow}>
+          <Chip label={site?.name ?? 'VANTAGE'} />
+          <Chip label={phaseLabel(alignment.phase)} selected={locked} />
+        </View>
         <Text variant="title">{vantage.label}</Text>
       </View>
 
       <View style={styles.reticleBlock}>
-        <Reticle size={220} progress={alignment.progress} phase={alignment.phase} />
-        <Text variant="label" tone={locked ? 'locked' : 'muted'} uppercase>
-          {phaseLabel(alignment.phase)}
-        </Text>
+        <Reticle size={240} progress={alignment.progress} phase={alignment.phase} />
       </View>
 
       {needsLocation ? (
         <View style={styles.notice}>
           <Text variant="body" tone="secondary">
-            Alignment needs to know where you are standing. Without it you can still frame the shot
-            by eye against the ghost overlay — it is recorded as a by-eye capture, not an aligned one.
+            Alignment needs your location. Without it, you can still frame the shot by eye against the ghost overlay.
           </Text>
           <Button label="Allow location" variant="secondary" onPress={requestLocation} />
         </View>
       ) : (
-        <View style={styles.readout}>
+        <View style={styles.readoutCard}>
           <AlignmentReadout alignment={alignment} vantage={vantage} />
         </View>
       )}
+
+      <View style={styles.voiceHint}>
+        <Text variant="caption" tone="muted">Alignment voice hint</Text>
+        <SpeakButton text={spokenHint} language="en" />
+      </View>
 
       <Divider />
 
@@ -108,17 +108,17 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
 
       <View style={styles.actions}>
         <Button
-          label={locked ? 'Witness — aligned' : 'Match by eye'}
+          label={locked ? 'Witness — Aligned' : 'Match by eye'}
           block
           onPress={openCapture}
-          accessibilityHint="Opens the camera to record an observation against the ghost overlay"
+          accessibilityHint="Opens the camera to record an observation"
         />
 
         {!locked ? (
           <Text variant="caption" tone="muted" center>
             {alignment.phase === 'unavailable'
-              ? 'No position fix. You can still frame by eye against the ghost — it is recorded as a by-eye capture.'
-              : 'Not yet within tolerance. Keep aligning, or frame by eye — the capture records which it was.'}
+              ? 'No position fix. Frame by eye against the ghost overlay.'
+              : 'Not yet within tolerance. Align further, or capture by eye.'}
           </Text>
         ) : null}
       </View>
@@ -129,24 +129,34 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
 function phaseLabel(phase: string): string {
   switch (phase) {
     case 'locked':
-      return 'Aligned';
+      return 'ALIGNED';
     case 'seeking':
-      return 'Seeking';
+      return 'SEEKING';
     case 'manual':
-      return 'By eye';
+      return 'BY EYE';
     case 'unavailable':
-      return 'No signal';
+      return 'NO SIGNAL';
     default:
-      return 'Idle';
+      return 'IDLE';
   }
 }
 
 const styles = StyleSheet.create({
-  head: { paddingTop: spacing.lg, gap: spacing.xs },
-  reticleBlock: { alignItems: 'center', gap: spacing.base, paddingVertical: spacing.xl },
+  head: { paddingTop: spacing.md, gap: spacing.xs },
+  badgeRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  reticleBlock: { alignItems: 'center', paddingVertical: spacing.lg },
   notice: { gap: spacing.md, alignItems: 'flex-start', paddingBottom: spacing.lg },
-  readout: { paddingBottom: spacing.lg },
-  note: { paddingVertical: spacing.lg },
+  voiceHint: { gap: spacing.xs, paddingBottom: spacing.md },
+  readoutCard: {
+    padding: spacing.base,
+    borderRadius: radii.lg,
+    backgroundColor: colors.surfaceSecondary,
+    borderWidth: 1,
+    borderColor: colors.border,
+    marginBottom: spacing.lg,
+  },
+  note: { paddingVertical: spacing.md },
   meta: { paddingBottom: spacing.lg },
-  actions: { gap: spacing.md, paddingTop: spacing.sm },
+  actions: { gap: spacing.md, paddingTop: spacing.sm, paddingBottom: spacing.xl },
 });
+

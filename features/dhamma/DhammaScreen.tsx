@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, TextInput, View } from 'react-native';
 
@@ -6,6 +6,7 @@ import { Button, Card, Screen, Text } from '@/components/ui';
 import { ScreenHeader, SettingsButton } from '@/components/common';
 import { demoDhammaEntries, findSource } from '@/data';
 import { colors, radii, spacing } from '@/theme';
+import { useVoiceInput } from '@/hooks/useVoiceInput';
 
 /**
  * Dhamma — grounded knowledge.
@@ -20,6 +21,11 @@ import { colors, radii, spacing } from '@/theme';
 export function DhammaScreen() {
   const router = useRouter();
   const [question, setQuestion] = useState('');
+  const voice = useVoiceInput();
+
+  useEffect(() => {
+    if (voice.transcript) setQuestion(voice.transcript);
+  }, [voice.transcript]);
 
   const askTyped = () => {
     const text = question.trim();
@@ -50,6 +56,16 @@ export function DhammaScreen() {
           onSubmitEditing={askTyped}
           accessibilityLabel="Your question"
         />
+        <Button
+          label={voice.isListening ? 'Stop listening' : 'Ask by voice'}
+          variant="secondary"
+          onPress={() => (voice.isListening ? voice.stop() : void voice.start('ne'))}
+        />
+        {voice.error ? (
+          <Text variant="caption" tone="muted">
+            {voice.error}
+          </Text>
+        ) : null}
         <Button label="Ask" onPress={askTyped} disabled={!question.trim()} />
         {/*
           Said before asking, not after refusing. Someone who knows the corpus
@@ -59,6 +75,18 @@ export function DhammaScreen() {
         <Text variant="caption" tone="muted">
           A small, narrow collection. It will say so when it cannot answer.
         </Text>
+      </View>
+
+      <View style={styles.reflectionEntry}>
+        <Text variant="heading">Reflection companion</Text>
+        <Text variant="body" tone="secondary">
+          Four questions from the Four Noble Truths. One at a time, in your own words.
+        </Text>
+        <Button
+          label="Begin a four-question reflection"
+          variant="secondary"
+          onPress={() => router.push('/(main)/dhamma/reflect' as never)}
+        />
       </View>
 
       <View style={styles.list}>
@@ -105,5 +133,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   list: { paddingTop: spacing.xl, gap: spacing.md, paddingBottom: spacing.lg },
+  reflectionEntry: { paddingTop: spacing.xl, gap: spacing.md },
   source: { marginTop: spacing.sm },
 });

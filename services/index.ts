@@ -1,6 +1,7 @@
 export * as permissions from './permissions';
 export * as storage from './storage';
 export * as database from './database';
+export * as device from './device';
 export * as location from './location';
 export * as sensors from './sensors';
 export * as camera from './camera';
@@ -9,6 +10,7 @@ export * as sync from './sync';
 export * as dhamma from './dhamma';
 export * as geofencing from './geofencing';
 export * as notifications from './notifications';
+export * as voice from './voice';
 export * as arrival from './arrival';
 export * as integrity from './integrity';
 export * as questReview from './questReview';
