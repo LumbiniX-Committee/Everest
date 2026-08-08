@@ -53,7 +53,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
 
     const scanFrame = async () => {
       if (!active || !aiScanOn) return;
-      const res = await runYoloScan(`frame-${vantageId}-${Date.now()}`);
+      const res = await runYoloScan(`live-${vantageId}-${Math.floor(Math.random() * 1000000)}`);
       if (active) {
         setYoloResult(res);
         timer = setTimeout(scanFrame, 1500); // refresh detection frame every 1.5s
