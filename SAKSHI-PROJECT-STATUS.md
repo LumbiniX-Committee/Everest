@@ -652,3 +652,39 @@ The repository is beyond skeleton stage and contains a credible, technically dif
 The project is not yet fully production-ready, fully cloud-backed, survey-grade, or device-verified. The remaining work is concentrated and manageable: prove the core loop on hardware, make the AI path visibly real and Nepali-first, clean the verification gate, stabilize deployment, and rehearse a disciplined story.
 
 **Recommended next action:** freeze new feature development and complete the P0 checklist above on the final presentation device.
+
+## Post-audit synchronization update
+
+After the main audit, the remote `main` branch received and was merged into both synchronized branches. The final repository commit is now `21df471` on `main`, `Aaditya`, `origin/main`, and `origin/Aaditya`.
+
+At the time of this post-merge audit, the synchronized application code was at `21df471`; the report update itself may be a later documentation commit. The merged work adds or improves:
+
+- Back navigation and map-hang fixes.
+- Narration audio wiring.
+- Alignment rehearsal during onboarding.
+- Quest evidence capture and second-opinion review flow.
+- Related onboarding, quest, database, and map integration changes.
+
+The final post-merge verification has this status:
+
+| Check | Result |
+|---|---|
+| Core tests | PASS — 55/55 |
+| Seed validation | PASS — 5 documentary-coordinate warnings |
+| Dhamma evaluation | PASS — 49/50, mandatory gates green |
+| TypeScript | FAIL — new route typing issue plus missing `expo-image-picker` dependency |
+| Vocabulary lint | FAIL — 6 existing `tokens` variable-name hits |
+
+The two TypeScript errors are:
+
+1. `features/onboarding/steps.ts` references `/onboarding/align`, but the generated Expo typed-route declaration has not been regenerated or does not include the new route. Restart Expo with `npx expo start -c`, regenerate/refresh `.expo` route types, and rerun typecheck.
+2. `features/quests/components/TaskEvidenceSheet.tsx` imports `expo-image-picker`, but that package is not currently present in `package.json`/installed dependencies. Add it with the Expo-SDK-compatible version using `npx expo install expo-image-picker`, then rerun `npm install`, typecheck, and the full verification gate.
+
+Do not call the final repository “fully green” until these two TypeScript issues and the six vocabulary lint hits are resolved. After fixing them, rerun:
+
+```powershell
+npx expo start -c
+npm run verify
+```
+
+Then commit the dependency/type fixes and synchronize `main` and `Aaditya` again.
