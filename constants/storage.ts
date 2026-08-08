@@ -26,6 +26,17 @@ export const StorageKeys = {
    * Sacred Garden re-notifies on every crossing.
    */
   arrivalsLastNotified: `${PREFIX}.arrivals.lastNotified`,
+
+  /**
+   * This installation's id — see services/device.
+   *
+   * The only key here without the version prefix, deliberately. The prefix
+   * exists so a breaking change to a stored *shape* can be migrated; this value
+   * has no shape, and its single useful property is that it never changes.
+   * Bumping the prefix would silently re-identify every install and break the
+   * grouping the id exists for, so it does not carry one.
+   */
+  deviceId: 'sakshi.device.id',
 } as const;
 
 /** Preference field → storage key. The settings screen iterates this. */
