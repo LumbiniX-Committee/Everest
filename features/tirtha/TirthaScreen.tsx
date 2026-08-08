@@ -33,6 +33,7 @@ export function TirthaScreen() {
   return (
     <Screen scroll>
       <ScreenHeader
+        canGoBack={false}
         eyebrow="Tīrtha"
         title="Explore Lumbini"
         subtitle={

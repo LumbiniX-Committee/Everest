@@ -11,3 +11,4 @@ export * as geofencing from './geofencing';
 export * as notifications from './notifications';
 export * as arrival from './arrival';
 export * as integrity from './integrity';
+export * as questReview from './questReview';

@@ -16,6 +16,7 @@ export const onboardingSteps: OnboardingStep[] = [
   { key: 'welcome', route: '/onboarding/welcome' },
   { key: 'purpose', route: '/onboarding/purpose' },
   { key: 'how-it-works', route: '/onboarding/how-it-works' },
+  { key: 'align', route: '/onboarding/align' },
   { key: 'permissions', route: '/onboarding/permissions' },
 ];
 

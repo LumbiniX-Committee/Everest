@@ -3,6 +3,8 @@ import * as SQLite from 'expo-sqlite';
 import { DATABASE_NAME } from '@/constants';
 import type {
   ConditionReport,
+  QuestReviewVerdict,
+  QuestSubmission,
   MeritEvent,
   Observation,
   ObservationAssessment,
@@ -166,6 +168,30 @@ const migrations: string[] = [
      synced INTEGER NOT NULL DEFAULT 0
    );
    CREATE INDEX IF NOT EXISTS idx_quest_completions_quest ON quest_completions (quest_id);`,
+
+  // Quest evidence. A tick records that someone said they did something; this
+  // records what they actually brought back, which is the only thing a
+  // conservation series can be built from.
+  //
+  // The AI review columns store an *opinion*: model and verdict live beside
+  // each other so a later reader can see who said it and weigh it accordingly.
+  // review_verdict is nullable throughout — a submission made offline is
+  // complete without one, and backfilling would invent a judgement nobody made.
+  `CREATE TABLE IF NOT EXISTS quest_submissions (
+     quest_id TEXT NOT NULL,
+     task_id TEXT NOT NULL,
+     photo_uri TEXT,
+     count INTEGER,
+     note TEXT,
+     submitted_at TEXT NOT NULL,
+     review_verdict TEXT,
+     review_comment TEXT,
+     review_model TEXT,
+     reviewed_at TEXT,
+     PRIMARY KEY (quest_id, task_id)
+   );
+   CREATE INDEX IF NOT EXISTS idx_submissions_quest
+     ON quest_submissions (quest_id);`,
 ];
 
 async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
@@ -861,3 +887,72 @@ export async function getCompletedQuestIds(): Promise<Set<string>> {
 }
 
 
+
+
+type QuestSubmissionRow = {
+  quest_id: string;
+  task_id: string;
+  photo_uri: string | null;
+  count: number | null;
+  note: string | null;
+  submitted_at: string;
+  review_verdict: string | null;
+  review_comment: string | null;
+  review_model: string | null;
+  reviewed_at: string | null;
+};
+
+function toQuestSubmission(row: QuestSubmissionRow): QuestSubmission {
+  return {
+    questId: row.quest_id,
+    taskId: row.task_id,
+    photoUri: row.photo_uri ?? undefined,
+    count: row.count ?? undefined,
+    note: row.note ?? undefined,
+    submittedAt: row.submitted_at,
+    review: row.review_verdict
+      ? {
+          verdict: row.review_verdict as QuestReviewVerdict,
+          comment: row.review_comment ?? '',
+          model: row.review_model ?? undefined,
+          reviewedAt: row.reviewed_at ?? row.submitted_at,
+        }
+      : undefined,
+  };
+}
+
+/**
+ * Records what someone brought back for a task.
+ *
+ * REPLACE rather than IGNORE: re-photographing a task is a correction, and the
+ * later answer is the one they mean. The primary key makes that a single row
+ * per task rather than a history — a quest is a prompt to look, not a ledger.
+ */
+export async function saveQuestSubmission(submission: QuestSubmission): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync(
+    `INSERT OR REPLACE INTO quest_submissions
+       (quest_id, task_id, photo_uri, count, note, submitted_at,
+        review_verdict, review_comment, review_model, reviewed_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    submission.questId,
+    submission.taskId,
+    submission.photoUri ?? null,
+    submission.count ?? null,
+    submission.note ?? null,
+    submission.submittedAt,
+    submission.review?.verdict ?? null,
+    submission.review?.comment ?? null,
+    submission.review?.model ?? null,
+    submission.review?.reviewedAt ?? null,
+  );
+}
+
+export async function listQuestSubmissions(questId: string): Promise<QuestSubmission[]> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<QuestSubmissionRow>(
+    'SELECT * FROM quest_submissions WHERE quest_id = ?',
+    questId,
+  );
+  return rows.map(toQuestSubmission);
+}
