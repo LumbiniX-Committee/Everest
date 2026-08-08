@@ -179,12 +179,46 @@ function reflectionPassages(matches: RetrievalResult[]): Passage[] {
   }));
 }
 
-function fallbackGuidance(language: 'en' | 'ne', matches: RetrievalResult[]): string {
+function fallbackGuidance(language: 'en' | 'ne', matches: RetrievalResult[], answers: string[] = []): string {
   const citation = matches[0]?.chunk.chunk_id ? ` [${matches[0].chunk.chunk_id}]` : '';
+  const joined = answers.join(' ').toLowerCase();
+  const focus = /तुलना|compare|comparison|jealous|jealousy/.test(joined)
+    ? 'तुलना र आफूलाई अरूसँग नाप्ने बानी'
+    : /क्रोध|रिस|anger|angry|resent/.test(joined)
+      ? 'रिस र त्यसले देखाएको चोट'
+      : /डर|भय|fear|anxious|चिन्ता|worry/.test(joined)
+        ? 'डर र भविष्यलाई नियन्त्रण गर्न खोज्ने मन'
+        : /काम|तनाव|work|stress|pressure/.test(joined)
+          ? 'कामको दबाब र त्यससँग जोडिएको अपेक्षा'
+          : /छोड|समात|attachment|attached|holding|craving/.test(joined)
+            ? 'समातेर राख्न खोजेको चाहना'
+            : 'तपाईंले नाम दिनुभएको भारी अनुभव';
+  const variation = answers.reduce((sum, answer) => sum + answer.length, 0) % 3;
   if (language === 'ne') {
-    return `तपाईंले लेख्नुभएको कुरालाई तुरुन्तै समाधान गर्नुपर्ने आदेश होइन, ध्यानपूर्वक हेर्नुपर्ने अनुभवका रूपमा लिनुहोस्${citation}। आज एउटा सानो कदम रोज्नुहोस्: प्रतिक्रिया दिनुअघि केही सास हेर्नुहोस्, आफ्नो चाहना वा विरोधलाई नाम दिनुहोस्, र त्यसपछि तपाईंको मूल्यसँग मिल्ने काम गर्नुहोस्। यो सुझावलाई आफ्नै अनुभवमा जाँच्नुहोस्; यसलाई उपचार वा निश्चित जीवन-सल्लाह नठान्नुहोस्।`;
+    const steps = [
+      'प्रतिक्रिया दिनुअघि तीन सास हेर्नुहोस् र त्यस क्षणमा के चाहनुभएको थियो भनेर नाम दिनुहोस्',
+      'आज एउटा त्यस्तो क्षण रोज्नुहोस् जहाँ तपाईंले तुरुन्तै प्रतिक्रिया दिनुहुन्छ; एक पल रोकिएर शरीर र मन दुवै अवलोकन गर्नुहोस्',
+      'यो अनुभव फेरि आउँदा आफूलाई दोष नदिई, चाहना र विरोध दुवै परिवर्तनशील छन् कि छैनन् भनेर जाँच्नुहोस्',
+    ];
+    return `तपाईंले ${focus} लाई चार प्रश्नमार्फत हेर्नुभयो${citation}। यसको अर्थ तपाईं कमजोर हुनुहुन्छ भन्ने होइन; अनुभवका कारण र त्यसप्रतिको प्रतिक्रियालाई छुट्याएर हेर्न सकिन्छ। आज एउटा सानो प्रयोग गर्नुहोस्: ${steps[variation]}। यो शिक्षालाई आफ्नै अनुभवमा जाँच्नुहोस्; यसलाई उपचार वा निश्चित जीवन-सल्लाह नठान्नुहोस्।`;
   }
-  return `Treat what you wrote as an experience to observe, not a command that must be solved immediately${citation}. Choose one small step today: notice a breath before reacting, name the craving or aversion you saw, and then act in a way that fits your values. Test this against your own experience; it is not treatment or a definitive life prescription.`;
+  const focusEn = /तुलना|compare|comparison|jealous|jealousy/.test(joined)
+    ? 'comparison and the habit of measuring yourself against others'
+    : /क्रोध|रिस|anger|angry|resent/.test(joined)
+      ? 'anger and the hurt it may be protecting'
+      : /डर|भय|fear|anxious|चिन्ता|worry/.test(joined)
+        ? 'fear and the mind’s wish to control what comes next'
+        : /काम|तनाव|work|stress|pressure/.test(joined)
+          ? 'work pressure and the expectations attached to it'
+          : /छोड|समात|attachment|attached|holding|craving/.test(joined)
+            ? 'the wish to hold on to what is changing'
+            : 'the heaviness you named';
+  const stepsEn = [
+    'notice three breaths before reacting, then name what you wanted in that moment',
+    'choose one moment when you usually react quickly; pause and observe both body and mind',
+    'when this experience returns, check whether the craving and aversion are changing rather than blaming yourself',
+  ];
+  return `You looked at ${focusEn} through four questions${citation}. This does not mean something is wrong with you; it means the experience and your response to it can be seen separately. Try one small experiment today: ${stepsEn[variation]}. Test the teaching against your own experience; it is not treatment or a definitive life prescription.`;
 }
 
 /**
@@ -210,15 +244,15 @@ export async function processReflectionAsync(req: ReflectionRequest): Promise<Re
     : 'This is a reflective inquiry tool. It is not counselling, therapy, or mental health treatment.';
 
   const fallback = {
-    inquiry: fallbackGuidance(language, validMatches),
+    inquiry: fallbackGuidance(language, validMatches, answers),
     stage: 5,
     completed: true,
     distress_override: false,
     site_id: req.site_id,
     disclaimer,
     language,
-    guidance: fallbackGuidance(language, validMatches),
-    citations: validMatches.length > 0 ? validateCitations(fallbackGuidance(language, validMatches), validMatches) : [],
+    guidance: fallbackGuidance(language, validMatches, answers),
+    citations: validMatches.length > 0 ? validateCitations(fallbackGuidance(language, validMatches, answers), validMatches) : [],
     passages: finalPassages,
     tier: 'fallback' as const,
   };

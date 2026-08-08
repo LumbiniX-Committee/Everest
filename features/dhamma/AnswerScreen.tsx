@@ -152,7 +152,7 @@ export function AnswerScreen({ questionId, query }: { questionId?: string; query
               if (!source) return null;
               return (
                 <Citation
-                  key={citation.sourceId}
+                  key={`${citation.sourceId}-${citation.locator ?? index}`}
                   source={source}
                   citation={citation}
                   index={index + 1}
