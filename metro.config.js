@@ -4,7 +4,8 @@ const { getDefaultConfig } = require('expo/metro-config');
 const config = getDefaultConfig(__dirname);
 
 // expo-sqlite ships a WASM build for web; Metro must treat .wasm as an asset.
-config.resolver.assetExts.push('wasm');
+// expo-audio ships opus files; Metro must treat .opus as an asset.
+config.resolver.assetExts.push('wasm', 'opus');
 
 // wa-sqlite needs SharedArrayBuffer, which requires cross-origin isolation.
 config.server.enhanceMiddleware = (middleware) => (req, res, next) => {
