@@ -1,1 +1,1 @@
-web: node mock-api/server.mjs
+web: node --experimental-strip-types mock-api/server.mjs

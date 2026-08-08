@@ -9,9 +9,11 @@ not a second implementation to keep in sync.
 ## Run
 
 ```bash
-node mock-api/server.mjs           # defaults to port 8000
-PORT=8099 node mock-api/server.mjs # or pick a port
+node --experimental-strip-types mock-api/server.mjs # defaults to port 8000
+PORT=8099 node --experimental-strip-types mock-api/server.mjs # or pick a port
 ```
+
+From the repository root, the equivalent command is `npm run api`.
 
 No `npm install`. Node 22 has everything it needs. It reads `seed/*.json` at
 boot and holds all POSTed state in memory — restart to reset.
@@ -29,6 +31,18 @@ ipconfig            # look for "IPv4 Address" under your active adapter
 Then set the app's API base URL to `http://<that-ip>:8000` (put it in
 `.env.example` as `EXPO_PUBLIC_API_URL`). `localhost` will **not** work from the
 phone — that resolves to the phone itself.
+
+Set `EXPO_PUBLIC_API_URL=http://<that-ip>:8000` in `.env.local`, then restart
+Expo after changing it. `localhost` works only for the same computer. For an
+Android emulator use `http://10.0.2.2:8000`; for an iOS simulator use
+`http://127.0.0.1:8000`; for a physical phone use the computer's LAN IPv4
+address and allow Node through the Windows firewall on private networks.
+
+Mobile request path: `AnswerScreen` → `services/dhamma.ask()` → `POST
+/dhamma/ask` → `core/dhamma/engine.ts` → Ollama Cloud.
+
+Keep `OLLAMA_API_KEY` only in the backend environment. Never put it in
+`.env.local` or an `EXPO_PUBLIC_` variable.
 
 ## Debug hooks
 

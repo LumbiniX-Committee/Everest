@@ -7,6 +7,7 @@ import { EmptyState, LoadingState } from '@/components/common';
 import { Citation, SourceDetailSheet } from '@/components/source';
 import { findDhammaEntry, findSource } from '@/data';
 import { dhamma } from '@/services';
+import type { DhammaLanguage } from '@/services/dhamma';
 import { colors, radii, spacing } from '@/theme';
 import { isGrounded, type DhammaAnswer, type Source } from '@/types';
 
@@ -28,22 +29,19 @@ export function AnswerScreen({ questionId, query }: { questionId?: string; query
   const [answer, setAnswer] = useState<DhammaAnswer | null>(null);
   const [retrieving, setRetrieving] = useState(false);
   const [openSource, setOpenSource] = useState<Source | null>(null);
+  const [language, setLanguage] = useState<DhammaLanguage>('ne');
 
   // A canned entry resolves synchronously; a typed question goes to retrieval.
   const entry = questionId ? findDhammaEntry(questionId) : undefined;
   const questionText = entry?.question ?? query ?? '';
 
   useEffect(() => {
-    if (entry) {
-      setAnswer(dhamma.answerForEntry(entry));
-      return;
-    }
-    if (!query) return;
+    if (!questionText) return;
 
     let active = true;
     setRetrieving(true);
     dhamma
-      .ask(query)
+      .ask(questionText, language)
       .then((result) => {
         if (active) setAnswer(result.answer);
       })
@@ -56,7 +54,7 @@ export function AnswerScreen({ questionId, query }: { questionId?: string; query
     return () => {
       active = false;
     };
-  }, [entry, query]);
+  }, [questionText, language]);
 
   if (!entry && !query) {
     return (
@@ -88,6 +86,28 @@ export function AnswerScreen({ questionId, query }: { questionId?: string; query
   return (
     <Screen scroll>
       <Head question={questionText} />
+
+      {questionText ? (
+        <View style={styles.languageToggle}>
+          <Text variant="label" tone="muted" uppercase>
+            Response language
+          </Text>
+          <View style={styles.languageButtons}>
+            <Button
+              label="नेपाली"
+              variant={language === 'ne' ? 'primary' : 'secondary'}
+              onPress={() => setLanguage('ne')}
+              disabled={retrieving || language === 'ne'}
+            />
+            <Button
+              label="English"
+              variant={language === 'en' ? 'primary' : 'secondary'}
+              onPress={() => setLanguage('en')}
+              disabled={retrieving || language === 'en'}
+            />
+          </View>
+        </View>
+      ) : null}
 
       {isGrounded(answer) ? (
         <>
@@ -270,6 +290,8 @@ const styles = StyleSheet.create({
   },
   caveat: { gap: spacing.sm, paddingBottom: spacing.lg },
   block: { paddingVertical: spacing.lg, gap: spacing.sm },
+  languageToggle: { gap: spacing.sm, paddingBottom: spacing.lg },
+  languageButtons: { flexDirection: 'row', gap: spacing.sm },
   refusalBlock: { paddingBottom: spacing.lg },
   refusal: {
     padding: spacing.base,

@@ -1,5 +1,5 @@
 import { demoDhammaEntries, findSource, type DhammaEntry } from '@/data';
-import type { DhammaAnswer, Evidence, GroundedAnswer, RefusedAnswer } from '@/types';
+import type { Citation, DhammaAnswer, Evidence, GroundedAnswer, RefusedAnswer } from '@/types';
 
 /**
  * Dhamma retrieval.
@@ -204,6 +204,109 @@ export type Retrieval = {
   evidence: Evidence[];
 };
 
+type ApiCitation = {
+  segment_id?: string;
+  sutta_uid?: string;
+  display?: string;
+};
+
+type ApiPassage = {
+  segment_id?: string;
+  english?: string;
+};
+
+type ApiResponse = {
+  answer?: string | null;
+  refused?: boolean;
+  refusal_reason?: string;
+  citations?: ApiCitation[];
+  passages?: ApiPassage[];
+};
+
+export type DhammaLanguage = 'ne' | 'en';
+
+// This value is embedded in the Expo bundle. It is only a server URL: the
+// Ollama credential must stay in the backend environment.
+const API_URL = (process.env.EXPO_PUBLIC_API_URL ?? '').trim().replace(/\/$/, '');
+const API_TIMEOUT_MS = 12000;
+
+function sourceIdFor(suttaUid: string | undefined, segmentId: string | undefined): string {
+  if (suttaUid === 'dn16' || segmentId?.startsWith('dn16:')) return 'dn-16';
+  if (suttaUid === 'sn56.11' || segmentId?.startsWith('sn56.11:')) return 'sn-11-3';
+  // The current canonical corpus exposes additional suttas before the local
+  // source registry does. Keep the citation checkable without inventing a
+  // source record; the UI simply omits an unknown source card.
+  return suttaUid ?? segmentId ?? 'canonical-corpus';
+}
+
+function fromApiResponse(result: ApiResponse, question: string, language: DhammaLanguage): Retrieval {
+  const apiCitations = Array.isArray(result.citations) ? result.citations : [];
+  const citations: Citation[] = apiCitations.map((citation) => ({
+    sourceId: sourceIdFor(citation.sutta_uid, citation.segment_id),
+    locator: citation.segment_id,
+  }));
+  const passages = Array.isArray(result.passages) ? result.passages : [];
+  const evidence = passages.map((passage, index) => ({
+    citation: citations[index] ?? {
+      sourceId: sourceIdFor(undefined, passage.segment_id),
+      locator: passage.segment_id,
+    },
+    passage: passage.english ?? '',
+    relevance: Math.max(0, 1 - index * 0.1),
+  }));
+
+  if (result.refused || !result.answer) {
+    return {
+      answer: {
+        status: 'refused',
+        text: language === 'ne'
+          ? 'यस प्रश्नको विश्वसनीय उत्तर दिन मसँग पर्याप्त प्रमाण छैन।'
+          : 'I don’t have enough reliable evidence to answer this confidently.',
+        reason: result.refusal_reason ?? (language === 'ne'
+          ? 'प्रामाणिक संग्रहले यस प्रश्नको विश्वसनीय उत्तर समर्थन गर्दैन।'
+          : 'The canonical collection does not support a reliable answer to this question.'),
+        searched: COLLECTIONS,
+        related: citations,
+        suggestions: demoDhammaEntries
+          .filter((entry) => entry.question.toLowerCase() !== question.trim().toLowerCase())
+          .slice(0, 3)
+          .map((entry) => entry.question),
+      },
+      evidence,
+    };
+  }
+
+  return {
+    answer: {
+      status: 'grounded',
+      text: result.answer,
+      citations,
+      evidence,
+    },
+    evidence,
+  };
+}
+
+async function askRemote(query: string, language: DhammaLanguage): Promise<Retrieval> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  try {
+    const response = await fetch(`${API_URL}/dhamma/ask`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ question: query, language, mode: 'auto' }),
+      signal: controller.signal,
+    });
+    const body = await response.json().catch(() => null) as ApiResponse | null;
+    if (!response.ok || !body) {
+      throw new Error(`Dhamma API returned ${response.status}`);
+    }
+    return fromApiResponse(body, query, language);
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 /**
  * Searches the corpus for a free-text question.
  *
@@ -211,7 +314,16 @@ export type Retrieval = {
  * search boundary, not a fake typing animation. The UI fills it by showing the
  * evidence being weighed (§14), which is the honest version of "thinking".
  */
-export async function ask(query: string): Promise<Retrieval> {
+export async function ask(query: string, language: DhammaLanguage = 'ne'): Promise<Retrieval> {
+  if (API_URL) {
+    try {
+      return await askRemote(query, language);
+    } catch (error) {
+      // The local corpus is an intentional offline fallback for venue Wi-Fi
+      // failures and development without the backend running.
+      console.warn('[dhamma] API unavailable; using local corpus fallback', error);
+    }
+  }
   const queryTokens = tokenise(query);
 
   const ranked = demoDhammaEntries

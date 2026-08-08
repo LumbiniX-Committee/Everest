@@ -261,7 +261,7 @@ export function askDhamma(req: DhammaAskRequest): DhammaAskResponse {
   };
 }
 
-const OLLAMA_API_KEY = process.env.OLLAMA_API_KEY || '226858876a3548bdae99a7c0eba308af.nuYJf6TLNGco-2kd-KRxgOjo';
+const OLLAMA_API_KEY = process.env.OLLAMA_API_KEY;
 const OLLAMA_API_ENDPOINT = process.env.OLLAMA_API_ENDPOINT || 'https://ollama.com/v1/chat/completions';
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'gpt-oss:120b-cloud';
 
@@ -273,7 +273,8 @@ const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'gpt-oss:120b-cloud';
 export async function askDhammaAsync(req: DhammaAskRequest): Promise<DhammaAskResponse> {
   // 1. Run Grounding Gate & Pre-checks synchronously
   const syncResult = askDhamma(req);
-  if (syncResult.refused || req.mode === 'passages_only' || syncResult.tier === 'cached_demo') {
+  // Cached demo answers are English. Re-run retrieval and generation for Nepali.
+  if (syncResult.refused || req.mode === 'passages_only' || (syncResult.tier === 'cached_demo' && req.language !== 'ne')) {
     return syncResult;
   }
 
@@ -286,7 +287,12 @@ export async function askDhammaAsync(req: DhammaAskRequest): Promise<DhammaAskRe
   const systemPrompt =
     'You are the Sākṣī Dhamma RAG engine. Synthesize the retrieved canonical passages to answer the user question directly in 1-2 concise sentences. You MUST include the exact segment ID citation in brackets like [sn56.11:4.2] or [dn16:6.7]. Do NOT output thinking, reasoning, or preamble. Return ONLY the final direct answer.';
 
-  const userPrompt = `Retrieved Canonical Passages:\n${passageContext}\n\nUser Question: ${req.question}`;
+  const responseLanguage = req.language === 'ne' ? 'Nepali (Devanagari script)' : 'English';
+  const userPrompt = `Retrieved Canonical Passages:\n${passageContext}\n\nRespond entirely in ${responseLanguage}. Preserve the exact citation IDs.\n\nUser Question: ${req.question}`;
+
+  // Never attempt a provider call without a server-side credential. The
+  // deterministic RAG result below remains available for offline operation.
+  if (!OLLAMA_API_KEY) return syncResult;
 
   try {
     const controller = new AbortController();
