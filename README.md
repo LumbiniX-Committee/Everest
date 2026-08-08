@@ -26,6 +26,7 @@ require a decision.
 
 ```bash
 npm install
+cp .env.example .env.local   # then fill in your Supabase project values
 npx expo start
 ```
 
@@ -45,7 +46,7 @@ app/          Expo Router routes. Thin — each file resolves params and renders
 features/     Screen implementations, grouped by surface.
 components/   Shared UI. ui/ is the primitive layer; nothing outside it names a colour or a font.
 theme/        Colour, typography, spacing, radii tokens.
-services/     Platform boundaries: permissions, location, camera, sensors, storage, database.
+services/     Platform boundaries: permissions, location, camera, sensors, storage, database, supabase.
 store/        App-wide React context (first-launch state, permissions).
 hooks/        Composed behaviour — alignment, position, heading.
 data/         Content. Currently `demo/`; swapped behind `data/index.ts` when real data lands.
@@ -72,6 +73,11 @@ three-step process to enable them.
 use, after its reason is on screen. A refusal is a valid outcome, never an
 error — `denied` (ask again) and `blocked` (Settings only) are distinguished so
 the UI never offers a button that silently does nothing.
+
+**Configuration lives in `.env.local`**, which is gitignored — copy `.env.example`
+and fill it in. `EXPO_PUBLIC_` variables are inlined into the bundle at build
+time, so only publishable values belong there; Row Level Security is what
+protects the data, not the key.
 
 **Observations are written locally first.** A photograph taken at a vantage on a
 particular day cannot be retaken, so SQLite is the record and the network is an

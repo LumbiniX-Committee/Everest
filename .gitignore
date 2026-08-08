@@ -31,7 +31,12 @@ yarn-error.*
 *.pem
 
 # local env files
-.env*.local
+# .env.local holds the Supabase config and is required to run — see .env.example.
+# Every .env variant is ignored, including a bare `.env`, which `.env*.local`
+# alone would have let through.
+.env
+.env.*
+!.env.example
 
 # typescript
 *.tsbuildinfo
