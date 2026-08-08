@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { arrival, notifications } from '@/services';
 import type { Coordinate } from '@/types';
@@ -38,7 +38,15 @@ export function useSiteArrival(
   { notify = true }: { notify?: boolean } = {},
 ): SiteArrivalState {
   const [atSiteId, setAtSiteId] = useState<string | null>(null);
-  const nearest = arrival.nearestSite(coordinate);
+  // Memoised on the coordinate's *values*, not its identity. nearestSite
+  // builds a new object on every call, so an unmemoised result changed identity
+  // on every render and re-ran the effect below continuously — several times a
+  // second while a watched position is updating.
+  const nearest = useMemo(
+    () => arrival.nearestSite(coordinate),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [coordinate?.latitude, coordinate?.longitude],
+  );
 
   /**
    * Held in a ref, not state.

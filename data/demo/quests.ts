@@ -19,6 +19,7 @@ export const demoQuests: Quest[] = [
         title: 'Visit Maya Devi Temple Precinct',
         description: 'Arrive at the main precinct of the Maya Devi shelter.',
         type: 'site_visit',
+        evidence: 'none',
         targetId: 'maya-devi-temple',
       },
       {
@@ -26,6 +27,8 @@ export const demoQuests: Quest[] = [
         title: 'Capture East Approach Vantage',
         description: 'Record baseline photo observation from vantage maya-devi-east-approach.',
         type: 'observation',
+        evidence: 'photo',
+        expectation: 'Record baseline photo observation from vantage maya-devi-east-approach.',
         targetId: 'maya-devi-east-approach',
       },
       {
@@ -33,6 +36,8 @@ export const demoQuests: Quest[] = [
         title: 'Capture Pond Edge Vantage',
         description: 'Record baseline photo observation from vantage maya-devi-pond-edge.',
         type: 'observation',
+        evidence: 'photo',
+        expectation: 'Record baseline photo observation from vantage maya-devi-pond-edge.',
         targetId: 'maya-devi-pond-edge',
       },
       {
@@ -40,6 +45,8 @@ export const demoQuests: Quest[] = [
         title: 'File Foundation Condition Assessment',
         description: 'File a structural condition report on brick foundations.',
         type: 'condition_report',
+        evidence: 'photo',
+        expectation: 'File a structural condition report on brick foundations.',
         targetId: 'maya-devi-temple',
       },
     ],
@@ -63,6 +70,7 @@ export const demoQuests: Quest[] = [
         title: 'Inspect Ashoka Pillar Site',
         description: 'Approach the Ashoka Pillar south perimeter.',
         type: 'site_visit',
+        evidence: 'none',
         targetId: 'ashoka-pillar',
       },
       {
@@ -70,6 +78,8 @@ export const demoQuests: Quest[] = [
         title: 'Capture Inscription Facing Vantage',
         description: 'Photograph the Brahmi epigraph from vantage ashoka-pillar-south.',
         type: 'observation',
+        evidence: 'photo',
+        expectation: 'Photograph the Brahmi epigraph from vantage ashoka-pillar-south.',
         targetId: 'ashoka-pillar-south',
       },
       {
@@ -77,6 +87,7 @@ export const demoQuests: Quest[] = [
         title: 'Study Brahmi Text Transcription',
         description: 'Review the classical Brahmi text translation and provenance details.',
         type: 'reading',
+        evidence: 'note',
         targetId: 'rummindei-inscription',
       },
       {
@@ -84,6 +95,8 @@ export const demoQuests: Quest[] = [
         title: 'Report Pillar Fissure Condition',
         description: 'Assess micro-fissure stability along the pillar shaft.',
         type: 'condition_report',
+        evidence: 'photo',
+        expectation: 'Assess micro-fissure stability along the pillar shaft.',
         targetId: 'ashoka-pillar',
       },
     ],
@@ -107,6 +120,7 @@ export const demoQuests: Quest[] = [
         title: 'Walk Sacred Pond Steps',
         description: 'Survey the brick steps surrounding Puskarini Pond.',
         type: 'site_visit',
+        evidence: 'none',
         targetId: 'puskarini-pond',
       },
       {
@@ -114,6 +128,8 @@ export const demoQuests: Quest[] = [
         title: 'Capture Water Surface Vantage',
         description: 'Record photo observation of pond water level and clarity.',
         type: 'observation',
+        evidence: 'photo',
+        expectation: 'Record photo observation of pond water level and clarity.',
         targetId: 'puskarini-pond-north',
       },
       {
@@ -121,6 +137,8 @@ export const demoQuests: Quest[] = [
         title: 'Assess Masonry Step Algae & Erosion',
         description: 'Document sub-surface brick weathering and algal growth.',
         type: 'condition_report',
+        evidence: 'photo',
+        expectation: 'Document sub-surface brick weathering and algal growth.',
         targetId: 'puskarini-pond',
       },
     ],
@@ -144,6 +162,7 @@ export const demoQuests: Quest[] = [
         title: 'Survey Royal Thai Monastery',
         description: 'Visit and inspect exterior architectural state of Royal Thai Monastery.',
         type: 'site_visit',
+        evidence: 'none',
         targetId: 'royal-thai-monastery',
       },
       {
@@ -151,6 +170,7 @@ export const demoQuests: Quest[] = [
         title: 'Survey Mahamevnawa Monastery',
         description: 'Inspect courtyard brickwork and drainage at Mahamevnawa.',
         type: 'site_visit',
+        evidence: 'none',
         targetId: 'mahamevnawa-monastery',
       },
       {
@@ -158,6 +178,8 @@ export const demoQuests: Quest[] = [
         title: 'Capture Central Canal Alignment Vantage',
         description: 'Photograph central canal axis from the pedestrian bridge.',
         type: 'observation',
+        evidence: 'photo',
+        expectation: 'Photograph central canal axis from the pedestrian bridge.',
         targetId: 'monastic-canal-bridge',
       },
       {
@@ -165,6 +187,8 @@ export const demoQuests: Quest[] = [
         title: 'File Monastic Zone Preservation Summary',
         description: 'Document overall visitor pathways and vegetation encroaching on structures.',
         type: 'condition_report',
+        evidence: 'photo',
+        expectation: 'Document overall visitor pathways and vegetation encroaching on structures.',
         targetId: 'monastic-zone',
       },
     ],

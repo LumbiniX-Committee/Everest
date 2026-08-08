@@ -31,6 +31,7 @@ export function DhammaScreen() {
   return (
     <Screen scroll>
       <ScreenHeader
+        canGoBack={false}
         eyebrow="Dhamma"
         title="Questions"
         subtitle="Everything here carries a citation you can go and check."
