@@ -19,7 +19,9 @@
 | 10 | Camera Capture Loading/Error | Async loading state & error handling during capture | Tier 2 & 4 |
 
 ## Coverage Thresholds
-- `npm run typecheck`: 0 errors
-- `npm run lint`: 0 errors
-- Directory existence: `features/quests` and `features/settings` exist with implementation.
-- Schema migration: `services/database/index.ts` has migration index 4 for `quests` and `quest_progress`.
+- `npm run verify`: all green (`npm run typecheck`, `node tools/run-tests.mjs`, `node tools/validate-seed.mjs`, `node tools/lint-vocab.mjs`)
+- `node tools/run-tests.mjs`: 48 tests pass (core domain logic suite)
+- `node tools/validate-seed.mjs`: OK (0 errors)
+- `node tools/lint-vocab.mjs`: clean (0 prohibited gamification terms)
+- Schema migration: `services/database/index.ts` has migrations index 0–7 (observations, reports, merit, visits, quests, alignment metrics, weighted merit, quest completions).
+

@@ -154,6 +154,18 @@ const migrations: string[] = [
   `ALTER TABLE merit_events ADD COLUMN amount INTEGER NOT NULL DEFAULT 0;
    ALTER TABLE merit_events ADD COLUMN day_key TEXT NOT NULL DEFAULT '';
    CREATE INDEX IF NOT EXISTS idx_merit_day ON merit_events (day_key);`,
+
+  // Quest completions table for seed and spec quests (05-CONTENT-SPEC §5).
+  `CREATE TABLE IF NOT EXISTS quest_completions (
+     id TEXT PRIMARY KEY NOT NULL,
+     quest_id TEXT NOT NULL,
+     completed_at TEXT NOT NULL,
+     evidence_id TEXT,
+     answer TEXT,
+     merit_awarded INTEGER NOT NULL DEFAULT 0,
+     synced INTEGER NOT NULL DEFAULT 0
+   );
+   CREATE INDEX IF NOT EXISTS idx_quest_completions_quest ON quest_completions (quest_id);`,
 ];
 
 async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
@@ -796,4 +808,56 @@ export async function seedDefaultQuests(quests: Quest[]): Promise<void> {
     }
   });
 }
+
+export type QuestCompletionRecord = {
+  id: string;
+  questId: string;
+  completedAt: string;
+  evidenceId?: string;
+  answer?: string;
+  meritAwarded: number;
+};
+
+export async function recordQuestCompletion(record: QuestCompletionRecord): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync(
+    `INSERT OR REPLACE INTO quest_completions
+       (id, quest_id, completed_at, evidence_id, answer, merit_awarded)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    record.id,
+    record.questId,
+    record.completedAt,
+    record.evidenceId ?? null,
+    record.answer ?? null,
+    record.meritAwarded,
+  );
+}
+
+export async function listQuestCompletions(): Promise<QuestCompletionRecord[]> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<{
+    id: string;
+    quest_id: string;
+    completed_at: string;
+    evidence_id: string | null;
+    answer: string | null;
+    merit_awarded: number;
+  }>('SELECT * FROM quest_completions ORDER BY completed_at DESC');
+
+  return rows.map((row) => ({
+    id: row.id,
+    questId: row.quest_id,
+    completedAt: row.completed_at,
+    evidenceId: row.evidence_id ?? undefined,
+    answer: row.answer ?? undefined,
+    meritAwarded: row.merit_awarded,
+  }));
+}
+
+export async function getCompletedQuestIds(): Promise<Set<string>> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<{ quest_id: string }>('SELECT DISTINCT quest_id FROM quest_completions');
+  return new Set(rows.map((r) => r.quest_id));
+}
+
 

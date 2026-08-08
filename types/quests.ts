@@ -55,3 +55,31 @@ export type QuestProgress = {
 export type QuestWithProgress = Quest & {
   progress: QuestProgress;
 };
+
+export type QuestFamily = 'witness' | 'path' | 'attention' | 'observation';
+
+export type LocalizedString = {
+  en: string;
+  ne: string;
+};
+
+export type SeedRiddle = {
+  accept: string[];
+  hint: LocalizedString;
+};
+
+export type SeedQuest = {
+  id: string;
+  family: QuestFamily;
+  title: LocalizedString;
+  description: LocalizedString;
+  siteId: string | null;
+  vantageId?: string;
+  merit: number;
+  window?: { from: string; to: string };
+  durationSeconds?: number;
+  riddle?: SeedRiddle;
+  centroid?: { lat: number; lon: number };
+  radiusMeters?: number;
+};
+
