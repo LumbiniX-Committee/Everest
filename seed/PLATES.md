@@ -68,13 +68,20 @@ from Mukherji 1901 (full-res from the Internet Archive JP2 scans, catalogued in
 - `ashokan-pillar.pre1896-jungle.source` — Plate XX Fig. 1, the conditioning
   source for the jungle reconstruction (not the reconstruction itself)
 
-`plates.json` carries a `produced` flag per entry. The three
-`conditioned_reconstruction` plates (`horse-capital`, `pre1896-jungle`,
-`votive-stupas-1957`) are **not** produced — they need image-to-image generation,
-which is the one plate step a model cannot do from a shell. Their conditioning
-sources are cited and, for the jungle, already extracted. Two
-`historical_photograph` entries (`nativity-sculpture`, `puskarini.1899-view`) are
-not in Mukherji and await a harvest match.
+`plates.json` carries a `produced` flag per entry. Two
+`conditioned_reconstruction` plates are now **produced**, generated
+image-to-image in Nano Banana Pro / Gemini and clearly tier-labelled:
+
+- `ashokan-pillar.pre1896-jungle` — the overgrown jungle mound, conditioned on
+  Mukherji's own 1899 west-view photograph
+- `puskarini.earthen-pond-pre1930s` — the natural earthen oval pond before the
+  1930s brick remodel, conditioned on the modern CC BY-SA photograph (pairs with
+  `now.puskarini.webp`)
+
+Two `conditioned_reconstruction` plates remain **not** produced
+(`horse-capital`, `votive-stupas-1957`) — optional extras, conditioning sources
+cited. Two `historical_photograph` entries (`nativity-sculpture`,
+`puskarini.1899-view`) are not in Mukherji and await a harvest match.
 
 ## Output
 

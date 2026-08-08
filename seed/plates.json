@@ -159,7 +159,7 @@
     },
     "image": "ashokan-pillar.pre1896-jungle.webp",
     "evidence_tier": "conditioned_reconstruction",
-    "produced": false,
+    "produced": true,
     "conditioned_on": {
       "title": "Mukherji's own 1899 photograph of the still-overgrown mound (extracted)",
       "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ",
@@ -184,7 +184,7 @@
     },
     "image": "puskarini.earthen-pond-pre1930s.webp",
     "evidence_tier": "conditioned_reconstruction",
-    "produced": false,
+    "produced": true,
     "conditioned_on": {
       "title": "The pond was originally an oval earthen pool, remodelled into the present rectangular brick tank in the 1930s",
       "url": "https://whc.unesco.org/en/list/666",
