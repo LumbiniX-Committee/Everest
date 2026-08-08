@@ -7,5 +7,7 @@ export * from './map';
 export * from './source';
 export * from './dissolve';
 export * from './condition';
+export * from './series';
+
 
 
