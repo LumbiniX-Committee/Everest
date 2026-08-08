@@ -28,12 +28,13 @@ const PORT = Number(process.env.PORT) || 8000;
 
 // --- Dhamma Engine (lazy-loaded from core — TypeScript but Node strips types) -
 let _dhammaReady = false;
-let _askDhamma, _processReflection;
+let _askDhamma, _askDhammaAsync, _processReflection;
 async function loadDhamma() {
   if (_dhammaReady) return;
   try {
     const mod = await import('../core/dhamma/index.ts');
     _askDhamma = mod.askDhamma;
+    _askDhammaAsync = mod.askDhammaAsync || mod.askDhamma;
     _processReflection = mod.processReflection;
     _dhammaReady = true;
     console.log('[dhamma] engine loaded ✓');
@@ -347,14 +348,20 @@ on('POST', '/quests/:id/complete', (_req, res, p, _q, body) => {
   json(res, 200, { merit_awarded: awarded, evidence_id, merit_capped: before === 0 });
 });
 
-// POST /dhamma/ask → real engine if loaded, passage-only stub otherwise
+// POST /dhamma/ask → real LLM AI engine if loaded, passage-only stub otherwise
 on('POST', '/dhamma/ask', async (_req, res, _p, _q, body) => {
   const question = String(body.question || '').trim();
   if (!question) return err(res, 400, 'question is required');
 
-  if (_askDhamma) {
+  const fn = _askDhammaAsync || _askDhamma;
+  if (fn) {
     try {
-      const result = _askDhamma(question, body.site_id || null);
+      const result = await fn({
+        question,
+        site_id: body.site_id || null,
+        language: body.language || 'en',
+        mode: body.mode || 'auto',
+      });
       // audit trail
       state.dhammaLog.push({
         id: randomUUID(), ts: now(), question,
