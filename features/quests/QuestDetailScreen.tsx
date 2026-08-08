@@ -1,18 +1,26 @@
 import { useRouter } from 'expo-router';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { ErrorState, LoadingState, ScreenHeader } from '@/components/common';
-import { Button, Card, Screen, Text } from '@/components/ui';
+import { BottomSheet, Button, Card, Screen, Text } from '@/components/ui';
 import { useQuests } from '@/store/quests';
 import { colors, spacing } from '@/theme';
+import type { QuestTask } from '@/types';
 
 import { QuestCategoryBadge } from './components/QuestCategoryBadge';
 import { QuestProgressBar } from './components/QuestProgressBar';
+import { TaskEvidenceSheet } from './components';
 import { QuestTaskItem } from './components/QuestTaskItem';
 
 export function QuestDetailScreen({ questId }: { questId: string }) {
   const router = useRouter();
   const { hydrated, getQuestById, startQuest, completeTask } = useQuests();
+
+  // Declared before any early return. React requires hooks to run
+  // unconditionally on every render, and the loading and not-found branches
+  // below both return before this point otherwise.
+  const [openTask, setOpenTask] = useState<QuestTask | null>(null);
 
   if (!hydrated) return <LoadingState label="Reading quest details" />;
 
@@ -33,14 +41,26 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
   const isNotStarted = progress.status === 'not_started';
   const isCompleted = progress.status === 'completed';
 
-  const handleTaskToggle = async (taskId: string) => {
-    const isTaskDone = progress.completedTasks.includes(taskId);
-    if (isTaskDone) return;
-
+  // A task that asks for something opens the sheet; a task that asks for
+  // nothing still ticks straight through, because demanding a photograph of a
+  // gate you walked past is busywork dressed as rigour.
+  const finishTask = async (taskId: string) => {
     const result = await completeTask(questId, taskId);
     if (result.questCompleted) {
       router.replace(`/(main)/tirtha/quests/completed/${questId}`);
     }
+  };
+
+  const handleTaskToggle = async (taskId: string) => {
+    if (progress.completedTasks.includes(taskId)) return;
+
+    const task = tasks.find((t) => t.id === taskId);
+    const wantsEvidence = task && (task.evidence ?? 'none') !== 'none';
+    if (wantsEvidence) {
+      setOpenTask(task);
+      return;
+    }
+    await finishTask(taskId);
   };
 
   return (
@@ -107,6 +127,26 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
           ))}
         </View>
       )}
+
+      <BottomSheet
+        visible={openTask !== null}
+        onClose={() => setOpenTask(null)}
+        title={openTask?.title ?? 'Record what you saw'}
+        scroll
+      >
+        {openTask ? (
+          <TaskEvidenceSheet
+            questId={questId}
+            task={openTask}
+            onCancel={() => setOpenTask(null)}
+            onSubmitted={async () => {
+              const id = openTask.id;
+              setOpenTask(null);
+              await finishTask(id);
+            }}
+          />
+        ) : null}
+      </BottomSheet>
 
       {isCompleted ? (
         <View style={styles.actionWrap}>
