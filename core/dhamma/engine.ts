@@ -158,8 +158,8 @@ const DOMAIN_VOCAB = new Set([
 
 /** Returns true if the query contains at least one domain-relevant token */
 function isDomainQuery(question: string): boolean {
-  const tokens = question.toLowerCase().split(/[\s,.:;?!'"()\[\]\/\\—–-]+/);
-  return tokens.some((t) => t.length >= 2 && DOMAIN_VOCAB.has(t));
+  const queryTerms = question.toLowerCase().split(/[\s,.:;?!'"()\[\]\/\\—–-]+/);
+  return queryTerms.some((t) => t.length >= 2 && DOMAIN_VOCAB.has(t));
 }
 
 /** Grounding Gate & Citation Validator Engine execution */

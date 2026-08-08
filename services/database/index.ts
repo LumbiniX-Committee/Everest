@@ -192,6 +192,16 @@ const migrations: string[] = [
    );
    CREATE INDEX IF NOT EXISTS idx_submissions_quest
      ON quest_submissions (quest_id);`,
+
+  // Quest evidence leaves the device.
+  //
+  // Submissions were record-class data with no way off the phone — a photograph
+  // of what someone actually saw, ending with a reinstall or a dropped handset.
+  // DEFAULT 0 is right for existing rows: they were never sent, so the next
+  // sync pass picks them up rather than treating them as already delivered.
+  `ALTER TABLE quest_submissions ADD COLUMN synced INTEGER NOT NULL DEFAULT 0;
+   CREATE INDEX IF NOT EXISTS idx_submissions_unsynced
+     ON quest_submissions (synced) WHERE synced = 0;`,
 ];
 
 async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
@@ -900,6 +910,7 @@ type QuestSubmissionRow = {
   review_comment: string | null;
   review_model: string | null;
   reviewed_at: string | null;
+  synced: number;
 };
 
 function toQuestSubmission(row: QuestSubmissionRow): QuestSubmission {
@@ -927,6 +938,11 @@ function toQuestSubmission(row: QuestSubmissionRow): QuestSubmission {
  * REPLACE rather than IGNORE: re-photographing a task is a correction, and the
  * later answer is the one they mean. The primary key makes that a single row
  * per task rather than a history — a quest is a prompt to look, not a ledger.
+ *
+ * `synced` is absent from the column list on purpose, so REPLACE returns it to
+ * its default of 0. A corrected submission has not been sent in its corrected
+ * form, and carrying the old flag across would leave the server holding the
+ * answer the person replaced.
  */
 export async function saveQuestSubmission(submission: QuestSubmission): Promise<void> {
   const db = await getDatabase();
@@ -955,4 +971,24 @@ export async function listQuestSubmissions(questId: string): Promise<QuestSubmis
     questId,
   );
   return rows.map(toQuestSubmission);
+}
+
+export async function getUnsyncedQuestSubmissions(): Promise<QuestSubmission[]> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<QuestSubmissionRow>(
+    'SELECT * FROM quest_submissions WHERE synced = 0 ORDER BY submitted_at ASC',
+  );
+  return rows.map(toQuestSubmission);
+}
+
+export async function markQuestSubmissionSynced(
+  questId: string,
+  taskId: string,
+): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync(
+    'UPDATE quest_submissions SET synced = 1 WHERE quest_id = ? AND task_id = ?',
+    questId,
+    taskId,
+  );
 }
