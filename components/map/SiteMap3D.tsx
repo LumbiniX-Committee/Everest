@@ -2,11 +2,11 @@ import Constants, { ExecutionEnvironment } from 'expo-constants';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { Text } from '@/components/ui';
-import { MAP_HOME, precinctGeoJSON, siteGeoJSON } from '@/data';
-import { colors, radii, sakshiMapStyleJSON, spacing } from '@/theme';
+import { MAP_HOME, demoSites, monumentGeoJSON, precinctGeoJSON, siteGeoJSON, waterGeoJSON } from '@/data';
+import { colors, radii, sakshiMapStyleJSON } from '@/theme';
 
 import { MapWebView } from './MapWebView';
+import { SitePlan } from './SitePlan';
 
 export type SiteMap3DProps = {
   /** Height of the map block. The map is a panel on a scrolling page. */
@@ -68,12 +68,13 @@ export function SiteMap3D({ height = 320, onSelectSite }: SiteMap3DProps) {
     return <MapWebView height={height} onSelectSite={onSelectSite} />;
   }
 
+  // Same as the WebView path: the schematic plan is what a failed basemap
+  // falls back to, not a second map kept permanently on the page.
   if (failed) {
     return (
-      <Unavailable
-        height={height}
-        reason="Basemap tiles need a connection the first time. Everything else on this screen works offline."
-      />
+      <View style={[styles.wrap, { height }]}>
+        <SitePlan sites={demoSites} onSelectSite={onSelectSite} height={height} />
+      </View>
     );
   }
 
@@ -88,6 +89,14 @@ export function SiteMap3D({ height = 320, onSelectSite }: SiteMap3DProps) {
         attribution
         logo={false}
         compass
+        // Inert, for the same reason the WebView preview is: this panel lives
+        // inside a scrolling page, and a map that consumes drags competes with
+        // the page for them. Panning and zooming belong to the full-screen map,
+        // which this preview opens.
+        dragPan={false}
+        touchZoom={false}
+        doubleTapZoom={false}
+        touchRotate={false}
         onDidFailLoadingMap={() => setFailed(true)}
       >
         <Camera
@@ -111,6 +120,26 @@ export function SiteMap3D({ height = 320, onSelectSite }: SiteMap3DProps) {
               // 0.5, not 0.35: on the dark ground 0.35 measured 2.20:1 and the
               // enclosure read as a smudge rather than a wall.
               'fill-extrusion-opacity': 0.5,
+            }}
+          />
+        </GeoJSONSource>
+
+        <GeoJSONSource id="site-water" data={waterGeoJSON}>
+          <Layer id="site-water-fill" type="fill" paint={{ 'fill-color': colors.mapWater }} />
+        </GeoJSONSource>
+
+        {/* The monuments carry their own massing: OSM knows the height of one
+            building in Lumbini, so its data alone extrudes to identical slabs. */}
+        <GeoJSONSource id="monuments" data={monumentGeoJSON}>
+          <Layer
+            id="monument-massing"
+            type="fill-extrusion"
+            paint={{
+              'fill-extrusion-color': colors.mapBuildingRoof,
+              'fill-extrusion-height': ['get', 'height'],
+              'fill-extrusion-base': 0,
+              'fill-extrusion-opacity': 0.95,
+              'fill-extrusion-vertical-gradient': true,
             }}
           />
         </GeoJSONSource>
@@ -165,21 +194,6 @@ export function SiteMap3D({ height = 320, onSelectSite }: SiteMap3DProps) {
   );
 }
 
-function Unavailable({ height, reason }: { height: number; reason: string }) {
-  return (
-    <View style={[styles.fallback, { height }]}>
-      <Text variant="label" tone="muted" uppercase>
-        Map
-      </Text>
-      <Text variant="body" tone="secondary" center>
-        {reason}
-      </Text>
-      <Text variant="caption" tone="muted" center>
-        The plan below shows the same ground and works everywhere.
-      </Text>
-    </View>
-  );
-}
 
 const styles = StyleSheet.create({
   wrap: {
@@ -188,15 +202,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surfaceSecondary,
-  },
-  fallback: {
-    borderRadius: radii.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surfaceSecondary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.sm,
-    padding: spacing.lg,
   },
 });

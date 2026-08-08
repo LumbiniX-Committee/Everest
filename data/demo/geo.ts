@@ -96,3 +96,113 @@ export const MAP_HOME = {
    */
   bearing: -18,
 };
+
+
+/**
+ * Monument massing.
+ *
+ * OpenStreetMap knows 318 buildings around Lumbini and the height of exactly
+ * one of them; 315 are tagged only `building=yes`. Extruding that data gives a
+ * field of identical 4 m slabs, which is what "boxes" means — the fault was a
+ * blanket fallback height standing in for data that does not exist.
+ *
+ * The monuments are the content, so they get massing of their own rather than
+ * inheriting the shed default. These figures are *schematic*: heights are
+ * approximate and footprints are regular forms sized from each site's own
+ * geofence radius. They are a legible massing model, not a survey, and nothing
+ * downstream should treat them as measurement.
+ *
+ * Where a real dimension is well known it is used — the World Peace Pagoda is
+ * about 41 m — and where it is not, the figure is a plausible order of
+ * magnitude rather than a precise claim.
+ */
+type Massing = {
+  /** Approximate height above ground, metres. Schematic. */
+  height: number;
+  /** Round forms for stupas and domes, square for halls and shelters. */
+  form: 'round' | 'square';
+};
+
+const MASSING: Record<string, Massing> = {
+  'maya-devi-temple': { height: 10, form: 'square' }, // the 2003 shelter over the remains
+  'ashokan-pillar': { height: 7, form: 'round' }, // the column standing above ground
+  'marker-stone': { height: 1, form: 'square' }, // a slab, inside the temple
+  'vihara-remains': { height: 2, form: 'square' }, // excavated brick courses
+  'myanmar-temple': { height: 30, form: 'round' }, // Lokamani Cula Pagoda
+  'china-temple': { height: 18, form: 'square' },
+  'korean-temple': { height: 20, form: 'square' },
+  'gautami-nuns-temple': { height: 15, form: 'square' },
+  'world-peace-pagoda': { height: 41, form: 'round' }, // the stupa's known height
+  tilaurakot: { height: 3, form: 'square' }, // excavated palace footings
+  ramagrama: { height: 7, form: 'round' }, // the unopened relic mound
+  // puskarini is deliberately absent: it is a pond, and extruding water into a
+  // building is exactly the kind of wrong the rest of this file avoids.
+};
+
+/** A square footprint, sized from the site's own reach. */
+function square(
+  centre: { latitude: number; longitude: number },
+  metres: number,
+): number[][][] {
+  const dLat = metres / 111_320;
+  const dLon = metres / (111_320 * Math.cos((centre.latitude * Math.PI) / 180));
+  return [
+    [
+      [centre.longitude - dLon, centre.latitude - dLat],
+      [centre.longitude + dLon, centre.latitude - dLat],
+      [centre.longitude + dLon, centre.latitude + dLat],
+      [centre.longitude - dLon, centre.latitude + dLat],
+      [centre.longitude - dLon, centre.latitude - dLat],
+    ],
+  ];
+}
+
+/**
+ * The monuments as volumes.
+ *
+ * Footprints are a fraction of each site's geofence radius — the geofence is
+ * how close you must be, not how large the thing is, and using it directly
+ * would make the Marker Stone a 20 m block.
+ */
+export const monumentGeoJSON: FeatureCollection<Polygon> = {
+  type: 'FeatureCollection',
+  features: demoSites
+    .filter((site) => MASSING[site.id])
+    .map((site): Feature<Polygon> => {
+      const massing = MASSING[site.id];
+      const footprint = Math.max(6, (site.radiusMeters ?? 30) * 0.45);
+      return {
+        type: 'Feature',
+        id: site.id,
+        geometry: {
+          type: 'Polygon',
+          coordinates:
+            massing.form === 'round'
+              ? circle(site.coordinate, footprint, 24)
+              : square(site.coordinate, footprint),
+        },
+        properties: {
+          id: site.id,
+          name: site.name,
+          height: massing.height,
+          form: massing.form,
+        },
+      };
+    }),
+};
+
+/** Water bodies the seed knows about, so a pond is drawn as a pond. */
+export const waterGeoJSON: FeatureCollection<Polygon> = {
+  type: 'FeatureCollection',
+  features: demoSites
+    .filter((site) => site.id === 'puskarini')
+    .map((site): Feature<Polygon> => ({
+      type: 'Feature',
+      id: site.id,
+      geometry: {
+        type: 'Polygon',
+        coordinates: square(site.coordinate, Math.max(10, (site.radiusMeters ?? 25) * 0.8)),
+      },
+      properties: { id: site.id, name: site.name },
+    })),
+};
