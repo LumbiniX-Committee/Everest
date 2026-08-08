@@ -1,0 +1,16 @@
+# harvest pipeline dependencies
+#
+# Scripts 00, 01, 02, 05 and 06 use the standard library only and run with no
+# install. The image-processing steps below need these:
+
+# 03_dedupe_quality.py
+pillow>=10.0
+imagehash>=4.3
+numpy>=1.26
+
+# 04_classify.py  (CPU is fine for a few hundred images)
+open_clip_torch>=2.24
+torch>=2.2
+
+# optional: ZenSVI pulls from Mapillary + KartaView and builds depth maps
+# zensvi

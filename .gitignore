@@ -2,6 +2,8 @@
 
 # dependencies
 node_modules/
+tools/test/node_modules/
+tools/test/package-lock.json
 
 # Expo
 .expo/
@@ -44,3 +46,15 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# harvest output (large; regenerated from scripts)
+harvest/_raw/
+harvest/_images/
+*.pyc
+__pycache__/
+.venv/
+venv/
+
+# scratch
+*.log
+osm.json
