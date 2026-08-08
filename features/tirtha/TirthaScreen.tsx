@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { Button, Screen, Text } from '@/components/ui';
 import { ScreenHeader, SettingsButton } from '@/components/common';
 import { ArrivalWisdom } from '@/components/arrival';
-import { SiteMap3D, SitePlan } from '@/components/map';
+import { SiteMap3D } from '@/components/map';
 import { SiteListItem } from '@/components/site';
 import { demoSites } from '@/data';
 import { QuestCard } from '@/features/quests';
@@ -64,13 +64,6 @@ export function TirthaScreen() {
         </Text>
       </Pressable>
 
-      {/* The flat plan stays: it renders with no network and no tiles, and it
-          is the only view that works when the basemap cannot load. */}
-      <SitePlan
-          sites={demoSites}
-          observer={coordinate}
-          onSelectSite={(id) => router.push(`/(main)/tirtha/site/${id}`)}
-        />
 
       {showLocationOffer ? (
         <View style={styles.offer}>
