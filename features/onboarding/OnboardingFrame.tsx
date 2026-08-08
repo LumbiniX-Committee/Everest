@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
+import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 
 import { Screen, Text } from '@/components/ui';
 import { colors, radii, spacing } from '@/theme';
@@ -50,18 +51,29 @@ export function OnboardingFrame({
       ) : null}
 
       {showProgress ? (
-        <View style={styles.progress} accessibilityRole="progressbar">
+        <Animated.View
+          entering={FadeIn.duration(400)}
+          style={styles.progress}
+          accessibilityRole="progressbar"
+        >
           {Array.from({ length: TOTAL_STEPS }, (_, i) => (
             <View key={i} style={[styles.mark, i <= index && styles.markActive]} />
           ))}
-        </View>
+        </Animated.View>
       ) : (
         <View style={styles.progressSpacer} />
       )}
 
-      <View style={styles.body}>{children}</View>
+      {/* The body rises as it fades, and the footer follows a beat later, so a
+          screen composes itself rather than appearing all at once. Short
+          enough not to be a wait: 380ms, with a 90ms stagger. */}
+      <Animated.View entering={FadeInDown.duration(380).damping(18)} style={styles.body}>
+        {children}
+      </Animated.View>
 
-      <View style={styles.footer}>{footer}</View>
+      <Animated.View entering={FadeInDown.delay(90).duration(380)} style={styles.footer}>
+        {footer}
+      </Animated.View>
     </Screen>
   );
 }
