@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, TextInput, View } from 'react-native';
 
@@ -6,6 +6,7 @@ import { Button, Card, Screen, Text } from '@/components/ui';
 import { ScreenHeader, SettingsButton } from '@/components/common';
 import { demoDhammaEntries, findSource } from '@/data';
 import { colors, radii, spacing } from '@/theme';
+import { useVoiceInput } from '@/hooks/useVoiceInput';
 
 /**
  * Dhamma — grounded knowledge.
@@ -20,6 +21,11 @@ import { colors, radii, spacing } from '@/theme';
 export function DhammaScreen() {
   const router = useRouter();
   const [question, setQuestion] = useState('');
+  const voice = useVoiceInput();
+
+  useEffect(() => {
+    if (voice.transcript) setQuestion(voice.transcript);
+  }, [voice.transcript]);
 
   const askTyped = () => {
     const text = question.trim();
@@ -50,6 +56,16 @@ export function DhammaScreen() {
           onSubmitEditing={askTyped}
           accessibilityLabel="Your question"
         />
+        <Button
+          label={voice.isListening ? 'Stop listening' : 'Ask by voice'}
+          variant="secondary"
+          onPress={() => (voice.isListening ? voice.stop() : void voice.start('ne'))}
+        />
+        {voice.error ? (
+          <Text variant="caption" tone="muted">
+            {voice.error}
+          </Text>
+        ) : null}
         <Button label="Ask" onPress={askTyped} disabled={!question.trim()} />
         {/*
           Said before asking, not after refusing. Someone who knows the corpus

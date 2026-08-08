@@ -5,6 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import { Button, Divider, Screen, Text } from '@/components/ui';
 import { EmptyState, LoadingState } from '@/components/common';
 import { Citation, SourceDetailSheet } from '@/components/source';
+import { SpeakButton } from '@/components/voice/SpeakButton';
 import { findDhammaEntry, findSource } from '@/data';
 import { dhamma } from '@/services';
 import type { DhammaLanguage } from '@/services/dhamma';
@@ -114,6 +115,7 @@ export function AnswerScreen({ questionId, query }: { questionId?: string; query
           <Text variant="bodyLarge" style={styles.answer}>
             {answer.text}
           </Text>
+          <SpeakButton text={answer.text} language={language} />
 
           {answer.evidence.some((item) => item.passage) ? (
             <View style={styles.evidence}>

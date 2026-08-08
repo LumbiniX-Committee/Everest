@@ -5,11 +5,13 @@ import { StyleSheet, View } from 'react-native';
 import { Button, Chip, Divider, MetaRow, Screen, Text } from '@/components/ui';
 import { EmptyState } from '@/components/common';
 import { AlignmentReadout, Reticle } from '@/components/reticle';
+import { SpeakButton } from '@/components/voice/SpeakButton';
 import { findSite, findVantage } from '@/data';
 import { useAlignment, useHaptics } from '@/hooks';
 import { usePermission } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 import { formatCoordinate } from '@/utils';
+import { alignmentHint } from '@/utils/alignmentHint';
 
 /**
  * Align to a vantage.
@@ -41,6 +43,7 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
   const site = findSite(vantage.siteId);
   const locked = alignment.phase === 'locked';
   const needsLocation = locationPermission.status !== 'granted';
+  const spokenHint = alignmentHint(alignment);
 
   useEffect(() => {
     if (locked) {
@@ -81,6 +84,11 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
           <AlignmentReadout alignment={alignment} vantage={vantage} />
         </View>
       )}
+
+      <View style={styles.voiceHint}>
+        <Text variant="caption" tone="muted">Alignment voice hint</Text>
+        <SpeakButton text={spokenHint} language="en" />
+      </View>
 
       <Divider />
 
@@ -138,6 +146,7 @@ const styles = StyleSheet.create({
   badgeRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   reticleBlock: { alignItems: 'center', paddingVertical: spacing.lg },
   notice: { gap: spacing.md, alignItems: 'flex-start', paddingBottom: spacing.lg },
+  voiceHint: { gap: spacing.xs, paddingBottom: spacing.md },
   readoutCard: {
     padding: spacing.base,
     borderRadius: radii.lg,

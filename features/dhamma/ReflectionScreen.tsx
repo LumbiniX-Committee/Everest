@@ -4,6 +4,7 @@ import { StyleSheet, TextInput, View } from 'react-native';
 
 import { Button, Card, Divider, Screen, Text } from '@/components/ui';
 import { LoadingState } from '@/components/common';
+import { SpeakButton } from '@/components/voice/SpeakButton';
 import { dhamma } from '@/services';
 import type { DhammaLanguage, ReflectionApiResult } from '@/services/dhamma';
 import { colors, radii, spacing } from '@/theme';
@@ -110,6 +111,7 @@ export function ReflectionScreen({ siteId }: { siteId?: string }) {
           </Text>
           <Card style={styles.questionCard}>
             <Text variant="bodyLarge">{response.inquiry}</Text>
+            <SpeakButton text={response.inquiry} language={language} />
           </Card>
           <TextInput
             value={input}
@@ -153,6 +155,7 @@ export function ReflectionScreen({ siteId }: { siteId?: string }) {
             {language === 'ne' ? 'तपाईंको प्रतिबिम्ब' : 'Your reflection'}
           </Text>
           <Text variant="bodyLarge">{response?.guidance ?? response?.inquiry}</Text>
+          <SpeakButton text={response?.guidance ?? response?.inquiry ?? ''} language={language} />
           {response?.citations && response.citations.length > 0 ? (
             <View style={styles.sources}>
               <Text variant="label" tone="muted" uppercase>
