@@ -74,7 +74,8 @@
           "motionPermission": "Sākṣī uses motion sensors to help align your device with a fixed viewpoint."
         }
       ],
-      "@maplibre/maplibre-react-native"
+      "@maplibre/maplibre-react-native",
+      "expo-audio"
     ],
     "experiments": {
       "typedRoutes": true,
