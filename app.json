@@ -1,0 +1,67 @@
+{
+  "expo": {
+    "name": "Sākṣī",
+    "slug": "sakshi",
+    "scheme": "sakshi",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "org.lumbinix.sakshi"
+    },
+    "android": {
+      "package": "org.lumbinix.sakshi",
+      "adaptiveIcon": {
+        "backgroundColor": "#F4F1E8",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-sqlite",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 180,
+          "resizeMode": "contain",
+          "backgroundColor": "#F4F1E8"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Sākṣī uses your location to find nearby heritage sites and guide you to fixed viewpoints."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Sākṣī uses the camera so you can compare today's view with historical imagery and record an observation.",
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-sensors",
+        {
+          "motionPermission": "Sākṣī uses motion sensors to help align your device with a fixed viewpoint."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "tsconfigPaths": true
+    }
+  }
+}

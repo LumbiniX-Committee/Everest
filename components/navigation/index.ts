@@ -1,0 +1,1 @@
+export { SurfaceTabBar } from './SurfaceTabBar';
