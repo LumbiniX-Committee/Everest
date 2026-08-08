@@ -57,6 +57,13 @@ export async function syncData(): Promise<void> {
         bearing_error_deg: obs.bearingErrorDeg,
         note: obs.note,
         assessment: obs.assessment,
+        // Capture integrity. gate_mode is what tells a later reader whether the
+        // two error columns above are measurements or a frame matched by eye —
+        // sending those errors without it made the remote record misleading
+        // rather than merely incomplete.
+        gate_mode: obs.gateMode ?? null,
+        align_score: obs.alignScore ?? null,
+        gps_acc_m: obs.gpsAccuracyM ?? null,
       });
 
       if (dbError) throw dbError;
