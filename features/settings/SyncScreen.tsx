@@ -1,8 +1,11 @@
+import { StyleSheet } from 'react-native';
 import { ScreenHeader } from '@/components/common';
 import { Button, Screen, Text } from '@/components/ui';
 import { useSync } from '@/hooks';
 import { usePreferences } from '@/store';
 import { OFFLINE_SYNC_OPTIONS } from '@/types';
+
+import { spacing } from '@/theme';
 
 import { SettingsChoice, SettingsSection } from './components';
 
@@ -68,4 +71,6 @@ export function SyncScreen() {
   );
 }
 
-const styles = { body: { paddingHorizontal: 16, paddingVertical: 12 } } as const;
+const styles = StyleSheet.create({
+  body: { paddingHorizontal: spacing.base, paddingVertical: spacing.md },
+});

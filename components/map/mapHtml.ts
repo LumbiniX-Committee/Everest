@@ -71,7 +71,7 @@ ${avatar ? '<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></s
           'fill-extrusion-color': ${JSON.stringify(colors.sandstone)},
           'fill-extrusion-height': 6,
           'fill-extrusion-base': 0,
-          'fill-extrusion-opacity': 0.35
+          'fill-extrusion-opacity': 0.5
         }
       });
       map.addSource('sites', { type:'geojson', data: ${JSON.stringify(siteGeoJSON)} });
@@ -81,7 +81,7 @@ ${avatar ? '<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></s
           'circle-radius': 6,
           'circle-color': ${JSON.stringify(colors.earth)},
           'circle-stroke-width': 2,
-          'circle-stroke-color': ${JSON.stringify(colors.background)}
+          'circle-stroke-color': ${JSON.stringify(colors.sandstone)}
         }
       });
       map.addLayer({
@@ -139,7 +139,7 @@ const AVATAR_LAYER = `
       var scene = new THREE.Scene();
       var figure = new THREE.Group();
 
-      var stone = new THREE.MeshLambertMaterial({ color: ${JSON.stringify(colors.sandstoneDeep)} });
+      var stone = new THREE.MeshLambertMaterial({ color: ${JSON.stringify(colors.sandstone)} });
       var cloth = new THREE.MeshLambertMaterial({ color: ${JSON.stringify(colors.earth)} });
 
       // Head, torso, two legs. Enough to read as a standing person at the size

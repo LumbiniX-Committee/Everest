@@ -1,6 +1,8 @@
+import { StyleSheet } from 'react-native';
 import { LoadingState, ScreenHeader } from '@/components/common';
 import { Button, Screen, Text } from '@/components/ui';
 import { usePermissions } from '@/store';
+import { spacing } from '@/theme';
 import { canPrompt, needsSettings, type PermissionKind, type PermissionState } from '@/types';
 
 import { SettingsSection } from './components';
@@ -85,4 +87,6 @@ export function PermissionsScreen() {
   );
 }
 
-const styles = { status: { paddingHorizontal: 16, paddingVertical: 12 } } as const;
+const styles = StyleSheet.create({
+  status: { paddingHorizontal: spacing.base, paddingVertical: spacing.md },
+});
