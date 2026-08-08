@@ -12,8 +12,8 @@ import { plateImages, plateMeta } from '../plates';
  * photograph. The paired modern photograph is resolved per site by
  * `nowImageForSite` in `../plates`.
  *
- * Site ids here are the app's current ids (`ashoka-pillar`, `puskarini-pond`);
- * Phase 3 migrates them to the canonical seed ids.
+ * Site and vantage ids are the canonical seed ids (`ashokan-pillar`,
+ * `puskarini`), matching data/generated/.
  *
  * Sites without a comparably-framed plate (e.g. Maya Devi, whose only plate is a
  * plan-view drawing that cannot align with an oblique photograph) are omitted
@@ -22,9 +22,9 @@ import { plateImages, plateMeta } from '../plates';
  */
 export const demoHistoricalImages: HistoricalImage[] = [
   {
-    id: 'ashoka-pillar.1899-south',
-    siteId: 'ashoka-pillar',
-    vantageId: 'ashoka-pillar-south',
+    id: 'ashokan-pillar.1899-south',
+    siteId: 'ashokan-pillar',
+    vantageId: 'ashokan-pillar.v1',
     date: '1899',
     capturedAt: '1899-12-01T00:00:00.000Z',
     caption: plateMeta['ashokan-pillar.1899-south'].caption,
@@ -37,9 +37,9 @@ export const demoHistoricalImages: HistoricalImage[] = [
     viewpointConfirmed: false,
   },
   {
-    id: 'ashoka-pillar.pre1896-jungle',
-    siteId: 'ashoka-pillar',
-    vantageId: 'ashoka-pillar-south',
+    id: 'ashokan-pillar.pre1896-jungle',
+    siteId: 'ashokan-pillar',
+    vantageId: 'ashokan-pillar.v1',
     date: 'pre-1896',
     caption: plateMeta['ashokan-pillar.pre1896-jungle'].caption,
     image: plateImages['ashokan-pillar.pre1896-jungle'],
@@ -50,8 +50,8 @@ export const demoHistoricalImages: HistoricalImage[] = [
   },
   {
     id: 'puskarini.earthen-pond-pre1930s',
-    siteId: 'puskarini-pond',
-    vantageId: 'puskarini-north-step',
+    siteId: 'puskarini',
+    vantageId: 'puskarini.v1',
     date: 'pre-1930s',
     caption: plateMeta['puskarini.earthen-pond-pre1930s'].caption,
     image: plateImages['puskarini.earthen-pond-pre1930s'],

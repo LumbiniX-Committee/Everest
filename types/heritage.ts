@@ -9,6 +9,18 @@ export type SourceTier = 'archaeological' | 'documented' | 'community';
 
 export type ConditionStatus = 'stable' | 'watch' | 'open' | 'resolved';
 
+/** Which part of the property a site sits in (04-ARCHITECTURE schema). */
+export type Zone = 'sacred_garden' | 'monastic_east' | 'monastic_west' | 'greater_lumbini';
+
+/**
+ * Whether photography is permitted at a site. Charter #8: capture is hard-disabled
+ * where this is `restricted` or `prohibited`, inside the geofence.
+ */
+export type PhotographyPolicy = 'allowed' | 'restricted' | 'prohibited';
+
+/** A labelled fact shown in the site detail's data table. */
+export type SiteFact = { label: string; value: string };
+
 /**
  * A heritage site in and around Lumbini — a temple, stupa, pillar, excavation,
  * or monastic zone plot.
@@ -20,11 +32,27 @@ export type HeritageSite = {
   /** Devanagari name, rendered in Anek where present. */
   nameNepali?: string;
   /** One line. Shown under the name in lists. */
+  /** Pali name, where one exists (e.g. "Māyādevī"). */
+  namePali?: string;
   summary: string;
   description: string;
   coordinate: Coordinate;
+  /** Which zone of the property this site sits in. */
+  zone?: Zone;
+  /** Significance tier: 1 primary, 2 secondary, 3 contextual. */
+  tier?: 1 | 2 | 3;
+  /**
+   * Geofence radius in metres — how close counts as "arrived" / "on site".
+   * Per-site (20–60 m) rather than a global constant, so a pillar and a temple
+   * complex don't share one radius. Feeds geofencing and the photography lockout.
+   */
+  radiusMeters?: number;
+  /** Whether capture is permitted here. Charter #8. */
+  photography?: PhotographyPolicy;
   /** Metres above sea level, where surveyed. */
   elevation?: number;
+  /** Labelled facts for the site detail table. */
+  facts?: SiteFact[];
   sourceTier: SourceTier;
   /**
    * Ids into the shared source registry, resolved with `resolveSources`.
@@ -55,6 +83,8 @@ export type Vantage = {
   positionToleranceM: number;
   /** How close, in degrees, the bearing must match. */
   bearingToleranceDeg: number;
+  /** Horizontal field of view of the reference framing, in degrees. */
+  hfovDeg?: number;
   /** Why this viewpoint was chosen. Shown before capture. */
   note?: string;
   /** Timestamp of the earliest observation in the series, if any. */

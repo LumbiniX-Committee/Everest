@@ -69,9 +69,14 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
 
   const refresh = useCallback(async () => {
     try {
-      // Seed default quests if DB is empty
-      await database.seedDefaultQuests(demoQuests);
-      const list = await database.listQuests();
+      // Seed the catalogue only when the table is empty. Re-seeding on every
+      // mount (INSERT OR REPLACE) would silently revert any later edit to a
+      // quest row; the guard is what makes the "if empty" comment true.
+      let list = await database.listQuests();
+      if (list.length === 0) {
+        await database.seedDefaultQuests(demoQuests);
+        list = await database.listQuests();
+      }
       setQuests(list);
     } catch (error) {
       console.error('Failed to load quests from database:', error);

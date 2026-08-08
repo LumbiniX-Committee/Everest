@@ -28,13 +28,13 @@ export const plateImages = {
 export type PlateId = keyof typeof plateImages;
 
 /**
- * Modern "now" photographs, keyed by the CURRENT app site id (Phase 3 migrates
- * these to canonical seed ids). Licence-clean CC BY-SA 4.0, credited below.
+ * Modern "now" photographs, keyed by canonical seed site id. Licence-clean
+ * CC BY-SA 4.0, credited below.
  */
 export const nowImages: Record<string, number> = {
-  'ashoka-pillar': require('../assets/plates/now.ashokan-pillar.webp'),
+  'ashokan-pillar': require('../assets/plates/now.ashokan-pillar.webp'),
   'maya-devi-temple': require('../assets/plates/now.maya-devi-temple.webp'),
-  'puskarini-pond': require('../assets/plates/now.puskarini.webp'),
+  'puskarini': require('../assets/plates/now.puskarini.webp'),
 };
 
 export type PlateMeta = {

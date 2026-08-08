@@ -9,6 +9,7 @@
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
     "lint": "expo lint",
+    "gen": "node tools/gen-data.mjs",
     "test": "node tools/run-tests.mjs",
     "validate": "node tools/validate-seed.mjs",
     "vocab": "node tools/lint-vocab.mjs",

@@ -4,4 +4,5 @@
  * catalogue — it is swapped in here and no screen changes.
  */
 export * from './demo';
+export * from './generated';
 export * from './plates';
