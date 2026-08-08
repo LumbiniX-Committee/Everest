@@ -1,4 +1,3 @@
-import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 import { ActivityIndicator, Image, StyleSheet, TextInput, View } from 'react-native';
 
@@ -16,6 +15,32 @@ export type TaskEvidenceSheetProps = {
   onSubmitted: (submission: QuestSubmission) => void;
   onCancel: () => void;
 };
+
+/**
+ * expo-image-picker is native, and this screen can reach a device that predates
+ * it — an over-the-air update carries JavaScript and assets but never native
+ * code. A static import would throw during module evaluation there and take the
+ * quest screen down with it, so it is required lazily behind an availability
+ * check, exactly as expo-notifications and MapLibre are.
+ *
+ * Where it is absent the task still completes: the photograph is dropped and
+ * the note carries the observation. A degraded answer is worth more than a
+ * blocked one, and the person is told which they are getting.
+ */
+type PickerModule = typeof import('expo-image-picker');
+
+let pickerCache: PickerModule | null | undefined;
+
+function loadPicker(): PickerModule | null {
+  if (pickerCache !== undefined) return pickerCache;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    pickerCache = require('expo-image-picker') as PickerModule;
+  } catch {
+    pickerCache = null;
+  }
+  return pickerCache;
+}
 
 const VERDICT_LABEL: Record<QuestReview['verdict'], string> = {
   'looks-right': 'Looks like what the task asked for',
@@ -59,19 +84,20 @@ export function TaskEvidenceSheet({
 
   const kind = task.evidence ?? 'none';
 
+  const picker = loadPicker();
+
   const pick = async (fromCamera: boolean) => {
+    if (!picker) return;
+
     const permission = fromCamera
-      ? await ImagePicker.requestCameraPermissionsAsync()
-      : await ImagePicker.requestMediaLibraryPermissionsAsync();
+      ? await picker.requestCameraPermissionsAsync()
+      : await picker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) return;
 
+    const quality = preferences.photoQuality === 'high' ? 0.9 : 0.6;
     const result = fromCamera
-      ? await ImagePicker.launchCameraAsync({
-          quality: preferences.photoQuality === 'high' ? 0.9 : 0.6,
-        })
-      : await ImagePicker.launchImageLibraryAsync({
-          quality: preferences.photoQuality === 'high' ? 0.9 : 0.6,
-        });
+      ? await picker.launchCameraAsync({ quality })
+      : await picker.launchImageLibraryAsync({ quality });
 
     if (result.canceled || !result.assets[0]) return;
     const uri = result.assets[0].uri;
@@ -106,7 +132,7 @@ export function TaskEvidenceSheet({
   // being checked, not a model's.
   const ready =
     kind === 'none' ||
-    (kind === 'photo' && !!photoUri) ||
+    (kind === 'photo' && (!!photoUri || (!picker && note.trim().length > 0))) ||
     (kind === 'count' && count.trim().length > 0) ||
     (kind === 'note' && note.trim().length > 0);
 
@@ -118,7 +144,16 @@ export function TaskEvidenceSheet({
         {task.expectation ?? task.description}
       </Text>
 
-      {kind === 'photo' ? (
+      {kind === 'photo' && !picker ? (
+        <View style={styles.block}>
+          <Text variant="body" tone="secondary">
+            Photographs need a newer version of the app than this one. Record what you saw in the
+            note below and the task still counts.
+          </Text>
+        </View>
+      ) : null}
+
+      {kind === 'photo' && picker ? (
         <View style={styles.block}>
           {photoUri ? (
             <Image source={{ uri: photoUri }} style={styles.preview} resizeMode="cover" />
