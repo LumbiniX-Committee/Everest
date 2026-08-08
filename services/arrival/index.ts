@@ -1,4 +1,4 @@
-import { demoPrecincts, dhammaForSite, findPrecinct, findSite } from '@/data';
+import { demoPrecincts, dhammaForSite, findPrecinct, findSite, narrationForSite } from '@/data';
 import { StorageKeys } from '@/constants';
 import { distanceMeters } from '@/utils';
 import type { Coordinate, HeritageSite, Precinct } from '@/types';
@@ -106,15 +106,22 @@ export type SiteProximity = {
 };
 
 /**
- * How near you must be for a site to be *the* site you are at.
+ * Fallback reach, for a site the seed gives no radius for.
  *
- * 30 m, chosen against the measured geometry rather than picked round: the two
- * closest monuments are 39 m apart, so a radius at or above half that could
- * claim you are at both. Under open sky here a fix settles to a few metres,
- * which resolves 39 m comfortably — this is the precision the geofence cannot
- * give and the foreground can.
+ * Each site carries its own `radiusMeters` — 20 m for the Marker Stone, 60 m
+ * for Tilaurakot — because a stone slab and a dispersed palace city do not
+ * share a threshold. That per-site value is used wherever it exists; this is
+ * only the floor for anything missing one.
+ *
+ * 30 m is not a round number picked for looks: the two closest monuments are
+ * 39 m apart, so anything at or above half that could claim you are at both.
  */
 export const AT_SITE_RADIUS_M = 30;
+
+/** The reach of a particular site, honouring the seed's own figure. */
+export function reachOf(site: HeritageSite): number {
+  return site.radiusMeters ?? AT_SITE_RADIUS_M;
+}
 
 /**
  * The site someone is actually standing at, from a foreground fix.
@@ -133,9 +140,54 @@ export function nearestSite(coordinate: Coordinate | null): SiteProximity | null
       if (!site) continue;
       const distanceM = distanceMeters(coordinate, site.coordinate);
       if (!best || distanceM < best.distanceM) {
-        best = { site, distanceM, precinct, withinReach: distanceM <= AT_SITE_RADIUS_M };
+        best = { site, distanceM, precinct, withinReach: distanceM <= reachOf(site) };
       }
     }
   }
   return best;
+}
+
+
+/**
+ * What a place is, for someone standing on it.
+ *
+ * Assembled rather than authored here. `seed/narration.json` already carries a
+ * second-person account of every one of the twelve sites — "You are standing at
+ * the birthplace of the Buddha" — and each site carries its own facts. That is
+ * the historical significance, written and checked, and until now nothing
+ * surfaced it on arrival: the arrival flow only looked for Dhamma passages, of
+ * which exactly one site has any.
+ *
+ * Dhamma is still included where it exists, but it is no longer the only thing
+ * that can make a place worth telling someone about.
+ */
+export type SiteSignificance = {
+  site: HeritageSite;
+  /** Second-person account of the place. Present for every seeded site. */
+  narration?: string;
+  /** Roughly how long the narration takes to read aloud. */
+  narrationSeconds?: number;
+  /** Label/value pairs — what it enshrines, how it is built, when. */
+  facts: { label: string; value: string }[];
+  /** Cited passages that genuinely concern this site. Often none. */
+  dhamma: ReturnType<typeof dhammaForSite>;
+};
+
+export function significanceOf(siteId: string): SiteSignificance | null {
+  const site = findSite(siteId);
+  if (!site) return null;
+  const narration = narrationForSite(siteId);
+  return {
+    site,
+    narration: narration?.en,
+    narrationSeconds: narration?.approx_seconds,
+    facts: site.facts ?? [],
+    dhamma: dhammaForSite(siteId),
+  };
+}
+
+/** True when there is something worth saying on arrival at this site. */
+export function hasSomethingToSay(siteId: string): boolean {
+  const s = significanceOf(siteId);
+  return !!s && (!!s.narration || s.facts.length > 0 || s.dhamma.length > 0);
 }
