@@ -61,6 +61,22 @@ export type Vantage = {
   seriesBegan?: string;
 };
 
+/**
+ * Whether the observer has said what they saw.
+ *
+ * `no-change` is a finding, not an absence of one. In condition monitoring a
+ * dated photograph with "nothing has changed here" attached is evidence of
+ * stability, and a series of them is how you establish that a site is holding.
+ * Collapsing it into `unreviewed` would throw that away.
+ */
+export type ObservationAssessment =
+  /** Recorded, but the observer has not yet said what they saw. */
+  | 'unreviewed'
+  /** Looked, and found nothing changed. A positive finding. */
+  | 'no-change'
+  /** Something was noticed; a condition report is attached. */
+  | 'reported';
+
 /** A single recorded witness event at a vantage. */
 export type Observation = {
   id: string;
@@ -80,6 +96,8 @@ export type Observation = {
   bearingErrorDeg: number;
   /** Observer's own note on what changed. */
   note?: string;
+  /** What the observer said about what they saw. */
+  assessment: ObservationAssessment;
   /** False until the observation has left the device. */
   synced: boolean;
 };

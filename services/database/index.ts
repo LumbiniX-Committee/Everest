@@ -1,7 +1,7 @@
 import * as SQLite from 'expo-sqlite';
 
 import { DATABASE_NAME } from '@/constants';
-import type { Observation } from '@/types';
+import type { ConditionReport, Observation, ObservationAssessment } from '@/types';
 
 /**
  * Local observation store.
@@ -37,6 +37,32 @@ const migrations: string[] = [
      ON observations (vantage_id, captured_at DESC);
    CREATE INDEX IF NOT EXISTS idx_observations_unsynced
      ON observations (synced) WHERE synced = 0;`,
+
+  // Condition reporting. The assessment column defaults to 'unreviewed' so
+  // observations recorded before this migration keep a truthful state — they
+  // were never reviewed, and backfilling them as 'no-change' would invent a
+  // finding nobody made.
+  `ALTER TABLE observations
+     ADD COLUMN assessment TEXT NOT NULL DEFAULT 'unreviewed';
+
+   CREATE TABLE IF NOT EXISTS condition_reports (
+     id TEXT PRIMARY KEY NOT NULL,
+     observation_id TEXT NOT NULL,
+     site_id TEXT NOT NULL,
+     category TEXT NOT NULL,
+     subtype TEXT NOT NULL,
+     severity TEXT NOT NULL,
+     note TEXT,
+     recorded_at TEXT NOT NULL,
+     synced INTEGER NOT NULL DEFAULT 0,
+     FOREIGN KEY (observation_id) REFERENCES observations (id) ON DELETE CASCADE
+   );
+   CREATE INDEX IF NOT EXISTS idx_reports_observation
+     ON condition_reports (observation_id);
+   CREATE INDEX IF NOT EXISTS idx_reports_site
+     ON condition_reports (site_id, recorded_at DESC);
+   CREATE INDEX IF NOT EXISTS idx_reports_unsynced
+     ON condition_reports (synced) WHERE synced = 0;`,
 ];
 
 async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
@@ -56,6 +82,10 @@ export function getDatabase(): Promise<SQLite.SQLiteDatabase> {
     dbPromise = (async () => {
       const db = await SQLite.openDatabaseAsync(DATABASE_NAME);
       await db.execAsync('PRAGMA journal_mode = WAL');
+      // Off by default in sqlite, per connection. Without it the ON DELETE
+      // CASCADE on condition_reports is decorative and deleting an observation
+      // would strand its report pointing at a row that no longer exists.
+      await db.execAsync('PRAGMA foreign_keys = ON');
       await migrate(db);
       return db;
     })().catch((error) => {
@@ -80,6 +110,7 @@ type ObservationRow = {
   position_error_m: number;
   bearing_error_deg: number;
   note: string | null;
+  assessment: string;
   synced: number;
 };
 
@@ -96,8 +127,16 @@ function toObservation(row: ObservationRow): Observation {
     positionErrorM: row.position_error_m,
     bearingErrorDeg: row.bearing_error_deg,
     note: row.note ?? undefined,
+    // Widened from TEXT. An unrecognised value means a newer build wrote a
+    // state this one does not know; treating it as unreviewed is the reading
+    // that cannot invent a finding.
+    assessment: isAssessment(row.assessment) ? row.assessment : 'unreviewed',
     synced: row.synced === 1,
   };
+}
+
+function isAssessment(value: string): value is ObservationAssessment {
+  return value === 'unreviewed' || value === 'no-change' || value === 'reported';
 }
 
 export async function insertObservation(observation: Observation): Promise<void> {
@@ -105,8 +144,8 @@ export async function insertObservation(observation: Observation): Promise<void>
   await db.runAsync(
     `INSERT OR REPLACE INTO observations
        (id, vantage_id, site_id, captured_at, photo_uri, latitude, longitude,
-        bearing, pitch, position_error_m, bearing_error_deg, note, synced)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        bearing, pitch, position_error_m, bearing_error_deg, note, assessment, synced)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     observation.id,
     observation.vantageId,
     observation.siteId,
@@ -119,7 +158,28 @@ export async function insertObservation(observation: Observation): Promise<void>
     observation.positionErrorM,
     observation.bearingErrorDeg,
     observation.note ?? null,
+    observation.assessment,
     observation.synced ? 1 : 0,
+  );
+}
+
+/**
+ * Records what the observer said they saw.
+ *
+ * Separate from the insert because the photograph and the judgement happen at
+ * different moments — the shutter is pressed in the field, the assessment a few
+ * seconds later while looking at the result. Writing the observation first
+ * means a person who walks away mid-flow still keeps their photograph.
+ */
+export async function setObservationAssessment(
+  observationId: string,
+  assessment: ObservationAssessment,
+): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync(
+    'UPDATE observations SET assessment = ? WHERE id = ?',
+    assessment,
+    observationId,
   );
 }
 
@@ -144,6 +204,80 @@ export async function getObservation(id: string): Promise<Observation | null> {
     id,
   );
   return row ? toObservation(row) : null;
+}
+
+type ConditionReportRow = {
+  id: string;
+  observation_id: string;
+  site_id: string;
+  category: string;
+  subtype: string;
+  severity: string;
+  note: string | null;
+  recorded_at: string;
+  synced: number;
+};
+
+function toConditionReport(row: ConditionReportRow): ConditionReport {
+  return {
+    id: row.id,
+    observationId: row.observation_id,
+    siteId: row.site_id,
+    // Cast rather than validate: unlike assessment there is no safe default —
+    // an unrecognised category cannot be silently rewritten into another one
+    // without misfiling somebody's report.
+    category: row.category as ConditionReport['category'],
+    subtype: row.subtype,
+    severity: row.severity as ConditionReport['severity'],
+    note: row.note ?? undefined,
+    recordedAt: row.recorded_at,
+    synced: row.synced === 1,
+  };
+}
+
+/**
+ * Writes the report and flips the observation to 'reported' in one transaction.
+ *
+ * Together or not at all: an observation marked 'reported' with no report is a
+ * dead end in the UI, and a report attached to an observation that still reads
+ * 'unreviewed' would prompt the person to report the same thing twice.
+ */
+export async function insertConditionReport(report: ConditionReport): Promise<void> {
+  const db = await getDatabase();
+  await db.withTransactionAsync(async () => {
+    await db.runAsync(
+      `INSERT OR REPLACE INTO condition_reports
+         (id, observation_id, site_id, category, subtype, severity, note, recorded_at, synced)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      report.id,
+      report.observationId,
+      report.siteId,
+      report.category,
+      report.subtype,
+      report.severity,
+      report.note ?? null,
+      report.recordedAt,
+      report.synced ? 1 : 0,
+    );
+    await db.runAsync(
+      "UPDATE observations SET assessment = 'reported' WHERE id = ?",
+      report.observationId,
+    );
+  });
+}
+
+/** Reports for one observation, or every report newest first. */
+export async function listConditionReports(observationId?: string): Promise<ConditionReport[]> {
+  const db = await getDatabase();
+  const rows = observationId
+    ? await db.getAllAsync<ConditionReportRow>(
+        'SELECT * FROM condition_reports WHERE observation_id = ? ORDER BY recorded_at DESC',
+        observationId,
+      )
+    : await db.getAllAsync<ConditionReportRow>(
+        'SELECT * FROM condition_reports ORDER BY recorded_at DESC',
+      );
+  return rows.map(toConditionReport);
 }
 
 export async function countObservations(): Promise<number> {

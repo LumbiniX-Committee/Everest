@@ -10,7 +10,7 @@ import { useCurrentPosition } from '@/hooks';
 import { database } from '@/services';
 import { spacing } from '@/theme';
 import { distanceMeters, formatTimestamp } from '@/utils';
-import type { Observation } from '@/types';
+import type { Observation, ObservationAssessment } from '@/types';
 
 /**
  * Sākṣī — the witnessing surface.
@@ -123,13 +123,31 @@ function ObservationRow({
             {formatTimestamp(observation.capturedAt)}
           </Text>
         </View>
-        <Text variant="label" tone={observation.synced ? 'resolved' : 'seeking'} uppercase>
-          {observation.synced ? 'Synced' : 'On device'}
+        {/*
+          The assessment, not the sync state. Someone who pressed the shutter
+          and then walked off has an unreviewed frame, and this row is the only
+          route back to finishing it — sync status can wait for the detail
+          screen.
+        */}
+        <Text variant="label" tone={assessmentTone[observation.assessment]} uppercase>
+          {assessmentLabel[observation.assessment]}
         </Text>
       </View>
     </Card>
   );
 }
+
+const assessmentLabel: Record<ObservationAssessment, string> = {
+  unreviewed: 'Needs review',
+  'no-change': 'No change',
+  reported: 'Reported',
+};
+
+const assessmentTone: Record<ObservationAssessment, 'seeking' | 'resolved' | 'open'> = {
+  unreviewed: 'seeking',
+  'no-change': 'resolved',
+  reported: 'open',
+};
 
 const styles = StyleSheet.create({
   section: { paddingTop: spacing.lg, gap: spacing.md },

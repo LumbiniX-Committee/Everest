@@ -92,6 +92,10 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
         pitch: vantage.pitch - (alignment.pitchDeltaDeg ?? 0),
         positionErrorM: alignment.distanceM ?? 0,
         bearingErrorDeg: Math.abs(alignment.bearingDeltaDeg ?? 0),
+        // The photograph is the record; what it shows is a separate judgement
+        // made on the next screen. Writing it unreviewed means walking away
+        // here still keeps the frame.
+        assessment: 'unreviewed',
         synced: false,
       };
 

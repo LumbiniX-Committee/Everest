@@ -3,12 +3,18 @@ import { useRouter } from 'expo-router';
 import { Image, StyleSheet, View } from 'react-native';
 
 import { Button, Divider, MetaRow, Screen, Text } from '@/components/ui';
-import { EmptyState } from '@/components/common';
+import { EmptyState, LoadingState } from '@/components/common';
+import { ConditionSheet, type ConditionDraft } from '@/components/observation';
 import { findSite, findVantage } from '@/data';
 import { database } from '@/services';
 import { colors, radii, spacing } from '@/theme';
 import { formatBearing, formatCoordinate, formatDelta, formatDistance, formatTimestamp } from '@/utils';
-import type { Observation } from '@/types';
+import {
+  CONDITION_CATEGORY_LABELS,
+  SEVERITY_LABELS,
+  type ConditionReport,
+  type Observation,
+} from '@/types';
 
 type LoadState = 'loading' | 'ready' | 'missing';
 
@@ -23,16 +29,23 @@ type LoadState = 'loading' | 'ready' | 'missing';
 export function ObservationScreen({ observationId }: { observationId: string }) {
   const router = useRouter();
   const [observation, setObservation] = useState<Observation | null>(null);
+  const [reports, setReports] = useState<ConditionReport[]>([]);
   const [status, setStatus] = useState<LoadState>('loading');
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
 
-    database
-      .getObservation(observationId)
-      .then((found) => {
+    Promise.all([
+      database.getObservation(observationId),
+      database.listConditionReports(observationId),
+    ])
+      .then(([found, foundReports]) => {
         if (!active) return;
         setObservation(found);
+        setReports(foundReports);
         setStatus(found ? 'ready' : 'missing');
       })
       .catch(() => {
@@ -44,14 +57,57 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
     };
   }, [observationId]);
 
+  /**
+   * "Nothing changed" is written, not merely skipped. A dated photograph with a
+   * finding of stability attached is evidence; the same photograph with no
+   * assessment is only a picture.
+   */
+  const recordNoChange = async () => {
+    if (!observation || submitting) return;
+    setSubmitting(true);
+    setSaveError(null);
+    try {
+      await database.setObservationAssessment(observation.id, 'no-change');
+      setObservation({ ...observation, assessment: 'no-change' });
+    } catch {
+      setSaveError('That could not be saved. Your photograph is safe on this device.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const recordCondition = async (draft: ConditionDraft) => {
+    if (!observation || submitting) return;
+    setSubmitting(true);
+    setSaveError(null);
+    try {
+      const report: ConditionReport = {
+        id: `cond-${Date.now()}`,
+        observationId: observation.id,
+        siteId: observation.siteId,
+        category: draft.category,
+        subtype: draft.subtype,
+        severity: draft.severity,
+        note: draft.note,
+        recordedAt: new Date().toISOString(),
+        synced: false,
+      };
+      await database.insertConditionReport(report);
+      setReports((previous) => [report, ...previous]);
+      setObservation({ ...observation, assessment: 'reported' });
+      setSheetOpen(false);
+    } catch {
+      // The sheet stays open so the person does not lose what they chose.
+      setSaveError('That could not be saved. Your photograph is safe on this device.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   if (status === 'loading') {
     return (
       <Screen>
-        <View style={styles.loading}>
-          <Text variant="caption" tone="muted">
-            Reading the record…
-          </Text>
-        </View>
+        <LoadingState label="Reading the record" />
       </Screen>
     );
   }
@@ -127,6 +183,61 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
 
       <Divider />
 
+      {observation.assessment === 'unreviewed' ? (
+        <View style={styles.choice}>
+          <Text variant="heading">What did you notice?</Text>
+          <Text variant="body" tone="secondary">
+            Both answers are worth recording. A series of frames where nothing changed is how
+            stability gets established.
+          </Text>
+          {saveError ? (
+            <Text variant="caption" tone="open">
+              {saveError}
+            </Text>
+          ) : null}
+          <View style={styles.choiceActions}>
+            <Button
+              label="Nothing changed"
+              variant="secondary"
+              loading={submitting}
+              onPress={recordNoChange}
+            />
+            <Button
+              label="Something changed"
+              disabled={submitting}
+              onPress={() => setSheetOpen(true)}
+            />
+          </View>
+        </View>
+      ) : (
+        <View style={styles.choice}>
+          <Text variant="label" tone="muted" uppercase>
+            Your finding
+          </Text>
+          {observation.assessment === 'no-change' ? (
+            <Text variant="body">
+              Nothing had changed. Recorded as part of the series.
+            </Text>
+          ) : (
+            reports.map((report) => (
+              <View key={report.id} style={styles.report}>
+                <Text variant="heading">{CONDITION_CATEGORY_LABELS[report.category]}</Text>
+                <Text variant="body" tone="secondary">
+                  {report.subtype} · {SEVERITY_LABELS[report.severity]}
+                </Text>
+                {report.note ? (
+                  <Text variant="body" tone="secondary" style={styles.reportNote}>
+                    “{report.note}”
+                  </Text>
+                ) : null}
+              </View>
+            ))
+          )}
+        </View>
+      )}
+
+      <Divider />
+
       <View style={styles.meta}>
         <MetaRow
           label="Status"
@@ -136,15 +247,43 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
         />
       </View>
 
+      {observation.assessment !== 'unreviewed' ? (
+        <View style={styles.complete}>
+          {/*
+            The closing line. Deliberately terminal — §27 wants the app to
+            encourage stopping, so the end of the witness loop reads as an
+            ending rather than a prompt to go and do the next one.
+          */}
+          <Text variant="title" center>
+            Witnessed
+          </Text>
+          <Text variant="body" tone="secondary" center>
+            This frame joins the record for {site?.name ?? 'this site'}. Someone comparing it in ten
+            years will know exactly where you stood.
+          </Text>
+        </View>
+      ) : null}
+
       <View style={styles.actions}>
         <Button label="Done" block onPress={() => router.replace('/(main)/sakshi')} />
       </View>
+
+      <ConditionSheet
+        visible={sheetOpen}
+        onClose={() => setSheetOpen(false)}
+        onSubmit={recordCondition}
+        submitting={submitting}
+      />
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  loading: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  choice: { paddingVertical: spacing.lg, gap: spacing.md },
+  choiceActions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  report: { gap: spacing.xxs },
+  reportNote: { marginTop: spacing.xs },
+  complete: { paddingVertical: spacing.xl, gap: spacing.sm },
   head: { paddingTop: spacing.lg, paddingBottom: spacing.lg, gap: spacing.xs },
   photo: {
     width: '100%',
