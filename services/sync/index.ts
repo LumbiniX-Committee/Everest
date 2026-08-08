@@ -1,5 +1,5 @@
-import { database } from '@/services';
-import { supabase } from '@/services';
+import * as database from '../database';
+import * as supabase from '../supabase';
 import type { Observation } from '@/types';
 
 /**
