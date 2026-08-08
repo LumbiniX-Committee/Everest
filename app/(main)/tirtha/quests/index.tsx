@@ -1,3 +1,6 @@
 import { QuestListScreen } from '@/features/quests';
 
-export default QuestListScreen;
+export default function QuestListIndexRoute() {
+  return <QuestListScreen />;
+}
+

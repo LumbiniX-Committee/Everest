@@ -57,44 +57,55 @@ export async function configure(): Promise<void> {
   const N = load();
   if (!N) return;
 
-  N.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowBanner: true,
-      shouldShowList: true,
-      // Deliberately silent. Someone standing in a temple precinct should not
-      // have their phone chime; the banner is enough, and a sound here would
-      // be the app intruding on the thing it is asking them to attend to.
-      shouldPlaySound: false,
-      shouldSetBadge: false,
-    }),
-  });
-
-  if (Platform.OS === 'android') {
-    await N.setNotificationChannelAsync(ARRIVAL_CHANNEL, {
-      name: 'Arrivals',
-      description: 'Shown once when you reach a precinct of the sacred site.',
-      importance: N.AndroidImportance.DEFAULT,
-      sound: null,
-      vibrationPattern: [0, 120],
-      lightColor: colors.sandstone,
+  try {
+    N.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowBanner: true,
+        shouldShowList: true,
+        // Deliberately silent. Someone standing in a temple precinct should not
+        // have their phone chime; the banner is enough, and a sound here would
+        // be the app intruding on the thing it is asking them to attend to.
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+      }),
     });
+
+    if (Platform.OS === 'android') {
+      await N.setNotificationChannelAsync(ARRIVAL_CHANNEL, {
+        name: 'Arrivals',
+        description: 'Shown once when you reach a precinct of the sacred site.',
+        importance: N.AndroidImportance.DEFAULT,
+        sound: null,
+        vibrationPattern: [0, 120],
+        lightColor: colors.sandstone,
+      });
+    }
+  } catch (error) {
+    console.warn('Failed to configure notifications:', error);
   }
 }
 
 export async function requestPermission(): Promise<boolean> {
   const N = load();
   if (!N) return false;
-
-  const existing = await N.getPermissionsAsync();
-  if (existing.granted) return true;
-  if (!existing.canAskAgain) return false;
-  return (await N.requestPermissionsAsync()).granted;
+  try {
+    const existing = await N.getPermissionsAsync();
+    if (existing.granted) return true;
+    if (!existing.canAskAgain) return false;
+    return (await N.requestPermissionsAsync()).granted;
+  } catch {
+    return false;
+  }
 }
 
 export async function hasPermission(): Promise<boolean> {
   const N = load();
   if (!N) return false;
-  return (await N.getPermissionsAsync()).granted;
+  try {
+    return (await N.getPermissionsAsync()).granted;
+  } catch {
+    return false;
+  }
 }
 
 export type ArrivalNotification = {
@@ -117,22 +128,31 @@ export async function presentArrival({
 }: ArrivalNotification): Promise<void> {
   const N = load();
   if (!N) return;
-  if (!(await hasPermission())) return;
 
-  await N.scheduleNotificationAsync({
-    content: {
-      title,
-      body,
-      data: { precinctId, kind: 'arrival' },
-      ...(Platform.OS === 'android' ? { channelId: ARRIVAL_CHANNEL } : {}),
-    },
-    trigger: null,
-  });
+  try {
+    if (!(await hasPermission())) return;
+
+    await N.scheduleNotificationAsync({
+      content: {
+        title,
+        body,
+        data: { precinctId, kind: 'arrival' },
+        ...(Platform.OS === 'android' ? { channelId: ARRIVAL_CHANNEL } : {}),
+      },
+      trigger: null,
+    });
+  } catch (error) {
+    console.warn('Failed to present arrival notification:', error);
+  }
 }
 
 /** Clears delivered arrivals, so a stale banner cannot outlive the visit. */
 export async function dismissArrivals(): Promise<void> {
   const N = load();
   if (!N) return;
-  await N.dismissAllNotificationsAsync();
+  try {
+    await N.dismissAllNotificationsAsync();
+  } catch (error) {
+    console.warn('Failed to dismiss notifications:', error);
+  }
 }

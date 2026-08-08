@@ -1,3 +1,6 @@
 import { WelcomeScreen } from '@/features/onboarding';
 
-export default WelcomeScreen;
+export default function WelcomeRoute() {
+  return <WelcomeScreen />;
+}
+

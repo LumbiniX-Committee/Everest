@@ -1,3 +1,6 @@
 import { SakshiScreen } from '@/features/sakshi';
 
-export default SakshiScreen;
+export default function SakshiIndexRoute() {
+  return <SakshiScreen />;
+}
+

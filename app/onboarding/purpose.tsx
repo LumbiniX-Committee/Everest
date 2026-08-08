@@ -1,3 +1,6 @@
 import { PurposeScreen } from '@/features/onboarding';
 
-export default PurposeScreen;
+export default function PurposeRoute() {
+  return <PurposeScreen />;
+}
+

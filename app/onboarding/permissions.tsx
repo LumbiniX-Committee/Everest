@@ -1,3 +1,6 @@
 import { PermissionsScreen } from '@/features/onboarding';
 
-export default PermissionsScreen;
+export default function PermissionsRoute() {
+  return <PermissionsScreen />;
+}
+
