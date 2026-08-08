@@ -119,13 +119,14 @@ export const sakshiMapStyle = {
       'source-layer': 'building',
       minzoom: 15,
       paint: {
-        'fill-extrusion-color': colors.sandstone,
-        // OSM building coverage around Lumbini is sparse and mostly untagged
-        // for height, so `render_height` is frequently null. The fallback keeps
-        // a footprint visible rather than flattening it to nothing.
-        'fill-extrusion-height': ['coalesce', ['get', 'render_height'], 4],
+        'fill-extrusion-color': colors.mapLanduse,
+        // Context, not content. Only one of the 318 buildings OSM knows here
+        // carries a height, so `render_height` is null almost everywhere and a
+        // blanket fallback made every one an identical slab. Kept low and
+        // quiet: the monuments are drawn separately, with massing of their own.
+        'fill-extrusion-height': ['coalesce', ['get', 'render_height'], 3],
         'fill-extrusion-base': ['coalesce', ['get', 'render_min_height'], 0],
-        'fill-extrusion-opacity': 0.75,
+        'fill-extrusion-opacity': 0.45,
       },
     },
     {

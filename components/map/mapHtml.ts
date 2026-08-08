@@ -1,4 +1,4 @@
-import { MAP_HOME, precinctGeoJSON, siteGeoJSON } from '@/data';
+import { MAP_HOME, monumentGeoJSON, precinctGeoJSON, siteGeoJSON, waterGeoJSON } from '@/data';
 import { colors, sakshiMapStyle } from '@/theme';
 
 export type MapHtmlOptions = {
@@ -101,6 +101,28 @@ ${interactive ? INTERACTIVE_CONTROLS : ''}
           'fill-extrusion-opacity': 0.65
         }
       });
+      map.addSource('site-water', { type:'geojson', data: ${JSON.stringify(waterGeoJSON)} });
+      map.addLayer({
+        id:'site-water-fill', type:'fill', source:'site-water',
+        paint:{ 'fill-color': ${JSON.stringify(colors.mapWater)} }
+      });
+
+      // The monuments, with massing of their own. OSM knows the height of one
+      // building in Lumbini, so extruding its data alone gives identical slabs.
+      map.addSource('monuments', { type:'geojson', data: ${JSON.stringify(monumentGeoJSON)} });
+      map.addLayer({
+        id:'monument-massing', type:'fill-extrusion', source:'monuments',
+        paint:{
+          'fill-extrusion-color': ${JSON.stringify(colors.surface)},
+          'fill-extrusion-height': ['get','height'],
+          'fill-extrusion-base': 0,
+          'fill-extrusion-opacity': 0.95,
+          // Shades the sides against the top so a volume reads as a solid
+          // rather than a flat patch of colour seen at an angle.
+          'fill-extrusion-vertical-gradient': true
+        }
+      });
+
       map.addSource('sites', { type:'geojson', data: ${JSON.stringify(siteGeoJSON)} });
       map.addLayer({
         id:'site-dot', type:'circle', source:'sites',

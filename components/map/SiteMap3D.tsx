@@ -2,7 +2,7 @@ import Constants, { ExecutionEnvironment } from 'expo-constants';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { MAP_HOME, demoSites, precinctGeoJSON, siteGeoJSON } from '@/data';
+import { MAP_HOME, demoSites, monumentGeoJSON, precinctGeoJSON, siteGeoJSON, waterGeoJSON } from '@/data';
 import { colors, radii, sakshiMapStyleJSON } from '@/theme';
 
 import { MapWebView } from './MapWebView';
@@ -120,6 +120,26 @@ export function SiteMap3D({ height = 320, onSelectSite }: SiteMap3DProps) {
               // 0.5, not 0.35: on the dark ground 0.35 measured 2.20:1 and the
               // enclosure read as a smudge rather than a wall.
               'fill-extrusion-opacity': 0.5,
+            }}
+          />
+        </GeoJSONSource>
+
+        <GeoJSONSource id="site-water" data={waterGeoJSON}>
+          <Layer id="site-water-fill" type="fill" paint={{ 'fill-color': colors.mapWater }} />
+        </GeoJSONSource>
+
+        {/* The monuments carry their own massing: OSM knows the height of one
+            building in Lumbini, so its data alone extrudes to identical slabs. */}
+        <GeoJSONSource id="monuments" data={monumentGeoJSON}>
+          <Layer
+            id="monument-massing"
+            type="fill-extrusion"
+            paint={{
+              'fill-extrusion-color': colors.surface,
+              'fill-extrusion-height': ['get', 'height'],
+              'fill-extrusion-base': 0,
+              'fill-extrusion-opacity': 0.95,
+              'fill-extrusion-vertical-gradient': true,
             }}
           />
         </GeoJSONSource>
