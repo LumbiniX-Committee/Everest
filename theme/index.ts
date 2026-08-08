@@ -14,6 +14,7 @@ export {
 } from './typography';
 export { useAppFonts } from './fonts';
 export { layers } from './layers';
+export { sakshiMapStyle, sakshiMapStyleJSON, MAP_TILES_URL, MAP_GLYPHS_URL } from './mapStyle';
 
 import { colors } from './colors';
 import { spacing } from './spacing';
