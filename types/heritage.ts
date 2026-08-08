@@ -79,6 +79,35 @@ export type Observation = {
   synced: boolean;
 };
 
+/**
+ * A dated photograph of a site, used as the "then" half of Then / Now.
+ *
+ * `vantageId` is what makes a comparison honest rather than suggestive. An
+ * image shot from an unknown position can sit beside a modern one and imply a
+ * change that is really just a change of angle, so the UI states plainly when
+ * the historical viewpoint is only approximate.
+ */
+export type HistoricalImage = {
+  id: string;
+  siteId: string;
+  /** The vantage this was shot from, where that is known. */
+  vantageId?: string;
+  /** Bundled asset (`require(...)`) or a remote/local URI. */
+  image: number | string;
+  /** Free-form: "1899", "c. 1930", "March 1975". Displayed, not parsed. */
+  date: string;
+  /** ISO 8601 where the exact date is known, for ordering the series. */
+  capturedAt?: string;
+  caption: string;
+  /** Required. A historical image without provenance is decoration. */
+  sourceId: string;
+  /**
+   * False when the viewpoint is inferred rather than surveyed. Drives a visible
+   * qualifier on the comparison — never hidden to make the pairing look better.
+   */
+  viewpointConfirmed: boolean;
+};
+
 /** Where the reticle is in its alignment cycle. */
 export type AlignmentPhase = 'idle' | 'seeking' | 'locked' | 'unavailable';
 
