@@ -9,6 +9,7 @@ import {
   Smartphone,
 } from 'lucide-react';
 
+import { GreetingMonk } from '@/components/GreetingMonk';
 import { formatBuildDate, getLatestBuild } from '@/lib/eas';
 
 /**
@@ -82,50 +83,62 @@ export default async function Home() {
           className="pointer-events-none absolute inset-x-0 -top-40 h-[32rem] bg-[radial-gradient(ellipse_at_top,rgba(200,148,50,0.18),transparent_65%)]"
         />
 
-        <div className="relative mx-auto max-w-5xl px-6 pt-20 pb-24 text-center sm:pt-28 sm:pb-32">
-          <span className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 px-4 py-1.5 text-sm font-medium text-ink-soft shadow-sm">
-            <span className="size-1.5 rounded-full bg-dhamma" />
-            LumbiniX 2026
-          </span>
-
-          <h1 className="mt-8 font-[family-name:var(--font-display)] text-6xl leading-none font-semibold tracking-tight text-ink sm:text-8xl">
-            Sākṣī
-          </h1>
-
-          <p className="mt-6 font-[family-name:var(--font-display)] text-2xl text-ink-soft italic sm:text-3xl">
-            Strive on with heedfulness
-          </p>
-
-          <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-ink-soft">
-            An AR conservation and pilgrimage companion for the sacred sites of
-            Lumbini. Walk the tīrtha, witness a place as it changes, and read
-            the teaching from the canon.
-          </p>
-
-          <div className="mt-12">
-            <a
-              href={build.apkUrl}
-              className="inline-flex items-center gap-3 rounded-2xl bg-earth px-9 py-5 text-lg font-semibold text-white shadow-lg shadow-earth/25 transition hover:-translate-y-0.5 hover:bg-sandstone-deep hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-earth"
-            >
-              <Download className="size-6" aria-hidden />
-              Download APK for Android
-            </a>
-
-            <p className="mt-5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm text-ink-muted">
-              <Smartphone className="size-4" aria-hidden />
-              <span>Android 7.0 and above</span>
-              <span aria-hidden>·</span>
-              <span>
-                Version {build.version}
-                {build.buildNumber ? ` (build ${build.buildNumber})` : ''}
+        {/*
+          Two columns only once there is room for the figure to stand beside
+          the wordmark. Below that the text stays centred and the figure falls
+          to the end, which keeps the download button — the one thing this page
+          exists to hand over — above the fold on a phone.
+        */}
+        <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-20 sm:pt-20 sm:pb-28">
+          <div className="grid items-center gap-y-14 lg:grid-cols-[1fr_auto] lg:gap-x-16">
+            <div className="text-center lg:text-left">
+              <span className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 px-4 py-1.5 text-sm font-medium text-ink-soft shadow-sm">
+                <span className="size-1.5 rounded-full bg-dhamma" />
+                LumbiniX 2026
               </span>
-              {builtOn ? (
-                <>
+
+              <h1 className="mt-8 font-[family-name:var(--font-display)] text-6xl leading-none font-semibold tracking-tight text-ink sm:text-8xl">
+                Sākṣī
+              </h1>
+
+              <p className="mt-6 font-[family-name:var(--font-display)] text-2xl text-ink-soft italic sm:text-3xl">
+                Strive on with heedfulness
+              </p>
+
+              <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-ink-soft lg:mx-0">
+                An AR conservation and pilgrimage companion for the sacred sites of
+                Lumbini. Walk the tīrtha, witness a place as it changes, and read
+                the teaching from the canon.
+              </p>
+
+              <div className="mt-12">
+                <a
+                  href={build.apkUrl}
+                  className="inline-flex items-center gap-3 rounded-2xl bg-earth px-9 py-5 text-lg font-semibold text-white shadow-lg shadow-earth/25 transition hover:-translate-y-0.5 hover:bg-sandstone-deep hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-earth"
+                >
+                  <Download className="size-6" aria-hidden />
+                  Download APK for Android
+                </a>
+
+                <p className="mt-5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm text-ink-muted lg:justify-start">
+                  <Smartphone className="size-4" aria-hidden />
+                  <span>Android 7.0 and above</span>
                   <span aria-hidden>·</span>
-                  <span>Built {builtOn}</span>
-                </>
-              ) : null}
-            </p>
+                  <span>
+                    Version {build.version}
+                    {build.buildNumber ? ` (build ${build.buildNumber})` : ''}
+                  </span>
+                  {builtOn ? (
+                    <>
+                      <span aria-hidden>·</span>
+                      <span>Built {builtOn}</span>
+                    </>
+                  ) : null}
+                </p>
+              </div>
+            </div>
+
+            <GreetingMonk className="h-56 sm:h-72 lg:h-[27rem]" />
           </div>
         </div>
       </section>
