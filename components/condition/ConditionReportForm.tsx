@@ -3,7 +3,7 @@ import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native
 
 import { Button, Chip, Divider, Text } from '@/components/ui';
 import { colors, radii, spacing } from '@/theme';
-import type { ConditionCategory, ConditionReport, ConditionSeverity } from '@/types/condition';
+import type { ConditionCategory, ConditionSeverity } from '@/types/condition';
 import { CONDITION_CATEGORIES, CONDITION_CATEGORY_LABELS, CONDITION_SUBTYPES } from '@/types/condition';
 
 export type ConditionReportInput = {
@@ -68,7 +68,8 @@ export function ConditionReportForm({
           VERIFIED STABILITY
         </Text>
         <Text variant="body" tone="secondary">
-          "Nothing has changed" is a scientific observation and is awarded identical merit to a damage report.
+          “Nothing has changed” is a scientific observation and is awarded identical merit to a
+          damage report.
         </Text>
         <Button
           label="Nothing has changed (Record stable status)"
