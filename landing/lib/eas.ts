@@ -9,7 +9,7 @@
 const EAS_GRAPHQL = 'https://api.expo.dev/graphql';
 
 /** From app.json, extra.eas.projectId. */
-const PROJECT_ID = 'e8454679-10b7-42cc-8961-95a421426705';
+const PROJECT_ID = '5649effc-96a2-403e-93f5-c401fd3f80af';
 
 /**
  * Only the `preview` profile is eligible. `production` builds an app-bundle

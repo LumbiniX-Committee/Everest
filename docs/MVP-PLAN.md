@@ -19,7 +19,7 @@ brief, and the phased route between them.
 | Package manager | npm |
 | Local DB | expo-sqlite |
 | Backend | Supabase (`@supabase/supabase-js`), lazy client, unused so far |
-| Build | EAS configured, `@siddantasodari/sakshi` |
+| Build | EAS configured, `@aadityabro1/sakshi` |
 
 Native capability already wired: `expo-camera`, `expo-location`, `expo-sensors`,
 `expo-sqlite`, plus reanimated and gesture-handler.
