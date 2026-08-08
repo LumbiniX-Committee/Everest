@@ -14,5 +14,5 @@
     "expo-env.d.ts"
   ],
   "//": "core/ and shared/ are device-independent logic with their own typecheck config (tools/test/tsconfig.json); they use .ts-extension imports and node:test, so they are excluded from the app's own include glob. allowImportingTsExtensions (above) lets the app's tsc still follow `import ... from '@/core'` when a screen wires the logic in.",
-  "exclude": ["node_modules", "core", "shared", "tools", "mock-api"]
+  "exclude": ["node_modules", "core", "shared", "tools", "mock-api", "landing"]
 }

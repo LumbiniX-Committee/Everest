@@ -1,0 +1,17 @@
+# Files EAS Build does not need in the project archive.
+#
+# .easignore replaces .gitignore for the upload, so anything ignored for git
+# that must also stay out of the build has to be repeated here.
+
+node_modules/
+.expo/
+dist/
+web-build/
+
+# The APK download landing page. A standalone Next.js app that shares nothing
+# with the Expo project — uploading it only inflates the build archive.
+landing/
+
+# Docs and store credentials never reach the native build.
+docs/
+google-play-service-account.json

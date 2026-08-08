@@ -9,14 +9,17 @@ import {
   Smartphone,
 } from 'lucide-react';
 
+import { formatBuildDate, getLatestBuild } from '@/lib/eas';
+
 /**
- * Set NEXT_PUBLIC_APK_URL at build time to point at a newer build. The
- * fallback is the EAS artifact for the current preview build, so the page
- * works with no environment configured at all.
+ * The page re-resolves the latest EAS build on this interval, so publishing a
+ * new APK updates the download button without a redeploy.
+ *
+ * Next parses this export statically and rejects an imported constant, so the
+ * literal cannot be shared with REVALIDATE_SECONDS in lib/eas.ts. Keep the two
+ * in step.
  */
-const APK_URL =
-  process.env.NEXT_PUBLIC_APK_URL ??
-  'https://expo.dev/accounts/siddantasodari/projects/sakshi/builds/730c9b55-7aa9-4792-9146-94f78c06a529';
+export const revalidate = 300;
 
 const pillars = [
   {
@@ -66,7 +69,10 @@ const installSteps = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const build = await getLatestBuild();
+  const builtOn = formatBuildDate(build.completedAt);
+
   return (
     <main className="min-h-screen">
       {/* Hero */}
@@ -98,16 +104,27 @@ export default function Home() {
 
           <div className="mt-12">
             <a
-              href={APK_URL}
+              href={build.apkUrl}
               className="inline-flex items-center gap-3 rounded-2xl bg-earth px-9 py-5 text-lg font-semibold text-white shadow-lg shadow-earth/25 transition hover:-translate-y-0.5 hover:bg-sandstone-deep hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-earth"
             >
               <Download className="size-6" aria-hidden />
               Download APK for Android
             </a>
 
-            <p className="mt-5 flex items-center justify-center gap-2 text-sm text-ink-muted">
+            <p className="mt-5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm text-ink-muted">
               <Smartphone className="size-4" aria-hidden />
-              Android 7.0 and above · Version 0.1.0 · Sideload install
+              <span>Android 7.0 and above</span>
+              <span aria-hidden>·</span>
+              <span>
+                Version {build.version}
+                {build.buildNumber ? ` (build ${build.buildNumber})` : ''}
+              </span>
+              {builtOn ? (
+                <>
+                  <span aria-hidden>·</span>
+                  <span>Built {builtOn}</span>
+                </>
+              ) : null}
             </p>
           </div>
         </div>

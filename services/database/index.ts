@@ -6,6 +6,13 @@ import type {
   MeritEvent,
   Observation,
   ObservationAssessment,
+  Quest,
+  QuestCategory,
+  QuestDifficulty,
+  QuestProgress,
+  QuestStatus,
+  QuestTask,
+  QuestWithProgress,
 } from '@/types';
 
 /**
@@ -100,6 +107,34 @@ const migrations: string[] = [
      last_visited_at TEXT NOT NULL,
      visit_count INTEGER NOT NULL DEFAULT 1
    );`,
+
+  // Quests & Quest Progress tables.
+  `CREATE TABLE IF NOT EXISTS quests (
+     id TEXT PRIMARY KEY NOT NULL,
+     title TEXT NOT NULL,
+     subtitle TEXT NOT NULL,
+     description TEXT NOT NULL,
+     category TEXT NOT NULL,
+     intention TEXT NOT NULL,
+     difficulty TEXT NOT NULL,
+     estimated_minutes INTEGER NOT NULL,
+     icon TEXT NOT NULL,
+     tasks TEXT NOT NULL,
+     created_at INTEGER NOT NULL
+   );
+   CREATE INDEX IF NOT EXISTS idx_quests_category
+     ON quests (category);
+
+   CREATE TABLE IF NOT EXISTS quest_progress (
+     quest_id TEXT PRIMARY KEY NOT NULL,
+     status TEXT NOT NULL,
+     completed_tasks TEXT NOT NULL,
+     started_at INTEGER,
+     completed_at INTEGER,
+     FOREIGN KEY (quest_id) REFERENCES quests (id) ON DELETE CASCADE
+   );
+   CREATE INDEX IF NOT EXISTS idx_quest_progress_status
+     ON quest_progress (status);`,
 ];
 
 async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
@@ -243,6 +278,20 @@ export async function getObservation(id: string): Promise<Observation | null> {
   return row ? toObservation(row) : null;
 }
 
+export async function getUnsyncedObservations(): Promise<Observation[]> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<ObservationRow>(
+    'SELECT * FROM observations WHERE synced = 0 ORDER BY captured_at ASC'
+  );
+  return rows.map(toObservation);
+}
+
+export async function markObservationSynced(id: string): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync('UPDATE observations SET synced = 1 WHERE id = ?', id);
+}
+
+
 type ConditionReportRow = {
   id: string;
   observation_id: string;
@@ -303,7 +352,6 @@ export async function insertConditionReport(report: ConditionReport): Promise<vo
   });
 }
 
-/** Reports for one observation, or every report newest first. */
 export async function listConditionReports(observationId?: string): Promise<ConditionReport[]> {
   const db = await getDatabase();
   const rows = observationId
@@ -315,6 +363,19 @@ export async function listConditionReports(observationId?: string): Promise<Cond
         'SELECT * FROM condition_reports ORDER BY recorded_at DESC',
       );
   return rows.map(toConditionReport);
+}
+
+export async function getUnsyncedConditionReports(): Promise<ConditionReport[]> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<ConditionReportRow>(
+    'SELECT * FROM condition_reports WHERE synced = 0 ORDER BY recorded_at ASC'
+  );
+  return rows.map(toConditionReport);
+}
+
+export async function markConditionReportSynced(id: string): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync('UPDATE condition_reports SET synced = 1 WHERE id = ?', id);
 }
 
 type MeritEventRow = {
@@ -454,3 +515,230 @@ export async function countObservations(): Promise<number> {
   const row = await db.getFirstAsync<{ n: number }>('SELECT COUNT(*) AS n FROM observations');
   return row?.n ?? 0;
 }
+
+type QuestRow = {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  intention: string;
+  category: string;
+  difficulty: string;
+  estimated_minutes: number;
+  icon: string;
+  tasks: string;
+  created_at: number;
+};
+
+type QuestWithProgressRow = QuestRow & {
+  progress_status: string | null;
+  completed_tasks: string | null;
+  started_at: number | null;
+  completed_at: number | null;
+};
+
+function toQuestWithProgress(row: QuestWithProgressRow): QuestWithProgress {
+  let parsedTasks: QuestTask[] = [];
+  try {
+    parsedTasks = JSON.parse(row.tasks);
+  } catch {
+    parsedTasks = [];
+  }
+
+  let parsedCompletedTasks: string[] = [];
+  if (row.completed_tasks) {
+    try {
+      parsedCompletedTasks = JSON.parse(row.completed_tasks);
+    } catch {
+      parsedCompletedTasks = [];
+    }
+  }
+
+  const quest: Quest = {
+    id: row.id,
+    title: row.title,
+    subtitle: row.subtitle,
+    description: row.description,
+    intention: row.intention,
+    category: row.category as QuestCategory,
+    difficulty: row.difficulty as QuestDifficulty,
+    estimatedMinutes: row.estimated_minutes,
+    icon: row.icon,
+    tasks: parsedTasks,
+    createdAt: row.created_at,
+  };
+
+  const progress: QuestProgress = {
+    questId: row.id,
+    status: (row.progress_status as QuestStatus) ?? 'not_started',
+    completedTasks: parsedCompletedTasks,
+    startedAt: row.started_at ?? undefined,
+    completedAt: row.completed_at ?? undefined,
+  };
+
+  return { ...quest, progress };
+}
+
+export async function listQuests(): Promise<QuestWithProgress[]> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<QuestWithProgressRow>(
+    `SELECT q.*, qp.status as progress_status, qp.completed_tasks, qp.started_at, qp.completed_at
+     FROM quests q
+     LEFT JOIN quest_progress qp ON q.id = qp.quest_id
+     ORDER BY q.created_at ASC`
+  );
+  return rows.map(toQuestWithProgress);
+}
+
+export async function getQuest(id: string): Promise<QuestWithProgress | null> {
+  const db = await getDatabase();
+  const row = await db.getFirstAsync<QuestWithProgressRow>(
+    `SELECT q.*, qp.status as progress_status, qp.completed_tasks, qp.started_at, qp.completed_at
+     FROM quests q
+     LEFT JOIN quest_progress qp ON q.id = qp.quest_id
+     WHERE q.id = ?`,
+    id
+  );
+  return row ? toQuestWithProgress(row) : null;
+}
+
+export async function startQuest(questId: string): Promise<QuestProgress> {
+  const db = await getDatabase();
+  const existing = await db.getFirstAsync<{
+    quest_id: string;
+    status: string;
+    completed_tasks: string;
+    started_at: number | null;
+    completed_at: number | null;
+  }>('SELECT * FROM quest_progress WHERE quest_id = ?', questId);
+
+  const now = Date.now();
+  if (!existing) {
+    await db.runAsync(
+      `INSERT INTO quest_progress (quest_id, status, completed_tasks, started_at)
+       VALUES (?, 'in_progress', '[]', ?)`,
+      questId,
+      now
+    );
+    return {
+      questId,
+      status: 'in_progress',
+      completedTasks: [],
+      startedAt: now,
+    };
+  }
+
+  if (existing.status === 'not_started') {
+    const startedAt = existing.started_at ?? now;
+    await db.runAsync(
+      `UPDATE quest_progress SET status = 'in_progress', started_at = ? WHERE quest_id = ?`,
+      startedAt,
+      questId
+    );
+    let completedTasks: string[] = [];
+    try {
+      completedTasks = JSON.parse(existing.completed_tasks);
+    } catch {}
+    return {
+      questId,
+      status: 'in_progress',
+      completedTasks,
+      startedAt,
+      completedAt: existing.completed_at ?? undefined,
+    };
+  }
+
+  let completedTasks: string[] = [];
+  try {
+    completedTasks = JSON.parse(existing.completed_tasks);
+  } catch {}
+  return {
+    questId,
+    status: existing.status as QuestStatus,
+    completedTasks,
+    startedAt: existing.started_at ?? undefined,
+    completedAt: existing.completed_at ?? undefined,
+  };
+}
+
+export async function completeQuestTask(questId: string, taskId: string): Promise<QuestProgress> {
+  const db = await getDatabase();
+  const questWithProgress = await getQuest(questId);
+  if (!questWithProgress) {
+    throw new Error(`Quest with id ${questId} not found`);
+  }
+
+  const currentCompleted = new Set(questWithProgress.progress.completedTasks);
+  currentCompleted.add(taskId);
+  const updatedCompletedArray = Array.from(currentCompleted);
+
+  const allTasksCount = questWithProgress.tasks.length;
+  const isAllCompleted = allTasksCount > 0 && updatedCompletedArray.length >= allTasksCount;
+
+  const newStatus: QuestStatus = isAllCompleted ? 'completed' : 'in_progress';
+  const startedAt = questWithProgress.progress.startedAt ?? Date.now();
+  const completedAt = isAllCompleted ? (questWithProgress.progress.completedAt ?? Date.now()) : undefined;
+
+  await db.runAsync(
+    `INSERT INTO quest_progress (quest_id, status, completed_tasks, started_at, completed_at)
+     VALUES (?, ?, ?, ?, ?)
+     ON CONFLICT(quest_id) DO UPDATE SET
+       status = excluded.status,
+       completed_tasks = excluded.completed_tasks,
+       started_at = excluded.started_at,
+       completed_at = excluded.completed_at`,
+    questId,
+    newStatus,
+    JSON.stringify(updatedCompletedArray),
+    startedAt,
+    completedAt ?? null
+  );
+
+  return {
+    questId,
+    status: newStatus,
+    completedTasks: updatedCompletedArray,
+    startedAt,
+    completedAt,
+  };
+}
+
+export async function resetQuestProgress(questId?: string): Promise<void> {
+  const db = await getDatabase();
+  if (questId) {
+    await db.runAsync('DELETE FROM quest_progress WHERE quest_id = ?', questId);
+  } else {
+    await db.runAsync('DELETE FROM quest_progress');
+  }
+}
+
+export async function seedDefaultQuests(quests: Quest[]): Promise<void> {
+  const db = await getDatabase();
+  await db.withTransactionAsync(async () => {
+    for (const quest of quests) {
+      await db.runAsync(
+        `INSERT OR REPLACE INTO quests
+           (id, title, subtitle, description, intention, category, difficulty, estimated_minutes, icon, tasks, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        quest.id,
+        quest.title,
+        quest.subtitle,
+        quest.description,
+        quest.intention,
+        quest.category,
+        quest.difficulty,
+        quest.estimatedMinutes,
+        quest.icon,
+        JSON.stringify(quest.tasks),
+        quest.createdAt
+      );
+
+      await db.runAsync(
+        `INSERT OR IGNORE INTO quest_progress (quest_id, status, completed_tasks)
+         VALUES (?, 'not_started', '[]')`,
+        quest.id
+      );
+    }
+  });
+}
+
