@@ -79,37 +79,35 @@ export function computeAlignment(input: {
     };
   }
 
-  // Without position or heading there is nothing to align against. This is a
-  // legitimate state — no sensors, or permission refused — not an error.
-  if (coordinate == null || heading == null) {
+  // Without GPS coordinate there is no position signal to align against.
+  if (coordinate == null) {
     return {
       phase: 'unavailable',
       progress: 0,
       bearingDeltaDeg: null,
-      distanceM: coordinate ? distanceMeters(coordinate, vantage.coordinate) : null,
+      distanceM: null,
       pitchDeltaDeg: null,
     };
   }
 
   const distanceM = distanceMeters(coordinate, vantage.coordinate);
-
-  // Standing on the vantage, the target is the vantage's recorded bearing.
-  // Approaching it, the useful instruction is "walk this way" — so far out we
-  // steer toward the point, and close in we steer toward the framing.
   const targetBearing =
     distanceM > vantage.positionToleranceM
       ? bearingDegrees(coordinate, vantage.coordinate)
       : vantage.bearing;
 
-  const bearingDeltaDeg = bearingDelta(heading, targetBearing);
+  const bearingDeltaDeg = heading == null ? null : bearingDelta(heading, targetBearing);
   const pitchDeltaDeg = pitch == null ? null : vantage.pitch - pitch;
 
   const positionScore = axisProgress(distanceM, vantage.positionToleranceM, POSITION_FLOOR_MULTIPLE);
-  const bearingScore = axisProgress(
-    Math.abs(bearingDeltaDeg),
-    vantage.bearingToleranceDeg,
-    BEARING_FLOOR_MULTIPLE,
-  );
+  const bearingScore =
+    bearingDeltaDeg == null
+      ? 0
+      : axisProgress(
+          Math.abs(bearingDeltaDeg),
+          vantage.bearingToleranceDeg,
+          BEARING_FLOOR_MULTIPLE,
+        );
   // A missing pitch reading must not block a lock — it degrades to "assume level".
   const pitchScore =
     pitchDeltaDeg == null ? 1 : axisProgress(Math.abs(pitchDeltaDeg), PITCH_TOLERANCE_DEG, 6);
