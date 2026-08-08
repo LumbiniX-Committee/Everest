@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import { Image, StyleSheet, View } from 'react-native';
 
 import { Button, Divider, MetaRow, Screen, Text } from '@/components/ui';
+import { ConditionReportForm, TimeSeriesScrubber } from '@/components';
 import { EmptyState, LoadingState } from '@/components/common';
 import { ConditionSheet, type ConditionDraft } from '@/components/observation';
 import { MeritAcknowledgement } from '@/components/practice';
@@ -160,6 +161,29 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
     observation.positionErrorM <= vantage.positionToleranceM &&
     observation.bearingErrorDeg <= vantage.bearingToleranceDeg;
 
+  const [seriesObservations, setSeriesObservations] = useState<Observation[]>([]);
+  const [showConditionForm, setShowConditionForm] = useState(false);
+
+  useEffect(() => {
+    if (!observation) return;
+    database.listObservations(observation.vantageId).then(setSeriesObservations).catch(() => {});
+  }, [observation]);
+
+  if (showConditionForm && observation) {
+    return (
+      <Screen scroll>
+        <ConditionReportForm
+          siteId={observation.siteId}
+          vantageId={observation.vantageId}
+          observationId={observation.id}
+          onSubmitReport={() => setShowConditionForm(false)}
+          onNoChangeReport={() => setShowConditionForm(false)}
+          onSkip={() => setShowConditionForm(false)}
+        />
+      </Screen>
+    );
+  }
+
   return (
     <Screen scroll>
       <View style={styles.head}>
@@ -185,6 +209,27 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
         <MetaRow label="Bearing" value={formatBearing(observation.bearing)} />
         <MetaRow label="Tilt" value={formatDelta(observation.pitch)} />
       </View>
+
+      <Divider />
+
+      {/* Task 3.4: Condition Reporting Form Access */}
+      <View style={styles.actions}>
+        <Button
+          label="Add Structured Condition Report"
+          variant="secondary"
+          onPress={() => setShowConditionForm(true)}
+        />
+      </View>
+
+      <Divider />
+
+      {/* Task 3.6: Vantage Time Series Scrubber */}
+      {seriesObservations.length > 0 ? (
+        <TimeSeriesScrubber
+          observations={seriesObservations}
+          vantageLabel={vantage?.label ?? 'Vantage Series'}
+        />
+      ) : null}
 
       <Divider />
 
