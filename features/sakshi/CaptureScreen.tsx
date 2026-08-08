@@ -163,11 +163,25 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
       <View style={styles.viewfinder}>
         <CameraView ref={cameraRef} style={StyleSheet.absoluteFill} facing="back" />
 
+        {/* Top Floating Mobile Status Bar */}
+        <View style={styles.topHud}>
+          <Pressable style={styles.backBtn} onPress={() => router.back()}>
+            <Text variant="body">‹ Back</Text>
+          </Pressable>
+          <View style={styles.hudBadge}>
+            <Text variant="caption" tone={locked ? 'sandstone' : 'secondary'}>
+              {site?.name ?? 'Vantage'} · {vantage.label}
+            </Text>
+          </View>
+        </View>
+
+        {/* Center Alignment Reticle HUD */}
         <View style={[StyleSheet.absoluteFill, styles.overlay]} pointerEvents="none">
           <Reticle size={240} progress={alignment.progress} phase={alignment.phase} />
         </View>
       </View>
 
+      {/* Floating Bottom Control Deck */}
       <View style={styles.controls}>
         <View style={styles.readoutRow}>
           <Text variant="mono" tone={locked ? 'locked' : 'seeking'}>
@@ -181,11 +195,10 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
           </Text>
         </View>
 
-        {/* Manual compass heading nudge (task 2.7) — corrects local declination
-            drift without tearing down the sensor subscription. */}
+        {/* Manual Compass Heading Nudge */}
         <View style={styles.nudgeRow}>
           <Button
-            label={`Nudge -5°`}
+            label="Nudge -5°"
             variant="quiet"
             onPress={() => setNudgeDeg((prev) => prev - 5)}
           />
@@ -193,7 +206,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
             {nudgeDeg === 0 ? 'Compass 0°' : `${nudgeDeg > 0 ? '+' : ''}${nudgeDeg}°`}
           </Text>
           <Button
-            label={`Nudge +5°`}
+            label="Nudge +5°"
             variant="quiet"
             onPress={() => setNudgeDeg((prev) => prev + 5)}
           />
@@ -222,8 +235,6 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
           </Pressable>
 
           {locked ? (
-            // Task 3.5: recording stability is worth exactly as much as recording
-            // damage. Equal visual weight, same merit — only enabled on a real lock.
             <Button
               label="Nothing has changed"
               variant="quiet"
@@ -232,8 +243,6 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
               accessibilityHint="Record a stable observation"
             />
           ) : (
-            // The mandated escape hatch: capture by eye when tolerance can't be
-            // met. Recorded honestly as a by-eye frame, never as an aligned one.
             <Button
               label="Capture by eye"
               variant="quiet"
@@ -246,8 +255,8 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
 
         <Text variant="caption" tone="muted" center>
           {locked
-            ? 'Aligned. Record when the light is right.'
-            : 'Move or nudge until the reticle locks — or capture by eye, recorded as such.'}
+            ? 'Aligned. Press shutter to record.'
+            : 'Move or nudge compass until reticle locks — or capture by eye.'}
         </Text>
       </View>
     </Screen>
@@ -257,8 +266,34 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
 const styles = StyleSheet.create({
   frame: { paddingHorizontal: 0 },
   gate: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: spacing.base },
-  viewfinder: { flex: 1, backgroundColor: colors.textPrimary, overflow: 'hidden' },
+  viewfinder: { flex: 1, backgroundColor: colors.textPrimary, overflow: 'hidden', position: 'relative' },
   overlay: { alignItems: 'center', justifyContent: 'center', zIndex: layers.reticle },
+  topHud: {
+    position: 'absolute',
+    top: spacing.md,
+    left: spacing.base,
+    right: spacing.base,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    zIndex: 50,
+  },
+  backBtn: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: radii.full,
+    backgroundColor: 'rgba(14, 21, 18, 0.85)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  hudBadge: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: radii.full,
+    backgroundColor: 'rgba(14, 21, 18, 0.85)',
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
   controls: {
     paddingHorizontal: spacing.gutter,
     paddingTop: spacing.lg,
