@@ -1,0 +1,44 @@
+[
+  {
+    "site_id": "ashokan-pillar",
+    "image": "now.ashokan-pillar.webp",
+    "role": "now",
+    "caption": {
+      "en": "Maya Devi Temple and Ashokan Pillar today, on the same mound",
+      "ne": "आज एउटै डँगुरमा माया देवी मन्दिर र अशोक स्तम्भ"
+    },
+    "ne_review": "ai-reviewed",
+    "pairs_with_plate": "ashokan-pillar.1899-south",
+    "licence": "CC BY-SA 4.0",
+    "attribution": "Shadow Ayush (Wikimedia Commons)",
+    "source_url": "https://commons.wikimedia.org/wiki/File%3AMaya_Devi_Temple_and_Ashoka_Pillar%2C_Lumbini%2C_Rupandehi%2C_Nepal.jpg"
+  },
+  {
+    "site_id": "maya-devi-temple",
+    "image": "now.maya-devi-temple.webp",
+    "role": "now",
+    "caption": {
+      "en": "Maya Devi Temple reflected in the Puskarini today",
+      "ne": "आज पुष्करिणीमा प्रतिबिम्बित माया देवी मन्दिर"
+    },
+    "ne_review": "ai-reviewed",
+    "pairs_with_plate": "maya-devi-temple.mukherji-1899-plan",
+    "licence": "CC BY-SA 4.0",
+    "attribution": "Dhrubapaudel (Wikimedia Commons)",
+    "source_url": "https://commons.wikimedia.org/wiki/File%3AMayadevi_temple_and_puskarini_kunda.jpg"
+  },
+  {
+    "site_id": "puskarini",
+    "image": "now.puskarini.webp",
+    "role": "now",
+    "caption": {
+      "en": "The Puskarini sacred pond today",
+      "ne": "आजको पुष्करिणी पवित्र पोखरी"
+    },
+    "ne_review": "ai-reviewed",
+    "pairs_with_plate": null,
+    "licence": "CC BY-SA 4.0",
+    "attribution": "Shadow Ayush (Wikimedia Commons)",
+    "source_url": "https://commons.wikimedia.org/wiki/File%3AThe_sacred_pool_(known_as_Puskarni)%2C_Lumbini%2C_Rupandehi%2C_Nepal.jpg"
+  }
+]

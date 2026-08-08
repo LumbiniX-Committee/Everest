@@ -176,6 +176,32 @@
     ]
   },
   {
+    "id": "puskarini.earthen-pond-pre1930s",
+    "site_id": "puskarini",
+    "caption": {
+      "en": "Before the 1930s: the Puskarini as a natural earthen oval pond",
+      "ne": "सन् १९३० अघि: प्राकृतिक माटोको अण्डाकार पोखरीका रूपमा पुष्करिणी"
+    },
+    "image": "puskarini.earthen-pond-pre1930s.webp",
+    "evidence_tier": "conditioned_reconstruction",
+    "produced": false,
+    "conditioned_on": {
+      "title": "The pond was originally an oval earthen pool, remodelled into the present rectangular brick tank in the 1930s",
+      "url": "https://whc.unesco.org/en/list/666",
+      "locator": "shape and setting conditioned on the modern photograph; the earthen-oval-to-brick change is the documented fact",
+      "source_image": "now.puskarini.webp"
+    },
+    "licence": "CC BY-SA 4.0 (Sākṣī reconstruction — clearly labelled); conditioning photo CC BY-SA 4.0 Shadow Ayush",
+    "attribution": "Sākṣī team, image-to-image conditioned on a modern CC BY-SA photograph",
+    "pairs_with_now": "now.puskarini.webp",
+    "sources": [
+      {
+        "title": "UNESCO WHC — Lumbini (666rev)",
+        "url": "https://whc.unesco.org/en/list/666"
+      }
+    ]
+  },
+  {
     "id": "vihara-remains.votive-stupas-1957",
     "site_id": "vihara-remains",
     "caption": {

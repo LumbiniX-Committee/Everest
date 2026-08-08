@@ -89,6 +89,55 @@ bare foundations).
 
 ---
 
+## Reverse reconstructions — modern photo → historical "then"
+
+This is the strongest dissolve of all: the "then" is generated from the **modern
+photo itself**, so both halves share the exact camera angle and line up perfectly
+when the slider moves. The modern shots live in `app/assets/plates/now.*.webp`
+(licence-clean CC BY-SA 4.0, credited in `now-images.json`). Still a
+`conditioned_reconstruction` — conditioned on the modern image for structure and
+on cited historical evidence for what changes. Label it as a reconstruction.
+
+### R1. Pre-restoration mound  → produces `ashokan-pillar.pre1896-jungle`
+
+Use this instead of prompt #1 if you want the jungle mound framed identically to
+the modern temple shot (better dissolve).
+
+**Attach:** `app/assets/plates/now.ashokan-pillar.webp` (the modern temple + pillar)
+**and** `app/assets/plates/ashokan-pillar.1899-south.webp` (the real 1899 overgrown
+mound, as the evidence reference).
+**Aspect ratio:** match `now.ashokan-pillar.webp` — **3:2 landscape**.
+
+> Keep the exact camera position, framing, horizon and mound shape of the first
+> attached photograph, but render the scene as it was before rediscovery in the
+> early 1890s, using the second (1899) photograph as evidence for the state.
+> Remove the white Maya Devi Temple building, the paved plaza, the prayer flags,
+> the railings and all modern structures and people. In their place show a
+> jungle-covered earthen mound: dense sal-forest undergrowth, tall grass, scrub
+> and creepers burying weathered brick ruins, the pillar broken and half-hidden.
+> Overcast diffuse daylight, muted natural colours, late-19th-century landscape
+> photograph realism. No text, no watermark, no modern elements.
+
+### R2. Pre-1930s pond  → produces `puskarini.earthen-pond-pre1930s`
+
+Evidence: the Puskarini was originally an **oval earthen pond** and was remodelled
+into the rectangular brick tank you see today **in the 1930s**. So the "then" is
+the earthen oval.
+
+**Attach:** `app/assets/plates/now.puskarini.webp` (the modern rectangular brick tank).
+**Aspect ratio:** match it — **3:2 landscape**.
+
+> Keep the same viewpoint and background tree line as the attached photograph, but
+> replace the rectangular brick-stepped tank with an older, natural earthen pond of
+> irregular oval shape: soft grassy and mud banks instead of brick steps, reeds at
+> the water's edge, no paving, no railings, no visitors. Early-20th-century
+> setting, before the 1930s brick remodelling. Overcast daylight, muted natural
+> colour, documentary-photograph realism. No text, no watermark, no modern
+> elements.
+
+Send this back as `puskarini.earthen-pond-pre1930s` — it's already stubbed in
+`plates.json` with `produced: false`, and it pairs with `now.puskarini.webp`.
+
 ## When you send the images back
 
 Tell me, per file, which plate id it's for and (for #3) which tier you chose. I'll
