@@ -130,10 +130,11 @@ export function SiteMap3D({ height = 320, onSelectSite }: SiteMap3DProps) {
               'circle-radius': 6,
               'circle-color': colors.earth,
               'circle-stroke-width': 2,
-              // Sand, not the ground colour. A dark ring around a dark dot on a
-              // dark map gave no separation at all — the ring now carries the
-              // contrast (9.45:1) and the dot carries the meaning.
-              'circle-stroke-color': colors.sandstone,
+              // The ring is the ground colour, so the dot is separated from
+              // whatever terrain sits under it. On the light palette a sand
+              // ring measured 2.19:1 against the brick dot and stopped
+              // separating anything; white gives 5.79:1.
+              'circle-stroke-color': colors.surface,
             }}
           />
           <Layer

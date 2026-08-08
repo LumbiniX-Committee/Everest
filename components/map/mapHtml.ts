@@ -68,10 +68,10 @@ ${avatar ? '<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></s
       map.addLayer({
         id:'precinct-walls', type:'fill-extrusion', source:'precincts',
         paint:{
-          'fill-extrusion-color': ${JSON.stringify(colors.sandstone)},
+          'fill-extrusion-color': ${JSON.stringify(colors.sandstoneDeep)},
           'fill-extrusion-height': 6,
           'fill-extrusion-base': 0,
-          'fill-extrusion-opacity': 0.5
+          'fill-extrusion-opacity': 0.65
         }
       });
       map.addSource('sites', { type:'geojson', data: ${JSON.stringify(siteGeoJSON)} });
@@ -81,7 +81,7 @@ ${avatar ? '<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></s
           'circle-radius': 6,
           'circle-color': ${JSON.stringify(colors.earth)},
           'circle-stroke-width': 2,
-          'circle-stroke-color': ${JSON.stringify(colors.sandstone)}
+          'circle-stroke-color': ${JSON.stringify(colors.surface)}
         }
       });
       map.addLayer({
@@ -139,7 +139,7 @@ const AVATAR_LAYER = `
       var scene = new THREE.Scene();
       var figure = new THREE.Group();
 
-      var stone = new THREE.MeshLambertMaterial({ color: ${JSON.stringify(colors.sandstone)} });
+      var stone = new THREE.MeshLambertMaterial({ color: ${JSON.stringify(colors.sandstoneDeep)} });
       var cloth = new THREE.MeshLambertMaterial({ color: ${JSON.stringify(colors.earth)} });
 
       // Head, torso, two legs. Enough to read as a standing person at the size
