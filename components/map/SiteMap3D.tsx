@@ -6,6 +6,8 @@ import { Text } from '@/components/ui';
 import { MAP_HOME, precinctGeoJSON, siteGeoJSON } from '@/data';
 import { colors, radii, sakshiMapStyleJSON, spacing } from '@/theme';
 
+import { MapWebView } from './MapWebView';
+
 export type SiteMap3DProps = {
   /** Height of the map block. The map is a panel on a scrolling page. */
   height?: number;
@@ -59,17 +61,11 @@ export function SiteMap3D({ height = 320, onSelectSite }: SiteMap3DProps) {
   const [failed, setFailed] = useState(false);
   const MapLibre = loadMapLibre();
 
+  // No native module — Expo Go, or a host without it. Draw the same style and
+  // the same GeoJSON through MapLibre GL JS in a WebView rather than showing an
+  // apology. The native path is preferred where it exists; this is not.
   if (!MapLibre) {
-    return (
-      <Unavailable
-        height={height}
-        reason={
-          inExpoGo
-            ? 'The map needs a development build. Expo Go cannot load native map code.'
-            : 'Map support is unavailable on this device.'
-        }
-      />
-    );
+    return <MapWebView height={height} onSelectSite={onSelectSite} />;
   }
 
   if (failed) {
