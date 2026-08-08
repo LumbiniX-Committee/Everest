@@ -44,6 +44,17 @@ const FALLBACK: LatestBuild = {
   isFallback: true,
 };
 
+/**
+ * Visitors are deliberately shown no difference — a warning banner on a
+ * download page costs trust and tells them nothing they can act on. The signal
+ * belongs in the server log, where whoever is on the hook for the demo can find
+ * out *why* the page is pinned instead of guessing.
+ */
+function fallback(reason: string): LatestBuild {
+  console.warn(`[eas] serving pinned build — ${reason}`);
+  return FALLBACK;
+}
+
 const QUERY = `
   query LatestAndroidApk($appId: String!, $profile: String!) {
     app {
@@ -77,7 +88,7 @@ export async function getLatestBuild(): Promise<LatestBuild> {
 
   // Not an error worth crashing on: local `next dev` without a token should
   // still render a working page.
-  if (!token) return FALLBACK;
+  if (!token) return fallback('EXPO_TOKEN is not set');
 
   try {
     const res = await fetch(EAS_GRAPHQL, {
@@ -93,13 +104,14 @@ export async function getLatestBuild(): Promise<LatestBuild> {
       next: { revalidate: REVALIDATE_SECONDS },
     });
 
-    if (!res.ok) return FALLBACK;
+    if (!res.ok) return fallback(`EAS responded ${res.status}`);
 
     const json = await res.json();
 
     // GraphQL reports auth and validation failures as 200 + an errors array,
     // so a bad token looks like success until this is checked.
-    if (json.errors?.length) return FALLBACK;
+    if (json.errors?.length)
+      return fallback(`GraphQL error: ${json.errors[0]?.message ?? 'unknown'}`);
 
     const build: BuildNode | undefined = json.data?.app?.byId?.builds?.[0];
     const url = build?.artifacts?.applicationArchiveUrl;
@@ -107,7 +119,9 @@ export async function getLatestBuild(): Promise<LatestBuild> {
     // Guard the extension as well as the profile filter. If someone ever points
     // the preview profile at an app-bundle, this keeps an unsideloadable .aab
     // off the download button.
-    if (!url || !url.endsWith('.apk')) return FALLBACK;
+    if (!url) return fallback('no finished Android preview build found');
+    if (!url.endsWith('.apk'))
+      return fallback(`latest artifact is not an APK: ${url}`);
 
     return {
       version: build?.appVersion ?? FALLBACK.version,
@@ -116,8 +130,8 @@ export async function getLatestBuild(): Promise<LatestBuild> {
       completedAt: build?.completedAt ?? null,
       isFallback: false,
     };
-  } catch {
-    return FALLBACK;
+  } catch (err) {
+    return fallback(`request failed: ${err instanceof Error ? err.message : err}`);
   }
 }
 
