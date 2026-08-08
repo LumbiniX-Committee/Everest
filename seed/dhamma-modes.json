@@ -1,0 +1,43 @@
+{
+  "taxonomy_source": "Pañhabyākaraṇa Sutta, Aṅguttara Nikāya 4.42",
+  "note": "The four ways of answering a question, from AN 4.42. The Dhamma surface classifies every question into one of these modes before generating, and shows the mode on the answer card. Glosses are for the UI label; ne strings await a native-speaker pass.",
+  "modes": [
+    {
+      "id": "ekamsa",
+      "pali": "ekaṃsa-byākaraṇīya",
+      "gloss": { "en": "Answered directly", "ne": "सिधै उत्तर दिइयो" },
+      "explain": {
+        "en": "A single, clear answer the sources support — yes, no, this, that.",
+        "ne": "स्रोतहरूले समर्थन गर्ने एउटै स्पष्ट उत्तर — हो, होइन, यो, त्यो।"
+      }
+    },
+    {
+      "id": "vibhajja",
+      "pali": "vibhajja-byākaraṇīya",
+      "gloss": { "en": "Answered with a distinction", "ne": "भेद छुट्याएर उत्तर दिइयो" },
+      "explain": {
+        "en": "The question needs a term defined or a distinction drawn before it can be answered fairly.",
+        "ne": "यसको न्यायपूर्ण उत्तर दिनुअघि कुनै शब्द परिभाषित गर्नु वा भेद छुट्याउनु आवश्यक छ।"
+      }
+    },
+    {
+      "id": "patipuccha",
+      "pali": "paṭipucchā-byākaraṇīya",
+      "gloss": { "en": "Answered with a question back", "ne": "प्रतिप्रश्नले उत्तर दिइयो" },
+      "explain": {
+        "en": "The question is about your own situation, not doctrine, so it is turned back for you to work through.",
+        "ne": "यो प्रश्न सिद्धान्तबारे होइन, तपाईंकै अवस्थाबारे हो, त्यसैले तपाईंले नै विचार गर्न फर्काइन्छ।"
+      }
+    },
+    {
+      "id": "thapaniya",
+      "pali": "ṭhapanīya",
+      "gloss": { "en": "Set aside", "ne": "छोडिदिइयो" },
+      "explain": {
+        "en": "Some questions are left unanswered on purpose — either outside the canon we hold, or of the kind the Buddha himself declined.",
+        "ne": "केही प्रश्न जानाजान अनुत्तरित छाडिन्छन् — या त हामीसँग भएको ग्रन्थभन्दा बाहिरका, या बुद्ध आफैंले अस्वीकार गर्नुभएका खालका।"
+      },
+      "declined_example": "Cūḷamālukya Sutta, Majjhima Nikāya 63 — the ten questions the Buddha set aside."
+    }
+  ]
+}

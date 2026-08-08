@@ -1,0 +1,101 @@
+[
+  {
+    "site_id": "maya-devi-temple",
+    "darsana": [
+      { "en": "Why does this place matter?", "ne": "यो स्थान किन महत्त्वपूर्ण छ?" },
+      { "en": "What is the marker stone inside the temple?", "ne": "मन्दिरभित्रको चिन्ह ढुङ्गा के हो?" },
+      { "en": "What are the four great places of pilgrimage?", "ne": "तीर्थयात्राका चार महान् स्थान कुन हुन्?" }
+    ],
+    "capture": { "en": "Ask about what you just witnessed here.", "ne": "तपाईंले भर्खरै यहाँ देख्नुभएको बारे सोध्नुहोस्।" }
+  },
+  {
+    "site_id": "ashokan-pillar",
+    "darsana": [
+      { "en": "What does this inscription say?", "ne": "यो अभिलेखले के भन्छ?" },
+      { "en": "Who was Ashoka, and why did he come here?", "ne": "अशोक को थिए, र उनी यहाँ किन आए?" },
+      { "en": "What shape was the capital on top of this pillar?", "ne": "यो स्तम्भमाथिको शीर्ष कस्तो आकारको थियो?" }
+    ],
+    "capture": { "en": "Ask about the inscription you just recorded.", "ne": "तपाईंले भर्खरै अभिलेख गर्नुभएको शिलालेखबारे सोध्नुहोस्।" }
+  },
+  {
+    "site_id": "puskarini",
+    "darsana": [
+      { "en": "What happened at this pond?", "ne": "यस पोखरीमा के भएको थियो?" },
+      { "en": "Why does the app ask me to be still here?", "ne": "एपले मलाई यहाँ किन स्थिर हुन भन्छ?" },
+      { "en": "What does darśana mean?", "ne": "दर्शनको अर्थ के हो?" }
+    ]
+  },
+  {
+    "site_id": "marker-stone",
+    "darsana": [
+      { "en": "How do we know this is the exact spot?", "ne": "यो ठ्याक्कै स्थान हो भन्ने हामीलाई कसरी थाहा?" },
+      { "en": "When was this stone found?", "ne": "यो ढुङ्गा कहिले फेला पर्यो?" },
+      { "en": "What is a World Heritage site?", "ne": "विश्व सम्पदा स्थल भनेको के हो?" }
+    ]
+  },
+  {
+    "site_id": "vihara-remains",
+    "darsana": [
+      { "en": "What stood here before?", "ne": "यहाँ पहिले के थियो?" },
+      { "en": "What is anicca — impermanence?", "ne": "अनिच्च — अनित्यता भनेको के हो?" },
+      { "en": "Why does a repeatable record matter for heritage?", "ne": "सम्पदाका लागि दोहोर्‍याउन मिल्ने अभिलेख किन महत्त्वपूर्ण छ?" }
+    ]
+  },
+  {
+    "site_id": "myanmar-temple",
+    "darsana": [
+      { "en": "Who built this temple?", "ne": "यो मन्दिर कसले बनायो?" },
+      { "en": "Why are there temples from many countries here?", "ne": "यहाँ धेरै देशका मन्दिर किन छन्?" },
+      { "en": "What is a stupa for?", "ne": "स्तूप केका लागि हो?" }
+    ]
+  },
+  {
+    "site_id": "china-temple",
+    "darsana": [
+      { "en": "Who planned the monastic zone?", "ne": "विहार क्षेत्रको योजना कसले बनायो?" },
+      { "en": "What was Kenzo Tange's master plan?", "ne": "केन्जो टाङ्गेको गुरुयोजना के थियो?" },
+      { "en": "How did Buddhism travel to China?", "ne": "बौद्ध धर्म चीनसम्म कसरी पुग्यो?" }
+    ]
+  },
+  {
+    "site_id": "korean-temple",
+    "darsana": [
+      { "en": "What is a pilgrim guesthouse for?", "ne": "तीर्थयात्री अतिथिगृह केका लागि हो?" },
+      { "en": "What does it mean to make a pilgrimage?", "ne": "तीर्थयात्रा गर्नु भनेको के हो?" },
+      { "en": "How far do people travel to reach Lumbini?", "ne": "मानिसहरू लुम्बिनी पुग्न कति टाढाबाट आउँछन्?" }
+    ]
+  },
+  {
+    "site_id": "gautami-nuns-temple",
+    "darsana": [
+      { "en": "Who was Mahapajapati Gotami?", "ne": "महाप्रजापती गौतमी को थिइन्?" },
+      { "en": "When were women first ordained?", "ne": "महिलाहरू पहिलोपटक कहिले दीक्षित भए?" },
+      { "en": "What is the sangha?", "ne": "संघ भनेको के हो?" }
+    ]
+  },
+  {
+    "site_id": "world-peace-pagoda",
+    "darsana": [
+      { "en": "Who built this pagoda?", "ne": "यो पगोडा कसले बनायो?" },
+      { "en": "Why is it at the far end of the central axis?", "ne": "यो केन्द्रीय अक्षको टाढाको छेउमा किन छ?" },
+      { "en": "What does the Buddha teach about peace?", "ne": "बुद्धले शान्तिबारे के सिकाउनुहुन्छ?" }
+    ]
+  },
+  {
+    "site_id": "tilaurakot",
+    "darsana": [
+      { "en": "Is this really Kapilavastu?", "ne": "के यो साँच्चै कपिलवस्तु हो?" },
+      { "en": "What did Siddhartha leave behind here?", "ne": "सिद्धार्थले यहाँ के छाड्नुभयो?" },
+      { "en": "Why did he leave the palace?", "ne": "उनले दरबार किन छाडे?" }
+    ],
+    "capture": { "en": "Ask about the ramparts you just recorded.", "ne": "तपाईंले भर्खरै अभिलेख गर्नुभएको पर्खालबारे सोध्नुहोस्।" }
+  },
+  {
+    "site_id": "ramagrama",
+    "darsana": [
+      { "en": "Why was this stupa never opened?", "ne": "यो स्तूप किन कहिल्यै खोलिएन?" },
+      { "en": "What are relics, and why divide them?", "ne": "धातु के हुन्, र किन बाँडिए?" },
+      { "en": "What does it mean to leave something undisturbed?", "ne": "कुनै कुरालाई नखलबलिई छाड्नु भनेको के हो?" }
+    ]
+  }
+]
