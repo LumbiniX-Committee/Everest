@@ -35,6 +35,16 @@ export type DhammaEntry = {
   caveat?: string;
   /** Offered after the answer has been read. Optional to take up. */
   reflectionPrompt?: string;
+  /**
+   * Sites this passage genuinely concerns.
+   *
+   * Held on the entry rather than as a list on each site, because a passage
+   * knows what it is about and a site should not need editing every time one is
+   * written. Empty or absent means the passage belongs to the whole place — it
+   * answers a question about Lumbini, not about a monument in it, and arriving
+   * somewhere specific is not a reason to surface it.
+   */
+  siteIds?: string[];
 };
 
 export const demoDhammaEntries: DhammaEntry[] = [
@@ -47,6 +57,10 @@ export const demoDhammaEntries: DhammaEntry[] = [
     original: 'hida budhe jāte sākyamunīti',
     reflectionPrompt:
       'The stone records a belief held two centuries after the event. What would you accept as evidence of something that far back?',
+    // The inscription is on the pillar and names the spot the temple marks.
+    // Not linked to the pond or the Bodhi tree: the passage says nothing about
+    // either, and arriving at one is no reason to be handed the other.
+    siteIds: ['ashoka-pillar', 'maya-devi-temple'],
   },
   {
     id: 'appamada',
@@ -76,4 +90,22 @@ export const demoDhammaEntries: DhammaEntry[] = [
 
 export function findDhammaEntry(id: string): DhammaEntry | undefined {
   return demoDhammaEntries.find((entry) => entry.id === id);
+}
+
+/**
+ * Passages that genuinely concern a site.
+ *
+ * Returns empty rather than falling back to something loosely related. The
+ * arrival flow treats that as a real state and says nothing rather than
+ * handing someone a passage about the Buddha's last words because they
+ * happened to walk past a pond — the same refusal rule the Dhamma surface
+ * applies to a weak retrieval match (§25).
+ */
+export function dhammaForSite(siteId: string): DhammaEntry[] {
+  return demoDhammaEntries.filter((entry) => entry.siteIds?.includes(siteId));
+}
+
+/** Sites the corpus can currently speak to. Useful in tests and diagnostics. */
+export function sitesWithDhamma(): string[] {
+  return [...new Set(demoDhammaEntries.flatMap((entry) => entry.siteIds ?? []))];
 }

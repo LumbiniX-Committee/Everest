@@ -51,7 +51,14 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "Sākṣī uses your location to find nearby heritage sites and guide you to fixed viewpoints."
+          "locationWhenInUsePermission": "Sākṣī uses your location to find nearby heritage sites, guide you to fixed viewpoints, and tell you what a place holds when you reach it."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/android-icon-monochrome.png",
+          "color": "#B79B72"
         }
       ],
       [

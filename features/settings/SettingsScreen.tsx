@@ -40,6 +40,11 @@ export function SettingsScreen() {
           onPress={() => router.push('/(main)/settings/preferences')}
         />
         <SettingsRow
+          label="Arrivals"
+          hint="Being told what a place holds when you reach it"
+          onPress={() => router.push('/(main)/settings/arrivals')}
+        />
+        <SettingsRow
           label="Permissions"
           value={denied > 0 ? `${denied} needs attention` : 'All granted'}
           hint="Camera, location, motion"

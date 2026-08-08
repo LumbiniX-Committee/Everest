@@ -4,6 +4,7 @@ import { AppStateProvider } from './app-state';
 import { PermissionsProvider } from './permissions';
 import { PracticeProvider } from './practice';
 import { PreferencesProvider } from './preferences';
+import { ArrivalProvider } from './arrival';
 import { QuestsProvider } from './quests';
 
 export { AppStateProvider, useAppState } from './app-state';
@@ -11,6 +12,7 @@ export { PermissionsProvider, usePermissions, usePermission } from './permission
 export { PracticeProvider, usePractice } from './practice';
 export { QuestsProvider, useQuests } from './quests';
 export { PreferencesProvider, usePreferences } from './preferences';
+export { ArrivalProvider, useArrival } from './arrival';
 
 /**
  * Single mounting point for app-wide state, so the root layout composes one
@@ -22,7 +24,9 @@ export function AppProviders({ children }: { children: ReactNode }) {
       <PreferencesProvider>
         <PermissionsProvider>
           <PracticeProvider>
-            <QuestsProvider>{children}</QuestsProvider>
+            <QuestsProvider>
+              <ArrivalProvider>{children}</ArrivalProvider>
+            </QuestsProvider>
           </PracticeProvider>
         </PermissionsProvider>
       </PreferencesProvider>

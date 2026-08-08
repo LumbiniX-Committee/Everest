@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
 import { ScreenHeader, SettingsButton } from '@/components/common';
+import { ArrivalWisdom } from '@/components/arrival';
 import { SitePlan } from '@/components/map';
 import { SiteListItem } from '@/components/site';
 import { demoSites } from '@/data';
@@ -41,6 +42,8 @@ export function TirthaScreen() {
         }
         rightAction={<SettingsButton />}
       />
+
+      <ArrivalWisdom coordinate={coordinate} />
 
       <SitePlan sites={demoSites} observer={coordinate} />
 
