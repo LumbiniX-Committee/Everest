@@ -1,12 +1,13 @@
-import * as Location from 'expo-location';
-import * as TaskManager from 'expo-task-manager';
+import * as Location from "expo-location";
+import * as TaskManager from "expo-task-manager";
+import { Platform } from "react-native";
 
-import { demoPrecincts, findPrecinct } from '@/data';
+import { demoPrecincts, findPrecinct } from "@/data";
 import {
   MAX_MONITORED_REGIONS,
   MIN_GEOFENCE_RADIUS_M,
   type Precinct,
-} from '@/types';
+} from "@/types";
 
 /**
  * Arrival detection.
@@ -22,7 +23,21 @@ import {
  * the rest.
  */
 
-export const GEOFENCE_TASK = 'sakshi-precinct-arrival';
+export const GEOFENCE_TASK = "sakshi-precinct-arrival";
+
+/**
+ * TaskManager is native-only.
+ *
+ * On web its methods throw UnavailabilityError rather than returning a falsy
+ * value, so every entry point below has to check before calling — an
+ * unguarded `isTaskRegisteredAsync` in the provider's mount effect took the
+ * whole app down to a blank screen, because the throw escaped an effect in a
+ * provider wrapping the tree.
+ *
+ * `expo start --web` is the fastest way to walk a screen while building it, so
+ * degrading here is worth more than the two lines it costs.
+ */
+export const isSupported = Platform.OS === "ios" || Platform.OS === "android";
 
 export type ArrivalEvent = {
   precinctId: string;
@@ -53,13 +68,15 @@ export function setArrivalHandler(handler: ArrivalHandler | null): void {
  * platform cap are dropped without warning. Failing loudly at startup is worth
  * more than debugging why the fourth precinct never fires.
  */
-export function validatePrecincts(precincts: Precinct[] = demoPrecincts): string[] {
+export function validatePrecincts(
+  precincts: Precinct[] = demoPrecincts,
+): string[] {
   const problems: string[] = [];
 
   if (precincts.length > MAX_MONITORED_REGIONS) {
     problems.push(
       `${precincts.length} precincts exceeds the ${MAX_MONITORED_REGIONS}-region iOS cap; ` +
-        'monitor only the nearest N instead.',
+        "monitor only the nearest N instead.",
     );
   }
 
@@ -67,11 +84,13 @@ export function validatePrecincts(precincts: Precinct[] = demoPrecincts): string
     if (p.radiusMetres < MIN_GEOFENCE_RADIUS_M) {
       problems.push(
         `${p.id}: radius ${p.radiusMetres} m is below the ${MIN_GEOFENCE_RADIUS_M} m floor; ` +
-          'enter events will be unreliable.',
+          "enter events will be unreliable.",
       );
     }
     if (p.siteIds.length === 0) {
-      problems.push(`${p.id}: no sites, so an arrival would have nothing to show.`);
+      problems.push(
+        `${p.id}: no sites, so an arrival would have nothing to show.`,
+      );
     }
   }
 
@@ -80,7 +99,11 @@ export function validatePrecincts(precincts: Precinct[] = demoPrecincts): string
 
 export type GeofencingStartResult =
   | { started: true }
-  | { started: false; reason: 'permission' | 'unsupported' | 'invalid'; detail?: string };
+  | {
+      started: false;
+      reason: "permission" | "unsupported" | "invalid";
+      detail?: string;
+    };
 
 /**
  * Begins monitoring. Foreground permission is required; background permission
@@ -90,18 +113,30 @@ export type GeofencingStartResult =
 export async function startGeofencing(
   precincts: Precinct[] = demoPrecincts,
 ): Promise<GeofencingStartResult> {
+  if (!isSupported) {
+    return {
+      started: false,
+      reason: "unsupported",
+      detail: "Geofencing is Android and iOS only.",
+    };
+  }
+
   const problems = validatePrecincts(precincts);
   if (problems.length > 0) {
-    return { started: false, reason: 'invalid', detail: problems.join(' ') };
+    return { started: false, reason: "invalid", detail: problems.join(" ") };
   }
 
   const { status } = await Location.getForegroundPermissionsAsync();
-  if (status !== 'granted') {
-    return { started: false, reason: 'permission' };
+  if (status !== "granted") {
+    return { started: false, reason: "permission" };
   }
 
   if (!(await Location.hasServicesEnabledAsync())) {
-    return { started: false, reason: 'unsupported', detail: 'Location services are off.' };
+    return {
+      started: false,
+      reason: "unsupported",
+      detail: "Location services are off.",
+    };
   }
 
   // Restarting is cheaper than reasoning about whether the region list changed.
@@ -125,12 +160,14 @@ export async function startGeofencing(
 }
 
 export async function stopGeofencing(): Promise<void> {
+  if (!isSupported) return;
   if (await TaskManager.isTaskRegisteredAsync(GEOFENCE_TASK)) {
     await Location.stopGeofencingAsync(GEOFENCE_TASK);
   }
 }
 
 export async function isGeofencingActive(): Promise<boolean> {
+  if (!isSupported) return false;
   return TaskManager.isTaskRegisteredAsync(GEOFENCE_TASK);
 }
 
@@ -142,16 +179,21 @@ export async function isGeofencingActive(): Promise<boolean> {
  * an effect would mean the task is undefined on exactly the cold-start path it
  * exists to serve.
  */
-TaskManager.defineTask(GEOFENCE_TASK, async ({ data, error }) => {
-  if (error) return;
+if (isSupported) {
+  TaskManager.defineTask(GEOFENCE_TASK, async ({ data, error }) => {
+    if (error) return;
 
-  const { eventType, region } = (data ?? {}) as {
-    eventType?: Location.GeofencingEventType;
-    region?: Location.LocationRegion;
-  };
+    const { eventType, region } = (data ?? {}) as {
+      eventType?: Location.GeofencingEventType;
+      region?: Location.LocationRegion;
+    };
 
-  if (eventType !== Location.GeofencingEventType.Enter) return;
-  if (!region?.identifier || !findPrecinct(region.identifier)) return;
+    if (eventType !== Location.GeofencingEventType.Enter) return;
+    if (!region?.identifier || !findPrecinct(region.identifier)) return;
 
-  await onArrival?.({ precinctId: region.identifier, at: new Date().toISOString() });
-});
+    await onArrival?.({
+      precinctId: region.identifier,
+      at: new Date().toISOString(),
+    });
+  });
+}

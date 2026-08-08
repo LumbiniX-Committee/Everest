@@ -6,7 +6,7 @@ import { Text } from '@/components/ui';
 import { OfflineBanner } from '@/components/common';
 import { useSync } from '@/hooks';
 import { colors, spacing } from '@/theme';
-import { SURFACE_LABELS, type Surface } from '@/constants';
+import { SURFACES, SURFACE_LABELS, type Surface } from '@/constants';
 
 /**
  * The three-surface navigator.
@@ -33,15 +33,18 @@ export function SurfaceTabBar({ state, descriptors, navigation }: BottomTabBarPr
         const focused = state.index === index;
         const { options } = descriptors[route.key];
 
-        // A route registered with `href: null` is addressable but is not a
-        // destination — Settings pushes over the surfaces rather than joining
-        // them. Skipped here rather than filtered above so `index` still lines
-        // up with `state.index` for the focused check.
+        // SURFACES is the navigation model, so anything absent from it is not a
+        // destination — Settings registers as a tab route only so its stack
+        // resolves, and pushes over the surfaces rather than joining them.
         //
-        // expo-router adds `href` to the screen options at runtime but does not
-        // widen BottomTabNavigationOptions to declare it, hence the narrowing.
-        const { href } = options as typeof options & { href?: string | null };
-        if (href === null) return null;
+        // Filtering on the model rather than on `options.href === null`: that
+        // option is plumbed by expo-router's Link-based Tabs but not by the
+        // js-tabs navigator this app uses, so the check silently never matched
+        // and Settings rendered as a fourth tab.
+        //
+        // Skipped inside the map rather than filtered before it, so `index`
+        // still lines up with `state.index` for the focused check.
+        if (!(SURFACES as readonly string[]).includes(route.name)) return null;
 
         const label = SURFACE_LABELS[route.name as Surface] ?? route.name;
 
