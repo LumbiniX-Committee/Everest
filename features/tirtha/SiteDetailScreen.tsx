@@ -89,6 +89,17 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
         {site.description}
       </Text>
 
+      <Button
+        label="Reflect from this place"
+        variant="secondary"
+        onPress={() =>
+          router.push({
+            pathname: '/(main)/dhamma/reflect',
+            params: { siteId: site.id },
+          } as never)
+        }
+      />
+
       {narration || audioSource ? (
         <>
           <Divider />

@@ -61,6 +61,18 @@ export function DhammaScreen() {
         </Text>
       </View>
 
+      <View style={styles.reflectionEntry}>
+        <Text variant="heading">Reflection companion</Text>
+        <Text variant="body" tone="secondary">
+          Four questions from the Four Noble Truths. One at a time, in your own words.
+        </Text>
+        <Button
+          label="Begin a four-question reflection"
+          variant="secondary"
+          onPress={() => router.push('/(main)/dhamma/reflect' as never)}
+        />
+      </View>
+
       <View style={styles.list}>
         <Text variant="heading">What it can answer</Text>
         {demoDhammaEntries.map((entry) => {
@@ -105,5 +117,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   list: { paddingTop: spacing.xl, gap: spacing.md, paddingBottom: spacing.lg },
+  reflectionEntry: { paddingTop: spacing.xl, gap: spacing.md },
   source: { marginTop: spacing.sm },
 });

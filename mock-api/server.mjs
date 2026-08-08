@@ -28,7 +28,7 @@ const PORT = Number(process.env.PORT) || 8000;
 
 // --- Dhamma Engine (lazy-loaded from core — TypeScript but Node strips types) -
 let _dhammaReady = false;
-let _askDhamma, _askDhammaAsync, _processReflection;
+let _askDhamma, _askDhammaAsync, _processReflection, _processReflectionAsync;
 async function loadDhamma() {
   if (_dhammaReady) return;
   try {
@@ -36,6 +36,7 @@ async function loadDhamma() {
     _askDhamma = mod.askDhamma;
     _askDhammaAsync = mod.askDhammaAsync || mod.askDhamma;
     _processReflection = mod.processReflection;
+    _processReflectionAsync = mod.processReflectionAsync || mod.processReflection;
     _dhammaReady = true;
     console.log('[dhamma] engine loaded ✓');
   } catch (e) {
@@ -394,12 +395,14 @@ on('POST', '/dhamma/ask', async (_req, res, _p, _q, body) => {
 
 // POST /dhamma/reflect → Socratic four-truths reflection companion
 on('POST', '/dhamma/reflect', async (_req, res, _p, _q, body) => {
-  if (_processReflection) {
+  const fn = _processReflectionAsync || _processReflection;
+  if (fn) {
     try {
-      const result = _processReflection({
+      const result = await fn({
         site_id: body.site_id,
         stage: body.stage ?? 1,
         user_input: body.user_input,
+        answers: Array.isArray(body.answers) ? body.answers : [],
         language: body.language ?? 'en',
       });
       return json(res, 200, result);

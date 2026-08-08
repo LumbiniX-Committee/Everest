@@ -225,6 +225,20 @@ type ApiResponse = {
 
 export type DhammaLanguage = 'ne' | 'en';
 
+export type ReflectionApiResult = {
+  inquiry: string;
+  stage: number;
+  completed: boolean;
+  distress_override: boolean;
+  helplines?: Array<{ name: string; number: string; hours: string }>;
+  disclaimer: string;
+  language?: DhammaLanguage;
+  guidance?: string;
+  citations?: Array<{ segment_id: string; sutta_uid: string; display: string }>;
+  passages?: Array<{ segment_id: string; english: string }>;
+  tier?: 'full_rag' | 'fallback';
+};
+
 // This value is embedded in the Expo bundle. It is only a server URL: the
 // Ollama credential must stay in the backend environment.
 const API_URL = (process.env.EXPO_PUBLIC_API_URL ?? '').trim().replace(/\/$/, '');
@@ -346,4 +360,35 @@ export async function ask(query: string, language: DhammaLanguage = 'ne'): Promi
 
   const answer = answerForEntry(best.entry, best.score);
   return { answer, evidence: answer.evidence };
+}
+
+export async function reflect(request: {
+  stage: number;
+  userInput?: string;
+  answers: string[];
+  siteId?: string;
+  language: DhammaLanguage;
+}): Promise<ReflectionApiResult> {
+  if (!API_URL) throw new Error('Dhamma API URL is not configured');
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  try {
+    const response = await fetch(`${API_URL}/dhamma/reflect`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        stage: request.stage,
+        user_input: request.userInput,
+        answers: request.answers,
+        site_id: request.siteId,
+        language: request.language,
+      }),
+      signal: controller.signal,
+    });
+    const body = await response.json().catch(() => null) as ReflectionApiResult | null;
+    if (!response.ok || !body) throw new Error(`Reflection API returned ${response.status}`);
+    return body;
+  } finally {
+    clearTimeout(timeout);
+  }
 }

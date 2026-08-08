@@ -67,7 +67,7 @@ test('reflection companion steps through four-truths scaffold', () => {
 
   const step4 = processReflection({ stage: 4, user_input: 'I will meditate daily' });
   assert.equal(step4.stage, 4);
-  assert.equal(step4.completed, true);
+  assert.equal(step4.completed, false);
 });
 
 test('safety distress override halts reflection and surfaces helplines', () => {
