@@ -9,7 +9,7 @@ and `lint-vocab` run with **no npm install** — Node 22 is enough.
 node tools/run-tests.mjs
 ```
 
-Globs `app/src/**/*.test.ts` and runs them under Node's built-in test runner
+Globs `core/**/*.test.ts` and runs them under Node's built-in test runner
 with type-stripping. This is the check that matters: it verifies the merit
 ledger, cap, pradakṣiṇā, geofence hysteresis, quests, stillness, riddles, the
 close ritual and directed dāna — all without a phone or an app build.
@@ -32,7 +32,7 @@ node tools/lint-vocab.mjs
 ```
 
 Fails the build if any banned gamification word (points, tokens, streak,
-leaderboard, collect, catch, …) appears in `seed/`, `app/src/` or `deck/`. This
+leaderboard, collect, catch, …) appears in `seed/`, `core/` or `deck/`. This
 is TEAM-CHARTER's vocabulary rule made enforceable. Suppress a justified use
 with a trailing `lint-vocab:allow` comment.
 
@@ -41,9 +41,9 @@ with a trailing `lint-vocab:allow` comment.
 ```bash
 cd tools/test
 npm install
-npm run typecheck   # tsc --noEmit over shared/ + app/src logic (excludes RN *.tsx)
+npm run typecheck   # tsc --noEmit over shared/ + core logic
 npm test            # vitest
 ```
 
-The RN-dependent files (`*.tsx`, `app/src/screens/`) are excluded from the
+The RN-dependent files (`*.tsx`, `core/screens/`) are excluded from the
 typecheck until B's native build provides react-native's types.

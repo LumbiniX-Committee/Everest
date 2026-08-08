@@ -1,11 +1,51 @@
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
 # dependencies
 node_modules/
 tools/test/node_modules/
 tools/test/package-lock.json
 
-# env
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+# .env.local holds the Supabase config and is required to run — see .env.example.
+# Every .env variant is ignored, including a bare `.env`, which `.env*.local`
+# alone would have let through.
 .env
-.env.local
+.env.*
+!.env.example
+
+# typescript
+*.tsbuildinfo
+
+# generated native folders
+/ios
+/android
 
 # harvest output (large; regenerated from scripts)
 harvest/_raw/

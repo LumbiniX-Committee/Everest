@@ -12,7 +12,6 @@
     "lib": ["ES2022"],
     "types": ["node"]
   },
-  "//": "Typechecks the device-independent logic today. The RN-dependent files (*.tsx and app/src/screens) only typecheck once B's native build provides react-native's types — they are excluded here on purpose.",
-  "include": ["../../shared/**/*.ts", "../../app/src/**/*.ts"],
-  "exclude": ["../../app/src/**/*.tsx", "../../app/src/screens/**"]
+  "//": "Typechecks the device-independent logic in core/ and shared/. The Expo app (app/, features/, components/, …) is typechecked by the root project's own tsconfig, not here.",
+  "include": ["../../shared/**/*.ts", "../../core/**/*.ts"]
 }

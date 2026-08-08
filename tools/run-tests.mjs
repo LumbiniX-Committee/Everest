@@ -1,7 +1,7 @@
 /**
  * tools/run-tests.mjs — the zero-install test runner.
  *
- * Globs app/src for *.test.ts and runs them under Node's built-in test runner
+ * Globs core for *.test.ts and runs them under Node's built-in test runner
  * with type-stripping. No npm install, nothing to break on venue wifi.
  *
  *   node tools/run-tests.mjs
@@ -27,9 +27,9 @@ function findTests(dir) {
   return out;
 }
 
-const tests = findTests(join(root, 'app', 'src'));
+const tests = findTests(join(root, 'core'));
 if (!tests.length) {
-  console.error('no *.test.ts found under app/src');
+  console.error('no *.test.ts found under core');
   process.exit(1);
 }
 console.log(`running ${tests.length} test file(s) under node --experimental-strip-types --test`);

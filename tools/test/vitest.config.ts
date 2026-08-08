@@ -4,7 +4,7 @@ import { defineConfig } from 'vitest/config';
 // runs the same *.test.ts files under Node's built-in runner with no install.
 export default defineConfig({
   test: {
-    include: ['app/src/**/*.test.ts'],
+    include: ['core/**/*.test.ts'],
     environment: 'node',
   },
 });

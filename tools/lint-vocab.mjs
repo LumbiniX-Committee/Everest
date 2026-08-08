@@ -3,7 +3,7 @@
  *
  * TEAM-CHARTER's vocabulary rule turned into something that fails a build
  * instead of something four tired people remember at hour 40. Scans seed/,
- * app/src/ and deck/ for the banned gamification lexicon.
+ * core/ and deck/ for the banned gamification lexicon.
  *
  *   node tools/lint-vocab.mjs
  *
@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join, relative, extname } from 'node:path';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const TARGET_DIRS = ['seed', 'app/src', 'deck'];
+const TARGET_DIRS = ['seed', 'core', 'deck'];
 const EXTS = new Set(['.ts', '.tsx', '.json', '.md']);
 
 // The banned lexicon (TEAM-CHARTER). Say darśana, puṇya, pradakṣiṇā, vantage,
@@ -82,4 +82,4 @@ if (hits.length) {
   console.error(`\n${hits.length} banned-vocabulary use(s). Rephrase, or add a justified 'lint-vocab:allow' comment.`);
   process.exit(1);
 }
-console.log('vocab: clean — no banned gamification lexicon in seed/, app/src/ or deck/.');
+console.log('vocab: clean — no banned gamification lexicon in seed/, core/ or deck/.');
