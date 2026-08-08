@@ -2,7 +2,7 @@
   "expo": {
     "name": "Sākṣī",
     "slug": "sakshi",
-    "owner": "aadityabro1",
+    "owner": "siddantasodari",
     "scheme": "sakshi",
     "version": "0.1.0",
     "runtimeVersion": "0.1.0",
@@ -89,11 +89,11 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "5649effc-96a2-403e-93f5-c401fd3f80af"
+        "projectId": "e8454679-10b7-42cc-8961-95a421426705"
       }
     },
     "updates": {
-      "url": "https://u.expo.dev/5649effc-96a2-403e-93f5-c401fd3f80af"
+      "url": "https://u.expo.dev/e8454679-10b7-42cc-8961-95a421426705"
     }
   }
 }

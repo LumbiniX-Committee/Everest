@@ -9,7 +9,7 @@ import { ConditionSheet, type ConditionDraft, YoloVisionOverlay, PathologySummar
 import { MeritAcknowledgement } from '@/components/practice';
 import { findSite, findVantage } from '@/data';
 import { database } from '@/services';
-import { runYoloScan, type YoloScanResult } from '@/services/ai/yoloEngine';
+import { useDamageDetector, scanToSuggestion, type YoloScanResult } from '@/services/ai/yoloEngine';
 import { usePractice } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 import { formatBearing, formatCoordinate, formatDelta, formatDistance, formatTimestamp } from '@/utils';
@@ -45,6 +45,10 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
   const [yoloScanning, setYoloScanning] = useState(false);
   const [aiDraft, setAiDraft] = useState<Partial<ConditionDraft> | undefined>(undefined);
   const { recognise, summary } = usePractice();
+  // Called unconditionally; resolves to a no-op detector when no model/runtime is
+  // present, so the AI UI simply does not appear in a build without the model.
+  const detector = useDamageDetector();
+  const aiAvailable = detector.status !== 'no-model' && detector.status !== 'unsupported';
 
   useEffect(() => {
     let active = true;
@@ -197,42 +201,51 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
           resizeMode="cover"
           accessibilityLabel={`Observation recorded ${formatTimestamp(observation.capturedAt)}`}
         />
-        {yoloResult ? (
+        {yoloResult && yoloResult.detections.length > 0 ? (
           <YoloVisionOverlay detections={yoloResult.detections} />
         ) : null}
       </View>
 
-      {/* YOLO AI Analysis */}
-      {!yoloResult ? (
-        <View style={styles.aiRow}>
-          <Button
-            label={yoloScanning ? 'Scanning...' : '✨ Analyze with YOLO AI'}
-            loading={yoloScanning}
-            onPress={async () => {
-              setYoloScanning(true);
-              const result = await runYoloScan(observation.photoUri);
-              setYoloResult(result);
-              setYoloScanning(false);
-            }}
-            block
-          />
-        </View>
-      ) : (
-        <View style={styles.aiRow}>
-          <PathologySummaryCard
-            result={yoloResult}
-            onApplyAiSuggestion={(res) => {
-              setAiDraft({
-                category: res.primaryCategory,
-                subtype: res.primarySubtype,
-                severity: res.suggestedSeverity,
-                note: `AI Detected ${res.detections.length} defect(s). Surface integrity at ${res.surfaceHealth}%.`,
-              });
-              setSheetOpen(true);
-            }}
-          />
-        </View>
-      )}
+      {/* On-device damage detection — present only when a trained model ships in
+          this build. It offers candidates for the surveyor to confirm; it never
+          files a report on its own. */}
+      {aiAvailable ? (
+        !yoloResult ? (
+          <View style={styles.aiRow}>
+            <Button
+              label={
+                detector.status === 'loading'
+                  ? 'Loading model…'
+                  : yoloScanning
+                    ? 'Scanning…'
+                    : 'Scan photo for damage'
+              }
+              variant="secondary"
+              loading={yoloScanning}
+              disabled={detector.status === 'loading' || yoloScanning}
+              onPress={async () => {
+                setYoloScanning(true);
+                const result = await detector.scan(observation.photoUri);
+                setYoloResult(result);
+                setYoloScanning(false);
+              }}
+              block
+            />
+          </View>
+        ) : (
+          <View style={styles.aiRow}>
+            <PathologySummaryCard
+              result={yoloResult}
+              onApplyAiSuggestion={(res) => {
+                const suggestion = scanToSuggestion(res);
+                if (!suggestion) return;
+                setAiDraft(suggestion);
+                setSheetOpen(true);
+              }}
+            />
+          </View>
+        )
+      ) : null}
 
       <View style={styles.meta}>
         <MetaRow label="Recorded" value={formatTimestamp(observation.capturedAt)} />

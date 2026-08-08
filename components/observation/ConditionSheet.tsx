@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 
 import { BottomSheet, Button, Chip, Text } from '@/components/ui';
@@ -19,6 +19,8 @@ export type ConditionDraft = {
   subtype: string;
   severity: ConditionSeverity;
   note?: string;
+  /** True when the draft was pre-filled from the on-device detector. */
+  aiAssisted?: boolean;
 };
 
 export type ConditionSheetProps = {
