@@ -55,6 +55,27 @@ in the building. Show two or three plates to one of them before finalising.
 *"We showed our reconstructions to a monk at the monastic zone and changed two
 of them"* is a credibility move nobody else has.
 
+## Status (what is already produced)
+
+Five plates are extracted and live in `app/assets/plates/`, all Public Domain
+from Mukherji 1901 (full-res from the Internet Archive JP2 scans, catalogued in
+`harvest/MUKHERJI-PLATES.md`):
+
+- `ashokan-pillar.1899-south` — **the hero**, Plate XX Fig. 2
+- `maya-devi-temple.mukherji-1899-plan` — Plate XX Fig. 1
+- `ashokan-pillar.rummindei-inscription` — Plate XX Fig. 4 (Brahmi facsimile)
+- `lumbini.mukherji-1899-general-plan` — Plate XVIII Fig. 1 (bonus)
+- `ashokan-pillar.pre1896-jungle.source` — Plate XX Fig. 1, the conditioning
+  source for the jungle reconstruction (not the reconstruction itself)
+
+`plates.json` carries a `produced` flag per entry. The three
+`conditioned_reconstruction` plates (`horse-capital`, `pre1896-jungle`,
+`votive-stupas-1957`) are **not** produced — they need image-to-image generation,
+which is the one plate step a model cannot do from a shell. Their conditioning
+sources are cited and, for the jungle, already extracted. Two
+`historical_photograph` entries (`nativity-sculpture`, `puskarini.1899-view`) are
+not in Mukherji and await a harvest match.
+
 ## Output
 
 - Format: `.webp`, long edge ~2048px, into `app/assets/plates/` at the `image`

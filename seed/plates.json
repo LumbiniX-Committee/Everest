@@ -3,19 +3,20 @@
     "id": "ashokan-pillar.1899-south",
     "site_id": "ashokan-pillar",
     "caption": {
-      "en": "Lumbini ruins viewed from the south, 1899",
-      "ne": "दक्षिणबाट देखिएको लुम्बिनीका भग्नावशेष, १८९९"
+      "en": "Rummindei (Lumbini): view of the ruins from the south, 1899",
+      "ne": "रुम्मिनदेई (लुम्बिनी): दक्षिणबाट देखिएका भग्नावशेष, १८९९"
     },
     "image": "ashokan-pillar.1899-south.webp",
     "evidence_tier": "historical_photograph",
+    "produced": true,
     "year": 1899,
-    "licence": "Public Domain (published 1901; author died >70 years ago)",
-    "attribution": "P. C. Mukherji, Archaeological Survey of India, 1901",
+    "licence": "Public Domain (published 1901; photographed December 1899)",
+    "attribution": "P. C. Mukherji, Archaeological Survey of India — Survey of India Offices, Calcutta, December 1899",
     "sources": [
       {
         "title": "Mukherji 1901, ASI Imperial Series XXVI/1 — Antiquities in the Tarai, Nepal",
         "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ",
-        "locator": "photographic plate, Lumbini from the south"
+        "locator": "Plate XX, Fig. 2 — 'Rummin-dei view of the ruins from the south' (IA leaf 0126)"
       }
     ]
   },
@@ -23,19 +24,67 @@
     "id": "maya-devi-temple.mukherji-1899-plan",
     "site_id": "maya-devi-temple",
     "caption": {
-      "en": "Measured ground plan of the Maya Devi Temple ruins, Mukherji survey",
-      "ne": "मायादेवी मन्दिर भग्नावशेषको नापी योजना, मुखर्जी सर्वेक्षण"
+      "en": "Measured ground plan of the Maya Devi Temple, Mukherji survey",
+      "ne": "मायादेवी मन्दिरको नापी योजना, मुखर्जी सर्वेक्षण"
     },
     "image": "maya-devi-temple.mukherji-1899-plan.webp",
     "evidence_tier": "survey_drawing",
+    "produced": true,
     "year": 1901,
     "licence": "Public Domain (published 1901)",
-    "attribution": "P. C. Mukherji, Archaeological Survey of India, 1901",
+    "attribution": "P. C. Mukherji (drawn by Sohan Lall, Draftsman), Archaeological Survey of India, 1901",
     "sources": [
       {
         "title": "Mukherji 1901, ASI Imperial Series XXVI/1",
-        "url": "https://archive.org/details/in.ernet.dli.2015.115950",
-        "locator": "measured plan plate"
+        "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ",
+        "locator": "Plate XX, Fig. 1 — 'Plan of Maya-Devi Temple' (IA leaf 0128)"
+      }
+    ]
+  },
+  {
+    "id": "lumbini.mukherji-1899-general-plan",
+    "site_id": "maya-devi-temple",
+    "caption": {
+      "en": "General plan of the ruins at Rummin-dei, with the pillar, temple and tank",
+      "ne": "रुम्मिनदेईका भग्नावशेषको सामान्य योजना — स्तम्भ, मन्दिर र पोखरीसहित"
+    },
+    "image": "lumbini.mukherji-1899-general-plan.webp",
+    "evidence_tier": "survey_drawing",
+    "produced": true,
+    "year": 1901,
+    "licence": "Public Domain (published 1901)",
+    "attribution": "P. C. Mukherji (drawn by Sohan Lall, Draftsman), Archaeological Survey of India, 1901",
+    "sources": [
+      {
+        "title": "Mukherji 1901, ASI Imperial Series XXVI/1",
+        "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ",
+        "locator": "Plate XVIII, Fig. 1 — 'General plan of the ruins at Rummin-dei' (IA leaf 0072)"
+      }
+    ]
+  },
+  {
+    "id": "ashokan-pillar.rummindei-inscription",
+    "site_id": "ashokan-pillar",
+    "caption": {
+      "en": "Facsimile of the Rummindei (Lumbini) Pillar Edict in Brahmi",
+      "ne": "रुम्मिनदेई (लुम्बिनी) स्तम्भ अभिलेखको ब्राह्मी प्रतिलिपि"
+    },
+    "image": "ashokan-pillar.rummindei-inscription.webp",
+    "evidence_tier": "survey_drawing",
+    "produced": true,
+    "year": 1901,
+    "licence": "Public Domain (published 1901)",
+    "attribution": "P. C. Mukherji (drawn by Sohan Lall, Draftsman), Archaeological Survey of India, 1901",
+    "sources": [
+      {
+        "title": "Mukherji 1901, ASI Imperial Series XXVI/1",
+        "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ",
+        "locator": "Plate XX, Fig. 4 — 'Detail of the inscription' (IA leaf 0128)"
+      },
+      {
+        "title": "Cleaner scholarly facsimile if a replacement is wanted: Hultzsch, Inscriptions of Asoka (CII Vol. I), 1925",
+        "url": "https://archive.org/details/inscriptionsofas035106mbp",
+        "locator": "Rummindei Pillar Edict facsimile (also Public Domain)"
       }
     ]
   },
@@ -48,6 +97,7 @@
     },
     "image": "maya-devi-temple.nativity-sculpture.webp",
     "evidence_tier": "historical_photograph",
+    "produced": false,
     "licence": "pending — resolved from harvest LICENCES.md at build",
     "attribution": "pending harvest (Wikimedia Commons contributor)",
     "sources": [
@@ -61,39 +111,18 @@
     "id": "puskarini.1899-view",
     "site_id": "puskarini",
     "caption": {
-      "en": "The Puskarini tank, 1899 survey view",
-      "ne": "पुष्करिणी पोखरी, १८९९ सर्वेक्षण दृश्य"
+      "en": "The Puskarini tank, historical view",
+      "ne": "पुष्करिणी पोखरी, ऐतिहासिक दृश्य"
     },
     "image": "puskarini.1899-view.webp",
     "evidence_tier": "historical_photograph",
-    "year": 1899,
-    "licence": "Public Domain (published 1901)",
-    "attribution": "P. C. Mukherji, Archaeological Survey of India, 1901",
+    "produced": false,
+    "licence": "pending — Mukherji 1901 has no dedicated Puskarini plate; source from harvest or a later survey",
+    "attribution": "pending",
     "sources": [
       {
-        "title": "Mukherji 1901, ASI Imperial Series XXVI/1",
-        "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ",
-        "locator": "Puskarini plate"
-      }
-    ]
-  },
-  {
-    "id": "ashokan-pillar.rummindei-inscription",
-    "site_id": "ashokan-pillar",
-    "caption": {
-      "en": "Facsimile of the Rummindei (Lumbini) Pillar Edict in Brahmi",
-      "ne": "रुम्मिनदेई (लुम्बिनी) स्तम्भ अभिलेखको ब्राह्मी प्रतिलिपि"
-    },
-    "image": "ashokan-pillar.rummindei-inscription.webp",
-    "evidence_tier": "survey_drawing",
-    "year": 1925,
-    "licence": "Public Domain (published 1925)",
-    "attribution": "E. Hultzsch, Inscriptions of Asoka (CII Vol. I), 1925",
-    "sources": [
-      {
-        "title": "Hultzsch, Inscriptions of Asoka (Corpus Inscriptionum Indicarum, Vol. I, 1925)",
-        "url": "https://archive.org/details/inscriptionsofas035106mbp",
-        "locator": "Rummindei Pillar Edict facsimile"
+        "title": "UNESCO WHC — Lumbini (666rev)",
+        "url": "https://whc.unesco.org/en/list/666"
       }
     ]
   },
@@ -106,6 +135,7 @@
     },
     "image": "ashokan-pillar.horse-capital.webp",
     "evidence_tier": "conditioned_reconstruction",
+    "produced": false,
     "conditioned_on": {
       "title": "Mauryan animal capitals as comparanda (Rampurva bull, Sankissa elephant) + Xuanzang's account of a horse capital at Lumbini",
       "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ",
@@ -129,17 +159,19 @@
     },
     "image": "ashokan-pillar.pre1896-jungle.webp",
     "evidence_tier": "conditioned_reconstruction",
+    "produced": false,
     "conditioned_on": {
-      "title": "Führer & Mukherji rediscovery accounts of an overgrown, buried mound; comparanda from unexcavated Tarai stupa mounds",
+      "title": "Mukherji's own 1899 photograph of the still-overgrown mound (extracted)",
       "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ",
-      "locator": "overgrowth and burial conditioned on documented pre-1896 state and regional unexcavated mounds"
+      "locator": "Plate XX, Fig. 1 — 'Rummin-dei view of the ruins from the west' (IA leaf 0126)",
+      "source_image": "ashokan-pillar.pre1896-jungle.source.webp"
     },
-    "licence": "CC BY-SA 4.0 (Sākṣī reconstruction — clearly labelled)",
-    "attribution": "Sākṣī team, image-to-image conditioned on cited accounts and comparanda",
+    "licence": "CC BY-SA 4.0 (Sākṣī reconstruction — clearly labelled); conditioning source is Public Domain",
+    "attribution": "Sākṣī team, image-to-image conditioned on Mukherji's 1899 west-view photograph",
     "sources": [
       {
-        "title": "UNESCO WHC — Lumbini (666rev)",
-        "url": "https://whc.unesco.org/en/list/666"
+        "title": "Mukherji 1901, ASI Imperial Series XXVI/1",
+        "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ"
       }
     ]
   },
@@ -152,6 +184,7 @@
     },
     "image": "vihara-remains.votive-stupas-1957.webp",
     "evidence_tier": "conditioned_reconstruction",
+    "produced": false,
     "conditioned_on": {
       "title": "Debala Mitra's 1957 survey record of sixteen small votive stupas in the Sacred Garden",
       "url": "https://whc.unesco.org/en/list/666",
