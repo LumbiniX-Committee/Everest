@@ -1,63 +1,63 @@
 import type { HistoricalImage } from '@/types';
 
+import { plateImages, plateMeta } from '../plates';
+
 /**
  * Historical imagery for Then / Now.
  *
- * DEMONSTRATION DATA. None of these records carries an image file yet, so the
- * comparison renders a labelled placeholder in the "then" panel. That is the
- * intended state until archive material is cleared, not a gap to paper over —
- * §36's rule is that a neutral placeholder beats an invented fact, and an
- * invented photograph would be the worst version of an invented fact.
+ * These records now carry real, licence-clean images — Mukherji's 1899
+ * photographs and survey drawings (public domain) and Sākṣī reconstructions
+ * conditioned on cited sources. Each declares its `evidenceTier` (Charter #6),
+ * which the comparison renders so a reconstruction is never read as a
+ * photograph. The paired modern photograph is resolved per site by
+ * `nowImageForSite` in `../plates`.
  *
- * The dates and captions below describe what each viewpoint *would* show, drawn
- * from the documented history of the site. They are framing, not claims about a
- * specific negative in a specific archive.
+ * Site ids here are the app's current ids (`ashoka-pillar`, `puskarini-pond`);
+ * Phase 3 migrates them to the canonical seed ids.
  *
- * To bring a record to life: clear the image, drop it in `assets/historical/`,
- * set `image: require(...)`, confirm the viewpoint against the vantage, and set
- * `viewpointConfirmed` accordingly. No component changes.
+ * Sites without a comparably-framed plate (e.g. Maya Devi, whose only plate is a
+ * plan-view drawing that cannot align with an oblique photograph) are omitted
+ * deliberately rather than paired with something that would mislead — a neutral
+ * "no record yet" state beats a comparison the viewer cannot trust.
  */
 export const demoHistoricalImages: HistoricalImage[] = [
   {
-    id: 'maya-devi-1899',
-    siteId: 'maya-devi-temple',
-    vantageId: 'maya-devi-east-approach',
-    date: 'c. 1899',
-    caption:
-      'The temple mound shortly after the site was cleared, before the modern shelter was built over the excavated brickwork.',
-    sourceId: 'fuhrer-1896',
-    // The east approach is a modern surveyed vantage; no late-19th-century
-    // photograph was taken from a fixed point, so any pairing is approximate.
-    viewpointConfirmed: false,
-  },
-  {
-    id: 'maya-devi-1995',
-    siteId: 'maya-devi-temple',
-    vantageId: 'maya-devi-east-approach',
-    date: '1995',
-    capturedAt: '1995-01-01T00:00:00.000Z',
-    caption:
-      'The east elevation two years before World Heritage inscription, during the excavation season that exposed the marker stone.',
-    sourceId: 'ldt-excavation',
-    viewpointConfirmed: false,
-  },
-  {
-    id: 'ashoka-pillar-1896',
+    id: 'ashoka-pillar.1899-south',
     siteId: 'ashoka-pillar',
     vantageId: 'ashoka-pillar-south',
-    date: '1896',
-    caption:
-      'The pillar as recorded at its rediscovery, the inscription panel still partly buried.',
-    sourceId: 'fuhrer-1896',
+    date: '1899',
+    capturedAt: '1899-12-01T00:00:00.000Z',
+    caption: plateMeta['ashokan-pillar.1899-south'].caption,
+    image: plateImages['ashokan-pillar.1899-south'],
+    evidenceTier: plateMeta['ashokan-pillar.1899-south'].evidenceTier,
+    attribution: plateMeta['ashokan-pillar.1899-south'].attribution,
+    sourceId: 'mukherji-1901',
+    // A real fixed-point photograph, but the modern vantage is a re-survey of
+    // the same view rather than the identical 1899 tripod position.
     viewpointConfirmed: false,
   },
   {
-    id: 'puskarini-1970s',
+    id: 'ashoka-pillar.pre1896-jungle',
+    siteId: 'ashoka-pillar',
+    vantageId: 'ashoka-pillar-south',
+    date: 'pre-1896',
+    caption: plateMeta['ashokan-pillar.pre1896-jungle'].caption,
+    image: plateImages['ashokan-pillar.pre1896-jungle'],
+    evidenceTier: plateMeta['ashokan-pillar.pre1896-jungle'].evidenceTier,
+    attribution: plateMeta['ashokan-pillar.pre1896-jungle'].attribution,
+    sourceId: 'mukherji-1901',
+    viewpointConfirmed: false,
+  },
+  {
+    id: 'puskarini.earthen-pond-pre1930s',
     siteId: 'puskarini-pond',
     vantageId: 'puskarini-north-step',
-    date: 'c. 1975',
-    caption: 'The tank before the terracing was restored, with the north steps partly collapsed.',
-    sourceId: 'ldt-conservation',
+    date: 'pre-1930s',
+    caption: plateMeta['puskarini.earthen-pond-pre1930s'].caption,
+    image: plateImages['puskarini.earthen-pond-pre1930s'],
+    evidenceTier: plateMeta['puskarini.earthen-pond-pre1930s'].evidenceTier,
+    attribution: plateMeta['puskarini.earthen-pond-pre1930s'].attribution,
+    sourceId: 'unesco-1997',
     viewpointConfirmed: false,
   },
 ];
@@ -65,8 +65,4 @@ export const demoHistoricalImages: HistoricalImage[] = [
 /** Oldest first — Then / Now reads forward through the record. */
 export function historicalImagesForSite(siteId: string): HistoricalImage[] {
   return demoHistoricalImages.filter((image) => image.siteId === siteId);
-}
-
-export function findHistoricalImage(id: string): HistoricalImage | undefined {
-  return demoHistoricalImages.find((image) => image.id === id);
 }

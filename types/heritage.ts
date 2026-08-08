@@ -113,11 +113,33 @@ export type Observation = {
  * change that is really just a change of angle, so the UI states plainly when
  * the historical viewpoint is only approximate.
  */
+/**
+ * Evidence tier — Charter #6. Every plate declares one, and the UI shows it, so
+ * a viewer can always tell a photograph from a reconstruction. The four tiers,
+ * strongest to weakest:
+ *   historical_photograph  — a real historical photo. Nothing generated.
+ *   survey_drawing         — a measured plan/section/facsimile from a survey.
+ *   conditioned_reconstruction — image-to-image, conditioned on a cited source.
+ *   artistic_impression    — informed by evidence but not conditioned on an image.
+ */
+export type EvidenceTier =
+  | 'historical_photograph'
+  | 'survey_drawing'
+  | 'conditioned_reconstruction'
+  | 'artistic_impression';
+
 export type HistoricalImage = {
   id: string;
   siteId: string;
   /** The vantage this was shot from, where that is known. */
   vantageId?: string;
+  /**
+   * Charter #6. Required for any image that is not a live capture — the label is
+   * rendered on the comparison so a reconstruction is never read as a photograph.
+   */
+  evidenceTier?: EvidenceTier;
+  /** Credit line shown with the image. */
+  attribution?: string;
   /**
    * Bundled asset (`require(...)`) or a remote/local URI.
    *

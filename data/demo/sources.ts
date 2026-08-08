@@ -82,6 +82,17 @@ export const demoSources: Source[] = [
     caveat:
       'Demonstration reference. Replace with the specific assessment and its date before release.',
   },
+  {
+    id: 'mukherji-1901',
+    kind: 'archaeological',
+    title: 'A Report on a Tour of Exploration of the Antiquities in the Tarai, Nepal',
+    attribution: 'P. C. Mukherji, Archaeological Survey of India (Imperial Series XXVI, Part 1)',
+    date: '1901 (survey December 1899)',
+    reference: 'Plates XVIII–XX',
+    url: 'https://archive.org/details/bub_gb_5iYXAAAAYAAJ',
+    caveat:
+      'Public domain. Mukherji re-surveyed Rummindei after Führer’s discredited reporting; his plates and measured plans are the primary photographic record of the site at rediscovery.',
+  },
 ];
 
 export function findSource(id: string): Source | undefined {

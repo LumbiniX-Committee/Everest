@@ -6,7 +6,7 @@ import { Button, Chip, Divider, Screen, Text } from '@/components/ui';
 import { EmptyState } from '@/components/common';
 import { SourceCard } from '@/components/source';
 import { ThenNowCompare } from '@/components/thennow';
-import { findSite, findSource, historicalImagesForSite, vantagesForSite } from '@/data';
+import { findSite, findSource, historicalImagesForSite, nowImageForSite, vantagesForSite } from '@/data';
 import { spacing } from '@/theme';
 
 /**
@@ -56,6 +56,7 @@ export function ThenNowScreen({ siteId }: { siteId: string }) {
 
   const selected = images.find((image) => image.id === selectedId) ?? images[0];
   const source = findSource(selected.sourceId);
+  const nowImage = nowImageForSite(siteId);
   const vantage = selected.vantageId
     ? vantagesForSite(siteId).find((v) => v.id === selected.vantageId)
     : undefined;
@@ -69,8 +70,10 @@ export function ThenNowScreen({ siteId }: { siteId: string }) {
           image: selected.image,
           date: selected.date,
           placeholderNote: selected.caption,
+          tier: selected.evidenceTier,
         }}
         now={{
+          image: nowImage,
           date: 'Today',
           placeholderNote:
             'Your own photograph appears here once you have witnessed this site from the fixed viewpoint.',

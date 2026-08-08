@@ -10,6 +10,9 @@ import {
 
 import { Text } from '@/components/ui';
 import { colors, radii, spacing } from '@/theme';
+import type { EvidenceTier } from '@/types';
+
+import { EvidenceTierLabel } from './EvidenceTierLabel';
 
 export type ThenNowPanel = {
   /** Bundled asset or URI. Absent renders the labelled placeholder. */
@@ -18,6 +21,8 @@ export type ThenNowPanel = {
   date: string;
   /** Stands in for a missing image. Describes what would be shown. */
   placeholderNote?: string;
+  /** Charter #6. When set, the tier badge is shown on the panel. */
+  tier?: EvidenceTier;
 };
 
 export type ThenNowCompareProps = {
@@ -143,6 +148,12 @@ function Panel({
         </View>
       )}
 
+      {panel.tier ? (
+        <View style={[styles.tierTag, align === 'left' ? styles.tagLeft : styles.tagRight]}>
+          <EvidenceTierLabel tier={panel.tier} />
+        </View>
+      ) : null}
+
       <View style={[styles.tag, tagStyle]}>
         <Text variant="mono" tone="inverse">
           {panel.date}
@@ -196,6 +207,7 @@ const styles = StyleSheet.create({
   },
   tagLeft: { left: spacing.sm },
   tagRight: { right: spacing.sm },
+  tierTag: { position: 'absolute', top: spacing.sm },
   handleTrack: {
     position: 'absolute',
     top: 0,
