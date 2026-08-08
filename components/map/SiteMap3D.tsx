@@ -2,11 +2,11 @@ import Constants, { ExecutionEnvironment } from 'expo-constants';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { Text } from '@/components/ui';
-import { MAP_HOME, precinctGeoJSON, siteGeoJSON } from '@/data';
-import { colors, radii, sakshiMapStyleJSON, spacing } from '@/theme';
+import { MAP_HOME, demoSites, precinctGeoJSON, siteGeoJSON } from '@/data';
+import { colors, radii, sakshiMapStyleJSON } from '@/theme';
 
 import { MapWebView } from './MapWebView';
+import { SitePlan } from './SitePlan';
 
 export type SiteMap3DProps = {
   /** Height of the map block. The map is a panel on a scrolling page. */
@@ -68,12 +68,13 @@ export function SiteMap3D({ height = 320, onSelectSite }: SiteMap3DProps) {
     return <MapWebView height={height} onSelectSite={onSelectSite} />;
   }
 
+  // Same as the WebView path: the schematic plan is what a failed basemap
+  // falls back to, not a second map kept permanently on the page.
   if (failed) {
     return (
-      <Unavailable
-        height={height}
-        reason="Basemap tiles need a connection the first time. Everything else on this screen works offline."
-      />
+      <View style={[styles.wrap, { height }]}>
+        <SitePlan sites={demoSites} onSelectSite={onSelectSite} height={height} />
+      </View>
     );
   }
 
@@ -165,21 +166,6 @@ export function SiteMap3D({ height = 320, onSelectSite }: SiteMap3DProps) {
   );
 }
 
-function Unavailable({ height, reason }: { height: number; reason: string }) {
-  return (
-    <View style={[styles.fallback, { height }]}>
-      <Text variant="label" tone="muted" uppercase>
-        Map
-      </Text>
-      <Text variant="body" tone="secondary" center>
-        {reason}
-      </Text>
-      <Text variant="caption" tone="muted" center>
-        The plan below shows the same ground and works everywhere.
-      </Text>
-    </View>
-  );
-}
 
 const styles = StyleSheet.create({
   wrap: {
@@ -188,15 +174,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surfaceSecondary,
-  },
-  fallback: {
-    borderRadius: radii.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surfaceSecondary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.sm,
-    padding: spacing.lg,
   },
 });
