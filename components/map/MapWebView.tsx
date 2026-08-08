@@ -2,11 +2,12 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 
-import { Text } from '@/components/ui';
-import { colors, radii, spacing } from '@/theme';
+import { demoSites } from '@/data';
+import { colors, radii } from '@/theme';
 import type { Coordinate } from '@/types';
 
 import { buildMapHtml } from './mapHtml';
+import { SitePlan } from './SitePlan';
 
 export type MapWebViewProps = {
   height?: number;
@@ -45,8 +46,10 @@ export function MapWebView({
   const webRef = useRef<WebView>(null);
 
   const wantsFigure = coordinate != null;
+  // Interactive only when it fills the screen. Inline, the map is a preview
+  // that opens the full-screen one — see MapHtmlOptions.interactive.
   const html = useMemo(
-    () => buildMapHtml({ avatar: wantsFigure, fullscreen: fill }),
+    () => buildMapHtml({ avatar: wantsFigure, fullscreen: fill, interactive: fill }),
     [wantsFigure, fill],
   );
 
@@ -67,18 +70,19 @@ export function MapWebView({
 
   const frame = fill ? styles.fill : { height };
 
+  // The schematic plan *is* the fallback, rather than a second map kept
+  // permanently below this one. Two maps stacked read as a duplicate — the
+  // plan earns its place only when the tiles cannot load, which is exactly the
+  // case it was written for.
   if (failed) {
     return (
-      <View style={[styles.fallback, frame]}>
-        <Text variant="label" tone="muted" uppercase>
-          Map
-        </Text>
-        <Text variant="body" tone="secondary" center>
-          The map could not load. It needs a connection the first time.
-        </Text>
-        <Text variant="caption" tone="muted" center>
-          The plan below shows the same ground and works offline.
-        </Text>
+      <View style={[styles.wrap, frame]}>
+        <SitePlan
+          sites={demoSites}
+          observer={coordinate}
+          onSelectSite={onSelectSite}
+          height={fill ? undefined : height}
+        />
       </View>
     );
   }
@@ -90,9 +94,12 @@ export function MapWebView({
         style={styles.web}
         originWhitelist={['*']}
         source={{ html }}
-        // The panel version sits inside a scrolling page; without this the
-        // WebView swallows vertical drags and the page stops scrolling past it.
-        nestedScrollEnabled={!fill}
+        // Inline, the map is inert, so the page owns every gesture and scrolls
+        // straight through it. Full screen, the map owns them instead.
+        scrollEnabled={fill}
+        nestedScrollEnabled={fill}
+        // An inert preview must not intercept the tap that opens the full map.
+        pointerEvents={fill ? 'auto' : 'none'}
         javaScriptEnabled
         domStorageEnabled
         onError={() => setFailed(true)}
@@ -123,14 +130,4 @@ const styles = StyleSheet.create({
   fillWrap: { overflow: 'hidden', backgroundColor: colors.surfaceSecondary },
   fill: { flex: 1 },
   web: { flex: 1, backgroundColor: colors.background },
-  fallback: {
-    borderRadius: radii.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surfaceSecondary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.sm,
-    padding: spacing.lg,
-  },
 });

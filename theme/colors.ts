@@ -63,12 +63,18 @@ const resolvedGreen = '#477052'; // acknowledged / resolved. 5.11:1
  * Terrain sits deliberately low against the ground — present, but never
  * competing with the monuments, which are the content.
  */
-const map_water = '#A9C4CC'; // still water of the Puskarini, 1.65:1
-const map_vegetation = '#CBD7BE'; // the sal grove, 1.35:1 across large fills
-const map_landuse = '#E8E4D9'; // compound and precinct ground, 1.15:1 as a wash
-const map_road = '#FFFFFF'; // metalled road, read by being lighter than ground
-const map_road_major = '#FFFFFF'; // the approach roads, carried by width
-const map_path = '#C4AE8A'; // packed earth walking path, 1.94:1
+const map_base = '#F2EFE7'; // the map's own ground, a shade warmer than the page
+const map_water = '#8FBBD9'; // still water — a blue that reads as water
+const map_vegetation = '#A9C99A'; // the sal grove
+const map_park = '#BBD6A8'; // maintained park and garden
+const map_landuse = '#E7DFCC'; // compound and precinct ground
+const map_road = '#FFFFFF'; // carriageway fill
+const map_road_casing = '#D8CBB2'; // the outline that makes a road read as a road
+const map_path = '#C08A4E'; // packed earth walking path
+const map_building = '#DDCFB6'; // ordinary built context
+const map_building_roof = '#CBB99A'; // roof, a step darker so volumes read
+const map_label = '#4A4438'; // place and road labels
+const map_label_halo = '#F7F4EC'; // halo, so labels survive over any fill
 
 export const colors = {
   // Spec names — prefer these in new code.
@@ -85,12 +91,18 @@ export const colors = {
   white: ground2,
 
   /** Map terrain. Not interchangeable with the semantic tokens above. */
+  mapBase: map_base,
   mapWater: map_water,
   mapVegetation: map_vegetation,
+  mapPark: map_park,
   mapLanduse: map_landuse,
   mapRoad: map_road,
-  mapRoadMajor: map_road_major,
+  mapRoadCasing: map_road_casing,
   mapPath: map_path,
+  mapBuilding: map_building,
+  mapBuildingRoof: map_building_roof,
+  mapLabel: map_label,
+  mapLabelHalo: map_label_halo,
 
   // ── Legacy role names ─────────────────────────────────────────────────────
   /** Page ground. */

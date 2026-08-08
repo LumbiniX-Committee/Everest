@@ -4,4 +4,4 @@ export { useAlignment, computeAlignment, type AlignmentInput } from './useAlignm
 export { useNearbySites, type SiteWithDistance } from './useNearbySites';
 export { useSync } from './useSync';
 export { useHaptics } from './useHaptics';
-
+export { useSiteArrival, type SiteArrivalState } from './useSiteArrival';

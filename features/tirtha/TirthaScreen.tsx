@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { Button, Screen, Text } from '@/components/ui';
 import { ScreenHeader, SettingsButton } from '@/components/common';
 import { ArrivalWisdom } from '@/components/arrival';
-import { SiteMap3D, SitePlan } from '@/components/map';
+import { SiteMap3D } from '@/components/map';
 import { SiteListItem } from '@/components/site';
 import { demoSites } from '@/data';
 import { QuestCard } from '@/features/quests';
@@ -45,12 +45,18 @@ export function TirthaScreen() {
 
       <ArrivalWisdom coordinate={coordinate} />
 
-      {/* The map is not wrapped in a Pressable. It contains a WebView or a
-          native map view, both of which consume their own gestures — a parent
-          Pressable either swallows the pan and the monument taps, or fires
-          "open full screen" when someone meant to drag. The affordance is an
-          explicit control underneath instead. */}
-      <SiteMap3D onSelectSite={(id) => router.push(`/(main)/tirtha/site/${id}`)} />
+      {/* Wrapping the map is safe again: inline it is built inert, so it
+          consumes no gestures and cannot fight this Pressable or the page's
+          own scrolling. Panning and zooming happen on the full-screen map,
+          where nothing competes for the touches. */}
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Open the full screen map"
+        accessibilityHint="Shows the map full screen, where you can pan and zoom"
+        onPress={() => router.push('/(main)/tirtha/map')}
+      >
+        <SiteMap3D onSelectSite={(id) => router.push(`/(main)/tirtha/site/${id}`)} />
+      </Pressable>
 
       <Pressable
         accessibilityRole="button"
@@ -64,13 +70,6 @@ export function TirthaScreen() {
         </Text>
       </Pressable>
 
-      {/* The flat plan stays: it renders with no network and no tiles, and it
-          is the only view that works when the basemap cannot load. */}
-      <SitePlan
-          sites={demoSites}
-          observer={coordinate}
-          onSelectSite={(id) => router.push(`/(main)/tirtha/site/${id}`)}
-        />
 
       {showLocationOffer ? (
         <View style={styles.offer}>

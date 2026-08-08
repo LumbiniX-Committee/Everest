@@ -5,8 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MapWebView } from '@/components/map';
 import { Text } from '@/components/ui';
-import { useCurrentPosition, useHeading } from '@/hooks';
-import { arrival } from '@/services';
+import { useCurrentPosition, useHeading, useSiteArrival } from '@/hooks';
 import { colors, radii, spacing } from '@/theme';
 
 /**
@@ -27,7 +26,9 @@ export function LiveMapScreen() {
   const heading = useHeading();
   const [follow, setFollow] = useState(true);
 
-  const near = arrival.nearestSite(coordinate);
+  // notify:false — Tīrtha's card already announces, and two banners for one
+  // arrival is the app talking over itself.
+  const { atSiteId, nearest: near } = useSiteArrival(coordinate, { notify: false });
 
   return (
     <View style={styles.root}>
@@ -67,9 +68,9 @@ export function LiveMapScreen() {
           near ? (
             <Text variant="body" center>
               {near.site.name}
-              <Text variant="body" tone="muted">
+              <Text variant="body" tone={atSiteId ? 'sandstone' : 'muted'}>
                 {'  ·  '}
-                {Math.round(near.distanceM)} m
+                {atSiteId ? 'you are here' : `${Math.round(near.distanceM)} m`}
               </Text>
             </Text>
           ) : (
