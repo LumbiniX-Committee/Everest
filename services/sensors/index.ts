@@ -1,4 +1,5 @@
-import { DeviceMotion, Magnetometer } from 'expo-sensors';
+import { DeviceMotion } from 'expo-sensors';
+import * as Location from 'expo-location';
 
 import { normalizeBearing } from '@/utils';
 
@@ -6,17 +7,28 @@ import { normalizeBearing } from '@/utils';
  * Sensor service — heading and attitude.
  *
  * Two independent readings feed alignment:
- *   heading — where the device is pointed, from the magnetometer.
+ *   heading — where the device is pointed, from expo-location's compass.
  *   pitch   — how it is tilted, from device motion.
  *
- * The magnetometer is noisy and, near iron structures, actively wrong. Every
- * reading is smoothed before it reaches the reticle, otherwise the lock
- * indicator flickers and the user cannot tell a real lock from jitter.
+ * Heading comes from `Location.watchHeadingAsync`, which is tilt-compensated and
+ * reports true north — not the raw magnetometer x/y, which in portrait (the app's
+ * only posture) is not a compass heading at all. Magnetic declination at Lumbini
+ * is under 1°, so no declination correction is applied; do not "fix" that.
+ *
+ * The reading is still jittery, so it is smoothed on the unit vector before it
+ * reaches the reticle, otherwise the lock indicator flickers and the user cannot
+ * tell a real lock from noise. Accuracy is reported so a poor compass can prompt
+ * a calibration.
  */
 
 export type Heading = {
-  /** Degrees clockwise from magnetic north, 0–360. */
+  /** Degrees clockwise from true north, 0–360. */
   degrees: number;
+  /**
+   * Reported heading accuracy. iOS: degrees of uncertainty (lower is better).
+   * Android: a 0–3 enum (3 is best). Null when the platform gives nothing.
+   */
+  accuracy: number | null;
 };
 
 export type Attitude = {
@@ -24,12 +36,6 @@ export type Attitude = {
   pitch: number;
   /** Degrees of rotation about the viewing axis. */
   roll: number;
-};
-
-type MagnetometerData = {
-  x: number;
-  y: number;
-  z?: number;
 };
 
 type DeviceMotionData = {
@@ -56,32 +62,43 @@ function smoothAngle(previous: number | null, next: number, alpha: number): numb
   return normalizeBearing((Math.atan2(y, x) * 180) / Math.PI);
 }
 
-const HEADING_SMOOTHING = 0.15;
+// Input from watchHeadingAsync is already platform-filtered and tilt-compensated,
+// so smoothing can be lighter than the raw-magnetometer path needed. Tune on device.
+const HEADING_SMOOTHING = 0.3;
 const PITCH_SMOOTHING = 0.2;
 
 /**
- * Stream a smoothed compass heading. Safe on all platforms (web fallback).
+ * Stream a smoothed true-north heading from expo-location. Returns an
+ * unsubscribe that is safe to call before the subscription resolves.
  */
-export function watchHeading(onHeading: (heading: Heading) => void, intervalMs = 100): () => void {
+export function watchHeading(onHeading: (heading: Heading) => void): () => void {
   let smoothed: number | null = null;
+  let subscription: Location.LocationSubscription | null = null;
+  let cancelled = false;
 
-  try {
-    if (typeof Magnetometer?.addListener !== 'function') {
-      return () => {};
-    }
-
-    Magnetometer.setUpdateInterval?.(intervalMs);
-    const subscription = Magnetometer.addListener(({ x, y }: MagnetometerData) => {
-      const raw = normalizeBearing((Math.atan2(y, x) * 180) / Math.PI);
-      smoothed = smoothAngle(smoothed, raw, HEADING_SMOOTHING);
-      onHeading({ degrees: smoothed });
+  Location.watchHeadingAsync((data) => {
+    // trueHeading is -1 when unavailable; fall back to magnetic north.
+    const source = data.trueHeading >= 0 ? data.trueHeading : data.magHeading;
+    const raw = normalizeBearing(source);
+    smoothed = smoothAngle(smoothed, raw, HEADING_SMOOTHING);
+    onHeading({ degrees: smoothed, accuracy: data.accuracy ?? null });
+  })
+    .then((sub) => {
+      if (cancelled) {
+        sub.remove();
+        return;
+      }
+      subscription = sub;
+    })
+    .catch((err) => {
+      console.warn('[sensors] watchHeading unavailable:', err);
     });
 
-    return () => subscription?.remove?.();
-  } catch (err) {
-    console.warn('[sensors] watchHeading unavailable on this platform:', err);
-    return () => {};
-  }
+  return () => {
+    cancelled = true;
+    subscription?.remove();
+    subscription = null;
+  };
 }
 
 /** Stream a smoothed pitch and roll. Safe on all platforms (web fallback). */
@@ -115,8 +132,9 @@ export function watchAttitude(onAttitude: (attitude: Attitude) => void, interval
 
 export async function isHeadingAvailable(): Promise<boolean> {
   try {
-    if (typeof Magnetometer?.isAvailableAsync !== 'function') return false;
-    return await Magnetometer.isAvailableAsync();
+    if (typeof Location?.watchHeadingAsync !== 'function') return false;
+    // The compass needs location services enabled to report true north.
+    return await Location.hasServicesEnabledAsync();
   } catch {
     return false;
   }

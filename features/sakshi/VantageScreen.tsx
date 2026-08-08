@@ -1,4 +1,3 @@
-import { useMemo, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
@@ -24,24 +23,8 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
   const router = useRouter();
   const vantage = findVantage(vantageId);
   const { state: locationPermission, request: requestLocation } = usePermission('location');
-  const [simulatedAtVantage, setSimulatedAtVantage] = useState(false);
 
-  // If simulatedAtVantage is true, override input position/heading to match vantage exactly
-  const mockAlignment = useMemo(() => {
-    if (simulatedAtVantage && vantage) {
-      return {
-        phase: 'locked' as const,
-        progress: 1,
-        bearingDeltaDeg: 0,
-        distanceM: 0,
-        pitchDeltaDeg: 0,
-      };
-    }
-    return null;
-  }, [simulatedAtVantage, vantage]);
-
-  const realAlignment = useAlignment({ vantage });
-  const alignment = mockAlignment ?? realAlignment;
+  const alignment = useAlignment({ vantage });
 
   if (!vantage) {
     return (
@@ -58,10 +41,15 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
 
   const site = findSite(vantage.siteId);
   const locked = alignment.phase === 'locked';
-  const needsLocation = locationPermission.status !== 'granted' && !simulatedAtVantage;
+  const needsLocation = locationPermission.status !== 'granted';
 
+  // A real lock records as an aligned capture; anything else is an honest
+  // "match by eye" — the capture screen records which, and never fakes a lock.
   const openCapture = () => {
-    router.push({ pathname: '/(main)/sakshi/capture', params: { vantageId: vantage.id } });
+    router.push({
+      pathname: '/(main)/sakshi/capture',
+      params: { vantageId: vantage.id, mode: locked ? 'aligned' : 'manual' },
+    });
   };
 
   return (
@@ -80,19 +68,11 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
         </Text>
       </View>
 
-      {/* Testing / Indoor Simulation Toggle */}
-      <View style={styles.simulatedRow}>
-        <Button
-          label={simulatedAtVantage ? 'Simulated at Vantage (ON)' : 'Simulate Standing at Vantage'}
-          variant={simulatedAtVantage ? 'secondary' : 'quiet'}
-          onPress={() => setSimulatedAtVantage(!simulatedAtVantage)}
-        />
-      </View>
-
       {needsLocation ? (
         <View style={styles.notice}>
           <Text variant="body" tone="secondary">
-            Alignment needs to know where you are standing. Without it, use the bearing below or simulate standing at the vantage.
+            Alignment needs to know where you are standing. Without it you can still frame the shot
+            by eye against the ghost overlay — it is recorded as a by-eye capture, not an aligned one.
           </Text>
           <Button label="Allow location" variant="secondary" onPress={requestLocation} />
         </View>
@@ -120,17 +100,17 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
 
       <View style={styles.actions}>
         <Button
-          label={locked ? 'Witness (Open Camera)' : 'Open Camera (Test / Match by Eye)'}
+          label={locked ? 'Witness — aligned' : 'Match by eye'}
           block
           onPress={openCapture}
-          accessibilityHint="Opens the camera to record an observation or test ghost overlay"
+          accessibilityHint="Opens the camera to record an observation against the ghost overlay"
         />
 
         {!locked ? (
           <Text variant="caption" tone="muted" center>
             {alignment.phase === 'unavailable'
-              ? 'GPS/Compass signal missing. Tap Open Camera above to test ghost overlay.'
-              : 'Sensors active. Tap Open Camera above or align reticle.'}
+              ? 'No position fix. You can still frame by eye against the ghost — it is recorded as a by-eye capture.'
+              : 'Not yet within tolerance. Keep aligning, or frame by eye — the capture records which it was.'}
           </Text>
         ) : null}
       </View>
@@ -144,6 +124,8 @@ function phaseLabel(phase: string): string {
       return 'Aligned';
     case 'seeking':
       return 'Seeking';
+    case 'manual':
+      return 'By eye';
     case 'unavailable':
       return 'No signal';
     default:
@@ -154,7 +136,6 @@ function phaseLabel(phase: string): string {
 const styles = StyleSheet.create({
   head: { paddingTop: spacing.lg, gap: spacing.xs },
   reticleBlock: { alignItems: 'center', gap: spacing.base, paddingVertical: spacing.xl },
-  simulatedRow: { alignItems: 'center', paddingBottom: spacing.md },
   notice: { gap: spacing.md, alignItems: 'flex-start', paddingBottom: spacing.lg },
   readout: { paddingBottom: spacing.lg },
   note: { paddingVertical: spacing.lg },

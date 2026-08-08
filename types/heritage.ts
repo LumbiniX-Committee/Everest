@@ -194,13 +194,28 @@ export type HistoricalImage = {
   viewpointConfirmed: boolean;
 };
 
-/** Where the reticle is in its alignment cycle. */
-export type AlignmentPhase = 'idle' | 'seeking' | 'locked' | 'unavailable';
+/**
+ * Where the reticle is in its alignment cycle.
+ *
+ * `manual` is the honest "match by eye" escape hatch (04-ARCHITECTURE §5, mandated
+ * demo insurance): the gate is bypassed by the user, so it is NOT a lock and must
+ * never be coloured lapis or recorded as a perfect measurement.
+ */
+export type AlignmentPhase = 'idle' | 'seeking' | 'locked' | 'manual' | 'unavailable';
 
 export type AlignmentState = {
   phase: AlignmentPhase;
   /** 0–1. How aligned the device is overall. Drives the reticle. */
   progress: number;
+  /**
+   * The weighted alignment score (04-ARCHITECTURE §5) at this instant. Same
+   * number that governs lock and that is persisted with a capture. In `manual`
+   * mode this is still the real measured score (or 0 when there is no signal) —
+   * never faked to 1.
+   */
+  alignScore: number;
+  /** Reported GPS accuracy in metres, or null when unknown. */
+  gpsAccuracyM: number | null;
   /** Signed degrees to turn. Negative is left. */
   bearingDeltaDeg: number | null;
   /** Metres to the vantage. */

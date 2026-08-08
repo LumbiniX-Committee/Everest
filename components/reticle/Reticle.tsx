@@ -46,7 +46,9 @@ export function Reticle({
   idleAnimation = false,
 }: ReticleProps) {
   const locked = phase === 'locked';
-  const inert = phase === 'idle' || phase === 'unavailable';
+  // `manual` is the by-eye escape hatch: show it as inert (static, muted) rather
+  // than seeking or locked — the instrument is not tracking, the user has taken over.
+  const inert = phase === 'idle' || phase === 'unavailable' || phase === 'manual';
 
   const animatedProgress = useSharedValue(progress);
   const lockValue = useSharedValue(locked ? 1 : 0);
@@ -143,6 +145,8 @@ function reticleLabel(phase: AlignmentPhase): string {
       return 'Aligned with the vantage point';
     case 'seeking':
       return 'Seeking alignment';
+    case 'manual':
+      return 'Framed by eye — alignment gate bypassed';
     case 'unavailable':
       return 'Alignment unavailable';
     case 'idle':

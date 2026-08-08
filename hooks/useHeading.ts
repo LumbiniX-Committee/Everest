@@ -10,11 +10,15 @@ import { sensors } from '@/services';
  * running behind a navigation stack drains battery for nothing.
  */
 export function useHeading(enabled = true, nudgeDeg = 0): number | null {
-  const [heading, setHeading] = useState<number | null>(null);
+  const [raw, setRaw] = useState<number | null>(null);
 
+  // The subscription depends only on `enabled`. The manual nudge is applied at
+  // read time below, not inside the effect — otherwise every ±° adjustment tore
+  // down and rebuilt the magnetometer/heading subscription and reset the
+  // smoothing filter, so the user's own correction was punished with a resettle.
   useEffect(() => {
     if (!enabled) {
-      setHeading(null);
+      setRaw(null);
       return;
     }
 
@@ -23,20 +27,17 @@ export function useHeading(enabled = true, nudgeDeg = 0): number | null {
 
     sensors.isHeadingAvailable().then((available) => {
       if (cancelled || !available) return;
-      unsubscribe = sensors.watchHeading(({ degrees }) => {
-        // Apply manual nudge offset (persisted or user-dragged)
-        const nudged = (degrees + nudgeDeg + 360) % 360;
-        setHeading(nudged);
-      });
+      unsubscribe = sensors.watchHeading(({ degrees }) => setRaw(degrees));
     });
 
     return () => {
       cancelled = true;
       unsubscribe?.();
     };
-  }, [enabled, nudgeDeg]);
+  }, [enabled]);
 
-  return heading;
+  if (raw == null) return null;
+  return (raw + nudgeDeg + 360) % 360;
 }
 
 /** Live pitch in degrees from level, or null when device motion is unavailable. */
