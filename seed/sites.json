@@ -1,0 +1,920 @@
+[
+  {
+    "id": "maya-devi-temple",
+    "name": {
+      "en": "Maya Devi Temple",
+      "ne": "माया देवी मन्दिर",
+      "pi": "Māyādevī"
+    },
+    "zone": "sacred_garden",
+    "tier": 1,
+    "coords": {
+      "lat": 27.469609,
+      "lon": 83.275831
+    },
+    "coords_source": "osm",
+    "geofence_m": 30,
+    "period": {
+      "from": -250,
+      "to": null
+    },
+    "photography": "restricted",
+    "summary": {
+      "en": "The Maya Devi Temple encloses the spot venerated for over two millennia as the birthplace of the Buddha. Inside lie the Marker Stone, believed to fix the exact nativity point, and the worn Nativity Sculpture showing Queen Maya Devi grasping a sal branch. Excavation revealed brick structures built in phases from the 3rd century BCE, laid over a still older shrine, arranged as fifteen box-like chambers in five east–west and three north–south rows around a circumambulatory path. The present whitewashed temple was rebuilt by the Lumbini Development Trust in 2003 to shelter these remains. It marks the first of the four great pilgrimage places — birth here at Lumbini, awakening at Bodh Gaya, first teaching at Sarnath, and parinirvāṇa at Kushinagar. The interior is a protected archaeological space; photography inside is generally restricted, so confirm on arrival before capturing.",
+      "ne": "माया देवी मन्दिरले दुई हजार वर्षभन्दा बढी समयदेखि बुद्धको जन्मस्थलका रूपमा पूजिने स्थललाई घेरेको छ। भित्र चिन्ह ढुङ्गा र माया देवीले सालको हाँगा समातेको देखाउने जन्म-मूर्ति रहेका छन्। उत्खननले ईसापूर्व तेस्रो शताब्दीदेखि विभिन्न चरणमा बनेका इँटाका संरचना देखाएको छ, जुन पाँच पूर्व–पश्चिम र तीन उत्तर–दक्षिण पङ्क्तिमा पन्ध्र कोठाका रूपमा परिक्रमा-मार्ग वरिपरि मिलाइएका छन्। हालको मन्दिर लुम्बिनी विकास कोषले सन् २००३ मा पुनर्निर्माण गरेको हो। यो चार महान् तीर्थमध्ये पहिलो हो — लुम्बिनीमा जन्म, बोधगयामा ज्ञान, सारनाथमा प्रथम उपदेश, र कुशीनगरमा परिनिर्वाण। भित्री भाग संरक्षित पुरातात्त्विक क्षेत्र हो; भित्र फोटो खिच्न प्रायः निषेध हुन्छ।"
+    },
+    "ne_review": "pending",
+    "facts": [
+      {
+        "label": {
+          "en": "Enshrines",
+          "ne": "संरक्षित"
+        },
+        "value": {
+          "en": "Marker Stone & Nativity Sculpture",
+          "ne": "चिन्ह ढुङ्गा र जन्म-मूर्ति"
+        }
+      },
+      {
+        "label": {
+          "en": "Structure",
+          "ne": "संरचना"
+        },
+        "value": {
+          "en": "15 brick chambers, 5×3 grid",
+          "ne": "१५ इँटा कोठा, ५×३"
+        }
+      },
+      {
+        "label": {
+          "en": "Earliest phase",
+          "ne": "प्रारम्भिक चरण"
+        },
+        "value": {
+          "en": "3rd c. BCE, over an older shrine",
+          "ne": "ईसापूर्व ३ शताब्दी, पुरानो देवालयमाथि"
+        }
+      },
+      {
+        "label": {
+          "en": "Present temple",
+          "ne": "हालको मन्दिर"
+        },
+        "value": {
+          "en": "Rebuilt by LDT, 2003",
+          "ne": "लुम्बिनी विकास कोष, २००३"
+        }
+      },
+      {
+        "label": {
+          "en": "Access",
+          "ne": "पहुँच"
+        },
+        "value": {
+          "en": "Interior restricted",
+          "ne": "भित्री भाग निषेधित"
+        }
+      }
+    ],
+    "timeline": [
+      "rediscovery-1896",
+      "reconstruction-1933",
+      "conservation-1962",
+      "reexcavation-1992",
+      "ldt-2003"
+    ],
+    "plates": [
+      "maya-devi-temple.nativity-sculpture",
+      "maya-devi-temple.mukherji-1899-plan"
+    ],
+    "vantages": [
+      "maya-devi-temple.v1",
+      "maya-devi-temple.v2"
+    ],
+    "dhamma_links": [
+      "dn14",
+      "mn123"
+    ],
+    "sources": [
+      {
+        "title": "UNESCO WHC — Lumbini, the Birthplace of the Lord Buddha (666rev)",
+        "url": "https://whc.unesco.org/en/list/666"
+      },
+      {
+        "title": "Mukherji 1901, ASI Imperial Series XXVI/1 — Antiquities in the Tarai, Nepal",
+        "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ"
+      },
+      {
+        "title": "OpenStreetMap — Mayadevi Temple node (wikidata Q15238480)",
+        "url": "https://www.openstreetmap.org/",
+        "locator": "27.469609, 83.275831"
+      }
+    ]
+  },
+  {
+    "id": "ashokan-pillar",
+    "name": {
+      "en": "Ashokan Pillar",
+      "ne": "अशोक स्तम्भ",
+      "pi": "Asoka-thambha"
+    },
+    "zone": "sacred_garden",
+    "tier": 1,
+    "coords": {
+      "lat": 27.469681,
+      "lon": 83.275668
+    },
+    "coords_source": "osm",
+    "geofence_m": 30,
+    "period": {
+      "from": -249,
+      "to": null
+    },
+    "photography": "allowed",
+    "summary": {
+      "en": "This sandstone pillar was raised by the Mauryan emperor Ashoka in 249 BCE, in his twentieth regnal year, to mark the birthplace of the Buddha. Its Brahmi inscription in the Pali language records the emperor's visit, declares that here the Blessed One was born, and grants the village of Lumbini relief from tax — the earliest firmly dated written evidence for the site. The pillar was originally crowned by a capital recorded as a horse; that capital is now lost. Do not expect the lion capital of Sarnath, which is a different monument and the state emblem of India. The pillar was rediscovered in 1896 by Khadga Shamsher Rana and Anton Führer, who read the inscription and identified Lumbini. It stands within the Sacred Garden, a short walk from the Marker Stone and the Puskarini pond, and remains the hero object of the site.",
+      "ne": "यो बलौटे ढुङ्गाको स्तम्भ मौर्य सम्राट अशोकले ईसापूर्व २४९ मा, आफ्नो शासनको बीसौं वर्षमा, बुद्धको जन्मस्थल चिन्ह लगाउन खडा गरेका हुन्। यसमा पाली भाषामा ब्राह्मी लिपिमा कुँदिएको अभिलेखले सम्राटको भ्रमण अभिलेख गर्दै यहाँ भगवान् जन्मनुभयो भन्छ र लुम्बिनी गाउँलाई करमा छुट दिन्छ — यो स्थलको सबैभन्दा पुरानो निश्चित मितिको लिखित प्रमाण हो। स्तम्भको टुप्पोमा घोडाको शीर्ष थियो भनी अभिलेख छ; त्यो शीर्ष अहिले हराएको छ। यो सारनाथको सिंह-शीर्ष होइन, जुन बेग्लै स्मारक हो र भारतको राजचिन्ह हो। स्तम्भ सन् १८९६ मा खड्ग शमशेर राणा र एन्टोन फ्युहररले पुनः पत्ता लगाएका थिए।"
+    },
+    "ne_review": "pending",
+    "facts": [
+      {
+        "label": {
+          "en": "Erected",
+          "ne": "स्थापना"
+        },
+        "value": {
+          "en": "249 BCE",
+          "ne": "ईसापूर्व २४९"
+        }
+      },
+      {
+        "label": {
+          "en": "Material",
+          "ne": "सामग्री"
+        },
+        "value": {
+          "en": "Sandstone",
+          "ne": "बलौटे ढुङ्गा"
+        }
+      },
+      {
+        "label": {
+          "en": "Script",
+          "ne": "लिपि"
+        },
+        "value": {
+          "en": "Brahmi",
+          "ne": "ब्राह्मी"
+        }
+      },
+      {
+        "label": {
+          "en": "Language",
+          "ne": "भाषा"
+        },
+        "value": {
+          "en": "Pali",
+          "ne": "पाली"
+        }
+      },
+      {
+        "label": {
+          "en": "Lost element",
+          "ne": "हराएको भाग"
+        },
+        "value": {
+          "en": "Horse capital",
+          "ne": "घोडाको शीर्ष"
+        }
+      },
+      {
+        "label": {
+          "en": "Rediscovered",
+          "ne": "पुनः पत्ता"
+        },
+        "value": {
+          "en": "1896",
+          "ne": "१८९६"
+        }
+      }
+    ],
+    "inscription": {
+      "transliteration": "Devānampiyena Piyadasina lājina vīsati-vasābhisitena atana āgāca mahīyite hida Budhe jāte Sakyamunī ti. Silā vigaḍabhī cā kālāpita silā-thabhe ca usapāpite hida Bhagavaṃ jāte ti. Luṃmini-gāme ubalike kaṭe aṭha-bhāgiye ca.",
+      "translation": {
+        "en": "King Piyadasi, beloved of the gods, in the twentieth year of his consecration, came here in person and worshipped, [saying] 'Here the Buddha, sage of the Shakyas, was born.' He caused a stone [enclosure] to be made and a stone pillar to be raised, [declaring] that the Blessed One was born here. He made the village of Lumbini free of tax and paying [only] an eighth share.",
+        "ne": "देवताका प्रिय राजा पियदसि (अशोक) ले आफ्नो अभिषेकको बीसौं वर्षमा स्वयं यहाँ आई पूजा गरे, 'यहाँ शाक्यमुनि बुद्ध जन्मनुभयो' भन्दै। उनले ढुङ्गाको घेरा बनाउन लगाए र ढुङ्गाको स्तम्भ खडा गरे, 'यहाँ भगवान् जन्मनुभयो' भनी। उनले लुम्बिनी गाउँलाई करमुक्त गरी आठौं भाग मात्र तिर्ने बनाए।"
+      },
+      "source": {
+        "title": "Hultzsch, Inscriptions of Asoka (Corpus Inscriptionum Indicarum, Vol. I, 1925)",
+        "url": "https://archive.org/details/inscriptionsofas035106mbp",
+        "locator": "Rummindei Pillar Edict"
+      }
+    },
+    "timeline": [
+      "rediscovery-1896",
+      "conservation-1962",
+      "reexcavation-1992"
+    ],
+    "plates": [
+      "ashokan-pillar.horse-capital",
+      "ashokan-pillar.1899-south"
+    ],
+    "vantages": [
+      "ashokan-pillar.v1",
+      "ashokan-pillar.v2"
+    ],
+    "dhamma_links": [
+      "dn16"
+    ],
+    "sources": [
+      {
+        "title": "UNESCO WHC — Lumbini, the Birthplace of the Lord Buddha (666rev)",
+        "url": "https://whc.unesco.org/en/list/666"
+      },
+      {
+        "title": "Hultzsch, Inscriptions of Asoka (CII Vol. I, 1925)",
+        "url": "https://archive.org/details/inscriptionsofas035106mbp",
+        "locator": "Rummindei Pillar Edict"
+      },
+      {
+        "title": "Mukherji 1901, ASI Imperial Series XXVI/1",
+        "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ"
+      },
+      {
+        "title": "OpenStreetMap — Ashoka Pillar node",
+        "url": "https://www.openstreetmap.org/",
+        "locator": "27.469681, 83.275668"
+      }
+    ]
+  },
+  {
+    "id": "puskarini",
+    "name": {
+      "en": "Puskarini",
+      "ne": "पुष्करिणी",
+      "pi": "Pokkharaṇī"
+    },
+    "zone": "sacred_garden",
+    "tier": 1,
+    "coords": {
+      "lat": 27.4694,
+      "lon": 83.2756
+    },
+    "coords_source": "doc",
+    "geofence_m": 25,
+    "period": {
+      "from": null,
+      "to": null
+    },
+    "photography": "allowed",
+    "summary": {
+      "en": "The Puskarini is the sacred pond set about twenty-five paces from the Marker Stone, within the Sacred Garden. Tradition holds that Queen Maya Devi bathed in its waters before giving birth, and that the newborn received his first bath here. The stepped, brick-lined tank visible today was cleared and consolidated during modern excavation and conservation of the garden. Its still water gives the clearest reflection of the Ashokan Pillar and the temple, and it is the setting for the stillness practice — sitting quietly at its edge is itself the point. Like the rest of the Sacred Garden, the pond depends on seasonal drainage; silt and monsoon inflow are recurring conservation concerns. Its exact position has not yet been confirmed against a survey coordinate, so the location shown here is approximate, pending verification on the ground.",
+      "ne": "पुष्करिणी चिन्ह ढुङ्गादेखि लगभग पच्चीस पाइला टाढा रहेको पवित्र पोखरी हो। परम्पराअनुसार माया देवीले जन्म दिनुअघि यसै पोखरीमा स्नान गर्नुभएको र नवजात शिशुले पहिलो स्नान यहीँ पाएको मानिन्छ। हाल देखिने इँटाले बनेको खुड्किलायुक्त पोखरी आधुनिक उत्खनन र संरक्षणका क्रममा सफा र सुदृढ गरिएको हो। यसको स्थिर पानीले अशोक स्तम्भ र मन्दिरको प्रतिबिम्ब देखाउँछ, र यो मौन-अभ्यासको स्थल हो। यसको ठ्याक्कै स्थान सर्वेक्षण-निर्देशांकसँग पुष्टि भइनसकेकाले यहाँ देखाइएको स्थान अनुमानित हो।"
+    },
+    "ne_review": "pending",
+    "facts": [
+      {
+        "label": {
+          "en": "Type",
+          "ne": "प्रकार"
+        },
+        "value": {
+          "en": "Sacred pond",
+          "ne": "पवित्र पोखरी"
+        }
+      },
+      {
+        "label": {
+          "en": "Distance",
+          "ne": "दूरी"
+        },
+        "value": {
+          "en": "~25 paces from Marker Stone",
+          "ne": "चिन्ह ढुङ्गादेखि ~२५ पाइला"
+        }
+      },
+      {
+        "label": {
+          "en": "Tradition",
+          "ne": "परम्परा"
+        },
+        "value": {
+          "en": "Maya Devi's pre-birth bath",
+          "ne": "जन्मअघिको स्नान"
+        }
+      },
+      {
+        "label": {
+          "en": "Coordinate",
+          "ne": "निर्देशांक"
+        },
+        "value": {
+          "en": "Approximate, pending field survey",
+          "ne": "अनुमानित, क्षेत्र सर्वेक्षण बाँकी"
+        }
+      }
+    ],
+    "timeline": [
+      "conservation-1962",
+      "reexcavation-1992"
+    ],
+    "plates": [
+      "puskarini.1899-view"
+    ],
+    "vantages": [
+      "puskarini.v1",
+      "puskarini.v2"
+    ],
+    "dhamma_links": [
+      "mn123",
+      "dn14"
+    ],
+    "sources": [
+      {
+        "title": "UNESCO WHC — Lumbini, the Birthplace of the Lord Buddha (666rev)",
+        "url": "https://whc.unesco.org/en/list/666"
+      },
+      {
+        "title": "Mukherji 1901, ASI Imperial Series XXVI/1",
+        "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ"
+      }
+    ]
+  },
+  {
+    "id": "marker-stone",
+    "name": {
+      "en": "Marker Stone",
+      "ne": "चिन्ह ढुङ्गा"
+    },
+    "zone": "sacred_garden",
+    "tier": 1,
+    "coords": {
+      "lat": 27.469609,
+      "lon": 83.275831
+    },
+    "coords_source": "doc",
+    "geofence_m": 20,
+    "period": {
+      "from": null,
+      "to": null
+    },
+    "photography": "restricted",
+    "summary": {
+      "en": "The Marker Stone is a small slab of conglomerate, discovered in 1996, that archaeologists identify as pinpointing the exact spot of the nativity. It lies within the Maya Devi Temple, protected beneath an enclosure directly below the worn Nativity Sculpture. Its discovery, during the 1992–1997 re-excavation, fixed the birthplace to within a stone’s width and helped secure Lumbini’s UNESCO inscription in 1997. Because it sits inside the temple, photography is restricted; confirm on arrival.",
+      "ne": "चिन्ह ढुङ्गा सन् १९९६ मा फेला परेको सानो समूह-ढुङ्गाको टुक्रा हो, जसलाई पुरातत्त्वविद्हरूले जन्मको ठ्याक्कै स्थान देखाउने मान्छन्। यो माया देवी मन्दिरभित्र, जन्म-मूर्तिमुनि सुरक्षित छ। सन् १९९२–१९९७ को पुनः उत्खननमा भएको यसको खोजले जन्मस्थल निश्चित गर्न मद्दत गर्‍यो र सन् १९९७ को युनेस्को सूचीकरणमा सहयोग पुर्‍यायो। मन्दिरभित्र भएकाले फोटो खिच्न निषेध छ।"
+    },
+    "ne_review": "pending",
+    "facts": [
+      {
+        "label": {
+          "en": "Discovered",
+          "ne": "खोज"
+        },
+        "value": {
+          "en": "1996",
+          "ne": "१९९६"
+        }
+      },
+      {
+        "label": {
+          "en": "Material",
+          "ne": "सामग्री"
+        },
+        "value": {
+          "en": "Conglomerate stone",
+          "ne": "समूह-ढुङ्गा"
+        }
+      },
+      {
+        "label": {
+          "en": "Access",
+          "ne": "पहुँच"
+        },
+        "value": {
+          "en": "Inside the temple, restricted",
+          "ne": "मन्दिरभित्र, निषेधित"
+        }
+      }
+    ],
+    "timeline": [
+      "reexcavation-1992"
+    ],
+    "plates": [],
+    "vantages": [],
+    "dhamma_links": [
+      "mn123",
+      "dn14"
+    ],
+    "sources": [
+      {
+        "title": "UNESCO WHC — Lumbini (666rev)",
+        "url": "https://whc.unesco.org/en/list/666"
+      }
+    ]
+  },
+  {
+    "id": "vihara-remains",
+    "name": {
+      "en": "Vihara & Stupa Remains",
+      "ne": "विहार तथा स्तूप अवशेष"
+    },
+    "zone": "sacred_garden",
+    "tier": 1,
+    "coords": {
+      "lat": 27.4699,
+      "lon": 83.2762
+    },
+    "coords_source": "doc",
+    "geofence_m": 40,
+    "period": {
+      "from": -250,
+      "to": 500
+    },
+    "photography": "allowed",
+    "summary": {
+      "en": "Across the Sacred Garden stand the excavated brick foundations of Buddhist monasteries (vihāras) and votive stupas, built and rebuilt between the 3rd century BCE and the 5th century CE. They are also the site’s clearest warning. Debala Mitra recorded sixteen small votive stupas on a 1957 visit that had, by her later account, been completely demolished, and several structures P. C. Mukherji exposed in 1899 could no longer be traced. It is a documented case of heritage vanishing between two expert visits — the reason a repeatable photographic record matters.",
+      "ne": "पवित्र उद्यानभरि बौद्ध विहार र मन्नत-स्तूपका उत्खनित इँटा जग रहेका छन्, जुन ईसापूर्व तेस्रो शताब्दीदेखि पाँचौं शताब्दीसम्म बनाइएका थिए। यो स्थलको सबैभन्दा स्पष्ट चेतावनी पनि हो। देबला मित्राले सन् १९५७ मा सोह्र साना मन्नत-स्तूप अभिलेख गरेकी थिइन्, जुन पछि पूर्ण रूपमा भत्काइएका थिए; मुखर्जीले सन् १८९९ मा देखाएका केही संरचना पछि फेला परेनन्। यो दुई विज्ञ भ्रमणबीच सम्पदा हराएको प्रलेखित घटना हो।"
+    },
+    "ne_review": "pending",
+    "facts": [
+      {
+        "label": {
+          "en": "Type",
+          "ne": "प्रकार"
+        },
+        "value": {
+          "en": "Monasteries & votive stupas",
+          "ne": "विहार र मन्नत-स्तूप"
+        }
+      },
+      {
+        "label": {
+          "en": "Span",
+          "ne": "अवधि"
+        },
+        "value": {
+          "en": "3rd c. BCE – 5th c. CE",
+          "ne": "ईसापूर्व ३ – ईस्वी ५ शताब्दी"
+        }
+      },
+      {
+        "label": {
+          "en": "Documented loss",
+          "ne": "प्रलेखित क्षति"
+        },
+        "value": {
+          "en": "16 votive stupas, gone by a later visit",
+          "ne": "१६ मन्नत-स्तूप, पछि हराएका"
+        }
+      }
+    ],
+    "timeline": [
+      "rediscovery-1896",
+      "reconstruction-1933",
+      "reexcavation-1992"
+    ],
+    "plates": [],
+    "vantages": [],
+    "dhamma_links": [],
+    "sources": [
+      {
+        "title": "UNESCO WHC — Lumbini (666rev)",
+        "url": "https://whc.unesco.org/en/list/666"
+      },
+      {
+        "title": "Mukherji 1901, ASI Imperial Series XXVI/1",
+        "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ"
+      }
+    ]
+  },
+  {
+    "id": "myanmar-temple",
+    "name": {
+      "en": "Lokamani Cula Pagoda",
+      "ne": "लोकमणि चूल पगोडा"
+    },
+    "zone": "monastic_east",
+    "tier": 2,
+    "coords": {
+      "lat": 27.476144,
+      "lon": 83.277797
+    },
+    "coords_source": "osm",
+    "geofence_m": 45,
+    "period": {
+      "from": 1970,
+      "to": null
+    },
+    "photography": "allowed",
+    "summary": {
+      "en": "Lokamani Cula Pagoda, the Myanmar (Burmese) temple, is a gold-and-white stupa in the eastern monastic zone whose form echoes Yangon’s Shwedagon. Built by the Myanmar Buddhist community, it is among the most visited of Lumbini’s international monasteries.",
+      "ne": "लोकमणि चूल पगोडा, म्यानमार (बर्मेली) मन्दिर, पूर्वी विहार क्षेत्रमा रहेको सुन र सेतो रङको स्तूप हो, जसको स्वरूप याङ्गुनको श्वेडागोनसँग मिल्छ। म्यानमारका बौद्ध समुदायद्वारा निर्मित, यो लुम्बिनीका सबैभन्दा धेरै भ्रमण हुने अन्तर्राष्ट्रिय विहारमध्ये एक हो।"
+    },
+    "ne_review": "pending",
+    "facts": [
+      {
+        "label": {
+          "en": "Built by",
+          "ne": "निर्माता"
+        },
+        "value": {
+          "en": "Myanmar Buddhist community",
+          "ne": "म्यानमार बौद्ध समुदाय"
+        }
+      },
+      {
+        "label": {
+          "en": "Form",
+          "ne": "स्वरूप"
+        },
+        "value": {
+          "en": "Gold-and-white stupa",
+          "ne": "सुन-सेतो स्तूप"
+        }
+      }
+    ],
+    "timeline": [],
+    "plates": [],
+    "vantages": [],
+    "dhamma_links": [],
+    "sources": [
+      {
+        "title": "UNESCO WHC — Lumbini (666rev)",
+        "url": "https://whc.unesco.org/en/list/666"
+      }
+    ]
+  },
+  {
+    "id": "china-temple",
+    "name": {
+      "en": "China Temple",
+      "ne": "चीन मन्दिर"
+    },
+    "zone": "monastic_west",
+    "tier": 2,
+    "coords": {
+      "lat": 27.480294,
+      "lon": 83.27201
+    },
+    "coords_source": "osm",
+    "geofence_m": 50,
+    "period": {
+      "from": 1996,
+      "to": null
+    },
+    "photography": "allowed",
+    "summary": {
+      "en": "The China Temple, built by the Buddhist Association of China in the western monastic zone, is a walled complex of tiled pagodas, prayer halls and meditation cells in classical Chinese style — one of the largest monastery compounds on the Kenzo Tange master-plan grid.",
+      "ne": "चीन मन्दिर, पश्चिमी विहार क्षेत्रमा चीनको बौद्ध संघद्वारा निर्मित, टायलयुक्त पगोडा, प्रार्थना कक्ष र ध्यान कोठा भएको पर्खालले घेरिएको परम्परागत चिनियाँ शैलीको परिसर हो — केन्जो टाङ्गे गुरुयोजनाका सबैभन्दा ठूला विहार परिसरमध्ये एक।"
+    },
+    "ne_review": "pending",
+    "facts": [
+      {
+        "label": {
+          "en": "Built by",
+          "ne": "निर्माता"
+        },
+        "value": {
+          "en": "Buddhist Association of China",
+          "ne": "चीनको बौद्ध संघ"
+        }
+      },
+      {
+        "label": {
+          "en": "Style",
+          "ne": "शैली"
+        },
+        "value": {
+          "en": "Classical Chinese",
+          "ne": "परम्परागत चिनियाँ"
+        }
+      }
+    ],
+    "timeline": [],
+    "plates": [],
+    "vantages": [],
+    "dhamma_links": [],
+    "sources": [
+      {
+        "title": "UNESCO WHC — Lumbini (666rev)",
+        "url": "https://whc.unesco.org/en/list/666"
+      }
+    ]
+  },
+  {
+    "id": "korean-temple",
+    "name": {
+      "en": "Dae Sung Suk Ga Sa",
+      "ne": "डे सुङ सुक गा सा"
+    },
+    "zone": "monastic_west",
+    "tier": 2,
+    "coords": {
+      "lat": 27.477994,
+      "lon": 83.271731
+    },
+    "coords_source": "osm",
+    "geofence_m": 50,
+    "period": {
+      "from": 2000,
+      "to": null
+    },
+    "photography": "allowed",
+    "summary": {
+      "en": "Dae Sung Suk Ga Sa, the Korean monastery in the western monastic zone, is a large temple and pilgrim guesthouse serving Korean Buddhist visitors to Lumbini.",
+      "ne": "डे सुङ सुक गा सा, पश्चिमी विहार क्षेत्रमा रहेको कोरियाली विहार, लुम्बिनी आउने कोरियाली बौद्ध तीर्थयात्रीका लागि ठूलो मन्दिर र अतिथिगृह हो।"
+    },
+    "ne_review": "pending",
+    "facts": [
+      {
+        "label": {
+          "en": "Tradition",
+          "ne": "परम्परा"
+        },
+        "value": {
+          "en": "Korean Buddhist",
+          "ne": "कोरियाली बौद्ध"
+        }
+      },
+      {
+        "label": {
+          "en": "Function",
+          "ne": "कार्य"
+        },
+        "value": {
+          "en": "Temple & pilgrim guesthouse",
+          "ne": "मन्दिर र अतिथिगृह"
+        }
+      }
+    ],
+    "timeline": [],
+    "plates": [],
+    "vantages": [],
+    "dhamma_links": [],
+    "sources": [
+      {
+        "title": "UNESCO WHC — Lumbini (666rev)",
+        "url": "https://whc.unesco.org/en/list/666"
+      }
+    ]
+  },
+  {
+    "id": "gautami-nuns-temple",
+    "name": {
+      "en": "International Gautami Nuns Temple",
+      "ne": "अन्तर्राष्ट्रिय गौतमी भिक्षुणी मन्दिर"
+    },
+    "zone": "monastic_east",
+    "tier": 2,
+    "coords": {
+      "lat": 27.475579,
+      "lon": 83.278385
+    },
+    "coords_source": "osm",
+    "geofence_m": 45,
+    "period": {
+      "from": 2000,
+      "to": null
+    },
+    "photography": "allowed",
+    "summary": {
+      "en": "The International Gautami Nuns Temple, named for Mahāpajāpatī Gotamī — the Buddha’s aunt and foster-mother and the first ordained bhikkhunī — stands in the eastern monastic zone. Its central stupa is modelled on the Swayambhu Stupa of Kathmandu.",
+      "ne": "अन्तर्राष्ट्रिय गौतमी भिक्षुणी मन्दिर, बुद्धकी माहुली तथा पालनकर्ता र पहिलो भिक्षुणी महाप्रजापती गौतमीको नाममा, पूर्वी विहार क्षेत्रमा छ। यसको केन्द्रीय स्तूप काठमाडौंको स्वयम्भू स्तूपको नमुनामा बनेको छ।"
+    },
+    "ne_review": "pending",
+    "facts": [
+      {
+        "label": {
+          "en": "Named for",
+          "ne": "नामकरण"
+        },
+        "value": {
+          "en": "Mahāpajāpatī Gotamī",
+          "ne": "महाप्रजापती गौतमी"
+        }
+      },
+      {
+        "label": {
+          "en": "Central stupa",
+          "ne": "केन्द्रीय स्तूप"
+        },
+        "value": {
+          "en": "Modelled on Swayambhu",
+          "ne": "स्वयम्भूको नमुना"
+        }
+      }
+    ],
+    "timeline": [],
+    "plates": [],
+    "vantages": [],
+    "dhamma_links": [],
+    "sources": [
+      {
+        "title": "UNESCO WHC — Lumbini (666rev)",
+        "url": "https://whc.unesco.org/en/list/666"
+      }
+    ]
+  },
+  {
+    "id": "world-peace-pagoda",
+    "name": {
+      "en": "World Peace Pagoda",
+      "ne": "विश्व शान्ति स्तूप"
+    },
+    "zone": "monastic_east",
+    "tier": 2,
+    "coords": {
+      "lat": 27.498881,
+      "lon": 83.27626
+    },
+    "coords_source": "osm",
+    "geofence_m": 50,
+    "period": {
+      "from": 2001,
+      "to": null
+    },
+    "photography": "allowed",
+    "summary": {
+      "en": "The World Peace Pagoda (Shanti Stupa), built by the Japanese Nipponzan-Myōhōji order, is a white domed stupa at the northern terminus of Kenzo Tange’s central axis, about three kilometres from the Sacred Garden. It marks the far end of the walk-the-axis practice.",
+      "ne": "विश्व शान्ति स्तूप (शान्ति स्तूप), जापानको निप्पोन्जान-म्योहोजी सम्प्रदायद्वारा निर्मित, केन्जो टाङ्गेको केन्द्रीय अक्षको उत्तरी छेउमा रहेको सेतो गुम्बज-स्तूप हो, पवित्र उद्यानदेखि करिब तीन किलोमिटर टाढा। यो अक्ष-यात्रा अभ्यासको अन्तिम छेउ हो।"
+    },
+    "ne_review": "pending",
+    "facts": [
+      {
+        "label": {
+          "en": "Built by",
+          "ne": "निर्माता"
+        },
+        "value": {
+          "en": "Nipponzan-Myōhōji (Japan)",
+          "ne": "निप्पोन्जान-म्योहोजी (जापान)"
+        }
+      },
+      {
+        "label": {
+          "en": "Position",
+          "ne": "स्थान"
+        },
+        "value": {
+          "en": "North end of the Tange axis",
+          "ne": "टाङ्गे अक्षको उत्तरी छेउ"
+        }
+      }
+    ],
+    "timeline": [],
+    "plates": [],
+    "vantages": [],
+    "dhamma_links": [],
+    "sources": [
+      {
+        "title": "UNESCO WHC — Lumbini (666rev)",
+        "url": "https://whc.unesco.org/en/list/666"
+      }
+    ]
+  },
+  {
+    "id": "tilaurakot",
+    "name": {
+      "en": "Tilaurakot–Kapilavastu",
+      "ne": "तिलौराकोट–कपिलवस्तु"
+    },
+    "zone": "greater_lumbini",
+    "tier": 3,
+    "coords": {
+      "lat": 27.5747,
+      "lon": 83.0536
+    },
+    "coords_source": "doc",
+    "geofence_m": 60,
+    "period": {
+      "from": -600,
+      "to": null
+    },
+    "photography": "allowed",
+    "summary": {
+      "en": "Tilaurakot, widely identified with ancient Kapilavastu, is the fortified town where Prince Siddhartha is said to have grown up and which he left to seek awakening. Its ramparts, gateways and structures were surveyed by P. C. Mukherji in 1899 and remain under excavation. It lies about 25 km west of the Sacred Garden and is shown here as a map pin rather than a demo site.",
+      "ne": "तिलौराकोट, प्राचीन कपिलवस्तुसँग व्यापक रूपमा पहिचान गरिने, राजकुमार सिद्धार्थ हुर्केको र ज्ञानको खोजीमा छाडेको किल्लाबन्द नगर हो। यसका पर्खाल, ढोका र संरचना मुखर्जीले सन् १८९९ मा सर्वेक्षण गरेका थिए र अझै उत्खनन जारी छ। यो पवित्र उद्यानदेखि करिब २५ कि.मि. पश्चिममा छ।"
+    },
+    "ne_review": "pending",
+    "facts": [
+      {
+        "label": {
+          "en": "Identified as",
+          "ne": "पहिचान"
+        },
+        "value": {
+          "en": "Ancient Kapilavastu",
+          "ne": "प्राचीन कपिलवस्तु"
+        }
+      },
+      {
+        "label": {
+          "en": "Surveyed",
+          "ne": "सर्वेक्षण"
+        },
+        "value": {
+          "en": "Mukherji, 1899",
+          "ne": "मुखर्जी, १८९९"
+        }
+      },
+      {
+        "label": {
+          "en": "Coordinate",
+          "ne": "निर्देशांक"
+        },
+        "value": {
+          "en": "Approximate, pending verification",
+          "ne": "अनुमानित, पुष्टि बाँकी"
+        }
+      }
+    ],
+    "timeline": [
+      "rediscovery-1896"
+    ],
+    "plates": [],
+    "vantages": [],
+    "dhamma_links": [
+      "dn16",
+      "mn26"
+    ],
+    "sources": [
+      {
+        "title": "UNESCO WHC — Lumbini (666rev)",
+        "url": "https://whc.unesco.org/en/list/666"
+      },
+      {
+        "title": "Mukherji 1901, ASI Imperial Series XXVI/1",
+        "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ"
+      }
+    ]
+  },
+  {
+    "id": "ramagrama",
+    "name": {
+      "en": "Ramagrama Stupa",
+      "ne": "रामग्राम स्तूप"
+    },
+    "zone": "greater_lumbini",
+    "tier": 3,
+    "coords": {
+      "lat": 27.503,
+      "lon": 83.687
+    },
+    "coords_source": "doc",
+    "geofence_m": 60,
+    "period": {
+      "from": -500,
+      "to": null
+    },
+    "photography": "allowed",
+    "summary": {
+      "en": "Ramagrama Stupa is held to be the only original relic stupa of the Buddha that remains undisturbed — the single one of the eight that was never opened to redistribute its relics. The earthen mound lies about 50 km east of Lumbini and is shown here as a map pin.",
+      "ne": "रामग्राम स्तूप बुद्धको एक मात्र नखोलिएको मूल धातु-स्तूप मानिन्छ — आठमध्ये एउटै मात्र जुन धातु पुनर्वितरण गर्न कहिल्यै खोलिएन। यो माटोको डँगुर लुम्बिनीदेखि करिब ५० कि.मि. पूर्वमा छ।"
+    },
+    "ne_review": "pending",
+    "facts": [
+      {
+        "label": {
+          "en": "Significance",
+          "ne": "महत्त्व"
+        },
+        "value": {
+          "en": "The one undisturbed relic stupa",
+          "ne": "एक मात्र नखोलिएको धातु-स्तूप"
+        }
+      },
+      {
+        "label": {
+          "en": "Form",
+          "ne": "स्वरूप"
+        },
+        "value": {
+          "en": "Earthen mound",
+          "ne": "माटोको डँगुर"
+        }
+      },
+      {
+        "label": {
+          "en": "Coordinate",
+          "ne": "निर्देशांक"
+        },
+        "value": {
+          "en": "Approximate, pending verification",
+          "ne": "अनुमानित, पुष्टि बाँकी"
+        }
+      }
+    ],
+    "timeline": [],
+    "plates": [],
+    "vantages": [],
+    "dhamma_links": [
+      "dn16"
+    ],
+    "sources": [
+      {
+        "title": "UNESCO WHC — Lumbini (666rev)",
+        "url": "https://whc.unesco.org/en/list/666"
+      }
+    ]
+  }
+]

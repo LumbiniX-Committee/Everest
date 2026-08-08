@@ -1,0 +1,155 @@
+[
+  {
+    "id": "q.resurvey",
+    "family": "witness",
+    "title": { "en": "Return to a marked viewpoint", "ne": "चिन्ह लगाइएको दृश्यबिन्दुमा फर्कनुहोस्" },
+    "description": {
+      "en": "Route to the nearest unsurveyed viewpoint, align to the ghost image, and capture. Merit is the same whether or not anything has changed — 'nothing has changed' is a valuable observation.",
+      "ne": "नजिकको सर्वेक्षण नभएको दृश्यबिन्दुमा जानुहोस्, छायाँ-चित्रसँग मिलाउनुहोस्, र खिच्नुहोस्। केही परिवर्तन भए वा नभए पनि पुण्य उत्तिकै हुन्छ — 'केही परिवर्तन भएको छैन' पनि मूल्यवान् अवलोकन हो।"
+    },
+    "ne_review": "pending",
+    "site_id": "ashokan-pillar",
+    "vantage_id": "ashokan-pillar.v1",
+    "merit": 50
+  },
+  {
+    "id": "q.first-light",
+    "family": "witness",
+    "title": { "en": "Photograph the platform at dawn", "ne": "बिहान झिसमिसेमा चौतारीको फोटो खिच्नुहोस्" },
+    "description": {
+      "en": "Available 05:30–07:00 only. Raking dawn light reveals surface deterioration that midday light hides — this is real conservation photography practice.",
+      "ne": "बिहान ५:३० देखि ७:०० सम्म मात्र उपलब्ध। झिसमिसेको छड्के प्रकाशले मध्यान्हको प्रकाशले लुकाउने सतहको क्षति देखाउँछ — यो साँचो संरक्षण-फोटोग्राफी अभ्यास हो।"
+    },
+    "ne_review": "pending",
+    "site_id": "maya-devi-temple",
+    "merit": 80,
+    "window": { "from": "05:30", "to": "07:00" }
+  },
+  {
+    "id": "q.pradakshina",
+    "family": "path",
+    "title": { "en": "Circumambulate clockwise", "ne": "घडीको दिशामा परिक्रमा गर्नुहोस्" },
+    "description": {
+      "en": "Walk clockwise around the monument. Direction matters — anticlockwise does not complete the walk, and the app will say why, briefly.",
+      "ne": "स्मारकको वरिपरि घडीको दिशामा हिँड्नुहोस्। दिशा महत्त्वपूर्ण छ — घडीविपरीत दिशाले परिक्रमा पूरा गर्दैन, र किन भन्ने कुरा एपले छोटकरीमा बताउनेछ।"
+    },
+    "ne_review": "pending",
+    "site_id": "maya-devi-temple",
+    "merit": 40,
+    "centroid": { "lat": 27.469609, "lon": 83.275831 },
+    "radius_m": 15
+  },
+  {
+    "id": "q.tange-axis",
+    "family": "path",
+    "title": { "en": "Walk the central axis", "ne": "केन्द्रीय अक्ष हिँड्नुहोस्" },
+    "description": {
+      "en": "Follow Kenzo Tange's canal axis from the Sacred Garden north to the World Peace Pagoda — about three kilometres, with checkpoints along the way.",
+      "ne": "केन्जो टाङ्गेको नहर-अक्ष पवित्र उद्यानदेखि उत्तरतर्फ विश्व शान्ति स्तूपसम्म पछ्याउनुहोस् — करिब तीन किलोमिटर, बाटोमा जाँच-बिन्दुहरूसहित।"
+    },
+    "ne_review": "pending",
+    "site_id": "maya-devi-temple",
+    "merit": 60
+  },
+  {
+    "id": "q.stillness",
+    "family": "attention",
+    "title": { "en": "Sit ten minutes at the Puskarini", "ne": "पुष्करिणीमा दस मिनेट बस्नुहोस्" },
+    "description": {
+      "en": "Sit for ten minutes at the sacred pond with the phone face down. Merit accrues while the app is not being used. Stillness is the practice.",
+      "ne": "पवित्र पोखरीमा फोन घोप्टो पारेर दस मिनेट बस्नुहोस्। एप प्रयोग नगर्दा पनि पुण्य बढ्छ। मौनता नै अभ्यास हो।"
+    },
+    "ne_review": "pending",
+    "site_id": "puskarini",
+    "merit": 70,
+    "duration_s": 600
+  },
+  {
+    "id": "q.notice",
+    "family": "attention",
+    "title": { "en": "Name three things you notice", "ne": "आफूले देखेका तीन कुरा लेख्नुहोस्" },
+    "description": {
+      "en": "Write three things you notice that our description does not mention. No right answer, no failure state — this helps the next pilgrim see more.",
+      "ne": "हाम्रो विवरणमा उल्लेख नभएका तीन कुरा लेख्नुहोस् जुन तपाईंले देख्नुभयो। कुनै सही उत्तर छैन, कुनै असफलता छैन — यसले अर्को तीर्थयात्रीलाई थप देख्न मद्दत गर्छ।"
+    },
+    "ne_review": "pending",
+    "site_id": null,
+    "merit": 30
+  },
+  {
+    "id": "q.riddle.mdt-chambers",
+    "family": "observation",
+    "title": { "en": "Count the chambers", "ne": "कोठाहरू गन्नुहोस्" },
+    "description": {
+      "en": "Look at the exposed brick platform inside the temple. How many box-like chambers were laid out in its grid?",
+      "ne": "मन्दिरभित्रको खुला इँटा-चौतारीलाई हेर्नुहोस्। यसको ढाँचामा कति बाकस-आकारका कोठा मिलाइएका थिए?"
+    },
+    "ne_review": "pending",
+    "site_id": "maya-devi-temple",
+    "merit": 30,
+    "riddle": {
+      "accept": ["15", "fifteen", "१५", "pandhra", "पन्ध्र"],
+      "hint": {
+        "en": "Seek further, traveller — count the rows: five one way, three the other.",
+        "ne": "अझ खोज्नुहोस्, यात्री — पङ्क्ति गन्नुहोस्: एकातिर पाँच, अर्कातिर तीन।"
+      }
+    }
+  },
+  {
+    "id": "q.riddle.mdt-tree",
+    "family": "observation",
+    "title": { "en": "The branch of the nativity", "ne": "जन्मको हाँगा" },
+    "description": {
+      "en": "The Nativity Sculpture shows Queen Maya Devi grasping a branch as she gives birth. Which tree is it? (It is not the tree of the awakening.)",
+      "ne": "जन्म-मूर्तिमा माया देवीले जन्म दिँदा एउटा हाँगा समातेको देखिन्छ। त्यो कुन रूख हो? (यो ज्ञान प्राप्तिको रूख होइन।)"
+    },
+    "ne_review": "pending",
+    "site_id": "maya-devi-temple",
+    "merit": 30,
+    "riddle": {
+      "accept": ["sal", "saal", "sala", "shala", "साल", "sal tree"],
+      "hint": {
+        "en": "Seek further, traveller — the awakening tree grows at Bodh Gaya. This one shades the birth.",
+        "ne": "अझ खोज्नुहोस्, यात्री — ज्ञानको रूख बोधगयामा छ। यो त जन्मलाई छहारी दिन्छ।"
+      }
+    }
+  },
+  {
+    "id": "q.riddle.pillar-capital",
+    "family": "observation",
+    "title": { "en": "The missing crown", "ne": "हराएको शीर्ष" },
+    "description": {
+      "en": "The pillar once bore an animal figure at its top, now lost. Which animal do the old records name? (It is not the lion of Sarnath.)",
+      "ne": "स्तम्भको टुप्पोमा कुनै बेला एउटा पशुको आकृति थियो, जुन अहिले हराएको छ। पुराना अभिलेखले कुन पशु भन्छन्? (यो सारनाथको सिंह होइन।)"
+    },
+    "ne_review": "pending",
+    "site_id": "ashokan-pillar",
+    "merit": 30,
+    "riddle": {
+      "accept": ["horse", "asva", "ashva", "घोडा", "aswa"],
+      "hint": {
+        "en": "Seek further, traveller — Xuanzang recorded it, and it was never a lion.",
+        "ne": "अझ खोज्नुहोस्, यात्री — ह्वेनसाङले यसलाई अभिलेख गरे, र यो कहिल्यै सिंह थिएन।"
+      }
+    }
+  },
+  {
+    "id": "q.riddle.pillar-script",
+    "family": "observation",
+    "title": { "en": "The oldest writing here", "ne": "यहाँको सबैभन्दा पुरानो लेखन" },
+    "description": {
+      "en": "Read the letters carved into the pillar. In which ancient script is the inscription written?",
+      "ne": "स्तम्भमा कुँदिएका अक्षर पढ्नुहोस्। अभिलेख कुन प्राचीन लिपिमा लेखिएको छ?"
+    },
+    "ne_review": "pending",
+    "site_id": "ashokan-pillar",
+    "merit": 30,
+    "riddle": {
+      "accept": ["brahmi", "brahmī", "ब्राह्मी"],
+      "hint": {
+        "en": "Seek further, traveller — it is the ancestor of most scripts of South Asia, and it named this place.",
+        "ne": "अझ खोज्नुहोस्, यात्री — यो दक्षिण एसियाका धेरै लिपिको पूर्वज हो, र यसैले यो स्थलको नाम राख्यो।"
+      }
+    }
+  }
+]

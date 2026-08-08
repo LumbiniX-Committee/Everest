@@ -1,0 +1,72 @@
+[
+  {
+    "id": "rediscovery-1896",
+    "label": { "en": "Rediscovery", "ne": "पुनः खोज" },
+    "year_from": 1896,
+    "year_to": 1899,
+    "description": {
+      "en": "Khadga Shamsher Rana and Anton Führer clear a mound crowned by a shrine to 'Rummini-dei', uncovering the Ashokan pillar and its inscription. P. C. Mukherji surveys and plans the site in 1899, recovering the main part of the Nativity Sculpture.",
+      "ne": "खड्ग शमशेर राणा र एन्टोन फ्युहररले 'रुम्मिनी-देई' देवीको मन्दिर भएको डाँडा सफा गरी अशोक स्तम्भ र यसको अभिलेख फेला पारे। पी. सी. मुखर्जीले सन् १८९९ मा स्थलको सर्वेक्षण र नक्सा बनाए र जन्म-मूर्तिको मुख्य भाग फेला पारे।"
+    },
+    "ne_review": "pending",
+    "sources": [
+      { "title": "Mukherji 1901, ASI Imperial Series XXVI/1", "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ" }
+    ]
+  },
+  {
+    "id": "reconstruction-1933",
+    "label": { "en": "Reconstruction", "ne": "पुनर्निर्माण" },
+    "year_from": 1933,
+    "year_to": 1939,
+    "description": {
+      "en": "Keshar Shumsher excavates the mound and rebuilds the Maya Devi Temple. The work was later criticised by Debala Mitra as unscientific, having damaged or destroyed structures exposed by earlier surveys.",
+      "ne": "केशर शमशेरले डाँडा उत्खनन गरी माया देवी मन्दिर पुनर्निर्माण गरे। पछि देबला मित्राले यो कामलाई अवैज्ञानिक भन्दै अघिल्ला सर्वेक्षणले देखाएका संरचना बिगारेको वा नष्ट गरेको आलोचना गरिन्।"
+    },
+    "ne_review": "pending",
+    "sources": [
+      { "title": "UNESCO WHC — Lumbini (666rev)", "url": "https://whc.unesco.org/en/list/666" }
+    ]
+  },
+  {
+    "id": "conservation-1962",
+    "label": { "en": "Conservation", "ne": "संरक्षण" },
+    "year_from": 1962,
+    "year_to": 1985,
+    "description": {
+      "en": "The Master Plan era. Kenzo Tange's plan for Lumbini is adopted, and systematic Department of Archaeology surveys begin in 1970–71.",
+      "ne": "गुरुयोजना युग। लुम्बिनीका लागि केन्जो टाङ्गेको योजना स्वीकृत हुन्छ, र पुरातत्त्व विभागका व्यवस्थित सर्वेक्षण सन् १९७०–७१ मा सुरु हुन्छन्।"
+    },
+    "ne_review": "pending",
+    "sources": [
+      { "title": "UNESCO WHC — Lumbini (666rev)", "url": "https://whc.unesco.org/en/list/666" }
+    ]
+  },
+  {
+    "id": "reexcavation-1992",
+    "label": { "en": "Re-excavation", "ne": "पुनः उत्खनन" },
+    "year_from": 1992,
+    "year_to": 1997,
+    "description": {
+      "en": "Renewed excavation exposes the phased brick structures beneath the temple. The Marker Stone is found in 1996, and Lumbini is inscribed on the UNESCO World Heritage List in 1997.",
+      "ne": "नयाँ उत्खननले मन्दिरमुनिका चरणबद्ध इँटा संरचना देखाउँछ। चिन्ह ढुङ्गा सन् १९९६ मा फेला पर्छ, र लुम्बिनी सन् १९९७ मा युनेस्को विश्व सम्पदा सूचीमा सूचीकृत हुन्छ।"
+    },
+    "ne_review": "pending",
+    "sources": [
+      { "title": "UNESCO WHC — Lumbini (666rev)", "url": "https://whc.unesco.org/en/list/666" }
+    ]
+  },
+  {
+    "id": "ldt-2003",
+    "label": { "en": "Present temple", "ne": "हालको मन्दिर" },
+    "year_from": 2003,
+    "year_to": null,
+    "description": {
+      "en": "The Maya Devi Temple is rebuilt by the Lumbini Development Trust to shelter the excavated remains and the Marker Stone.",
+      "ne": "माया देवी मन्दिर लुम्बिनी विकास कोषद्वारा उत्खनित अवशेष र चिन्ह ढुङ्गालाई जोगाउन पुनर्निर्माण गरिन्छ।"
+    },
+    "ne_review": "pending",
+    "sources": [
+      { "title": "UNESCO WHC — Lumbini (666rev)", "url": "https://whc.unesco.org/en/list/666" }
+    ]
+  }
+]
