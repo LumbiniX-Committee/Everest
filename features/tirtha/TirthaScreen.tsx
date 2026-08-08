@@ -3,7 +3,8 @@ import { StyleSheet, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
 import { ScreenHeader, SettingsButton } from '@/components/common';
-import { SitePlan } from '@/components/map';
+import { ArrivalWisdom } from '@/components/arrival';
+import { SiteMap3D, SitePlan } from '@/components/map';
 import { SiteListItem } from '@/components/site';
 import { demoSites } from '@/data';
 import { QuestCard } from '@/features/quests';
@@ -42,6 +43,12 @@ export function TirthaScreen() {
         rightAction={<SettingsButton />}
       />
 
+      <ArrivalWisdom coordinate={coordinate} />
+
+      <SiteMap3D onSelectSite={(id) => router.push(`/(main)/tirtha/site/${id}`)} />
+
+      {/* The flat plan stays: it renders with no network and no tiles, and it
+          is the only view that works when the basemap cannot load. */}
       <SitePlan sites={demoSites} observer={coordinate} />
 
       {showLocationOffer ? (

@@ -3,7 +3,7 @@ import { Image, Pressable, StyleSheet, View } from 'react-native';
 
 import { MetaRow, Text } from '@/components/ui';
 import { colors, radii, spacing } from '@/theme';
-import { formatBearing, formatDelta, formatDistance, formatTimestamp } from '@/utils';
+import { formatDistance, formatTimestamp } from '@/utils';
 import type { Observation } from '@/types';
 
 export type TimeSeriesScrubberProps = {
