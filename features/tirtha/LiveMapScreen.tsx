@@ -220,20 +220,23 @@ export function LiveMapScreen() {
     const standingAfter = standingFor(after);
     const site = findSite(siteId);
 
+    // Recognition, not a score. Crossing a threshold is named rather than
+    // celebrated, and the amount shown is always the amount the ledger actually
+    // granted — which is zero once the daily cap is reached, and says so.
     setReward(
       leveledUp
         ? {
-            title: `🎉 LEVEL UP! Level ${standingAfter.level} · ${standingAfter.title}`,
-            detail: `${site?.name ?? 'This place'} · +${event?.amount ?? 0} Wisdom XP earned!`,
+            title: `✦ Recognised as ${standingAfter.title}`,
+            detail: `${site?.name ?? 'This place'} · ${amountLine(event?.amount ?? 0)}`,
           }
         : event && event.amount > 0
           ? {
-              title: `✦ Wisdom Unlocked (+${event.amount} XP)`,
-              detail: `${site?.name ?? 'This place'} · Level ${standingAfter.level} (${standingAfter.title})`,
+              title: `✦ ${event.amount} puṇya recorded`,
+              detail: `${site?.name ?? 'This place'} · ${standingAfter.title}`,
             }
           : {
-              title: '✦ Wisdom Unlocked',
-              detail: `${site?.name ?? 'This place'} · You have explored well today`,
+              title: '✦ Recorded',
+              detail: `${site?.name ?? 'This place'} · enough for today; the record keeps`,
             },
     );
   };
@@ -363,14 +366,14 @@ export function LiveMapScreen() {
           <View
             style={styles.standing}
             accessibilityRole="progressbar"
-            accessibilityLabel={`${standing.title}, level ${standing.level}, ${standing.wisdom} wisdom`}
+            accessibilityLabel={`${standing.title}, ${standing.wisdom} puṇya`}
           >
             <View style={styles.standingHead}>
               <Text variant="caption" tone="sandstone" uppercase style={styles.standingTitle}>
-                LVL {standing.level} · {standing.title}
+                {standing.title}
               </Text>
               <Text variant="caption" tone="muted">
-                {standing.wisdom} XP
+                {standing.wisdom} puṇya
               </Text>
             </View>
             <View style={styles.wisdomTrack}>
@@ -784,3 +787,16 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
 });
+
+/**
+ * What the ledger actually granted, in words.
+ *
+ * Zero is a real and expected outcome — the daily cap exists precisely so that
+ * repeating an act stops being worth anything, and `core/progression` says the
+ * completion moments must state that rather than show an amount that was not
+ * granted. Printing a fixed "+200" over a capped award would be inventing a
+ * measurement, which is the one thing this record must never do.
+ */
+function amountLine(amount: number): string {
+  return amount > 0 ? `${amount} puṇya recorded` : 'enough for today; the record keeps';
+}

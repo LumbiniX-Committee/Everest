@@ -204,8 +204,16 @@ function QuestRow({
           </Text>
           <View style={styles.cardTitle}>
             <Text variant="heading">{quest.title}</Text>
+            {/*
+              No amount. `+{tasks.length * 100}` used to sit here, and it was
+              invented twice over: quests carry no value of their own — puṇya is
+              weighted by the kind of attention, never by the quest — and the
+              daily cap means the figure would often be granted in full to
+              nobody. types/quests.ts states the rule: "Putting a number here
+              would invite tuning quests for points."
+            */}
             <Text variant="caption" tone={done ? 'sandstone' : 'muted'}>
-              {tasksDone(quest)} / {quest.tasks.length} objectives · +{quest.tasks.length * 100} XP
+              {tasksDone(quest)} / {quest.tasks.length} tasks
             </Text>
           </View>
           <Text variant="body" tone="muted">

@@ -11,7 +11,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { GreetingMonk } from '@/components/monk';
-import { buildStory, standingFor, type StoryBeat } from '@/core';
+import { buildStory, standingFor, WISDOM_LEVELS, type StoryBeat } from '@/core';
 import { findSite } from '@/data';
 import { arrival, voice } from '@/services';
 import { usePractice, usePreferences } from '@/store';
@@ -155,16 +155,19 @@ function UnlockPopup({ visible, siteName, onClose, onQuests, confettiOn }: Unloc
           </Pressable>
 
           <RNText style={popup.star}>✦</RNText>
-          <RNText style={popup.label}>SPIRITUALITY UNLOCKED</RNText>
-          
-          {/* Dynamic Level & Title */}
-          <RNText style={popup.level}>Level {standing.level} · {standing.title}</RNText>
+          <RNText style={popup.label}>STORY READ</RNText>
 
-          {/* XP Gained Badge */}
-          <View style={popup.xpBadge}>
-            <RNText style={popup.xpBadgeTxt}>+200 Wisdom XP Earned!</RNText>
-          </View>
+          {/* The standing this person now holds, named rather than numbered. */}
+          <RNText style={popup.level}>{standing.title}</RNText>
 
+          {/*
+            A fixed "+200 earned" badge stood here, and it was not a reading of
+            anything: it was a constant, shown whatever the ledger granted —
+            including zero, once the daily cap is reached. `recognise()` returns
+            the real amount and this component is not given it, so rather than
+            print a number it cannot know, it prints none. The awarded amount is
+            announced by the surface that actually performed the award.
+          */}
           <View style={popup.divider} />
 
           <RNText style={popup.siteName}>{siteName}</RNText>
@@ -175,16 +178,18 @@ function UnlockPopup({ visible, siteName, onClose, onQuests, confettiOn }: Unloc
           {/* Level Progress Indicator */}
           <View style={popup.progressBox}>
             <View style={popup.progressHead}>
-              <RNText style={popup.progressLabel}>Level {standing.level} Progress</RNText>
-              <RNText style={popup.progressPts}>{standing.wisdom} XP Total</RNText>
+              <RNText style={popup.progressLabel}>Standing</RNText>
+              <RNText style={popup.progressPts}>{standing.wisdom} puṇya</RNText>
             </View>
             <View style={popup.track}>
               <View style={[popup.fill, { width: `${Math.round(standing.progress * 100)}%` }]} />
             </View>
             <RNText style={popup.toNext}>
+              {/* Named, not numbered: "until Seeker" says something about a
+                  pilgrimage in a way "for Level 3" never will. */}
               {standing.toNextLevel > 0
-                ? `${standing.toNextLevel} XP needed for Level ${standing.level + 1}`
-                : 'Maximum Spiritual Level Reached!'}
+                ? `${standing.toNextLevel} puṇya until ${nextTitleAfter(standing.title)}`
+                : 'The furthest standing this record keeps'}
             </RNText>
           </View>
 
@@ -200,6 +205,17 @@ function UnlockPopup({ visible, siteName, onClose, onQuests, confettiOn }: Unloc
 }
 
 // ─── Beat body ────────────────────────────────────────────────────────────────
+
+/**
+ * The title that follows this one, or the current one at the top.
+ *
+ * Read from `WISDOM_LEVELS` rather than restated here, so inserting a standing
+ * cannot leave this copy naming one that no longer follows.
+ */
+function nextTitleAfter(title: string): string {
+  const index = WISDOM_LEVELS.findIndex((entry) => entry.title === title);
+  return WISDOM_LEVELS[index + 1]?.title ?? title;
+}
 
 function BeatBody({ beat }: { beat: StoryBeat }) {
   const typed = useTypingText(beat.body, 22);
@@ -818,22 +834,6 @@ const popup = StyleSheet.create({
     color: colors.textPrimary,
     textAlign: 'center',
     letterSpacing: 0.2,
-  },
-
-  xpBadge: {
-    backgroundColor: 'rgba(180, 71, 42, 0.1)',
-    borderRadius: radii.full,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xxs + 2,
-    borderWidth: 1,
-    borderColor: 'rgba(180, 71, 42, 0.25)',
-  },
-
-  xpBadgeTxt: {
-    fontSize: 12,
-    fontWeight: '800',
-    color: '#B4472A',
-    letterSpacing: 0.4,
   },
 
   progressBox: {
