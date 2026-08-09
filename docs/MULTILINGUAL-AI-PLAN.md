@@ -26,15 +26,14 @@ app input
   -> translate input to English when required
   -> canonical hybrid retrieval
   -> Ollama Cloud synthesis with exact citation IDs
-  -> validate citations before translation
-  -> Google Cloud Translation for target language when required
-  -> return translated answer plus original evidence/citations
+  -> validate citations
+  -> return the model's requested-language answer plus original evidence/citations
 ```
 
-Google credentials live only on the API server as `GOOGLE_TRANSLATE_API_KEY`.
-The browser and mobile bundle receive only the API URL. Translation is
-optional at runtime: if the provider is unavailable, the server uses the
-model's direct language output or the deterministic language fallback.
+No translation billing account is required for the current release. The
+Ollama model receives the requested output language directly. A future server
+translation provider may be added behind the same boundary, but it is not part
+of the current deployment path.
 
 The API contract should carry:
 
@@ -106,9 +105,9 @@ canonical evidence.
 | Environment | AI | Translation | Mobile target |
 |---|---|---|---|
 | Local | Ollama Cloud through mock API | optional server key | Expo Go/dev client |
-| Preview | hosted API + Ollama Cloud | Google Translation server key | internal APK |
-| Production | hosted HTTPS API | Google Translation server key | store/production build |
+| Preview | hosted API + Ollama Cloud | Ollama requested-language output | internal APK |
+| Production | hosted HTTPS API | Ollama requested-language output | store/production build |
 
-`OLLAMA_API_KEY` and `GOOGLE_TRANSLATE_API_KEY` are server-only. Only
+`OLLAMA_API_KEY` is server-only. Only
 `EXPO_PUBLIC_API_URL` and publishable Supabase configuration may be embedded in
 the app bundle.
