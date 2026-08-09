@@ -57,6 +57,24 @@ export function PreferencesScreen() {
       </SettingsSection>
 
       <SettingsSection
+        title="On arrival"
+        footnote="Both are on because reaching a place is the gesture — you should not have to know there was something to open. Narration follows your phone's silent switch: silenced on the way into a shrine, it stays silent and the text is still there to read."
+      >
+        <SettingsToggle
+          label="Open what a place holds"
+          hint="Show the passage as soon as you reach a monument, without being asked."
+          value={preferences.autoWisdom}
+          onValueChange={(next) => void update('autoWisdom', next)}
+        />
+        <SettingsToggle
+          label="Play the narration"
+          hint="Start the recording when that opens. Never when your phone is silenced."
+          value={preferences.autoNarration}
+          onValueChange={(next) => void update('autoNarration', next)}
+        />
+      </SettingsSection>
+
+      <SettingsSection
         title="Capture"
         footnote="Auto-capture is off by default. The witness loop is an act of attention, and an automatic shutter takes that decision away from the person holding the camera."
       >

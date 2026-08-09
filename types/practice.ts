@@ -21,7 +21,9 @@ export type MeritKind =
   /** Reading an answer through to its sources. */
   | 'study'
   /** A reflection completed. */
-  | 'reflection';
+  | 'reflection'
+  /** Lumbini wisdom received. */
+  | 'wisdom';
 
 export const MERIT_LABELS: Record<MeritKind, string> = {
   witness: 'Witnessed',
@@ -29,6 +31,7 @@ export const MERIT_LABELS: Record<MeritKind, string> = {
   resurvey: 'Returned',
   study: 'Studied',
   reflection: 'Reflected',
+  wisdom: 'Lumbini Wisdom',
 };
 
 /**
@@ -45,6 +48,7 @@ export const MERIT_WEIGHTS: Record<MeritKind, number> = {
   resurvey: 50,
   study: 30,
   reflection: 70,
+  wisdom: 50,
 };
 
 /**

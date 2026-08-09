@@ -58,6 +58,10 @@ export type UserPreferences = {
   offlineSyncMode: OfflineSyncMode;
   photoQuality: PhotoQuality;
   wisdomTier: WisdomTier;
+  /** Open what a place holds the moment you reach it, without being asked. */
+  autoWisdom: boolean;
+  /** Start the recorded narration when that opens. */
+  autoNarration: boolean;
 };
 
 export const DEFAULT_USER_PREFERENCES: UserPreferences = {
@@ -76,6 +80,14 @@ export const DEFAULT_USER_PREFERENCES: UserPreferences = {
   // caption, and a person who wants less can say so in one tap — whereas nobody
   // discovers depth they were never shown.
   wisdomTier: 'medium',
+  // On. Someone walking a site with a phone in their pocket should not have to
+  // know there was something to open; reaching the place is the gesture.
+  autoWisdom: true,
+  // Also on, but narrower than it looks: playback respects the silent switch
+  // (see services/audio), so a phone silenced on the way into a shrine stays
+  // silent and the text is still there to read. That is what makes an automatic
+  // narration defensible in a place people come to be quiet in.
+  autoNarration: true,
 };
 
 /**

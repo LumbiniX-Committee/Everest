@@ -108,11 +108,25 @@ export async function hasPermission(): Promise<boolean> {
   }
 }
 
+/**
+ * An arrival, from either of the two things that can detect one.
+ *
+ * The OS geofence knows a *precinct* was entered and nothing finer; a live
+ * foreground fix knows which *monument* you are standing on. Both raise the
+ * same banner, and the tap has to open the right thing, so the payload names
+ * which kind of arrival it was instead of putting a site id in a field called
+ * `precinctId` — which is what it used to do, and which meant every tap
+ * resolved to a precinct that did not exist.
+ */
 export type ArrivalNotification = {
-  precinctId: string;
+  precinctId?: string;
+  siteId?: string;
   title: string;
   body: string;
 };
+
+/** What a tapped arrival banner points at. */
+export type ArrivalTarget = { kind: 'precinct' | 'site'; id: string };
 
 /**
  * Presents an arrival immediately.
@@ -123,6 +137,7 @@ export type ArrivalNotification = {
  */
 export async function presentArrival({
   precinctId,
+  siteId,
   title,
   body,
 }: ArrivalNotification): Promise<void> {
@@ -130,19 +145,55 @@ export async function presentArrival({
   if (!N) return;
 
   try {
+    // Silent when unpermitted, and that used to be the whole story: nothing
+    // asked for the permission outside Settings → Arrivals, so for anyone who
+    // never opened that screen every arrival returned here and stopped. The ask
+    // now happens in onboarding, beside the location ask that makes arrivals
+    // possible at all. This stays a quiet return because by the time an arrival
+    // fires there is no one to prompt.
     if (!(await hasPermission())) return;
 
     await N.scheduleNotificationAsync({
       content: {
         title,
         body,
-        data: { precinctId, kind: 'arrival' },
+        data: { precinctId, siteId, kind: 'arrival' },
         ...(Platform.OS === 'android' ? { channelId: ARRIVAL_CHANNEL } : {}),
       },
       trigger: null,
     });
   } catch (error) {
     console.warn('Failed to present arrival notification:', error);
+  }
+}
+
+/**
+ * Calls back when someone taps an arrival banner.
+ *
+ * A banner that does nothing when tapped is worse than no banner: it says there
+ * is something here to read and then refuses to show it. Returns an unsubscribe
+ * that is safe to call on an unsupported host, where nothing was subscribed.
+ */
+export function subscribeToArrivalTaps(handler: (target: ArrivalTarget) => void): () => void {
+  const N = load();
+  if (!N) return () => undefined;
+
+  try {
+    const subscription = N.addNotificationResponseReceivedListener((response) => {
+      const data = response.notification.request.content.data as {
+        kind?: string;
+        siteId?: string;
+        precinctId?: string;
+      } | null;
+      if (!data || data.kind !== 'arrival') return;
+      // Site first: it is the more specific of the two, and a notification
+      // carrying both came from the fine-grained path.
+      if (typeof data.siteId === 'string') handler({ kind: 'site', id: data.siteId });
+      else if (typeof data.precinctId === 'string') handler({ kind: 'precinct', id: data.precinctId });
+    });
+    return () => subscription.remove();
+  } catch {
+    return () => undefined;
   }
 }
 

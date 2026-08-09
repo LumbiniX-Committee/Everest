@@ -1,8 +1,9 @@
-import { StyleSheet, View } from 'react-native';
+import { Modal, Pressable, StyleSheet, View } from 'react-native';
 
-import { Text } from '@/components/ui';
+import { Button, Card, ProgressIndicator, Text } from '@/components/ui';
+import { usePractice } from '@/store/practice';
 import { colors, radii, spacing } from '@/theme';
-import { MERIT_LABELS, type MeritEvent } from '@/types';
+import { DAILY_MERIT_CAP, MERIT_LABELS, type MeritEvent } from '@/types';
 
 export type MeritAcknowledgementProps = {
   event: MeritEvent;
@@ -30,6 +31,104 @@ export function MeritAcknowledgement({ event }: MeritAcknowledgementProps) {
   );
 }
 
+export type MeritRewardModalProps = {
+  visible: boolean;
+  onClose: () => void;
+  event?: MeritEvent | null;
+};
+
+/**
+ * What is shown at the moment of recognition: the puṇya recorded, the line
+ * that goes with it, and where the day now stands against the cap.
+ *
+ * A null `event` is not an error and not a zero-award — it is the store saying
+ * the day is already complete, or this act was already recognised. Showing
+ * "+50" there would be the app congratulating itself for a ledger entry it did
+ * not make, so the modal says what actually happened instead.
+ */
+export function MeritRewardModal({ visible, onClose, event }: MeritRewardModalProps) {
+  const { summary } = usePractice();
+  const awarded = event !== null && event !== undefined && event.amount > 0;
+
+  return (
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      onRequestClose={onClose}
+    >
+      <Pressable style={styles.modalOverlay} onPress={onClose}>
+        <Pressable style={styles.modalContainer} onPress={(e) => e.stopPropagation()}>
+          <Card style={styles.rewardCard}>
+            <View style={styles.headerBadge}>
+              <Text style={styles.badgeIcon}>🪷</Text>
+            </View>
+
+            <View style={styles.titleSection}>
+              <Text variant="heading" center tone="sandstone">
+                {awarded ? 'Recognised' : 'Recorded'}
+              </Text>
+              {awarded && event ? (
+                <Text variant="display" center tone="sandstone" style={styles.pointsAmount}>
+                  +{event.amount} puṇya
+                </Text>
+              ) : null}
+              <Text variant="body" center tone="secondary">
+                {event
+                  ? event.acknowledgement
+                  : summary.dayComplete
+                    ? 'You have done enough today. The act is in the ledger; no further merit follows.'
+                    : 'Already recognised. It stays in the ledger once.'}
+              </Text>
+            </View>
+
+            <View style={styles.statsContainer}>
+              <View style={styles.statBox}>
+                <Text variant="caption" tone="muted" uppercase>
+                  Puṇya Balance
+                </Text>
+                <Text variant="label" tone="sandstone" style={styles.statValue}>
+                  {summary.balance} points
+                </Text>
+              </View>
+
+              <View style={styles.statDivider} />
+
+              <View style={styles.statBox}>
+                <Text variant="caption" tone="muted" uppercase>
+                  Recognised today
+                </Text>
+                <Text variant="label" tone="sandstone" style={styles.statValue}>
+                  {summary.todayMerit} / {DAILY_MERIT_CAP}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.progressSection}>
+              <View style={styles.progressHeader}>
+                <Text variant="caption" tone="muted" uppercase>
+                  Daily Cap Progress
+                </Text>
+                <Text variant="caption" tone="sandstone">
+                  {summary.todayMerit} / {DAILY_MERIT_CAP}
+                </Text>
+              </View>
+              <ProgressIndicator value={summary.todayMerit} total={DAILY_MERIT_CAP} showCount={false} />
+            </View>
+
+            <Button
+              label="Continue Journey"
+              variant="primary"
+              onPress={onClose}
+              style={styles.closeButton}
+            />
+          </Card>
+        </Pressable>
+      </Pressable>
+    </Modal>
+  );
+}
+
 const styles = StyleSheet.create({
   wrap: {
     gap: spacing.sm,
@@ -38,5 +137,83 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceSecondary,
     borderLeftWidth: 3,
     borderLeftColor: colors.sandstone,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: spacing.base,
+  },
+  modalContainer: {
+    width: '100%',
+    maxWidth: 380,
+  },
+  rewardCard: {
+    gap: spacing.md,
+    padding: spacing.lg,
+    borderRadius: radii.xl,
+    backgroundColor: colors.surface,
+    borderColor: colors.sandstone,
+    borderWidth: 1.5,
+    alignItems: 'center',
+  },
+  headerBadge: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: colors.surfaceSecondary,
+    borderColor: colors.sandstone,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  badgeIcon: {
+    fontSize: 32,
+  },
+  titleSection: {
+    gap: spacing.xs,
+    alignItems: 'center',
+    width: '100%',
+  },
+  pointsAmount: {
+    fontSize: 36,
+    fontWeight: '700',
+    color: colors.sandstone,
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    width: '100%',
+    backgroundColor: colors.surfaceSecondary,
+    borderRadius: radii.md,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+  },
+  statBox: {
+    alignItems: 'center',
+    gap: 2,
+  },
+  statValue: {
+    fontWeight: '700',
+  },
+  statDivider: {
+    width: 1,
+    height: 28,
+    backgroundColor: colors.border,
+  },
+  progressSection: {
+    width: '100%',
+    gap: spacing.xs,
+  },
+  progressHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  closeButton: {
+    width: '100%',
+    marginTop: spacing.xs,
   },
 });

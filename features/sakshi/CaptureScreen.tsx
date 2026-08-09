@@ -217,16 +217,30 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
           </Text>
         ) : null}
 
+        {/*
+          Two ways to record, and by-eye is not a footnote to the other.
+          
+          It used to be a `quiet` text link sitting under a large, greyed-out
+          shutter. That reads as one broken button, not as two choices — so the
+          feature people could always reach looked like the feature that did not
+          work. Unaligned, by-eye *is* the shutter; the round control is the one
+          that greys out, because it is the one with a precondition.
+        */}
         <View style={styles.buttonGroup}>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Record observation"
-            accessibilityState={{ disabled: !locked || saving, busy: saving }}
-            disabled={!locked || saving}
-            onPress={() => onCapture('aligned', false)}
+            accessibilityLabel={locked ? 'Record aligned observation' : 'Record by eye'}
+            accessibilityState={{ busy: saving }}
+            accessibilityHint={
+              locked
+                ? 'Records a measured observation from this vantage'
+                : 'Records a photograph without a measured lock — position and bearing error are left blank'
+            }
+            disabled={saving}
+            onPress={() => onCapture(locked ? 'aligned' : 'manual', false)}
             style={({ pressed }) => [
               styles.shutter,
-              locked ? styles.shutterReady : styles.shutterWaiting,
+              locked ? styles.shutterReady : styles.shutterByEye,
               pressed && styles.shutterPressed,
             ]}
           >
@@ -241,22 +255,19 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
               onPress={() => onCapture('aligned', true)}
               accessibilityHint="Record a stable observation"
             />
-          ) : (
-            <Button
-              label="Capture by eye"
-              variant="quiet"
-              disabled={saving}
-              onPress={() => onCapture('manual', false)}
-              accessibilityHint="Record a by-eye observation without a measured lock"
-            />
-          )}
+          ) : null}
         </View>
 
-        <Text variant="caption" tone="muted" center>
+        <Text variant="caption" tone={locked ? 'locked' : 'seeking'} center>
           {locked
-            ? 'Aligned. Press shutter to record.'
-            : 'Move or nudge compass until reticle locks — or capture by eye.'}
+            ? 'Aligned — the shutter records position and bearing error.'
+            : 'By eye — the photograph is kept, the measurements are left blank.'}
         </Text>
+        {!locked ? (
+          <Text variant="caption" tone="muted" center>
+            Move, or nudge the compass, until the reticle locks for a measured record.
+          </Text>
+        ) : null}
       </View>
     </Screen>
   );
@@ -317,7 +328,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   shutterReady: { borderColor: colors.alignmentLocked },
-  shutterWaiting: { borderColor: colors.border },
+  // Live, not disabled — by-eye is a valid record, drawn in the seeking colour
+  // so it never reads as the aligned one.
+  shutterByEye: { borderColor: colors.alignmentSeeking },
   shutterPressed: { opacity: 0.7 },
   shutterCore: {
     width: 56,

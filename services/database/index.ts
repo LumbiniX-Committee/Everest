@@ -816,6 +816,49 @@ export async function completeQuestTask(questId: string, taskId: string): Promis
   };
 }
 
+/**
+ * Un-tick a task.
+ *
+ * The completion interaction is a tick, and a tick with no way back is a trap:
+ * one mis-tap marks an objective done and the only remedy shipped was resetting
+ * the whole quest. Undo is the other half of a checkbox.
+ *
+ * A quest that had been finished drops back to `in_progress` and loses its
+ * `completedAt`. What it does *not* do is take back the puṇya that completion
+ * recognised — the ledger is append-only by design, and un-recording an act of
+ * attention because someone corrected a checkbox is exactly the kind of edit it
+ * exists to refuse. The quest can be finished again; the merit is not paid
+ * twice, because `recognise` already declines a repeat.
+ */
+export async function uncompleteQuestTask(questId: string, taskId: string): Promise<QuestProgress> {
+  const db = await getDatabase();
+  const questWithProgress = await getQuest(questId);
+  if (!questWithProgress) {
+    throw new Error(`Quest with id ${questId} not found`);
+  }
+
+  const remaining = questWithProgress.progress.completedTasks.filter((id) => id !== taskId);
+  const startedAt = questWithProgress.progress.startedAt ?? Date.now();
+  const status: QuestStatus = remaining.length === 0 ? 'not_started' : 'in_progress';
+
+  await db.runAsync(
+    `INSERT INTO quest_progress (quest_id, status, completed_tasks, started_at, completed_at)
+     VALUES (?, ?, ?, ?, ?)
+     ON CONFLICT(quest_id) DO UPDATE SET
+       status = excluded.status,
+       completed_tasks = excluded.completed_tasks,
+       started_at = excluded.started_at,
+       completed_at = excluded.completed_at`,
+    questId,
+    status,
+    JSON.stringify(remaining),
+    startedAt,
+    null,
+  );
+
+  return { questId, status, completedTasks: remaining, startedAt };
+}
+
 export async function resetQuestProgress(questId?: string): Promise<void> {
   const db = await getDatabase();
   if (questId) {

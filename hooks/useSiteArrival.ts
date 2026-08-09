@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { arrival, notifications } from '@/services';
 import { usePreferences } from '@/store';
@@ -27,12 +27,37 @@ import type { Coordinate } from '@/types';
  */
 const RE_ARM_MARGIN_M = 25;
 
+/**
+ * Which sites have already spoken, and when.
+ *
+ * Module-level, not a ref. Held in a ref it belonged to one mounted copy of the
+ * hook, so it emptied on every remount — and both Tīrtha and the full-screen
+ * map mount this hook, so walking between the two re-announced a site the
+ * person had not moved from. Two components watching one physical arrival have
+ * to share one memory of it.
+ */
+const announcedAt = new Map<string, number>();
+
+/**
+ * A floor under how often one site may announce itself, whatever the geometry
+ * says. The re-arm margin above handles walking away and back; this handles the
+ * rest — a fix that jitters across the margin, a screen reopened, an app
+ * resumed. Twenty minutes is longer than it takes to look at one monument and
+ * shorter than a second visit later in the day.
+ */
+const MIN_RE_ANNOUNCE_MS = 20 * 60 * 1000;
+
 export type SiteArrivalState = {
   /** The site you are within reach of, or null. */
   atSiteId: string | null;
   /** Nearest site regardless of reach, for a "how far" readout. */
   nearest: ReturnType<typeof arrival.nearestSite>;
 };
+
+/** Lets the demo walk start a fresh run without inheriting the last one's silence. */
+export function resetSiteAnnouncements(): void {
+  announcedAt.clear();
+}
 
 export function useSiteArrival(
   coordinate: Coordinate | null,
@@ -51,49 +76,51 @@ export function useSiteArrival(
     [coordinate?.latitude, coordinate?.longitude],
   );
 
-  /**
-   * Held in a ref, not state.
-   *
-   * This changes on every fix and nothing renders from it — putting it in state
-   * would re-render the whole screen once a second while someone walks.
-   */
-  const announced = useRef<Set<string>>(new Set());
-
   useEffect(() => {
     if (!nearest) {
       setAtSiteId(null);
       return;
     }
 
-    const reach = arrival.reachOf(nearest.site);
+    const site = nearest.site;
+    const reach = arrival.reachOf(site);
     const inside = nearest.distanceM <= reach;
     const wellOutside = nearest.distanceM > reach + RE_ARM_MARGIN_M;
+    const now = Date.now();
 
     if (wellOutside) {
-      // Left properly. Let this site speak again on a genuine return.
-      announced.current.delete(nearest.site.id);
+      // Left properly. Let this site speak again on a genuine return — but only
+      // once the floor above has also passed, so pacing the boundary cannot
+      // turn one visit into a stream of banners.
+      const last = announcedAt.get(site.id);
+      if (last === undefined || now - last >= MIN_RE_ANNOUNCE_MS) announcedAt.delete(site.id);
     }
 
-    setAtSiteId(inside ? nearest.site.id : null);
+    setAtSiteId(inside ? site.id : null);
 
-    if (!inside || announced.current.has(nearest.site.id)) return;
+    if (!inside || announcedAt.has(site.id)) return;
 
     // Nothing to say is a reason to stay quiet, not to announce an empty
     // banner — the same refusal the Dhamma surface applies to a weak match.
     // Judged at the reader's chosen depth: at `basic` a site whose only
     // material is a facts table has nothing to say, and staying quiet is the
     // correct outcome rather than a bug.
-    if (!arrival.hasSomethingToSay(nearest.site.id, wisdomTier)) return;
+    if (!arrival.hasSomethingToSay(site.id, wisdomTier)) return;
 
-    announced.current.add(nearest.site.id);
+    // Recorded whether or not this caller notifies. The mark means "this
+    // arrival has been handled", and the screen showing the passage handles it
+    // just as much as a banner does — otherwise the map, which passes
+    // notify:false, would leave the arrival un-marked for Tīrtha to announce
+    // the moment you switched tabs.
+    announcedAt.set(site.id, now);
 
     if (notify) {
       void notifications.presentArrival({
-        precinctId: nearest.site.id,
-        title: `You are at ${nearest.site.name}`,
+        siteId: site.id,
+        title: `You are at ${site.name}`,
         // Names the place and points at the app rather than quoting: a banner
         // truncates and strips the citation, and the citation is the point.
-        body: nearest.site.summary ?? 'Open Sākṣī to read what this place holds.',
+        body: site.summary ?? 'Open Sākṣī to read what this place holds.',
       });
     }
   }, [nearest, notify, wisdomTier]);

@@ -10,6 +10,7 @@ export * as sync from './sync';
 export * as dhamma from './dhamma';
 export * as geofencing from './geofencing';
 export * as notifications from './notifications';
+export * as audio from './audio';
 export * as voice from './voice';
 export * as arrival from './arrival';
 export * as integrity from './integrity';

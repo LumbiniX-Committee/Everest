@@ -1,4 +1,4 @@
-import { demoDhammaEntries, demoPrecincts, findSite } from '@/data';
+import { demoDhammaEntries, demoPrecincts, demoQuests, findSite, findVantage } from '@/data';
 import { MIN_GEOFENCE_RADIUS_M } from '@/types';
 
 /**
@@ -63,6 +63,28 @@ export function checkSiteReferences(): IntegrityProblem[] {
           message: `references site "${siteId}", which does not exist. This passage will never surface on arrival.`,
         });
       }
+    }
+  }
+
+  /*
+   * Quests were the case this file described and did not cover.
+   *
+   * Every quest task carries a `targetId` naming either a site or a vantage,
+   * and that id is what makes a quest location-aware — it decides which quests
+   * are offered where, and whether one is locked. Two of the four shipped
+   * quests pointed at `ashoka-pillar` and `puskarini-pond`: the very ids the
+   * note above says were renamed. Nothing failed. The quests simply belonged
+   * to no place, so they were never offered anywhere and never locked
+   * anywhere, which looks exactly like a quest system with nothing to do.
+   */
+  for (const quest of demoQuests) {
+    for (const task of quest.tasks) {
+      if (!task.targetId) continue;
+      if (findSite(task.targetId) || findVantage(task.targetId)) continue;
+      problems.push({
+        where: `quest "${quest.id}", task "${task.id}"`,
+        message: `targets "${task.targetId}", which is neither a site nor a vantage. This task can never be offered at a place or completed by reaching one.`,
+      });
     }
   }
 

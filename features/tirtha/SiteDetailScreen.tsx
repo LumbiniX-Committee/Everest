@@ -115,10 +115,13 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
         }
       />
 
+      {/* Never automatic here: opening a site's page is reading, and reading
+          is not a reason to start talking. The arrival sheet is the surface
+          that plays on its own, because reaching a place is a different act. */}
       {narration || audioSource ? (
         <>
           <Divider />
-          <NarrationPlayer audioSource={audioSource} narration={narration} />
+          <NarrationPlayer siteId={site.id} />
         </>
       ) : null}
 

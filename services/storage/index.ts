@@ -103,6 +103,8 @@ export async function getUserPreferences(): Promise<UserPreferences> {
     offlineSyncMode: oneOf(raw.offlineSyncMode, OFFLINE_SYNC_OPTIONS, 'offlineSyncMode'),
     photoQuality: oneOf(raw.photoQuality, PHOTO_QUALITY_OPTIONS, 'photoQuality'),
     wisdomTier: oneOf(raw.wisdomTier, WISDOM_TIER_OPTIONS, 'wisdomTier'),
+    autoWisdom: bool(raw.autoWisdom, 'autoWisdom'),
+    autoNarration: bool(raw.autoNarration, 'autoNarration'),
   };
 }
 
