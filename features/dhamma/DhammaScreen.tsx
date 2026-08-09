@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
-import { Image, Platform, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { Image, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // The family directly, not through the package barrel: the barrel pulls in
 // every icon family, and only this one is used here. No `@ts-ignore` — the
@@ -38,9 +38,6 @@ import { useVoiceInput } from '@/hooks/useVoiceInput';
  * badge precisely because it makes no claim — and it stays abstract so it can
  * never be mistaken for the archive plates in Sākṣī, which do.
  */
-
-/** Serif, for the two display headings only. */
-const SERIF = Platform.select({ ios: 'Georgia', android: 'serif', default: 'serif' });
 
 /**
  * The face each collection entry wears.
@@ -95,7 +92,9 @@ export function DhammaScreen() {
             </Text>
             <SettingsButton />
           </View>
-          <Text style={styles.title}>Questions</Text>
+          <Text variant="display" style={styles.title}>
+            Questions
+          </Text>
           <Text variant="body" tone="secondary" style={styles.subtitle}>
             Everything here carries a citation you can go and check.
           </Text>
@@ -191,7 +190,9 @@ export function DhammaScreen() {
               />
             </View>
             <View style={styles.reflectionText}>
-              <Text style={styles.cardHeading}>Reflection companion</Text>
+              <Text variant="title" style={styles.cardHeading}>
+                Reflection companion
+              </Text>
               <Text variant="body" tone="secondary">
                 Say what is on your mind. It turns that into a few questions — one at a time, in
                 your own words — and ends with a short reflection you can check against the canon.
@@ -215,7 +216,9 @@ export function DhammaScreen() {
           </Pressable>
         </View>
 
-        <Text style={styles.sectionTitle}>What it can answer</Text>
+        <Text variant="title" style={styles.sectionTitle}>
+          What it can answer
+        </Text>
 
         <View style={styles.list}>
           {demoDhammaEntries.map((entry) => {
@@ -316,13 +319,12 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   eyebrow: { letterSpacing: 2 },
-  title: {
-    fontFamily: SERIF,
-    fontSize: 40,
-    lineHeight: 48,
-    fontWeight: '700',
-    color: colors.textPrimary,
-  },
+  /*
+    Size only. The family comes from the `display` variant, resolved at render —
+    a hardcoded `fontFamily` here would be frozen at module scope and would miss
+    the real families the moment they finish loading.
+  */
+  title: { fontSize: 40, lineHeight: 48, letterSpacing: 0 },
   // Held short of the illustration's subject so the two never collide on a
   // narrow display.
   subtitle: { maxWidth: '72%' },
@@ -402,13 +404,7 @@ const styles = StyleSheet.create({
   },
   reflectionRow: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.base },
   reflectionText: { flex: 1, gap: spacing.xs },
-  cardHeading: {
-    fontFamily: SERIF,
-    fontSize: 20,
-    lineHeight: 26,
-    fontWeight: '700',
-    color: colors.textPrimary,
-  },
+  cardHeading: { fontSize: 20, lineHeight: 26 },
   iconCircleLarge: {
     width: 60,
     height: 60,
@@ -430,14 +426,7 @@ const styles = StyleSheet.create({
     borderColor: colors.sandstone,
   },
 
-  sectionTitle: {
-    fontFamily: SERIF,
-    fontSize: 24,
-    lineHeight: 30,
-    fontWeight: '700',
-    color: colors.textPrimary,
-    marginTop: spacing.sm,
-  },
+  sectionTitle: { fontSize: 24, lineHeight: 30, marginTop: spacing.sm },
 
   list: { gap: spacing.md },
   entryCard: {

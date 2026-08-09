@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Image, StyleSheet, View } from 'react-native';
 
-import { Button, Chip, Divider, MetaRow, Screen, Text } from '@/components/ui';
+import { Button, Chip, Divider, Icon, MetaRow, Screen, Text } from '@/components/ui';
 import { TimeSeriesScrubber } from '@/components';
 import { EmptyState, LoadingState } from '@/components/common';
 import {
@@ -234,13 +234,15 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
         {/* Floating Telemetry HUD */}
         <View style={styles.hudOverlay}>
           <View style={styles.hudBadge}>
+            <Icon name="crosshairs-gps" size={13} color={colors.surface} />
             <Text variant="mono" style={styles.hudText}>
-              📍 {formatDistance(observation.positionErrorM)}
+              {formatDistance(observation.positionErrorM)}
             </Text>
           </View>
           <View style={styles.hudBadge}>
+            <Icon name="compass-outline" size={13} color={colors.surface} />
             <Text variant="mono" style={styles.hudText}>
-              🧭 {formatBearing(observation.bearing)}
+              {formatBearing(observation.bearing)}
             </Text>
           </View>
         </View>
@@ -464,6 +466,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   hudBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xxs,
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xxs,

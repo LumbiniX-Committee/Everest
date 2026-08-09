@@ -1,15 +1,15 @@
 import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet } from 'react-native';
 
-import { Text } from '@/components/ui';
+import { Icon } from '@/components/ui';
 import { colors, radii } from '@/theme';
 
 /**
  * The Settings entry, sat in each surface's header.
  *
- * A glyph rather than an icon font: nothing else in the app pulls one in, and
- * one control is not worth the dependency. 44dp regardless of the glyph's own
- * size, because that is the touch target, not the character.
+ * A drawn icon, not `⚙`: that character is in the emoji range, so Android hands
+ * it to the emoji font and renders a blue gear no `color` can touch. 44dp
+ * regardless of the icon's own size, because that is the touch target.
  */
 export function SettingsButton() {
   const router = useRouter();
@@ -22,9 +22,7 @@ export function SettingsButton() {
       onPress={() => router.push('/(main)/settings')}
       style={({ pressed }) => [styles.button, pressed && styles.pressed]}
     >
-      <Text variant="body" tone="secondary">
-        ⚙
-      </Text>
+      <Icon name="cog-outline" size={22} color={colors.textSecondary} />
     </Pressable>
   );
 }

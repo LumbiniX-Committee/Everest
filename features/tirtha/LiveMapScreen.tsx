@@ -7,7 +7,7 @@ import { ArrivalWisdom } from '@/components/arrival';
 import { MapWebView } from '@/components/map';
 import { GreetingMonk } from '@/components/monk';
 import { NarrationPlayer } from '@/components/site';
-import { BottomSheet, Card, Text } from '@/components/ui';
+import { BottomSheet, Card, Icon, Text } from '@/components/ui';
 import { placeStanding, reachedNewLevel, standingFor } from '@/core';
 import { findSite, findVantage, questsForSite, vantagesForSite } from '@/data';
 import {
@@ -259,8 +259,8 @@ export function LiveMapScreen() {
     const wasLastHere = atSiteId ? questsOpenHere <= 1 && story.hasRead(atSiteId) : false;
     setReward(
       wasLastHere
-        ? { title: '🏆 Place mastered', detail: findSite(atSiteId!)?.name }
-        : { title: '🏆 Quest complete', detail: quest?.title },
+        ? { title: '✦ Place complete', detail: findSite(atSiteId!)?.name }
+        : { title: '✦ Quest complete', detail: quest?.title },
     );
   };
 
@@ -391,7 +391,7 @@ export function LiveMapScreen() {
             onPress={() => setShowPlaces(true)}
             style={styles.iconPill}
           >
-            <Text variant="body">🧭</Text>
+            <Icon name="compass-outline" size={20} />
           </Pressable>
 
           <Pressable
@@ -471,7 +471,7 @@ export function LiveMapScreen() {
             onPress={() => openSakshi(atSiteId)}
             style={styles.worldButton}
           >
-            <Text style={styles.worldIcon}>👁️</Text>
+            <Icon name="eye-outline" size={24} />
           </Pressable>
         ) : null}
       </View>
@@ -763,7 +763,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.18,
     shadowRadius: 6,
   },
-  worldIcon: { fontSize: 24, lineHeight: 28 },
   toastSlot: { alignItems: 'center', paddingBottom: spacing.sm },
   dock: {
     position: 'absolute',

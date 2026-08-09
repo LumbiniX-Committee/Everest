@@ -2,19 +2,19 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { BottomTabBarProps } from 'expo-router/js-tabs';
 
-import { Text } from '@/components/ui';
+import { Icon, Text, type IconName } from '@/components/ui';
 import { OfflineBanner } from '@/components/common';
 import { useSync } from '@/hooks';
 import { colors, radii, spacing } from '@/theme';
 import { SURFACES, SURFACE_LABELS, SURFACE_ICONS, type Surface } from '@/constants';
 
 /**
- * Premium elevated surface navigator.
+ * The bottom navigator: a floating sandstone bar over the three surfaces.
  *
- * Provides a floating glass/sandstone bottom tab bar with distinct icons:
- * 🧭 Tīrtha, 👁️ Sākṣī, 🪷 Dhamma, ✨ AI.
- * Active surface features a sandstone top line indicator, subtle warm pill highlight,
- * and highlighted typography.
+ * Compass for Tīrtha, eye for Sākṣī, lotus for Dhamma — drawn icons, so the
+ * selected one can take the sandstone tint the label and the top mark share.
+ * The active surface carries a sandstone rule above it, a warm pill behind it,
+ * and a heavier label. There is no fourth entry; see `constants/app.ts`.
  */
 export function SurfaceTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
@@ -34,7 +34,7 @@ export function SurfaceTabBar({ state, descriptors, navigation }: BottomTabBarPr
           const { options } = descriptors[route.key];
           const surfaceKey = route.name as Surface;
           const label = SURFACE_LABELS[surfaceKey] ?? route.name;
-          const icon = SURFACE_ICONS[surfaceKey] ?? '✨';
+          const icon = (SURFACE_ICONS[surfaceKey] ?? 'circle-outline') as IconName;
 
           const onPress = () => {
             const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
@@ -63,9 +63,11 @@ export function SurfaceTabBar({ state, descriptors, navigation }: BottomTabBarPr
             >
               <View style={[styles.indexMark, focused && styles.indexMarkActive]} />
               <View style={styles.iconContainer}>
-                <Text style={[styles.icon, focused && styles.iconActive]}>
-                  {icon}
-                </Text>
+                <Icon
+                  name={icon}
+                  size={focused ? 24 : 22}
+                  color={focused ? colors.sandstoneDeep : colors.textMuted}
+                />
               </View>
               <Text
                 variant="label"
@@ -136,16 +138,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.sandstone,
   },
   iconContainer: {
+    // Fixed, so the two-point size change on selection moves the icon and not
+    // the label beneath it.
+    height: 26,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  icon: {
-    fontSize: 18,
-    opacity: 0.65,
-  },
-  iconActive: {
-    fontSize: 20,
-    opacity: 1,
   },
   label: {
     fontSize: 11,

@@ -8,10 +8,10 @@ import { Platform, type TextStyle } from 'react-native';
  *   body    — IBM Plex Sans. UI, navigation, descriptions, buttons.
  *   mono    — IBM Plex Mono. Coordinates, distances, timestamps, alignment values.
  *
- * The font files are not vendored yet. Until they are, family names resolve to
- * the platform default — that is the intended fallback, not a bug. Drop the
- * .ttf files into `assets/fonts/`, register them in `theme/fonts.ts`, and every
- * component picks them up with no edits.
+ * The files are bundled — see `theme/fonts.ts`. Until `useAppFonts` reports them
+ * loaded, family names resolve to a *named* platform family, never to the device
+ * default: an OEM skin can set the system face to anything, and a demo that looks
+ * different on every phone is not a demo of one design.
  *
  * Styles are resolved lazily via `text()` rather than baked into a constant, so
  * a screen rendered after the fonts load gets the real families.
@@ -64,7 +64,16 @@ function fallbackStyle(role: FontRole, weight: FontWeightName): TextStyle {
       fontWeight,
     };
   }
-  return { fontWeight };
+  /**
+   * Naming a family here is deliberate. Omitting `fontFamily` hands the choice to
+   * the OEM system font, which on some Android skins is a handwriting face — so
+   * the app would look different on every judge's phone. `sans-serif` is Roboto
+   * and always resolves.
+   */
+  return {
+    fontFamily: Platform.select({ ios: 'Helvetica Neue', android: 'sans-serif', default: 'System' }),
+    fontWeight,
+  };
 }
 
 /**

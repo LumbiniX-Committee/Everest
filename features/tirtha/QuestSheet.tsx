@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { Button, BottomSheet, ProgressIndicator, Text } from '@/components/ui';
+import { Button, BottomSheet, Icon, ProgressIndicator, Text } from '@/components/ui';
 import { SiteVisual } from '@/components/site';
 import { findSite, siteIdsForQuest } from '@/data';
 import { colors, radii, spacing } from '@/theme';
@@ -166,9 +166,7 @@ function QuestRow({
       <View style={[styles.card, styles.cardLocked]}>
         {homeSiteId ? <SiteVisual siteId={homeSiteId} height={96} style={styles.heroDim} /> : null}
         <View style={styles.cardHead}>
-          <Text variant="body" style={styles.lockMark}>
-            🔒
-          </Text>
+          <Icon name="lock-outline" size={20} color={colors.textMuted} />
           <View style={styles.cardTitle}>
             <Text variant="heading">{quest.title}</Text>
             <Text variant="caption" tone="muted">
@@ -199,9 +197,11 @@ function QuestRow({
       >
         {homeSiteId ? <SiteVisual siteId={homeSiteId} height={120} /> : null}
         <View style={styles.cardHead}>
-          <Text variant="body" style={styles.lockMark}>
-            {done ? '🏆' : '🎯'}
-          </Text>
+          <Icon
+            name={done ? 'flag-checkered' : 'target'}
+            size={20}
+            color={done ? colors.sandstoneDeep : colors.textSecondary}
+          />
           <View style={styles.cardTitle}>
             <Text variant="heading">{quest.title}</Text>
             {/*
@@ -318,7 +318,6 @@ const styles = StyleSheet.create({
   cardLocked: { backgroundColor: colors.surfaceSecondary, opacity: 0.9 },
   cardHead: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm },
   cardTitle: { flex: 1, gap: 2 },
-  lockMark: { fontSize: 18, lineHeight: 22 },
   tasks: { gap: spacing.sm },
   task: {
     flexDirection: 'row',

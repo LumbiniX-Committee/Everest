@@ -1,6 +1,6 @@
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
 
-import { Button, Card, ProgressIndicator, Text } from '@/components/ui';
+import { Button, Card, Icon, ProgressIndicator, Text } from '@/components/ui';
 import { usePractice } from '@/store/practice';
 import { colors, radii, spacing } from '@/theme';
 import { DAILY_MERIT_CAP, MERIT_LABELS, type MeritEvent } from '@/types';
@@ -61,7 +61,7 @@ export function MeritRewardModal({ visible, onClose, event }: MeritRewardModalPr
         <Pressable style={styles.modalContainer} onPress={(e) => e.stopPropagation()}>
           <Card style={styles.rewardCard}>
             <View style={styles.headerBadge}>
-              <Text style={styles.badgeIcon}>🪷</Text>
+              <Icon name="flower-outline" size={30} />
             </View>
 
             <View style={styles.titleSection}>
@@ -167,9 +167,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  badgeIcon: {
-    fontSize: 32,
   },
   titleSection: {
     gap: spacing.xs,

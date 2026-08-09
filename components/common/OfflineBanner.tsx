@@ -13,12 +13,20 @@ export type OfflineBannerProps = {
 };
 
 /**
- * Network status, stated without alarm.
+ * The state of the record, stated without alarm.
  *
- * Lumbini has patchy coverage and the app is built to work without it, so being
- * offline is an ordinary condition rather than a fault. The banner exists to
+ * Lumbini has patchy coverage and the app is built to work without it, so
+ * unsent work is an ordinary condition rather than a fault. The banner exists to
  * reassure — the record is on the device and nothing is lost — not to nag
  * someone into finding signal.
+ *
+ * ── Why this no longer says "Offline" ───────────────────────────────────────
+ *
+ * `hooks/useSync.ts` reaches the `offline` state whenever rows are unsent and no
+ * remote is configured. It never asks the OS about connectivity, so it said
+ * "Offline" on a phone with full signal — a claim about the network the app has
+ * not checked and, without a netinfo dependency, cannot check. The copy below
+ * states only what is actually known: how many rows are here and unsent.
  *
  * Renders nothing once everything is synced. A permanent green "all good" strip
  * is noise on a screen the person is using to look at a temple.
@@ -55,8 +63,8 @@ const messages: Record<Exclude<SyncState, 'synced'>, (pending: number) => { text
   offline: (pending) => ({
     color: colors.textMuted,
     text: pending
-      ? `Offline. ${pending} ${pending === 1 ? 'observation' : 'observations'} saved on this device.`
-      : 'Offline. Everything you record is saved on this device.',
+      ? `${pending} ${pending === 1 ? 'observation' : 'observations'} saved on this device — not sent yet.`
+      : 'Everything you record is saved on this device.',
   }),
   syncing: (pending) => ({
     color: colors.alignmentSeeking,

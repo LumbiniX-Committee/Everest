@@ -1,23 +1,26 @@
 # Fonts
 
-Empty on purpose. Font files are licensed artefacts and get committed
-deliberately, not fetched by a tool.
+Empty on purpose — but no longer because the fonts are missing.
 
-Sākṣī expects three families:
+Sākṣī's three families now ship as npm packages rather than as loose `.ttf`
+files in this directory:
 
-| Role | Family | Used for |
-| --- | --- | --- |
-| display | Anek Devanagari | Headings, site names, Nepali text |
-| body | IBM Plex Sans | UI, prose, navigation, buttons |
-| mono | IBM Plex Mono | Coordinates, bearings, distances, timestamps |
+| Role | Family | Package | Used for |
+| --- | --- | --- | --- |
+| display | Anek Devanagari | `@expo-google-fonts/anek-devanagari` | Headings, site names, Devanagari |
+| body | IBM Plex Sans | `@expo-google-fonts/ibm-plex-sans` | UI, prose, navigation, buttons |
+| mono | IBM Plex Mono | `@expo-google-fonts/ibm-plex-mono` | Coordinates, bearings, distances, timestamps |
 
-All three are Open Font License and available from Google Fonts.
+All three are Open Font License; each package carries its own `LICENSE_FONT`.
 
-To enable them:
+They are **static instances**, not variable fonts. That is the reason for the
+packages: the variable builds Google serves from its web endpoint carry weight as
+an axis, and React Native cannot vary an axis — it would render one weight for
+all three.
 
-1. Drop the `.ttf` files here using the exact names listed in `theme/fonts.ts`.
-2. Uncomment the entries in `fontAssets` in that file.
-3. Nothing else — every component already resolves through those keys.
+Registration lives in `theme/fonts.ts`, keyed by the family names
+`theme/typography.ts` resolves through. Add a weight there, not here.
 
-Until then `theme/typography.ts` falls back to the platform default, which is
-the intended behaviour and not a bug.
+Put a file in this directory only if a family arrives from somewhere other than
+Google Fonts — a commissioned Devanagari face, say. Then register it alongside
+the others in `theme/fonts.ts`.

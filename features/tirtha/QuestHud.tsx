@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { Animated, Easing, Pressable, StyleSheet, View } from 'react-native';
 
-import { Text } from '@/components/ui';
+import { Icon, Text } from '@/components/ui';
 import { colors, radii, spacing } from '@/theme';
 
 /**
@@ -87,7 +87,11 @@ export function QuestHud({ available, completed, total, pulse, onPress }: QuestH
         onPress={onPress}
         style={({ pressed }) => [styles.button, done && styles.buttonDone, pressed && styles.pressed]}
       >
-        <Text style={styles.icon}>{done ? '🏆' : '🎯'}</Text>
+        <Icon
+          name={done ? 'flag-checkered' : 'target'}
+          size={20}
+          color={done ? colors.sandstoneDeep : colors.textSecondary}
+        />
         <Text variant="caption" tone={done ? 'sandstone' : 'secondary'} style={styles.count}>
           {completed}/{total}
         </Text>
@@ -122,7 +126,6 @@ const styles = StyleSheet.create({
   },
   buttonDone: { borderColor: colors.resolved },
   pressed: { opacity: 0.75 },
-  icon: { fontSize: 20, lineHeight: 24 },
   count: { fontSize: 10, fontWeight: '700', lineHeight: 12 },
 });
 

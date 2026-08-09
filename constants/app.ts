@@ -21,10 +21,19 @@ export const SURFACE_LABELS: Record<Surface, string> = {
   dhamma: 'Dhamma',
 };
 
+/**
+ * Icon names from the app's one icon set — see `components/ui/Icon.tsx`.
+ *
+ * These were emoji. Emoji are drawn by the system emoji font, arrive
+ * pre-coloured, cannot be tinted to match a selected tab, and are a different
+ * drawing on every vendor's phone. The names below are typed against the glyph
+ * map at the call site, so a mistyped one is a compile error rather than a
+ * missing tab.
+ */
 export const SURFACE_ICONS: Record<Surface, string> = {
-  tirtha: '🧭',
-  sakshi: '👁️',
-  dhamma: '🪷',
+  tirtha: 'compass-outline',
+  sakshi: 'eye-outline',
+  dhamma: 'flower-outline',
 };
 
 export const SURFACE_MEANINGS: Record<Surface, string> = {
