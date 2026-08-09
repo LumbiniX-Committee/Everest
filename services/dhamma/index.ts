@@ -1,4 +1,10 @@
-import { askDhammaAsync, processReflectionAsync } from '@/core/dhamma';
+import {
+  askDhammaAsync,
+  checkDistressTrigger,
+  generateReflectionQuestions,
+  processReflectionAsync,
+  VERIFIED_NEPALI_HELPLINES,
+} from '@/core/dhamma';
 import { generateOfflineGroundedAnswer } from '@/services/offlineModel';
 import { demoDhammaEntries, findSource, type DhammaEntry } from '@/data';
 import type { Citation, DhammaAnswer, Evidence, GroundedAnswer, RefusedAnswer } from '@/types';
@@ -259,7 +265,22 @@ export type ReflectionApiResult = {
 // This value is embedded in the Expo bundle. It is only a server URL: the
 // Ollama credential must stay in the backend environment.
 const API_URL = (process.env.EXPO_PUBLIC_API_URL ?? '').trim().replace(/\/$/, '');
-const API_TIMEOUT_MS = 12000;
+
+/**
+ * Thirty seconds, and it must stay longer than the engine's own provider
+ * deadline (`LLM_TIMEOUT_MS`, 20s in core/dhamma/llm.ts).
+ *
+ * This was twelve, which inverted the two budgets: the backend was still
+ * waiting on a synthesis it would have returned at second eighteen when the app
+ * gave up at second twelve. Measured Nepali synthesis runs 6–9s warm and longer
+ * on the first call of a session, so the client was abandoning work that was
+ * about to succeed and falling back to the on-device engine — which then made
+ * its *own* provider call and paid the latency a second time.
+ *
+ * The ordering is the invariant, not the number: an outer deadline shorter than
+ * the inner one cannot ever observe a slow success, only manufacture failures.
+ */
+const API_TIMEOUT_MS = 30000;
 
 function sourceIdFor(suttaUid: string | undefined, segmentId: string | undefined): string {
   if (suttaUid === 'dn16' || segmentId?.startsWith('dn16:')) return 'dn-16';
@@ -374,6 +395,89 @@ export async function ask(query: string, language: DhammaLanguage = 'ne'): Promi
   return fromApiResponse(result, query, language);
 }
 
+export type CrisisHelpline = { name: string; number: string; hours: string };
+
+export type ReflectionQuestionsResult = {
+  opening?: string;
+  questions: string[];
+  distress_override: boolean;
+  helplines?: CrisisHelpline[];
+  disclaimer: string;
+  language: DhammaLanguage;
+  tier: 'full_rag' | 'fallback';
+};
+
+/**
+ * A synchronous crisis check for the reflection chat.
+ *
+ * The tailored-question and synthesis calls both check distress on the server
+ * side, but a person's answers to the middle questions never reach the server
+ * until the final synthesis. This lets the chat catch a distress signal in any
+ * message the moment it is typed and surface verified helplines immediately,
+ * rather than waiting for a round trip. Same keyword source as the engine, so
+ * the two cannot disagree about what counts.
+ */
+export function distressGuard(
+  text: string,
+  language: DhammaLanguage,
+): { message: string; helplines: CrisisHelpline[] } | null {
+  if (!checkDistressTrigger(text)) return null;
+  return {
+    message:
+      language === 'ne'
+        ? 'यदि तपाईं गम्भीर पीडा वा आत्म-हानिको विचारमा हुनुहुन्छ भने, कृपया तुरुन्तै सहयोग सेवामा सम्पर्क गर्नुहोस्। तपाईं यो एक्लै बोक्नुपर्दैन।'
+        : 'If you are in acute distress or having thoughts of self-harm, please reach out to support services right away. You do not have to carry this alone.',
+    helplines: VERIFIED_NEPALI_HELPLINES,
+  };
+}
+
+/**
+ * Turns what the person shared into 3–4 tailored inquiry questions.
+ *
+ * Mirrors `ask`'s resilience: the API is preferred when configured, but any
+ * failure falls back to the on-device engine rather than throwing — the venue
+ * Wi-Fi case. On device (no API), the engine tailors the questions through a
+ * provider when one is present and otherwise returns the deterministic
+ * four-question scaffold, so this always resolves to a usable set.
+ */
+export async function reflectQuestions(request: {
+  userInput: string;
+  siteId?: string;
+  language: DhammaLanguage;
+}): Promise<ReflectionQuestionsResult> {
+  const local = () =>
+    generateReflectionQuestions({
+      user_input: request.userInput,
+      site_id: request.siteId,
+      language: request.language,
+    }) as Promise<ReflectionQuestionsResult>;
+
+  if (!API_URL) return local();
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+  try {
+    const response = await fetch(`${API_URL}/dhamma/reflect/questions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        user_input: request.userInput,
+        site_id: request.siteId,
+        language: request.language,
+      }),
+      signal: controller.signal,
+    });
+    const body = (await response.json().catch(() => null)) as ReflectionQuestionsResult | null;
+    if (!response.ok || !body) throw new Error(`Reflection questions API returned ${response.status}`);
+    return body;
+  } catch (error) {
+    console.warn('[dhamma] questions API unavailable; using on-device engine', error);
+    return local();
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 export async function reflect(request: {
   stage: number;
   userInput?: string;
@@ -385,7 +489,7 @@ export async function reflect(request: {
   // four-question companion unreachable for anyone not running mock-api — the
   // offline case, and the one Lumbini actually presents. core/dhamma has
   // implemented this the whole time.
-  if (!API_URL) {
+  const local = async (): Promise<ReflectionApiResult> => {
     const result = await processReflectionAsync({
       stage: request.stage,
       user_input: request.userInput,
@@ -406,8 +510,16 @@ export async function reflect(request: {
       }
     }
     return result;
-  }
+  };
 
+  if (!API_URL) return local();
+
+  // Falls back rather than throwing, matching `ask` and `reflectQuestions`.
+  // This was the one call in the trio that let a network failure escape, and it
+  // is the *last* step of the conversation — so an unreachable backend produced
+  // tailored questions, took all four answers, and then failed at the synthesis,
+  // losing the reflection someone had just spent several minutes on. The engine
+  // that would have answered was on the device the whole time.
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
   try {
@@ -426,6 +538,9 @@ export async function reflect(request: {
     const body = await response.json().catch(() => null) as ReflectionApiResult | null;
     if (!response.ok || !body) throw new Error(`Reflection API returned ${response.status}`);
     return body;
+  } catch (error) {
+    console.warn('[dhamma] reflect API unavailable; using on-device engine', error);
+    return local();
   } finally {
     clearTimeout(timeout);
   }

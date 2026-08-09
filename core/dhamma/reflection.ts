@@ -11,7 +11,12 @@
 
 import { hybridRetrieve, type RetrievalResult } from './retrieval.ts';
 import { validateCitations, type Citation, type Passage } from './engine.ts';
-import { DHAMMA_MODEL, hasProvider, LLM_API_KEY, LLM_ENDPOINT, LLM_TIMEOUT_MS } from './llm.ts';
+import { callLlm, hasProvider, trimToCompleteSentence } from './llm.ts';
+
+const REFLECTION_DISCLAIMER_EN =
+  'This is a reflective inquiry tool. It is not counselling, therapy, or mental health treatment.';
+const REFLECTION_DISCLAIMER_NE =
+  'यो आत्म-चिन्तनको साधन हो; परामर्श, थेरापी वा मानसिक स्वास्थ्य उपचार होइन।';
 
 export type ReflectionRequest = {
   site_id?: string;
@@ -40,6 +45,26 @@ export type ReflectionResponse = {
   citations?: Citation[];
   passages?: Passage[];
   tier?: 'full_rag' | 'fallback';
+};
+
+export type ReflectionQuestionsRequest = {
+  user_input: string;
+  language?: 'en' | 'ne';
+  site_id?: string;
+};
+
+export type ReflectionQuestionsResponse = {
+  /** A short, tailored opening line, or a site prompt in the deterministic case. */
+  opening?: string;
+  /** 3–4 inquiry questions: tailored to the input online, deterministic offline. */
+  questions: string[];
+  distress_override: boolean;
+  helplines?: CrisisHelpline[];
+  disclaimer: string;
+  language: 'en' | 'ne';
+  /** 'full_rag' when the provider tailored them; 'fallback' when deterministic. */
+  tier: 'full_rag' | 'fallback';
+  site_id?: string;
 };
 
 export const VERIFIED_NEPALI_HELPLINES: CrisisHelpline[] = [
@@ -169,6 +194,120 @@ export function processReflection(req: ReflectionRequest): ReflectionResponse {
   };
 }
 
+/**
+ * Parse the model's reply into 3–4 clean inquiry questions, or null if it did
+ * not return a usable set.
+ *
+ * The model is asked for a bare JSON array, but providers wrap it in prose or a
+ * code fence often enough that we extract the first bracketed span rather than
+ * trusting the whole reply to be JSON. Anything malformed, too short, or too
+ * long is rejected wholesale — a half-parsed set is worse than the deterministic
+ * fallback, which is known-good. Pure, so the parsing is unit-tested without a
+ * provider.
+ */
+export function parseGeneratedQuestions(raw: string, min = 3, max = 4): string[] | null {
+  if (!raw) return null;
+  const start = raw.indexOf('[');
+  const end = raw.lastIndexOf(']');
+  if (start === -1 || end === -1 || end <= start) return null;
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw.slice(start, end + 1));
+  } catch {
+    return null;
+  }
+  if (!Array.isArray(parsed)) return null;
+  const questions = parsed
+    .filter((item): item is string => typeof item === 'string')
+    .map((item) => item.trim())
+    .filter((item) => item.length >= 3 && item.length <= 200);
+  if (questions.length < min) return null;
+  return questions.slice(0, max);
+}
+
+/**
+ * Turn what the person shared into 3–4 questions tailored to their words.
+ *
+ * Online, one provider call rewrites the Four-Truths scaffold around what they
+ * actually said — naming the difficulty, seeing its origin, sensing it could
+ * ease, choosing one small step — as questions, never answers. The reply is
+ * parsed and validated; anything unusable falls through.
+ *
+ * Offline, or on any provider or validation failure, it returns the deterministic
+ * four-question scaffold unchanged. That fallback is the reflection companion
+ * that shipped before this, so the feature degrades to a known-good version
+ * rather than to nothing — which is the case Lumbini actually presents.
+ *
+ * Distress is checked first, before any provider call, and short-circuits to the
+ * crisis response with verified helplines.
+ */
+export async function generateReflectionQuestions(
+  req: ReflectionQuestionsRequest,
+): Promise<ReflectionQuestionsResponse> {
+  const language = req.language ?? 'en';
+  const disclaimer = language === 'ne' ? REFLECTION_DISCLAIMER_NE : REFLECTION_DISCLAIMER_EN;
+  const input = (req.user_input ?? '').trim();
+
+  if (input && checkDistressTrigger(input)) {
+    return {
+      questions: [],
+      distress_override: true,
+      helplines: VERIFIED_NEPALI_HELPLINES,
+      disclaimer,
+      language,
+      tier: 'fallback',
+      site_id: req.site_id,
+    };
+  }
+
+  const sitePrompts = language === 'ne' ? SITE_PROMPTS_NE : SITE_PROMPTS;
+  const opening = req.site_id ? sitePrompts[req.site_id] : undefined;
+  const fallbackQuestions = language === 'ne' ? DEFAULT_STAGES_NE : DEFAULT_STAGES;
+  const fallback: ReflectionQuestionsResponse = {
+    opening,
+    questions: [...fallbackQuestions],
+    distress_override: false,
+    disclaimer,
+    language,
+    tier: 'fallback',
+    site_id: req.site_id,
+  };
+
+  if (!hasProvider() || !input) return fallback;
+
+  const responseLanguage = language === 'ne' ? 'Nepali in Devanagari script' : 'English';
+  const system =
+    'You are a careful Buddhist reflection companion. The person will share what is on their mind. ' +
+    'Generate exactly 4 short questions that help them look at their own experience through the Four ' +
+    'Noble Truths: naming the difficulty (dukkha), seeing its origin (craving or aversion), sensing ' +
+    'that it could ease (cessation), and choosing one small next step (path). Tailor every question to ' +
+    'their words. Ask, do not answer. Give no advice, no diagnosis, no moralising, and never claim to ' +
+    `be the Buddha or any teacher. Each question must be answerable by the person in their own words. ` +
+    `Respond entirely in ${responseLanguage}. Output ONLY a JSON array of 4 strings and nothing else.`;
+  const user = `The person shared:\n"""${input}"""`;
+
+  // Generous headroom: a reasoning model consumes much of its budget before it
+  // writes anything, and a JSON array cut off at the limit fails to parse and
+  // costs the whole tailored set. Over-allocating is cheaper than falling back.
+  const reply = await callLlm(system, user, 900);
+  // No sentence-trimming rescue for this one: a severed JSON array is not
+  // repairable, and `parseGeneratedQuestions` already returns null on malformed
+  // input, which lands on the deterministic scaffold.
+  const questions = reply ? parseGeneratedQuestions(reply.text, 3, 4) : null;
+  if (questions && questions.length >= 3) {
+    return {
+      opening,
+      questions,
+      distress_override: false,
+      disclaimer,
+      language,
+      tier: 'full_rag',
+      site_id: req.site_id,
+    };
+  }
+  return fallback;
+}
+
 function reflectionPassages(matches: RetrievalResult[]): Passage[] {
   return matches.map((match) => ({
     segment_id: match.chunk.chunk_id,
@@ -244,16 +383,21 @@ export async function processReflectionAsync(req: ReflectionRequest): Promise<Re
     ? 'यो आत्म-चिन्तनको साधन हो; परामर्श, थेरापी वा मानसिक स्वास्थ्य उपचार होइन।'
     : 'This is a reflective inquiry tool. It is not counselling, therapy, or mental health treatment.';
 
+  // Computed once. It was being built three separate times — twice for the two
+  // fields and again to validate against — and since it is deterministic all
+  // three agreed, so nothing broke; it was simply the same paragraph assembled
+  // three times on every completed reflection.
+  const deterministic = fallbackGuidance(language, validMatches, answers);
   const fallback = {
-    inquiry: fallbackGuidance(language, validMatches, answers),
+    inquiry: deterministic,
     stage: 5,
     completed: true,
     distress_override: false,
     site_id: req.site_id,
     disclaimer,
     language,
-    guidance: fallbackGuidance(language, validMatches, answers),
-    citations: validMatches.length > 0 ? validateCitations(fallbackGuidance(language, validMatches, answers), validMatches) : [],
+    guidance: deterministic,
+    citations: validMatches.length > 0 ? validateCitations(deterministic, validMatches) : [],
     passages: finalPassages,
     tier: 'fallback' as const,
   };
@@ -264,35 +408,29 @@ export async function processReflectionAsync(req: ReflectionRequest): Promise<Re
     `[${match.chunk.chunk_id}] (${match.chunk.title_en}): "${match.chunk.english}"`,
   ).join('\n');
   const responseLanguage = language === 'ne' ? 'Nepali in Devanagari script' : 'English';
-  const system = `You are a careful Buddhist reflection companion. Respond entirely in ${responseLanguage}. Do not claim to be the Buddha, do not diagnose, predict, moralise, or give medical/legal/financial advice. Reflect the user's four answers in 2-4 warm, concrete sentences. Offer one small experiment the user can choose, not an order. Use only the retrieved canonical passages and include at least one exact citation such as [sn56.11:4.2]. Say that the user should test the teaching against their own experience.`;
-  const user = `Four reflections:\n${answers.map((answer, index) => `${index + 1}. ${answer}`).join('\n')}\n\nRetrieved canonical passages:\n${context}`;
+  const system = `You are a careful Buddhist reflection companion. Respond entirely in ${responseLanguage}. Do not claim to be the Buddha, do not diagnose, predict, moralise, or give medical/legal/financial advice. Reflect the user's own answers back in 2-4 warm, concrete sentences. Offer one small experiment the user can choose, not an order. Use only the retrieved canonical passages and include at least one exact citation such as [sn56.11:4.2]. Say that the user should test the teaching against their own experience.`;
+  const user = `The person's reflections:\n${answers.map((answer, index) => `${index + 1}. ${answer}`).join('\n')}\n\nRetrieved canonical passages:\n${context}`;
 
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), LLM_TIMEOUT_MS);
-    try {
-      const response = await fetch(LLM_ENDPOINT, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${LLM_API_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: DHAMMA_MODEL,
-          messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
-          stream: false,
-          max_tokens: 320,
-        }),
-        signal: controller.signal,
-      });
-      const data = await response.json() as { choices?: Array<{ message?: { content?: string } }> };
-      const guidance = data.choices?.[0]?.message?.content?.trim();
-      const citations = guidance ? validateCitations(guidance, validMatches) : [];
-      if (response.ok && guidance && citations.length > 0) {
-        return { ...fallback, inquiry: guidance, guidance, citations, tier: 'full_rag' };
-      }
-    } finally {
-      clearTimeout(timeout);
-    }
-  } catch {
-    // The deterministic reflection remains safe and cited when the provider fails.
+  // Through `callLlm`, not a second hand-rolled fetch. This path used to shape
+  // its own request with its own timeout and its own token ceiling, which is the
+  // precise drift `llm.ts` was extracted to end — and it is how this call came to
+  // be capped so low that it rendered replies which stopped mid-sentence.
+  const reply = await callLlm(system, user, 900);
+  if (!reply) return fallback;
+
+  // A reply that hit the ceiling is cut back to its last complete sentence
+  // rather than shown as-is. Guidance that ends mid-word reads as a broken app
+  // on the one surface that has to look trustworthy.
+  const guidance = reply.truncated ? trimToCompleteSentence(reply.text) : reply.text;
+
+  // Both gates matter, and both fall back rather than degrade in place:
+  // too-short means trimming left nothing usable, and no citation means the
+  // model wrote something the retrieved passages do not support. The
+  // deterministic reflection is grounded and cited, so falling back is a
+  // downgrade in tailoring only, never in honesty.
+  const citations = guidance.length >= 40 ? validateCitations(guidance, validMatches) : [];
+  if (citations.length > 0) {
+    return { ...fallback, inquiry: guidance, guidance, citations, tier: 'full_rag' };
   }
   return fallback;
 }

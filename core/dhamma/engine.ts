@@ -12,7 +12,7 @@
 
 import { resolveSegment, type BilaraChunk } from './bilara.ts';
 import { hybridRetrieve, type RetrievalResult } from './retrieval.ts';
-import { DHAMMA_MODEL, hasProvider, LLM_API_KEY, LLM_ENDPOINT, LLM_TIMEOUT_MS } from './llm.ts';
+import { callLlm, DHAMMA_MODEL, hasProvider, trimToCompleteSentence } from './llm.ts';
 
 /**
  * Declared once, in the shared vocabulary, and re-exported here so everything
@@ -324,41 +324,32 @@ export async function askDhammaAsync(req: DhammaAskRequest): Promise<DhammaAskRe
   // it is — under the old name this branch was taken on every device.
   if (!hasProvider()) return syncResult;
 
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), LLM_TIMEOUT_MS);
-
-    const apiRes = await fetch(LLM_ENDPOINT, {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + LLM_API_KEY,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: DHAMMA_MODEL,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt },
-        ],
-        stream: false,
-        max_tokens: 300,
-      }),
-      signal: controller.signal,
-    });
-
-    clearTimeout(timeoutId);
-
-    if (apiRes.ok) {
-      const data = await apiRes.json();
-      const rawAnswer = data.choices?.[0]?.message?.content?.trim();
-      if (rawAnswer) {
-        const validatedCits = validateCitations(rawAnswer, matches);
-        const finalCits = validatedCits.length > 0 ? validatedCits : syncResult.citations;
-
+  // Through `callLlm`. This was the third hand-rolled copy of the same
+  // chat-completions request in this package, and it carried the same three
+  // faults as the others: a token ceiling low enough to sever the answer
+  // mid-sentence, an untyped `data` that defeated the typechecker at the exact
+  // point untrusted network JSON enters the engine, and a `clearTimeout` outside
+  // any `finally`, so a thrown fetch leaked the timer. `callLlm` never throws,
+  // so the surrounding error handling is gone with it.
+  const reply = await callLlm(systemPrompt, userPrompt, 700);
+  if (reply) {
+    // Trimmed back to the last complete sentence if the model ran out of room.
+    // An answer is the most sensitive place for this: a citation that survives
+    // while the clause it supported is cut would leave a reference attached to
+    // half a claim.
+    const rawAnswer = reply.truncated ? trimToCompleteSentence(reply.text) : reply.text;
+    if (rawAnswer) {
+      const validatedCits = validateCitations(rawAnswer, matches);
+      // Only a synthesis whose citations survive validation may be presented.
+      // Substituting the deterministic result's citations here would attach
+      // references to prose they were never checked against — which is the one
+      // thing this engine exists to prevent — so an uncited synthesis is
+      // discarded in favour of the deterministic answer, which is itself cited.
+      if (validatedCits.length > 0) {
         return {
           answer: rawAnswer,
           refused: false,
-          citations: finalCits,
+          citations: validatedCits,
           passages: syncResult.passages,
           tier: 'full_rag',
           mode: 'ekamsa',
@@ -366,8 +357,6 @@ export async function askDhammaAsync(req: DhammaAskRequest): Promise<DhammaAskRe
         };
       }
     }
-  } catch (e) {
-    console.warn('[dhamma] LLM API call failed or timed out — using fallback engine:', (e as Error).message);
   }
 
   // Graceful fallback to deterministic engine response
@@ -380,12 +369,22 @@ export function validateCitations(text: string, matches: RetrievalResult[]): Cit
   const validChunkIds = new Set(matches.map((m) => m.chunk.chunk_id));
   const citations: Citation[] = [];
 
+  // Deduplicated by segment. A model that refers to the same passage twice —
+  // which is normal in a two-paragraph answer, and normal in guidance that
+  // returns to its source — used to yield two identical citation objects. That
+  // surfaced downstream as React's "two children with the same key" warning,
+  // because a citation's identity *is* its segment id, and it read to the
+  // visitor as though two separate passages supported the claim when only one
+  // did. Citing a source once is both the correct render and the honest count.
+  const seen = new Set<string>();
+
   const regex = /\[([a-zA-Z0-9.:-]+)\]/g;
   let match;
   while ((match = regex.exec(text)) !== null) {
     const chunkId = match[1];
     const resolved = resolveSegment(chunkId);
-    if (resolved && validChunkIds.has(resolved.chunk_id)) {
+    if (resolved && validChunkIds.has(resolved.chunk_id) && !seen.has(resolved.chunk_id)) {
+      seen.add(resolved.chunk_id);
       citations.push({
         segment_id: resolved.chunk_id,
         sutta_uid: resolved.uid,
