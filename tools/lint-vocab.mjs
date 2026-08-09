@@ -26,6 +26,35 @@ import { dirname, join, relative, extname } from 'node:path';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CONTENT_DIRS = ['seed', 'core', 'deck'];
+
+// Files this linter has no business editorialising over. The canonical corpus
+// is fetched from SuttaCentral, not written here: "collect uncarded cotton"
+// (DN 16, the funeral rites) and "the lap of the gods" are translations of
+// Pali, and rephrasing scripture to satisfy a vocabulary rule about
+// gamification would be absurd — and would break the citations that make the
+// Dhamma engine checkable.
+const SKIP_FILES = [/core\/dhamma\/corpus\.generated\.ts$/];
+
+// ── The leaderboard exemption ──────────────────────────────────────────────
+//
+// `leaderboard` is on the banned list because the charter refused competitive
+// ranking at a sacred site, and this linter is how that refusal was enforced.
+// That decision has been reversed deliberately, by the team, for the pitch —
+// the app now has a global board, and the feature cannot be named without the
+// word.
+//
+// Exempted by path rather than by scattering twelve suppressions, and recorded
+// here rather than by deleting the word from the ban list, because the ban
+// still holds everywhere else. Tīrtha, Sākṣī, Dhamma and the practice surfaces
+// must not start talking about ranks; only the surface that *is* a ranking may.
+//
+// If the leaderboard is ever removed, delete this block and the word goes back
+// to being banned everywhere with no further edits.
+const RANKING_FEATURE = [
+  /services\/leaderboard\//,
+  /features\/leaderboard\//,
+  /app\/\(main\)\/sakshi\/guardians\.tsx$/,
+];
 const APP_DIRS = [
   'app', 'features', 'components', 'store', 'hooks',
   'services', 'theme', 'types', 'data', 'constants',
@@ -87,11 +116,17 @@ const hits = [];
 function scan(dirs, patterns) {
   for (const d of dirs) {
     for (const file of walk(join(root, d))) {
+      const posix = file.replace(/\\/g, '/');
+      if (SKIP_FILES.some((rx) => rx.test(posix))) continue;
+      const rankingFeature = RANKING_FEATURE.some((rx) => rx.test(posix));
       const lines = readFileSync(file, 'utf8').split(/\r?\n/);
       lines.forEach((line, i) => {
         if (line.includes('lint-vocab:allow')) return;
         if (ALLOW.some((rx) => rx.test(line))) return;
         for (const { word, rx } of patterns) {
+          // Only the feature's own name is forgiven here. `points`, `streak`,
+          // `grind` and the rest stay banned even on the ranking surface.
+          if (rankingFeature && word === 'leaderboard') continue;
           if (rx.test(line)) hits.push({ file: relative(root, file), line: i + 1, word, text: line.trim().slice(0, 100) });
         }
       });
