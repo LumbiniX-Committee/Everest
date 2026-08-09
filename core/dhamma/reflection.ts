@@ -11,6 +11,7 @@
 
 import { hybridRetrieve, type RetrievalResult } from './retrieval.ts';
 import { validateCitations, type Citation, type Passage } from './engine.ts';
+import { DHAMMA_MODEL, hasProvider, LLM_API_KEY, LLM_ENDPOINT, LLM_TIMEOUT_MS } from './llm';
 
 export type ReflectionRequest = {
   site_id?: string;
@@ -257,8 +258,7 @@ export async function processReflectionAsync(req: ReflectionRequest): Promise<Re
     tier: 'fallback' as const,
   };
 
-  const apiKey = process.env.OLLAMA_API_KEY;
-  if (!apiKey || validMatches.length === 0) return fallback;
+  if (!hasProvider() || validMatches.length === 0) return fallback;
 
   const context = validMatches.map((match) =>
     `[${match.chunk.chunk_id}] (${match.chunk.title_en}): "${match.chunk.english}"`,
@@ -269,13 +269,13 @@ export async function processReflectionAsync(req: ReflectionRequest): Promise<Re
 
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 6000);
+    const timeout = setTimeout(() => controller.abort(), LLM_TIMEOUT_MS);
     try {
-      const response = await fetch(process.env.OLLAMA_API_ENDPOINT || 'https://ollama.com/v1/chat/completions', {
+      const response = await fetch(LLM_ENDPOINT, {
         method: 'POST',
-        headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+        headers: { Authorization: `Bearer ${LLM_API_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: process.env.OLLAMA_MODEL || 'gpt-oss:120b-cloud',
+          model: DHAMMA_MODEL,
           messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
           stream: false,
           max_tokens: 320,

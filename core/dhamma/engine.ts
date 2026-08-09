@@ -12,6 +12,7 @@
 
 import { resolveSegment, type BilaraChunk } from './bilara.ts';
 import { hybridRetrieve, type RetrievalResult } from './retrieval.ts';
+import { DHAMMA_MODEL, hasProvider, LLM_API_KEY, LLM_ENDPOINT, LLM_TIMEOUT_MS } from './llm';
 
 export type Citation = {
   segment_id: string;
@@ -261,9 +262,7 @@ export function askDhamma(req: DhammaAskRequest): DhammaAskResponse {
   };
 }
 
-const OLLAMA_API_KEY = process.env.OLLAMA_API_KEY;
-const OLLAMA_API_ENDPOINT = process.env.OLLAMA_API_ENDPOINT || 'https://ollama.com/v1/chat/completions';
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'gpt-oss:120b-cloud';
+
 
 /**
  * Async RAG pipeline — calls real LLM API (gpt-oss:120b-cloud via Ollama cloud API)
@@ -290,22 +289,24 @@ export async function askDhammaAsync(req: DhammaAskRequest): Promise<DhammaAskRe
   const responseLanguage = req.language === 'ne' ? 'Nepali (Devanagari script)' : 'English';
   const userPrompt = `Retrieved Canonical Passages:\n${passageContext}\n\nRespond entirely in ${responseLanguage}. Preserve the exact citation IDs.\n\nUser Question: ${req.question}`;
 
-  // Never attempt a provider call without a server-side credential. The
-  // deterministic RAG result below remains available for offline operation.
-  if (!OLLAMA_API_KEY) return syncResult;
+  // Never attempt a provider call without a credential. The deterministic RAG
+  // result is grounded and cited, so this degrades the answer rather than
+  // withholding one. See core/dhamma/llm.ts for why the variable is named as
+  // it is — under the old name this branch was taken on every device.
+  if (!hasProvider()) return syncResult;
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 6000); // 6s timeout for fast response
+    const timeoutId = setTimeout(() => controller.abort(), LLM_TIMEOUT_MS);
 
-    const apiRes = await fetch(OLLAMA_API_ENDPOINT, {
+    const apiRes = await fetch(LLM_ENDPOINT, {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer ' + OLLAMA_API_KEY,
+        'Authorization': 'Bearer ' + LLM_API_KEY,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: OLLAMA_MODEL,
+        model: DHAMMA_MODEL,
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt },

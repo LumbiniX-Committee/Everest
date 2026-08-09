@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { StyleSheet, View, type LayoutChangeEvent } from 'react-native';
+import { StyleSheet, View, Image, type LayoutChangeEvent } from 'react-native';
 
 import { Text } from '@/components/ui';
 import { LUMBINI_BOUNDS } from '@/constants';
 import { colors, radii, spacing } from '@/theme';
 import type { Coordinate, HeritageSite } from '@/types';
+import { MONK_STILL } from '@/components/monk';
 
 /**
  * A schematic site plan, not a map.
@@ -73,10 +74,12 @@ export function SitePlan({
         })}
 
       {width > 0 && observer ? (
-        <View
+        <Image
           accessible
           accessibilityLabel="Your position"
+          source={MONK_STILL}
           style={[styles.observer, positionStyle(project(observer))]}
+          resizeMode="contain"
         />
       ) : null}
     </View>
@@ -84,7 +87,7 @@ export function SitePlan({
 }
 
 function positionStyle({ left, top }: { left: number; top: number }) {
-  return { left: left - 7, top: top - 7 };
+  return { left: left - 16, top: top - 16 };
 }
 
 function clamp(value: number) {
@@ -116,11 +119,7 @@ const styles = StyleSheet.create({
   },
   observer: {
     position: 'absolute',
-    width: 14,
-    height: 14,
-    borderRadius: radii.full,
-    borderWidth: 2,
-    borderColor: colors.alignmentLocked,
-    backgroundColor: colors.surface,
+    width: 32,
+    height: 32,
   },
 });
