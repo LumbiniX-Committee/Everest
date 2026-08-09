@@ -21,6 +21,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { randomUUID } from 'node:crypto';
+import { hasGoogleTranslation, translateAnswer, translateFields, translateText } from './translation.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SEED = join(__dirname, '..', 'seed');
@@ -357,19 +358,39 @@ on('POST', '/dhamma/ask', async (_req, res, _p, _q, body) => {
   const fn = _askDhammaAsync || _askDhamma;
   if (fn) {
     try {
+      const requestedLanguage = body.language || 'en';
+      const useTranslation = requestedLanguage === 'ne' && hasGoogleTranslation();
+      const translatedQuestion = useTranslation
+        ? await translateText(question, 'ne', 'en')
+        : null;
       const result = await fn({
-        question,
+        question: translatedQuestion || question,
         site_id: body.site_id || null,
-        language: body.language || 'en',
+        language: useTranslation ? 'en' : requestedLanguage,
         mode: body.mode || 'auto',
       });
+      const translatedAnswer = useTranslation && !result.refused
+        ? await translateAnswer(result.answer, result.citations, 'ne')
+        : { text: result.answer, used: false };
+      const translatedReason = useTranslation && result.refusal_reason
+        ? (await translateFields({ value: result.refusal_reason }, 'en', 'ne')).fields.value
+        : result.refusal_reason;
+      const response = {
+        ...result,
+        answer: translatedAnswer.text,
+        refusal_reason: translatedReason,
+        language: requestedLanguage,
+        translationUsed: translatedAnswer.used,
+      };
       // audit trail
       state.dhammaLog.push({
         id: randomUUID(), ts: now(), question,
-        refused: result.refused, tier: result.tier,
-        citation_count: result.citations?.length ?? 0,
+        refused: response.refused, tier: response.tier,
+        language: requestedLanguage,
+        translation_used: response.translationUsed,
+        citation_count: response.citations?.length ?? 0,
       });
-      return json(res, 200, result);
+      return json(res, 200, response);
     } catch (e) {
       console.error('[dhamma] engine error:', e);
     }
@@ -398,14 +419,30 @@ on('POST', '/dhamma/reflect', async (_req, res, _p, _q, body) => {
   const fn = _processReflectionAsync || _processReflection;
   if (fn) {
     try {
+      const requestedLanguage = body.language ?? 'en';
+      const useTranslation = requestedLanguage === 'ne' && hasGoogleTranslation();
+      const translatedInput = useTranslation && body.user_input
+        ? await translateText(String(body.user_input), 'ne', 'en')
+        : null;
+      const translatedAnswers = useTranslation && Array.isArray(body.answers)
+        ? await Promise.all(body.answers.map((answer) => translateText(String(answer), 'ne', 'en')))
+        : body.answers;
       const result = await fn({
         site_id: body.site_id,
         stage: body.stage ?? 1,
-        user_input: body.user_input,
-        answers: Array.isArray(body.answers) ? body.answers : [],
-        language: body.language ?? 'en',
+        user_input: translatedInput || body.user_input,
+        answers: Array.isArray(translatedAnswers) ? translatedAnswers.map((answer, index) => answer || body.answers[index]) : [],
+        language: useTranslation ? 'en' : requestedLanguage,
       });
-      return json(res, 200, result);
+      const translated = useTranslation
+        ? await translateFields({ inquiry: result.inquiry, guidance: result.guidance, disclaimer: result.disclaimer }, 'en', 'ne')
+        : { fields: {}, used: false };
+      return json(res, 200, {
+        ...result,
+        ...translated.fields,
+        language: requestedLanguage,
+        translationUsed: translated.used,
+      });
     } catch (e) {
       console.error('[dhamma/reflect] error:', e);
     }
