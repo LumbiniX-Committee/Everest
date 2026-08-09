@@ -9,6 +9,7 @@ import {
   onnxAvailable,
   onnxUnavailableReason,
   runOnnxDetection,
+  warmUpSession,
   type OnnxDetection,
   type OnnxSession,
 } from './onnx';
@@ -278,7 +279,13 @@ function useOnnxDamageDetector(source: number): DamageDetector {
   useEffect(() => {
     let cancelled = false;
     createOnnxSession(source)
-      .then((session) => {
+      .then(async (session) => {
+        if (cancelled) return;
+        // Warm up before reporting ready, so the automatic scan that fires the
+        // moment a photo is captured is the fast, warm run rather than the cold
+        // first one. The load phase is slightly longer; the phase that the user
+        // actually waits on, after capture, is much shorter.
+        await warmUpSession(session, INPUT_SIZE);
         if (cancelled) return;
         sessionRef.current = session;
         setReason(null);
