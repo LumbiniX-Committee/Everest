@@ -8,7 +8,7 @@ import { MapWebView } from '@/components/map';
 import { GreetingMonk } from '@/components/monk';
 import { NarrationPlayer } from '@/components/site';
 import { BottomSheet, Card, Text } from '@/components/ui';
-import { placeStanding, standingFor } from '@/core';
+import { placeStanding, reachedNewLevel, standingFor } from '@/core';
 import { findSite, findVantage, questsForSite, vantagesForSite } from '@/data';
 import {
   useCurrentPosition,
@@ -50,6 +50,7 @@ export function LiveMapScreen() {
   const { coordinate, demoMode } = useCurrentPosition({ watch: true });
   const deviceHeading = useHeading();
   const demo = useDemoWalk();
+  const { pauseWalk, resumeWalk } = demo;
   const [follow, setFollow] = useState(true);
   const [showWisdomModal, setShowWisdomModal] = useState(false);
 
@@ -64,6 +65,10 @@ export function LiveMapScreen() {
   const { summary, recognise } = usePractice();
   const { quests, startQuest, completeTask, uncompleteTask } = useQuests();
   const story = useStoryProgress();
+  // Mirror story into a ref so imperative code can always read the latest
+  // value without being in a stale closure.
+  const storyRef = useRef(story);
+  storyRef.current = story;
 
   const [showStory, setShowStory] = useState(false);
   const [showQuests, setShowQuests] = useState(false);
@@ -121,28 +126,78 @@ export function LiveMapScreen() {
    * remembered for the visit, because someone who closed it has said no here
    * and reopening on the next fix would be the app arguing.
    */
+  /**
+   * Story trigger — fires once per genuine site transition.
+   *
+   * Using a prevAtSiteId ref rather than useEffect dependency tracking to avoid
+   * a class of timing bugs where the effect re-runs (because `story` changed
+   * identity) after `openedFor` was already set, silently blocking the story.
+   * Reading all mutable state through refs means the check always sees the
+   * latest value at the moment of the transition, never a stale closure.
+   */
   const openedFor = useRef<string | null>(null);
+  const prevAtSiteIdRef = useRef<string | null>(null);
+  // Preferences ref so the trigger always reads current prefs without being
+  // listed as a dependency (prefs change does not constitute a new arrival).
+  const prefsRef = useRef(preferences);
+  prefsRef.current = preferences;
+  const demoModeRef = useRef(demoMode);
+  demoModeRef.current = demoMode;
 
+  // The actual trigger — runs on every render but only fires side-effects when
+  // atSiteId has genuinely changed to a new, non-null value.
+  if (atSiteId !== prevAtSiteIdRef.current) {
+    prevAtSiteIdRef.current = atSiteId;
+
+    if (!atSiteId) {
+      // Walked away — re-arm for a genuine return.
+      openedFor.current = null;
+    } else if (
+      openedFor.current !== atSiteId &&
+      prefsRef.current.autoWisdom &&
+      (demoModeRef.current || !storyRef.current.hasRead(atSiteId)) &&
+      arrival.hasSomethingToSay(atSiteId, prefsRef.current.wisdomTier)
+    ) {
+      openedFor.current = atSiteId;
+      // Schedule the story open and camera move on the next tick so React can
+      // finish the current render before we set state.
+      const capturedId = atSiteId;
+      setTimeout(() => {
+        setShowStory(true);
+        if (demoModeRef.current) pauseWalk();
+        const site = findSite(capturedId);
+        if (site) flyTo(site.coordinate.longitude, site.coordinate.latitude, 'close');
+      }, 0);
+    }
+  }
+
+
+  /**
+   * Demo restart: re-arm the gamified story for every site.
+   *
+   * The story progress is persisted to AsyncStorage so real visits are not
+   * replayed. But a demo is the one case where replaying is the point — the
+   * presenter needs to walk the same circuit again without clearing app data
+   * manually. Resetting both the in-memory guard and the persisted map means
+   * the next time the demo position enters a site radius, the Buddha sequence
+   * fires fresh.
+   */
+  const handleDemoRestart = () => {
+    openedFor.current = null;
+    prevAtSiteIdRef.current = null;
+    void story.reset();
+    demo.restart();
+  };
+
+  // When the demo toggles ON, also re-arm so the very first site of a new
+  // demo run shows the sequence even if the user visited it in real mode.
   useEffect(() => {
-    if (!preferences.autoWisdom || !story.hydrated) return;
-    if (!atSiteId || openedFor.current === atSiteId) return;
-    if (story.hasRead(atSiteId)) return;
-    if (!arrival.hasSomethingToSay(atSiteId, preferences.wisdomTier)) return;
-
-    openedFor.current = atSiteId;
-    setShowStory(true);
-
-    // The camera comes in with the story: attention has narrowed to one
-    // monument, so the world should too. It goes back out when the story ends.
-    const site = findSite(atSiteId);
-    if (site) flyTo(site.coordinate.longitude, site.coordinate.latitude, 'close');
+    if (!demoMode) return;
+    openedFor.current = null;
+    prevAtSiteIdRef.current = null;
+    void story.reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [atSiteId, preferences.autoWisdom, preferences.wisdomTier, story]);
-
-  // Walking out re-arms it, so a genuine return can offer the place again.
-  useEffect(() => {
-    if (!atSiteId) openedFor.current = null;
-  }, [atSiteId]);
+  }, [demoMode]);
 
   /**
    * Reading a place through is an act of attention, so it is recognised like
@@ -153,26 +208,32 @@ export function LiveMapScreen() {
   const onStoryComplete = async (siteId: string) => {
     setShowStory(false);
     setCamera(null);
+    // Resume the demo walker — story is done, character can move to next site.
+    if (demoMode) resumeWalk();
     await story.markRead(siteId);
 
     const before = summary.balance;
     const event = await recognise({ kind: 'wisdom', siteId });
+    const after = before + (event?.amount ?? 0);
+    const leveledUp = reachedNewLevel(before, after);
+    const standingAfter = standingFor(after);
     const site = findSite(siteId);
 
     setReward(
-      event && event.amount > 0
+      leveledUp
         ? {
-            title: '✦ Wisdom unlocked',
-            detail: `${site?.name ?? 'This place'} · +${event.amount} wisdom · ${
-              standingFor(before + event.amount).title
-            }`,
+            title: `🎉 LEVEL UP! Level ${standingAfter.level} · ${standingAfter.title}`,
+            detail: `${site?.name ?? 'This place'} · +${event?.amount ?? 0} Wisdom XP earned!`,
           }
-        : {
-            // Honest about the cap rather than showing a number nobody was
-            // given. The reading still happened and is still in the ledger.
-            title: '✦ Wisdom unlocked',
-            detail: `${site?.name ?? 'This place'} · you have done enough today`,
-          },
+        : event && event.amount > 0
+          ? {
+              title: `✦ Wisdom Unlocked (+${event.amount} XP)`,
+              detail: `${site?.name ?? 'This place'} · Level ${standingAfter.level} (${standingAfter.title})`,
+            }
+          : {
+              title: '✦ Wisdom Unlocked',
+              detail: `${site?.name ?? 'This place'} · You have explored well today`,
+            },
     );
   };
 
@@ -305,10 +366,10 @@ export function LiveMapScreen() {
           >
             <View style={styles.standingHead}>
               <Text variant="caption" tone="sandstone" uppercase style={styles.standingTitle}>
-                {standing.title}
+                LVL {standing.level} · {standing.title}
               </Text>
               <Text variant="caption" tone="muted">
-                {standing.wisdom}
+                {standing.wisdom} XP
               </Text>
             </View>
             <View style={styles.wisdomTrack}>
@@ -380,14 +441,8 @@ export function LiveMapScreen() {
             accessibilityLabel={story.hasRead(atSiteId) ? 'What this place holds' : 'Hear this place'}
             accessibilityHint="Opens the passage for this site, with its sources"
             onPress={() => {
-              // The guide is the same guide. Where a story is still unread, the
-              // avatar opens it; once read, it opens the passage and its
-              // sources — one control, two states, rather than two Buddhas.
-              if (!story.hasRead(atSiteId)) {
-                setShowStory(true);
-                return;
-              }
-              setShowWisdomModal(true);
+              setShowStory(true);
+              if (demoMode) pauseWalk();
             }}
             style={styles.worldButton}
           >
@@ -438,7 +493,7 @@ export function LiveMapScreen() {
             step={demo.step}
             coordinate={coordinate}
             atSiteId={atSiteId}
-            onRestart={demo.restart}
+            onRestart={handleDemoRestart}
             onExit={demo.toggle}
           />
         ) : null}
@@ -587,6 +642,14 @@ export function LiveMapScreen() {
           onDismiss={() => {
             setShowStory(false);
             setCamera(null);
+            // Dismissed without completing — still unfreeze so demo can continue.
+            if (demoMode) resumeWalk();
+          }}
+          onOpenQuests={() => {
+            setShowStory(false);
+            setCamera(null);
+            if (demoMode) resumeWalk();
+            setShowQuests(true);
           }}
         />
       ) : null}
