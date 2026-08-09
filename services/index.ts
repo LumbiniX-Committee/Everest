@@ -8,6 +8,7 @@ export * as camera from './camera';
 export * as supabase from './supabase';
 export * as sync from './sync';
 export * as dhamma from './dhamma';
+export * as guide from './guide';
 export * as geofencing from './geofencing';
 export * as notifications from './notifications';
 export * as audio from './audio';

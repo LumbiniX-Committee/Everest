@@ -8,7 +8,7 @@ import { MapWebView } from '@/components/map';
 import { GreetingMonk } from '@/components/monk';
 import { NarrationPlayer } from '@/components/site';
 import { BottomSheet, Card, Icon, Text } from '@/components/ui';
-import { placeStanding, reachedNewLevel, standingFor } from '@/core';
+import { reachedNewLevel, standingFor } from '@/core';
 import { findSite, findVantage, questsForSite, vantagesForSite } from '@/data';
 import {
   useCurrentPosition,
@@ -108,10 +108,6 @@ export function LiveMapScreen() {
   const questsElsewhere = quests.filter((q) => !questsHere.includes(q));
   const questsDoneHere = questsHere.filter((q) => q.progress?.status === 'completed').length;
   const questsOpenHere = questsHere.length - questsDoneHere;
-
-  const placeHere = atSiteId
-    ? placeStanding(story.hasRead(atSiteId), questsDoneHere, questsHere.length)
-    : null;
 
   /**
    * The story, opened by reaching the place it is about.
@@ -483,8 +479,7 @@ export function LiveMapScreen() {
         readout floating above its own background.
       */}
       <View style={styles.dock} pointerEvents="box-none">
-        {/* The toast rides above the dock, in the gap between the world and the
-            readout, where nothing else is drawn. */}
+        {/* The toast rides above the dock, where nothing else is drawn. */}
         <View style={styles.toastSlot} pointerEvents="none">
           <RewardToast
             visible={reward !== null}
@@ -504,41 +499,12 @@ export function LiveMapScreen() {
           />
         ) : null}
 
-        <View style={styles.readout}>
-          {coordinate ? (
-            near ? (
-              <Text variant="body" center>
-                {near.site.name}
-                <Text variant="body" tone={atSiteId ? 'sandstone' : 'muted'}>
-                  {'  ·  '}
-                  {atSiteId ? 'you are here' : `${Math.round(near.distanceM)} m`}
-                </Text>
-                {/* How far through this place you are, where you already are.
-                    A progress bar in a menu is a statistic; here it is a reason
-                    to stay a moment longer. */}
-                {placeHere && placeHere.questsTotal > 0 ? (
-                  <Text variant="body" tone="muted">
-                    {'  ·  '}
-                    {placeHere.mastered
-                      ? 'mastered'
-                      : `${Math.round(placeHere.progress * 100)}%`}
-                  </Text>
-                ) : null}
-              </Text>
-            ) : (
-              <Text variant="body" tone="secondary" center>
-                Position acquired.
-              </Text>
-            )
-          ) : (
-            // Named rather than a spinner: a GPS fix under open sky can take
-            // thirty seconds, and saying so is the difference between waiting
-            // and assuming it is broken.
-            <Text variant="body" tone="muted" center>
-              {demoMode ? 'Setting out…' : 'Acquiring position…'}
-            </Text>
-          )}
-        </View>
+        {/*
+          The name-and-distance strip that stood here is gone. It restated what
+          the map already draws, and "World Peace Pagoda · 25103 m" is a number
+          about somewhere you are not. Arrival is announced by the toast, and the
+          place you are at is the marker under you.
+        */}
       </View>
 
       {/*
@@ -663,6 +629,7 @@ export function LiveMapScreen() {
       <BuddhaChat
         visible={showChat}
         onClose={() => setShowChat(false)}
+        siteId={activeSiteId}
         siteName={activeSignificance?.site.name}
       />
     </View>
@@ -740,14 +707,6 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 10,
-  },
-  readout: {
-    paddingHorizontal: spacing.base,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.base,
-    backgroundColor: colors.background,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
   },
   modalContent: {
     gap: spacing.md,

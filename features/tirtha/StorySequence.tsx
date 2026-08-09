@@ -8,9 +8,8 @@ import {
   Text as RNText,
   View,
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { GreetingMonk } from '@/components/monk';
+import { SpeechCloud, speechCloudStyles, useTypingText } from '@/components/monk';
 import { buildStory, standingFor, WISDOM_LEVELS, type StoryBeat } from '@/core';
 import { findSite } from '@/data';
 import { arrival, voice } from '@/services';
@@ -66,25 +65,6 @@ function useConfetti(trigger: boolean) {
   }, [trigger, particles]);
 
   return particles;
-}
-
-// ─── Typewriter hook ──────────────────────────────────────────────────────────
-
-function useTypingText(text: string, speed = 22): string {
-  const [displayed, setDisplayed] = useState('');
-  const textRef = useRef(text);
-  useEffect(() => {
-    textRef.current = text;
-    setDisplayed('');
-    let i = 0;
-    const id = setInterval(() => {
-      i += 1;
-      setDisplayed(textRef.current.slice(0, i));
-      if (i >= textRef.current.length) clearInterval(id);
-    }, speed);
-    return () => clearInterval(id);
-  }, [text, speed]);
-  return displayed;
 }
 
 // ─── Unlock popup ─────────────────────────────────────────────────────────────
@@ -218,25 +198,25 @@ function nextTitleAfter(title: string): string {
 }
 
 function BeatBody({ beat }: { beat: StoryBeat }) {
-  const typed = useTypingText(beat.body, 22);
+  const { displayed } = useTypingText(beat.body, 22);
   return (
-    <View style={styles.beatContent}>
+    <View style={speechCloudStyles.content}>
       {beat.original ? (
-        <RNText style={styles.originalTxt}>{beat.original}</RNText>
+        <RNText style={speechCloudStyles.original}>{beat.original}</RNText>
       ) : null}
-      <RNText style={styles.bodyTxt}>{typed}</RNText>
+      <RNText style={speechCloudStyles.body}>{displayed}</RNText>
     </View>
   );
 }
 
 function DiscoveryBeat({ siteName }: { siteName: string }) {
-  const typed = useTypingText(
+  const { displayed } = useTypingText(
     `You have truly arrived at ${siteName}. The wisdom of this sacred place now walks with you on your journey.`,
     20,
   );
   return (
-    <View style={styles.beatContent}>
-      <RNText style={styles.bodyTxt}>{typed}</RNText>
+    <View style={speechCloudStyles.content}>
+      <RNText style={speechCloudStyles.body}>{displayed}</RNText>
     </View>
   );
 }
@@ -266,7 +246,6 @@ export type StorySequenceProps = {
 };
 
 export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQuests }: StorySequenceProps) {
-  const insets = useSafeAreaInsets();
   const { preferences } = usePreferences();
   const [index, setIndex] = useState(0);
   const [showUnlock, setShowUnlock] = useState(false);
@@ -327,47 +306,8 @@ export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQu
     };
   }, [visible, index, beats, voiceMuted, preferences.autoNarration]);
 
-  // ── Avatar: slides in from the left once per site ──────────────────────────
-  const avatarSlide = useRef(new Animated.Value(0)).current;
-  const avatarOpacity = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    if (!visible) {
-      avatarSlide.setValue(0);
-      avatarOpacity.setValue(0);
-      return;
-    }
-    avatarSlide.setValue(0);
-    avatarOpacity.setValue(0);
-    Animated.parallel([
-      Animated.timing(avatarSlide, {
-        toValue: 1,
-        duration: 540,
-        easing: Easing.out(Easing.back(1.1)),
-        useNativeDriver: true,
-      }),
-      Animated.timing(avatarOpacity, {
-        toValue: 1,
-        duration: 320,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [visible, siteId, avatarSlide, avatarOpacity]);
-
-  // ── Bubble: floats up on each beat change ─────────────────────────────────
-  const bubbleAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    if (!visible) return;
-    bubbleAnim.setValue(0);
-    Animated.timing(bubbleAnim, {
-      toValue: 1,
-      duration: 320,
-      delay: 160,
-      easing: Easing.out(Easing.cubic),
-      useNativeDriver: true,
-    }).start();
-  }, [visible, index, bubbleAnim]);
+  // The monk's entrance and the cloud's float-up now live in `SpeechCloud`,
+  // shared with the guide in `BuddhaChat` so the two cannot drift apart.
 
   if (!visible || beats.length === 0) return null;
 
@@ -417,123 +357,57 @@ export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQu
 
   return (
     <>
-      <View style={styles.root} pointerEvents="box-none">
-        {/* Dim overlay (tap to advance) */}
-        <Pressable style={styles.backdrop} onPress={next} accessibilityRole="button" accessibilityLabel="Next" />
-
-        {/* Buddha avatar — large, from left, no circular frame */}
-        <Animated.View
-          style={[
-            styles.avatarWrap,
-            { bottom: insets.bottom + 72 },
-            {
-              opacity: avatarOpacity,
-              transform: [
-                {
-                  translateX: avatarSlide.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [-200, 0],
-                  }),
-                },
-              ],
-            },
-          ]}
-          pointerEvents="none"
-        >
-          <GreetingMonk height={250} />
-        </Animated.View>
-
-        {/* Floating speech bubble panel */}
-        <Animated.View
-          style={[
-            styles.speechArea,
-            { paddingBottom: insets.bottom + spacing.lg },
-            {
-              opacity: bubbleAnim,
-              transform: [
-                {
-                  translateY: bubbleAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [28, 0],
-                  }),
-                },
-              ],
-            },
-          ]}
-          pointerEvents="box-none"
-        >
-          <View style={styles.bubble}>
-            {/* Tail pointing left toward avatar */}
-            <View style={styles.bubbleTail} />
-
-            {/* Top row: chapter eyebrow + synchronized voice narration button + dismiss */}
-            <View style={styles.eyebrowRow}>
-              <View style={styles.eyebrowLeft}>
-                <View style={styles.eyebrowPill}>
-                  <RNText style={styles.eyebrowTxt}>
-                    {isDiscovery ? '✦  Wisdom Unlocked' : beat.eyebrow.toUpperCase()}
-                  </RNText>
-                </View>
-
-                <Pressable
-                  onPress={toggleVoice}
-                  hitSlop={12}
-                  accessibilityRole="button"
-                  accessibilityLabel={speaking ? 'Pause voice' : 'Play voice'}
-                  style={[styles.voicePill, speaking && styles.voicePillPlaying]}
-                >
-                  <RNText style={[styles.voiceTxt, speaking && styles.voiceTxtPlaying]}>
-                    {speaking ? '🔊 Voice' : '🔈 Voice'}
-                  </RNText>
-                </Pressable>
-              </View>
-
+      <SpeechCloud
+        eyebrow={isDiscovery ? '✦  WISDOM UNLOCKED' : beat.eyebrow.toUpperCase()}
+        eyebrowAccessory={
+          <Pressable
+            onPress={toggleVoice}
+            hitSlop={12}
+            accessibilityRole="button"
+            accessibilityLabel={speaking ? 'Pause voice' : 'Play voice'}
+            style={[styles.voicePill, speaking && styles.voicePillPlaying]}
+          >
+            <RNText style={[styles.voiceTxt, speaking && styles.voiceTxtPlaying]}>
+              {speaking ? '🔊 Voice' : '🔈 Voice'}
+            </RNText>
+          </Pressable>
+        }
+        onClose={handleDismiss}
+        onBackdropPress={next}
+        animationKey={index}
+        footer={
+          <View style={styles.footer}>
+            <View style={styles.footerLeft}>
               <Pressable
-                onPress={handleDismiss}
-                hitSlop={12}
+                onPress={back}
+                disabled={index === 0}
+                hitSlop={10}
+                style={[styles.navBtn, index === 0 && styles.navBtnOff]}
                 accessibilityRole="button"
-                accessibilityLabel="Close story"
-                style={styles.closeBubble}
+                accessibilityLabel="Previous"
               >
-                <RNText style={styles.closeBubbleTxt}>✕</RNText>
+                <RNText style={[styles.navBtnTxt, index === 0 && styles.navBtnTxtMuted]}>‹</RNText>
               </Pressable>
+              <Pips count={beats.length} at={index} />
             </View>
 
-            {/* Beat content with typewriter animation */}
-            {isDiscovery
-              ? <DiscoveryBeat siteName={site?.name ?? ''} />
-              : <BeatBody beat={beat} />}
-
-            {/* Footer: back + dots + next */}
-            <View style={styles.footer}>
-              <View style={styles.footerLeft}>
-                <Pressable
-                  onPress={back}
-                  disabled={index === 0}
-                  hitSlop={10}
-                  style={[styles.navBtn, index === 0 && styles.navBtnOff]}
-                  accessibilityRole="button"
-                  accessibilityLabel="Previous"
-                >
-                  <RNText style={[styles.navBtnTxt, index === 0 && styles.navBtnTxtMuted]}>‹</RNText>
-                </Pressable>
-                <Pips count={beats.length} at={index} />
-              </View>
-
-              <Pressable
-                style={[styles.nextBtn, isLast && styles.nextBtnClaim]}
-                onPress={next}
-                accessibilityRole="button"
-                accessibilityLabel={isLast ? 'Claim wisdom' : 'Next'}
-              >
-                <RNText style={styles.nextBtnTxt}>
-                  {isLast ? '✦  Claim' : 'Next  →'}
-                </RNText>
-              </Pressable>
-            </View>
+            <Pressable
+              style={[styles.nextBtn, isLast && styles.nextBtnClaim]}
+              onPress={next}
+              accessibilityRole="button"
+              accessibilityLabel={isLast ? 'Claim wisdom' : 'Next'}
+            >
+              <RNText style={styles.nextBtnTxt}>{isLast ? '✦  Claim' : 'Next  →'}</RNText>
+            </Pressable>
           </View>
-        </Animated.View>
-      </View>
+        }
+      >
+        {isDiscovery ? (
+          <DiscoveryBeat siteName={site?.name ?? ''} />
+        ) : (
+          <BeatBody beat={beat} />
+        )}
+      </SpeechCloud>
 
       {/* Unlock celebration popup */}
       <UnlockPopup
@@ -550,78 +424,6 @@ export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQu
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-  root: {
-    position: 'absolute',
-    top: 0, left: 0, right: 0, bottom: 0,
-    zIndex: 9999,
-    elevation: 9999,
-  },
-
-  backdrop: {
-    position: 'absolute',
-    top: 0, left: 0, right: 0, bottom: 0,
-    // Map stays legible — guide in the world, not a page over it.
-    backgroundColor: 'rgba(20, 25, 22, 0.42)',
-  },
-
-  // Large avatar from left, no circular background at all.
-  avatarWrap: {
-    position: 'absolute',
-    left: -16,
-  },
-
-  // Bubble sits to the right of the avatar, at the bottom.
-  speechArea: {
-    position: 'absolute',
-    left: 0, right: 0, bottom: 0,
-    paddingHorizontal: spacing.base,
-    // Shift content right to leave room for avatar (~145pt wide).
-    paddingLeft: 142,
-  },
-
-  bubble: {
-    backgroundColor: 'rgba(255, 252, 246, 0.96)',
-    borderRadius: 20,
-    padding: spacing.base,
-    gap: spacing.sm + 2,
-    overflow: 'visible',
-    // Warm golden shadow
-    shadowColor: '#A07A50',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.32,
-    shadowRadius: 20,
-    elevation: 14,
-    borderWidth: 1.5,
-    borderColor: 'rgba(183, 155, 114, 0.38)',
-  },
-
-  // Pointer triangle toward the avatar on the left.
-  bubbleTail: {
-    position: 'absolute',
-    left: -11,
-    top: 28,
-    width: 0,
-    height: 0,
-    borderTopWidth: 10,
-    borderBottomWidth: 10,
-    borderRightWidth: 13,
-    borderTopColor: 'transparent',
-    borderBottomColor: 'transparent',
-    borderRightColor: 'rgba(255, 252, 246, 0.96)',
-  },
-
-  eyebrowRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-
-  eyebrowLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-  },
-
   voicePill: {
     backgroundColor: 'rgba(180, 71, 42, 0.08)',
     borderRadius: radii.full,
@@ -645,50 +447,6 @@ const styles = StyleSheet.create({
 
   voiceTxtPlaying: {
     color: '#FFFFFF',
-  },
-
-  eyebrowPill: {
-    backgroundColor: colors.sandstone,
-    borderRadius: radii.full,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xxs,
-  },
-
-  eyebrowTxt: {
-    fontSize: 10,
-    fontWeight: '700',
-    letterSpacing: 0.9,
-    color: '#FFFFFF',
-  },
-
-  closeBubble: {
-    width: 26,
-    height: 26,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  closeBubbleTxt: {
-    fontSize: 15,
-    color: colors.textMuted,
-  },
-
-  beatContent: {
-    gap: spacing.xs,
-    minHeight: 68,
-  },
-
-  originalTxt: {
-    fontStyle: 'italic',
-    fontSize: 13,
-    color: colors.sandstoneDeep,
-    lineHeight: 19,
-  },
-
-  bodyTxt: {
-    fontSize: 15,
-    lineHeight: 24,
-    color: colors.textPrimary,
   },
 
   footer: {

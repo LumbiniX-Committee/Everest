@@ -48,6 +48,28 @@ async function loadDhamma() {
 // Kick off background load
 loadDhamma().catch(() => {});
 
+// --- Tīrtha guide (free voice, two limits — see core/guide/index.ts) ---------
+let _guideReady = false;
+let _guideSystem, _guidePrompt, _tidyGuideText, _callLlm, _hasProvider, _trimToCompleteSentence;
+async function loadGuide() {
+  if (_guideReady) return;
+  try {
+    const g = await import('../core/guide/index.ts');
+    const l = await import('../core/dhamma/llm.ts');
+    _guideSystem = g.guideSystem;
+    _guidePrompt = g.guidePrompt;
+    _tidyGuideText = g.tidyGuideText;
+    _callLlm = l.callLlm;
+    _hasProvider = l.hasProvider;
+    _trimToCompleteSentence = l.trimToCompleteSentence;
+    _guideReady = true;
+    console.log('[guide] voice loaded ✓');
+  } catch (e) {
+    console.warn('[guide] unavailable, falling back to site descriptions:', e.message);
+  }
+}
+loadGuide().catch(() => {});
+
 // --- seed (read once at boot) ----------------------------------------------
 const readSeed = (f) => JSON.parse(readFileSync(join(SEED, f), 'utf8'));
 const sites = readSeed('sites.json');
@@ -461,6 +483,72 @@ on('POST', '/dhamma/reflect/questions', async (_req, res, _p, _q, body) => {
     language: body.language ?? 'en',
     tier: 'fallback',
     _note: 'engine unavailable — stub response',
+  });
+});
+
+// POST /tirtha/guide → the on-site guide. Free voice, never refuses.
+//
+// Deliberately NOT /dhamma/ask. That path retrieves, grounds, cites and refuses
+// when the corpus does not cover the question, which is right for a question
+// about a sutta and useless for a visitor asking what a building is. The two
+// limits that survive are in the prompt (core/guide/index.ts): no statement
+// about a monument's physical condition, and no claim to be quoting a source.
+on('POST', '/tirtha/guide', async (_req, res, _p, _q, body) => {
+  const question = String(body.question || '').trim();
+  if (!question) return err(res, 400, 'question is required');
+  const language = body.language === 'ne' ? 'ne' : 'en';
+
+  const site = sites.find((s) => s.id === body.site_id);
+  const pick = (v) => (v && typeof v === 'object' ? v[language] ?? v.en : v);
+  const place = site
+    ? {
+        name: pick(site.name),
+        nameNepali: site.name?.ne,
+        summary: pick(site.summary),
+        zone: site.zone,
+        facts: (site.facts ?? []).map((f) => ({ label: pick(f.label), value: pick(f.value) })),
+      }
+    : null;
+  const placeName = place?.name ?? (body.site_name || undefined);
+
+  await loadGuide();
+  if (_guideReady && _hasProvider()) {
+    try {
+      const reply = await _callLlm(
+        _guideSystem(language),
+        _guidePrompt(question, place, placeName),
+        420,
+      );
+      // A reply that stopped at the ceiling ends mid-word. Cut it back to its
+      // last complete sentence; if too little survives, fall through to the seed.
+      const raw = reply?.text?.trim()
+        ? (reply.truncated ? _trimToCompleteSentence(reply.text) : reply.text)
+        : '';
+      const answer = raw ? _tidyGuideText(raw) : '';
+      if (answer.length >= 40) {
+        return json(res, 200, {
+          answer,
+          origin: 'provider',
+          site_id: body.site_id ?? null,
+          language,
+        });
+      }
+    } catch (e) {
+      console.error('[tirtha/guide] provider error:', e);
+    }
+  }
+
+  // No provider, or it declined to answer. The seed still knows this place, and
+  // a description is a real answer where "the network failed" is not.
+  json(res, 200, {
+    answer: place?.summary
+      ? place.summary
+      : placeName
+        ? `You are at ${placeName}. Open the place from the map for what this app has recorded about it.`
+        : 'Walk toward a marked place on the map and I can tell you about it.',
+    origin: place?.summary ? 'site' : 'general',
+    site_id: body.site_id ?? null,
+    language,
   });
 });
 
