@@ -8,7 +8,7 @@ import { MapWebView } from '@/components/map';
 import { GreetingMonk } from '@/components/monk';
 import { NarrationPlayer } from '@/components/site';
 import { BottomSheet, Card, Text } from '@/components/ui';
-import { placeStanding, standingFor } from '@/core';
+import { placeStanding, reachedNewLevel, standingFor } from '@/core';
 import { findSite, findVantage, questsForSite, vantagesForSite } from '@/data';
 import {
   useCurrentPosition,
@@ -214,22 +214,26 @@ export function LiveMapScreen() {
 
     const before = summary.balance;
     const event = await recognise({ kind: 'wisdom', siteId });
+    const after = before + (event?.amount ?? 0);
+    const leveledUp = reachedNewLevel(before, after);
+    const standingAfter = standingFor(after);
     const site = findSite(siteId);
 
     setReward(
-      event && event.amount > 0
+      leveledUp
         ? {
-            title: '✦ Wisdom unlocked',
-            detail: `${site?.name ?? 'This place'} · +${event.amount} wisdom · ${
-              standingFor(before + event.amount).title
-            }`,
+            title: `🎉 LEVEL UP! Level ${standingAfter.level} · ${standingAfter.title}`,
+            detail: `${site?.name ?? 'This place'} · +${event?.amount ?? 0} Wisdom XP earned!`,
           }
-        : {
-            // Honest about the cap rather than showing a number nobody was
-            // given. The reading still happened and is still in the ledger.
-            title: '✦ Wisdom unlocked',
-            detail: `${site?.name ?? 'This place'} · you have done enough today`,
-          },
+        : event && event.amount > 0
+          ? {
+              title: `✦ Wisdom Unlocked (+${event.amount} XP)`,
+              detail: `${site?.name ?? 'This place'} · Level ${standingAfter.level} (${standingAfter.title})`,
+            }
+          : {
+              title: '✦ Wisdom Unlocked',
+              detail: `${site?.name ?? 'This place'} · You have explored well today`,
+            },
     );
   };
 
@@ -362,10 +366,10 @@ export function LiveMapScreen() {
           >
             <View style={styles.standingHead}>
               <Text variant="caption" tone="sandstone" uppercase style={styles.standingTitle}>
-                {standing.title}
+                LVL {standing.level} · {standing.title}
               </Text>
               <Text variant="caption" tone="muted">
-                {standing.wisdom}
+                {standing.wisdom} XP
               </Text>
             </View>
             <View style={styles.wisdomTrack}>

@@ -11,10 +11,10 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { GreetingMonk } from '@/components/monk';
-import { buildStory, type StoryBeat } from '@/core';
+import { buildStory, standingFor, type StoryBeat } from '@/core';
 import { findSite } from '@/data';
 import { arrival, voice } from '@/services';
-import { usePreferences } from '@/store';
+import { usePractice, usePreferences } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 
 // ─── Confetti particle ────────────────────────────────────────────────────────
@@ -101,6 +101,10 @@ function UnlockPopup({ visible, siteName, onClose, onQuests, confettiOn }: Unloc
   const particles = useConfetti(confettiOn);
   const scale = useRef(new Animated.Value(0.65)).current;
   const opacity = useRef(new Animated.Value(0)).current;
+  const { summary } = usePractice();
+
+  // Compute actual user spiritual level and progress from wisdom balance
+  const standing = standingFor(summary.balance);
 
   useEffect(() => {
     if (visible) {
@@ -152,18 +156,41 @@ function UnlockPopup({ visible, siteName, onClose, onQuests, confettiOn }: Unloc
 
           <RNText style={popup.star}>✦</RNText>
           <RNText style={popup.label}>SPIRITUALITY UNLOCKED</RNText>
-          <RNText style={popup.level}>Level 1 Explorer</RNText>
+          
+          {/* Dynamic Level & Title */}
+          <RNText style={popup.level}>Level {standing.level} · {standing.title}</RNText>
+
+          {/* XP Gained Badge */}
+          <View style={popup.xpBadge}>
+            <RNText style={popup.xpBadgeTxt}>+200 Wisdom XP Earned!</RNText>
+          </View>
 
           <View style={popup.divider} />
 
           <RNText style={popup.siteName}>{siteName}</RNText>
           <RNText style={popup.caption}>
-            You stood here, you listened, you understood.
+            You stood here, listened, and unlocked sacred knowledge.
           </RNText>
+
+          {/* Level Progress Indicator */}
+          <View style={popup.progressBox}>
+            <View style={popup.progressHead}>
+              <RNText style={popup.progressLabel}>Level {standing.level} Progress</RNText>
+              <RNText style={popup.progressPts}>{standing.wisdom} XP Total</RNText>
+            </View>
+            <View style={popup.track}>
+              <View style={[popup.fill, { width: `${Math.round(standing.progress * 100)}%` }]} />
+            </View>
+            <RNText style={popup.toNext}>
+              {standing.toNextLevel > 0
+                ? `${standing.toNextLevel} XP needed for Level ${standing.level + 1}`
+                : 'Maximum Spiritual Level Reached!'}
+            </RNText>
+          </View>
 
           {onQuests ? (
             <Pressable style={popup.questBtn} onPress={onQuests} accessibilityRole="button">
-              <RNText style={popup.questBtnTxt}>⚑  View Quests</RNText>
+              <RNText style={popup.questBtnTxt}>⚑  View Location Quests</RNText>
             </Pressable>
           ) : null}
         </Animated.View>
@@ -786,11 +813,74 @@ const popup = StyleSheet.create({
   },
 
   level: {
-    fontSize: 26,
+    fontSize: 24,
     fontWeight: '800',
     color: colors.textPrimary,
     textAlign: 'center',
     letterSpacing: 0.2,
+  },
+
+  xpBadge: {
+    backgroundColor: 'rgba(180, 71, 42, 0.1)',
+    borderRadius: radii.full,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xxs + 2,
+    borderWidth: 1,
+    borderColor: 'rgba(180, 71, 42, 0.25)',
+  },
+
+  xpBadgeTxt: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#B4472A',
+    letterSpacing: 0.4,
+  },
+
+  progressBox: {
+    width: '100%',
+    backgroundColor: 'rgba(183, 155, 114, 0.08)',
+    borderRadius: radii.md,
+    padding: spacing.md,
+    gap: spacing.xs,
+    marginVertical: spacing.xxs,
+  },
+
+  progressHead: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+
+  progressLabel: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: colors.sandstoneDeep,
+  },
+
+  progressPts: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: colors.textPrimary,
+  },
+
+  track: {
+    width: '100%',
+    height: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.08)',
+    borderRadius: radii.full,
+    overflow: 'hidden',
+  },
+
+  fill: {
+    height: '100%',
+    backgroundColor: colors.sandstone,
+    borderRadius: radii.full,
+  },
+
+  toNext: {
+    fontSize: 11,
+    color: colors.textMuted,
+    textAlign: 'center',
   },
 
   divider: {

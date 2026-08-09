@@ -205,7 +205,7 @@ function QuestRow({
           <View style={styles.cardTitle}>
             <Text variant="heading">{quest.title}</Text>
             <Text variant="caption" tone={done ? 'sandstone' : 'muted'}>
-              {tasksDone(quest)} / {quest.tasks.length} objectives
+              {tasksDone(quest)} / {quest.tasks.length} objectives · +{quest.tasks.length * 100} XP
             </Text>
           </View>
           <Text variant="body" tone="muted">
