@@ -97,8 +97,6 @@ export function LiveMapScreen() {
     setCamera({ longitude, latitude, distance, nonce: cameraNonce.current });
   };
 
-  const standing = standingFor(summary.balance);
-
   /**
    * The quests belonging to where the player is, and everywhere else.
    *
@@ -338,9 +336,22 @@ export function LiveMapScreen() {
       />
 
       {/*
-        The HUD. Standing, then the controls — a game reads its own state first
-        and its buttons second, and the level is the one thing on this screen
-        that is about the player rather than about the ground.
+        The HUD: a way out on the left, the world controls on the right.
+
+        The standing pill used to sit here — a title, a puṇya total and a
+        progress track, permanently over the map. Three reasons it is gone.
+        Nothing in the app reads the balance: quest availability is decided by
+        position, time and completion history, so the number gated nothing and
+        the bar filled towards nothing. It overflowed — `maxWidth: 180` left
+        about eighty points for a title needing eighty-eight, with no
+        `flexShrink` and no `numberOfLines`. And a running total pinned over a
+        sacred site is the one thing the vocabulary rules in `core/progression`
+        exist to prevent: puṇya is a record of attention paid, not a score
+        carried around.
+
+        It is still recorded, and still shown where it means something: in the
+        acknowledgement after an observation, and in the day's practice summary
+        under Sākṣī → Records.
       */}
       <View style={[styles.topBar, { paddingTop: insets.top + spacing.sm }]} pointerEvents="box-none">
         {/*
@@ -364,24 +375,6 @@ export function LiveMapScreen() {
           >
             <Text variant="body">‹</Text>
           </Pressable>
-
-          <View
-            style={styles.standing}
-            accessibilityRole="progressbar"
-            accessibilityLabel={`${standing.title}, ${standing.wisdom} puṇya`}
-          >
-            <View style={styles.standingHead}>
-              <Text variant="caption" tone="sandstone" uppercase style={styles.standingTitle}>
-                {standing.title}
-              </Text>
-              <Text variant="caption" tone="muted">
-                {standing.wisdom} puṇya
-              </Text>
-            </View>
-            <View style={styles.wisdomTrack}>
-              <View style={[styles.wisdomFill, { width: `${Math.round(standing.progress * 100)}%` }]} />
-            </View>
-          </View>
         </View>
 
         <View style={styles.topRight} pointerEvents="box-none">
@@ -722,29 +715,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
-  standing: {
-    // Shrinks rather than pushing the controls off a narrow screen. The three
-    // pills are fixed at 44 each, so this is the piece that has to give.
-    flexShrink: 1,
-    minWidth: 96,
-    maxWidth: 180,
-    gap: 4,
-    paddingHorizontal: spacing.base,
-    paddingVertical: spacing.xs,
-    borderRadius: radii.full,
-    backgroundColor: colors.background,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  standingHead: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', gap: spacing.sm },
-  standingTitle: { fontWeight: '700', flexShrink: 1 },
-  wisdomTrack: {
-    height: 3,
-    borderRadius: radii.full,
-    backgroundColor: colors.surfaceSecondary,
-    overflow: 'hidden',
-  },
-  wisdomFill: { height: 3, backgroundColor: colors.sandstone },
   /** The world actions, in one right-hand column clear of the top bar. */
   worldControls: { position: 'absolute', right: spacing.base, zIndex: 12, gap: spacing.sm, alignItems: 'center' },
   worldButton: {

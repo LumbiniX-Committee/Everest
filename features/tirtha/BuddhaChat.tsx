@@ -1,72 +1,87 @@
-﻿import { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  Animated,
-  Easing,
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text as RNText,
-  TextInput,
-  View,
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Animated, Easing, Modal, Pressable, StyleSheet, View } from 'react-native';
 
 import { GreetingMonk } from '@/components/monk';
+import {
+  ChatBubble,
+  ChatComposer,
+  ChatTranscript,
+  SourceList,
+  type ChatTranscriptHandle,
+} from '@/components/chat';
+import { Icon, Text } from '@/components/ui';
+import { useKeyboardInset } from '@/hooks';
 import { dhamma as dhammaService, voice } from '@/services';
 import { colors, radii, spacing } from '@/theme';
 import { isGrounded, type DhammaAnswer } from '@/types';
 
-function useTypingText(text: string, speed = 16): string {
+/**
+ * The guide you can ask, from where you are standing.
+ *
+ * It answers through `dhamma.ask` — the same retrieval, the same grounding
+ * gates and the same refusals as the Dhamma surface. There is one corpus and one
+ * way into it; this is a door, not a second engine. The site name is prepended
+ * to the question the way `AskThisPlace` does, so "when was it built" means this
+ * place rather than nothing in particular.
+ *
+ * ── The four reasons it appeared not to answer ──────────────────────────────
+ *
+ * 1. Text-to-speech shared the `try` with the request. `voice.speakText` throws
+ *    on a device with no speech engine, and the catch then replaced a perfectly
+ *    good answer with "could not reach the corpus". The answer is committed to
+ *    state before anything is spoken now, and speech has its own guard: it is a
+ *    nicety, and a nicety must not be able to discard the content.
+ * 2. `KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' :
+ *    undefined}` — a no-op on Android, inside a Modal that lacked
+ *    `statusBarTranslucent` and so did not resize under edge-to-edge. The
+ *    keyboard covered the field and what you typed was invisible while you
+ *    typed it. `ChatComposer` measures the keyboard instead.
+ * 3. The bubble had no height limit and nothing to scroll it, so a long answer
+ *    grew off the top of the screen and its opening sentence could not be read.
+ * 4. The typewriter ran at 14 ms a character — eleven seconds for a long answer,
+ *    with no way to skip. It is faster now, and a tap finishes it.
+ *
+ * Citations were also being discarded: the reply rendered `answer.text` and
+ * nothing else. On a surface whose whole claim is that answers are checkable,
+ * that was the most expensive omission of the four.
+ */
+
+/**
+ * Reveals text a character at a time, and stops pretending when asked.
+ *
+ * This is decoration, not a claim about thinking — the reply is already
+ * complete in state before the first character appears, and `skip` shows all of
+ * it immediately. §14 forbids an animation that implies composition; this one
+ * is a reveal of something already written, and it can always be cut short.
+ */
+function useTypingText(text: string, speed = 6): { displayed: string; done: boolean; skip: () => void } {
   const [displayed, setDisplayed] = useState('');
+
   useEffect(() => {
     setDisplayed('');
     if (!text) return;
     let i = 0;
     const id = setInterval(() => {
-      i += 1;
+      // Several characters a tick rather than one: at one character per 14 ms a
+      // three-hundred-character answer took four seconds to become readable.
+      i = Math.min(text.length, i + 3);
       setDisplayed(text.slice(0, i));
       if (i >= text.length) clearInterval(id);
     }, speed);
     return () => clearInterval(id);
   }, [text, speed]);
-  return displayed;
+
+  return {
+    displayed,
+    done: displayed.length >= text.length,
+    skip: () => setDisplayed(text),
+  };
 }
 
-type ChatPhase =
-  | { kind: 'idle' }
-  | { kind: 'asking' }
-  | { kind: 'loading' }
-  | { kind: 'answered'; answer: DhammaAnswer }
-  | { kind: 'failed' };
-
-function AnswerBody({ answer, speaking }: { answer: DhammaAnswer; speaking: boolean }) {
-  const text = isGrounded(answer)
-    ? answer.text
-    : answer.text || 'I cannot find this in the collections on Lumbini.';
-  const displayed = useTypingText(text, 14);
-
-  return (
-    <View style={s.answerBody}>
-      <RNText style={s.answerText}>{displayed}</RNText>
-      {isGrounded(answer) && answer.caveat ? (
-        <RNText style={s.caveatText}>{answer.caveat}</RNText>
-      ) : null}
-      {!isGrounded(answer) && answer.suggestions.length > 0 ? (
-        <View style={s.suggestBox}>
-          <RNText style={s.suggestLabel}>TRY ASKING</RNText>
-          {answer.suggestions.slice(0, 2).map((q: string, i: number) => (
-            <RNText key={i} style={s.suggestItem}>· {q}</RNText>
-          ))}
-        </View>
-      ) : null}
-      <RNText style={[s.speakPill, speaking && s.speakPillOn]}>
-        {speaking ? '🔊 Speaking…' : '🔈 Spoken'}
-      </RNText>
-    </View>
-  );
-}
+type Turn =
+  | { id: string; from: 'user'; text: string }
+  | { id: string; from: 'guide'; answer: DhammaAnswer }
+  | { id: string; from: 'guide'; failure: string };
 
 export type BuddhaChatProps = {
   visible: boolean;
@@ -75,28 +90,33 @@ export type BuddhaChatProps = {
 };
 
 export function BuddhaChat({ visible, onClose, siteName }: BuddhaChatProps) {
-  const insets = useSafeAreaInsets();
-  const [phase, setPhase] = useState<ChatPhase>({ kind: 'idle' });
+  // The bottom safe area is `ChatComposer`'s business, not this screen's — it is
+  // the thing that sits against the edge.
+  const keyboardInset = useKeyboardInset();
+
+  const [turns, setTurns] = useState<Turn[]>([]);
   const [question, setQuestion] = useState('');
+  const [busy, setBusy] = useState(false);
   const [speaking, setSpeaking] = useState(false);
+
+  const transcriptRef = useRef<ChatTranscriptHandle>(null);
+  const idRef = useRef(0);
+  const nextId = () => `b${(idRef.current += 1)}`;
 
   const avatarSlide = useRef(new Animated.Value(0)).current;
   const avatarOpacity = useRef(new Animated.Value(0)).current;
-  const bubbleAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     if (!visible) {
       avatarSlide.setValue(0);
       avatarOpacity.setValue(0);
-      bubbleAnim.setValue(0);
-      setPhase({ kind: 'idle' });
+      setTurns([]);
       setQuestion('');
+      setBusy(false);
       voice.stopSpeaking();
       setSpeaking(false);
       return;
     }
-    avatarSlide.setValue(0);
-    avatarOpacity.setValue(0);
     Animated.parallel([
       Animated.timing(avatarSlide, {
         toValue: 1,
@@ -106,53 +126,67 @@ export function BuddhaChat({ visible, onClose, siteName }: BuddhaChatProps) {
       }),
       Animated.timing(avatarOpacity, { toValue: 1, duration: 320, useNativeDriver: true }),
     ]).start();
-    Animated.timing(bubbleAnim, {
-      toValue: 1,
-      duration: 280,
-      delay: 160,
-      easing: Easing.out(Easing.cubic),
-      useNativeDriver: true,
-    }).start();
   }, [visible]);
 
   useEffect(() => {
-    if (!visible) return;
-    bubbleAnim.setValue(0);
-    Animated.timing(bubbleAnim, {
-      toValue: 1,
-      duration: 280,
-      easing: Easing.out(Easing.cubic),
-      useNativeDriver: true,
-    }).start();
-  }, [phase.kind]);
+    if (keyboardInset > 0) transcriptRef.current?.scrollToEnd();
+  }, [keyboardInset]);
 
-  const handleAsk = useCallback(async () => {
-    const q = question.trim();
-    if (!q) return;
-    voice.stopSpeaking();
-    setSpeaking(false);
-    setPhase({ kind: 'loading' });
-    setQuestion('');
-
+  const speak = useCallback((text: string) => {
+    // Outside the request's try/catch on purpose. Speech failing must not be
+    // able to turn a good answer into an error — see the note at the top.
     try {
-      const result = await dhammaService.ask(q, 'en');
-      setPhase({ kind: 'answered', answer: result.answer });
-      const spokenText = isGrounded(result.answer)
-        ? result.answer.text
-        : result.answer.text || 'I cannot find this in the collections.';
       setSpeaking(true);
-      voice.speakText(spokenText, 'en', () => setSpeaking(false), () => setSpeaking(false));
+      voice.speakText(
+        text,
+        'en',
+        () => setSpeaking(false),
+        () => setSpeaking(false),
+      );
     } catch {
-      setPhase({ kind: 'failed' });
+      setSpeaking(false);
     }
-  }, [question]);
-
-  const handleReset = useCallback(() => {
-    voice.stopSpeaking();
-    setSpeaking(false);
-    setPhase({ kind: 'asking' });
-    setQuestion('');
   }, []);
+
+  const ask = useCallback(
+    async (raw: string) => {
+      const q = raw.trim();
+      if (!q || busy) return;
+
+      voice.stopSpeaking();
+      setSpeaking(false);
+      setQuestion('');
+      setBusy(true);
+      setTurns((prev) => [...prev, { id: nextId(), from: 'user', text: q }]);
+
+      let answer: DhammaAnswer | null = null;
+      try {
+        // The place is part of the question. Without it, "when was it built"
+        // retrieves against nothing in particular.
+        const asked = siteName ? `${siteName}: ${q}` : q;
+        const result = await dhammaService.ask(asked, 'en');
+        answer = result.answer;
+      } catch {
+        answer = null;
+      }
+
+      if (answer) {
+        setTurns((prev) => [...prev, { id: nextId(), from: 'guide', answer: answer! }]);
+        speak(isGrounded(answer) ? answer.text : answer.text || 'I cannot find this in the collections.');
+      } else {
+        setTurns((prev) => [
+          ...prev,
+          {
+            id: nextId(),
+            from: 'guide',
+            failure: 'The collections could not be searched just now. Ask again in a moment.',
+          },
+        ]);
+      }
+      setBusy(false);
+    },
+    [busy, siteName, speak],
+  );
 
   const handleClose = useCallback(() => {
     voice.stopSpeaking();
@@ -162,270 +196,236 @@ export function BuddhaChat({ visible, onClose, siteName }: BuddhaChatProps) {
 
   if (!visible) return null;
 
-  const eyebrow =
-    phase.kind === 'loading'
-      ? '🔍  SEARCHING COLLECTIONS…'
-      : phase.kind === 'answered'
-        ? isGrounded(phase.answer)
-          ? '✦  FROM THE RECORD'
-          : '◌  NOT FOUND IN COLLECTION'
-        : phase.kind === 'failed'
-          ? '⚠  COULD NOT REACH CORPUS'
-          : siteName
-            ? `ASK ABOUT ${siteName.toUpperCase()}`
-            : 'ASK ABOUT LUMBINI';
+  const opening = siteName
+    ? `What would you like to know about ${siteName}, or the early record?`
+    : 'What would you like to know about Lumbini, or the early record?';
 
   return (
-    <Modal transparent animationType="none" visible={visible} onRequestClose={handleClose}>
-      <KeyboardAvoidingView
-        style={s.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        <View style={s.backdrop} />
+    <Modal
+      transparent
+      animationType="fade"
+      visible={visible}
+      onRequestClose={handleClose}
+      // Without this the Modal sits under the status bar on Android and does not
+      // resize for the keyboard — the same reason BottomSheet sets it.
+      statusBarTranslucent
+    >
+      <View style={s.fill}>
+        <Pressable
+          style={s.backdrop}
+          accessibilityRole="button"
+          accessibilityLabel="Close"
+          onPress={handleClose}
+        />
 
+        {/*
+          Above the sheet rather than behind it. The monk used to be pinned to
+          the bottom of the screen, which is where the conversation now is, so an
+          opaque panel would have covered him entirely.
+        */}
         <Animated.View
           style={[
             s.avatarWrap,
-            { bottom: insets.bottom + 72 },
             {
               opacity: avatarOpacity,
               transform: [
-                {
-                  translateX: avatarSlide.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [-200, 0],
-                  }),
-                },
+                { translateX: avatarSlide.interpolate({ inputRange: [0, 1], outputRange: [-200, 0] }) },
               ],
             },
           ]}
           pointerEvents="none"
         >
-          <GreetingMonk height={250} />
+          <GreetingMonk height={190} />
         </Animated.View>
 
-        <Animated.View
-          style={[
-            s.speechArea,
-            { paddingBottom: insets.bottom + spacing.lg },
-            {
-              opacity: bubbleAnim,
-              transform: [
-                {
-                  translateY: bubbleAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [28, 0],
-                  }),
-                },
-              ],
-            },
-          ]}
-          pointerEvents="box-none"
-        >
-          <View style={s.bubble}>
-            <View style={s.bubbleTail} />
-
-            <View style={s.headerRow}>
-              <View style={s.eyebrowPill}>
-                <RNText style={s.eyebrowTxt} numberOfLines={1}>
-                  {eyebrow}
-                </RNText>
-              </View>
-              <Pressable
-                onPress={handleClose}
-                hitSlop={12}
-                accessibilityRole="button"
-                accessibilityLabel="Close chat"
-                style={s.closeBtn}
-              >
-                <RNText style={s.closeBtnTxt}>✕</RNText>
-              </Pressable>
+        <View style={[s.sheet, { paddingBottom: keyboardInset }]}>
+          <View style={s.header}>
+            <View style={s.eyebrowPill}>
+              <Icon name="dharmachakra" size={14} />
+              <Text variant="label" tone="sandstone" uppercase numberOfLines={1} style={s.eyebrowText}>
+                {siteName ? `Ask about ${siteName}` : 'Ask about Lumbini'}
+              </Text>
             </View>
-
-            {phase.kind === 'idle' || phase.kind === 'asking' ? (
-              <View style={s.inputSection}>
-                <RNText style={s.promptText}>
-                  {siteName
-                    ? `What would you like to know about ${siteName} or the early record?`
-                    : 'What would you like to know about Lumbini or the early record?'}
-                </RNText>
-                <View style={s.inputRow}>
-                  <TextInput
-                    value={question}
-                    onChangeText={setQuestion}
-                    placeholder="Type your question…"
-                    placeholderTextColor={colors.textMuted}
-                    style={s.input}
-                    returnKeyType="send"
-                    onSubmitEditing={() => void handleAsk()}
-                    multiline={false}
-                    autoFocus={phase.kind === 'asking'}
-                    accessibilityLabel="Question about Lumbini"
-                  />
-                  <Pressable
-                    onPress={() => void handleAsk()}
-                    disabled={!question.trim()}
-                    style={[s.sendBtn, !question.trim() && s.sendBtnOff]}
-                    accessibilityRole="button"
-                    accessibilityLabel="Send question"
-                  >
-                    <RNText style={s.sendBtnTxt}>→</RNText>
-                  </Pressable>
-                </View>
-                {phase.kind === 'idle' ? (
-                  <Pressable
-                    onPress={() => setPhase({ kind: 'asking' })}
-                    style={s.typeTrigger}
-                    accessibilityRole="button"
-                  >
-                    <RNText style={s.typeTriggerTxt}>✎  Tap here to type</RNText>
-                  </Pressable>
-                ) : null}
-              </View>
-            ) : phase.kind === 'loading' ? (
-              <View style={s.loadingSection}>
-                <RNText style={s.dots}>· · ·</RNText>
-                <RNText style={s.loadingLabel}>Searching the collections…</RNText>
-              </View>
-            ) : phase.kind === 'answered' ? (
-              <View style={s.answeredSection}>
-                <AnswerBody answer={phase.answer} speaking={speaking} />
-                <Pressable
-                  onPress={handleReset}
-                  style={s.askAnotherBtn}
-                  accessibilityRole="button"
-                >
-                  <RNText style={s.askAnotherTxt}>‹  Ask another question</RNText>
-                </Pressable>
-              </View>
-            ) : (
-              <View style={s.loadingSection}>
-                <RNText style={s.loadingLabel}>
-                  Could not reach the corpus. Please try again.
-                </RNText>
-                <Pressable onPress={handleReset} style={s.askAnotherBtn}>
-                  <RNText style={s.askAnotherTxt}>‹  Try again</RNText>
-                </Pressable>
-              </View>
-            )}
+            <Pressable
+              onPress={handleClose}
+              hitSlop={12}
+              accessibilityRole="button"
+              accessibilityLabel="Close"
+              style={s.closeBtn}
+            >
+              <Icon name="close" size={18} color={colors.textSecondary} />
+            </Pressable>
           </View>
-        </Animated.View>
-      </KeyboardAvoidingView>
+
+          <ChatTranscript ref={transcriptRef}>
+            <ChatBubble from="companion">
+              <Text variant="body">{opening}</Text>
+              <Text variant="caption" tone="muted">
+                Answered from the canonical texts. If they do not cover it, you will be told so
+                rather than given a guess.
+              </Text>
+            </ChatBubble>
+
+            {turns.map((turn) => {
+              if (turn.from === 'user') {
+                return (
+                  <ChatBubble key={turn.id} from="user">
+                    <Text variant="body">{turn.text}</Text>
+                  </ChatBubble>
+                );
+              }
+              if ('failure' in turn) {
+                return (
+                  <ChatBubble key={turn.id} from="companion" accent="muted">
+                    <Text variant="body" tone="secondary">
+                      {turn.failure}
+                    </Text>
+                  </ChatBubble>
+                );
+              }
+              return <GuideTurn key={turn.id} answer={turn.answer} speaking={speaking} />;
+            })}
+
+            {busy ? (
+              <ChatBubble from="companion">
+                <Text variant="caption" tone="muted">
+                  Searching the collections…
+                </Text>
+              </ChatBubble>
+            ) : null}
+          </ChatTranscript>
+
+          <ChatComposer
+            value={question}
+            onChangeText={setQuestion}
+            onSend={() => void ask(question)}
+            busy={busy}
+            placeholder="Type your question…"
+            onGrow={() => transcriptRef.current?.scrollToEnd()}
+          />
+        </View>
+      </View>
     </Modal>
   );
 }
 
+/** One reply from the guide, with the citations that stand behind it. */
+function GuideTurn({ answer, speaking }: { answer: DhammaAnswer; speaking: boolean }) {
+  const grounded = isGrounded(answer);
+  const text = answer.text || 'I cannot find this in the collections on Lumbini.';
+  const { displayed, done, skip } = useTypingText(text);
+
+  return (
+    <ChatBubble from="companion" accent={grounded ? null : 'muted'} wide>
+      <Pressable
+        onPress={skip}
+        disabled={done}
+        accessibilityRole={done ? undefined : 'button'}
+        accessibilityLabel={done ? undefined : 'Show the whole answer'}
+      >
+        <Text variant="body">{displayed}</Text>
+      </Pressable>
+
+      {speaking ? (
+        <View style={s.speakRow}>
+          <Icon name="volume-high" size={14} />
+          <Text variant="caption" tone="sandstone">
+            Speaking
+          </Text>
+        </View>
+      ) : null}
+
+      {grounded && answer.caveat ? (
+        <Text variant="caption" tone="muted">
+          {answer.caveat}
+        </Text>
+      ) : null}
+
+      {/*
+        The citations. These used to be dropped entirely — the reply rendered
+        `answer.text` and nothing else — on the one surface whose whole claim is
+        that its answers are checkable.
+      */}
+      {grounded ? <SourceList citations={answer.citations} /> : null}
+
+      {!grounded && answer.suggestions.length > 0 ? (
+        <View style={s.suggestBox}>
+          <Text variant="label" tone="sandstone" uppercase>
+            Try asking
+          </Text>
+          {answer.suggestions.slice(0, 3).map((suggestion) => (
+            <Text key={suggestion} variant="caption" tone="secondary">
+              · {suggestion}
+            </Text>
+          ))}
+        </View>
+      ) : null}
+    </ChatBubble>
+  );
+}
+
 const s = StyleSheet.create({
-  flex: { flex: 1 },
+  // Bottom-aligned: the monk stands on the sheet's top edge.
+  fill: { flex: 1, justifyContent: 'flex-end' },
   backdrop: {
     position: 'absolute',
-    top: 0, left: 0, right: 0, bottom: 0,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     backgroundColor: 'rgba(14, 18, 16, 0.72)',
   },
-  avatarWrap: { position: 'absolute', left: -16 },
-  speechArea: {
-    position: 'absolute',
-    left: 0, right: 0, bottom: 0,
-    paddingHorizontal: spacing.base,
-    paddingLeft: 142,
+  avatarWrap: { alignSelf: 'flex-start', marginLeft: -24, marginBottom: -8 },
+  /*
+    A definite height, not `flex: 1`. The transcript inside is `flex: 1` and
+    needs a bounded parent to scroll within — the previous version was an
+    absolutely-positioned bubble with neither a height limit nor a ScrollView,
+    so a long answer simply grew off the top of the screen.
+  */
+  sheet: {
+    height: '74%',
+    backgroundColor: colors.background,
+    borderTopLeftRadius: radii.xl,
+    borderTopRightRadius: radii.xl,
+    borderTopWidth: 1,
+    borderColor: colors.border,
+    overflow: 'hidden',
   },
-  bubble: {
-    backgroundColor: 'rgba(255, 252, 246, 0.97)',
-    borderRadius: 20,
-    padding: spacing.base,
-    gap: spacing.sm + 2,
-    overflow: 'visible',
-    shadowColor: '#A07A50',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.32,
-    shadowRadius: 20,
-    elevation: 14,
-    borderWidth: 1.5,
-    borderColor: 'rgba(183, 155, 114, 0.38)',
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.sm,
+    paddingHorizontal: spacing.gutter,
+    paddingTop: spacing.base,
+    paddingBottom: spacing.sm,
   },
-  bubbleTail: {
-    position: 'absolute',
-    left: -11,
-    top: 28,
-    width: 0,
-    height: 0,
-    borderTopWidth: 10,
-    borderBottomWidth: 10,
-    borderRightWidth: 13,
-    borderTopColor: 'transparent',
-    borderBottomColor: 'transparent',
-    borderRightColor: 'rgba(255, 252, 246, 0.97)',
-  },
-  headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   eyebrowPill: {
-    backgroundColor: 'rgba(183, 155, 114, 0.15)',
-    borderRadius: radii.full,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    flexShrink: 1,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xxs,
-    borderWidth: 1,
-    borderColor: 'rgba(183, 155, 114, 0.35)',
-    flexShrink: 1,
+    borderRadius: radii.full,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.sandstone,
+    backgroundColor: colors.surfaceSecondary,
   },
-  eyebrowTxt: { fontSize: 10, fontWeight: '800', letterSpacing: 1, color: colors.sandstoneDeep },
+  eyebrowText: { flexShrink: 1 },
   closeBtn: {
-    width: 28,
-    height: 28,
+    width: 32,
+    height: 32,
     borderRadius: radii.full,
-    backgroundColor: 'rgba(0,0,0,0.07)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: spacing.xs,
+    backgroundColor: colors.surfaceSecondary,
   },
-  closeBtnTxt: { fontSize: 13, color: colors.textMuted, fontWeight: '700' },
-  inputSection: { gap: spacing.sm },
-  promptText: { fontSize: 14, color: colors.textPrimary, fontStyle: 'italic', lineHeight: 20 },
-  inputRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
-  input: {
-    flex: 1,
-    backgroundColor: 'rgba(183, 155, 114, 0.08)',
-    borderRadius: radii.md,
-    borderWidth: 1.5,
-    borderColor: 'rgba(183, 155, 114, 0.35)',
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    fontSize: 14,
-    color: colors.textPrimary,
-  },
-  sendBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: radii.full,
-    backgroundColor: colors.sandstone,
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 4,
-    shadowColor: colors.sandstone,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.4,
-    shadowRadius: 6,
-  },
-  sendBtnOff: { backgroundColor: 'rgba(183, 155, 114, 0.25)', elevation: 0, shadowOpacity: 0 },
-  sendBtnTxt: { fontSize: 18, fontWeight: '800', color: '#FFFFFF' },
-  typeTrigger: { alignSelf: 'flex-start', paddingVertical: spacing.xxs },
-  typeTriggerTxt: { fontSize: 13, color: colors.sandstoneDeep, fontWeight: '600' },
-  loadingSection: { alignItems: 'center', gap: spacing.xs, paddingVertical: spacing.sm },
-  dots: { fontSize: 22, color: colors.sandstone, letterSpacing: 6 },
-  loadingLabel: { fontSize: 13, color: colors.textMuted, fontStyle: 'italic', textAlign: 'center' },
-  answeredSection: { gap: spacing.sm },
-  answerBody: { gap: spacing.xs },
-  answerText: { fontSize: 14, color: colors.textPrimary, lineHeight: 21 },
-  caveatText: { fontSize: 12, color: colors.textMuted, fontStyle: 'italic', lineHeight: 18 },
+  speakRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
   suggestBox: {
-    backgroundColor: 'rgba(183, 155, 114, 0.08)',
-    borderRadius: radii.sm,
-    padding: spacing.xs,
-    gap: 3,
-    marginTop: spacing.xxs,
+    gap: spacing.xxs,
+    padding: spacing.sm,
+    borderRadius: radii.md,
+    backgroundColor: colors.background,
   },
-  suggestLabel: { fontSize: 9, fontWeight: '800', letterSpacing: 1.2, color: colors.sandstoneDeep },
-  suggestItem: { fontSize: 12, color: colors.textMuted, lineHeight: 18 },
-  speakPill: { fontSize: 11, color: colors.textMuted, fontWeight: '600' },
-  speakPillOn: { color: '#B4472A' },
-  askAnotherBtn: { alignSelf: 'flex-start', paddingVertical: spacing.xxs },
-  askAnotherTxt: { fontSize: 13, color: colors.sandstoneDeep, fontWeight: '700' },
 });
