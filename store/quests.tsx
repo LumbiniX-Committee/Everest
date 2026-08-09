@@ -38,6 +38,8 @@ export type QuestsContextValue = {
   startQuest: (questId: string) => Promise<void>;
   /** Mark a task completed. Triggers Puṇya recognition when all tasks in quest are done. */
   completeTask: (questId: string, taskId: string) => Promise<TaskCompletionResult>;
+  /** Un-tick a task. The other half of a checkbox — see database.uncompleteQuestTask. */
+  uncompleteTask: (questId: string, taskId: string) => Promise<void>;
   /**
    * Credit a filed condition report against any started quest that was asking
    * for one at this site. Returns how many tasks it satisfied.
@@ -133,6 +135,14 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
     [quests, recognise, refresh],
   );
 
+  const uncompleteTask = useCallback(
+    async (questId: string, taskId: string) => {
+      await database.uncompleteQuestTask(questId, taskId);
+      await refresh();
+    },
+    [refresh],
+  );
+
   /**
    * Credits a condition report against any quest task that was asking for one
    * here.
@@ -215,6 +225,7 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
       getQuestById,
       startQuest,
       completeTask,
+      uncompleteTask,
       creditConditionReport,
       resetQuests: resetQuests,
       refresh,
@@ -228,6 +239,7 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
       getQuestById,
       startQuest,
       completeTask,
+      uncompleteTask,
       creditConditionReport,
       resetQuests,
       refresh,

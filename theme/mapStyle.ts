@@ -105,7 +105,7 @@ export const sakshiMapStyle = {
       layout: { 'line-cap': 'round' as const, 'line-join': 'round' as const },
       paint: {
         'line-color': colors.mapRoadCasing,
-        'line-width': ['interpolate', ['linear'], ['zoom'], 11, 3, 18, 20],
+        'line-width': ['interpolate', ['linear'], ['zoom'], 11, 3, 16, 11, 18, 22],
       },
     },
     {
@@ -117,7 +117,7 @@ export const sakshiMapStyle = {
       layout: { 'line-cap': 'round' as const, 'line-join': 'round' as const },
       paint: {
         'line-color': colors.mapRoad,
-        'line-width': ['interpolate', ['linear'], ['zoom'], 11, 1.5, 18, 15],
+        'line-width': ['interpolate', ['linear'], ['zoom'], 11, 1.5, 16, 7.5, 18, 16],
       },
     },
     {
@@ -129,7 +129,7 @@ export const sakshiMapStyle = {
       layout: { 'line-cap': 'round' as const, 'line-join': 'round' as const },
       paint: {
         'line-color': colors.mapRoadCasing,
-        'line-width': ['interpolate', ['linear'], ['zoom'], 13, 2, 18, 11],
+        'line-width': ['interpolate', ['linear'], ['zoom'], 13, 2, 16, 6, 18, 13],
       },
     },
     {
@@ -141,7 +141,7 @@ export const sakshiMapStyle = {
       layout: { 'line-cap': 'round' as const, 'line-join': 'round' as const },
       paint: {
         'line-color': colors.mapRoad,
-        'line-width': ['interpolate', ['linear'], ['zoom'], 13, 1, 18, 8],
+        'line-width': ['interpolate', ['linear'], ['zoom'], 13, 1, 16, 3.5, 18, 9],
       },
     },
     {
@@ -153,7 +153,7 @@ export const sakshiMapStyle = {
       layout: { 'line-cap': 'round' as const },
       paint: {
         'line-color': colors.mapPath,
-        'line-width': ['interpolate', ['linear'], ['zoom'], 14, 1, 18, 4],
+        'line-width': ['interpolate', ['linear'], ['zoom'], 14, 1.2, 16, 3, 18, 6],
         // Dashed: a walking path is not a road and should not be mistaken for
         // one at a glance, which matters when the paths are the way you move
         // through the sacred garden.

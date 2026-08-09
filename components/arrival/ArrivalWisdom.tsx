@@ -1,19 +1,23 @@
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import { MeritRewardModal } from '@/components/practice/MeritAcknowledgement';
 import { Citation, SourceDetailSheet } from '@/components/source';
-import { Card, Divider, Text } from '@/components/ui';
+import { Button, Card, Divider, Text } from '@/components/ui';
 import { findSource } from '@/data';
 import { useSiteArrival } from '@/hooks';
 import { arrival } from '@/services';
+import { usePractice } from '@/store/practice';
 import { colors, spacing } from '@/theme';
-import type { Coordinate, Source } from '@/types';
+import { MERIT_LABELS, MERIT_WEIGHTS, type Coordinate, type MeritEvent, type Source } from '@/types';
 
 export type ArrivalWisdomProps = {
   /** The current fix, or null while it is being acquired. */
   coordinate: Coordinate | null;
   /** Raise a notification on arrival. Off where a screen is already showing it. */
   notify?: boolean;
+  /** Optional site ID to display wisdom for directly. */
+  siteId?: string;
 };
 
 /**
@@ -31,24 +35,43 @@ export type ArrivalWisdomProps = {
  * deliberate: handing someone an unrelated passage because they walked past a
  * pond is the failure §25 refuses.
  */
-export function ArrivalWisdom({ coordinate, notify = true }: ArrivalWisdomProps) {
+export function ArrivalWisdom({ coordinate, notify = true, siteId }: ArrivalWisdomProps) {
   const [openSource, setOpenSource] = useState<Source | null>(null);
+  const [rewardEvent, setRewardEvent] = useState<MeritEvent | null>(null);
+  const [showRewardModal, setShowRewardModal] = useState(false);
+
+  const { recognise, events } = usePractice();
   const { atSiteId, nearest } = useSiteArrival(coordinate, { notify });
 
-  if (!atSiteId || !nearest) return null;
+  const effectiveSiteId = siteId ?? atSiteId ?? nearest?.site.id;
 
-  const significance = arrival.significanceOf(atSiteId);
+  if (!effectiveSiteId) return null;
+
+  const significance = arrival.significanceOf(effectiveSiteId);
   if (!significance) return null;
 
   const { site, narration, facts, dhamma } = significance;
   const entry = dhamma[0];
+
+  // Read from the ledger rather than from local state. A component-local
+  // `claimed` map forgot every claim the moment the sheet closed, so the same
+  // site could be claimed again on the next open — and the ledger is already
+  // the durable record of what was recognised.
+  const isClaimed = events.some((e) => e.siteId === effectiveSiteId && e.kind === 'wisdom');
+
+  const isAtSite = atSiteId === effectiveSiteId;
+  const distanceM = nearest && nearest.site.id === effectiveSiteId ? nearest.distanceM : null;
 
   return (
     <>
       <Card style={styles.card}>
         <View style={styles.header}>
           <Text variant="label" tone="sandstone" uppercase>
-            You are here · {Math.round(nearest.distanceM)} m
+            {isAtSite
+              ? `You are here${distanceM !== null ? ` · ${Math.round(distanceM)} m` : ''}`
+              : distanceM !== null
+                ? `Nearby site · ${Math.round(distanceM)} m`
+                : 'Heritage Site Wisdom'}
           </Text>
           <Text variant="heading">{site.name}</Text>
           {site.namePali || site.nameNepali ? (
@@ -102,9 +125,36 @@ export function ArrivalWisdom({ coordinate, notify = true }: ArrivalWisdomProps)
             </View>
           </>
         ) : null}
+
+        <Divider />
+
+        <View style={styles.claimSection}>
+          <Button
+            label={
+              isClaimed
+                ? `Received · ${MERIT_LABELS.wisdom}`
+                : `Receive this place · +${MERIT_WEIGHTS.wisdom} puṇya`
+            }
+            variant="primary"
+            disabled={isClaimed}
+            onPress={async () => {
+              // Null means the day's cap was already reached, or this site was
+              // already recognised. The modal says which — it never invents an
+              // award the ledger did not make.
+              setRewardEvent(await recognise({ kind: 'wisdom', siteId: effectiveSiteId }));
+              setShowRewardModal(true);
+            }}
+          />
+        </View>
       </Card>
 
       <SourceDetailSheet source={openSource} onClose={() => setOpenSource(null)} />
+
+      <MeritRewardModal
+        visible={showRewardModal}
+        onClose={() => setShowRewardModal(false)}
+        event={rewardEvent}
+      />
     </>
   );
 }
@@ -116,4 +166,5 @@ const styles = StyleSheet.create({
   fact: { gap: spacing.xxs },
   dhamma: { gap: spacing.sm },
   original: { fontStyle: 'italic' },
+  claimSection: { paddingTop: spacing.xs },
 });

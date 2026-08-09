@@ -175,4 +175,5 @@ const acknowledgements: Record<MeritKind, string> = {
   resurvey: 'You returned. That is what makes the series worth having.',
   study: 'Read through to the sources.',
   reflection: 'Sat with the question.',
+  wisdom: 'Lumbini Wisdom received. Merit has been acknowledged.',
 };

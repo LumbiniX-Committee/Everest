@@ -5,4 +5,7 @@ export { useNearbySites, type SiteWithDistance } from './useNearbySites';
 export { useSync } from './useSync';
 export { useHaptics } from './useHaptics';
 export { useSiteArrival, type SiteArrivalState } from './useSiteArrival';
+export { useDemoWalk, type DemoWalkState } from './useDemoWalk';
+export { useNarration, type NarrationState } from './useNarration';
+export { useStoryProgress, type StoryProgress } from './useStoryProgress';
 export { useKeyboardInset } from './useKeyboardInset';

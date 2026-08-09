@@ -85,3 +85,28 @@ export const plateMeta: Record<PlateId, PlateMeta> = {
 export function nowImageForSite(siteId: string): number | undefined {
   return nowImages[siteId];
 }
+
+/**
+ * The one image that best stands for a place.
+ *
+ * A modern photograph first — a quest card is asking someone to go and stand
+ * somewhere, and a photograph is what tells them what they will be looking at.
+ * Where no photograph is bundled the historical plate stands in, because a
+ * measured survey drawing of the ground is still a picture of the place, and it
+ * is the kind of picture this app is actually about.
+ *
+ * Returns undefined rather than a placeholder. Three of the twelve sites have
+ * imagery; a grey box on the other nine would be worse than a card that is
+ * honestly text.
+ */
+export function heroImageForSite(siteId: string): { source: number; historical: boolean } | undefined {
+  const now = nowImages[siteId];
+  if (now !== undefined) return { source: now, historical: false };
+
+  // Plate ids are prefixed with the site they belong to, so the first match is
+  // this site's earliest bundled plate.
+  const plateId = (Object.keys(plateImages) as PlateId[]).find((id) => id.startsWith(`${siteId}.`));
+  if (plateId) return { source: plateImages[plateId], historical: true };
+
+  return undefined;
+}

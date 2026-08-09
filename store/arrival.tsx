@@ -9,7 +9,7 @@ import {
 } from 'react';
 
 import { demoPrecincts } from '@/data';
-import { arrival, geofencing, integrity, notifications } from '@/services';
+import { arrival, audio, geofencing, integrity, notifications } from '@/services';
 import type { Precinct } from '@/types';
 
 /**
@@ -61,6 +61,9 @@ export function ArrivalProvider({ children }: { children: ReactNode }) {
 
     void (async () => {
       await notifications.configure();
+      // Before any narration can start, so the first automatic playback of the
+      // day already respects the silent switch rather than the one after it.
+      await audio.configure();
 
       // Registered before anything else can fire. The handler is module-level
       // in the service precisely so a background wake finds it set.

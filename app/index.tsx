@@ -15,5 +15,5 @@ import { useAppState } from '@/store';
 export default function Index() {
   const { onboardingComplete } = useAppState();
 
-  return <Redirect href={onboardingComplete ? '/(main)/tirtha' : '/onboarding'} />;
+  return <Redirect href={onboardingComplete ? '/(main)/tirtha/map' : '/onboarding'} />;
 }

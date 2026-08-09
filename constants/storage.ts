@@ -20,6 +20,19 @@ export const StorageKeys = {
   prefOfflineSyncMode: `${PREFIX}.preferences.offlineSyncMode`,
   prefPhotoQuality: `${PREFIX}.preferences.photoQuality`,
   prefWisdomTier: `${PREFIX}.preferences.wisdomTier`,
+  prefAutoWisdom: `${PREFIX}.preferences.autoWisdom`,
+  prefAutoNarration: `${PREFIX}.preferences.autoNarration`,
+
+  /**
+   * Which sites have had their story sequence read through to the end, as a
+   * JSON map of site id to ISO timestamp.
+   *
+   * Kept out of the merit ledger deliberately. The ledger records acts of
+   * attention and is append-only; this is interface state — whether a place
+   * still has an unread story to offer — and re-reading one is not a second act
+   * worth recording.
+   */
+  storiesRead: `${PREFIX}.tirtha.storiesRead`,
 
   /**
    * When each precinct last produced an arrival notification, as a JSON map of
@@ -50,6 +63,8 @@ export const PreferenceKeys = {
   offlineSyncMode: StorageKeys.prefOfflineSyncMode,
   photoQuality: StorageKeys.prefPhotoQuality,
   wisdomTier: StorageKeys.prefWisdomTier,
+  autoWisdom: StorageKeys.prefAutoWisdom,
+  autoNarration: StorageKeys.prefAutoNarration,
 } as const;
 
 export const DATABASE_NAME = 'sakshi.db';

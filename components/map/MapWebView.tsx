@@ -30,6 +30,24 @@ export type MapWebViewProps = {
   heading?: number | null;
   /** Keep the camera on the figure as it moves. */
   follow?: boolean;
+  /** Safe area inset top (in pixels) for floating map control offset. */
+  topInset?: number;
+  /**
+   * A planned way to draw under the trail, as [longitude, latitude] pairs.
+   *
+   * The demo walk uses it to show where the pilgrim is going before they get
+   * there. Pass an empty array or omit it and no route is drawn.
+   */
+  route?: readonly (readonly [number, number])[];
+  /**
+   * Where the camera should be, and how close.
+   *
+   * A declared destination rather than an imperative handle: the screen says
+   * "the camera belongs at this place, at reading distance" and a re-render
+   * with the same value does nothing, so a story opening cannot re-fly the
+   * camera on every frame. Bump `nonce` to repeat the same move deliberately.
+   */
+  camera?: { longitude: number; latitude: number; distance: 'world' | 'close'; nonce?: number } | null;
 };
 
 /**
@@ -51,6 +69,9 @@ export function MapWebView({
   heading,
   follow = true,
   showFigure = false,
+  topInset = 0,
+  route,
+  camera,
 }: MapWebViewProps) {
   const [failed, setFailed] = useState(false);
   const [ready, setReady] = useState(false);
@@ -75,8 +96,8 @@ export function MapWebView({
   // Depends only on props that do not change while the screen is open, so the
   // document is built once and never rebuilt underneath a running map.
   const html = useMemo(
-    () => buildMapHtml({ avatar: showFigure, fullscreen: fill, interactive: fill }),
-    [showFigure, fill],
+    () => buildMapHtml({ avatar: showFigure, fullscreen: fill, interactive: fill, topInset }),
+    [showFigure, fill, topInset],
   );
 
   /**
@@ -93,6 +114,37 @@ export function MapWebView({
       `window.sakshiSetPose && window.sakshiSetPose(${longitude}, ${latitude}, ${heading ?? 0}, ${follow}); true;`,
     );
   }, [ready, coordinate, heading, follow]);
+
+  /**
+   * The planned route, pushed in the same way and for the same reason.
+   *
+   * Serialised from the prop rather than from its identity: a caller building
+   * the array inline would otherwise re-inject on every render, and clearing
+   * the trail with it would erase the walk each time.
+   */
+  const routeJson = useMemo(() => JSON.stringify(route ?? []), [route]);
+  useEffect(() => {
+    if (!ready) return;
+    webRef.current?.injectJavaScript(
+      `window.sakshiSetRoute && window.sakshiSetRoute(${routeJson}); true;`,
+    );
+  }, [ready, routeJson]);
+
+  /**
+   * A commanded camera move.
+   *
+   * Serialised for the same reason the route is: an object built inline in the
+   * parent changes identity every render, and a camera that re-flies on every
+   * render is a camera nobody can pan away from.
+   */
+  const cameraJson = camera ? JSON.stringify(camera) : null;
+  useEffect(() => {
+    if (!ready || !cameraJson) return;
+    const target = JSON.parse(cameraJson) as NonNullable<MapWebViewProps['camera']>;
+    webRef.current?.injectJavaScript(
+      `window.sakshiFlyTo && window.sakshiFlyTo(${target.longitude}, ${target.latitude}, ${JSON.stringify(target.distance)}); true;`,
+    );
+  }, [ready, cameraJson]);
 
   const frame = fill ? styles.fill : { height };
 
@@ -162,7 +214,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     backgroundColor: colors.surfaceSecondary,
   },
-  fillWrap: { overflow: 'hidden', backgroundColor: colors.surfaceSecondary },
+  fillWrap: { flex: 1, overflow: 'hidden', backgroundColor: colors.surfaceSecondary, zIndex: 1 },
   fill: { flex: 1 },
   web: { flex: 1, backgroundColor: colors.mapBase },
   loading: {

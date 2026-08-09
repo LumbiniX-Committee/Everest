@@ -50,6 +50,12 @@ export * from './adapters/coords.ts';
 // --- Dhamma Engine: Bilara corpus, RRF retrieval, Grounding Gate, Reflection --
 export * from './dhamma/index';
 
+// --- Progression: wisdom and spiritual level, read off the puṇya ledger -----
+export * from './progression/index.ts';
+
+// --- Story: a place's own material, arranged as a sequence of beats ---------
+export * from './story/index.ts';
+
 // --- Wisdom tiers: how much a place says when you reach it ------------------
 export { depthFor, type WisdomDepth } from './wisdom/index.ts';
 
