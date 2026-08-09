@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 
 import { BottomSheet, Button, Chip, Text } from '@/components/ui';
@@ -70,15 +70,24 @@ export function ConditionSheet({ visible, onClose, onSubmit, submitting = false,
   // The sheet stays mounted, so its fields are re-seeded from the draft each time
   // it opens rather than only once. Without this, a pre-fill chosen after the
   // sheet first mounted would land on a stale blank form.
-  useEffect(() => {
-    if (!visible) return;
-    setCategory(initialDraft?.category ?? null);
-    setSubtype(initialDraft?.subtype ?? null);
-    setSeverity(initialDraft?.severity ?? null);
-    setNote(initialDraft?.note ?? '');
-    setStep(firstUnfilledStep());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible]);
+  //
+  // Adjusted during render rather than from an effect. React's own guidance for
+  // "reset state when a prop changes", and it fixes something the effect got
+  // wrong as well as satisfying the lint rule: an effect runs *after* paint, so
+  // the frame in which the sheet became visible still showed the previous
+  // report's answers. Setting state during render re-runs this component before
+  // anything reaches the screen, so the first frame is already correct.
+  const [wasVisible, setWasVisible] = useState(visible);
+  if (visible !== wasVisible) {
+    setWasVisible(visible);
+    if (visible) {
+      setCategory(initialDraft?.category ?? null);
+      setSubtype(initialDraft?.subtype ?? null);
+      setSeverity(initialDraft?.severity ?? null);
+      setNote(initialDraft?.note ?? '');
+      setStep(firstUnfilledStep());
+    }
+  }
 
   const reset = () => {
     setStep('category');

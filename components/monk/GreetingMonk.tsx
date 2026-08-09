@@ -53,6 +53,15 @@ const STILL_FRAME = 0;
 /** The source is 316×560; height drives the layout and width follows it. */
 const ASPECT = 316 / 560;
 
+/**
+ * One frame, for callers that want the figure without the sway.
+ *
+ * The map uses it as the "you are here" marker. Mounting the full animator
+ * there would put eleven decoded images and a 10fps timer behind a 32-point
+ * dot, on the screen least able to spare either.
+ */
+export const MONK_STILL = FRAMES[STILL_FRAME];
+
 export type GreetingMonkProps = {
   /** Rendered height in points. Width is derived from the frame aspect. */
   height?: number;
