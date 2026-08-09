@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -74,6 +74,7 @@ export function LiveMapScreen() {
   const [showQuests, setShowQuests] = useState(false);
   const [showPlaces, setShowPlaces] = useState(false);
   const [reward, setReward] = useState<{ title: string; detail?: string } | null>(null);
+  const hideReward = useCallback(() => setReward(null), []);
   /**
    * A commanded camera move.
    *
@@ -484,7 +485,7 @@ export function LiveMapScreen() {
             visible={reward !== null}
             title={reward?.title ?? ''}
             detail={reward?.detail}
-            onHide={() => setReward(null)}
+            onHide={hideReward}
           />
         </View>
 
