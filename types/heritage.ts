@@ -72,6 +72,8 @@ export type HeritageSite = {
   condition: ConditionStatus;
   /** Vantage point ids belonging to this site. */
   vantageIds: string[];
+  /** Optional hero image shown in list and detail cards. */
+  image?: number | string;
 };
 
 /**

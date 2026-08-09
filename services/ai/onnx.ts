@@ -62,19 +62,46 @@ type AssetModule = {
   Asset: { fromModule: (mod: number) => { downloadAsync: () => Promise<unknown>; localUri: string | null; uri: string } };
 };
 
-function guardedRequire<T>(name: string): T | null {
+function tryLoadOrtModule(): OrtModule | null {
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    return require(name) as T;
+    return require('onnxruntime-react-native') as OrtModule;
   } catch {
     return null;
   }
 }
 
-const ort = guardedRequire<OrtModule>('onnxruntime-react-native');
-const manip = guardedRequire<ManipulatorModule>('expo-image-manipulator');
-const jpeg = guardedRequire<JpegModule>('jpeg-js');
-const assetMod = guardedRequire<AssetModule>('expo-asset');
+function tryLoadManipulatorModule(): ManipulatorModule | null {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require('expo-image-manipulator') as ManipulatorModule;
+  } catch {
+    return null;
+  }
+}
+
+function tryLoadJpegModule(): JpegModule | null {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require('jpeg-js') as JpegModule;
+  } catch {
+    return null;
+  }
+}
+
+function tryLoadAssetModule(): AssetModule | null {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require('expo-asset') as AssetModule;
+  } catch {
+    return null;
+  }
+}
+
+const ort = tryLoadOrtModule();
+const manip = tryLoadManipulatorModule();
+const jpeg = tryLoadJpegModule();
+const assetMod = tryLoadAssetModule();
 
 /** True only when every piece the ONNX pipeline needs is present in this build. */
 export const onnxAvailable: boolean = !!(ort && manip && jpeg && assetMod);

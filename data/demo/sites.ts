@@ -26,6 +26,7 @@ export const demoSites: HeritageSite[] = [
     sourceTier: 'archaeological',
     sourceIds: ['unesco-1997', 'ldt-excavation'],
     condition: 'watch',
+    image: require('../../assets/plates/maya-devi-temple.aerial.jpg'),
     vantageIds: ['maya-devi-east-approach', 'maya-devi-pond-edge'],
   },
   {

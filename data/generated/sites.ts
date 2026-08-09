@@ -54,6 +54,7 @@ export const demoSites: HeritageSite[] = [
       "mukherji-1901"
     ],
     "condition": "open",
+    "image": require('../../assets/plates/maya-devi-temple.aerial.jpg'),
     "vantageIds": [
       "maya-devi-temple.v1",
       "maya-devi-temple.v2"
