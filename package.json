@@ -18,7 +18,8 @@
     "vocab": "node tools/lint-vocab.mjs",
     "verify": "npm run typecheck && npm run test && npm run validate && npm run vocab && npm run eval:dhamma",
     "eval:dhamma": "node tools/dhamma-eval.mjs",
-    "corpus:fetch": "node tools/fetch-bilara.mjs"
+    "corpus:fetch": "node tools/fetch-bilara.mjs",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@expo/metro-runtime": "~57.0.8",
@@ -66,6 +67,8 @@
     "@types/react": "~19.2.2",
     "eslint": "^9.0.0",
     "eslint-config-expo": "~57.0.1",
+    "patch-package": "^8.0.1",
+    "postinstall-postinstall": "^2.1.0",
     "typescript": "~6.0.3"
   },
   "private": true
