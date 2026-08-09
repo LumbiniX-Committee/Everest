@@ -9,9 +9,24 @@ export type QuestTaskItemProps = {
   completed: boolean;
   onToggle: () => void;
   disabled?: boolean;
+  /**
+   * Condition reports already filed at this task's site.
+   *
+   * The other direction of the same link: filing a report now ticks the task,
+   * and the task says what has been filed. Without it a ticked box is the only
+   * trace of an act whose actual product — a dated, categorised, photographed
+   * finding — lives on a different screen entirely.
+   */
+  reportCount?: number;
 };
 
-export function QuestTaskItem({ task, completed, onToggle, disabled = false }: QuestTaskItemProps) {
+export function QuestTaskItem({
+  task,
+  completed,
+  onToggle,
+  disabled = false,
+  reportCount = 0,
+}: QuestTaskItemProps) {
   return (
     <Pressable
       style={({ pressed }) => [
@@ -42,6 +57,14 @@ export function QuestTaskItem({ task, completed, onToggle, disabled = false }: Q
             {task.type.replace('_', ' ')}
           </Text>
         </View>
+
+        {task.type === 'condition_report' && reportCount > 0 ? (
+          <Text variant="caption" tone="secondary">
+            {reportCount === 1
+              ? '1 condition report filed here'
+              : `${reportCount} condition reports filed here`}
+          </Text>
+        ) : null}
       </View>
     </Pressable>
   );
