@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { Button, Text } from '@/components/ui';
 import { GreetingMonk } from '@/components/monk';
+import { HeritageVideo } from '@/components/media/HeritageVideo';
 import { APP_EPIGRAPH, APP_NAME, APP_SUBTITLE } from '@/constants';
 import { spacing } from '@/theme';
 
@@ -44,6 +45,8 @@ export function WelcomeScreen() {
     >
       <View style={styles.body}>
         <GreetingMonk height={240} />
+
+        <HeritageVideo />
 
         <View style={styles.wordmark}>
           <Text variant="display" center>

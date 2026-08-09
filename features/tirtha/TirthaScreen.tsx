@@ -6,6 +6,7 @@ import { ScreenHeader, SettingsButton } from '@/components/common';
 import { ArrivalWisdom } from '@/components/arrival';
 import { SiteMap3D } from '@/components/map';
 import { SiteListItem } from '@/components/site';
+import { HeritageVideo } from '@/components/media/HeritageVideo';
 import { demoSites } from '@/data';
 import { QuestCard } from '@/features/quests';
 import { useCurrentPosition, useNearbySites } from '@/hooks';
@@ -45,6 +46,14 @@ export function TirthaScreen() {
       />
 
       <ArrivalWisdom coordinate={coordinate} />
+
+      <View>
+        <Text variant="label" tone="muted" uppercase>Witness the place</Text>
+        <Text variant="body" tone="secondary" style={styles.videoIntro}>
+          A short glimpse of the heritage you are helping keep visible.
+        </Text>
+        <HeritageVideo compact />
+      </View>
 
       {/* Wrapping the map is safe again: inline it is built inert, so it
           consumes no gestures and cannot fight this Pressable or the page's
@@ -126,6 +135,7 @@ const styles = StyleSheet.create({
   mapCtaPressed: { backgroundColor: colors.surfaceSecondary },
   offer: { marginTop: spacing.lg, gap: spacing.md, alignItems: 'flex-start' },
   offerText: { paddingRight: spacing.xl },
+  videoIntro: { marginTop: spacing.xs },
   questSection: { marginTop: spacing.lg, gap: spacing.xs },
   sectionHeader: {
     flexDirection: 'row',

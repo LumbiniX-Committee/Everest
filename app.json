@@ -83,7 +83,8 @@
       ],
       "onnxruntime-react-native",
       "expo-asset",
-      "llama.rn"
+      "llama.rn",
+      "expo-video"
     ],
     "experiments": {
       "typedRoutes": true,

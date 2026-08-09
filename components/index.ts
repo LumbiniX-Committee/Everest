@@ -11,3 +11,5 @@ export * from './thennow';
 export * from './observation';
 export * from './practice';
 export * from './arrival';
+export * from './media/HeritageVideo';
+export * from './media/ReflectionPresence';

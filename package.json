@@ -50,6 +50,7 @@
     "expo-status-bar": "~57.0.1",
     "expo-task-manager": "~57.0.8",
     "expo-updates": "~57.0.12",
+    "expo-video": "~57.0.2",
     "jpeg-js": "^0.4.4",
     "llama.rn": "^0.12.6",
     "onnxruntime-react-native": "^1.24.3",
