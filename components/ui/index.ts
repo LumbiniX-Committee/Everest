@@ -8,3 +8,4 @@ export { ConditionBadge, SourceBadge } from './Badge';
 export { Chip, type ChipProps } from './Chip';
 export { BottomSheet, type BottomSheetProps } from './BottomSheet';
 export { ProgressIndicator, type ProgressIndicatorProps } from './ProgressIndicator';
+export { ProgressRing, type ProgressRingProps } from './ProgressRing';
