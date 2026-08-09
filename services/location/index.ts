@@ -1,5 +1,7 @@
 import * as Location from 'expo-location';
 
+import { removeWatch, silenceWatchRemovalRejections } from './watchTeardown';
+
 import type { Coordinate } from '@/types';
 
 /**
@@ -62,6 +64,10 @@ export function watchPosition(
   let subscription: Location.LocationSubscription | null = null;
   let cancelled = false;
 
+  // expo-location drops the promise from its own teardown call; this is the
+  // only place that rejection can be caught. See watchTeardown.ts.
+  silenceWatchRemovalRejections();
+
   Location.watchPositionAsync(
     {
       accuracy: options.highAccuracy ? Location.Accuracy.BestForNavigation : Location.Accuracy.Balanced,
@@ -71,8 +77,10 @@ export function watchPosition(
     (position) => onFix(toFix(position)),
   )
     .then((sub) => {
+      // Cleanup ran before the watch finished starting: shut down the watch we
+      // were just handed rather than leaking it.
       if (cancelled) {
-        sub.remove();
+        removeWatch(sub);
         return;
       }
       subscription = sub;
@@ -83,7 +91,7 @@ export function watchPosition(
 
   return () => {
     cancelled = true;
-    subscription?.remove();
+    removeWatch(subscription);
     subscription = null;
   };
 }
