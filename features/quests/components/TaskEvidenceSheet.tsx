@@ -199,7 +199,7 @@ export function TaskEvidenceSheet({
               <Text variant="caption" tone="muted">
                 {review.model
                   ? `${review.model} · advisory only, you decide`
-                  : 'You decide — this is your observation.'}
+                  : 'You decide: this is your observation.'}
               </Text>
             </View>
           ) : null}

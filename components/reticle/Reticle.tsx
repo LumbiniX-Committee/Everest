@@ -146,7 +146,7 @@ function reticleLabel(phase: AlignmentPhase): string {
     case 'seeking':
       return 'Seeking alignment';
     case 'manual':
-      return 'Framed by eye — alignment gate bypassed';
+      return 'Framed by eye: alignment gate bypassed';
     case 'unavailable':
       return 'Alignment unavailable';
     case 'idle':

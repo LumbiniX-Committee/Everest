@@ -11,12 +11,12 @@
     "produced": true,
     "year": 1899,
     "licence": "Public Domain (published 1901; photographed December 1899)",
-    "attribution": "P. C. Mukherji, Archaeological Survey of India — Survey of India Offices, Calcutta, December 1899",
+    "attribution": "P. C. Mukherji, Archaeological Survey of India: Survey of India Offices, Calcutta, December 1899",
     "sources": [
       {
-        "title": "Mukherji 1901, ASI Imperial Series XXVI/1 — Antiquities in the Tarai, Nepal",
+        "title": "Mukherji 1901, ASI Imperial Series XXVI/1: Antiquities in the Tarai, Nepal",
         "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ",
-        "locator": "Plate XX, Fig. 2 — 'Rummin-dei view of the ruins from the south' (IA leaf 0126)"
+        "locator": "Plate XX, Fig. 2: 'Rummin-dei view of the ruins from the south' (IA leaf 0126)"
       }
     ]
   },
@@ -37,7 +37,7 @@
       {
         "title": "Mukherji 1901, ASI Imperial Series XXVI/1",
         "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ",
-        "locator": "Plate XX, Fig. 1 — 'Plan of Maya-Devi Temple' (IA leaf 0128)"
+        "locator": "Plate XX, Fig. 1: 'Plan of Maya-Devi Temple' (IA leaf 0128)"
       }
     ]
   },
@@ -46,7 +46,7 @@
     "site_id": "maya-devi-temple",
     "caption": {
       "en": "General plan of the ruins at Rummin-dei, with the pillar, temple and tank",
-      "ne": "रुम्मिनदेईका भग्नावशेषको सामान्य योजना — स्तम्भ, मन्दिर र पोखरीसहित"
+      "ne": "रुम्मिनदेईका भग्नावशेषको सामान्य योजना: स्तम्भ, मन्दिर र पोखरीसहित"
     },
     "image": "lumbini.mukherji-1899-general-plan.webp",
     "evidence_tier": "survey_drawing",
@@ -58,7 +58,7 @@
       {
         "title": "Mukherji 1901, ASI Imperial Series XXVI/1",
         "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ",
-        "locator": "Plate XVIII, Fig. 1 — 'General plan of the ruins at Rummin-dei' (IA leaf 0072)"
+        "locator": "Plate XVIII, Fig. 1: 'General plan of the ruins at Rummin-dei' (IA leaf 0072)"
       }
     ]
   },
@@ -79,7 +79,7 @@
       {
         "title": "Mukherji 1901, ASI Imperial Series XXVI/1",
         "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ",
-        "locator": "Plate XX, Fig. 4 — 'Detail of the inscription' (IA leaf 0128)"
+        "locator": "Plate XX, Fig. 4: 'Detail of the inscription' (IA leaf 0128)"
       },
       {
         "title": "Cleaner scholarly facsimile if a replacement is wanted: Hultzsch, Inscriptions of Asoka (CII Vol. I), 1925",
@@ -98,11 +98,11 @@
     "image": "maya-devi-temple.nativity-sculpture.webp",
     "evidence_tier": "historical_photograph",
     "produced": false,
-    "licence": "pending — resolved from harvest LICENCES.md at build",
+    "licence": "pending: resolved from harvest LICENCES.md at build",
     "attribution": "pending harvest (Wikimedia Commons contributor)",
     "sources": [
       {
-        "title": "UNESCO WHC — Lumbini (666rev)",
+        "title": "UNESCO WHC: Lumbini (666rev)",
         "url": "https://whc.unesco.org/en/list/666"
       }
     ]
@@ -117,11 +117,11 @@
     "image": "puskarini.1899-view.webp",
     "evidence_tier": "historical_photograph",
     "produced": false,
-    "licence": "pending — Mukherji 1901 has no dedicated Puskarini plate; source from harvest or a later survey",
+    "licence": "pending: Mukherji 1901 has no dedicated Puskarini plate; source from harvest or a later survey",
     "attribution": "pending",
     "sources": [
       {
-        "title": "UNESCO WHC — Lumbini (666rev)",
+        "title": "UNESCO WHC: Lumbini (666rev)",
         "url": "https://whc.unesco.org/en/list/666"
       }
     ]
@@ -141,7 +141,7 @@
       "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ",
       "locator": "capital form conditioned on surviving Mauryan capitals; the horse is attested, the object itself is lost"
     },
-    "licence": "CC BY-SA 4.0 (Sākṣī reconstruction — clearly labelled, not a photograph)",
+    "licence": "CC BY-SA 4.0 (Sākṣī reconstruction: clearly labelled, not a photograph)",
     "attribution": "Sākṣī team, image-to-image conditioned on cited Mauryan comparanda",
     "sources": [
       {
@@ -163,10 +163,10 @@
     "conditioned_on": {
       "title": "Mukherji's own 1899 photograph of the still-overgrown mound (extracted)",
       "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ",
-      "locator": "Plate XX, Fig. 1 — 'Rummin-dei view of the ruins from the west' (IA leaf 0126)",
+      "locator": "Plate XX, Fig. 1: 'Rummin-dei view of the ruins from the west' (IA leaf 0126)",
       "source_image": "ashokan-pillar.pre1896-jungle.source.webp"
     },
-    "licence": "CC BY-SA 4.0 (Sākṣī reconstruction — clearly labelled); conditioning source is Public Domain",
+    "licence": "CC BY-SA 4.0 (Sākṣī reconstruction: clearly labelled); conditioning source is Public Domain",
     "attribution": "Sākṣī team, image-to-image conditioned on Mukherji's 1899 west-view photograph",
     "sources": [
       {
@@ -191,12 +191,12 @@
       "locator": "shape and setting conditioned on the modern photograph; the earthen-oval-to-brick change is the documented fact",
       "source_image": "now.puskarini.webp"
     },
-    "licence": "CC BY-SA 4.0 (Sākṣī reconstruction — clearly labelled); conditioning photo CC BY-SA 4.0 Shadow Ayush",
+    "licence": "CC BY-SA 4.0 (Sākṣī reconstruction: clearly labelled); conditioning photo CC BY-SA 4.0 Shadow Ayush",
     "attribution": "Sākṣī team, image-to-image conditioned on a modern CC BY-SA photograph",
     "pairs_with_now": "now.puskarini.webp",
     "sources": [
       {
-        "title": "UNESCO WHC — Lumbini (666rev)",
+        "title": "UNESCO WHC: Lumbini (666rev)",
         "url": "https://whc.unesco.org/en/list/666"
       }
     ]
@@ -216,11 +216,11 @@
       "url": "https://whc.unesco.org/en/list/666",
       "locator": "forms conditioned on Mitra 1957; the loss between two expert visits is the documented fact"
     },
-    "licence": "CC BY-SA 4.0 (Sākṣī reconstruction — clearly labelled)",
+    "licence": "CC BY-SA 4.0 (Sākṣī reconstruction: clearly labelled)",
     "attribution": "Sākṣī team, image-to-image conditioned on Debala Mitra 1957",
     "sources": [
       {
-        "title": "UNESCO WHC — Lumbini (666rev)",
+        "title": "UNESCO WHC: Lumbini (666rev)",
         "url": "https://whc.unesco.org/en/list/666"
       }
     ]

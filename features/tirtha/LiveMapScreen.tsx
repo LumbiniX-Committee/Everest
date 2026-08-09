@@ -363,7 +363,7 @@ export function LiveMapScreen() {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Tīrtha"
-            accessibilityHint="Everything else at Lumbini — the sites, the quests, then and now"
+            accessibilityHint="Everything else at Lumbini: the sites, the quests, then and now"
             onPress={() =>
               router.canGoBack() ? router.back() : router.replace('/(main)/tirtha')
             }

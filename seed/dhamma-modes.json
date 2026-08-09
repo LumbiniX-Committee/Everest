@@ -7,8 +7,8 @@
       "pali": "ekaṃsa-byākaraṇīya",
       "gloss": { "en": "Answered directly", "ne": "सिधै उत्तर दिइयो" },
       "explain": {
-        "en": "A single, clear answer the sources support — yes, no, this, that.",
-        "ne": "स्रोतहरूले समर्थन गर्ने एउटै स्पष्ट उत्तर — हो, होइन, यो, त्यो।"
+        "en": "A single, clear answer the sources support: yes, no, this, that.",
+        "ne": "स्रोतहरूले समर्थन गर्ने एउटै स्पष्ट उत्तर: हो, होइन, यो, त्यो।"
       }
     },
     {
@@ -34,10 +34,10 @@
       "pali": "ṭhapanīya",
       "gloss": { "en": "Set aside", "ne": "छोडिदिइयो" },
       "explain": {
-        "en": "Some questions are left unanswered on purpose — either outside the canon we hold, or of the kind the Buddha himself declined.",
-        "ne": "केही प्रश्न जानाजान अनुत्तरित छाडिन्छन् — या त हामीसँग भएको ग्रन्थभन्दा बाहिरका, या बुद्ध आफैंले अस्वीकार गर्नुभएका खालका।"
+        "en": "Some questions are left unanswered on purpose: either outside the canon we hold, or of the kind the Buddha himself declined.",
+        "ne": "केही प्रश्न जानाजान अनुत्तरित छाडिन्छन्: या त हामीसँग भएको ग्रन्थभन्दा बाहिरका, या बुद्ध आफैंले अस्वीकार गर्नुभएका खालका।"
       },
-      "declined_example": "Cūḷamālukya Sutta, Majjhima Nikāya 63 — the ten questions the Buddha set aside."
+      "declined_example": "Cūḷamālukya Sutta, Majjhima Nikāya 63: the ten questions the Buddha set aside."
     }
   ]
 }

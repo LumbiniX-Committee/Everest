@@ -136,7 +136,7 @@ export function ConditionSheet({ visible, onClose, onSubmit, submitting = false,
       {initialDraft?.aiAssisted ? (
         <View style={styles.aiBanner}>
           <Text variant="caption" tone="secondary">
-            Filled from an AI candidate. You’re confirming it — change anything that’s wrong, and
+            Filled from a model candidate. You’re confirming it. Change anything that is wrong, and
             you decide how urgent it is.
           </Text>
         </View>

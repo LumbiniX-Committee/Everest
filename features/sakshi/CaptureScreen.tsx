@@ -69,7 +69,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
           </Text>
           <Text variant="body" tone="secondary" center>
             An observation is a photograph taken from a known point. Without the camera there is
-            nothing to record — though you can still read the series others have built.
+            nothing to record, though you can still read the series others have built.
           </Text>
           {cameraPermission.status === 'blocked' ? (
             <Button label="Open settings" onPress={openSettings} />
@@ -123,7 +123,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
         alignScore: alignment.alignScore,
         gpsAccuracyM: alignment.gpsAccuracyM,
         gateMode: mode,
-        note: isNoChange ? 'Nothing has changed — verified stability.' : undefined,
+        note: isNoChange ? 'Nothing has changed: verified stability.' : undefined,
         assessment: 'unreviewed',
         synced: false,
       };
@@ -151,7 +151,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
           </Text>
           <Text variant="body" tone="secondary" center>
             {site.name} is a protected space where photography is {site.photography}. The witness
-            tool is disabled at this site — please respect the restriction and confirm with site
+            tool is disabled at this site. Please respect the restriction and confirm with site
             staff. You can still read its record and history.
           </Text>
           <Button label="Back" onPress={() => router.back()} />
@@ -234,7 +234,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
             accessibilityHint={
               locked
                 ? 'Records a measured observation from this vantage'
-                : 'Records a photograph without a measured lock — position and bearing error are left blank'
+                : 'Records a photograph without a measured lock: position and bearing error are left blank'
             }
             disabled={saving}
             onPress={() => onCapture(locked ? 'aligned' : 'manual', false)}
@@ -260,8 +260,8 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
 
         <Text variant="caption" tone={locked ? 'locked' : 'seeking'} center>
           {locked
-            ? 'Aligned — the shutter records position and bearing error.'
-            : 'By eye — the photograph is kept, the measurements are left blank.'}
+            ? 'Aligned: the shutter records position and bearing error.'
+            : 'By eye: the photograph is kept, the measurements are left blank.'}
         </Text>
         {!locked ? (
           <Text variant="caption" tone="muted" center>

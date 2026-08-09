@@ -337,7 +337,7 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
               <MetaRow label="Align score" value={observation.alignScore.toFixed(2)} tone="seeking" />
             ) : null}
             <Text variant="caption" tone="secondary" style={styles.accuracyNote}>
-              Framed by eye — not measured within the vantage tolerance. It is part of the record,
+              Framed by eye, not measured within the vantage tolerance. It is part of the record,
               but is not directly comparable frame-to-frame the way an aligned capture is.
             </Text>
           </>

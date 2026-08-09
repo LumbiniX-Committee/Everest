@@ -34,7 +34,7 @@ export const demoSites: HeritageSite[] = [
     nameNepali: 'अशोक स्तम्भ',
     summary: 'Third century BCE inscribed pillar',
     description:
-      'Erected by Emperor Ashoka in 249 BCE, the pillar carries the inscription identifying Lumbini as the Buddha’s birthplace — the earliest surviving epigraphic evidence for the site.',
+      'Erected by Emperor Ashoka in 249 BCE, the pillar carries the inscription identifying Lumbini as the Buddha’s birthplace: the earliest surviving epigraphic evidence for the site.',
     coordinate: { latitude: 27.46905, longitude: 83.27614 },
     elevation: 105,
     sourceTier: 'archaeological',
@@ -124,7 +124,7 @@ export const demoVantages: Vantage[] = [
     pitch: 22,
     positionToleranceM: 2,
     bearingToleranceDeg: 4,
-    note: 'The inscription panel. Tight tolerance — small changes in angle make the surface uncomparable.',
+    note: 'The inscription panel. Tight tolerance: small changes in angle make the surface uncomparable.',
     seriesBegan: '2023-11-19T03:05:00.000Z',
   },
   {

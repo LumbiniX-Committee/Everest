@@ -115,7 +115,7 @@ export function SakshiScreen() {
         rightAction={<SettingsButton />}
       />
 
-      {/* Location-Driven Hero Quick Witness Card */}
+      {/* The nearest viewpoint, and the way straight to it. */}
       {primaryVantage ? (
         <View style={styles.heroCard}>
           {activeSite && siteHeroImages[activeSite.id] ? (
@@ -129,7 +129,7 @@ export function SakshiScreen() {
           ) : null}
           <View style={styles.heroBody}>
             <View style={styles.heroHeader}>
-              <Chip label="LOCATION HERITAGE" />
+              <Chip label="NEAREST" />
               {distanceToSite != null ? (
                 <Text variant="mono" tone="sandstone">
                   {formatDistance(distanceToSite)}
@@ -137,13 +137,19 @@ export function SakshiScreen() {
               ) : null}
             </View>
             <Text variant="heading">
-              {activeSite?.name ?? 'Sacred Site'} — {primaryVantage.label}
+              {activeSite?.name ?? 'Sacred Site'}
             </Text>
             <Text variant="caption" tone="secondary">
-              Tolerance: ±{primaryVantage.positionToleranceM} m · ±{primaryVantage.bearingToleranceDeg}°
+              {primaryVantage.label}
             </Text>
+            {/*
+              The tolerance figures used to sit here, before anyone had walked
+              to the spot. They are the alignment rule and they belong on the
+              viewfinder, where they are being met or missed; on a card they
+              were a specification of a thing not yet being done.
+            */}
             <Button
-              label="Align & Witness Now"
+              label="Take the photograph"
               onPress={() =>
                 router.push({
                   pathname: '/(main)/sakshi/vantage',
@@ -300,7 +306,7 @@ export function SakshiScreen() {
             onPress={() => router.push('/(main)/sakshi/register' as any)}
           />
           <Button
-            label="Guardians — who is contributing"
+            label="Who is contributing"
             variant="quiet"
             onPress={() => router.push('/(main)/sakshi/guardians' as any)}
           />

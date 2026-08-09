@@ -209,7 +209,7 @@ function refuse(query: string, ranked: { entry: DhammaEntry; score: number }[]):
     text: 'I don’t have enough reliable evidence to answer this confidently.',
     reason: related.length
       ? 'Nothing in the collections addresses this closely enough to answer without guessing. What is below is adjacent, not an answer.'
-      : `Nothing in the collections addresses this. The corpus here is small and deliberately narrow — ${COLLECTIONS.length} collections, all concerning Lumbini and the early record.`,
+      : `Nothing in the collections addresses this. The corpus here is small and deliberately narrow: ${COLLECTIONS.length} collections, all concerning Lumbini and the early record.`,
     searched: COLLECTIONS,
     related,
     // Real questions the corpus can answer, so the suggestion is never a

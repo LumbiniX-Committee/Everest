@@ -78,7 +78,7 @@ export function LeaderboardScreen() {
     <Screen>
       <ScreenHeader
         title="Guardians"
-        subtitle="Ranked by what has been contributed to the record — not by puṇya, which stays yours and is never ranked."
+        subtitle="Ranked by what has been contributed to the record, not by puṇya, which stays yours and is never ranked."
       />
 
       <View style={styles.tabs}>

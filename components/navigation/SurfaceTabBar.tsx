@@ -3,8 +3,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { BottomTabBarProps } from 'expo-router/js-tabs';
 
 import { Icon, Text, type IconName } from '@/components/ui';
-import { OfflineBanner } from '@/components/common';
-import { useSync } from '@/hooks';
 import { colors, radii, spacing } from '@/theme';
 import { SURFACES, SURFACE_LABELS, SURFACE_ICONS, type Surface } from '@/constants';
 
@@ -15,17 +13,17 @@ import { SURFACES, SURFACE_LABELS, SURFACE_ICONS, type Surface } from '@/constan
  * selected one can take the sandstone tint the label and the top mark share.
  * The active surface carries a sandstone rule above it, a warm pill behind it,
  * and a heavier label. There is no fourth entry; see `constants/app.ts`.
+ *
+ * The sync banner used to sit above the bar on every screen, on every surface,
+ * saying "1 observation saved on this device". It was true and it was permanent
+ * furniture over a map of a temple. The state it reported is unchanged and still
+ * reachable in Settings, under Sync, where a failed upload can also be retried.
  */
 export function SurfaceTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
-  const { syncState, pendingCount, triggerSync } = useSync();
 
   return (
     <View style={[styles.container, { paddingBottom: Math.max(insets.bottom, spacing.xs) }]}>
-      <View style={styles.bannerContainer}>
-        <OfflineBanner state={syncState} pending={pendingCount} onRetry={triggerSync} />
-      </View>
-
       <View style={styles.bar}>
         {state.routes.map((route, index) => {
           if (!(SURFACES as readonly string[]).includes(route.name)) return null;
@@ -91,10 +89,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     paddingHorizontal: spacing.md,
     paddingTop: spacing.xs,
-  },
-  bannerContainer: {
-    paddingHorizontal: spacing.xs,
-    paddingBottom: spacing.xs,
   },
   bar: {
     flexDirection: 'row',

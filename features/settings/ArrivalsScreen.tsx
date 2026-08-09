@@ -46,7 +46,7 @@ export function ArrivalsScreen() {
 
       <SettingsSection
         title="Status"
-        footnote="Detection is handled by the operating system, which watches for the crossing using cell and wifi rather than GPS. That is why it costs almost no battery — and why it can take a minute or two to notice."
+        footnote="Detection is handled by the operating system, which watches for the crossing using cell and wifi rather than GPS. That is why it costs almost no battery, and why it can take a minute or two to notice."
       >
         <Text variant="body" style={styles.body}>
           {STATUS_TEXT[status]}
@@ -66,7 +66,7 @@ export function ArrivalsScreen() {
 
       <SettingsSection
         title="Precincts"
-        footnote="One geofence each, rather than one per monument. The four Sacred Garden monuments sit within 92 m of each other and the closest pair is 39 m apart — closer than a geofence can reliably resolve. Which monument you are at is decided from a live fix once the app is open."
+        footnote="One geofence each, rather than one per monument. The four Sacred Garden monuments sit within 92 m of each other and the closest pair is 39 m apart, closer than a geofence can reliably resolve. Which monument you are at is decided from a live fix once the app is open."
       >
         {precincts.map((p) => {
           const speakable = p.siteIds.filter((id) => dhammaForSite(id).length > 0);
@@ -100,7 +100,7 @@ export function ArrivalsScreen() {
 
       <SettingsSection
         title="Coverage"
-        footnote="A precinct with no passage still announces that you have arrived — it just has nothing to quote. Passages are never matched loosely to fill the gap."
+        footnote="A precinct with no passage still announces that you have arrived: it just has nothing to quote. Passages are never matched loosely to fill the gap."
       >
         {precincts
           .flatMap((p) => p.siteIds)

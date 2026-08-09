@@ -93,7 +93,7 @@ export async function setHandle(handle: string): Promise<void> {
   const trimmed = handle.trim();
   if (trimmed.length === 0) throw new Error('A name cannot be blank.');
   if (trimmed.length > 32) throw new Error('A name can be at most 32 characters.');
-  if (!isConfigured()) throw new Error('Not connected — this name will not be saved.');
+  if (!isConfigured()) throw new Error('Not connected: this name will not be saved.');
 
   const deviceId = await getDeviceId();
   const supabase = getSupabase();

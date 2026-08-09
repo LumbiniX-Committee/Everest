@@ -147,7 +147,7 @@ export const PERMISSION_COPY: Record<
   location: {
     title: 'Location',
     reason: 'Find nearby heritage sites and viewpoints.',
-    withoutIt: 'You can still browse every site — the list just will not sort by distance.',
+    withoutIt: 'You can still browse every site: the list just will not sort by distance.',
   },
   camera: {
     title: 'Camera',

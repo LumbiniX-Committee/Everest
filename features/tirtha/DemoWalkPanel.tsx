@@ -104,19 +104,19 @@ export function DemoWalkPanel({
 
     const precinctId = precinct?.id ?? '';
     if (precinctId !== seen.current.precinctId) {
-      if (precinctId) add(`Entered ${precinct?.name} — geofence armed`);
-      else if (seen.current.precinctId) add('Left the precinct — arrival re-arms');
+      if (precinctId) add(`Entered ${precinct?.name}: geofence armed`);
+      else if (seen.current.precinctId) add('Left the precinct: arrival re-arms');
       seen.current.precinctId = precinctId;
     }
 
     const siteId = atSiteId ?? '';
     if (siteId !== seen.current.siteId) {
-      if (siteId) add(`Within reach of ${site?.name} — arrival announced`);
+      if (siteId) add(`Within reach of ${site?.name}: arrival announced`);
       seen.current.siteId = siteId;
     }
 
     if (speaks && atSiteId && seen.current.spoke !== atSiteId) {
-      add(`${site?.name} has something to say — wisdom unlocked`);
+      add(`${site?.name} has something to say: wisdom unlocked`);
       seen.current.spoke = atSiteId;
     }
 
@@ -125,8 +125,8 @@ export function DemoWalkPanel({
       if (latest && events.length > seen.current.meritCount) {
         add(
           latest.amount > 0
-            ? `+${latest.amount} puṇya recorded — balance ${summary.balance}`
-            : 'Recorded, no merit — the day is already complete',
+            ? `+${latest.amount} puṇya recorded: balance ${summary.balance}`
+            : 'Recorded, no merit: the day is already complete',
         );
       }
       seen.current.meritCount = events.length;
@@ -134,8 +134,8 @@ export function DemoWalkPanel({
 
     const circling = step?.activity.kind === 'circling';
     if (circling !== seen.current.circuit) {
-      if (circling) add('Circumambulation begun — clockwise, as pradakṣiṇā requires');
-      else if (seen.current.circuit) add('Circuit closed — 360° clockwise');
+      if (circling) add('Circumambulation begun: clockwise, as pradakṣiṇā requires');
+      else if (seen.current.circuit) add('Circuit closed: 360° clockwise');
       seen.current.circuit = circling;
     }
   }, [precinct, atSiteId, site, speaks, events, summary.balance, step]);

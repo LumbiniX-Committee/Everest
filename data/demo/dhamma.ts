@@ -66,7 +66,7 @@ export const demoDhammaEntries: DhammaEntry[] = [
     id: 'appamada',
     question: 'What does appamādena sampādetha mean?',
     answer:
-      'It is usually rendered "strive on with diligence" or "accomplish your purpose without negligence". Appamāda is the opposite of letting things slide — sustained, unglamorous attention. Tradition holds these were the Buddha\'s last words.',
+      'It is usually rendered "strive on with diligence" or "accomplish your purpose without negligence". Appamāda is the opposite of letting things slide: sustained, unglamorous attention. Tradition holds these were the Buddha\'s last words.',
     citations: [{ sourceId: 'dn-16' }],
     original: 'vayadhammā saṅkhārā, appamādena sampādetha',
     reflectionPrompt: 'Where in the last week did you let something slide that mattered?',
@@ -75,14 +75,14 @@ export const demoDhammaEntries: DhammaEntry[] = [
     id: 'what-is-sakshi',
     question: 'What does sākṣī mean?',
     answer:
-      'A witness — one who sees directly and can testify to it. The word carries the sense of first-hand presence rather than report. The app takes the name literally: you go, you look, you record what is there.',
+      'A witness: one who sees directly and can testify to it. The word carries the sense of first-hand presence rather than report. The app takes the name literally: you go, you look, you record what is there.',
     citations: [{ sourceId: 'monier-williams' }],
   },
   {
     id: 'ehipassiko',
     question: 'Am I meant to take this on faith?',
     answer:
-      'The traditional description of the teaching is ehipassiko — "come and see". It invites checking rather than assent. That is also why every answer on this surface carries a citation you can go and read.',
+      'The traditional description of the teaching is ehipassiko: "come and see". It invites checking rather than assent. That is also why every answer on this surface carries a citation you can go and read.',
     citations: [{ sourceId: 'sn-11-3' }],
     original: 'ehipassiko opanayiko paccattaṃ veditabbo viññūhi',
   },

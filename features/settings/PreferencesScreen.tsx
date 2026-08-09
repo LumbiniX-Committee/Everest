@@ -34,7 +34,7 @@ export function PreferencesScreen() {
 
       <SettingsSection
         title="Alignment"
-        footnote="Tolerance decides when the reticle reports a lock. It does not change what is recorded — an observation notes the tolerance it was taken at."
+        footnote="Tolerance decides when the reticle reports a lock. It does not change what is recorded: an observation notes the tolerance it was taken at."
       >
         <SettingsChoice
           legend="Alignment tolerance"
@@ -46,7 +46,7 @@ export function PreferencesScreen() {
 
       <SettingsSection
         title="Wisdom"
-        footnote="This changes how much a place says when you reach it, not what it claims. Every tier draws on the same sourced material — the deeper ones simply stop leaving things out. Ask your own puts the question to the canonical texts, about wherever you are standing."
+        footnote="This changes how much a place says when you reach it, not what it claims. Every tier draws on the same sourced material: the deeper ones simply stop leaving things out. Ask your own puts the question to the canonical texts, about wherever you are standing."
       >
         <SettingsChoice
           legend="How much to tell me"
@@ -58,7 +58,7 @@ export function PreferencesScreen() {
 
       <SettingsSection
         title="On arrival"
-        footnote="Both are on because reaching a place is the gesture — you should not have to know there was something to open. Narration follows your phone's silent switch: silenced on the way into a shrine, it stays silent and the text is still there to read."
+        footnote="Both are on because reaching a place is the gesture: you should not have to know there was something to open. Narration follows your phone's silent switch: silenced on the way into a shrine, it stays silent and the text is still there to read."
       >
         <SettingsToggle
           label="Open what a place holds"

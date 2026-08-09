@@ -12,7 +12,7 @@ export const demoSites: HeritageSite[] = [
     "nameNepali": "माया देवी मन्दिर",
     "namePali": "Māyādevī",
     "summary": "The Maya Devi Temple encloses the spot venerated for over two millennia as the birthplace of the …",
-    "description": "The Maya Devi Temple encloses the spot venerated for over two millennia as the birthplace of the Buddha. Inside lie the Marker Stone, believed to fix the exact nativity point, and the worn Nativity Sculpture showing Queen Maya Devi grasping a sal branch. Excavation revealed brick structures built in phases from the 3rd century BCE, laid over a still older shrine, arranged as fifteen box-like chambers in five east–west and three north–south rows around a circumambulatory path. The present whitewashed temple was rebuilt by the Lumbini Development Trust in 2003 to shelter these remains. It marks the first of the four great pilgrimage places — birth here at Lumbini, awakening at Bodh Gaya, first teaching at Sarnath, and parinirvāṇa at Kushinagar. The interior is a protected archaeological space; photography inside is generally restricted, so confirm on arrival before capturing.",
+    "description": "The Maya Devi Temple encloses the spot venerated for over two millennia as the birthplace of the Buddha. Inside lie the Marker Stone, believed to fix the exact nativity point, and the worn Nativity Sculpture showing Queen Maya Devi grasping a sal branch. Excavation revealed brick structures built in phases from the 3rd century BCE, laid over a still older shrine, arranged as fifteen box-like chambers in five east–west and three north–south rows around a circumambulatory path. The present whitewashed temple was rebuilt by the Lumbini Development Trust in 2003 to shelter these remains. It marks the first of the four great pilgrimage places: birth here at Lumbini, awakening at Bodh Gaya, first teaching at Sarnath, and parinirvāṇa at Kushinagar. The interior is a protected archaeological space; photography inside is generally restricted, so confirm on arrival before capturing.",
     "coordinate": {
       "latitude": 27.469609,
       "longitude": 83.275831
@@ -65,7 +65,7 @@ export const demoSites: HeritageSite[] = [
     "nameNepali": "अशोक स्तम्भ",
     "namePali": "Asoka-thambha",
     "summary": "This sandstone pillar was raised by the Mauryan emperor Ashoka in 249 BCE, in his twentieth regna…",
-    "description": "This sandstone pillar was raised by the Mauryan emperor Ashoka in 249 BCE, in his twentieth regnal year, to mark the birthplace of the Buddha. Its Brahmi inscription in the Pali language records the emperor's visit, declares that here the Blessed One was born, and grants the village of Lumbini relief from tax — the earliest firmly dated written evidence for the site. The pillar was originally crowned by a capital recorded as a horse; that capital is now lost. Do not expect the lion capital of Sarnath, which is a different monument and the state emblem of India. The pillar was rediscovered in 1896 by Khadga Shamsher Rana and Anton Führer, who read the inscription and identified Lumbini. It stands within the Sacred Garden, a short walk from the Marker Stone and the Puskarini pond, and remains the hero object of the site.",
+    "description": "This sandstone pillar was raised by the Mauryan emperor Ashoka in 249 BCE, in his twentieth regnal year, to mark the birthplace of the Buddha. Its Brahmi inscription in the Pali language records the emperor's visit, declares that here the Blessed One was born, and grants the village of Lumbini relief from tax: the earliest firmly dated written evidence for the site. The pillar was originally crowned by a capital recorded as a horse; that capital is now lost. Do not expect the lion capital of Sarnath, which is a different monument and the state emblem of India. The pillar was rediscovered in 1896 by Khadga Shamsher Rana and Anton Führer, who read the inscription and identified Lumbini. It stands within the Sacred Garden, a short walk from the Marker Stone and the Puskarini pond, and remains the hero object of the site.",
     "coordinate": {
       "latitude": 27.469681,
       "longitude": 83.275668
@@ -121,7 +121,7 @@ export const demoSites: HeritageSite[] = [
     "nameNepali": "पुष्करिणी",
     "namePali": "Pokkharaṇī",
     "summary": "The Puskarini is the sacred pond set about twenty-five paces from the Marker Stone, within the Sa…",
-    "description": "The Puskarini is the sacred pond set about twenty-five paces from the Marker Stone, within the Sacred Garden. Tradition holds that Queen Maya Devi bathed in its waters before giving birth, and that the newborn received his first bath here. The stepped, brick-lined tank visible today was cleared and consolidated during modern excavation and conservation of the garden. Its still water gives the clearest reflection of the Ashokan Pillar and the temple, and it is the setting for the stillness practice — sitting quietly at its edge is itself the point. Like the rest of the Sacred Garden, the pond depends on seasonal drainage; silt and monsoon inflow are recurring conservation concerns. Its exact position has not yet been confirmed against a survey coordinate, so the location shown here is approximate, pending verification on the ground.",
+    "description": "The Puskarini is the sacred pond set about twenty-five paces from the Marker Stone, within the Sacred Garden. Tradition holds that Queen Maya Devi bathed in its waters before giving birth, and that the newborn received his first bath here. The stepped, brick-lined tank visible today was cleared and consolidated during modern excavation and conservation of the garden. Its still water gives the clearest reflection of the Ashokan Pillar and the temple, and it is the setting for the stillness practice: sitting quietly at its edge is itself the point. Like the rest of the Sacred Garden, the pond depends on seasonal drainage; silt and monsoon inflow are recurring conservation concerns. Its exact position has not yet been confirmed against a survey coordinate, so the location shown here is approximate, pending verification on the ground.",
     "coordinate": {
       "latitude": 27.4694,
       "longitude": 83.2756
@@ -209,7 +209,7 @@ export const demoSites: HeritageSite[] = [
     "name": "Vihara & Stupa Remains",
     "nameNepali": "विहार तथा स्तूप अवशेष",
     "summary": "Across the Sacred Garden stand the excavated brick foundations of Buddhist monasteries (vihāras) …",
-    "description": "Across the Sacred Garden stand the excavated brick foundations of Buddhist monasteries (vihāras) and votive stupas, built and rebuilt between the 3rd century BCE and the 5th century CE. They are also the site’s clearest warning. Debala Mitra recorded sixteen small votive stupas on a 1957 visit that had, by her later account, been completely demolished, and several structures P. C. Mukherji exposed in 1899 could no longer be traced. It is a documented case of heritage vanishing between two expert visits — the reason a repeatable photographic record matters.",
+    "description": "Across the Sacred Garden stand the excavated brick foundations of Buddhist monasteries (vihāras) and votive stupas, built and rebuilt between the 3rd century BCE and the 5th century CE. They are also the site’s clearest warning. Debala Mitra recorded sixteen small votive stupas on a 1957 visit that had, by her later account, been completely demolished, and several structures P. C. Mukherji exposed in 1899 could no longer be traced. It is a documented case of heritage vanishing between two expert visits: the reason a repeatable photographic record matters.",
     "coordinate": {
       "latitude": 27.4699,
       "longitude": 83.2762
@@ -278,7 +278,7 @@ export const demoSites: HeritageSite[] = [
     "name": "China Temple",
     "nameNepali": "चीन मन्दिर",
     "summary": "The China Temple, built by the Buddhist Association of China in the western monastic zone, is a w…",
-    "description": "The China Temple, built by the Buddhist Association of China in the western monastic zone, is a walled complex of tiled pagodas, prayer halls and meditation cells in classical Chinese style — one of the largest monastery compounds on the Kenzo Tange master-plan grid.",
+    "description": "The China Temple, built by the Buddhist Association of China in the western monastic zone, is a walled complex of tiled pagodas, prayer halls and meditation cells in classical Chinese style: one of the largest monastery compounds on the Kenzo Tange master-plan grid.",
     "coordinate": {
       "latitude": 27.480294,
       "longitude": 83.27201
@@ -341,8 +341,8 @@ export const demoSites: HeritageSite[] = [
     "id": "gautami-nuns-temple",
     "name": "International Gautami Nuns Temple",
     "nameNepali": "अन्तर्राष्ट्रिय गौतमी भिक्षुणी मन्दिर",
-    "summary": "The International Gautami Nuns Temple, named for Mahāpajāpatī Gotamī — the Buddha’s aunt and fost…",
-    "description": "The International Gautami Nuns Temple, named for Mahāpajāpatī Gotamī — the Buddha’s aunt and foster-mother and the first ordained bhikkhunī — stands in the eastern monastic zone. Its central stupa is modelled on the Swayambhu Stupa of Kathmandu.",
+    "summary": "The International Gautami Nuns Temple, named for Mahāpajāpatī Gotamī, the Buddha’s aunt and foste…",
+    "description": "The International Gautami Nuns Temple, named for Mahāpajāpatī Gotamī, the Buddha’s aunt and foster-mother and the first ordained bhikkhunī, stands in the eastern monastic zone. Its central stupa is modelled on the Swayambhu Stupa of Kathmandu.",
     "coordinate": {
       "latitude": 27.475579,
       "longitude": 83.278385
@@ -445,7 +445,7 @@ export const demoSites: HeritageSite[] = [
     "name": "Ramagrama Stupa",
     "nameNepali": "रामग्राम स्तूप",
     "summary": "Ramagrama Stupa is held to be the only original relic stupa of the Buddha that remains undisturbe…",
-    "description": "Ramagrama Stupa is held to be the only original relic stupa of the Buddha that remains undisturbed — the single one of the eight that was never opened to redistribute its relics. The earthen mound lies about 50 km east of Lumbini and is shown here as a map pin.",
+    "description": "Ramagrama Stupa is held to be the only original relic stupa of the Buddha that remains undisturbed: the single one of the eight that was never opened to redistribute its relics. The earthen mound lies about 50 km east of Lumbini and is shown here as a map pin.",
     "coordinate": {
       "latitude": 27.503,
       "longitude": 83.687

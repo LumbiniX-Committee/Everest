@@ -58,7 +58,7 @@ export function TaskProximity({ site, distanceM, unit }: TaskProximityProps) {
         <View style={[styles.dot, arrived ? styles.dotArrived : styles.dotApproaching]} />
         <Text variant="caption" tone={arrived ? 'secondary' : 'muted'}>
           {arrived
-            ? `You are here — within ${reachM} m of ${site.name}`
+            ? `You are here, within ${reachM} m of ${site.name}`
             : `${formatDistance(distanceM, unit)} away`}
         </Text>
       </View>

@@ -160,8 +160,9 @@ export function DhammaScreen() {
                 Reflection companion
               </Text>
               <Text variant="body" tone="secondary">
-                Say what is on your mind. It turns that into a few questions — one at a time, in
-                your own words — and ends with a short reflection you can check against the canon.
+                Say what is on your mind. It turns that into a few questions, asked one at a
+                time in your own words, and ends with a short reflection you can check against
+                the canon.
               </Text>
             </View>
           </View>

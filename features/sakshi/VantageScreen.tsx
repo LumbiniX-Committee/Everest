@@ -108,7 +108,7 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
 
       <View style={styles.actions}>
         <Button
-          label={locked ? 'Witness — Aligned' : 'Match by eye'}
+          label={locked ? 'Take it, aligned' : 'Match by eye'}
           block
           onPress={openCapture}
           accessibilityHint="Opens the camera to record an observation"

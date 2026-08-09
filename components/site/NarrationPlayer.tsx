@@ -59,7 +59,7 @@ export function NarrationPlayer({ siteId, autoPlay = false, textless = false }: 
         // PowerShell script, so a missing one is an ordinary state of the repo
         // on most machines, not a fault on this device.
         <Text variant="caption" tone="muted">
-          No recording for this place yet — the text above is the narration.
+          No recording for this place yet: the text above is the narration.
         </Text>
       )}
     </View>

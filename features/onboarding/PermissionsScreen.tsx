@@ -29,7 +29,7 @@ type PermissionCopy = { title: string; reason: string; withoutIt: string };
 const NOTIFICATION_COPY: PermissionCopy = {
   title: 'Notifications',
   reason:
-    'So Sākṣī can tell you when you have reached one of the precincts, with the phone in your pocket. One quiet banner on arrival — never a sound, and never anything else.',
+    'So Sākṣī can tell you when you have reached one of the precincts, with the phone in your pocket. One quiet banner on arrival, never a sound, and never anything else.',
   withoutIt: 'Without it, arrivals are only shown while the app is open.',
 };
 
@@ -79,7 +79,7 @@ export function PermissionsScreen() {
         <View style={styles.intro}>
           <Text variant="title">Four permissions</Text>
           <Text variant="body" tone="secondary">
-            Each one is asked for only when you tap it. Sākṣī works without any of them — you will
+            Each one is asked for only when you tap it. Sākṣī works without any of them. You will
             just have less of it.
           </Text>
         </View>

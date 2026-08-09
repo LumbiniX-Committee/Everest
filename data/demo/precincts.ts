@@ -25,7 +25,7 @@ export const demoPrecincts: Precinct[] = [
   {
     id: 'sacred-garden',
     name: 'The Sacred Garden',
-    summary: 'The birthplace precinct — temple, pillar, pond and marker stone.',
+    summary: 'The birthplace precinct: temple, pillar, pond and marker stone.',
     centre: { latitude: 27.46964, longitude: 83.27583 },
     // 150 m: the monuments span 47 m, and the margin means the trigger fires on
     // approach along the entrance path rather than once you are among them.

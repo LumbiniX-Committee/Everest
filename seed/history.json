@@ -5244,7 +5244,7 @@
       "id": "eb715354-2a5b-4393-b1be-5b3712a1e6b9",
       "report_id": "a3e07109-5a9a-498f-9ca3-3b80643a4675",
       "custodian_id": "lumbini-trust",
-      "note": "Acknowledged — low water at ashokan-pillar",
+      "note": "Acknowledged: low water at ashokan-pillar",
       "status": "acknowledged",
       "acknowledged_at": "2026-08-03T04:54:35.806Z"
     },
@@ -5252,7 +5252,7 @@
       "id": "343d3b32-4af9-46e3-9f33-6dc2c9d304e1",
       "report_id": "17835e9e-43e7-43ac-a3e2-b881850dfb3a",
       "custodian_id": "lumbini-trust",
-      "note": "Acknowledged — medium water at maya-devi-temple",
+      "note": "Acknowledged: medium water at maya-devi-temple",
       "status": "acknowledged",
       "acknowledged_at": "2026-08-04T07:24:22.934Z"
     }

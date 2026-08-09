@@ -25,6 +25,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join, relative, extname } from 'node:path';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
+const EM_DASH = String.fromCharCode(0x2014);
 const CONTENT_DIRS = ['seed', 'core', 'deck'];
 
 // Files this linter has no business editorialising over. The canonical corpus
@@ -112,6 +113,63 @@ function walk(dir) {
   return out;
 }
 
+// ── The em dash rule ────────────────────────────────────────────────────────
+//
+// Not a style preference. An em dash asks a reader to hold one clause open
+// while a second interrupts it. That is comfortable in an essay and poor on a
+// phone at arm's length in sunlight, often in a second language. So it is
+// banned in text a visitor reads, and nowhere else: comments keep theirs, and
+// this file is full of them.
+//
+// `core/` and `services/` are out of scope on purpose. Their strings are test
+// rationales, provider prompts and developer warnings, and rewriting those to
+// satisfy a rule about reading outdoors would be busywork.
+const DASH_DIRS = ['seed', 'app', 'features', 'components'];
+
+// Developer comments living inside a template literal, which no line-based
+// comment check can see into.
+const DASH_EXEMPT = [/components\/map\/mapHtml\.ts$/];
+
+const dashHits = [];
+
+function scanDashes(dirs) {
+  for (const d of dirs) {
+    for (const file of walk(join(root, d))) {
+      const posix = file.replace(/\\/g, '/');
+      // Markdown here is documentation for the four of us, not app text.
+      if (extname(file) === '.md') continue;
+      if (DASH_EXEMPT.some((rx) => rx.test(posix))) continue;
+      const src = readFileSync(file, 'utf8');
+      if (!src.includes(EM_DASH)) continue;
+      const json = extname(file) === '.json';
+      let inBlock = false;
+      src.split(/\r?\n/).forEach((line, i) => {
+        const trimmed = line.trim();
+        if (!json) {
+          // Line-based comment tracking, deliberately not a tokeniser: an
+          // apostrophe in JSX text ("don't") throws a tokeniser into a string
+          // state it never leaves, after which it stops seeing comments at all.
+          const wasInBlock = inBlock;
+          const opens = (line.match(/\/\*/g) ?? []).length;
+          const closes = (line.match(/\*\//g) ?? []).length;
+          if (opens > closes) inBlock = true;
+          else if (closes > 0) inBlock = false;
+          if (wasInBlock || opens > 0) return;
+          if (trimmed.startsWith('//') || trimmed.startsWith('*')) return;
+          if (line.includes('//')) return;
+        }
+        if (line.includes('lint-vocab:allow')) return;
+        const at = line.indexOf(EM_DASH);
+        if (at === -1) return;
+        // A bare dash standing in for a value nobody recorded is a placeholder,
+        // not prose, and reads as one.
+        if (line[at - 1] !== ' ' && line[at + 1] !== ' ') return;
+        dashHits.push({ file: relative(root, file), line: i + 1, text: trimmed.slice(0, 100) });
+      });
+    }
+  }
+}
+
 const hits = [];
 function scan(dirs, patterns) {
   for (const d of dirs) {
@@ -135,10 +193,17 @@ function scan(dirs, patterns) {
 }
 scan(CONTENT_DIRS, patternsFull); // our content: full strictness
 scan(APP_DIRS, patternsHard);     // lane B's app: unambiguous terms only
+scanDashes(DASH_DIRS);
 
-if (hits.length) {
+if (hits.length || dashHits.length) {
   for (const h of hits) console.error(`  ${h.file}:${h.line}  banned "${h.word}"  ${h.text}`);
-  console.error(`\n${hits.length} banned-vocabulary use(s). Rephrase, or add a justified 'lint-vocab:allow' comment.`);
+  for (const h of dashHits) console.error(`  ${h.file}:${h.line}  em dash in text  ${h.text}`);
+  if (hits.length) {
+    console.error(`\n${hits.length} banned-vocabulary use(s). Rephrase, or add a justified 'lint-vocab:allow' comment.`);
+  }
+  if (dashHits.length) {
+    console.error(`\n${dashHits.length} em dash(es) in text a person reads. Write the sentence without one.`);
+  }
   process.exit(1);
 }
-console.log('vocab: clean — content (seed/ core/ deck/) full sweep + app hard-term sweep both pass.');
+console.log('vocab: clean — content and app sweeps pass, and no em dash reaches a reader.');

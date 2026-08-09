@@ -70,7 +70,7 @@ const T = {
   ne: {
     eyebrow: 'Dhamma · आत्म-चिन्तन सहयात्री',
     intro:
-      'म तपाईंको ठाउँमा उत्तर दिनेछैनँ। तपाईंको मनमा आज के छ, आफ्नै शब्दमा भन्नुहोस् — त्यसैका आधारमा म केही प्रश्न सोध्नेछु।',
+      'म तपाईंको ठाउँमा उत्तर दिनेछैनँ। तपाईंको मनमा आज के छ, आफ्नै शब्दमा भन्नुहोस्। त्यसैका आधारमा म केही प्रश्न सोध्नेछु।',
     sharePlaceholder: 'तपाईंको मनमा आज के छ…',
     answerPlaceholder: 'आफ्नै शब्दमा लेख्नुहोस्…',
     send: 'पठाउनुहोस्',
@@ -86,12 +86,12 @@ const T = {
       'यदि तपाईं गम्भीर पीडा वा आत्म-हानिको विचारमा हुनुहुन्छ भने, कृपया तुरुन्तै सहयोग सेवामा सम्पर्क गर्नुहोस्। तपाईं यो एक्लै बोक्नुपर्दैन।',
     retry: 'फेरि प्रयास गर्नुहोस्',
     error: 'सेवा अहिले उपलब्ध छैन। नेटवर्क जाँचेर फेरि प्रयास गर्नुहोस्।',
-    offlineNote: 'यो प्रतिबिम्ब यहीँ यन्त्रमा, सङ्ग्रहबाट तयार भयो — तपाईंकै शब्दमा ढालिएको होइन।',
+    offlineNote: 'यो प्रतिबिम्ब यहीँ यन्त्रमा, सङ्ग्रहबाट तयार भयो। तपाईंकै शब्दमा ढालिएको होइन।',
   },
   en: {
     eyebrow: 'Dhamma · Reflection companion',
     intro:
-      'I will not answer in your place. Tell me what is on your mind today, in your own words — I will turn that into a few questions and ask them one at a time.',
+      'I will not answer in your place. Tell me what is on your mind today, in your own words. I will turn that into a few questions and ask them one at a time.',
     sharePlaceholder: 'What is on your mind today…',
     answerPlaceholder: 'Write in your own words…',
     send: 'Send',
@@ -107,7 +107,7 @@ const T = {
       'If you are in acute distress or having thoughts of self-harm, please reach out to support services right away. You do not have to carry this alone.',
     retry: 'Try again',
     error: 'The service is unavailable. Check the connection and try again.',
-    offlineNote: 'Prepared on this device from the collection — not shaped around your own words.',
+    offlineNote: 'Prepared on this device from the collection, not shaped around your own words.',
   },
 } as const;
 

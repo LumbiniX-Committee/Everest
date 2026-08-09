@@ -207,7 +207,7 @@ function timelineFor(
       date: formatTimestamp(observation.capturedAt),
       title:
         observation.assessment === 'reported' && report
-          ? `${CONDITION_CATEGORY_LABELS[report.category]} — ${report.subtype}`
+          ? `${CONDITION_CATEGORY_LABELS[report.category]}: ${report.subtype}`
           : observation.assessment === 'no-change'
             ? 'Nothing had changed'
             : 'Recorded, not yet reviewed',

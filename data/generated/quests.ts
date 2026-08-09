@@ -14,8 +14,8 @@ export const seedQuests: SeedQuest[] = [
       "ne": "चिन्ह लगाइएको दृश्यबिन्दुमा फर्कनुहोस्"
     },
     "description": {
-      "en": "Route to the nearest unsurveyed viewpoint, align to the ghost image, and capture. Merit is the same whether or not anything has changed — 'nothing has changed' is a valuable observation.",
-      "ne": "नजिकको सर्वेक्षण नभएको दृश्यबिन्दुमा जानुहोस्, छायाँ-चित्रसँग मिलाउनुहोस्, र खिच्नुहोस्। केही परिवर्तन भए वा नभए पनि पुण्य उत्तिकै हुन्छ — 'केही परिवर्तन भएको छैन' पनि मूल्यवान् अवलोकन हो।"
+      "en": "Route to the nearest unsurveyed viewpoint, align to the ghost image, and capture. Merit is the same whether or not anything has changed: 'nothing has changed' is a valuable observation.",
+      "ne": "नजिकको सर्वेक्षण नभएको दृश्यबिन्दुमा जानुहोस्, छायाँ-चित्रसँग मिलाउनुहोस्, र खिच्नुहोस्। केही परिवर्तन भए वा नभए पनि पुण्य उत्तिकै हुन्छ: 'केही परिवर्तन भएको छैन' पनि मूल्यवान् अवलोकन हो।"
     },
     "siteId": "ashokan-pillar",
     "vantageId": "ashokan-pillar.v1",
@@ -29,8 +29,8 @@ export const seedQuests: SeedQuest[] = [
       "ne": "बिहान झिसमिसेमा चौतारीको फोटो खिच्नुहोस्"
     },
     "description": {
-      "en": "Available 05:30–07:00 only. Raking dawn light reveals surface deterioration that midday light hides — this is real conservation photography practice.",
-      "ne": "बिहान ५:३० देखि ७:०० सम्म मात्र उपलब्ध। झिसमिसेको छड्के प्रकाशले मध्यान्हको प्रकाशले लुकाउने सतहको क्षति देखाउँछ — यो साँचो संरक्षण-फोटोग्राफी अभ्यास हो।"
+      "en": "Available 05:30–07:00 only. Raking dawn light reveals surface deterioration that midday light hides: this is real conservation photography practice.",
+      "ne": "बिहान ५:३० देखि ७:०० सम्म मात्र उपलब्ध। झिसमिसेको छड्के प्रकाशले मध्यान्हको प्रकाशले लुकाउने सतहको क्षति देखाउँछ: यो साँचो संरक्षण-फोटोग्राफी अभ्यास हो।"
     },
     "siteId": "maya-devi-temple",
     "merit": 80,
@@ -47,8 +47,8 @@ export const seedQuests: SeedQuest[] = [
       "ne": "घडीको दिशामा परिक्रमा गर्नुहोस्"
     },
     "description": {
-      "en": "Walk clockwise around the monument. Direction matters — anticlockwise does not complete the walk, and the app will say why, briefly.",
-      "ne": "स्मारकको वरिपरि घडीको दिशामा हिँड्नुहोस्। दिशा महत्त्वपूर्ण छ — घडीविपरीत दिशाले परिक्रमा पूरा गर्दैन, र किन भन्ने कुरा एपले छोटकरीमा बताउनेछ।"
+      "en": "Walk clockwise around the monument. Direction matters: anticlockwise does not complete the walk, and the app will say why, briefly.",
+      "ne": "स्मारकको वरिपरि घडीको दिशामा हिँड्नुहोस्। दिशा महत्त्वपूर्ण छ: घडीविपरीत दिशाले परिक्रमा पूरा गर्दैन, र किन भन्ने कुरा एपले छोटकरीमा बताउनेछ।"
     },
     "siteId": "maya-devi-temple",
     "merit": 40,
@@ -66,8 +66,8 @@ export const seedQuests: SeedQuest[] = [
       "ne": "केन्द्रीय अक्ष हिँड्नुहोस्"
     },
     "description": {
-      "en": "Follow Kenzo Tange's canal axis from the Sacred Garden north to the World Peace Pagoda — about three kilometres, with checkpoints along the way.",
-      "ne": "केन्जो टाङ्गेको नहर-अक्ष पवित्र उद्यानदेखि उत्तरतर्फ विश्व शान्ति स्तूपसम्म पछ्याउनुहोस् — करिब तीन किलोमिटर, बाटोमा जाँच-बिन्दुहरूसहित।"
+      "en": "Follow Kenzo Tange's canal axis from the Sacred Garden north to the World Peace Pagoda, about three kilometres, with checkpoints along the way.",
+      "ne": "केन्जो टाङ्गेको नहर-अक्ष पवित्र उद्यानदेखि उत्तरतर्फ विश्व शान्ति स्तूपसम्म पछ्याउनुहोस्: करिब तीन किलोमिटर, बाटोमा जाँच-बिन्दुहरूसहित।"
     },
     "siteId": "maya-devi-temple",
     "merit": 60
@@ -95,8 +95,8 @@ export const seedQuests: SeedQuest[] = [
       "ne": "आफूले देखेका तीन कुरा लेख्नुहोस्"
     },
     "description": {
-      "en": "Write three things you notice that our description does not mention. No right answer, no failure state — this helps the next pilgrim see more.",
-      "ne": "हाम्रो विवरणमा उल्लेख नभएका तीन कुरा लेख्नुहोस् जुन तपाईंले देख्नुभयो। कुनै सही उत्तर छैन, कुनै असफलता छैन — यसले अर्को तीर्थयात्रीलाई थप देख्न मद्दत गर्छ।"
+      "en": "Write three things you notice that our description does not mention. No right answer, no failure state: this helps the next pilgrim see more.",
+      "ne": "हाम्रो विवरणमा उल्लेख नभएका तीन कुरा लेख्नुहोस् जुन तपाईंले देख्नुभयो। कुनै सही उत्तर छैन, कुनै असफलता छैन: यसले अर्को तीर्थयात्रीलाई थप देख्न मद्दत गर्छ।"
     },
     "siteId": null,
     "merit": 30
@@ -123,8 +123,8 @@ export const seedQuests: SeedQuest[] = [
         "पन्ध्र"
       ],
       "hint": {
-        "en": "Seek further, traveller — count the rows: five one way, three the other.",
-        "ne": "अझ खोज्नुहोस्, यात्री — पङ्क्ति गन्नुहोस्: एकातिर पाँच, अर्कातिर तीन।"
+        "en": "Seek further, traveller. Count the rows: five one way, three the other.",
+        "ne": "अझ खोज्नुहोस्, यात्री। पङ्क्ति गन्नुहोस्: एकातिर पाँच, अर्कातिर तीन।"
       }
     }
   },
@@ -151,8 +151,8 @@ export const seedQuests: SeedQuest[] = [
         "sal tree"
       ],
       "hint": {
-        "en": "Seek further, traveller — the awakening tree grows at Bodh Gaya. This one shades the birth.",
-        "ne": "अझ खोज्नुहोस्, यात्री — ज्ञानको रूख बोधगयामा छ। यो त जन्मलाई छहारी दिन्छ।"
+        "en": "Seek further, traveller. The awakening tree grows at Bodh Gaya. This one shades the birth.",
+        "ne": "अझ खोज्नुहोस्, यात्री। ज्ञानको रूख बोधगयामा छ। यो त जन्मलाई छहारी दिन्छ।"
       }
     }
   },
@@ -178,8 +178,8 @@ export const seedQuests: SeedQuest[] = [
         "aswa"
       ],
       "hint": {
-        "en": "Seek further, traveller — Xuanzang recorded it, and it was never a lion.",
-        "ne": "अझ खोज्नुहोस्, यात्री — ह्वेनसाङले यसलाई अभिलेख गरे, र यो कहिल्यै सिंह थिएन।"
+        "en": "Seek further, traveller. Xuanzang recorded it, and it was never a lion.",
+        "ne": "अझ खोज्नुहोस्, यात्री। ह्वेनसाङले यसलाई अभिलेख गरे, र यो कहिल्यै सिंह थिएन।"
       }
     }
   },
@@ -203,8 +203,8 @@ export const seedQuests: SeedQuest[] = [
         "ब्राह्मी"
       ],
       "hint": {
-        "en": "Seek further, traveller — it is the ancestor of most scripts of South Asia, and it named this place.",
-        "ne": "अझ खोज्नुहोस्, यात्री — यो दक्षिण एसियाका धेरै लिपिको पूर्वज हो, र यसैले यो स्थलको नाम राख्यो।"
+        "en": "Seek further, traveller. It is the ancestor of most scripts of South Asia, and it named this place.",
+        "ne": "अझ खोज्नुहोस्, यात्री। यो दक्षिण एसियाका धेरै लिपिको पूर्वज हो, र यसैले यो स्थलको नाम राख्यो।"
       }
     }
   }

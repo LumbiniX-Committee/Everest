@@ -63,7 +63,7 @@ const messages: Record<Exclude<SyncState, 'synced'>, (pending: number) => { text
   offline: (pending) => ({
     color: colors.textMuted,
     text: pending
-      ? `${pending} ${pending === 1 ? 'observation' : 'observations'} saved on this device — not sent yet.`
+      ? `${pending} ${pending === 1 ? 'observation' : 'observations'} saved on this device, not sent yet.`
       : 'Everything you record is saved on this device.',
   }),
   syncing: (pending) => ({

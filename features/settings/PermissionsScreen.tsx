@@ -80,7 +80,7 @@ export function PermissionsScreen() {
       })}
 
       <Text variant="caption" tone="muted">
-        Changes made in system settings are picked up when you return — the app re-checks on
+        Changes made in system settings are picked up when you return. The app re-checks on
         foreground.
       </Text>
     </Screen>

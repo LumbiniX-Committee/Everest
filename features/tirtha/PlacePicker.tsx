@@ -56,7 +56,7 @@ export function PlacePicker({
       visible={visible}
       onClose={onClose}
       title="Go to"
-      subtitle={canTravel ? 'Takes you there' : 'Moves the view — your position is your own'}
+      subtitle={canTravel ? 'Takes you there' : 'Moves the view: your position is your own'}
       scroll
     >
       <View style={styles.list}>

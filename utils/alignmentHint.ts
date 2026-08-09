@@ -39,7 +39,7 @@ export function alignmentHint(alignment: AlignmentState): string {
     const direction = bearingDeltaDeg > 0 ? 'right' : 'left';
     const amount = Math.abs(Math.round(bearingDeltaDeg));
     if (amount > 30) {
-      return `Turn ${direction} — about ${amount}°.`;
+      return `Turn ${direction}, about ${amount}°.`;
     }
     return `Rotate ${direction} ${amount}°.`;
   }
