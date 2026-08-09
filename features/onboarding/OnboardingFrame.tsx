@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import type { ReactNode } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 
 import { Screen, Text } from '@/components/ui';
@@ -21,11 +21,25 @@ export function OnboardingFrame({
   children,
   footer,
   showProgress = true,
+  scrollBody = true,
 }: {
   stepKey: string;
   children: ReactNode;
   footer: ReactNode;
   showProgress?: boolean;
+  /**
+   * Whether the body scrolls when it is taller than the space it is given.
+   *
+   * On by default. The body used to be a fixed `flex: 1` view, so a step with
+   * more content than fits simply ran past its own bounds: the permissions step
+   * carries four cards, and the fourth sat below the frame where Android
+   * delivers no touches at all. The card was drawn but could never be tapped.
+   *
+   * Short steps are unchanged, because the content container still grows to
+   * fill and centres itself. Turn this off only for a step that owns a vertical
+   * gesture, which a scroll view would otherwise take for itself.
+   */
+  scrollBody?: boolean;
 }) {
   const router = useRouter();
   const index = stepIndex(stepKey);
@@ -63,7 +77,17 @@ export function OnboardingFrame({
           screen composes itself rather than appearing all at once. Short
           enough not to be a wait: 380ms, with a 90ms stagger. */}
       <Animated.View entering={FadeInDown.duration(380).damping(18)} style={styles.body}>
-        {children}
+        {scrollBody ? (
+          <ScrollView
+            style={styles.bodyScroll}
+            contentContainerStyle={styles.bodyContent}
+            keyboardShouldPersistTaps="handled"
+          >
+            {children}
+          </ScrollView>
+        ) : (
+          <View style={styles.bodyStatic}>{children}</View>
+        )}
       </Animated.View>
 
       {/* Back sits beside the action rather than up in the corner. It is the
@@ -128,7 +152,13 @@ const styles = StyleSheet.create({
   // Behind you, but still yours: filled, and quieter than the one you are on.
   markDone: { backgroundColor: colors.sandstoneDeep, opacity: 0.4 },
 
-  body: { flex: 1, justifyContent: 'center', paddingVertical: spacing.xxl },
+  body: { flex: 1 },
+  bodyScroll: { flex: 1 },
+  // `flexGrow` rather than `flex`, so a short step still centres in the space it
+  // has while a tall one is allowed to exceed it and scroll instead of spilling
+  // past the frame. Both branches keep the padding the body always had.
+  bodyContent: { flexGrow: 1, justifyContent: 'center', paddingVertical: spacing.xxl },
+  bodyStatic: { flex: 1, justifyContent: 'center', paddingVertical: spacing.xxl },
   footerRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
