@@ -35,6 +35,15 @@ export type QuestSheetProps = {
   /** Takes the player to the place a locked quest belongs to. */
   onGoToSite: (siteId: string) => void;
   /**
+   * Opens the quest's own screen.
+   *
+   * The sheet is the glance — what is here, how far through, tick it off. The
+   * quest screen is the depth: the intention, the evidence a task wants, the
+   * photographs already filed against it. They are two views of one quest, not
+   * two quest systems, and this is the seam that keeps them one.
+   */
+  onOpenQuest: (questId: string) => void;
+  /**
    * Hands a task that wants evidence over to Sākṣī, which is where evidence is
    * captured. Quest and Sākṣī stay separate features; this is the seam between
    * them, not a merge.
@@ -60,6 +69,7 @@ export function QuestSheet({
   onCompleteTask,
   onUndoTask,
   onGoToSite,
+  onOpenQuest,
   onWitness,
 }: QuestSheetProps) {
   const site = atSiteId ? findSite(atSiteId) : undefined;
@@ -89,6 +99,7 @@ export function QuestSheet({
                 onCompleteTask={onCompleteTask}
                 onUndoTask={onUndoTask}
                 onGoToSite={onGoToSite}
+                onOpenQuest={onOpenQuest}
                 onWitness={onWitness}
               />
             ))}
@@ -116,6 +127,7 @@ export function QuestSheet({
                 onCompleteTask={onCompleteTask}
                 onUndoTask={onUndoTask}
                 onGoToSite={onGoToSite}
+                onOpenQuest={onOpenQuest}
                 onWitness={onWitness}
               />
             ))}
@@ -132,6 +144,7 @@ function QuestRow({
   onCompleteTask,
   onUndoTask,
   onGoToSite,
+  onOpenQuest,
   onWitness,
 }: {
   quest: QuestWithProgress;
@@ -139,6 +152,7 @@ function QuestRow({
   onCompleteTask: (questId: string, taskId: string) => void;
   onUndoTask: (questId: string, taskId: string) => void;
   onGoToSite: (siteId: string) => void;
+  onOpenQuest: (questId: string) => void;
   onWitness: (siteId: string) => void;
 }) {
   const done = questDone(quest);
@@ -176,18 +190,29 @@ function QuestRow({
 
   return (
     <View style={[styles.card, done && styles.cardDone]}>
-      {homeSiteId ? <SiteVisual siteId={homeSiteId} height={120} /> : null}
-      <View style={styles.cardHead}>
-        <Text variant="body" style={styles.lockMark}>
-          {done ? '🏆' : '🎯'}
-        </Text>
-        <View style={styles.cardTitle}>
-          <Text variant="heading">{quest.title}</Text>
-          <Text variant="caption" tone={done ? 'sandstone' : 'muted'}>
-            {tasksDone(quest)} / {quest.tasks.length} objectives
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`Open ${quest.title}`}
+        accessibilityHint="Shows the full quest, its intention and any evidence filed"
+        onPress={() => onOpenQuest(quest.id)}
+        style={({ pressed }) => [styles.cardOpen, pressed && styles.cardPressed]}
+      >
+        {homeSiteId ? <SiteVisual siteId={homeSiteId} height={120} /> : null}
+        <View style={styles.cardHead}>
+          <Text variant="body" style={styles.lockMark}>
+            {done ? '🏆' : '🎯'}
+          </Text>
+          <View style={styles.cardTitle}>
+            <Text variant="heading">{quest.title}</Text>
+            <Text variant="caption" tone={done ? 'sandstone' : 'muted'}>
+              {tasksDone(quest)} / {quest.tasks.length} objectives
+            </Text>
+          </View>
+          <Text variant="body" tone="muted">
+            ›
           </Text>
         </View>
-      </View>
+      </Pressable>
 
       <View style={styles.tasks}>
         {quest.tasks.map((task) => {
@@ -280,6 +305,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
   },
   cardDone: { borderColor: colors.resolved, backgroundColor: colors.surfaceSecondary },
+  cardOpen: { gap: spacing.sm },
+  cardPressed: { opacity: 0.75 },
   cardLocked: { backgroundColor: colors.surfaceSecondary, opacity: 0.9 },
   cardHead: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm },
   cardTitle: { flex: 1, gap: 2 },
