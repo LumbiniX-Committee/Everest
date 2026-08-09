@@ -33,7 +33,9 @@ export function ThenNowScreen({ siteId }: { siteId: string }) {
         <EmptyState
           title="No such site"
           body="This site is not in the catalogue."
-          actionLabel="Back to Tīrtha"
+          // Just "Back": this screen is now reached from Sākṣī as well as
+          // Tīrtha, and naming the wrong surface is worse than naming none.
+          actionLabel="Back"
           onAction={() => router.back()}
         />
       </Screen>

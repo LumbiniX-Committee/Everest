@@ -6,7 +6,7 @@ import { Button, Card, Chip, Screen, Text } from '@/components/ui';
 import { EmptyState, ScreenHeader, SettingsButton } from '@/components/common';
 import { VantageListItem } from '@/components/site';
 import { PracticeSummaryCard } from '@/components/practice';
-import { demoVantages, findSite } from '@/data';
+import { demoSites, demoVantages, findSite, historicalImagesForSite } from '@/data';
 import { useCurrentPosition } from '@/hooks';
 import { database } from '@/services';
 import { usePractice } from '@/store';
@@ -14,7 +14,18 @@ import { colors, radii, spacing } from '@/theme';
 import { distanceMeters, formatDistance, formatTimestamp } from '@/utils';
 import type { Observation, ObservationAssessment } from '@/types';
 
-type TabMode = 'vantages' | 'records' | 'register';
+type TabMode = 'vantages' | 'thennow' | 'records';
+
+/**
+ * Sites with a comparison worth opening.
+ *
+ * Computed rather than listed, so a site gains a Then / Now the moment a
+ * matched plate is added and never appears with an empty one. Sites whose only
+ * archive image cannot honestly be wiped against a photograph — a plan drawn
+ * from directly above — are absent by the same rule, because `historicalImages`
+ * is what the comparison itself reads.
+ */
+const COMPARABLE_SITES = demoSites.filter((site) => historicalImagesForSite(site.id).length > 0);
 
 /**
  * Sākṣī — the witnessing surface.
@@ -106,20 +117,28 @@ export function SakshiScreen() {
             Vantages ({vantages.length})
           </Text>
         </Pressable>
+        {/*
+          Then / Now sits in the middle because it is the one thing here that
+          needs no equipment, no fix and no permission — it is what someone can
+          look at the moment they open the surface. It had no entry point in
+          Sākṣī at all before this: the comparison lived only behind Tīrtha → a
+          site → then-now, three taps into a different surface, which is why the
+          product's headline feature was the hardest thing here to find.
+        */}
+        <Pressable
+          style={[styles.tabItem, activeTab === 'thennow' && styles.tabItemActive]}
+          onPress={() => setActiveTab('thennow')}
+        >
+          <Text variant="label" tone={activeTab === 'thennow' ? 'sandstone' : 'muted'} uppercase>
+            Then / Now
+          </Text>
+        </Pressable>
         <Pressable
           style={[styles.tabItem, activeTab === 'records' && styles.tabItemActive]}
           onPress={() => setActiveTab('records')}
         >
           <Text variant="label" tone={activeTab === 'records' ? 'sandstone' : 'muted'} uppercase>
             Records ({observations.length})
-          </Text>
-        </Pressable>
-        <Pressable
-          style={[styles.tabItem, activeTab === 'register' && styles.tabItemActive]}
-          onPress={() => setActiveTab('register')}
-        >
-          <Text variant="label" tone={activeTab === 'register' ? 'sandstone' : 'muted'} uppercase>
-            Practice
           </Text>
         </Pressable>
       </View>
@@ -145,7 +164,48 @@ export function SakshiScreen() {
         </View>
       ) : null}
 
-      {/* Tab Content 2: Your Records */}
+      {/* Tab Content 2: Then / Now */}
+      {activeTab === 'thennow' ? (
+        <View style={styles.section}>
+          {COMPARABLE_SITES.length === 0 ? (
+            <EmptyState
+              title="No comparisons yet"
+              body="A comparison needs a dated archive photograph matched to a viewpoint. None are bundled yet."
+            />
+          ) : (
+            <View style={styles.list}>
+              {COMPARABLE_SITES.map((site) => {
+                const images = historicalImagesForSite(site.id);
+                const oldest = images[0];
+                return (
+                  <Card
+                    key={site.id}
+                    onPress={() =>
+                      router.push({
+                        pathname: '/(main)/sakshi/then-now/[siteId]',
+                        params: { siteId: site.id },
+                      })
+                    }
+                    accessibilityLabel={`Compare ${site.name} across time`}
+                  >
+                    <Text variant="heading">{site.name}</Text>
+                    <Text variant="mono" tone="sandstone">
+                      {oldest.date} → today
+                    </Text>
+                    {/* The count is the honest measure of how deep the record
+                        goes — one plate is a pair, three is a series. */}
+                    <Text variant="caption" tone="muted">
+                      {images.length === 1 ? '1 archive image' : `${images.length} archive images`}
+                    </Text>
+                  </Card>
+                );
+              })}
+            </View>
+          )}
+        </View>
+      ) : null}
+
+      {/* Tab Content 3: Your Records */}
       {activeTab === 'records' ? (
         <View style={styles.section}>
           {observations.length === 0 ? (
@@ -169,12 +229,14 @@ export function SakshiScreen() {
               ))}
             </View>
           )}
-        </View>
-      ) : null}
 
-      {/* Tab Content 3: Practice & Register */}
-      {activeTab === 'register' ? (
-        <View style={styles.section}>
+          {/*
+            Practice and the register moved here from a third tab of their own.
+            They belong beside the records they are a summary *of*, and a tab
+            holding one card and two links was a tab most people never opened —
+            which is how the site register came to be the least reachable thing
+            in a surface built around going to sites.
+          */}
           <PracticeSummaryCard summary={summary} />
           <Button
             label="Open complete site register"
