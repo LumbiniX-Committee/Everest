@@ -83,10 +83,11 @@ export function DhammaScreen() {
       <View style={styles.reflectionEntry}>
         <Text variant="heading">Reflection companion</Text>
         <Text variant="body" tone="secondary">
-          Four questions from the Four Noble Truths. One at a time, in your own words.
+          Say what is on your mind. It turns that into a few questions — one at a time, in your own
+          words — and ends with a short reflection you can check against the canon.
         </Text>
         <Button
-          label="Begin a four-question reflection"
+          label="Begin a reflection"
           variant="secondary"
           onPress={() => router.push('/(main)/dhamma/reflect' as never)}
         />

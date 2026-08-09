@@ -10,7 +10,7 @@ import { findDhammaEntry, findSource } from '@/data';
 import { dhamma } from '@/services';
 import type { DhammaLanguage } from '@/services/dhamma';
 import { colors, radii, spacing } from '@/theme';
-import { isGrounded, type DhammaAnswer, type Source } from '@/types';
+import { isGrounded, type Citation as CitationRef, type DhammaAnswer, type Source } from '@/types';
 
 /**
  * A question and what the collection can say about it.
@@ -147,9 +147,9 @@ export function AnswerScreen({ questionId, query }: { questionId?: string; query
 
           <View style={styles.block}>
             <Text variant="label" tone="muted" uppercase>
-              {answer.citations.length === 1 ? 'Source' : 'Sources'}
+              {uniqueCitations(answer.citations).length === 1 ? 'Source' : 'Sources'}
             </Text>
-            {answer.citations.map((citation, index) => {
+            {uniqueCitations(answer.citations).map((citation, index) => {
               const source = findSource(citation.sourceId);
               if (!source) return null;
               return (
@@ -222,12 +222,12 @@ export function AnswerScreen({ questionId, query }: { questionId?: string; query
                 <Text variant="label" tone="muted" uppercase>
                   Related, but not an answer
                 </Text>
-                {answer.related.map((citation, index) => {
+                {uniqueCitations(answer.related).map((citation, index) => {
                   const source = findSource(citation.sourceId);
                   if (!source) return null;
                   return (
                     <Citation
-                      key={`${citation.sourceId}-${index}`}
+                      key={`${citation.sourceId}-${citation.locator ?? index}`}
                       source={source}
                       citation={citation}
                       onPress={() => setOpenSource(source)}
@@ -267,6 +267,26 @@ export function AnswerScreen({ questionId, query }: { questionId?: string; query
       <SourceDetailSheet source={openSource} onClose={() => setOpenSource(null)} />
     </Screen>
   );
+}
+
+/**
+ * The distinct sources behind an answer, in the order first cited.
+ *
+ * A citation's identity is its source plus its locator, so the same passage
+ * referred to twice is one source, not two. `core/dhamma` now deduplicates
+ * before this point; this stays because the render must not be the thing that
+ * breaks when it does not — a repeated citation used to raise React's duplicate
+ * key warning here, and a numbered "Sources" list that counts one passage twice
+ * overstates the evidence to exactly the reader who is checking it.
+ */
+function uniqueCitations(citations: CitationRef[]): CitationRef[] {
+  const seen = new Set<string>();
+  return citations.filter((citation) => {
+    const identity = `${citation.sourceId}::${citation.locator ?? ''}`;
+    if (seen.has(identity)) return false;
+    seen.add(identity);
+    return true;
+  });
 }
 
 function Head({ question }: { question: string }) {

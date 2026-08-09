@@ -17,6 +17,7 @@
  */
 
 import { createServer } from 'node:http';
+import { networkInterfaces } from 'node:os';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -28,7 +29,7 @@ const PORT = Number(process.env.PORT) || 8000;
 
 // --- Dhamma Engine (lazy-loaded from core — TypeScript but Node strips types) -
 let _dhammaReady = false;
-let _askDhamma, _askDhammaAsync, _processReflection, _processReflectionAsync;
+let _askDhamma, _askDhammaAsync, _processReflection, _processReflectionAsync, _generateReflectionQuestions;
 async function loadDhamma() {
   if (_dhammaReady) return;
   try {
@@ -37,6 +38,7 @@ async function loadDhamma() {
     _askDhammaAsync = mod.askDhammaAsync || mod.askDhamma;
     _processReflection = mod.processReflection;
     _processReflectionAsync = mod.processReflectionAsync || mod.processReflection;
+    _generateReflectionQuestions = mod.generateReflectionQuestions;
     _dhammaReady = true;
     console.log('[dhamma] engine loaded ✓');
   } catch (e) {
@@ -432,6 +434,36 @@ on('POST', '/dhamma/reflect', async (_req, res, _p, _q, body) => {
   });
 });
 
+// POST /dhamma/reflect/questions → 3–4 questions tailored to what was shared
+on('POST', '/dhamma/reflect/questions', async (_req, res, _p, _q, body) => {
+  if (_generateReflectionQuestions) {
+    try {
+      const result = await _generateReflectionQuestions({
+        user_input: body.user_input ?? '',
+        site_id: body.site_id,
+        language: body.language ?? 'en',
+      });
+      return json(res, 200, { ...result, translationUsed: false });
+    } catch (e) {
+      console.error('[dhamma/reflect/questions] error:', e);
+    }
+  }
+  // Stub fallback: the deterministic four-question scaffold.
+  json(res, 200, {
+    questions: [
+      'What are you carrying today that feels heavy?',
+      'Where does that heaviness seem to come from?',
+      'Can you picture setting even a little of it down?',
+      'What is one small step you could take next?',
+    ],
+    distress_override: false,
+    disclaimer: 'This is a reflective inquiry tool. It is not counselling, therapy, or mental health treatment.',
+    language: body.language ?? 'en',
+    tier: 'fallback',
+    _note: 'engine unavailable — stub response',
+  });
+});
+
 // POST /custodian/acknowledgements → custodian acknowledges a report
 on('POST', '/custodian/acknowledgements', (_req, res, _p, _q, body) => {
   const report = state.reports.find((r) => r.id === body.report_id);
@@ -579,7 +611,73 @@ const server = createServer(async (req, res) => {
   }
 });
 
+/**
+ * The address a phone can actually dial.
+ *
+ * The banner used to print the bind address, `0.0.0.0`, which is not a thing
+ * anyone can type into a device. The LAN address is DHCP-assigned and changes
+ * whenever the machine reconnects — it moved three times in a single afternoon
+ * of testing — and every time it moves, `EXPO_PUBLIC_API_URL` silently points
+ * nowhere. Because the app degrades gracefully at every layer, a wrong address
+ * produces no error at all: the Dhamma surface just quietly stops using the
+ * provider and answers from the deterministic engine instead.
+ *
+ * Printing the current address, and comparing it against what the app is
+ * configured with, turns that silent failure into the first line of the log.
+ */
+function lanAddress() {
+  // Scored rather than first-match. A development machine typically has more
+  // non-internal IPv4 addresses than real networks: WSL, Hyper-V, Docker and
+  // VirtualBox each add one, and several enumerate *ahead* of the Wi-Fi
+  // adapter. Matching on interface name alone is not enough either — the
+  // VirtualBox host-only adapter is called "Ethernet 2" here and looks entirely
+  // ordinary, while being unreachable from any phone.
+  const candidates = [];
+
+  for (const [name, addresses] of Object.entries(networkInterfaces())) {
+    for (const address of addresses ?? []) {
+      if (address.family !== 'IPv4' || address.internal) continue;
+      // Self-assigned: the interface never got a lease and is not on a network.
+      if (address.address.startsWith('169.254.')) continue;
+
+      let score = 1;
+      if (/wi-?fi|wireless|wlan/i.test(name)) score += 4;
+      if (/vEthernet|WSL|Hyper-V|Default Switch|VirtualBox|Docker|VMware|Loopback/i.test(name)) score -= 5;
+      // Default host-only / container subnets. Real routers hand out
+      // 192.168.0.x and 192.168.1.x far more often than 192.168.56.x, which is
+      // VirtualBox's documented default.
+      if (address.address.startsWith('192.168.56.')) score -= 5;
+      if (/^172\.(1[6-9]|2\d|3[01])\./.test(address.address)) score -= 5;
+
+      candidates.push({ address: address.address, score });
+    }
+  }
+
+  candidates.sort((a, b) => b.score - a.score);
+  return candidates.length > 0 && candidates[0].score > 0 ? candidates[0].address : null;
+}
+
 server.listen(PORT, '0.0.0.0', () => {
+  const lan = lanAddress();
   console.log(`saksi mock API on http://0.0.0.0:${PORT}  (${sites.length} sites, ${vantages.length} vantages, ${quests.length} quests)`);
+  if (lan) console.log(`  phone → http://${lan}:${PORT}   (same wifi as this machine)`);
+
+  const configured = (process.env.EXPO_PUBLIC_API_URL ?? '').trim();
+  if (lan && configured && !configured.includes(lan)) {
+    console.warn(`  WARN  EXPO_PUBLIC_API_URL is ${configured}, but this machine is ${lan}.`);
+    console.warn(`        The app cannot reach the API, and will fall back silently.`);
+    console.warn(`        Set EXPO_PUBLIC_API_URL=http://${lan}:${PORT} in .env.local, then restart Expo with -c.`);
+  } else if (!configured) {
+    console.warn('  WARN  EXPO_PUBLIC_API_URL is unset — the app will use its on-device engine only.');
+  }
+
+  // The provider credential is deliberately server-side: it has no
+  // EXPO_PUBLIC_ prefix, so Expo never inlines it into the bundle and the app
+  // cannot call the provider directly. That makes this process the *only* way
+  // synthesis happens, which is worth stating at boot rather than discovering.
+  if (!process.env.OLLAMA_API_KEY) {
+    console.warn('  WARN  OLLAMA_API_KEY unset — answers stay deterministic (grounded and cited, not synthesised).');
+    console.warn('        Start with `npm run api`, which loads .env.local.');
+  }
   console.log('debug: append ?delay=1500 or ?fail=503 to any request');
 });
