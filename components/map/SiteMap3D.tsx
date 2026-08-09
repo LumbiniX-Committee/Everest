@@ -1,12 +1,13 @@
 import Constants, { ExecutionEnvironment } from 'expo-constants';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 
 import { MAP_HOME, demoSites, monumentGeoJSON, precinctGeoJSON, siteGeoJSON, waterGeoJSON } from '@/data';
 import { colors, radii, sakshiMapStyleJSON } from '@/theme';
 
 import { MapWebView } from './MapWebView';
 import { SitePlan } from './SitePlan';
+import { MONK_STILL } from '@/components/monk';
 
 export type SiteMap3DProps = {
   /** Height of the map block. The map is a panel on a scrolling page. */
@@ -188,7 +189,13 @@ export function SiteMap3D({ height = 320, onSelectSite }: SiteMap3DProps) {
           />
         </GeoJSONSource>
 
-        <UserLocation />
+        <UserLocation>
+          <Image 
+            source={MONK_STILL} 
+            style={{ width: 32, height: 32 }}
+            resizeMode="contain"
+          />
+        </UserLocation>
       </Map>
     </View>
   );

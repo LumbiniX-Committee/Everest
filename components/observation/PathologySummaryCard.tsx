@@ -86,7 +86,7 @@ export function PathologySummaryCard({ result, onApplyAiSuggestion }: PathologyS
           </View>
 
           <Text variant="caption" tone="muted">
-            Candidates for you to verify — not a conservator's assessment.
+            Candidates for you to verify — not a conservator’s assessment.
             {model?.mAP50 != null
               ? ` Model accuracy on its test set (mAP@50): ${model.mAP50.toFixed(2)}.`
               : ' This model has not reported its accuracy.'}
