@@ -545,6 +545,152 @@ feature, and taking the whole app down at launch over it would be a worse outcom
 inflicted on users rather than on whoever introduced the bug. It reports loudly in
 `__DEV__` and quietly in production.
 
+### 8.1 Every piece of data, and where it came from
+
+This is the full provenance of the product, one source at a time. The rule
+across all of it is the charter rule: a source is a real, checkable publication
+or artefact, nothing invented, and where a reading is contested the record says
+so.
+
+| Data | What it is | Source | Licence |
+|---|---|---|---|
+| Dhamma corpus | Canonical Buddhist passages, segment aligned | SuttaCentral `bilara-data` | CC0-1.0 (public domain) |
+| Site descriptions and facts | 12 heritage sites | Authored from the cited source registry below | Own content |
+| Site coordinates | 7 surveyed, 5 documentary | OpenStreetMap (7), documents (5, flagged) | ODbL (OSM) |
+| Historical plates | 10 plates: photos, drawings, reconstructions | Mukherji 1901 (ASI), Wikimedia, own reconstructions | Public Domain / CC BY-SA 4.0 |
+| Crack detector model | YOLOv8n weights | Trained by us on a public dataset | Own weights |
+| Crack training images | 4,029 labelled crack images | Public `crack-seg` set via Ultralytics | Public dataset |
+| Offline language model | Qwen3 0.6B Q4_K_M GGUF | Hugging Face (bartowski) | Apache-2.0 |
+| Map tiles | Vector basemap | OpenFreeMap (OpenStreetMap data) | Open, no key |
+| Map fonts (glyphs) | Label rendering | OpenFreeMap font stacks | Open |
+| UI fonts | Anek Devanagari, IBM Plex Sans, IBM Plex Mono | Google Fonts | OFL |
+| Crisis helplines | 3 verified Nepali numbers | Public helpline directories | Public |
+
+Everything below expands one row.
+
+### 8.2 The Dhamma corpus and its citations
+
+The knowledge engine draws on a **segment aligned** slice of the Pali Canon from
+**SuttaCentral's `bilara-data`**, fetched by `tools/fetch-bilara.mjs` from
+`https://raw.githubusercontent.com/suttacentral/bilara-data/published` and frozen
+into `core/dhamma/corpus.generated.ts`. Every passage carries its canonical
+segment identifier (for example `dn16:6.7`), its Pali root, its English
+translation, the translator, and the licence, so a reader can open the exact
+segment on SuttaCentral and check it.
+
+**Translations are by Bhikkhu Sujato, released CC0-1.0 (public domain).** That
+licence is why we can ship the text inside the app and quote it in an answer
+without restriction, and citing the translator is courtesy, not obligation.
+
+The corpus is deliberately narrow. It is built on these texts:
+
+| Sutta | Reference | What it anchors |
+|---|---|---|
+| Mahāparinibbāna Sutta | DN 16 | The Buddha's last days and last words; appamāda |
+| Dhammacakkappavattana Sutta | SN 56.11 | The four noble truths and the eightfold path |
+| Kālāma Sutta | AN 3.65 | Testing claims rather than accepting them on authority |
+| (a discourse from) MN 63 | MN 63 | The unanswered questions; what the teaching is for |
+| Dhammapada verses | Dhp 1 to 20 | The paired verses on mind and intention |
+| AN 5.177 | AN 5.177 | Right livelihood, the trades to avoid |
+
+Nepali questions are handled against this same English and Pali corpus through
+query translation, not through a separate Nepali text set.
+
+### 8.3 The source registry: heritage and Dhamma share one table
+
+`data/demo/sources.ts` is the single citation registry. Heritage claims and
+Dhamma answers both cite into it by id, so a reader learns one way of judging
+evidence and uses it on both surfaces. Each record carries a `kind`, an
+attribution, a date where known, a reference, and a `caveat` where the reading is
+contested. The ten sources:
+
+| Id | Title | Attribution | Kind |
+|---|---|---|---|
+| `rummindei-inscription` | Rummindei pillar inscription | Emperor Ashoka; tr. E. Hultzsch, 249 BCE | Inscription |
+| `dn-16` | Mahāparinibbāna Sutta | Dīgha Nikāya 16, Pali Canon | Sutta |
+| `sn-11-3` | Dhajagga Sutta | Saṃyutta Nikāya 11.3, Pali Canon | Sutta |
+| `monier-williams` | A Sanskrit-English Dictionary | Monier Monier-Williams, 1899 | Commentary |
+| `unesco-1997` | Lumbini World Heritage inscription | UNESCO World Heritage Centre, 1997 | Record |
+| `ldt-excavation` | Maya Devi Temple excavation records | Lumbini Development Trust | Archaeological |
+| `fuhrer-1896` | Rediscovery of the Ashokan pillar | Alois Anton Führer, 1896 | Archaeological |
+| `ldt-conservation` | Sacred Garden conservation assessments | Lumbini Development Trust | Survey |
+| `mukherji-1901` | Antiquities in the Tarai, Nepal | P. C. Mukherji, ASI Imperial Series XXVI/1 | Archaeological |
+
+Two `caveat` fields are worth quoting, because they are the honesty rule working
+on real data:
+
+- **Führer (1896)** "was later discredited for fabrications elsewhere in his
+  work. The pillar and its inscription have been independently confirmed many
+  times since; his wider reporting has not." We cite him and warn about him in the
+  same breath.
+- **The two Lumbini Development Trust records** are marked as demonstration
+  references: "Specific report titles, dates and plate numbers must be confirmed
+  with the Trust before this ships." We do not present a placeholder as a verified
+  citation.
+
+The Mukherji 1901 report is public domain and available on the Internet Archive
+(`archive.org/details/bub_gb_5iYXAAAAYAAJ`); it is the primary photographic record
+of the site at its rediscovery.
+
+### 8.4 The crack detector training data
+
+The YOLOv8n crack model was trained on the **public `crack-seg` dataset, 4,029
+labelled images**, downloaded automatically by Ultralytics during training. We
+did not collect a dataset. The training run, its settings, and the honest
+resulting accuracy (mAP50 0.8167) are documented in full in section 16 and are
+reproducible from `docs/train-crack-seg.ipynb`.
+
+The honesty note here matters: most public crack data is **single class**, so we
+ship a good crack detector and report its accuracy unrounded rather than a bad
+five class one. The model is not yet trained on Lumbini brick and sandstone
+specifically; that is a Phase 1 roadmap item.
+
+### 8.5 Historical plates: the then and now imagery
+
+`seed/plates.json` holds 10 plates, and every one declares an evidence tier and a
+licence so a reconstruction is never read as a photograph:
+
+| Evidence tier | Count | Meaning |
+|---|---|---|
+| `historical_photograph` | 3 | A real historical photo. Nothing generated. |
+| `survey_drawing` | 3 | A measured plan or facsimile from a survey. |
+| `conditioned_reconstruction` | 4 | Image work, conditioned on a cited source, clearly labelled. |
+
+The photographs and survey drawings come from **P. C. Mukherji's 1899 survey**
+(published 1901, public domain), with some Wikimedia Commons material. The
+reconstructions are our own, licensed CC BY-SA 4.0 and **labelled as
+reconstructions in the UI**, never as photographs. Where a plate's source is not
+yet resolved, its licence field literally says `pending`, so an unverified image
+cannot silently ship as verified.
+
+### 8.6 Everything else that is data
+
+- **Offline language model:** Qwen3 0.6B Q4_K_M, a public **Apache-2.0**
+  quantisation hosted on Hugging Face (bartowski). Downloaded into app-private
+  storage, verified by byte count and MD5, never bundled. Details in section 18.
+- **Map tiles:** **OpenFreeMap** (`tiles.openfreemap.org`), OpenStreetMap data on
+  the OpenMapTiles schema, no API key and no per-view billing, which is why it
+  suits a public trust. The map style itself (`theme/mapStyle.ts`) is ours.
+- **Fonts:** Anek Devanagari (for Nepali), IBM Plex Sans and IBM Plex Mono, all
+  from Google Fonts under the Open Font License. Devanagari is a first class
+  citizen, not a fallback glyph.
+- **Crisis helplines:** three verified Nepali numbers in
+  `core/dhamma/reflection.ts` (`VERIFIED_NEPALI_HELPLINES`): the National Mental
+  Health Helpline (TUTH), the Patan Hospital crisis line, and Nepal Police
+  emergency services. These are surfaced by the distress override and are the one
+  place the app gives a real-world number, so they are kept verified and few.
+- **Timeline, quests, narration, needs:** authored seed content in `seed/`, each
+  carrying its own `sources` array where it makes a historical claim, compiled and
+  validated like everything else.
+
+### 8.7 What we deliberately do not collect
+
+Stated here because a data section that only lists what you gather is half the
+picture. Sākṣī does not collect or sell visitor location traces, does not send
+photographs off the device except through the user's own synced observations, and
+holds the observation dataset for the heritage authority rather than for us (see
+sections 13 and 23). The model provider key never ships in the app (section 14.2).
+
 ---
 
 ## 9. Databases: local and cloud
