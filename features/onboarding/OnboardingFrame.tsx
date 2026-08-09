@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import type { ReactNode } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 
 import { Screen, Text } from '@/components/ui';
@@ -62,9 +62,24 @@ export function OnboardingFrame({
       {/* The body rises as it fades, and the footer follows a beat later, so a
           screen composes itself rather than appearing all at once. Short
           enough not to be a wait: 380ms, with a 90ms stagger. */}
-      <Animated.View entering={FadeInDown.duration(380).damping(18)} style={styles.body}>
-        {children}
-      </Animated.View>
+      {/* Scrolls, because one screen outgrew the frame. A centred `flex: 1`
+          view has nowhere to put content taller than itself, so the permissions
+          step — an intro plus four cards — overflowed in both directions at
+          once: the heading rode up under the status bar while the last card sat
+          beneath the footer, with "Enter Lumbini" printed over it.
+
+          `flexGrow: 1` with `justifyContent: 'center'` is what keeps the short
+          screens unchanged: while the content is shorter than the frame it is
+          still centred, and only once it is taller does the container grow and
+          scroll. Centring by `flex: 1` instead would strand the top of a long
+          screen out of reach. */}
+      <ScrollView
+        style={styles.body}
+        contentContainerStyle={styles.bodyContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <Animated.View entering={FadeInDown.duration(380).damping(18)}>{children}</Animated.View>
+      </ScrollView>
 
       {/* Back sits beside the action rather than up in the corner. It is the
           one control someone reaches for while already holding the phone to
@@ -128,7 +143,8 @@ const styles = StyleSheet.create({
   // Behind you, but still yours: filled, and quieter than the one you are on.
   markDone: { backgroundColor: colors.sandstoneDeep, opacity: 0.4 },
 
-  body: { flex: 1, justifyContent: 'center', paddingVertical: spacing.xxl },
+  body: { flex: 1 },
+  bodyContent: { flexGrow: 1, justifyContent: 'center', paddingVertical: spacing.xxl },
   footerRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
