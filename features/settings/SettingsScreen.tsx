@@ -54,6 +54,11 @@ export function SettingsScreen() {
 
       <SettingsSection title="Data">
         <SettingsRow
+          label="Offline AI"
+          hint="Download or remove the local Dhamma model"
+          onPress={() => router.push('/(main)/settings/offline-ai')}
+        />
+        <SettingsRow
           label="Sync"
           hint="What is waiting to upload, and when it may"
           onPress={() => router.push('/(main)/settings/sync')}

@@ -11,6 +11,7 @@ export * as dhamma from './dhamma';
 export * as geofencing from './geofencing';
 export * as notifications from './notifications';
 export * as voice from './voice';
+export * as offlineModel from './offlineModel';
 export * as arrival from './arrival';
 export * as integrity from './integrity';
 export * as questReview from './questReview';

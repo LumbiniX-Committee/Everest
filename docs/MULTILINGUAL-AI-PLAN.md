@@ -56,20 +56,23 @@ Offline is a graceful capability ladder, not a second source of truth:
 
 1. Local canonical corpus and deterministic retrieval always work.
 2. Curated English/Nepali answers cover the demo and common site questions.
-3. Downloadable on-device translation models provide English/Nepali switching.
-4. An optional small GGUF model rewrites short grounded passages; it does not
+3. The optional Qwen3 GGUF model provides short on-device English/Nepali
+   synthesis after it has been downloaded by the user.
+4. If the model is missing, the deterministic corpus remains the source of
+   truth; the local model may rewrite only retrieved passages and may not
    invent Dhamma facts or citations.
 
-The first GGUF benchmark is `Llama-3.2-1B-Instruct-Q4_K_M`. It is a technical
-baseline, not a Nepali-quality guarantee. A multilingual small model such as
-Qwen3-0.6B Q4 should be benchmarked beside it because Nepali is a priority.
-The model is loaded by a native `llama.cpp` bridge in a development/production
-build, never in Expo Go. The app uses a short context and unloads the model
-after generation when memory is constrained.
+The selected first model is `Qwen3-0.6B-Q4_K_M.gguf` (about 484 MB). It is a
+small multilingual baseline, not a Nepali-quality guarantee. It is loaded by
+the `llama.rn` native `llama.cpp` bridge in a development/production build,
+never in Expo Go. The app uses a short context and releases the model after
+generation when memory is constrained.
 
-Model delivery is optional and versioned. It must be downloaded over Wi-Fi
-with a checksum, stored in app-private storage, and deletable from Settings.
-The base APK should not force every user to download a large model.
+Model delivery is optional and versioned. The app downloads over Wi-Fi to
+app-private storage, validates the expected payload size, and exposes deletion
+through the model service. The base APK does not force every user to download
+a large model. The developer artifact and its SHA-256 are recorded in
+`models/README.md`.
 
 ## Voice
 
