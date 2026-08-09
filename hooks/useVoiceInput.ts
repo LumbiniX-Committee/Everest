@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Constants from 'expo-constants';
+import { Platform } from 'react-native';
 
 import type { VoiceLanguage } from '@/services/voice';
 
@@ -71,7 +72,9 @@ export function useVoiceInput() {
         }),
         recognition.addListener('error', (event) => {
           setIsListening(false);
-          if (event.error === 'language-not-supported' && language === 'ne' && !fallbackAttempted.current) {
+          const languageUnavailable =
+            event.error === 'language-not-supported' || /not yet downloaded|not downloaded/i.test(event.message);
+          if (languageUnavailable && language === 'ne' && !fallbackAttempted.current) {
             fallbackAttempted.current = true;
             setLanguageUsed('en');
             setError('Nepali speech recognition is unavailable on this device. Listening in English instead.');
@@ -80,6 +83,10 @@ export function useVoiceInput() {
             } catch {
               setError('Speech recognition could not start. You can type instead.');
             }
+            return;
+          }
+          if (languageUnavailable) {
+            setError('English speech is supported, but its offline language pack is not downloaded. Download it in your phone speech settings, then try again.');
             return;
           }
           if (event.error !== 'aborted' && event.error !== 'no-speech') {
@@ -98,7 +105,11 @@ export function useVoiceInput() {
       return;
     }
     if (!recognition.supportsOnDeviceRecognition()) {
-      setError('On-device speech recognition is unavailable. You can type instead.');
+      setError(
+        Platform.OS === 'web'
+          ? 'Web does not support private on-device voice input. Use the installed Sākṣī development app on your phone.'
+          : 'On-device speech recognition is unavailable. You can type instead.',
+      );
       return;
     }
 

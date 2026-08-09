@@ -7,7 +7,7 @@
     "api": "node --experimental-strip-types mock-api/server.mjs",
     "android": "expo start",
     "ios": "expo start",
-    "dev-client": "expo start --dev-client",
+    "dev-client": "expo start --dev-client --lan",
     "build:development": "npx eas-cli@latest build --profile development --platform android",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
