@@ -12,7 +12,7 @@
 
 import { resolveSegment, type BilaraChunk } from './bilara.ts';
 import { hybridRetrieve, type RetrievalResult } from './retrieval.ts';
-import { DHAMMA_MODEL, hasProvider, LLM_API_KEY, LLM_ENDPOINT, LLM_TIMEOUT_MS } from './llm';
+import { DHAMMA_MODEL, hasProvider, LLM_API_KEY, LLM_ENDPOINT, LLM_TIMEOUT_MS } from './llm.ts';
 
 export type Citation = {
   segment_id: string;

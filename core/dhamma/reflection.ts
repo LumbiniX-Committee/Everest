@@ -11,7 +11,7 @@
 
 import { hybridRetrieve, type RetrievalResult } from './retrieval.ts';
 import { validateCitations, type Citation, type Passage } from './engine.ts';
-import { DHAMMA_MODEL, hasProvider, LLM_API_KEY, LLM_ENDPOINT, LLM_TIMEOUT_MS } from './llm';
+import { DHAMMA_MODEL, hasProvider, LLM_API_KEY, LLM_ENDPOINT, LLM_TIMEOUT_MS } from './llm.ts';
 
 export type ReflectionRequest = {
   site_id?: string;

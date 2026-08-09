@@ -41,13 +41,17 @@
  * to deterministic retrieval, which is grounded and cited. A missing key
  * degrades the answer, it never fabricates one.
  */
-export const LLM_API_KEY = process.env.EXPO_PUBLIC_LLM_API_KEY ?? '';
+export const LLM_API_KEY =
+  process.env.OLLAMA_API_KEY ?? process.env.EXPO_PUBLIC_LLM_API_KEY ?? '';
 
 export const LLM_ENDPOINT =
-  process.env.EXPO_PUBLIC_LLM_ENDPOINT ?? 'https://ollama.com/v1/chat/completions';
+  process.env.OLLAMA_API_ENDPOINT ??
+  process.env.EXPO_PUBLIC_LLM_ENDPOINT ??
+  'https://ollama.com/v1/chat/completions';
 
 /** Text synthesis. `questReview` picks its own vision model separately. */
-export const DHAMMA_MODEL = process.env.EXPO_PUBLIC_DHAMMA_MODEL ?? 'gpt-oss:120b-cloud';
+export const DHAMMA_MODEL =
+  process.env.OLLAMA_MODEL ?? process.env.EXPO_PUBLIC_DHAMMA_MODEL ?? 'gpt-oss:120b-cloud';
 
 /** Six seconds. Someone standing at a monument will not wait longer than that. */
 export const LLM_TIMEOUT_MS = 6000;
