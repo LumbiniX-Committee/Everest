@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Image, Platform, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+// @ts-ignore
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { Screen, Text } from '@/components/ui';
 import { SettingsButton } from '@/components/common';
