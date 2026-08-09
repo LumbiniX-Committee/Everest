@@ -1,94 +1,201 @@
-# Everest
+# Sākṣī
 
-**Sākṣī** — a heritage-conservation and pilgrimage application for Lumbini, Nepal.
+A heritage and pilgrimage app for Lumbini, Nepal, the birthplace of the Buddha.
 
-Sākṣī means *witness*: one who sees directly and can testify to it. The app takes
-the name literally. You go to a heritage site, return to a fixed photographic
-viewpoint, align your device with it, and record what is there today. Over time
-those frames become a comparable time-series — evidence of how a place is
-changing, gathered by the people standing in front of it.
+Sākṣī (साक्षी) means *witness*: someone who sees a thing directly and can speak
+to it. The app takes the name at face value. You go to a heritage site, stand at
+a fixed viewpoint, line your phone up with it, and take a photo of what the place
+looks like today. Come back next month or next year, take the photo again from
+the same spot, and the two pictures line up. Over time they become a record of
+how a place is changing, made by the people standing in front of it.
 
-## The three surfaces
+Built for the LumbiniX 2026 hackathon by the LumbiniX-Committee team.
 
-The app has exactly three destinations, and they are its conceptual model rather
-than a navigation convenience:
+## What the app does, in one line
 
-| Surface | What it is |
-| --- | --- |
-| **Tīrtha** | Explore Lumbini and discover heritage sites |
-| **Sākṣī** | Witness — align to a vantage, capture, record |
-| **Dhamma** | Grounded, source-backed knowledge |
+It turns a visitor's attention into evidence a conservator can trust.
 
-There is no Home, Explore, Rewards, Profile or Settings tab. Adding one should
-require a decision.
+Everything else in the app (the map, the history, the AI, the guided visits)
+exists to help you make, understand, or care about that one thing: a photo taken
+from a known spot on a known day.
+
+## The three parts
+
+The app has exactly three places you can go. They are the idea of the product,
+not just tabs. There is no Home, Explore, Profile, or Rewards.
+
+| Part | Name means | What you do there |
+| --- | --- | --- |
+| **Tīrtha** | a sacred place | Explore Lumbini on a map, read about each site, and fade between an old photo and a new one to see what changed. |
+| **Sākṣī** | witness | The main loop: pick a viewpoint, line up your phone, take the photo, and note the condition of the site. |
+| **Dhamma** | the teaching | Ask about Buddhist texts and get answers backed by real sources, or an honest "I cannot answer that." |
+
+## What the app promises
+
+These rules shape almost every decision in the code. They are kept honest by
+automated checks, not just good intentions.
+
+- **A measurement is never faked.** If the GPS did not get a fix, the app saves
+  "unknown", never zero, because zero would look like a perfect reading.
+- **"By eye" is never dressed up as "measured".** If you line up a shot by eye
+  instead of getting a verified lock, the record says so, and it looks different
+  on screen.
+- **The AI suggests, it never decides.** The damage detector offers candidates
+  for a person to confirm. The Dhamma answers only from real sources and says no
+  when it cannot back an answer up.
+- **Nothing is ever deleted.** A photo is evidence. You fix a mistake by adding a
+  new record, not by erasing the old one.
+- **The phone is the source of truth.** A phone in the Sacred Garden may have no
+  signal for hours, so every record is saved on the device first. The cloud is a
+  copy.
 
 ## Running it
 
-```bash
-npm install
-cp .env.example .env.local   # then fill in your Supabase project values
-npx expo start
-```
-
-Then press `a` for Android or `i` for iOS, or scan the QR code with Expo Go.
-
-Camera, location and sensors need a development build or a physical device to
-exercise properly; everything else runs in Expo Go and the simulator.
+You need Node.js and the Expo tooling. Then:
 
 ```bash
-npm run typecheck   # tsc --noEmit, including typed routes
+npm install                     # install everything (also applies a small fix, see below)
+cp .env.example .env.local      # then fill in your own values
+npx expo start                  # start the app
 ```
 
-## Project layout
+Press `a` for Android, `i` for iOS, or scan the QR code with the Expo Go app.
+
+Most of the app runs in Expo Go and in a simulator. A few things need a real
+phone and a full build, because they use native code that Expo Go does not carry:
+
+- The camera, GPS, and compass need a real phone.
+- The map and the damage detector need a full build (`eas build --profile
+  development`), not Expo Go.
+
+### One command to check the code is healthy
+
+```bash
+npm run verify
+```
+
+This runs the type check, the tests, the content check, the word check, and the
+Dhamma answer check, all at once. All of them must pass.
+
+## Building a phone app
+
+The demo build is an installable Android file:
+
+```bash
+npx eas build --profile preview --platform android
+```
+
+When it finishes you get a link. Open it on the phone and install. A build is
+needed after changing the app's native parts (adding or removing a plugin, or
+changing which native module ships), because the file on the phone is frozen at
+build time.
+
+Notes:
+
+- The `android/` folder is not stored in the repository. The build tool creates
+  it fresh from `app.json` each time.
+- On install, a small fix to one dependency is applied automatically. It lives in
+  `patches/` and is reapplied on every `npm install`.
+- The damage detector model file ships inside the app, pinned by the
+  `assetBundlePatterns` line in `app.json`.
+
+## The main features
+
+### Tīrtha: place, map, and then-and-now
+
+An interactive map of Lumbini with its heritage sites, your live position, and a
+ring around each site. Open a site and you can fade between a real old photograph
+and a modern one of the same spot. Every image carries a label saying how
+trustworthy it is, so a modern picture is never passed off as a historical one.
+
+There is also a friendly on-site guide you can ask about a place. It answers in a
+simple speech-cloud, the same style used in the story mode. It will never claim a
+crack or a condition (that is Sākṣī's job, and it is measured) and it will never
+pretend to quote a text.
+
+### Sākṣī: the witness loop
 
 ```
-app/          Expo Router routes. Thin — each file resolves params and renders a feature screen.
-features/     Screen implementations, grouped by surface.
-components/   Shared UI. ui/ is the primitive layer; nothing outside it names a colour or a font.
-theme/        Colour, typography, spacing, radii tokens.
-services/     Platform boundaries: permissions, location, camera, sensors, storage, database, supabase.
-store/        App-wide React context (first-launch state, permissions).
-hooks/        Composed behaviour — alignment, position, heading.
-data/         Content. Currently `demo/`; swapped behind `data/index.ts` when real data lands.
-types/        Domain types.
-utils/        Pure helpers — geodesy and formatting.
-constants/    Identity strings, geography, storage keys.
+pick a site  ->  pick a viewpoint  ->  line up the phone  ->  take the photo  ->  note the condition
 ```
 
-Routes are thin on purpose. A screen's implementation lives in `features/`, so
-the route tree stays readable as a map of the app rather than as a codebase.
+Lining up the phone turns it into a simple survey tool. The app scores how well
+your position, direction, and tilt match the saved viewpoint, and only gives you
+a "lock" when the match is genuinely good and the GPS is accurate. If conditions
+are bad, you can still line up by eye, and the record clearly says it was done by
+eye, never faking a lock.
+
+After you take a photo, the app looks at it and suggests any cracks it finds. The
+suggestions are drawn as dashed boxes so no one mistakes them for a final call. A
+person confirms how serious it is; the AI never sets that. A report made with the
+AI's help is saved with a flag so a later reader knows.
+
+### Dhamma: answers you can trust
+
+Dhamma answers questions about Buddhist teaching, but only from real sources. It
+finds the most relevant passages, writes an answer using only those passages, and
+checks every claim points back to a real passage. If the sources do not support
+an answer, it says so instead of guessing. It refuses to pretend to be the
+Buddha, resists attempts to trick it, and answers in Nepali by default with an
+English option. Source text and citations are never machine-translated.
+
+Without a network, the built-in text collection still works. An optional small
+model can be downloaded to the phone to write short answers offline, and even
+then it may only rephrase real passages, never invent facts.
+
+## How the code is laid out
+
+```
+app/          The screen routes. Thin files. This folder is the map of the app.
+features/     The real screen code, grouped by part (tirtha, sakshi, dhamma).
+components/   Reusable pieces of UI.
+core/         Pure logic with no phone parts: scoring, merit rules, the Dhamma
+              engine, the vision decoder. This is the brain, and it is well tested.
+services/     The edges that talk to the outside: camera, location, database,
+              cloud, and the AI runtimes.
+hooks/        Reusable React behaviour (alignment, heading, position).
+store/        App-wide state (first launch, permissions, preferences).
+seed/         The source of truth for content, as plain JSON you can edit.
+data/         Content the app ships with, built from seed/.
+tools/        Build and check scripts.
+theme/        Colours, fonts, spacing.
+assets/       Images, fonts, audio, and the AI model file.
+supabase/     Cloud database setup.
+mock-api/     A tiny fake backend for demos.
+docs/         Longer guides. Start with docs/PROJECT-GUIDE.md.
+```
+
+One rule holds the layers together: `core/` never reaches up into `app/`,
+`features/`, or `services/`. It stays pure, which is why it can be tested without
+a phone.
 
 ## Conventions
 
-**Colour and type go through tokens.** No component names a hex value or a font
-family. `#557FA5` is reserved for successful alignment — it means *locked* and
-nothing else, which is what makes it readable at a glance in daylight.
+- **Colours and fonts go through the theme.** No screen writes a raw colour or
+  font. One blue means "locked" and nothing else, so it reads at a glance in
+  sunlight.
+- **Permissions are asked at the moment they are needed,** after the reason is on
+  screen, never all at once on launch. Saying no is a normal outcome, not an
+  error.
+- **Settings live in `.env.local`,** which is never committed. Copy
+  `.env.example` and fill it in. Only values that are safe to ship belong there.
+  The Ollama key is server-only and must never be given an `EXPO_PUBLIC_` prefix,
+  because those are baked into the app.
+- **Records are saved on the phone first,** then copied to the cloud. A photo
+  taken at a viewpoint on a given day cannot be retaken, so the phone is the
+  record and the network is a bonus.
 
-**Fonts are declared but not vendored.** Anek, IBM Plex Sans and IBM Plex Mono
-are wired through `theme/typography.ts`; until the licensed files are added to
-`assets/fonts/` the platform default stands in. See `theme/fonts.ts` for the
-three-step process to enable them.
+## Where to read more
 
-**Permissions are never requested at launch.** Each is asked for at the point of
-use, after its reason is on screen. A refusal is a valid outcome, never an
-error — `denied` (ask again) and `blocked` (Settings only) are distinguished so
-the UI never offers a button that silently does nothing.
-
-**Configuration lives in `.env.local`**, which is gitignored — copy `.env.example`
-and fill it in. `EXPO_PUBLIC_` variables are inlined into the bundle at build
-time, so only publishable values belong there; Row Level Security is what
-protects the data, not the key.
-
-**Observations are written locally first.** A photograph taken at a vantage on a
-particular day cannot be retaken, so SQLite is the record and the network is an
-optimisation.
+- **The full plain-language tour:** `docs/PROJECT-GUIDE.md`
+- **The data rules:** `docs/DATA-ARCHITECTURE.md`
+- **Rebuild or improve the damage model:** `docs/DAMAGE-MODEL.md`
+- **The offline and multilingual plan:** `docs/MULTILINGUAL-AI-PLAN.md`
+- **Build and deploy:** `docs/BUILD-AND-RUN.md` and `docs/DEPLOYMENT.md`
 
 ## Status
 
-This is the initial architecture and first flow: launch → onboarding → the three
-surfaces, with alignment, capture and local persistence working end to end.
-
-Site and vantage data in `data/demo/` is illustrative — real coordinates, but not
-survey-grade, and the vantage points are not established viewpoints. It must be
-replaced with Lumbini Development Trust survey data before any of it reaches a
-real observer.
+This is a hackathon build. Site and viewpoint coordinates are real but not all
+survey-grade, and a few are marked as approximate until field data replaces them.
+The damage detector, the camera loop, and the keyboard behaviour are best judged
+on a real phone build, not in a simulator.

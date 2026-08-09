@@ -97,5 +97,10 @@ harvest/_crops/
 # Generate with tools/make-narration-audio.ps1, then commit the output and
 # register each file in data/audio.ts.
 
+# Working screenshots dropped in for a task. Not part of the app; kept out of
+# the repository so a bulk `git add -A` cannot sweep them back in.
+dhammaupdate/
+imagesupdate/
+
 # Claude Code local settings
 .claude/settings.local.json
