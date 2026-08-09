@@ -1,5 +1,12 @@
-import { guidePrompt, guideSystem, tidyGuideText, type GuideLanguage } from '@/core/guide';
+import {
+  answerFromPlace,
+  guidePrompt,
+  guideSystem,
+  tidyGuideText,
+  type GuideLanguage,
+} from '@/core/guide';
 import { callLlm, hasProvider, trimToCompleteSentence } from '@/core/dhamma/llm';
+import { apiReachable, noteRemoteFailure } from '@/services/net/reachability';
 import { findSite } from '@/data';
 import type { HeritageSite } from '@/types';
 
@@ -98,6 +105,9 @@ async function askRemote(request: GuideRequest): Promise<GuideReply | null> {
     if (!text) return null;
     return { text: tidyGuideText(text), origin: 'provider' };
   } catch {
+    // The server looked reachable but the call failed. Open the breaker so the
+    // next question skips the network instead of waiting out the timeout again.
+    noteRemoteFailure();
     return null;
   } finally {
     clearTimeout(timeout);
@@ -107,17 +117,21 @@ async function askRemote(request: GuideRequest): Promise<GuideReply | null> {
 /**
  * Ask the guide. Always resolves, never throws, never refuses.
  *
- * Order: the backend, then a direct provider call if a credential happens to be
- * present in this process, then the site's own bundled description. The last of
- * those needs no network at all, which is the case the Sacred Garden actually
- * presents.
+ * Order: the backend (only when a cheap reachability probe says it is worth
+ * trying), then a direct provider call if a credential happens to be present in
+ * this process, then an extractive answer from the site's own seeded material,
+ * then the general fallback. Everything from the extractive step down needs no
+ * network at all, which is the case the Sacred Garden actually presents.
  */
 export async function askGuide(request: GuideRequest): Promise<GuideReply> {
   const site = request.siteId ? findSite(request.siteId) : undefined;
   const question = request.question.trim();
   if (!question) return fallbackReply(site, request.siteName);
 
-  if (API_URL) {
+  // The reachability probe is what keeps an unreachable server from stalling
+  // every question for the full timeout. If the breaker is open, this returns
+  // false without touching the network and we go straight to on-device.
+  if (API_URL && (await apiReachable(API_URL))) {
     const remote = await askRemote({ ...request, question });
     if (remote) return remote;
   }
@@ -130,6 +144,21 @@ export async function askGuide(request: GuideRequest): Promise<GuideReply> {
     );
     const text = usableGuideText(reply);
     if (text) return { text, origin: 'provider' };
+  }
+
+  // Offline, and no provider: answer the actual question from the site's own
+  // seeded facts and description rather than dumping the whole summary. Only
+  // when a site is in hand and something in it is relevant.
+  if (site) {
+    const extracted = answerFromPlace(question, {
+      name: site.name,
+      nameNepali: site.nameNepali,
+      summary: site.summary,
+      description: site.description,
+      zone: site.zone,
+      facts: site.facts,
+    });
+    if (extracted) return { text: extracted, origin: 'site' };
   }
 
   return fallbackReply(site, request.siteName);

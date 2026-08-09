@@ -6,6 +6,7 @@ import {
   VERIFIED_NEPALI_HELPLINES,
 } from '@/core/dhamma';
 import { generateOfflineGroundedAnswer } from '@/services/offlineModel';
+import { apiReachable, noteRemoteFailure } from '@/services/net/reachability';
 import { demoDhammaEntries, findSource, type DhammaEntry } from '@/data';
 import type { Citation, DhammaAnswer, Evidence, GroundedAnswer, RefusedAnswer } from '@/types';
 
@@ -354,6 +355,10 @@ async function askRemote(query: string, language: DhammaLanguage): Promise<Retri
       throw new Error(`Dhamma API returned ${response.status}`);
     }
     return fromApiResponse(body, query, language);
+  } catch (error) {
+    // The probe said the server was up but this call failed; open the breaker.
+    noteRemoteFailure();
+    throw error;
   } finally {
     clearTimeout(timeout);
   }
@@ -367,7 +372,10 @@ async function askRemote(query: string, language: DhammaLanguage): Promise<Retri
  * evidence being weighed (§14), which is the honest version of "thinking".
  */
 export async function ask(query: string, language: DhammaLanguage = 'ne'): Promise<Retrieval> {
-  if (API_URL) {
+  // A cheap reachability probe first, so an unreachable server costs one short
+  // probe rather than the full synthesis timeout on every question. If the
+  // breaker is open, this skips the network entirely.
+  if (API_URL && (await apiReachable(API_URL))) {
     try {
       return await askRemote(query, language);
     } catch (error) {
@@ -452,7 +460,7 @@ export async function reflectQuestions(request: {
       language: request.language,
     }) as Promise<ReflectionQuestionsResult>;
 
-  if (!API_URL) return local();
+  if (!API_URL || !(await apiReachable(API_URL))) return local();
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
@@ -471,6 +479,7 @@ export async function reflectQuestions(request: {
     if (!response.ok || !body) throw new Error(`Reflection questions API returned ${response.status}`);
     return body;
   } catch (error) {
+    noteRemoteFailure();
     console.warn('[dhamma] questions API unavailable; using on-device engine', error);
     return local();
   } finally {
@@ -512,7 +521,7 @@ export async function reflect(request: {
     return result;
   };
 
-  if (!API_URL) return local();
+  if (!API_URL || !(await apiReachable(API_URL))) return local();
 
   // Falls back rather than throwing, matching `ask` and `reflectQuestions`.
   // This was the one call in the trio that let a network failure escape, and it
@@ -539,6 +548,7 @@ export async function reflect(request: {
     if (!response.ok || !body) throw new Error(`Reflection API returned ${response.status}`);
     return body;
   } catch (error) {
+    noteRemoteFailure();
     console.warn('[dhamma] reflect API unavailable; using on-device engine', error);
     return local();
   } finally {
