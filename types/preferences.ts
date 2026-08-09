@@ -34,6 +34,20 @@ export type OfflineSyncMode = 'wifi' | 'any' | 'manual';
 /** Higher quality costs storage on a device that may be offline for days. */
 export type PhotoQuality = 'standard' | 'high';
 
+/**
+ * How much a place is asked to say when you arrive at it.
+ *
+ * The tiers select depth over material that is already sourced — a summary, the
+ * facts table, the timeline, the scholarly sources, the canonical passages the
+ * site rests on. None of them generate new claims about a site, which is why
+ * `high` can be exhaustive without being less true than `basic`.
+ *
+ * `custom` is the odd one and deliberately so: instead of a fixed depth it
+ * hands the question back to the person, and answers it from the canonical
+ * corpus scoped to where they are standing.
+ */
+export type WisdomTier = 'basic' | 'medium' | 'high' | 'custom';
+
 export type UserPreferences = {
   alignmentTolerance: AlignmentTolerance;
   hapticsEnabled: boolean;
@@ -43,6 +57,7 @@ export type UserPreferences = {
   distanceUnit: DistanceUnit;
   offlineSyncMode: OfflineSyncMode;
   photoQuality: PhotoQuality;
+  wisdomTier: WisdomTier;
 };
 
 export const DEFAULT_USER_PREFERENCES: UserPreferences = {
@@ -57,6 +72,10 @@ export const DEFAULT_USER_PREFERENCES: UserPreferences = {
   // asking. A person who wants otherwise can say so.
   offlineSyncMode: 'wifi',
   photoQuality: 'standard',
+  // Medium, not basic. Someone who has travelled to Lumbini did not come for a
+  // caption, and a person who wants less can say so in one tap — whereas nobody
+  // discovers depth they were never shown.
+  wisdomTier: 'medium',
 };
 
 /**
@@ -92,4 +111,11 @@ export const OFFLINE_SYNC_OPTIONS: { value: OfflineSyncMode; label: string; hint
 export const PHOTO_QUALITY_OPTIONS: { value: PhotoQuality; label: string; hint: string }[] = [
   { value: 'standard', label: 'Standard', hint: 'Smaller files, faster to upload.' },
   { value: 'high', label: 'High', hint: 'More detail for condition assessment.' },
+];
+
+export const WISDOM_TIER_OPTIONS: { value: WisdomTier; label: string; hint: string }[] = [
+  { value: 'basic', label: 'Basic', hint: 'What this place is, and one thing worth knowing.' },
+  { value: 'medium', label: 'Medium', hint: 'The history, the facts table, and what happened when.' },
+  { value: 'high', label: 'In depth', hint: 'Everything, with the scholarly sources and the canonical passages.' },
+  { value: 'custom', label: 'Ask your own', hint: 'Put your question to the canon, about the place you are standing in.' },
 ];

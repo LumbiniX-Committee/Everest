@@ -22,6 +22,8 @@ export type BilaraChunk = {
 };
 
 /** Seed canonical corpus chunks for offline execution & offline RAG indexing */
+import { GENERATED_CHUNKS } from './corpus.generated.ts';
+
 export const CANONICAL_CHUNKS: BilaraChunk[] = [
   {
     chunk_id: 'dn16:5.8',
@@ -121,12 +123,30 @@ export const CANONICAL_CHUNKS: BilaraChunk[] = [
   },
 ];
 
+/**
+ * Seed chunks first, then everything fetched from bilara-data.
+ *
+ * The seed entries are hand-written and deliberately kept: they are the
+ * passages the demo leans on, and having them in source means the engine still
+ * answers its core questions if the generated file is ever missing or being
+ * regenerated. Where a chunk_id appears in both, the seed wins — it was written
+ * against a known-good demo, and a generated file should not silently move the
+ * ground under a scripted answer.
+ */
+const ALL_CHUNKS: BilaraChunk[] = [
+  ...CANONICAL_CHUNKS,
+  ...GENERATED_CHUNKS.filter(
+    (generated) => !CANONICAL_CHUNKS.some((seed) => seed.chunk_id === generated.chunk_id),
+  ),
+];
+
 /** Map of chunk_id -> BilaraChunk for sub-second resolution */
 const chunkByIdMap = new Map<string, BilaraChunk>();
-for (const chunk of CANONICAL_CHUNKS) {
+for (const chunk of ALL_CHUNKS) {
   chunkByIdMap.set(chunk.chunk_id, chunk);
   for (const segId of chunk.segments) {
-    chunkByIdMap.set(segId, chunk);
+    // A segment already claimed by a seed chunk keeps it, for the same reason.
+    if (!chunkByIdMap.has(segId)) chunkByIdMap.set(segId, chunk);
   }
 }
 
@@ -137,5 +157,5 @@ export function resolveSegment(segmentOrChunkId: string): BilaraChunk | undefine
 
 /** Returns all canonical chunks in the corpus */
 export function getAllChunks(): BilaraChunk[] {
-  return CANONICAL_CHUNKS;
+  return ALL_CHUNKS;
 }

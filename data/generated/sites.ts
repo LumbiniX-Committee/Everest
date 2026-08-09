@@ -43,6 +43,10 @@ export const demoSites: HeritageSite[] = [
         "value": "Interior restricted"
       }
     ],
+    "dhammaLinks": [
+      "dn14",
+      "mn123"
+    ],
     "sourceTier": "archaeological",
     "sourceIds": [
       "unesco-1997",
@@ -96,6 +100,9 @@ export const demoSites: HeritageSite[] = [
         "value": "1896"
       }
     ],
+    "dhammaLinks": [
+      "dn16"
+    ],
     "sourceTier": "archaeological",
     "sourceIds": [
       "rummindei-inscription",
@@ -141,6 +148,10 @@ export const demoSites: HeritageSite[] = [
         "value": "Approximate, pending field survey"
       }
     ],
+    "dhammaLinks": [
+      "mn123",
+      "dn14"
+    ],
     "sourceTier": "archaeological",
     "sourceIds": [
       "unesco-1997",
@@ -181,6 +192,10 @@ export const demoSites: HeritageSite[] = [
         "value": "Inside the temple, restricted"
       }
     ],
+    "dhammaLinks": [
+      "mn123",
+      "dn14"
+    ],
     "sourceTier": "archaeological",
     "sourceIds": [
       "unesco-1997",
@@ -217,6 +232,7 @@ export const demoSites: HeritageSite[] = [
         "value": "16 votive stupas, gone by a later visit"
       }
     ],
+    "dhammaLinks": [],
     "sourceTier": "archaeological",
     "sourceIds": [
       "unesco-1997",
@@ -249,6 +265,7 @@ export const demoSites: HeritageSite[] = [
         "value": "Gold-and-white stupa"
       }
     ],
+    "dhammaLinks": [],
     "sourceTier": "documented",
     "sourceIds": [
       "unesco-1997"
@@ -280,6 +297,7 @@ export const demoSites: HeritageSite[] = [
         "value": "Classical Chinese"
       }
     ],
+    "dhammaLinks": [],
     "sourceTier": "documented",
     "sourceIds": [
       "unesco-1997"
@@ -311,6 +329,7 @@ export const demoSites: HeritageSite[] = [
         "value": "Temple & pilgrim guesthouse"
       }
     ],
+    "dhammaLinks": [],
     "sourceTier": "documented",
     "sourceIds": [
       "unesco-1997"
@@ -342,6 +361,7 @@ export const demoSites: HeritageSite[] = [
         "value": "Modelled on Swayambhu"
       }
     ],
+    "dhammaLinks": [],
     "sourceTier": "documented",
     "sourceIds": [
       "unesco-1997"
@@ -373,6 +393,7 @@ export const demoSites: HeritageSite[] = [
         "value": "North end of the Tange axis"
       }
     ],
+    "dhammaLinks": [],
     "sourceTier": "documented",
     "sourceIds": [
       "unesco-1997"
@@ -408,6 +429,10 @@ export const demoSites: HeritageSite[] = [
         "value": "Approximate, pending verification"
       }
     ],
+    "dhammaLinks": [
+      "dn16",
+      "mn26"
+    ],
     "sourceTier": "archaeological",
     "sourceIds": [
       "unesco-1997"
@@ -442,6 +467,9 @@ export const demoSites: HeritageSite[] = [
         "label": "Coordinate",
         "value": "Approximate, pending verification"
       }
+    ],
+    "dhammaLinks": [
+      "dn16"
     ],
     "sourceTier": "archaeological",
     "sourceIds": [

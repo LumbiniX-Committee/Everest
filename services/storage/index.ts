@@ -7,6 +7,7 @@ import {
   DISTANCE_UNIT_OPTIONS,
   OFFLINE_SYNC_OPTIONS,
   PHOTO_QUALITY_OPTIONS,
+  WISDOM_TIER_OPTIONS,
   SCRIPT_OPTIONS,
   type UserPreferences,
 } from '@/types';
@@ -101,6 +102,7 @@ export async function getUserPreferences(): Promise<UserPreferences> {
     distanceUnit: oneOf(raw.distanceUnit, DISTANCE_UNIT_OPTIONS, 'distanceUnit'),
     offlineSyncMode: oneOf(raw.offlineSyncMode, OFFLINE_SYNC_OPTIONS, 'offlineSyncMode'),
     photoQuality: oneOf(raw.photoQuality, PHOTO_QUALITY_OPTIONS, 'photoQuality'),
+    wisdomTier: oneOf(raw.wisdomTier, WISDOM_TIER_OPTIONS, 'wisdomTier'),
   };
 }
 

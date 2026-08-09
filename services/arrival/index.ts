@@ -5,6 +5,8 @@ import type { Coordinate, HeritageSite, Precinct } from '@/types';
 
 import * as notifications from '../notifications';
 import * as storage from '../storage';
+import { depthFor } from '@/core';
+import type { WisdomTier } from '@/types';
 
 /**
  * What happens when someone reaches a precinct.
@@ -173,21 +175,28 @@ export type SiteSignificance = {
   dhamma: ReturnType<typeof dhammaForSite>;
 };
 
-export function significanceOf(siteId: string): SiteSignificance | null {
+export function significanceOf(siteId: string, tier: WisdomTier = 'medium'): SiteSignificance | null {
   const site = findSite(siteId);
   if (!site) return null;
+
+  // The same policy the site screen uses. An arrival is the one moment the app
+  // speaks without being asked, so the setting has to bind hardest here — a
+  // person who chose `basic` should not receive scripture on a lock screen
+  // because a different surface computed depth differently.
+  const depth = depthFor(tier);
   const narration = narrationForSite(siteId);
+
   return {
     site,
     narration: narration?.en,
     narrationSeconds: narration?.approx_seconds,
-    facts: site.facts ?? [],
-    dhamma: dhammaForSite(siteId),
+    facts: depth.facts ? site.facts ?? [] : [],
+    dhamma: depth.scripture ? dhammaForSite(siteId) : [],
   };
 }
 
 /** True when there is something worth saying on arrival at this site. */
-export function hasSomethingToSay(siteId: string): boolean {
-  const s = significanceOf(siteId);
+export function hasSomethingToSay(siteId: string, tier: WisdomTier = 'medium'): boolean {
+  const s = significanceOf(siteId, tier);
   return !!s && (!!s.narration || s.facts.length > 0 || s.dhamma.length > 0);
 }
