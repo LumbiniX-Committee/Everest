@@ -363,13 +363,20 @@ on('POST', '/dhamma/ask', async (_req, res, _p, _q, body) => {
         language: body.language || 'en',
         mode: body.mode || 'auto',
       });
+      const response = {
+        ...result,
+        language: body.language || 'en',
+        translationUsed: false,
+      };
       // audit trail
       state.dhammaLog.push({
         id: randomUUID(), ts: now(), question,
-        refused: result.refused, tier: result.tier,
-        citation_count: result.citations?.length ?? 0,
+        refused: response.refused, tier: response.tier,
+        language: body.language || 'en',
+        translation_used: false,
+        citation_count: response.citations?.length ?? 0,
       });
-      return json(res, 200, result);
+      return json(res, 200, response);
     } catch (e) {
       console.error('[dhamma] engine error:', e);
     }
@@ -405,7 +412,11 @@ on('POST', '/dhamma/reflect', async (_req, res, _p, _q, body) => {
         answers: Array.isArray(body.answers) ? body.answers : [],
         language: body.language ?? 'en',
       });
-      return json(res, 200, result);
+      return json(res, 200, {
+        ...result,
+        language: body.language ?? 'en',
+        translationUsed: false,
+      });
     } catch (e) {
       console.error('[dhamma/reflect] error:', e);
     }

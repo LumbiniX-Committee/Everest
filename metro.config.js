@@ -5,7 +5,9 @@ const config = getDefaultConfig(__dirname);
 
 // expo-sqlite ships a WASM build for web; Metro must treat .wasm as an asset.
 // expo-audio ships opus files; Metro must treat .opus as an asset.
-config.resolver.assetExts.push('wasm', 'opus');
+// The damage detector's model files (.onnx now, .pte if we move to ExecuTorch)
+// are bundled and require()d as assets, so Metro must not try to parse them.
+config.resolver.assetExts.push('wasm', 'opus', 'onnx', 'pte');
 
 // wa-sqlite needs SharedArrayBuffer, which requires cross-origin isolation.
 config.server.enhanceMiddleware = (middleware) => (req, res, next) => {

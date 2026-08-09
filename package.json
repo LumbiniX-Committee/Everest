@@ -18,7 +18,8 @@
     "vocab": "node tools/lint-vocab.mjs",
     "verify": "npm run typecheck && npm run test && npm run validate && npm run vocab && npm run eval:dhamma",
     "eval:dhamma": "node tools/dhamma-eval.mjs",
-    "corpus:fetch": "node tools/fetch-bilara.mjs"
+    "corpus:fetch": "node tools/fetch-bilara.mjs",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@expo/metro-runtime": "~57.0.8",
@@ -27,6 +28,7 @@
     "@supabase/supabase-js": "^2.109.0",
     "base64-arraybuffer": "^1.0.2",
     "expo": "~57.0.11",
+    "expo-asset": "~57.0.9",
     "expo-audio": "~57.0.3",
     "expo-camera": "~57.0.3",
     "expo-constants": "~57.0.9",
@@ -34,6 +36,7 @@
     "expo-file-system": "~57.0.2",
     "expo-font": "~57.0.1",
     "expo-haptics": "~57.0.1",
+    "expo-image-manipulator": "~57.0.8",
     "expo-image-picker": "~57.0.8",
     "expo-linking": "~57.0.5",
     "expo-location": "~57.0.8",
@@ -47,6 +50,9 @@
     "expo-status-bar": "~57.0.1",
     "expo-task-manager": "~57.0.8",
     "expo-updates": "~57.0.12",
+    "jpeg-js": "^0.4.4",
+    "llama.rn": "^0.12.6",
+    "onnxruntime-react-native": "^1.24.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-native": "0.86.2",
@@ -62,6 +68,8 @@
     "@types/react": "~19.2.2",
     "eslint": "^9.0.0",
     "eslint-config-expo": "~57.0.1",
+    "patch-package": "^8.0.1",
+    "postinstall-postinstall": "^2.1.0",
     "typescript": "~6.0.3"
   },
   "private": true

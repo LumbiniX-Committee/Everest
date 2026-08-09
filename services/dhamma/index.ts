@@ -1,4 +1,5 @@
 import { askDhammaAsync, processReflectionAsync } from '@/core/dhamma';
+import { generateOfflineGroundedAnswer } from '@/services/offlineModel';
 import { demoDhammaEntries, findSource, type DhammaEntry } from '@/data';
 import type { Citation, DhammaAnswer, Evidence, GroundedAnswer, RefusedAnswer } from '@/types';
 
@@ -358,6 +359,18 @@ export async function ask(query: string, language: DhammaLanguage = 'ne'): Promi
   // through a provider when one is configured; without one it returns the
   // deterministic retrieval result, which is grounded and cited either way.
   const result = await askDhammaAsync({ question: query, language, mode: 'auto' });
+  if (!result.refused && result.answer && result.passages?.length) {
+    try {
+      const localAnswer = await generateOfflineGroundedAnswer({
+        question: query,
+        language,
+        passages: result.passages,
+      });
+      if (localAnswer) result.answer = localAnswer;
+    } catch (error) {
+      console.warn('[dhamma] offline model unavailable; keeping corpus answer', error);
+    }
+  }
   return fromApiResponse(result, query, language);
 }
 
@@ -373,13 +386,26 @@ export async function reflect(request: {
   // offline case, and the one Lumbini actually presents. core/dhamma has
   // implemented this the whole time.
   if (!API_URL) {
-    return processReflectionAsync({
+    const result = await processReflectionAsync({
       stage: request.stage,
       user_input: request.userInput,
       answers: request.answers,
       site_id: request.siteId,
       language: request.language,
     });
+    if (!result.distress_override && result.completed && result.passages?.length) {
+      try {
+        const localGuidance = await generateOfflineGroundedAnswer({
+          question: request.answers.join('\n'),
+          language: request.language,
+          passages: result.passages,
+        });
+        if (localGuidance) return { ...result, inquiry: localGuidance, guidance: localGuidance };
+      } catch (error) {
+        console.warn('[dhamma] offline reflection model unavailable; keeping corpus guidance', error);
+      }
+    }
+    return result;
   }
 
   const controller = new AbortController();

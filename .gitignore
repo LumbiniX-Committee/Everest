@@ -68,6 +68,11 @@ scratch/
 /ios
 /android
 
+# Optional on-device language models are downloaded locally and are never
+# committed to the repository or included in the base APK.
+/models/*.gguf
+/models/*.part
+
 # harvest output (large; regenerated from scripts)
 harvest/_raw/
 harvest/_images/

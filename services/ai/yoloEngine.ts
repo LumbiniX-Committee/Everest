@@ -1,25 +1,32 @@
-import { useCallback } from 'react';
-import { Image } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { filterByScore, normalizeBbox, type RawBbox } from '@/core/vision/detect';
+import { normalizeBbox, type RawBbox } from '@/core/vision/detect';
 import type { ConditionCategory } from '@/types';
 
-import { useObjectDetection, type RawDetection } from './executorch';
+import {
+  createOnnxSession,
+  onnxAvailable,
+  runOnnxDetection,
+  type OnnxDetection,
+  type OnnxSession,
+} from './onnx';
 
 /**
  * On-device damage detection — the honest engine.
  *
  * This replaced a fabricator that hashed the image *filename* into invented
  * boxes, confidence scores and a "surface integrity %". Nothing here invents a
- * finding. When a trained model is present it runs real inference and returns
- * what the model actually saw; when it is not, it says so (`no-model`) rather
- * than making something up. A candidate is offered to the surveyor to confirm —
- * it never writes a condition report on its own, and it never claims a
- * conservator-grade assessment.
+ * finding. When the trained model is present it runs real inference (via
+ * onnxruntime — see services/ai/onnx.ts) and returns what the model actually
+ * saw; when it is not, it says so (`no-model`/`unsupported`) rather than making
+ * something up. A candidate is offered to the surveyor to confirm — it never
+ * writes a condition report on its own, and it never claims a conservator-grade
+ * assessment.
  *
- * The model itself is trained and exported separately (see docs/DAMAGE-MODEL.md)
- * and dropped in via `DAMAGE_MODEL.source`. Until then the feature is simply
- * absent from the UI — honest by omission.
+ * The model is a YOLOv8 crack detector trained and exported separately (see
+ * docs/DAMAGE-MODEL.md) and dropped in via `DAMAGE_MODEL.source`. If that source
+ * is null, or the native runtime is absent (Expo Go / a build that has not added
+ * onnxruntime), the feature is simply absent from the UI — honest by omission.
  */
 
 export type YoloPathology = 'crack' | 'biological' | 'spalling' | 'water' | 'surface';
@@ -141,24 +148,34 @@ const LABEL_TO_PATHOLOGY: Record<string, YoloPathology> = {
 
 /** Detections below this score are dropped before they reach the UI. */
 const SCORE_THRESHOLD = 0.35;
+/** Overlapping same-class boxes above this IoU are suppressed (NMS). */
+const IOU_THRESHOLD = 0.45;
+/** The model's square input edge — must match the `imgsz` used to train/export. */
+const INPUT_SIZE = 640;
 
 /**
- * The trained model, dropped in after training (see docs/DAMAGE-MODEL.md).
+ * The trained model (see docs/DAMAGE-MODEL.md).
  *
- * `source: null` is the honest current state — no model shipped, so the feature
- * does not appear. To activate: place the exported model under assets/models/,
- * set `source: require('../../assets/models/crack-seg.pte')`, fill in `mAP50`
- * with the number your training run reported, `npm i react-native-executorch`,
- * and rebuild the dev client.
+ * This is a real YOLOv8n crack detector: trained on the public crack-seg set for
+ * 80 epochs and exported to ONNX. `mAP50` is the number that training run
+ * actually reported on the held-out split — shown in the UI, not rounded up. To
+ * retrain or extend the classes, follow docs/DAMAGE-MODEL.md and update both
+ * `classes` here and the `LABEL_TO_PATHOLOGY` map above.
+ *
+ * Runtime requirement: onnxruntime-react-native (a native module) must be
+ * installed and the dev client rebuilt. Without it `onnxAvailable` is false and
+ * the feature reports `unsupported` — the app runs exactly as before, minus the
+ * scan.
  */
-export const DAMAGE_MODEL: { source: string | number | null; info: ModelInfo } = {
-  source: null,
+export const DAMAGE_MODEL: { source: number | null; info: ModelInfo } = {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  source: require('../../assets/models/crack-seg.onnx'),
   info: {
     name: 'YOLOv8n crack detector',
-    version: '0.1.0',
+    version: '1.0.0',
     classes: ['crack'],
-    mAP50: null,
-    runtime: 'executorch',
+    mAP50: 0.8167,
+    runtime: 'onnx',
   },
 };
 
@@ -173,17 +190,7 @@ function labelToPathology(label: string): YoloPathology {
   return LABEL_TO_PATHOLOGY[label.trim().toLowerCase()] ?? 'surface';
 }
 
-function imageSize(uri: string): Promise<{ width: number; height: number }> {
-  return new Promise((resolve) => {
-    Image.getSize(
-      uri,
-      (width, height) => resolve({ width, height }),
-      () => resolve({ width: 0, height: 0 }),
-    );
-  });
-}
-
-function toDetection(raw: RawDetection, imageW: number, imageH: number, index: number): YoloDetection {
+function toDetection(raw: OnnxDetection, imageW: number, imageH: number, index: number): YoloDetection {
   const pathology = labelToPathology(raw.label);
   return {
     id: `det-${index}-${Math.round(raw.score * 1000)}`,
@@ -221,7 +228,7 @@ export function scanToSuggestion(result: YoloScanResult): ConditionSuggestion | 
 // Which detector implementation is used is fixed at module load by whether a
 // model and the native runtime are present, so hook order never changes between
 // renders — one branch is a hook, the other returns a constant.
-const UNAVAILABLE_STATUS: DetectorStatus = useObjectDetection == null ? 'unsupported' : 'no-model';
+const UNAVAILABLE_STATUS: DetectorStatus = onnxAvailable ? 'no-model' : 'unsupported';
 
 const UNAVAILABLE_DETECTOR: DamageDetector = {
   status: UNAVAILABLE_STATUS,
@@ -230,67 +237,87 @@ const UNAVAILABLE_DETECTOR: DamageDetector = {
   scan: async () => NO_MODEL_RESULT,
 };
 
-function makeExecutorchDetectorHook(
-  source: string | number,
-  useDetection: NonNullable<typeof useObjectDetection>,
-): () => DamageDetector {
-  return function useExecutorchDamageDetector(): DamageDetector {
-    const handle = useDetection({ modelSource: source });
+/**
+ * The live detector: loads the ONNX session once when it mounts, then runs real
+ * inference on demand. onnxruntime's session is imperative (not a hook), so the
+ * session is created in an effect and held in a ref; `status` reflects the load.
+ */
+function useOnnxDamageDetector(source: number): DamageDetector {
+  const [status, setStatus] = useState<DetectorStatus>('loading');
+  const [scanning, setScanning] = useState(false);
+  const sessionRef = useRef<OnnxSession | null>(null);
 
-    const scan = useCallback(
-      async (imageUri: string): Promise<YoloScanResult> => {
-        if (!handle.isReady) {
-          return {
-            status: 'error',
-            detections: [],
-            inferenceMs: null,
-            model: DAMAGE_MODEL.info,
-            error: 'The model is still loading.',
-          };
-        }
-        const started = Date.now();
-        try {
-          const raw = await handle.forward(imageUri);
-          // Assumes the runtime returns boxes in original-image pixel space. If a
-          // device test shows model-input space instead, adjust only here.
-          const { width, height } = await imageSize(imageUri);
-          const detections = filterByScore(raw, SCORE_THRESHOLD).map((d, i) =>
-            toDetection(d, width, height, i),
-          );
-          return {
-            status: 'ok',
-            detections,
-            inferenceMs: Date.now() - started,
-            model: DAMAGE_MODEL.info,
-          };
-        } catch (caught) {
-          return {
-            status: 'error',
-            detections: [],
-            inferenceMs: null,
-            model: DAMAGE_MODEL.info,
-            error: caught instanceof Error ? caught.message : 'The scan failed.',
-          };
-        }
-      },
-      [handle],
-    );
+  useEffect(() => {
+    let cancelled = false;
+    createOnnxSession(source)
+      .then((session) => {
+        if (cancelled) return;
+        sessionRef.current = session;
+        setStatus('ready');
+      })
+      .catch(() => {
+        if (!cancelled) setStatus('error');
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [source]);
 
-    const status: DetectorStatus = handle.error ? 'error' : handle.isReady ? 'ready' : 'loading';
-    return { status, model: DAMAGE_MODEL.info, scanning: handle.isGenerating, scan };
-  };
+  const scan = useCallback(async (imageUri: string): Promise<YoloScanResult> => {
+    const session = sessionRef.current;
+    if (!session) {
+      return {
+        status: 'error',
+        detections: [],
+        inferenceMs: null,
+        model: DAMAGE_MODEL.info,
+        error: 'The model is still loading.',
+      };
+    }
+    setScanning(true);
+    try {
+      const scanned = await runOnnxDetection(session, imageUri, {
+        classNames: DAMAGE_MODEL.info.classes,
+        inputSize: INPUT_SIZE,
+        confThreshold: SCORE_THRESHOLD,
+        iouThreshold: IOU_THRESHOLD,
+      });
+      const detections = scanned.detections.map((d, i) =>
+        toDetection(d, scanned.imageW, scanned.imageH, i),
+      );
+      return {
+        status: 'ok',
+        detections,
+        inferenceMs: scanned.inferenceMs,
+        model: DAMAGE_MODEL.info,
+      };
+    } catch (caught) {
+      return {
+        status: 'error',
+        detections: [],
+        inferenceMs: null,
+        model: DAMAGE_MODEL.info,
+        error: caught instanceof Error ? caught.message : 'The scan failed.',
+      };
+    } finally {
+      setScanning(false);
+    }
+  }, []);
+
+  return { status, model: DAMAGE_MODEL.info, scanning, scan };
 }
 
 /**
  * The damage detector for the current build.
  *
- * Returns a live executorch-backed detector when a model and runtime are
+ * Returns a live onnxruntime-backed detector when the model and runtime are
  * present; otherwise a constant detector reporting 'no-model'/'unsupported' whose
- * `scan` resolves honestly to an empty, no-model result.
+ * `scan` resolves honestly to an empty, no-model result. The choice is fixed at
+ * module load so the hook count never changes between renders.
  */
 const MODEL_SOURCE = DAMAGE_MODEL.source;
 
 export const useDamageDetector: () => DamageDetector =
-  MODEL_SOURCE != null && useObjectDetection != null
-    ? makeExecutorchDetectorHook(MODEL_SOURCE, useObjectDetection)
+  MODEL_SOURCE != null && onnxAvailable
+    ? () => useOnnxDamageDetector(MODEL_SOURCE)
     : () => UNAVAILABLE_DETECTOR;

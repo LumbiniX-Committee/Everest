@@ -3,7 +3,7 @@ import { clamp01 } from '../../shared/geo.ts';
 /**
  * Detection geometry — the device-independent half of damage detection.
  *
- * The model runtime (react-native-executorch) hands back pixel-space boxes; the
+ * The inference pipeline (services/ai/onnx.ts) hands back pixel-space boxes; the
  * overlay draws in normalised 0–1 space so it scales to any container. That
  * conversion is the one piece of the vision pipeline that is pure maths, so it
  * lives here where the test harness covers it — the rest of the pipeline needs a
@@ -13,7 +13,7 @@ import { clamp01 } from '../../shared/geo.ts';
  * actually produced.
  */
 
-/** A pixel-space box as react-native-executorch returns it. */
+/** A pixel-space box in corner form, as the decode pipeline produces. */
 export type RawBbox = { x1: number; y1: number; x2: number; y2: number };
 
 /** A normalised box in 0–1 image space: top-left origin, width/height. */

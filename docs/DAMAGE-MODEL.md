@@ -4,96 +4,91 @@ Sākṣī's damage detector runs a real, on-device YOLO model against a recorded
 photograph and offers **candidates** the surveyor confirms. It never fabricates a
 finding and never files a report on its own.
 
-This document is the recipe for producing the model and switching it on. Until a
-model is dropped in, `DAMAGE_MODEL.source` is `null` and the feature is simply
-absent from the UI — the app is honest by omission, and the manual condition
-report works exactly as before.
+**Status: shipped.** A YOLOv8n crack detector (single class `crack`, **mAP50
+0.8167**), trained on the public crack-seg set for 80 epochs and exported to
+**ONNX**, lives at `assets/models/crack-seg.onnx` and is fully wired in. The scan
+appears in the UI as soon as a dev build includes the native runtime (see Step 3).
+
+This document is the recipe for reproducing the model and the runtime.
 
 ---
 
-## What already exists in the app (done)
+## What exists in the app (done)
 
-- **`core/vision/detect.ts`** — pure bbox-normalisation + score-filtering, unit-tested.
-- **`services/ai/executorch.ts`** — the single guarded seam to `react-native-executorch`. Absent runtime → the detector reports `unsupported`, never a crash.
-- **`services/ai/yoloEngine.ts`** — honest types (`YoloDetection`, `YoloScanResult`, `ModelInfo`), the class → condition-category maps, `useDamageDetector()`, and the `DAMAGE_MODEL` config seam.
+- **`core/vision/letterbox.ts`** — pure aspect-preserving resize/pad geometry, the CHW input-tensor packing, and the inverse box mapping. Unit-tested.
+- **`core/vision/yolo.ts`** — pure YOLOv8 output decode (both tensor layouts) + IoU + non-maximum suppression. Unit-tested.
+- **`core/vision/detect.ts`** — pure bbox-normalisation + score-filtering. Unit-tested.
+- **`services/ai/onnx.ts`** — the single guarded seam to `onnxruntime-react-native`, `expo-image-manipulator`, `jpeg-js` and `expo-asset`. Absent runtime → the detector reports `unsupported`, never a crash. Contains the full preprocess → run → postprocess pipeline built on the pure core above.
+- **`services/ai/yoloEngine.ts`** — honest types (`YoloDetection`, `YoloScanResult`, `ModelInfo`), the class → condition-category maps, `useDamageDetector()`, and the `DAMAGE_MODEL` config.
 - **`components/observation/`** — `YoloVisionOverlay` (dashed *candidate* boxes) and `PathologySummaryCard` (real model name, real inference time, honest mAP, empty-state honesty).
 - **`ObservationScreen`** — opt-in "Scan photo for damage" → candidates → editable pre-fill.
 - **Provenance** — `condition_reports.ai_assisted` (migration index 10) records a confirmed-from-AI report.
+- **`metro.config.js`** — `.onnx` (and `.pte`) registered as bundled asset extensions.
 
-You supply: **the trained `.pte` model file**, and flip three switches below.
+---
+
+## Why ONNX (not ExecuTorch)
+
+The app was first scaffolded around `react-native-executorch`'s object-detection
+hook, which decodes YOLO output for you. The ExecuTorch `.pte` export is finicky,
+so training produced a rock-solid **ONNX** file instead. `onnxruntime-react-native`
+returns a *raw tensor*, so the decode the hook would have hidden is done
+explicitly in `core/vision/yolo.ts` and `services/ai/onnx.ts`. This is ~all of the
+value with a reliable export. If you later get a working `.pte`, the only file
+that changes is `services/ai/onnx.ts` (swap the runtime); the pure decode/geometry
+in `core/vision` and the whole UI stay put.
 
 ---
 
 ## Step 1 — Train (Colab free T4, ~1.5–3 h)
 
-You do **not** need to collect a dataset. Use a public one.
-
-```python
-!pip install ultralytics
-# 4,029-image crack instance-segmentation set, auto-downloaded by Ultralytics:
-!yolo segment train model=yolov8n-seg.pt data=crack-seg.yaml epochs=80 imgsz=640
-# For plain boxes (matches the current overlay, simplest): use detect instead:
-# !yolo detect train model=yolov8n.pt data=crack-seg.yaml epochs=80 imgsz=640
-```
-
-Watch **`mAP50`** in the output — that is the honest accuracy number you will put
-in the UI. Do not round it up.
+Run [`docs/train-crack-seg.ipynb`](train-crack-seg.ipynb). You do **not** need to
+collect a dataset — Ultralytics auto-downloads the public 4,029-image crack set.
+The notebook trains `yolov8n` (detection, boxes — what the overlay draws), prints
+the honest **`mAP50`**, exports ONNX first (reliably), and zips it for download.
 
 > Scope honestly: most public data is **crack-only (single class)**. Ship a good
-> crack detector rather than a bad five-class one. `docs`/`SAKSHI-COMPLETE.md`
-> §5.2 B15 and the spec's own words: *"five classes done well beats eight done
-> badly… report mAP honestly. Do not claim conservator-grade assessment."*
+> crack detector rather than a bad five-class one, and report mAP honestly. Do not
+> claim conservator-grade assessment.
 
-## Step 2 — Export to ExecuTorch
+## Step 2 — Export (handled by the notebook)
 
-```python
-!yolo export model=runs/segment/train/weights/best.pt format=executorch
-#   → best.pte (+ metadata.yaml)
-```
-
-**Fallback** if the `.pte` export fights you (it can): export ONNX and switch the
-runtime in `services/ai/executorch.ts` to onnxruntime-react-native — ~90% of the
-value, rock-solid export:
-
-```python
-!yolo export model=runs/segment/train/weights/best.pt format=onnx
-```
+The notebook's Step 5 produces `crack-seg.onnx`. (Step 5b optionally attempts a
+`.pte`; ignore it unless you specifically want the ExecuTorch runtime.) Keep the
+`mAP50` it printed — you paste it in below, unrounded.
 
 ## Step 3 — Drop it in
 
-1. Put the file at **`assets/models/crack-seg.pte`**.
-2. In **`services/ai/yoloEngine.ts`**, set the config:
-   ```ts
-   export const DAMAGE_MODEL = {
-     source: require('../../assets/models/crack-seg.pte'), // was null
-     info: {
-       name: 'YOLOv8n crack detector',
-       version: '0.1.0',
-       classes: ['crack'],
-       mAP50: 0.__,          // ← the real mAP50 from Step 1
-       runtime: 'executorch',
-     },
-   };
-   ```
-   If you trained more than crack, extend `classes` and the `LABEL_TO_PATHOLOGY`
-   map in the same file so the model's class strings map to condition categories.
-3. Install the runtime and rebuild the dev client (it is a native module — **not**
-   Expo Go; you already need a dev build for MapLibre):
+1. Put the file at **`assets/models/crack-seg.onnx`** (overwrites the shipped one).
+2. In **`services/ai/yoloEngine.ts`**, update `DAMAGE_MODEL.info.mAP50` to the
+   number your training run reported, and `classes` if you trained more than
+   `crack` (also extend `LABEL_TO_PATHOLOGY` in the same file so each class string
+   maps to a condition category). `source` already points at the `.onnx`.
+3. Install the runtime and rebuild the dev client (native module — **not** Expo
+   Go; you already need a dev build for MapLibre):
    ```bash
-   npm i react-native-executorch
+   npx expo install onnxruntime-react-native expo-image-manipulator expo-asset
+   npm i jpeg-js
    npx expo prebuild
    eas build --profile development --platform android   # or ios
    ```
 
 ## Step 4 — Verify on device
 
-- Requirements: **New Architecture** (you're on RN 0.86 ✓), **iOS 17+ / Android 13+**.
-- Open an observation → **Scan photo for damage** → boxes appear over the photo,
-  the summary shows the real model + mAP + inference time.
-- **Check the box coordinate space.** The one untested assumption is that the
-  runtime returns boxes in *original-image* pixel space. If boxes look shifted or
-  scaled, adjust the single marked line in `useExecutorchDamageDetector`
-  (`services/ai/yoloEngine.ts`) that calls `imageSize()` / `normalizeBbox()`.
+- Requirements: **New Architecture** (you're on RN 0.86 ✓). A dev build that
+  installed the packages above.
+- Open an observation → **Scan photo for damage** → dashed candidate boxes appear
+  over the photo; the summary shows the real model + mAP + measured inference time.
+- **Three untested-until-device seams** (all isolated in `services/ai/onnx.ts`):
+  1. **Model loading** — the session is created from the model *bytes*
+     (`InferenceSession.create(Uint8Array)`). If your onnxruntime version rejects
+     bytes, switch to a file path (resolve `Asset.localUri`).
+  2. **ImageManipulator API** — uses the SDK 54+ context API
+     (`ImageManipulator.manipulate(uri).resize(...).renderAsync()` →
+     `saveAsync({ base64, format })`). Adjust if your installed version differs.
+  3. **Box coordinate space** — the decode assumes YOLOv8's standard
+     `[1, 4+nc, 8400]` output in input-pixel space, letterboxed centre. If boxes
+     look shifted/scaled, the fix is in `runOnnxDetection` / `undoLetterbox`.
 
 ---
 
