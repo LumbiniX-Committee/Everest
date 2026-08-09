@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
 import { LoadingState } from '@/components/common';
@@ -12,7 +11,7 @@ import {
   type ChatTranscriptHandle,
 } from '@/components/chat';
 import { SpeakButton } from '@/components/voice/SpeakButton';
-import { useKeyboardInset } from '@/hooks';
+import { useKeyboardInset, useSceneBottomGap } from '@/hooks';
 import { dhamma } from '@/services';
 import type { CrisisHelpline, DhammaLanguage } from '@/services/dhamma';
 import { colors, radii, spacing } from '@/theme';
@@ -131,7 +130,10 @@ export function ReflectionScreen({ siteId }: { siteId?: string }) {
   // keyboard is up it occupies that space and padding for both would leave the
   // input floating above the keys.
   const keyboardInset = useKeyboardInset();
-  const insets = useSafeAreaInsets();
+  // Minus the scene's own gap below the window: this screen renders inside the
+  // tab navigator, so padding by the whole keyboard height left a dead band of
+  // exactly the tab bar's height under the composer. See `useSceneBottomGap`.
+  const { ref: sceneRef, onLayout: onSceneLayout, gap: sceneGap } = useSceneBottomGap();
 
   const transcriptRef = useRef<ChatTranscriptHandle>(null);
   const idRef = useRef(0);
@@ -285,7 +287,11 @@ export function ReflectionScreen({ siteId }: { siteId?: string }) {
 
   return (
     <Screen edges={['top']} contentStyle={styles.fill}>
-      <View style={[styles.fill, { paddingBottom: keyboardInset }]}>
+      <View
+        ref={sceneRef}
+        onLayout={onSceneLayout}
+        style={[styles.fill, { paddingBottom: Math.max(0, keyboardInset - sceneGap) }]}
+      >
         <View style={styles.header}>
           <Text variant="label" tone="muted" uppercase>
             {t.eyebrow}
@@ -363,7 +369,9 @@ export function ReflectionScreen({ siteId }: { siteId?: string }) {
           />
         ) : (
           <View
-            style={[styles.footerActions, { paddingBottom: insets.bottom + spacing.md }]}
+            // No safe-area inset: this screen sits inside the tab navigator and
+            // SurfaceTabBar already clears the gesture bar for the whole scene.
+            style={styles.footerActions}
           >
             <Button label={t.startAgain} variant="secondary" onPress={startAgain} />
             <Button label={t.back} variant="quiet" onPress={() => router.back()} />

@@ -9,3 +9,4 @@ export { useDemoWalk, type DemoWalkState } from './useDemoWalk';
 export { useNarration, type NarrationState } from './useNarration';
 export { useStoryProgress, type StoryProgress } from './useStoryProgress';
 export { useKeyboardInset } from './useKeyboardInset';
+export { useSceneBottomGap } from './useSceneBottomGap';

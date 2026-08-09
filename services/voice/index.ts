@@ -11,10 +11,13 @@ export type VoiceLanguage = 'en' | 'ne';
  * and the app does not start at all. Not the voice feature: the app.
  *
  * So it is required lazily behind an availability check, the same guard
- * expo-image-picker, expo-notifications and MapLibre already use here. The
- * sibling hook `hooks/useVoiceInput.ts` does this with a dynamic import for
- * expo-speech-recognition; this is the same idea, kept synchronous because
- * `speakText` is called straight from an onPress.
+ * expo-image-picker, expo-notifications and MapLibre already use here. Kept
+ * synchronous because `speakText` is called straight from an onPress.
+ *
+ * This is speech *out*. Speech in is gone: `useVoiceInput` and
+ * expo-speech-recognition needed a development build, so in Expo Go the button
+ * only ever printed an error, and typing a question was never the slow part.
+ * Reading an answer aloud stays, on every surface that had it.
  *
  * Where speech is missing everything degrades to a no-op and `isSpeechSupported`
  * reports false, so the UI can leave the control out rather than offer a button

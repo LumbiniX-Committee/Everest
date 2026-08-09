@@ -74,13 +74,6 @@
       ],
       "@maplibre/maplibre-react-native",
       "expo-audio",
-      [
-        "expo-speech-recognition",
-        {
-          "microphonePermission": "Sākṣī uses the microphone so you can ask a question aloud.",
-          "speechRecognitionPermission": "Sākṣī uses speech recognition to transcribe your question."
-        }
-      ],
       "onnxruntime-react-native",
       "expo-asset",
       "llama.rn"

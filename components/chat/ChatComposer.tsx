@@ -1,8 +1,6 @@
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Icon, Text } from '@/components/ui';
-import { useKeyboardInset } from '@/hooks';
 import { colors, font, radii, spacing } from '@/theme';
 
 /**
@@ -20,8 +18,11 @@ import { colors, font, radii, spacing } from '@/theme';
  * handle it, and subtracts any shrink the window *did* do so the space is never
  * paid for twice.
  *
- * The bottom safe area is only paid while the keyboard is down; once it is up,
- * the keys already occupy that strip and adding to it floats the bar.
+ * The bottom safe area is not paid here at all. Both screens that use this bar
+ * render inside the tab navigator, and `SurfaceTabBar` already clears the
+ * gesture bar for the whole scene — paying it twice was half of the dead band
+ * under the composer in the screenshots. The other half was the screen padding
+ * by the full keyboard height; see `useSceneBottomGap`.
  */
 
 export type ChatComposerProps = {
@@ -46,17 +47,10 @@ export function ChatComposer({
   sendLabel,
   onGrow,
 }: ChatComposerProps) {
-  const insets = useSafeAreaInsets();
-  const keyboardInset = useKeyboardInset();
   const canSend = value.trim().length > 0 && !busy;
 
   return (
-    <View
-      style={[
-        styles.bar,
-        { paddingBottom: keyboardInset > 0 ? spacing.md : insets.bottom + spacing.md },
-      ]}
-    >
+    <View style={styles.bar}>
       <TextInput
         value={value}
         onChangeText={onChangeText}
@@ -106,6 +100,7 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     paddingHorizontal: spacing.gutter,
     paddingTop: spacing.sm,
+    paddingBottom: spacing.md,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: colors.border,
     backgroundColor: colors.background,

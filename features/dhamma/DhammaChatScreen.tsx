@@ -8,7 +8,7 @@ import { ChatBubble, ChatComposer, ChatTranscript, SourceList, type ChatTranscri
 import { SourceDetailSheet } from '@/components/source';
 import { SpeakButton } from '@/components/voice/SpeakButton';
 import { findDhammaEntry } from '@/data';
-import { useKeyboardInset } from '@/hooks';
+import { useKeyboardInset, useSceneBottomGap } from '@/hooks';
 import { dhamma } from '@/services';
 import type { DhammaLanguage } from '@/services/dhamma';
 import { colors, radii, spacing } from '@/theme';
@@ -35,11 +35,48 @@ import { isGrounded, type DhammaAnswer, type Source } from '@/types';
  * animation, and any implication that the app is thinking. The wait says
  * "Searching the collections", because that is what is happening.
  *
- * A refusal is a turn like any other, and keeps everything that makes it a trust
- * feature: the reason, the collections actually searched, related-but-not-an-
- * answer citations, and the questions the collection *can* answer as chips you
- * can tap — which, in a chat, simply asks the next question.
+ * A refusal is a turn like any other, and keeps the part that makes it a trust
+ * feature: the sentence, the reason it could not be answered, and any citations
+ * that are related without being an answer.
+ *
+ * What it no longer carries is the furniture. "Collections searched" listed four
+ * collection names under every refusal, and "The collection can answer" offered
+ * three canned questions as chips. Both were the app talking about its own index
+ * rather than about what was asked, and after two refusals the screen was mostly
+ * that list. The data is still in `RefusedAnswer`; it simply stops being shown.
  */
+
+/**
+ * The labels around an answer, in the language of the answer.
+ *
+ * A Nepali refusal under an English WHY was the app changing language halfway
+ * down its own reply. The reply's language now governs its labels, the way it
+ * already does in `ReflectionScreen`.
+ */
+const L = {
+  ne: {
+    surface: 'धम्म',
+    restsOn: 'यो केमा आधारित छ',
+    doesNotSettle: 'यसले के टुंग्याउँदैन',
+    sitWith: 'मनन गर्न',
+    why: 'किन',
+    related: 'सम्बन्धित, तर उत्तर होइन',
+    askAnother: 'अर्को प्रश्न सोध्नुहोस्',
+    searching: 'संग्रह खोज्दै',
+    failed: 'अहिले संग्रह खोज्न सकिएन। फेरि प्रयास गर्नुहोस्।',
+  },
+  en: {
+    surface: 'Dhamma',
+    restsOn: 'What this rests on',
+    doesNotSettle: 'What this does not settle',
+    sitWith: 'To sit with',
+    why: 'Why',
+    related: 'Related, but not an answer',
+    askAnother: 'Ask another question',
+    searching: 'Searching the collections',
+    failed: 'The collections could not be searched just now. Try again.',
+  },
+} as const;
 
 type Turn =
   | { id: string; from: 'user'; text: string }
@@ -58,9 +95,19 @@ export function DhammaChatScreen({ questionId, query }: { questionId?: string; q
   const idRef = useRef(0);
   const nextId = () => `t${(idRef.current += 1)}`;
 
-  // The composer pins itself above the keyboard; the transcript has to give up
-  // the same height or its last turn sits behind the keys.
+  /**
+   * The composer pins itself above the keyboard, and the transcript gives up the
+   * same height so its last turn is not behind the keys.
+   *
+   * Minus the gap, which is the fix for the dead band in the screenshots: this
+   * screen renders inside the tab navigator, so its scene already ends above the
+   * window bottom that `useKeyboardInset` measures against. Padding by the whole
+   * keyboard height left a strip of exactly the tab bar's height between the
+   * composer and the keys.
+   */
   const keyboardInset = useKeyboardInset();
+  const { ref: sceneRef, onLayout: onSceneLayout, gap: sceneGap } = useSceneBottomGap();
+  const bottomPad = Math.max(0, keyboardInset - sceneGap);
 
   const ask = useCallback(
     async (question: string, asLanguage: DhammaLanguage) => {
@@ -77,7 +124,7 @@ export function DhammaChatScreen({ questionId, query }: { questionId?: string; q
         // No fabricated answer and no silent drop. `services/dhamma` already
         // falls back to on-device retrieval, so reaching here means even that
         // failed — which is worth saying plainly.
-        setError('The collections could not be searched just now. Try again.');
+        setError(L[asLanguage].failed);
       } finally {
         setBusy(false);
       }
@@ -122,7 +169,7 @@ export function DhammaChatScreen({ questionId, query }: { questionId?: string; q
 
   return (
     <Screen edges={['top']} contentStyle={styles.fill}>
-      <View style={[styles.fill, { paddingBottom: keyboardInset }]}>
+      <View ref={sceneRef} onLayout={onSceneLayout} style={[styles.fill, { paddingBottom: bottomPad }]}>
         <View style={styles.header}>
           <Pressable
             accessibilityRole="button"
@@ -133,7 +180,7 @@ export function DhammaChatScreen({ questionId, query }: { questionId?: string; q
           >
             <Icon name="chevron-left" size={22} color={colors.textSecondary} />
             <Text variant="label" tone="muted" uppercase>
-              Dhamma
+              {L[language].surface}
             </Text>
           </Pressable>
 
@@ -166,7 +213,6 @@ export function DhammaChatScreen({ questionId, query }: { questionId?: string; q
                 answer={turn.answer}
                 language={turn.language}
                 onOpenSource={setOpenSource}
-                onAskSuggestion={(suggestion) => void ask(suggestion, language)}
               />
             ),
           )}
@@ -178,7 +224,7 @@ export function DhammaChatScreen({ questionId, query }: { questionId?: string; q
                 "Searching the collections" is both true and more informative
                 than a cursor pretending to compose prose.
               */}
-              <LoadingState label="Searching the collections" fill={false} />
+              <LoadingState label={L[language].searching} fill={false} />
             </View>
           ) : null}
 
@@ -196,7 +242,7 @@ export function DhammaChatScreen({ questionId, query }: { questionId?: string; q
           onChangeText={setInput}
           onSend={send}
           busy={busy}
-          placeholder="Ask another question"
+          placeholder={L[language].askAnother}
           onGrow={() => transcriptRef.current?.scrollToEnd()}
         />
       </View>
@@ -218,13 +264,13 @@ function AnswerTurn({
   answer,
   language,
   onOpenSource,
-  onAskSuggestion,
 }: {
   answer: DhammaAnswer;
   language: DhammaLanguage;
   onOpenSource: (source: Source) => void;
-  onAskSuggestion: (suggestion: string) => void;
 }) {
+  const t = L[language];
+
   if (isGrounded(answer)) {
     const passages = answer.evidence.filter((item) => item.passage);
     return (
@@ -235,7 +281,7 @@ function AnswerTurn({
         {passages.length > 0 ? (
           <View style={styles.evidence}>
             <Text variant="label" tone="muted" uppercase>
-              What this rests on
+              {t.restsOn}
             </Text>
             {passages.map((item, index) => (
               <Text key={`${item.citation.sourceId}-${index}`} variant="mono" tone="sandstone">
@@ -248,7 +294,7 @@ function AnswerTurn({
         {answer.caveat ? (
           <View style={styles.caveat}>
             <Text variant="label" tone="seeking" uppercase>
-              What this does not settle
+              {t.doesNotSettle}
             </Text>
             <Text variant="body" tone="secondary">
               {answer.caveat}
@@ -261,7 +307,7 @@ function AnswerTurn({
         {answer.reflectionPrompt ? (
           <View style={styles.prompt}>
             <Text variant="label" tone="muted" uppercase>
-              To sit with
+              {t.sitWith}
             </Text>
             {/*
               A question, left open. No text box and nothing saved — §14 ends its
@@ -281,67 +327,28 @@ function AnswerTurn({
     <ChatBubble from="companion" accent="muted" wide>
       {/*
         §25. The refusal is a trust feature, not an error state: it is set in the
-        same type as an answer, carries what was searched so the reader can see
-        it resulted from looking, and always offers somewhere to go next.
+        same type as an answer and says why it could not be answered.
       */}
       <Text variant="bodyLarge">{answer.text}</Text>
 
       <View style={styles.block}>
         <Text variant="label" tone="muted" uppercase>
-          Why
+          {t.why}
         </Text>
         <Text variant="body" tone="secondary">
           {answer.reason}
         </Text>
       </View>
 
-      <View style={styles.block}>
-        <Text variant="label" tone="muted" uppercase>
-          Collections searched
-        </Text>
-        {answer.searched.map((collection) => (
-          <Text key={collection} variant="caption" tone="secondary">
-            {collection}
-          </Text>
-        ))}
-      </View>
-
       {answer.related.length > 0 ? (
         <SourceList
           citations={answer.related}
-          label="Related, but not an answer"
+          label={t.related}
           numbered={false}
           onOpenSource={onOpenSource}
         />
       ) : null}
 
-      {answer.suggestions.length > 0 ? (
-        <View style={styles.block}>
-          <Text variant="label" tone="muted" uppercase>
-            The collection can answer
-          </Text>
-          {/*
-            Chips rather than links to another screen. In a chat, tapping one is
-            simply asking it — the refusal stays above as the reason the second
-            question is being asked at all.
-          */}
-          <View style={styles.suggestions}>
-            {answer.suggestions.map((suggestion) => (
-              <Pressable
-                key={suggestion}
-                accessibilityRole="button"
-                accessibilityLabel={`Ask: ${suggestion}`}
-                onPress={() => onAskSuggestion(suggestion)}
-                style={({ pressed }) => [styles.suggestion, pressed && styles.pressed]}
-              >
-                <Text variant="caption" tone="sandstone">
-                  {suggestion}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-        </View>
-      ) : null}
     </ChatBubble>
   );
 }
@@ -404,14 +411,4 @@ const styles = StyleSheet.create({
   caveat: { gap: spacing.xs },
   block: { gap: spacing.xs },
   prompt: { gap: spacing.xs },
-  suggestions: { gap: spacing.xs, alignItems: 'flex-start' },
-  suggestion: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-    borderRadius: radii.md,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.sandstone,
-    backgroundColor: colors.surface,
-  },
-  pressed: { opacity: 0.7 },
 });

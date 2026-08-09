@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Image, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -13,7 +13,6 @@ import { Screen, Text } from '@/components/ui';
 import { SettingsButton } from '@/components/common';
 import { demoDhammaEntries, findSource } from '@/data';
 import { colors, font, radii, spacing } from '@/theme';
-import { useVoiceInput } from '@/hooks/useVoiceInput';
 
 /**
  * Dhamma — grounded knowledge.
@@ -60,11 +59,6 @@ export function DhammaScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [question, setQuestion] = useState('');
-  const voice = useVoiceInput();
-
-  useEffect(() => {
-    if (voice.transcript) setQuestion(voice.transcript);
-  }, [voice.transcript]);
 
   const askTyped = () => {
     const text = question.trim();
@@ -135,40 +129,6 @@ export function DhammaScreen() {
             <MaterialCommunityIcons name="send" size={20} color={colors.surface} />
           </Pressable>
         </View>
-
-        {/*
-          Only the voice control here now. "Ask" used to sit beside it doing
-          exactly what the send mark inside the field does, and two controls for
-          one action is two things to decide between rather than one to press.
-        */}
-        <View style={styles.actions}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={voice.isListening ? 'Stop voice' : 'Voice'}
-            accessibilityHint="Speak a Nepali question into the microphone"
-            onPress={() => (voice.isListening ? voice.stop() : void voice.start('ne'))}
-            style={({ pressed }) => [
-              styles.voiceButton,
-              voice.isListening && styles.voiceButtonActive,
-              pressed && styles.pressed,
-            ]}
-          >
-            <MaterialCommunityIcons
-              name={voice.isListening ? 'stop-circle-outline' : 'waveform'}
-              size={20}
-              color={colors.sandstoneDeep}
-            />
-            <Text variant="button" tone="sandstone">
-              {voice.isListening ? 'Stop' : 'Voice'}
-            </Text>
-          </Pressable>
-        </View>
-
-        {voice.error ? (
-          <Text variant="caption" tone="open">
-            {voice.error}
-          </Text>
-        ) : null}
 
         {/*
           Said before asking, not after refusing. Someone who knows the corpus
@@ -382,20 +342,10 @@ const styles = StyleSheet.create({
   },
   sendDisabled: { opacity: 0.35 },
 
-  actions: { flexDirection: 'row', gap: spacing.md },
-  voiceButton: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.sm,
-    minHeight: 52,
-    borderRadius: radii.md,
-    borderWidth: 1,
-    borderColor: colors.sandstone,
-    backgroundColor: colors.surface,
-  },
-  voiceButtonActive: { backgroundColor: colors.surfaceSecondary },
+  // `pressed` is shared by the send mark, the reflection button and every entry
+  // card. The voice button that used to live beside them is gone: speech
+  // recognition needed a development build, so in Expo Go it only ever printed
+  // an error under the field, and the field itself was never the slow part.
   pressed: { opacity: 0.7 },
 
   note: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm },
