@@ -1,12 +1,16 @@
 import { useCallback, useState } from 'react';
 import { useFocusEffect, useRouter } from 'expo-router';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
 
 import { Button, Card, Chip, Screen, Text } from '@/components/ui';
 import { EmptyState, ScreenHeader, SettingsButton } from '@/components/common';
 import { VantageListItem } from '@/components/site';
 import { PracticeSummaryCard } from '@/components/practice';
 import { demoVantages, findSite } from '@/data';
+
+const siteHeroImages: Record<string, number> = {
+  'maya-devi-temple': require('../../assets/plates/maya-devi-temple.aerial.jpg'),
+};
 import { useCurrentPosition } from '@/hooks';
 import { database } from '@/services';
 import { usePractice } from '@/store';
@@ -70,29 +74,40 @@ export function SakshiScreen() {
       {/* Hero Quick Witness Card */}
       {nearestVantage ? (
         <View style={styles.heroCard}>
-          <View style={styles.heroHeader}>
-            <Chip label="NEAREST VANTAGE" />
-            {nearestDistance != null ? (
-              <Text variant="mono" tone="sandstone" style={styles.heroDistance}>
-                {formatDistance(nearestDistance)}
-              </Text>
-            ) : null}
+          {nearestSite && siteHeroImages[nearestSite.id] ? (
+            <View style={styles.heroImageBanner}>
+              <Image
+                source={siteHeroImages[nearestSite.id]}
+                style={styles.heroImage}
+                resizeMode="cover"
+              />
+            </View>
+          ) : null}
+          <View style={styles.heroBody}>
+            <View style={styles.heroHeader}>
+              <Chip label="NEAREST VANTAGE" />
+              {nearestDistance != null ? (
+                <Text variant="mono" tone="sandstone" style={styles.heroDistance}>
+                  {formatDistance(nearestDistance)}
+                </Text>
+              ) : null}
+            </View>
+            <Text variant="heading" style={styles.heroTitle}>
+              {nearestSite?.name ?? 'Sacred Site'} — {nearestVantage.label}
+            </Text>
+            <Text variant="caption" tone="secondary" style={styles.heroSub}>
+              Tolerance: ±{nearestVantage.positionToleranceM} m · ±{nearestVantage.bearingToleranceDeg}°
+            </Text>
+            <Button
+              label="Align & Witness Now"
+              onPress={() =>
+                router.push({
+                  pathname: '/(main)/sakshi/vantage',
+                  params: { vantageId: nearestVantage.id },
+                })
+              }
+            />
           </View>
-          <Text variant="heading" style={styles.heroTitle}>
-            {nearestSite?.name ?? 'Sacred Site'} — {nearestVantage.label}
-          </Text>
-          <Text variant="caption" tone="secondary" style={styles.heroSub}>
-            Tolerance: ±{nearestVantage.positionToleranceM} m · ±{nearestVantage.bearingToleranceDeg}°
-          </Text>
-          <Button
-            label="Align & Witness Now"
-            onPress={() =>
-              router.push({
-                pathname: '/(main)/sakshi/vantage',
-                params: { vantageId: nearestVantage.id },
-              })
-            }
-          />
         </View>
       ) : null}
 
@@ -237,11 +252,22 @@ const assessmentTone: Record<ObservationAssessment, 'seeking' | 'resolved' | 'op
 const styles = StyleSheet.create({
   heroCard: {
     marginTop: spacing.md,
-    padding: spacing.base,
     borderRadius: radii.lg,
     backgroundColor: colors.surfaceSecondary,
     borderWidth: 1.5,
     borderColor: colors.sandstone,
+    overflow: 'hidden',
+  },
+  heroImageBanner: {
+    width: '100%',
+    aspectRatio: 2.8,
+  },
+  heroImage: {
+    width: '100%',
+    height: '100%',
+  },
+  heroBody: {
+    padding: spacing.base,
     gap: spacing.sm,
   },
   heroHeader: {
