@@ -36,28 +36,23 @@ export function OnboardingFrame({
 
   return (
     <Screen edges={['top', 'bottom']} contentStyle={styles.content}>
-      {canGoBack ? (
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Back"
-          hitSlop={{ top: 8, bottom: 8, left: 12, right: 12 }}
-          onPress={() => router.back()}
-          style={({ pressed }) => [styles.back, pressed && styles.backPressed]}
-        >
-          <Text variant="body" tone="secondary">
-            ‹ Back
-          </Text>
-        </Pressable>
-      ) : null}
-
       {showProgress ? (
         <Animated.View
           entering={FadeIn.duration(400)}
           style={styles.progress}
           accessibilityRole="progressbar"
+          accessibilityValue={{ min: 1, max: TOTAL_STEPS, now: index + 1 }}
+          accessibilityLabel={`Step ${index + 1} of ${TOTAL_STEPS}`}
         >
           {Array.from({ length: TOTAL_STEPS }, (_, i) => (
-            <View key={i} style={[styles.mark, i <= index && styles.markActive]} />
+            <View
+              key={i}
+              style={[
+                styles.mark,
+                i === index && styles.markCurrent,
+                i < index && styles.markDone,
+              ]}
+            />
           ))}
         </Animated.View>
       ) : (
@@ -71,8 +66,30 @@ export function OnboardingFrame({
         {children}
       </Animated.View>
 
-      <Animated.View entering={FadeInDown.delay(90).duration(380)} style={styles.footer}>
-        {footer}
+      {/* Back sits beside the action rather than up in the corner. It is the
+          one control someone reaches for while already holding the phone to
+          press Continue, and a top-left target on a tall screen is a two-handed
+          reach for a one-handed decision. The action keeps the width it had —
+          back takes its own square, not a share of the button. */}
+      <Animated.View entering={FadeInDown.delay(90).duration(380)} style={styles.footerRow}>
+        {canGoBack ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Back"
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            onPress={() => router.back()}
+            style={({ pressed }) => [styles.back, pressed && styles.backPressed]}
+          >
+            {/* `title` rather than `body`: a lone chevron at 16pt reads as a
+                stray mark inside a 52pt circle. The glyph carries no text, so
+                the size is doing the work the word "Back" used to do. */}
+            <Text variant="title" tone="secondary">
+              ‹
+            </Text>
+          </Pressable>
+        ) : null}
+
+        <View style={styles.footer}>{footer}</View>
       </Animated.View>
     </Screen>
   );
@@ -80,22 +97,45 @@ export function OnboardingFrame({
 
 const styles = StyleSheet.create({
   back: {
-    alignSelf: 'flex-start',
-    minHeight: 44,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    borderWidth: 1,
+    borderColor: colors.border,
+    alignItems: 'center',
     justifyContent: 'center',
-    paddingRight: spacing.md,
   },
-  backPressed: { opacity: 0.6 },
+  backPressed: { opacity: 0.6, backgroundColor: colors.surfaceSecondary },
   content: { paddingTop: spacing.lg },
-  progress: { flexDirection: 'row', gap: spacing.sm, height: 2 },
-  progressSpacer: { height: 2 },
+
+  // Dots rather than a divided bar. A bar cut into equal segments reads as one
+  // thing partly filled, which invites "how much is left"; discrete marks read
+  // as a short list of places, which is what five screens are. The current one
+  // is a lozenge instead of a dot — the same weight of ink, held longer, so
+  // position is legible at a glance without adding a second colour.
+  progress: { flexDirection: 'row', gap: spacing.sm, height: 6, alignItems: 'center' },
+  progressSpacer: { height: 6 },
   mark: {
-    flex: 1,
-    height: 2,
-    borderRadius: radii.sm,
+    width: 6,
+    height: 6,
+    borderRadius: 3,
     backgroundColor: colors.border,
   },
-  markActive: { backgroundColor: colors.sandstone },
+  markCurrent: {
+    width: 26,
+    backgroundColor: colors.sandstone,
+  },
+  // Behind you, but still yours: filled, and quieter than the one you are on.
+  markDone: { backgroundColor: colors.sandstoneDeep, opacity: 0.4 },
+
   body: { flex: 1, justifyContent: 'center', paddingVertical: spacing.xxl },
-  footer: { paddingBottom: spacing.lg, gap: spacing.md },
+  footerRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: spacing.md,
+    paddingBottom: spacing.lg,
+  },
+  // flex:1 so a `block` Button fills whatever back leaves, and so a screen
+  // whose footer stacks a caption under the button keeps that column intact.
+  footer: { flex: 1, gap: spacing.md },
 });
