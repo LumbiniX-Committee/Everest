@@ -13,6 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GreetingMonk } from '@/components/monk';
 import { buildStory, type StoryBeat } from '@/core';
 import { findSite } from '@/data';
+import { useNarration } from '@/hooks';
 import { arrival } from '@/services';
 import { usePreferences } from '@/store';
 import { colors, radii, spacing } from '@/theme';
@@ -229,6 +230,9 @@ export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQu
   const [showUnlock, setShowUnlock] = useState(false);
   const [confetti, setConfetti] = useState(false);
 
+  // Play real human-recorded voice narration when avatar speaks
+  const narration = useNarration(visible ? siteId : null, { autoPlay: preferences.autoNarration });
+
   const beats = useMemo(() => {
     const significance = arrival.significanceOf(siteId, preferences.wisdomTier);
     if (!significance) return [];
@@ -310,14 +314,21 @@ export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQu
   const back = () => setIndex((i) => Math.max(0, i - 1));
 
   const handleUnlockClose = () => {
+    narration.stop();
     setShowUnlock(false);
     onComplete(siteId);
   };
 
   const handleQuestsFromUnlock = () => {
+    narration.stop();
     setShowUnlock(false);
     onComplete(siteId);
     onOpenQuests?.();
+  };
+
+  const handleDismiss = () => {
+    narration.stop();
+    onDismiss();
   };
 
   return (
@@ -371,15 +382,32 @@ export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQu
             {/* Tail pointing left toward avatar */}
             <View style={styles.bubbleTail} />
 
-            {/* Top row: chapter eyebrow + dismiss */}
+            {/* Top row: chapter eyebrow + human voice narration button + dismiss */}
             <View style={styles.eyebrowRow}>
-              <View style={styles.eyebrowPill}>
-                <RNText style={styles.eyebrowTxt}>
-                  {isDiscovery ? '✦  Wisdom Unlocked' : beat.eyebrow.toUpperCase()}
-                </RNText>
+              <View style={styles.eyebrowLeft}>
+                <View style={styles.eyebrowPill}>
+                  <RNText style={styles.eyebrowTxt}>
+                    {isDiscovery ? '✦  Wisdom Unlocked' : beat.eyebrow.toUpperCase()}
+                  </RNText>
+                </View>
+
+                {narration.hasAudio ? (
+                  <Pressable
+                    onPress={narration.toggle}
+                    hitSlop={12}
+                    accessibilityRole="button"
+                    accessibilityLabel={narration.playing ? 'Pause human voice' : 'Play human voice'}
+                    style={[styles.voicePill, narration.playing && styles.voicePillPlaying]}
+                  >
+                    <RNText style={[styles.voiceTxt, narration.playing && styles.voiceTxtPlaying]}>
+                      {narration.playing ? '🔊 Voice' : '🔈 Voice'}
+                    </RNText>
+                  </Pressable>
+                ) : null}
               </View>
+
               <Pressable
-                onPress={onDismiss}
+                onPress={handleDismiss}
                 hitSlop={12}
                 accessibilityRole="button"
                 accessibilityLabel="Close story"
@@ -504,6 +532,37 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+
+  eyebrowLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
+
+  voicePill: {
+    backgroundColor: 'rgba(180, 71, 42, 0.08)',
+    borderRadius: radii.full,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xxs,
+    borderWidth: 1,
+    borderColor: 'rgba(180, 71, 42, 0.25)',
+  },
+
+  voicePillPlaying: {
+    backgroundColor: '#B4472A',
+    borderColor: '#B4472A',
+  },
+
+  voiceTxt: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#B4472A',
+    letterSpacing: 0.4,
+  },
+
+  voiceTxtPlaying: {
+    color: '#FFFFFF',
   },
 
   eyebrowPill: {
