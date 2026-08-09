@@ -13,8 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GreetingMonk } from '@/components/monk';
 import { buildStory, type StoryBeat } from '@/core';
 import { findSite } from '@/data';
-import { useNarration } from '@/hooks';
-import { arrival } from '@/services';
+import { arrival, voice } from '@/services';
 import { usePreferences } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 
@@ -229,9 +228,8 @@ export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQu
   const [index, setIndex] = useState(0);
   const [showUnlock, setShowUnlock] = useState(false);
   const [confetti, setConfetti] = useState(false);
-
-  // Play real human-recorded voice narration when avatar speaks
-  const narration = useNarration(visible ? siteId : null, { autoPlay: preferences.autoNarration });
+  const [voiceMuted, setVoiceMuted] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
 
   const beats = useMemo(() => {
     const significance = arrival.significanceOf(siteId, preferences.wisdomTier);
@@ -252,7 +250,39 @@ export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQu
     setIndex(0);
     setShowUnlock(false);
     setConfetti(false);
+    setVoiceMuted(false);
   }, [siteId]);
+
+  // ── Synchronized Beat-by-Beat Voice Playback ───────────────────────────────
+  // Speaks ONLY the beat currently displayed on screen.
+  // Stops previous beat's speech immediately when index changes (Next/Back).
+  // Never speaks ahead to future beats until the user actually taps Next!
+  useEffect(() => {
+    if (!visible || voiceMuted || !preferences.autoNarration || beats.length === 0) {
+      voice.stopSpeaking();
+      setSpeaking(false);
+      return;
+    }
+
+    const currentBeat = beats[Math.min(index, beats.length - 1)];
+    if (!currentBeat) return;
+
+    // Compose spoken line matching the beat text showing on screen
+    const spokenText = `${currentBeat.eyebrow}. ${currentBeat.body}`;
+
+    setSpeaking(true);
+    voice.speakText(
+      spokenText,
+      'en',
+      () => setSpeaking(false),
+      () => setSpeaking(false),
+    );
+
+    return () => {
+      voice.stopSpeaking();
+      setSpeaking(false);
+    };
+  }, [visible, index, beats, voiceMuted, preferences.autoNarration]);
 
   // ── Avatar: slides in from the left once per site ──────────────────────────
   const avatarSlide = useRef(new Animated.Value(0)).current;
@@ -304,6 +334,7 @@ export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQu
 
   const next = () => {
     if (isLast) {
+      voice.stopSpeaking();
       setShowUnlock(true);
       setTimeout(() => setConfetti(true), 80);
       return;
@@ -314,21 +345,31 @@ export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQu
   const back = () => setIndex((i) => Math.max(0, i - 1));
 
   const handleUnlockClose = () => {
-    narration.stop();
+    voice.stopSpeaking();
     setShowUnlock(false);
     onComplete(siteId);
   };
 
   const handleQuestsFromUnlock = () => {
-    narration.stop();
+    voice.stopSpeaking();
     setShowUnlock(false);
     onComplete(siteId);
     onOpenQuests?.();
   };
 
   const handleDismiss = () => {
-    narration.stop();
+    voice.stopSpeaking();
     onDismiss();
+  };
+
+  const toggleVoice = () => {
+    if (speaking) {
+      voice.stopSpeaking();
+      setVoiceMuted(true);
+      setSpeaking(false);
+    } else {
+      setVoiceMuted(false);
+    }
   };
 
   return (
@@ -382,7 +423,7 @@ export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQu
             {/* Tail pointing left toward avatar */}
             <View style={styles.bubbleTail} />
 
-            {/* Top row: chapter eyebrow + human voice narration button + dismiss */}
+            {/* Top row: chapter eyebrow + synchronized voice narration button + dismiss */}
             <View style={styles.eyebrowRow}>
               <View style={styles.eyebrowLeft}>
                 <View style={styles.eyebrowPill}>
@@ -391,19 +432,17 @@ export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQu
                   </RNText>
                 </View>
 
-                {narration.hasAudio ? (
-                  <Pressable
-                    onPress={narration.toggle}
-                    hitSlop={12}
-                    accessibilityRole="button"
-                    accessibilityLabel={narration.playing ? 'Pause human voice' : 'Play human voice'}
-                    style={[styles.voicePill, narration.playing && styles.voicePillPlaying]}
-                  >
-                    <RNText style={[styles.voiceTxt, narration.playing && styles.voiceTxtPlaying]}>
-                      {narration.playing ? '🔊 Voice' : '🔈 Voice'}
-                    </RNText>
-                  </Pressable>
-                ) : null}
+                <Pressable
+                  onPress={toggleVoice}
+                  hitSlop={12}
+                  accessibilityRole="button"
+                  accessibilityLabel={speaking ? 'Pause voice' : 'Play voice'}
+                  style={[styles.voicePill, speaking && styles.voicePillPlaying]}
+                >
+                  <RNText style={[styles.voiceTxt, speaking && styles.voiceTxtPlaying]}>
+                    {speaking ? '🔊 Voice' : '🔈 Voice'}
+                  </RNText>
+                </Pressable>
               </View>
 
               <Pressable
