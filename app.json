@@ -78,6 +78,7 @@
       "@maplibre/maplibre-react-native",
       "expo-audio",
       "onnxruntime-react-native",
+      "./plugins/withOnnxAutolink",
       "expo-asset",
       "llama.rn"
     ],
