@@ -69,9 +69,9 @@ never in Expo Go. The app uses a short context and releases the model after
 generation when memory is constrained.
 
 Model delivery is optional and versioned. The app downloads over Wi-Fi to
-app-private storage, validates the expected payload size, and exposes deletion
-through the model service. The base APK does not force every user to download
-a large model. The developer artifact and its SHA-256 are recorded in
+app-private storage, validates the expected payload size and MD5, and exposes
+deletion through the model service. The base APK does not force every user to
+download a large model. The developer artifact and its SHA-256 are recorded in
 `models/README.md`.
 
 ## Voice

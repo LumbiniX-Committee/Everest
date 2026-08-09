@@ -8,6 +8,7 @@ export const OFFLINE_MODEL = {
   // downloaded into app-private storage and never bundled.
   url: 'https://huggingface.co/bartowski/Qwen_Qwen3-0.6B-GGUF/resolve/main/Qwen_Qwen3-0.6B-Q4_K_M.gguf?download=true',
   expectedBytes: 484_000_000,
+  expectedMd5: 'c2eb98e4a2d6ff396fa064b28a012a06',
   // SHA-256 of the release downloaded and verified during implementation.
   // The device also enforces the expected size before activating the file.
   sha256: '9acfc1e001311f34b4252001b626f2e466d592a42065f66571bff3790d4e1b14',
@@ -47,7 +48,7 @@ export function offlineRuntimeAvailable(): boolean {
 export async function offlineModelStatus(): Promise<OfflineModelStatus> {
   if (!offlineRuntimeAvailable()) return { state: 'unsupported' };
   const info = await getInfo(MODEL_PATH);
-  if (!info.exists || !info.size || info.size < OFFLINE_MODEL.expectedBytes * 0.98) {
+  if (!info.exists || !info.size || info.size < OFFLINE_MODEL.expectedBytes * 0.98 || info.md5?.toLowerCase() !== OFFLINE_MODEL.expectedMd5) {
     return { state: 'missing' };
   }
   return { state: 'ready', path: MODEL_PATH, bytes: info.size };
@@ -76,7 +77,7 @@ export async function downloadOfflineModel(
   const result = await download.downloadAsync();
   if (!result?.uri) throw new Error('Offline model download did not complete.');
   const info = await getInfo(result.uri);
-  if (!info.exists || !info.size || info.size < OFFLINE_MODEL.expectedBytes * 0.98) {
+  if (!info.exists || !info.size || info.size < OFFLINE_MODEL.expectedBytes * 0.98 || info.md5?.toLowerCase() !== OFFLINE_MODEL.expectedMd5) {
     await FileSystem.deleteAsync(partPath, { idempotent: true });
     throw new Error('Downloaded offline model is incomplete.');
   }
