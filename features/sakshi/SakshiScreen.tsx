@@ -16,6 +16,7 @@ import {
 } from '@/data';
 import { useCurrentPosition } from '@/hooks';
 import { database } from '@/services';
+import { onnxAvailable, onnxUnavailableReason } from '@/services/ai/onnx';
 import { usePractice } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 import { distanceMeters, formatDistance, formatTimestamp } from '@/utils';
@@ -114,6 +115,27 @@ export function SakshiScreen() {
         subtitle="Return to a fixed viewpoint, align, and record what is there today."
         rightAction={<SettingsButton />}
       />
+
+      {/*
+        A visible answer to "is the detector actually in this build".
+
+        The on-device scanner is a native module. It only runs later, on the
+        observation screen after a capture, so a broken build used to be invisible
+        until then. This line reads onnxAvailable, a constant fixed when the app
+        loads: green when the runtime is present (the model itself loads on the
+        observation screen), and an honest reason when it is not (Expo Go, or an
+        APK built without the native module). It loads nothing itself.
+      */}
+      <View style={styles.detectorStatus}>
+        <Text variant="label" tone="muted" uppercase>
+          On-device damage detector
+        </Text>
+        <Text variant="caption" tone={onnxAvailable ? 'locked' : 'seeking'}>
+          {onnxAvailable
+            ? 'Ready in this build. Capture a photo and the scan runs on the observation screen.'
+            : `Not in this build. ${onnxUnavailableReason ?? 'Rebuild with the native runtime and install that APK, not Expo Go.'}`}
+        </Text>
+      </View>
 
       {/* The nearest viewpoint, and the way straight to it. */}
       {primaryVantage ? (
@@ -401,6 +423,15 @@ const styles = StyleSheet.create({
   },
   tabItemActive: {
     backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  detectorStatus: {
+    marginTop: spacing.md,
+    padding: spacing.sm,
+    gap: spacing.xxs,
+    borderRadius: radii.md,
+    backgroundColor: colors.surfaceSecondary,
     borderWidth: 1,
     borderColor: colors.border,
   },

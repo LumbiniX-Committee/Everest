@@ -111,7 +111,7 @@ export const onnxUnavailableReason: string | null = onnxAvailable
     : 'The on-device scanner is not part of this build.';
 
 if (!onnxAvailable) {
-  console.warn('[ai] on-device damage detection unavailable —', onnxUnavailableReason);
+  console.warn('[ai] on-device damage detection unavailable.', onnxUnavailableReason);
 }
 
 // ── Public API ──────────────────────────────────────────────────────────────
