@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { ErrorState, LoadingState, ScreenHeader } from '@/components/common';
@@ -10,7 +10,7 @@ import { database } from '@/services';
 import { usePreferences } from '@/store';
 import { useQuests } from '@/store/quests';
 import { colors, spacing } from '@/theme';
-import type { ConditionSeverity, QuestTask } from '@/types';
+import type { ConditionSeverity, QuestSubmission, QuestTask } from '@/types';
 import { distanceMeters } from '@/utils';
 
 /** Least to most serious, so a sort by index puts urgent first. */
@@ -41,6 +41,22 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
   const [reportsBySite, setReportsBySite] = useState<
     Record<string, { count: number; severities: ConditionSeverity[] }>
   >({});
+
+  /** What has been brought back, by task. Reloaded whenever one is submitted. */
+  const [submissions, setSubmissions] = useState<Record<string, QuestSubmission>>({});
+
+  const loadSubmissions = useCallback(async () => {
+    try {
+      const rows = await database.listQuestSubmissions(questId);
+      setSubmissions(Object.fromEntries(rows.map((row) => [row.taskId, row])));
+    } catch {
+      // The tick still stands without its evidence on screen.
+    }
+  }, [questId]);
+
+  useEffect(() => {
+    void loadSubmissions();
+  }, [loadSubmissions]);
 
   useEffect(() => {
     let active = true;
@@ -187,6 +203,7 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
                   ? reportsBySite[findSite(task.targetId)?.id ?? task.targetId]?.count ?? 0
                   : 0
               }
+              submission={submissions[task.id]}
               filedSeverities={
                 task.targetId
                   ? reportsBySite[findSite(task.targetId)?.id ?? task.targetId]?.severities ?? []
@@ -212,6 +229,9 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
               const id = openTask.id;
               setOpenTask(null);
               await finishTask(id);
+              // Re-read so the photograph appears on the row it belongs to
+              // rather than only after the screen is left and reopened.
+              await loadSubmissions();
             }}
           />
         ) : null}
