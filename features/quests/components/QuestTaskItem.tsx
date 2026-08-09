@@ -2,7 +2,9 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Text } from '@/components/ui';
 import { colors, radii, spacing } from '@/theme';
-import type { QuestTask } from '@/types';
+import type { ConditionSeverity, HeritageSite, QuestTask, UserPreferences } from '@/types';
+
+import { TaskProximity } from './TaskProximity';
 
 export type QuestTaskItemProps = {
   task: QuestTask;
@@ -18,6 +20,13 @@ export type QuestTaskItemProps = {
    * finding — lives on a different screen entirely.
    */
   reportCount?: number;
+  /** The site this task names, when it names one the registry knows. */
+  site?: HeritageSite;
+  /** Metres to that site, or null while there is no fix. */
+  distanceM?: number | null;
+  distanceUnit?: UserPreferences['distanceUnit'];
+  /** Severities already filed here, most serious first. */
+  filedSeverities?: ConditionSeverity[];
 };
 
 export function QuestTaskItem({
@@ -26,6 +35,10 @@ export function QuestTaskItem({
   onToggle,
   disabled = false,
   reportCount = 0,
+  site,
+  distanceM = null,
+  distanceUnit = 'metric',
+  filedSeverities = [],
 }: QuestTaskItemProps) {
   return (
     <Pressable
@@ -58,19 +71,64 @@ export function QuestTaskItem({
           </Text>
         </View>
 
+        {/*
+          A task that names a place now says how far away it is, and fills as
+          you close on it. The app knew both positions and stated neither — the
+          checkbox was the only thing on the row that moved.
+        */}
+        {task.type === 'site_visit' && site ? (
+          <TaskProximity site={site} distanceM={distanceM} unit={distanceUnit} />
+        ) : null}
+
         {task.type === 'condition_report' && reportCount > 0 ? (
-          <Text variant="caption" tone="secondary">
-            {reportCount === 1
-              ? '1 condition report filed here'
-              : `${reportCount} condition reports filed here`}
-          </Text>
+          <View style={styles.filed}>
+            {/*
+              What was found, not just that something was. A count says work
+              happened; a severity says what the place is doing, which is the
+              thing a conservator actually wants off this screen.
+            */}
+            {filedSeverities.slice(0, 3).map((severity, index) => (
+              <View
+                key={`${severity}-${index}`}
+                style={[styles.severity, { borderColor: SEVERITY_COLOUR[severity] }]}
+              >
+                <Text variant="label" uppercase style={{ color: SEVERITY_COLOUR[severity] }}>
+                  {severity}
+                </Text>
+              </View>
+            ))}
+            <Text variant="caption" tone="muted">
+              {reportCount === 1 ? '1 report filed' : `${reportCount} reports filed`}
+            </Text>
+          </View>
         ) : null}
       </View>
     </Pressable>
   );
 }
 
+/**
+ * Severity read as colour as well as a word.
+ *
+ * `urgent` takes `openCondition`, whose own definition says "not an error
+ * colour". That is the right register: this surface reports a finding about a
+ * monument, it does not raise an alarm, and a red would ask the reader to feel
+ * something the observation has not earned.
+ */
+const SEVERITY_COLOUR: Record<ConditionSeverity, string> = {
+  noted: colors.textMuted,
+  concerning: colors.sandstoneDeep,
+  urgent: colors.openCondition,
+};
+
 const styles = StyleSheet.create({
+  filed: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: spacing.xs },
+  severity: {
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: radii.sm,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: 1,
+  },
   container: {
     flexDirection: 'row',
     alignItems: 'flex-start',

@@ -5,10 +5,16 @@ import { StyleSheet, View } from 'react-native';
 import { ErrorState, LoadingState, ScreenHeader } from '@/components/common';
 import { BottomSheet, Button, Card, Screen, Text } from '@/components/ui';
 import { findSite } from '@/data';
+import { useCurrentPosition } from '@/hooks';
 import { database } from '@/services';
+import { usePreferences } from '@/store';
 import { useQuests } from '@/store/quests';
 import { colors, spacing } from '@/theme';
-import type { QuestTask } from '@/types';
+import type { ConditionSeverity, QuestTask } from '@/types';
+import { distanceMeters } from '@/utils';
+
+/** Least to most serious, so a sort by index puts urgent first. */
+const SEVERITY_ORDER: ConditionSeverity[] = ['noted', 'concerning', 'urgent'];
 
 import { QuestCategoryBadge } from './components/QuestCategoryBadge';
 import { QuestProgressBar } from './components/QuestProgressBar';
@@ -18,6 +24,10 @@ import { QuestTaskItem } from './components/QuestTaskItem';
 export function QuestDetailScreen({ questId }: { questId: string }) {
   const router = useRouter();
   const { hydrated, getQuestById, startQuest, completeTask } = useQuests();
+  // Watched, not sampled once: a task row that says how far away you are has to
+  // keep saying it while you walk.
+  const { coordinate } = useCurrentPosition({ watch: true });
+  const { preferences } = usePreferences();
 
   // Declared before any early return. React requires hooks to run
   // unconditionally on every render, and the loading and not-found branches
@@ -28,7 +38,9 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
    * Reports already filed, per site. Read once here rather than per task so a
    * quest with several report tasks does not query the database once each.
    */
-  const [reportsBySite, setReportsBySite] = useState<Record<string, number>>({});
+  const [reportsBySite, setReportsBySite] = useState<
+    Record<string, { count: number; severities: ConditionSeverity[] }>
+  >({});
 
   useEffect(() => {
     let active = true;
@@ -36,12 +48,22 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
       .listConditionReports()
       .then((reports) => {
         if (!active) return;
-        const counts: Record<string, number> = {};
+        const byId: Record<string, { count: number; severities: ConditionSeverity[] }> = {};
         for (const report of reports) {
           const id = findSite(report.siteId)?.id ?? report.siteId;
-          counts[id] = (counts[id] ?? 0) + 1;
+          const entry = byId[id] ?? { count: 0, severities: [] };
+          entry.count += 1;
+          entry.severities.push(report.severity);
+          byId[id] = entry;
         }
-        setReportsBySite(counts);
+        // Most serious first: if a place has an urgent finding, that is the one
+        // worth seeing without expanding anything.
+        for (const entry of Object.values(byId)) {
+          entry.severities.sort(
+            (a, b) => SEVERITY_ORDER.indexOf(b) - SEVERITY_ORDER.indexOf(a),
+          );
+        }
+        setReportsBySite(byId);
       })
       .catch(() => undefined);
     return () => {
@@ -150,10 +172,25 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
               completed={progress.completedTasks.includes(task.id)}
               disabled={isCompleted || isNotStarted}
               onToggle={() => void handleTaskToggle(task.id)}
+              site={task.targetId ? findSite(task.targetId) : undefined}
+              distanceM={
+                task.targetId && coordinate
+                  ? (() => {
+                      const target = findSite(task.targetId);
+                      return target ? distanceMeters(coordinate, target.coordinate) : null;
+                    })()
+                  : null
+              }
+              distanceUnit={preferences.distanceUnit}
               reportCount={
                 task.targetId
-                  ? reportsBySite[findSite(task.targetId)?.id ?? task.targetId] ?? 0
+                  ? reportsBySite[findSite(task.targetId)?.id ?? task.targetId]?.count ?? 0
                   : 0
+              }
+              filedSeverities={
+                task.targetId
+                  ? reportsBySite[findSite(task.targetId)?.id ?? task.targetId]?.severities ?? []
+                  : []
               }
             />
           ))}
