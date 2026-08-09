@@ -65,26 +65,54 @@ type AssetModule = {
 // Metro only supports statically analyzable require() calls. Keep these
 // guards separate and literal: Expo Go can bundle the JavaScript packages but
 // does not provide the native ONNX module, while a development build does.
-function loadOrt(): OrtModule | null {
-  try { return require('onnxruntime-react-native') as OrtModule; } catch { return null; }
-}
-function loadManipulator(): ManipulatorModule | null {
-  try { return require('expo-image-manipulator') as ManipulatorModule; } catch { return null; }
-}
-function loadJpeg(): JpegModule | null {
-  try { return require('jpeg-js') as JpegModule; } catch { return null; }
-}
-function loadAsset(): AssetModule | null {
-  try { return require('expo-asset') as AssetModule; } catch { return null; }
+//
+// ── Why the failure is recorded and not just swallowed ──────────────────────
+//
+// `onnxruntime-react-native` calls `Module.install()` at *import* time. In a
+// binary built before the plugin was added that throws, the `catch` returned
+// `null`, `onnxAvailable` went false, and every check downstream rendered
+// nothing at all: no scan button, no message, no log. A trained model, present
+// and correctly bundled, looked to the user like a feature that had never been
+// built. The guard stays; what changes is that it says why.
+const failures: string[] = [];
+
+function loadOptional<T>(name: string, load: () => T): T | null {
+  try {
+    return load();
+  } catch (caught) {
+    failures.push(`${name}: ${caught instanceof Error ? caught.message : 'not available'}`);
+    return null;
+  }
 }
 
-const ort = loadOrt();
-const manip = loadManipulator();
-const jpeg = loadJpeg();
-const assetMod = loadAsset();
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const ort = loadOptional('onnxruntime-react-native', () => require('onnxruntime-react-native') as OrtModule);
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const manip = loadOptional('expo-image-manipulator', () => require('expo-image-manipulator') as ManipulatorModule);
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const jpeg = loadOptional('jpeg-js', () => require('jpeg-js') as JpegModule);
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const assetMod = loadOptional('expo-asset', () => require('expo-asset') as AssetModule);
 
 /** True only when every piece the ONNX pipeline needs is present in this build. */
 export const onnxAvailable: boolean = !!(ort && manip && jpeg && assetMod);
+
+/**
+ * Why the pipeline is unavailable, or null when it is available.
+ *
+ * Surfaced in the UI rather than logged. The two cases a person needs to tell
+ * apart are "this build has no scanner, rebuild it" and "the scanner is here and
+ * something went wrong", and silence made them identical.
+ */
+export const onnxUnavailableReason: string | null = onnxAvailable
+  ? null
+  : failures.length > 0
+    ? failures.join('; ')
+    : 'The on-device scanner is not part of this build.';
+
+if (!onnxAvailable) {
+  console.warn('[ai] on-device damage detection unavailable —', onnxUnavailableReason);
+}
 
 // ── Public API ──────────────────────────────────────────────────────────────
 
@@ -121,10 +149,25 @@ export type DetectOptions = {
  * every scan.
  */
 export async function createOnnxSession(modelSource: number): Promise<OnnxSession> {
-  if (!ort || !assetMod) throw new Error('The ONNX runtime is not available in this build.');
+  if (!ort || !assetMod) {
+    throw new Error(onnxUnavailableReason ?? 'The ONNX runtime is not available in this build.');
+  }
   const asset = assetMod.Asset.fromModule(modelSource);
   await asset.downloadAsync();
   const uri = asset.localUri ?? asset.uri;
+
+  // The local path first. The model is 11.7 MB, and reading it through base64
+  // costs a ~16 MB JavaScript string plus the decoded copy beside it, on a phone
+  // that is also holding a camera preview. The runtime can open the file itself.
+  if (uri) {
+    try {
+      return await ort.InferenceSession.create(uri.replace(/^file:\/\//, ''));
+    } catch {
+      // Path handling differs between platforms and runtime versions. Bytes are
+      // unambiguous, so they remain the fallback rather than the default.
+    }
+  }
+
   const base64 = await FileSystem.readAsStringAsync(uri, { encoding: 'base64' });
   const bytes = new Uint8Array(decodeBase64(base64));
   return ort.InferenceSession.create(bytes);

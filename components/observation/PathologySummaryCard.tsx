@@ -58,8 +58,8 @@ export function PathologySummaryCard({ result, onApplyAiSuggestion }: PathologyS
 
       {detections.length === 0 ? (
         <Text variant="body" tone="secondary">
-          No candidate damage found. That is not a clean bill of health — inspect the photograph
-          yourself and report anything the model missed.
+          Nothing found in this photograph. That is a result, not a clean bill of health. Look at
+          it yourself and record anything the model missed.
         </Text>
       ) : (
         <>
@@ -86,16 +86,17 @@ export function PathologySummaryCard({ result, onApplyAiSuggestion }: PathologyS
           </View>
 
           <Text variant="caption" tone="muted">
-            Candidates for you to verify — not a conservator’s assessment.
+            Candidates for you to confirm, not a conservator’s assessment. Filing opens the report
+            at the one thing the model cannot judge, which is how urgent it is.
             {model?.mAP50 != null
-              ? ` Model accuracy on its test set (mAP@50): ${model.mAP50.toFixed(2)}.`
+              ? ` Model accuracy on its own test set: ${model.mAP50.toFixed(2)}.`
               : ' This model has not reported its accuracy.'}
           </Text>
 
           {onApplyAiSuggestion ? (
             <View style={styles.btnWrap}>
               <Button
-                label="Pre-fill condition report"
+                label="File this as a report"
                 onPress={() => onApplyAiSuggestion(result)}
                 block
               />

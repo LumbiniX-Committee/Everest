@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Image, StyleSheet, View } from 'react-native';
 
@@ -12,6 +12,7 @@ import {
   PathologySummaryCard,
 } from '@/components/observation';
 import { MeritAcknowledgement } from '@/components/practice';
+import { detectorMessage } from '@/core/vision/candidate';
 import { findSite, findVantage } from '@/data';
 import { database } from '@/services';
 import { useDamageDetector, scanToSuggestion, type YoloScanResult } from '@/services/ai/yoloEngine';
@@ -52,7 +53,11 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
   const { recognise, summary } = usePractice();
   const { creditConditionReport } = useQuests();
   const detector = useDamageDetector();
-  const aiAvailable = detector.status !== 'no-model' && detector.status !== 'unsupported';
+  // The sentence shown when there is no scan is decided in
+  // core/vision/candidate.ts, where the test harness covers it. It is null while
+  // the detector can still work, and never empty when it cannot: silence was
+  // what made a trained, bundled model look like a feature nobody had built.
+  const detectorNote = detectorMessage(detector.status, detector.reason);
 
   useEffect(() => {
     let active = true;
@@ -80,6 +85,48 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
     if (!observation) return;
     database.listObservations(observation.vantageId).then(setSeriesObservations).catch(() => {});
   }, [observation]);
+
+  /**
+   * The scan runs on arrival, once, without being asked.
+   *
+   * It replaces a button labelled "AI Scan", which put a decision in front of
+   * someone who has just taken a photograph of a crack and has no way to know
+   * what pressing it would do. The photograph is here and the model is loaded;
+   * the scan takes about a second and asserts nothing on its own. Waiting for
+   * permission to look was ceremony.
+   *
+   * Nothing is filed by this. The model offers a candidate and the surveyor
+   * confirms it, which is the invariant the whole surface rests on.
+   */
+  const scanned = useRef(false);
+  useEffect(() => {
+    if (scanned.current || detector.status !== 'ready' || !observation?.photoUri) return;
+    scanned.current = true;
+    let active = true;
+    setYoloScanning(true);
+    detector
+      .scan(observation.photoUri)
+      .then((result) => {
+        if (active) setYoloResult(result);
+      })
+      .catch(() => {
+        if (active) {
+          setYoloResult({
+            status: 'error',
+            detections: [],
+            inferenceMs: null,
+            model: detector.model,
+            error: 'The scan could not run on this photograph. You can still report by hand.',
+          });
+        }
+      })
+      .finally(() => {
+        if (active) setYoloScanning(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [detector, observation?.photoUri]);
 
   const recordNoChange = async () => {
     if (!observation || submitting) return;
@@ -122,6 +169,12 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
         subtype: draft.subtype,
         severity: draft.severity,
         note: draft.note,
+        // Carried through, at last. The column, the migration and the sheet's
+        // banner all existed; the flag was dropped at this one hop, so every
+        // model-assisted report was stored as though a person had written it
+        // unaided. Provenance that is recorded everywhere except where it is
+        // saved is not recorded.
+        aiAssisted: draft.aiAssisted,
         recordedAt: new Date().toISOString(),
         synced: false,
       };
@@ -195,28 +248,13 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
         </Text>
       </View>
 
-      {/* Feature Action Bar */}
       <View style={styles.featureBar}>
         <Button
-          label="⏳ Compare Then / Now"
+          label="Compare then and now"
           variant="secondary"
           onPress={() => router.push('/(main)/sakshi')}
           style={styles.featureBtn}
         />
-        {aiAvailable ? (
-          <Button
-            label={yoloScanning ? 'Scanning…' : '🤖 AI Scan'}
-            variant="secondary"
-            loading={yoloScanning}
-            onPress={async () => {
-              setYoloScanning(true);
-              const result = await detector.scan(observation.photoUri);
-              setYoloResult(result);
-              setYoloScanning(false);
-            }}
-            style={styles.featureBtn}
-          />
-        ) : null}
       </View>
 
       {/* Observation Photo with Floating Telemetry HUD */}
@@ -248,9 +286,18 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
         </View>
       </View>
 
-      {/* On-device damage detection summary */}
-      {yoloResult ? (
-        <View style={styles.aiRow}>
+      {/*
+        What the scan found, or why there was none.
+        
+        The third branch is the one that was missing. This rendered `null` when
+        the detector was unavailable, so a build without the native runtime
+        showed no scan, no boxes and no explanation, and the trained model
+        looked like something nobody had written.
+      */}
+      <View style={styles.aiRow}>
+        {yoloScanning ? (
+          <LoadingState label="Looking at the photograph" fill={false} />
+        ) : yoloResult ? (
           <PathologySummaryCard
             result={yoloResult}
             onApplyAiSuggestion={(res) => {
@@ -260,8 +307,12 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
               setSheetOpen(true);
             }}
           />
-        </View>
-      ) : null}
+        ) : detectorNote ? (
+          <Text variant="caption" tone="secondary">
+            {detectorNote} You can still record what you see by hand.
+          </Text>
+        ) : null}
+      </View>
 
       {/* Vantage Time Series Scrubber */}
       {seriesObservations.length > 0 ? (

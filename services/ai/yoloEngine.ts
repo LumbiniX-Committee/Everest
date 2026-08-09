@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { candidateNote, topCandidate } from '@/core/vision/candidate';
 import { normalizeBbox, type RawBbox } from '@/core/vision/detect';
 import type { ConditionCategory } from '@/types';
 
 import {
   createOnnxSession,
   onnxAvailable,
+  onnxUnavailableReason,
   runOnnxDetection,
   type OnnxDetection,
   type OnnxSession,
@@ -25,8 +27,13 @@ import {
  *
  * The model is a YOLOv8 crack detector trained and exported separately (see
  * docs/DAMAGE-MODEL.md) and dropped in via `DAMAGE_MODEL.source`. If that source
- * is null, or the native runtime is absent (Expo Go / a build that has not added
- * onnxruntime), the feature is simply absent from the UI — honest by omission.
+ * is null, or the native runtime is absent (Expo Go, or a build that has not
+ * added onnxruntime), the surface says so in a sentence and offers the manual
+ * report instead.
+ *
+ * It used to say nothing at all, and that was the bug: honest by omission is
+ * indistinguishable from a feature that was never built. Every path out of here
+ * now carries a `reason`.
  */
 
 export type YoloPathology = 'crack' | 'biological' | 'spalling' | 'water' | 'surface';
@@ -75,6 +82,15 @@ export type DamageDetector = {
   status: DetectorStatus;
   model: ModelInfo | null;
   scanning: boolean;
+  /**
+   * Why the detector cannot run, in a sentence a person can act on, or null.
+   *
+   * This is the fix for the reported bug. The detector used to fail silently:
+   * a bare `catch` in onnx.ts, a status latched at module load, and a screen
+   * that rendered `null` when it was not 'ready'. A trained, bundled model
+   * looked exactly like a feature that had never been built.
+   */
+  reason: string | null;
   scan: (imageUri: string) => Promise<YoloScanResult>;
 };
 
@@ -210,17 +226,12 @@ function toDetection(raw: OnnxDetection, imageW: number, imageH: number, index: 
  * the surveyor to set.
  */
 export function scanToSuggestion(result: YoloScanResult): ConditionSuggestion | null {
-  const top = result.detections.reduce<YoloDetection | null>(
-    (best, d) => (!best || d.confidence > best.confidence ? d : best),
-    null,
-  );
+  const top = topCandidate(result.detections);
   if (!top) return null;
   return {
     category: top.conditionCategory,
     subtype: top.suggestedSubtype,
-    note: `AI-assisted: candidate ${top.label.toLowerCase()} at about ${Math.round(
-      top.confidence * 100,
-    )}% confidence. Confirm and set how urgent it seems.`,
+    note: candidateNote(top.label, top.confidence),
     aiAssisted: true,
   };
 }
@@ -230,11 +241,23 @@ export function scanToSuggestion(result: YoloScanResult): ConditionSuggestion | 
 // renders — one branch is a hook, the other returns a constant.
 const UNAVAILABLE_STATUS: DetectorStatus = onnxAvailable ? 'no-model' : 'unsupported';
 
+/**
+ * What to tell someone whose build cannot scan.
+ *
+ * Two different problems, and confusing them wastes an afternoon: either the
+ * native runtime is missing, which a rebuild fixes, or the runtime is present
+ * and the model file is not, which it does not.
+ */
+export const UNAVAILABLE_REASON: string | null = onnxAvailable
+  ? 'The detector is in this build, but no model file is bundled with it.'
+  : (onnxUnavailableReason ?? 'The on-device scanner is not part of this build.');
+
 const UNAVAILABLE_DETECTOR: DamageDetector = {
   status: UNAVAILABLE_STATUS,
   model: null,
   scanning: false,
-  scan: async () => NO_MODEL_RESULT,
+  reason: UNAVAILABLE_REASON,
+  scan: async () => ({ ...NO_MODEL_RESULT, error: UNAVAILABLE_REASON ?? undefined }),
 };
 
 /**
@@ -245,7 +268,12 @@ const UNAVAILABLE_DETECTOR: DamageDetector = {
 function useOnnxDamageDetector(source: number): DamageDetector {
   const [status, setStatus] = useState<DetectorStatus>('loading');
   const [scanning, setScanning] = useState(false);
+  const [reason, setReason] = useState<string | null>(null);
   const sessionRef = useRef<OnnxSession | null>(null);
+  // Mirrored so `scan` can read the current reason without listing it as a
+  // dependency and getting a new identity on every load state change.
+  const reasonRef = useRef<string | null>(null);
+  reasonRef.current = reason;
 
   useEffect(() => {
     let cancelled = false;
@@ -253,10 +281,19 @@ function useOnnxDamageDetector(source: number): DamageDetector {
       .then((session) => {
         if (cancelled) return;
         sessionRef.current = session;
+        setReason(null);
         setStatus('ready');
       })
-      .catch(() => {
-        if (!cancelled) setStatus('error');
+      .catch((caught: unknown) => {
+        if (cancelled) return;
+        // The message is carried, not discarded. `.catch(() => setStatus('error'))`
+        // threw the only useful thing away, and because 'error' still counted as
+        // available the screen went on offering a scan that answered "the model
+        // is still loading" for as long as the app stayed open.
+        const message = caught instanceof Error ? caught.message : 'The model could not be loaded.';
+        console.warn('[ai] the damage model failed to load —', message);
+        setReason(message);
+        setStatus('error');
       });
     return () => {
       cancelled = true;
@@ -271,7 +308,7 @@ function useOnnxDamageDetector(source: number): DamageDetector {
         detections: [],
         inferenceMs: null,
         model: DAMAGE_MODEL.info,
-        error: 'The model is still loading.',
+        error: reasonRef.current ?? 'The model is still loading.',
       };
     }
     setScanning(true);
@@ -304,7 +341,7 @@ function useOnnxDamageDetector(source: number): DamageDetector {
     }
   }, []);
 
-  return { status, model: DAMAGE_MODEL.info, scanning, scan };
+  return { status, model: DAMAGE_MODEL.info, scanning, reason, scan };
 }
 
 /**
