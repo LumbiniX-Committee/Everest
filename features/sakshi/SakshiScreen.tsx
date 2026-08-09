@@ -6,16 +6,12 @@ import { Button, Card, Chip, Divider, Screen, Text } from '@/components/ui';
 import { EmptyState, ScreenHeader, SettingsButton } from '@/components/common';
 import { VantageListItem } from '@/components/site';
 import { PracticeSummaryCard } from '@/components/practice';
-import { SourceCard } from '@/components/source';
-import { ThenNowCompare } from '@/components/thennow';
 import { TimeSeriesScrubber } from '@/components/series';
 import {
   demoSites,
   demoVantages,
   findSite,
-  findSource,
   historicalImagesForSite,
-  nowImageForSite,
   vantagesForSite,
 } from '@/data';
 import { useCurrentPosition } from '@/hooks';
@@ -29,24 +25,46 @@ const siteHeroImages: Record<string, number> = {
   'maya-devi-temple': require('../../assets/plates/maya-devi-temple.aerial.jpg'),
 };
 
-type TabMode = 'reconstruction' | 'vantages' | 'thennow' | 'records';
+/**
+ * Three tabs, and there is a reason it is three.
+ *
+ * A fourth — "Reconstruction" — briefly sat first here. It was an inline copy of
+ * the Then/Now screen: same `ThenNowCompare`, same date chips, same source card,
+ * pointed at whichever site GPS had picked. So the one comparison in the app had
+ * two front doors that disagreed about which site you were looking at, and four
+ * uppercase labels at `letterSpacing: 1.4` across a phone meant the longest one
+ * wrapped mid-word. Then/Now already lists every comparable site and opens the
+ * full screen. This is the same feature, reached once.
+ */
+type TabMode = 'vantages' | 'thennow' | 'records';
+
+type TabCounts = { siteVantages: unknown[]; observations: unknown[] };
+
+const TABS: ReadonlyArray<{
+  key: TabMode;
+  label: string;
+  /** Tabs that carry a number say how many; Then/Now opens a list and does not. */
+  count?: (counts: TabCounts) => number;
+}> = [
+  { key: 'vantages', label: 'Vantages', count: (c) => c.siteVantages.length },
+  { key: 'thennow', label: 'Then / Now' },
+  { key: 'records', label: 'Records', count: (c) => c.observations.length },
+];
 
 const COMPARABLE_SITES = demoSites.filter((site) => historicalImagesForSite(site.id).length > 0);
 
 /**
- * Sākṣī — GPS Location-Anchored Heritage Reconstruction & Witness Surface.
+ * Sākṣī — the witness surface, anchored to where you are standing.
  *
- * Automatically detects your active heritage site via GPS and displays:
- * 1. Historical reconstruction & timeline comparison ONLY for that location.
- * 2. Viewpoint alignment trigger ONLY for that location.
- * 3. Recorded observation series ONLY for that location.
+ * GPS picks the nearest vantage, and that decides the site the whole screen is
+ * about. Three tabs follow from it: the viewpoints here, how this place compares
+ * with the archive, and what you have already recorded.
  */
 export function SakshiScreen() {
   const router = useRouter();
   const { coordinate } = useCurrentPosition({ watch: true });
   const [observations, setObservations] = useState<Observation[]>([]);
-  const [activeTab, setActiveTab] = useState<TabMode>('reconstruction');
-  const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<TabMode>('vantages');
   const { summary, refresh: refreshPractice } = usePractice();
 
   // Re-read on focus: an observation may have been recorded since we last looked.
@@ -84,13 +102,6 @@ export function SakshiScreen() {
   const distanceToSite =
     coordinate && primaryVantage ? distanceMeters(coordinate, primaryVantage.coordinate) : null;
 
-  // Historical images for the current GPS-detected site ONLY
-  const historicalImages = historicalImagesForSite(activeSiteId);
-  const selectedHistorical =
-    historicalImages.find((img) => img.id === selectedImageId) ?? historicalImages[0];
-  const source = selectedHistorical ? findSource(selectedHistorical.sourceId) : undefined;
-  const nowImage = nowImageForSite(activeSiteId);
-
   // Observations recorded for the current GPS-detected site ONLY
   const siteObservations = observations.filter((obs) => obs.siteId === activeSiteId);
 
@@ -120,15 +131,15 @@ export function SakshiScreen() {
             <View style={styles.heroHeader}>
               <Chip label="LOCATION HERITAGE" />
               {distanceToSite != null ? (
-                <Text variant="mono" tone="sandstone" style={styles.heroDistance}>
+                <Text variant="mono" tone="sandstone">
                   {formatDistance(distanceToSite)}
                 </Text>
               ) : null}
             </View>
-            <Text variant="heading" style={styles.heroTitle}>
+            <Text variant="heading">
               {activeSite?.name ?? 'Sacred Site'} — {primaryVantage.label}
             </Text>
-            <Text variant="caption" tone="secondary" style={styles.heroSub}>
+            <Text variant="caption" tone="secondary">
               Tolerance: ±{primaryVantage.positionToleranceM} m · ±{primaryVantage.bearingToleranceDeg}°
             </Text>
             <Button
@@ -144,138 +155,34 @@ export function SakshiScreen() {
         </View>
       ) : null}
 
-      {/* Segmented Mobile Navigation Bar */}
-      <View style={styles.tabBar}>
-        <Pressable
-          style={[styles.tabItem, activeTab === 'reconstruction' && styles.tabItemActive]}
-          onPress={() => setActiveTab('reconstruction')}
-        >
-          <Text variant="label" tone={activeTab === 'reconstruction' ? 'sandstone' : 'muted'} uppercase>
-            Reconstruction
-          </Text>
-        </Pressable>
-        <Pressable
-          style={[styles.tabItem, activeTab === 'vantages' && styles.tabItemActive]}
-          onPress={() => setActiveTab('vantages')}
-        >
-          <Text variant="label" tone={activeTab === 'vantages' ? 'sandstone' : 'muted'} uppercase>
-            Vantages ({siteVantages.length})
-          </Text>
-        </Pressable>
-        <Pressable
-          style={[styles.tabItem, activeTab === 'thennow' && styles.tabItemActive]}
-          onPress={() => setActiveTab('thennow')}
-        >
-          <Text variant="label" tone={activeTab === 'thennow' ? 'sandstone' : 'muted'} uppercase>
-            Then / Now
-          </Text>
-        </Pressable>
-        <Pressable
-          style={[styles.tabItem, activeTab === 'records' && styles.tabItemActive]}
-          onPress={() => setActiveTab('records')}
-        >
-          <Text variant="label" tone={activeTab === 'records' ? 'sandstone' : 'muted'} uppercase>
-            Records ({observations.length})
-          </Text>
-        </Pressable>
+      {/*
+        One loop rather than three hand-written buttons, so a fourth tab cannot
+        be added without also being declared above. `numberOfLines={1}` is the
+        guard the removed tab needed: these are uppercase at letterSpacing 1.4,
+        which is wide, and a long label used to wrap mid-word.
+      */}
+      <View style={styles.tabBar} accessibilityRole="tablist">
+        {TABS.map((tab) => {
+          const selected = activeTab === tab.key;
+          const label = tab.count ? `${tab.label} (${tab.count({ siteVantages, observations })})` : tab.label;
+          return (
+            <Pressable
+              key={tab.key}
+              accessibilityRole="tab"
+              accessibilityState={{ selected }}
+              accessibilityLabel={label}
+              style={[styles.tabItem, selected && styles.tabItemActive]}
+              onPress={() => setActiveTab(tab.key)}
+            >
+              <Text variant="label" tone={selected ? 'sandstone' : 'muted'} uppercase numberOfLines={1}>
+                {label}
+              </Text>
+            </Pressable>
+          );
+        })}
       </View>
 
-      {/* Tab Content 1: Reconstruction for CURRENT Location ONLY */}
-      {activeTab === 'reconstruction' ? (
-        <View style={styles.section}>
-          <Text variant="title" style={styles.compareTitle}>
-            {activeSite?.name ?? 'Heritage Site'}
-          </Text>
-
-          {selectedHistorical ? (
-            <>
-              {/* Interactive Draggable Wipe Frame */}
-              <ThenNowCompare
-                then={{
-                  image: selectedHistorical.image,
-                  date: selectedHistorical.date,
-                  placeholderNote: selectedHistorical.caption,
-                  tier: selectedHistorical.evidenceTier,
-                }}
-                now={{
-                  image: nowImage,
-                  date: 'Today',
-                  placeholderNote:
-                    'Your own photograph appears here once you have witnessed this site from the fixed viewpoint.',
-                }}
-              />
-
-              {/* Historical Date Switcher Chips */}
-              {historicalImages.length > 1 ? (
-                <View style={styles.chips}>
-                  {historicalImages.map((img) => (
-                    <Chip
-                      key={img.id}
-                      label={img.date}
-                      selected={img.id === selectedHistorical.id}
-                      onPress={() => setSelectedImageId(img.id)}
-                    />
-                  ))}
-                </View>
-              ) : null}
-
-              {/* Caption */}
-              <Text variant="body" style={styles.caption}>
-                {selectedHistorical.caption}
-              </Text>
-
-              {/* Approximate Viewpoint Disclaimer */}
-              {!selectedHistorical.viewpointConfirmed ? (
-                <View style={styles.qualifier}>
-                  <Text variant="label" tone="seeking" uppercase>
-                    Approximate viewpoint
-                  </Text>
-                  <Text variant="caption" tone="secondary">
-                    The historical image was not made from a surveyed point. Differences near the edges of
-                    the frame may be a change of angle rather than a change on the ground.
-                  </Text>
-                </View>
-              ) : null}
-
-              <Divider />
-
-              {/* Source Citation Card */}
-              {source ? (
-                <View style={styles.block}>
-                  <Text variant="label" tone="muted" uppercase>
-                    Source
-                  </Text>
-                  <SourceCard source={source} />
-                </View>
-              ) : null}
-
-              {/* Observation Timeline Scrubber for this location */}
-              {siteObservations.length > 0 ? (
-                <>
-                  <Divider />
-                  <TimeSeriesScrubber
-                    observations={siteObservations}
-                    vantageLabel={`${activeSite?.name ?? 'Site'} Timeline`}
-                    onSelectObservation={(obs) =>
-                      router.push({
-                        pathname: '/(main)/sakshi/observation',
-                        params: { observationId: obs.id },
-                      })
-                    }
-                  />
-                </>
-              ) : null}
-            </>
-          ) : (
-            <EmptyState
-              title="No historical reconstruction plate"
-              body={`No historical archive plate has been matched to ${activeSite?.name ?? 'this site'} yet.`}
-            />
-          )}
-        </View>
-      ) : null}
-
-      {/* Tab Content 2: Vantages for CURRENT Location ONLY */}
+      {/* Tab 1: the viewpoints at the place you are standing in */}
       {activeTab === 'vantages' ? (
         <View style={styles.section}>
           <View style={styles.list}>
@@ -296,7 +203,11 @@ export function SakshiScreen() {
         </View>
       ) : null}
 
-      {/* Tab Content 3: Then / Now */}
+      {/*
+        Tab 2: the comparison. A list rather than the widget itself — the
+        comparison wants the whole screen, and the list is the honest statement
+        of how many places actually have an archive plate behind them.
+      */}
       {activeTab === 'thennow' ? (
         <View style={styles.section}>
           {COMPARABLE_SITES.length === 0 ? (
@@ -335,9 +246,31 @@ export function SakshiScreen() {
         </View>
       ) : null}
 
-      {/* Tab Content 4: Your Records */}
+      {/* Tab 3: what you have recorded */}
       {activeTab === 'records' ? (
         <View style={styles.section}>
+          {/*
+            This place first, everything second. The scrubber came off the tab
+            that was removed; it belongs here rather than beside a comparison,
+            because it is a record of your own returns to one viewpoint, not a
+            comparison with the archive.
+          */}
+          {siteObservations.length > 0 ? (
+            <>
+              <TimeSeriesScrubber
+                observations={siteObservations}
+                vantageLabel={activeSite?.name ?? 'This place'}
+                onSelectObservation={(obs) =>
+                  router.push({
+                    pathname: '/(main)/sakshi/observation',
+                    params: { observationId: obs.id },
+                  })
+                }
+              />
+              <Divider />
+            </>
+          ) : null}
+
           {observations.length === 0 ? (
             <EmptyState
               title="Nothing recorded yet"
@@ -439,17 +372,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  heroDistance: {
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  heroTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  heroSub: {
-    fontSize: 12,
-  },
+  /*
+    No size or weight overrides on the hero text. `fontWeight` does nothing once
+    a real family is named — Android picks the file, not the axis — so an
+    override here would silently drop the emphasis it looks like it is setting.
+    The variants already carry both.
+  */
   tabBar: {
     flexDirection: 'row',
     marginTop: spacing.md,
@@ -471,29 +399,6 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   section: { paddingTop: spacing.md, gap: spacing.md },
-  compareTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: colors.sandstone,
-  },
-  chips: {
-    flexDirection: 'row',
-    gap: spacing.xs,
-  },
-  caption: {
-    lineHeight: 20,
-  },
-  qualifier: {
-    padding: spacing.sm,
-    borderRadius: radii.md,
-    backgroundColor: colors.surfaceSecondary,
-    borderLeftWidth: 3,
-    borderLeftColor: colors.seek,
-    gap: spacing.xxs,
-  },
-  block: {
-    gap: spacing.xs,
-  },
   list: { gap: spacing.md },
   observationRow: {
     flexDirection: 'row',

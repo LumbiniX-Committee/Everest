@@ -8,7 +8,7 @@ import {
   type LayoutChangeEvent,
 } from 'react-native';
 
-import { Text } from '@/components/ui';
+import { Icon, Text } from '@/components/ui';
 import { colors, radii, spacing } from '@/theme';
 import type { EvidenceTier } from '@/types';
 
@@ -104,9 +104,20 @@ export function ThenNowCompare({ then: thenPanel, now: nowPanel, aspectRatio = 4
           {...responder.panHandlers}
         >
           <View style={styles.handleLine} />
+          {/*
+            Opposing chevrons, not two vertical bars. Two bars in a circle is the
+            pause glyph, and people read it as one: the comparison looked like a
+            video someone had stopped, and the one gesture the widget has —
+            drag sideways — went undiscovered. Arrows name the gesture.
+          */}
           <View style={styles.handleGrip}>
-            <View style={styles.gripBar} />
-            <View style={styles.gripBar} />
+            <Icon name="chevron-left" size={16} color={colors.textSecondary} />
+            <Icon
+              name="chevron-right"
+              size={16}
+              color={colors.textSecondary}
+              style={styles.gripChevronRight}
+            />
           </View>
         </Animated.View>
       ) : null}
@@ -220,15 +231,18 @@ const styles = StyleSheet.create({
   handleLine: { position: 'absolute', top: 0, bottom: 0, width: 2, backgroundColor: colors.surface },
   handleGrip: {
     flexDirection: 'row',
-    gap: 3,
     alignItems: 'center',
     justifyContent: 'center',
-    width: 34,
-    height: 34,
+    width: 36,
+    height: 36,
     borderRadius: radii.full,
     backgroundColor: colors.surface,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.border,
   },
-  gripBar: { width: 2, height: 12, borderRadius: radii.full, backgroundColor: colors.textMuted },
+  /*
+    Pulled together so the two chevrons meet at the centre line. A gap between
+    them would read as a third element sitting on the divider.
+  */
+  gripChevronRight: { marginLeft: -8 },
 });
