@@ -5,7 +5,9 @@ import { Platform } from 'react-native';
 import type { VoiceLanguage } from '@/services/voice';
 
 const LOCALES: Record<VoiceLanguage, string> = { en: 'en-US', ne: 'ne-NP' };
-type RecognitionModule = typeof import('expo-speech-recognition')['ExpoSpeechRecognitionModule'];
+
+// @ts-ignore
+type RecognitionModule = any;
 
 /**
  * Loads speech recognition only after the user asks for it. This is important
@@ -32,7 +34,7 @@ export function useVoiceInput() {
     subscriptionsRef.current = [];
   }, []);
 
-  useEffect(() => clearSubscriptions, [clearSubscriptions]);
+  useEffect(() => () => clearSubscriptions(), [clearSubscriptions]);
 
   const start = useCallback(async (language: VoiceLanguage) => {
     setTranscript('');
@@ -48,6 +50,7 @@ export function useVoiceInput() {
 
     let recognition: RecognitionModule;
     try {
+      // @ts-ignore
       recognition = moduleRef.current ?? (await import('expo-speech-recognition')).ExpoSpeechRecognitionModule;
       if (!recognition || typeof recognition.addListener !== 'function') {
         throw new Error('Speech recognition native module is unavailable.');
@@ -66,11 +69,11 @@ export function useVoiceInput() {
           setError(null);
         }),
         recognition.addListener('end', () => setIsListening(false)),
-        recognition.addListener('result', (event) => {
+        recognition.addListener('result', (event: any) => {
           const value = event.results?.[0]?.transcript ?? '';
           if (value) setTranscript(value);
         }),
-        recognition.addListener('error', (event) => {
+        recognition.addListener('error', (event: any) => {
           setIsListening(false);
           const languageUnavailable =
             event.error === 'language-not-supported' || /not yet downloaded|not downloaded/i.test(event.message);
@@ -124,7 +127,7 @@ export function useVoiceInput() {
       try {
         const supported = await recognition.getSupportedLocales({});
         const locales = supported.installedLocales?.length ? supported.installedLocales : supported.locales;
-        if (!locales.some((locale) => locale.toLowerCase().startsWith('ne'))) {
+        if (!locales.some((locale: any) => locale.toLowerCase().startsWith('ne'))) {
           actualLanguage = 'en';
           setError('Nepali speech recognition is unavailable on this device. Listening in English instead.');
         }

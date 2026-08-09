@@ -321,6 +321,14 @@ const listeners = new Set<Listener>();
 let timer: ReturnType<typeof setInterval> | null = null;
 let cursor = 0;
 let current: DemoStep | null = null;
+/**
+ * When true the tick fires but does not advance the cursor.
+ *
+ * The walker stays at the exact coordinate it reached, still emitting that
+ * same fix on every tick so arrival hooks do not see a position gap. Resuming
+ * restarts the advance from wherever the itinerary left off.
+ */
+let paused = false;
 
 /** The most recent synthetic fix, or null before the walk has started. */
 export function currentStep(): DemoStep | null {
@@ -348,10 +356,13 @@ function tick(): void {
   const steps = track();
   if (steps.length === 0) return;
   current = steps[cursor];
-  // Wraps rather than stopping. The second pass is worth watching: the arrival
-  // cooldown suppresses what it announced the first time, which is a behaviour
-  // that only shows up on a return.
-  cursor = (cursor + 1) % steps.length;
+
+  // While paused: re-emit the same fix every tick so arrival hooks keep the
+  // site id active, but do not advance — the walker stays put until resume().
+  if (!paused) {
+    cursor = (cursor + 1) % steps.length;
+  }
+
   listeners.forEach((listener) => listener(current as DemoStep));
 }
 
@@ -372,7 +383,28 @@ export function restart(): void {
   cursor = 0;
   current = null;
   override = null;
+  paused = false;
   if (timer) tick();
+}
+
+/**
+ * Freeze the walker at its current position.
+ *
+ * The tick still fires — the same fix is re-emitted so the arrival state
+ * does not drop — but the cursor does not advance until resume() is called.
+ * Has no effect when the walk is not running.
+ */
+export function pause(): void {
+  paused = true;
+}
+
+/** Unfreeze. The walk continues from the step it stopped on. */
+export function resume(): void {
+  paused = false;
+}
+
+export function isPaused(): boolean {
+  return paused;
 }
 
 /** Every site the walk stops at, in the order it reaches them. */
