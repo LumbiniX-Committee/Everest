@@ -62,19 +62,26 @@ type AssetModule = {
   Asset: { fromModule: (mod: number) => { downloadAsync: () => Promise<unknown>; localUri: string | null; uri: string } };
 };
 
-function guardedRequire<T>(name: string): T | null {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    return require(name) as T;
-  } catch {
-    return null;
-  }
+// Metro only supports statically analyzable require() calls. Keep these
+// guards separate and literal: Expo Go can bundle the JavaScript packages but
+// does not provide the native ONNX module, while a development build does.
+function loadOrt(): OrtModule | null {
+  try { return require('onnxruntime-react-native') as OrtModule; } catch { return null; }
+}
+function loadManipulator(): ManipulatorModule | null {
+  try { return require('expo-image-manipulator') as ManipulatorModule; } catch { return null; }
+}
+function loadJpeg(): JpegModule | null {
+  try { return require('jpeg-js') as JpegModule; } catch { return null; }
+}
+function loadAsset(): AssetModule | null {
+  try { return require('expo-asset') as AssetModule; } catch { return null; }
 }
 
-const ort = guardedRequire<OrtModule>('onnxruntime-react-native');
-const manip = guardedRequire<ManipulatorModule>('expo-image-manipulator');
-const jpeg = guardedRequire<JpegModule>('jpeg-js');
-const assetMod = guardedRequire<AssetModule>('expo-asset');
+const ort = loadOrt();
+const manip = loadManipulator();
+const jpeg = loadJpeg();
+const assetMod = loadAsset();
 
 /** True only when every piece the ONNX pipeline needs is present in this build. */
 export const onnxAvailable: boolean = !!(ort && manip && jpeg && assetMod);
