@@ -13,6 +13,10 @@ export type DemoWalkState = {
   toggle: () => void;
   /** Back to the south gate without leaving demo mode. */
   restart: () => void;
+  /** Freeze the walker at its current site while a story is shown. */
+  pauseWalk: () => void;
+  /** Unfreeze — the walk continues from where it stopped. */
+  resumeWalk: () => void;
 };
 
 const NO_ROUTE: readonly (readonly [number, number])[] = [];
@@ -59,5 +63,13 @@ export function useDemoWalk(): DemoWalkState {
     locationService.demo.restart();
   }, []);
 
-  return { active, step, route, toggle, restart };
+  const pauseWalk = useCallback(() => {
+    locationService.demo.pause();
+  }, []);
+
+  const resumeWalk = useCallback(() => {
+    locationService.demo.resume();
+  }, []);
+
+  return { active, step, route, toggle, restart, pauseWalk, resumeWalk };
 }

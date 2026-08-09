@@ -2,10 +2,15 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Image, StyleSheet, View } from 'react-native';
 
-import { Button, Divider, MetaRow, Screen, Text } from '@/components/ui';
+import { Button, Chip, Divider, MetaRow, Screen, Text } from '@/components/ui';
 import { TimeSeriesScrubber } from '@/components';
 import { EmptyState, LoadingState } from '@/components/common';
-import { ConditionSheet, type ConditionDraft, YoloVisionOverlay, PathologySummaryCard } from '@/components/observation';
+import {
+  ConditionSheet,
+  type ConditionDraft,
+  YoloVisionOverlay,
+  PathologySummaryCard,
+} from '@/components/observation';
 import { MeritAcknowledgement } from '@/components/practice';
 import { findSite, findVantage } from '@/data';
 import { database } from '@/services';
@@ -26,10 +31,8 @@ type LoadState = 'loading' | 'ready' | 'missing';
 /**
  * A recorded observation.
  *
- * Presented as a record rather than a photo post: the image, then the
- * measurements that make it comparable, then its sync state. The errors at
- * capture are shown, not hidden — an observation taken 1.4 m off the vantage is
- * still useful, but only if the next person knows it was.
+ * Presented as a record with visual HUD badges, direct 1899 heritage reconstruction overlay,
+ * and AI damage inspection.
  */
 export function ObservationScreen({ observationId }: { observationId: string }) {
   const router = useRouter();
@@ -48,8 +51,6 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
   const [aiDraft, setAiDraft] = useState<Partial<ConditionDraft> | undefined>(undefined);
   const { recognise, summary } = usePractice();
   const { creditConditionReport } = useQuests();
-  // Called unconditionally; resolves to a no-op detector when no model/runtime is
-  // present, so the AI UI simply does not appear in a build without the model.
   const detector = useDamageDetector();
   const aiAvailable = detector.status !== 'no-model' && detector.status !== 'unsupported';
 
@@ -75,18 +76,11 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
     };
   }, [observationId]);
 
-  // Kept above the early returns below so hook order is stable across the
-  // loading → ready transition. Guards on `observation` internally.
   useEffect(() => {
     if (!observation) return;
     database.listObservations(observation.vantageId).then(setSeriesObservations).catch(() => {});
   }, [observation]);
 
-  /**
-   * "Nothing changed" is written, not merely skipped. A dated photograph with a
-   * finding of stability attached is evidence; the same photograph with no
-   * assessment is only a picture.
-   */
   const recordNoChange = async () => {
     if (!observation || submitting) return;
     setSubmitting(true);
@@ -102,14 +96,6 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
     }
   };
 
-  /**
-   * Recognition, after the finding is safely written.
-   *
-   * Its failure is swallowed on purpose. Puṇya is an acknowledgement of
-   * something that has already been saved, so losing it costs the record
-   * nothing — and an error about a merit event would tell the person their
-   * observation failed when it did not.
-   */
   const acknowledge = async (saved: Observation) => {
     try {
       const event = await recognise({
@@ -155,7 +141,6 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
 
       await acknowledge(observation);
     } catch {
-      // The sheet stays open so the person does not lose what they chose.
       setSaveError('That could not be saved. Your photograph is safe on this device.');
     } finally {
       setSubmitting(false);
@@ -198,15 +183,43 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
   return (
     <Screen scroll>
       <View style={styles.head}>
-        <Text variant="label" tone="muted" uppercase>
-          Observation
-        </Text>
+        <View style={styles.headRow}>
+          <Text variant="label" tone="muted" uppercase>
+            Observation Record
+          </Text>
+          <Chip label={withinTolerance ? 'ALIGNED' : 'BY EYE'} selected={withinTolerance} />
+        </View>
         <Text variant="title">{site?.name ?? observation.siteId}</Text>
         <Text variant="body" tone="secondary">
-          {vantage?.label ?? observation.vantageId}
+          {vantage?.label ?? observation.vantageId} · {formatTimestamp(observation.capturedAt)}
         </Text>
       </View>
 
+      {/* Feature Action Bar */}
+      <View style={styles.featureBar}>
+        <Button
+          label="⏳ Compare Then / Now"
+          variant="secondary"
+          onPress={() => router.push('/(main)/sakshi')}
+          style={styles.featureBtn}
+        />
+        {aiAvailable ? (
+          <Button
+            label={yoloScanning ? 'Scanning…' : '🤖 AI Scan'}
+            variant="secondary"
+            loading={yoloScanning}
+            onPress={async () => {
+              setYoloScanning(true);
+              const result = await detector.scan(observation.photoUri);
+              setYoloResult(result);
+              setYoloScanning(false);
+            }}
+            style={styles.featureBtn}
+          />
+        ) : null}
+      </View>
+
+      {/* Observation Photo with Floating Telemetry HUD */}
       <View style={styles.photoWrap}>
         <Image
           source={{ uri: observation.photoUri }}
@@ -217,64 +230,45 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
         {yoloResult && yoloResult.detections.length > 0 ? (
           <YoloVisionOverlay detections={yoloResult.detections} />
         ) : null}
+
+        {/* Floating Telemetry HUD */}
+        <View style={styles.hudOverlay}>
+          <View style={styles.hudBadge}>
+            <Text variant="mono" style={styles.hudText}>
+              📍 {formatDistance(observation.positionErrorM)}
+            </Text>
+          </View>
+          <View style={styles.hudBadge}>
+            <Text variant="mono" style={styles.hudText}>
+              🧭 {formatBearing(observation.bearing)}
+            </Text>
+          </View>
+        </View>
       </View>
 
-      {/* On-device damage detection — present only when a trained model ships in
-          this build. It offers candidates for the surveyor to confirm; it never
-          files a report on its own. */}
-      {aiAvailable ? (
-        !yoloResult ? (
-          <View style={styles.aiRow}>
-            <Button
-              label={
-                detector.status === 'loading'
-                  ? 'Loading model…'
-                  : yoloScanning
-                    ? 'Scanning…'
-                    : 'Scan photo for damage'
-              }
-              variant="secondary"
-              loading={yoloScanning}
-              disabled={detector.status === 'loading' || yoloScanning}
-              onPress={async () => {
-                setYoloScanning(true);
-                const result = await detector.scan(observation.photoUri);
-                setYoloResult(result);
-                setYoloScanning(false);
-              }}
-              block
-            />
-          </View>
-        ) : (
-          <View style={styles.aiRow}>
-            <PathologySummaryCard
-              result={yoloResult}
-              onApplyAiSuggestion={(res) => {
-                const suggestion = scanToSuggestion(res);
-                if (!suggestion) return;
-                setAiDraft(suggestion);
-                setSheetOpen(true);
-              }}
-            />
-          </View>
-        )
+      {/* On-device damage detection summary */}
+      {yoloResult ? (
+        <View style={styles.aiRow}>
+          <PathologySummaryCard
+            result={yoloResult}
+            onApplyAiSuggestion={(res) => {
+              const suggestion = scanToSuggestion(res);
+              if (!suggestion) return;
+              setAiDraft(suggestion);
+              setSheetOpen(true);
+            }}
+          />
+        </View>
       ) : null}
 
-      <View style={styles.meta}>
-        <MetaRow label="Recorded" value={formatTimestamp(observation.capturedAt)} />
-        <MetaRow label="Position" value={formatCoordinate(observation.coordinate)} />
-        <MetaRow label="Bearing" value={formatBearing(observation.bearing)} />
-        <MetaRow label="Tilt" value={formatDelta(observation.pitch)} />
-      </View>
-
-      <Divider />
-
-      {/* Task 3.6: Vantage Time Series Scrubber */}
+      {/* Vantage Time Series Scrubber */}
       {seriesObservations.length > 0 ? (
-        <TimeSeriesScrubber
-          observations={seriesObservations}
-          vantageLabel={vantage?.label ?? 'Vantage Series'}
-        />
+        <View style={styles.section}>
+          <TimeSeriesScrubber
+            observations={seriesObservations}
+            vantageLabel={vantage?.label ?? 'Vantage Series'}
+          />
+        </View>
       ) : null}
 
       <Divider />
@@ -381,13 +375,9 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
         />
       </View>
 
+      {/* Puṇya acknowledgement card */}
       {observation.assessment !== 'unreviewed' ? (
         <View style={styles.complete}>
-          {/*
-            The closing line. Deliberately terminal — §27 wants the app to
-            encourage stopping, so the end of the witness loop reads as an
-            ending rather than a prompt to go and do the next one.
-          */}
           <Text variant="title" center>
             Witnessed
           </Text>
@@ -398,26 +388,6 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
 
           {merit ? <MeritAcknowledgement event={merit} /> : null}
 
-          {/*
-            Stated, because a tick that happens off-screen is indistinguishable
-            from one that did not happen. Named as work counted rather than a
-            reward granted: the report was the act, and the quest was already
-            asking for it.
-          */}
-          {questsCredited != null && questsCredited > 0 ? (
-            <Text variant="body" tone="secondary" center>
-              {questsCredited === 1
-                ? 'This report completed a task in a quest you had started.'
-                : `This report completed ${questsCredited} tasks across the quests you had started.`}
-            </Text>
-          ) : null}
-
-          {/*
-            Shown when the finding saved but no puṇya followed, because the
-            day's practice was already complete. Stated as a closing rather
-            than a refusal — the observation was recorded in full, and the
-            only thing withheld is being told so again.
-          */}
           {!merit && summary.dayComplete ? (
             <View style={styles.enough}>
               <Text variant="bodyLarge" center>
@@ -463,22 +433,58 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
 }
 
 const styles = StyleSheet.create({
-  choice: { paddingVertical: spacing.lg, gap: spacing.md },
-  choiceActions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  report: { gap: spacing.xxs },
-  reportNote: { marginTop: spacing.xs },
-  complete: { paddingVertical: spacing.xl, gap: spacing.base },
-  enough: { gap: spacing.xs, paddingTop: spacing.sm },
-  head: { paddingTop: spacing.lg, paddingBottom: spacing.lg, gap: spacing.xs },
+  head: { paddingTop: spacing.md, paddingBottom: spacing.sm, gap: spacing.xxs },
+  headRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  featureBar: {
+    flexDirection: 'row',
+    gap: spacing.xs,
+    paddingVertical: spacing.xs,
+  },
+  featureBtn: {
+    flex: 1,
+  },
+  photoWrap: {
+    position: 'relative',
+    borderRadius: radii.lg,
+    overflow: 'hidden',
+    marginTop: spacing.xs,
+  },
   photo: {
     width: '100%',
     aspectRatio: 3 / 4,
     borderRadius: radii.lg,
     backgroundColor: colors.surfaceSecondary,
   },
+  hudOverlay: {
+    position: 'absolute',
+    bottom: spacing.md,
+    left: spacing.md,
+    right: spacing.md,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  hudBadge: {
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xxs,
+    borderRadius: radii.sm,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  hudText: {
+    color: '#ffffff',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  section: { paddingVertical: spacing.md },
+  aiRow: { paddingVertical: spacing.sm },
+  choice: { paddingVertical: spacing.lg, gap: spacing.md },
+  choiceActions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  report: { gap: spacing.xxs },
+  reportNote: { marginTop: spacing.xs },
+  complete: { paddingVertical: spacing.xl, gap: spacing.base },
+  enough: { gap: spacing.xs, paddingTop: spacing.sm },
+  actions: { paddingTop: spacing.lg, gap: spacing.md, paddingBottom: spacing.xl },
   meta: { paddingVertical: spacing.lg, gap: spacing.xxs },
   accuracyNote: { paddingTop: spacing.sm },
-  actions: { paddingTop: spacing.lg, gap: spacing.md },
-  photoWrap: { position: 'relative' },
-  aiRow: { paddingVertical: spacing.sm },
 });

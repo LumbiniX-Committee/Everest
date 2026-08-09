@@ -29,12 +29,14 @@ function getInfo(uri: string): Promise<FileInfo> {
   return FileSystem.getInfoAsync(uri, { md5: true }) as Promise<FileInfo>;
 }
 
+// @ts-ignore
 function loadNative(): typeof import('llama.rn') | null {
   try {
     // llama.rn is intentionally loaded only at runtime. This keeps Expo Go and
     // web usable; the native module exists only in a development/production
     // build containing the config plugin.
     if (typeof require !== 'function') return null;
+    // @ts-ignore
     return require('llama.rn') as typeof import('llama.rn');
   } catch {
     return null;

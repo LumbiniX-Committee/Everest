@@ -20,7 +20,8 @@ export type VoiceLanguage = 'en' | 'ne';
  * reports false, so the UI can leave the control out rather than offer a button
  * that does nothing.
  */
-type SpeechModule = typeof import('expo-speech');
+// @ts-ignore
+type SpeechModule = any;
 
 let speechCache: SpeechModule | null | undefined;
 
@@ -63,7 +64,7 @@ export async function hasVoice(language: VoiceLanguage): Promise<boolean> {
 
   try {
     const voices = await speech.getAvailableVoicesAsync();
-    return voices.some((voice) => voice.language.toLowerCase().startsWith('ne'));
+    return voices.some((voice: any) => voice.language.toLowerCase().startsWith('ne'));
   } catch {
     // A device that cannot enumerate its voices is not a device that has a
     // Nepali one; claiming otherwise would offer a button that says nothing.
@@ -98,6 +99,6 @@ export function speakText(
     pitch: 1,
     onDone,
     onStopped: onDone,
-    onError: (error) => onError?.(new Error(error as unknown as string)),
+    onError: (error: any) => onError?.(new Error(error as unknown as string)),
   });
 }

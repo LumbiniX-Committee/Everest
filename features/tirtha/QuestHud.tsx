@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Animated, Easing, Pressable, StyleSheet, View } from 'react-native';
 
 import { Text } from '@/components/ui';
@@ -145,11 +145,18 @@ export function RewardToast({
   onHide: () => void;
 }) {
   const enter = useRef(new Animated.Value(0)).current;
+  // Keep the latest onHide in a ref so the animation effect never lists it
+  // as a dependency. onHide is an inline arrow in the parent and gets a new
+  // identity on every render (GPS ticks, demo walk updates). Listing it caused
+  // the effect to restart the animation on every parent re-render, producing
+  // the repeated flickering toast.
+  const onHideRef = useRef(onHide);
+  onHideRef.current = onHide;
 
   useEffect(() => {
     if (!visible) return;
     enter.setValue(0);
-    Animated.sequence([
+    const anim = Animated.sequence([
       Animated.timing(enter, {
         toValue: 1,
         duration: 260,
@@ -158,10 +165,13 @@ export function RewardToast({
       }),
       Animated.delay(2400),
       Animated.timing(enter, { toValue: 0, duration: 220, useNativeDriver: true }),
-    ]).start(({ finished }) => {
-      if (finished) onHide();
+    ]);
+    anim.start(({ finished }) => {
+      if (finished) onHideRef.current();
     });
-  }, [visible, enter, onHide]);
+    return () => anim.stop();
+    // Only restart when visibility flips — NOT when onHide changes identity.
+  }, [visible, enter]);
 
   if (!visible) return null;
 
