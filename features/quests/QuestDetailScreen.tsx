@@ -4,13 +4,14 @@ import { StyleSheet, View } from 'react-native';
 
 import { ErrorState, LoadingState, ScreenHeader } from '@/components/common';
 import { BottomSheet, Button, Card, Screen, Text } from '@/components/ui';
+import { SitePlan } from '@/components/map';
 import { findSite } from '@/data';
 import { useCurrentPosition } from '@/hooks';
 import { database } from '@/services';
 import { usePreferences } from '@/store';
 import { useQuests } from '@/store/quests';
 import { colors, spacing } from '@/theme';
-import type { ConditionSeverity, QuestSubmission, QuestTask } from '@/types';
+import type { ConditionSeverity, HeritageSite, QuestSubmission, QuestTask } from '@/types';
 import { distanceMeters } from '@/utils';
 
 /** Least to most serious, so a sort by index puts urgent first. */
@@ -106,6 +107,32 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
   const isNotStarted = progress.status === 'not_started';
   const isCompleted = progress.status === 'completed';
 
+  /**
+   * The places this quest touches, and whether each is settled.
+   *
+   * A place counts as done when every task naming it is ticked — a site with a
+   * visit and a condition report is not finished halfway through. Sites the
+   * registry does not know (monastic-zone) drop out rather than being drawn at
+   * a guessed position.
+   */
+  const planSites: HeritageSite[] = [];
+  for (const task of tasks) {
+    if (!task.targetId) continue;
+    const site = findSite(task.targetId);
+    if (site && !planSites.some((existing) => existing.id === site.id)) planSites.push(site);
+  }
+
+  const planState: Record<string, 'done' | 'todo'> = {};
+  for (const site of planSites) {
+    const itsTasks = tasks.filter(
+      (task) => task.targetId && findSite(task.targetId)?.id === site.id,
+    );
+    planState[site.id] = itsTasks.every((task) => progress.completedTasks.includes(task.id))
+      ? 'done'
+      : 'todo';
+  }
+  const planDone = planSites.filter((site) => planState[site.id] === 'done').length;
+
   // A task that asks for something opens the sheet; a task that asks for
   // nothing still ticks straight through, because demanding a photograph of a
   // gate you walked past is busywork dressed as rigour.
@@ -178,6 +205,30 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
         </View>
       ) : (
         <View style={styles.tasksSection}>
+          {/*
+            The quest in space, before the quest as a list.
+            A quest that crosses four monuments read as four rows of prose;
+            nothing said they were 90 m apart, or which of them you had already
+            settled, or that one is behind you. The plan is schematic on purpose
+            — the same component the explore surface uses, with no map SDK and
+            no tiles.
+          */}
+          {planSites.length > 1 ? (
+            <View style={styles.planBlock}>
+              <SitePlan
+                sites={planSites}
+                observer={coordinate}
+                siteState={planState}
+                height={180}
+              />
+              <Text variant="caption" tone="muted">
+                {planDone === planSites.length
+                  ? 'Every place this quest asks for is settled.'
+                  : `${planDone} of ${planSites.length} places settled · hollow marks are done`}
+              </Text>
+            </View>
+          ) : null}
+
           <Text variant="heading" style={styles.tasksHeader}>
             Tasks ({progress.completedTasks.length}/{tasks.length})
           </Text>
@@ -260,5 +311,6 @@ const styles = StyleSheet.create({
   progressWrap: { paddingTop: spacing.sm },
   actionWrap: { marginTop: spacing.lg },
   tasksSection: { marginTop: spacing.lg, gap: spacing.md },
+  planBlock: { gap: spacing.sm, paddingBottom: spacing.base },
   tasksHeader: { marginBottom: spacing.xs },
 });
