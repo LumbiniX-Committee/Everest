@@ -21,6 +21,7 @@ import { arrival, location as locationService } from '@/services';
 import { usePractice, usePreferences, useQuests } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 
+import { BuddhaChat } from './BuddhaChat';
 import { DemoWalkPanel } from './DemoWalkPanel';
 import { PlacePicker } from './PlacePicker';
 import { QuestHud, RewardToast } from './QuestHud';
@@ -71,6 +72,7 @@ export function LiveMapScreen() {
   storyRef.current = story;
 
   const [showStory, setShowStory] = useState(false);
+  const [showChat, setShowChat] = useState(false);
   const [showQuests, setShowQuests] = useState(false);
   const [showPlaces, setShowPlaces] = useState(false);
   const [reward, setReward] = useState<{ title: string; detail?: string } | null>(null);
@@ -430,26 +432,33 @@ export function LiveMapScreen() {
         />
 
         {/*
-          The two doors out of a place, in the same column as the quest marker
-          rather than in a row along the bottom. As a bottom row they were 88
-          points of dock — on top of the panel and the readout, the map was down
-          to a third of the screen. A column of round buttons on the right costs
-          the world nothing and keeps every action in one place.
+          The Buddha icon button on the right.
+          - If at a heritage site AND story is not yet read: opens StorySequence.
+          - If at a heritage site AND story is completed: opens BuddhaChat.
+          - If outside any site: opens BuddhaChat.
         */}
-        {atSiteId ? (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={story.hasRead(atSiteId) ? 'What this place holds' : 'Hear this place'}
-            accessibilityHint="Opens the passage for this site, with its sources"
-            onPress={() => {
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={
+            atSiteId
+              ? story.hasRead(atSiteId)
+                ? 'Ask the Buddha'
+                : 'Hear this place'
+              : 'Ask about Lumbini'
+          }
+          accessibilityHint="Opens Buddha guide to listen to site stories or ask questions"
+          onPress={() => {
+            if (atSiteId && !story.hasRead(atSiteId)) {
               setShowStory(true);
               if (demoMode) pauseWalk();
-            }}
-            style={styles.worldButton}
-          >
-            <GreetingMonk height={38} />
-          </Pressable>
-        ) : null}
+            } else {
+              setShowChat(true);
+            }
+          }}
+          style={styles.worldButton}
+        >
+          <GreetingMonk height={38} />
+        </Pressable>
 
         {atSiteId ? (
           <Pressable
@@ -654,6 +663,12 @@ export function LiveMapScreen() {
           }}
         />
       ) : null}
+
+      <BuddhaChat
+        visible={showChat}
+        onClose={() => setShowChat(false)}
+        siteName={activeSignificance?.site.name}
+      />
     </View>
   );
 }
