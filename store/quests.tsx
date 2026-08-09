@@ -9,6 +9,8 @@ import {
 } from 'react';
 
 import { demoQuests } from '@/data';
+import { tasksSatisfiedByReport, type ReportableTask } from '@/core';
+import { findSite } from '@/data';
 import { database } from '@/services';
 import { usePractice } from '@/store/practice';
 import type { MeritKind, QuestProgress, QuestWithProgress } from '@/types';
@@ -36,6 +38,11 @@ export type QuestsContextValue = {
   startQuest: (questId: string) => Promise<void>;
   /** Mark a task completed. Triggers Puṇya recognition when all tasks in quest are done. */
   completeTask: (questId: string, taskId: string) => Promise<TaskCompletionResult>;
+  /**
+   * Credit a filed condition report against any started quest that was asking
+   * for one at this site. Returns how many tasks it satisfied.
+   */
+  creditConditionReport: (siteId: string) => Promise<number>;
   /** Reset all quest progress (for testing/debug). */
   resetQuests: () => Promise<void>;
   /** Re-query SQLite to synchronize local state. */
@@ -126,6 +133,53 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
     [quests, recognise, refresh],
   );
 
+  /**
+   * Credits a condition report against any quest task that was asking for one
+   * here.
+   *
+   * Called after the report is safely in the database, never before: a quest
+   * tick that outlives the record it stands for is worse than an untidy quest
+   * screen. Failure is swallowed for the same reason the caller keeps going —
+   * the report is the artefact that matters, and a missed tick is recoverable
+   * by opening the quest.
+   *
+   * Only tasks of a started quest are considered. Filing a report should not
+   * silently enrol someone in a quest they never chose; it credits work they
+   * were already doing.
+   */
+  const creditConditionReport = useCallback(
+    async (siteId: string): Promise<number> => {
+      const started = quests.filter((quest) => quest.progress.status !== 'not_started');
+
+      const tasks: ReportableTask[] = started.flatMap((quest) =>
+        quest.tasks.map((task) => ({
+          questId: quest.id,
+          taskId: task.id,
+          type: task.type,
+          targetId: task.targetId,
+          completed: quest.progress.completedTasks.includes(task.id),
+        })),
+      );
+
+      // findSite resolves the legacy ids the quests still use — ashoka-pillar
+      // for ashokan-pillar, puskarini-pond for puskarini. Falling back to the
+      // raw id keeps a target that is not a registered site matchable.
+      const links = tasksSatisfiedByReport(tasks, siteId, (id: string) => findSite(id)?.id ?? id);
+
+      for (const link of links) {
+        try {
+          await database.completeQuestTask(link.questId, link.taskId);
+        } catch {
+          // Keep going: one quest failing to update must not strand the others.
+        }
+      }
+
+      if (links.length > 0) await refresh();
+      return links.length;
+    },
+    [quests, refresh],
+  );
+
   const resetQuests = useCallback(async () => {
     await database.resetQuestProgress();
     await refresh();
@@ -161,6 +215,7 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
       getQuestById,
       startQuest,
       completeTask,
+      creditConditionReport,
       resetQuests: resetQuests,
       refresh,
     }),
@@ -173,6 +228,7 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
       getQuestById,
       startQuest,
       completeTask,
+      creditConditionReport,
       resetQuests,
       refresh,
     ],

@@ -181,6 +181,14 @@ export function SakshiScreen() {
             variant="secondary"
             onPress={() => router.push('/(main)/sakshi/register' as any)}
           />
+          {/* Sits under the practice summary, not beside puṇya. The summary
+              above is yours and unranked; this is the separate, openly
+              competitive count of what has reached the shared record. */}
+          <Button
+            label="Guardians — who is contributing"
+            variant="quiet"
+            onPress={() => router.push('/(main)/sakshi/guardians' as any)}
+          />
         </View>
       ) : null}
     </Screen>

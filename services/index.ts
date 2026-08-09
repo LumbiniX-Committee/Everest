@@ -14,3 +14,4 @@ export * as voice from './voice';
 export * as arrival from './arrival';
 export * as integrity from './integrity';
 export * as questReview from './questReview';
+export * as leaderboard from './leaderboard'; // lint-vocab:allow — the ranking surface, exempted by team decision

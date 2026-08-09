@@ -53,6 +53,14 @@ export type HeritageSite = {
   elevation?: number;
   /** Labelled facts for the site detail table. */
   facts?: SiteFact[];
+  /**
+   * Sutta uids this site rests on, e.g. `['dn14', 'mn123']`.
+   *
+   * Shown at the deepest wisdom tier, resolved to the actual passage rather
+   * than rendered as a bare reference — a citation nobody can read is
+   * decoration.
+   */
+  dhammaLinks?: string[];
   sourceTier: SourceTier;
   /**
    * Ids into the shared source registry, resolved with `resolveSources`.

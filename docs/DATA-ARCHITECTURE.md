@@ -235,11 +235,21 @@ which makes retry idempotent.
 
 ### Deliberately not planned
 
-- **Merit events on the server.** Puṇya has no score, no total, and no
-  leaderboard by design (`05-CONTENT-SPEC` §6, and the merit table carries no
-  weight column for that reason). Syncing it invites exactly the comparison the
-  model refuses. It stays on the device unless there is a reason that is not
-  "we could".
+- **Merit events on the server.** Puṇya has no score, no total, and no ranking
+  by design (`05-CONTENT-SPEC` §6). Syncing it invites exactly the comparison
+  the model refuses, and it would put a per-act, per-site, timestamped record of
+  someone's movements on the server. It stays on the device.
+
+  **This survived the leaderboard**, which is worth recording because it did not
+  have to. The obvious way to build a global ranking is to sync the merit
+  ledger; the board instead derives points on the server from records that
+  already sync — observations, condition reports, quest submissions — so puṇya
+  is untouched. That also made the ranking harder to cheat, since a score
+  computed from uploaded evidence cannot be claimed, only earned. See
+  `supabase/migrations/0008_leaderboard.sql`.
+
+  The reversal is real all the same: the app now ranks people, which the charter
+  refused. What it ranks is contribution to the shared record, not merit.
 - **Deleting observations.** There is no delete path and should not be one. A
   mistaken observation is corrected by a condition report or a later
   observation, not by erasing evidence.

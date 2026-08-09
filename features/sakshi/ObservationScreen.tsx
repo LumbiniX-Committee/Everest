@@ -10,7 +10,7 @@ import { MeritAcknowledgement } from '@/components/practice';
 import { findSite, findVantage } from '@/data';
 import { database } from '@/services';
 import { useDamageDetector, scanToSuggestion, type YoloScanResult } from '@/services/ai/yoloEngine';
-import { usePractice } from '@/store';
+import { usePractice, useQuests } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 import { formatBearing, formatCoordinate, formatDelta, formatDistance, formatTimestamp } from '@/utils';
 import {
@@ -40,11 +40,14 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
   const [submitting, setSubmitting] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [merit, setMerit] = useState<MeritEvent | null>(null);
+  /** How many quest tasks the last report satisfied. Null until one is filed. */
+  const [questsCredited, setQuestsCredited] = useState<number | null>(null);
   const [seriesObservations, setSeriesObservations] = useState<Observation[]>([]);
   const [yoloResult, setYoloResult] = useState<YoloScanResult | null>(null);
   const [yoloScanning, setYoloScanning] = useState(false);
   const [aiDraft, setAiDraft] = useState<Partial<ConditionDraft> | undefined>(undefined);
   const { recognise, summary } = usePractice();
+  const { creditConditionReport } = useQuests();
   // Called unconditionally; resolves to a no-op detector when no model/runtime is
   // present, so the AI UI simply does not appear in a build without the model.
   const detector = useDamageDetector();
@@ -140,6 +143,16 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
       setReports((previous) => [report, ...previous]);
       setObservation({ ...observation, assessment: 'reported' });
       setSheetOpen(false);
+
+      // A report is a side quest completing itself. Every seeded quest ends
+      // with a condition_report task naming a site, and until now filing one
+      // left the person to go and tick a box claiming they had done the thing
+      // they had just done. Credited after the report is safely stored, never
+      // before — a tick that outlives the record it stands for is worse than
+      // an untidy quest screen.
+      const credited = await creditConditionReport(observation.siteId).catch(() => 0);
+      setQuestsCredited(credited);
+
       await acknowledge(observation);
     } catch {
       // The sheet stays open so the person does not lose what they chose.
@@ -384,6 +397,20 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
           </Text>
 
           {merit ? <MeritAcknowledgement event={merit} /> : null}
+
+          {/*
+            Stated, because a tick that happens off-screen is indistinguishable
+            from one that did not happen. Named as work counted rather than a
+            reward granted: the report was the act, and the quest was already
+            asking for it.
+          */}
+          {questsCredited != null && questsCredited > 0 ? (
+            <Text variant="body" tone="secondary" center>
+              {questsCredited === 1
+                ? 'This report completed a task in a quest you had started.'
+                : `This report completed ${questsCredited} tasks across the quests you had started.`}
+            </Text>
+          ) : null}
 
           {/*
             Shown when the finding saved but no puṇya followed, because the

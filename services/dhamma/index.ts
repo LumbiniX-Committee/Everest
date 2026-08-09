@@ -1,17 +1,33 @@
+import { askDhammaAsync, processReflectionAsync } from '@/core/dhamma';
 import { demoDhammaEntries, findSource, type DhammaEntry } from '@/data';
 import type { Citation, DhammaAnswer, Evidence, GroundedAnswer, RefusedAnswer } from '@/types';
 
 /**
- * Dhamma retrieval.
+ * Dhamma retrieval — the app-facing boundary.
  *
- * A mock in the sense that the corpus is four entries and the matching is
- * lexical rather than semantic. Not a mock in the sense that matters: it really
- * searches, it really scores, and it really refuses. A stub that always
- * produced an answer would make the refusal path unreachable and untestable,
- * and the refusal is the feature.
+ * This file used to *be* the retriever: lexical scoring over six hand-written
+ * demo entries. It said of itself that the interface was the one a real
+ * retriever would expose, so replacing the internals later would touch nothing
+ * above this file. That turned out to be true, and this is that replacement.
  *
- * The interface is the one a real retriever would expose, so replacing the
- * internals later touches nothing above this file (§48).
+ * Answers now come from `core/dhamma`: hybrid retrieval (BM25 + vector, fused
+ * by reciprocal rank) over segment-aligned canonical passages, with citations
+ * validated against what was actually retrieved. The refusal is unchanged in
+ * spirit and stricter in fact — it now refuses against a grounding threshold on
+ * a real retrieval score rather than a lexical overlap.
+ *
+ * Three sources, in order:
+ *
+ *   1. `EXPO_PUBLIC_API_URL`, when set. Unchanged — the mock in `mock-api/`
+ *      serves this contract and the team's offline dev loop depends on it.
+ *   2. `core/dhamma`, on device. This is the one that matters: it needs no
+ *      network, which is the case that actually happens in the Sacred Garden.
+ *   3. The six demo entries, kept only as the source of *suggestions* on a
+ *      refusal — "here are questions this corpus can answer" needs a list of
+ *      known-good questions, and that is all they are still for.
+ *
+ * `core/dhamma` returns the same shape the API does, so `fromApiResponse` maps
+ * both. That is not a coincidence: the API was written against this contract.
  */
 
 /** Named so the refusal can say what was actually consulted. */
@@ -338,28 +354,11 @@ export async function ask(query: string, language: DhammaLanguage = 'ne'): Promi
       console.warn('[dhamma] API unavailable; using local corpus fallback', error);
     }
   }
-  const queryTokens = tokenise(query);
-
-  const ranked = demoDhammaEntries
-    .map((entry) => ({ entry, score: scoreEntry(queryTokens, entry) }))
-    .sort((a, b) => b.score - a.score);
-
-  const best = ranked[0];
-
-  if (!best || best.score < CONFIDENCE_FLOOR) {
-    const answer = refuse(query, ranked);
-    return {
-      answer,
-      evidence: answer.related.map((citation) => ({
-        citation,
-        passage: '',
-        relevance: 0,
-      })),
-    };
-  }
-
-  const answer = answerForEntry(best.entry, best.score);
-  return { answer, evidence: answer.evidence };
+  // On device, over the canonical corpus. Async because it may synthesise
+  // through a provider when one is configured; without one it returns the
+  // deterministic retrieval result, which is grounded and cited either way.
+  const result = await askDhammaAsync({ question: query, language, mode: 'auto' });
+  return fromApiResponse(result, query, language);
 }
 
 export async function reflect(request: {
@@ -369,7 +368,20 @@ export async function reflect(request: {
   siteId?: string;
   language: DhammaLanguage;
 }): Promise<ReflectionApiResult> {
-  if (!API_URL) throw new Error('Dhamma API URL is not configured');
+  // Reflection used to throw here without a backend, which made the whole
+  // four-question companion unreachable for anyone not running mock-api — the
+  // offline case, and the one Lumbini actually presents. core/dhamma has
+  // implemented this the whole time.
+  if (!API_URL) {
+    return processReflectionAsync({
+      stage: request.stage,
+      user_input: request.userInput,
+      answers: request.answers,
+      site_id: request.siteId,
+      language: request.language,
+    });
+  }
+
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
   try {

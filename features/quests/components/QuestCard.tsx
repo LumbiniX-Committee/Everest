@@ -1,82 +1,150 @@
-import { StyleSheet, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
 
-import { Card, Text } from '@/components/ui';
-import { colors, spacing } from '@/theme';
+import { ProgressRing, Text } from '@/components/ui';
+import { findSite, nowImageForSite } from '@/data';
+import { colors, radii, spacing } from '@/theme';
 import type { QuestWithProgress } from '@/types';
 
 import { QuestCategoryBadge } from './QuestCategoryBadge';
-import { QuestProgressBar } from './QuestProgressBar';
 
 export type QuestCardProps = {
   quest: QuestWithProgress;
   onPress: () => void;
 };
 
+/**
+ * A quest, led by the place it happens in.
+ *
+ * This card used to be six runs of text and a hairline bar — a title, a
+ * subtitle, a category, a duration, a task count, a percentage. Every quest
+ * looked like every other quest, and a survey of the Maya Devi Temple was
+ * indistinguishable at a glance from a walk through the monastic zone.
+ *
+ * Three of the four quests target a site the app already carries a photograph
+ * of, bundled and unused. Showing it is the difference between reading about
+ * somewhere and recognising it, and recognition is what gets someone to stand
+ * up and go.
+ *
+ * Where no photograph exists the card falls back to type on the plain surface
+ * rather than to a grey rectangle. A placeholder that says "no image" is worse
+ * than a card that never promised one.
+ */
 export function QuestCard({ quest, onPress }: QuestCardProps) {
   const { progress, tasks, category, title, subtitle, estimatedMinutes } = quest;
   const completedCount = progress.completedTasks.length;
-  const totalTasks = tasks.length;
   const isCompleted = progress.status === 'completed';
   const isInProgress = progress.status === 'in_progress';
 
+  // The first site any task names. Quests are built around a place, and the
+  // first task is the one that takes you there.
+  const siteId = tasks.map((task) => task.targetId).find(Boolean);
+  const canonicalId = siteId ? findSite(siteId)?.id ?? siteId : undefined;
+  const image = canonicalId ? nowImageForSite(canonicalId) : undefined;
+
   return (
-    <Card onPress={onPress} accessibilityLabel={`Quest: ${title}`}>
-      <View style={styles.header}>
-        <QuestCategoryBadge category={category} />
-        <View style={styles.badges}>
-          {isCompleted ? (
-            <View style={[styles.statusTag, styles.statusCompleted]}>
-              <Text variant="label" uppercase style={{ color: colors.resolved }}>
-                Completed
-              </Text>
-            </View>
-          ) : isInProgress ? (
-            <View style={[styles.statusTag, styles.statusActive]}>
-              <Text variant="label" uppercase style={{ color: colors.sandstoneDeep }}>
-                Active
-              </Text>
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`Quest: ${title}`}
+      onPress={onPress}
+      style={({ pressed }) => [styles.card, pressed && styles.pressed]}
+    >
+      {image ? (
+        <View style={styles.hero}>
+          <Image source={image} style={styles.heroImage} resizeMode="cover" />
+          {/*
+            A scrim, not a tint, and its opacity is measured rather than
+            judged. White type over the scrim has to stay legible in the worst
+            case — a blown-out sky directly underneath it — so the figure is
+            computed against a pure white backing:
+
+              0.62 -> 4.28:1   fails AA for body text
+              0.72 -> 5.85:1   passes with margin
+
+            0.62 looked right and was not. This is the one place in the app
+            where type sits on a photograph, so it is the one place that has to
+            be checked rather than eyeballed.
+          */}
+          <View style={styles.scrim} />
+          <View style={styles.heroText}>
+            <Text variant="heading" style={styles.heroTitle} numberOfLines={2}>
+              {title}
+            </Text>
+          </View>
+
+          {isCompleted || isInProgress ? (
+            <View style={styles.heroRing}>
+              <ProgressRing completed={completedCount} total={tasks.length} size={44} />
             </View>
           ) : null}
         </View>
-      </View>
-
-      <Text variant="heading" style={styles.title}>
-        {title}
-      </Text>
-      <Text variant="body" tone="secondary" style={styles.subtitle} numberOfLines={2}>
-        {subtitle}
-      </Text>
-
-      <View style={styles.metaRow}>
-        <Text variant="caption" tone="muted">
-          ⏱ ~{estimatedMinutes} mins
-        </Text>
-        <Text variant="caption" tone="muted">
-          {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'}
-        </Text>
-      </View>
-
-      {isInProgress || isCompleted ? (
-        <View style={styles.progressSection}>
-          <QuestProgressBar completed={completedCount} total={totalTasks} />
-        </View>
       ) : null}
-    </Card>
+
+      <View style={styles.body}>
+        <View style={styles.headRow}>
+          <QuestCategoryBadge category={category} />
+          {isCompleted ? (
+            <Text variant="label" uppercase style={styles.completedTag}>
+              Completed
+            </Text>
+          ) : null}
+        </View>
+
+        {/* Without a hero the title has nowhere else to be. */}
+        {image ? null : (
+          <Text variant="heading" style={styles.title} numberOfLines={2}>
+            {title}
+          </Text>
+        )}
+
+        <Text variant="body" tone="secondary" numberOfLines={2}>
+          {subtitle}
+        </Text>
+
+        <View style={styles.footRow}>
+          <View style={styles.meta}>
+            <Text variant="caption" tone="muted">
+              {tasks.length === 1 ? '1 task' : `${tasks.length} tasks`} · about {estimatedMinutes} minutes
+            </Text>
+          </View>
+
+          {/* Without a hero the ring has nowhere else to be either. */}
+          {!image && (isCompleted || isInProgress) ? (
+            <ProgressRing completed={completedCount} total={tasks.length} size={40} />
+          ) : null}
+        </View>
+      </View>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.xs },
-  badges: { flexDirection: 'row', gap: spacing.xs },
-  statusTag: { paddingHorizontal: spacing.sm, paddingVertical: spacing.xxs, borderRadius: 12 },
-  statusCompleted: {
-    backgroundColor: colors.surfaceSecondary,
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: radii.lg,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.resolved,
+    borderColor: colors.border,
+    overflow: 'hidden',
   },
-  statusActive: { backgroundColor: colors.surfaceSecondary },
-  title: { marginTop: spacing.xs },
-  subtitle: { marginTop: spacing.xxs },
-  metaRow: { flexDirection: 'row', gap: spacing.md, marginTop: spacing.sm, alignItems: 'center' },
-  progressSection: { marginTop: spacing.md },
+  pressed: { opacity: 0.9 },
+
+  hero: { height: 148, backgroundColor: colors.surfaceSecondary },
+  heroImage: { width: '100%', height: '100%' },
+  scrim: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 84,
+    backgroundColor: 'rgba(37, 42, 39, 0.72)',
+  },
+  heroText: { position: 'absolute', left: spacing.base, right: 76, bottom: spacing.md },
+  heroTitle: { color: '#FFFFFF' },
+  heroRing: { position: 'absolute', right: spacing.base, bottom: spacing.md },
+
+  body: { padding: spacing.base, gap: spacing.sm },
+  headRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  completedTag: { color: colors.resolved },
+  title: {},
+  footRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  meta: { flex: 1 },
 });

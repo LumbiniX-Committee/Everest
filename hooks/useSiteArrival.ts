@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { arrival, notifications } from '@/services';
+import { usePreferences } from '@/store';
 import type { Coordinate } from '@/types';
 
 /**
@@ -37,6 +38,8 @@ export function useSiteArrival(
   coordinate: Coordinate | null,
   { notify = true }: { notify?: boolean } = {},
 ): SiteArrivalState {
+  const { preferences } = usePreferences();
+  const wisdomTier = preferences.wisdomTier;
   const [atSiteId, setAtSiteId] = useState<string | null>(null);
   // Memoised on the coordinate's *values*, not its identity. nearestSite
   // builds a new object on every call, so an unmemoised result changed identity
@@ -77,7 +80,10 @@ export function useSiteArrival(
 
     // Nothing to say is a reason to stay quiet, not to announce an empty
     // banner — the same refusal the Dhamma surface applies to a weak match.
-    if (!arrival.hasSomethingToSay(nearest.site.id)) return;
+    // Judged at the reader's chosen depth: at `basic` a site whose only
+    // material is a facts table has nothing to say, and staying quiet is the
+    // correct outcome rather than a bug.
+    if (!arrival.hasSomethingToSay(nearest.site.id, wisdomTier)) return;
 
     announced.current.add(nearest.site.id);
 
@@ -90,7 +96,7 @@ export function useSiteArrival(
         body: nearest.site.summary ?? 'Open Sākṣī to read what this place holds.',
       });
     }
-  }, [nearest, notify]);
+  }, [nearest, notify, wisdomTier]);
 
   return { atSiteId, nearest };
 }

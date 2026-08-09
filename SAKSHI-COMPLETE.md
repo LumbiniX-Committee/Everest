@@ -291,7 +291,14 @@ Lumbini is a living pilgrimage site, not a game board. The wrong word in front o
 | **Vantage / resurvey** | photo spot, upload |
 | **Appamāda** (heedfulness) | engagement, retention |
 
-**Also banned in code, UI copy, and on stage:** streak, leaderboard, level up, grind, daily login.
+**Also banned in code, UI copy, and on stage:** streak, level up, grind, daily login.
+
+> **Amended.** `leaderboard` was on this list and no longer is, in one place
+> only. The app now has a global board ranking contribution to the record — a
+> deliberate reversal for the pitch, not an oversight. `tools/lint-vocab.mjs`
+> still bans the word everywhere except the ranking surface itself, and still
+> bans `points`, `streak` and the rest even there. Puṇya is unchanged: no score,
+> no total, no rank, never synced.
 
 ---
 
