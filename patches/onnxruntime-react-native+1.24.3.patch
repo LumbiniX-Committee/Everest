@@ -12,10 +12,10 @@ index 41b4359..50126eb 100644
      extractLibs "com.facebook.fbjni:fbjni:+"
    }
 diff --git a/node_modules/onnxruntime-react-native/dist/commonjs/binding.js b/node_modules/onnxruntime-react-native/dist/commonjs/binding.js
-index b5ca0ca..07b61e4 100644
+index b5ca0ca..a3d847a 100644
 --- a/node_modules/onnxruntime-react-native/dist/commonjs/binding.js
 +++ b/node_modules/onnxruntime-react-native/dist/commonjs/binding.js
-@@ -8,7 +8,12 @@ var _reactNative = require("react-native");
+@@ -8,8 +8,16 @@ var _reactNative = require("react-native");
  // Copyright (c) Microsoft Corporation. All rights reserved.
  // Licensed under the MIT License.
  
@@ -27,13 +27,17 @@ index b5ca0ca..07b61e4 100644
 +// resolves through NativeModules, so it is kept first.
 +const Module = exports.Module = _reactNative.NativeModules.Onnxruntime ?? (_reactNative.TurboModuleRegistry ? _reactNative.TurboModuleRegistry.get('Onnxruntime') : null);
  if (typeof globalThis.OrtApi === 'undefined') {
++  if (!Module) {
++    throw new Error('The Onnxruntime native module is not registered. This build does not include onnxruntime-react-native; rebuild the app and install that build.');
++  }
    Module.install();
  }
+ const OrtApi = exports.OrtApi = globalThis.OrtApi ?? new Proxy({}, {
 diff --git a/node_modules/onnxruntime-react-native/dist/module/binding.js b/node_modules/onnxruntime-react-native/dist/module/binding.js
-index e1bca3a..8e2ac43 100644
+index e1bca3a..67a3b16 100644
 --- a/node_modules/onnxruntime-react-native/dist/module/binding.js
 +++ b/node_modules/onnxruntime-react-native/dist/module/binding.js
-@@ -3,8 +3,13 @@
+@@ -3,9 +3,17 @@
  // Copyright (c) Microsoft Corporation. All rights reserved.
  // Licensed under the MIT License.
  
@@ -47,5 +51,59 @@ index e1bca3a..8e2ac43 100644
 +// resolves through NativeModules, so it is kept first.
 +export const Module = NativeModules.Onnxruntime ?? (TurboModuleRegistry ? TurboModuleRegistry.get('Onnxruntime') : null);
  if (typeof globalThis.OrtApi === 'undefined') {
++  if (!Module) {
++    throw new Error('The Onnxruntime native module is not registered. This build does not include onnxruntime-react-native; rebuild the app and install that build.');
++  }
    Module.install();
  }
+ export const OrtApi = globalThis.OrtApi ?? new Proxy({}, {
+diff --git a/node_modules/onnxruntime-react-native/lib/binding.ts b/node_modules/onnxruntime-react-native/lib/binding.ts
+index f5963a0..9f8d4e0 100644
+--- a/node_modules/onnxruntime-react-native/lib/binding.ts
++++ b/node_modules/onnxruntime-react-native/lib/binding.ts
+@@ -1,16 +1,43 @@
+ // Copyright (c) Microsoft Corporation. All rights reserved.
+ // Licensed under the MIT License.
+ 
+-import { NativeModules } from 'react-native';
++import { NativeModules, TurboModuleRegistry } from 'react-native';
+ import type { OrtApi as OrtApiType } from './api';
+ 
+-export const Module = NativeModules.Onnxruntime;
++// OnnxruntimeModule is a legacy ReactContextBaseJavaModule registered through a
++// ReactPackage. Under the New Architecture in bridgeless mode there is no
++// classic native module registry, so `NativeModules.Onnxruntime` comes back
++// null and the `Module.install()` below fails with "Cannot read property
++// 'install' of null". Legacy modules are still reachable in bridgeless through
++// the TurboModule interop layer, which is what TurboModuleRegistry.get returns.
++//
++// The old architecture resolves through NativeModules, so that is tried first
++// and this stays correct on both.
++const resolveModule = () => {
++  const classic = NativeModules.Onnxruntime;
++  if (classic) return classic;
++  // eslint-disable-next-line @typescript-eslint/no-explicit-any
++  const registry = TurboModuleRegistry as any;
++  return registry?.get?.('Onnxruntime') ?? null;
++};
++
++export const Module = resolveModule();
+ 
+ declare global {
+   var OrtApi: OrtApiType; // eslint-disable-line no-var
+ }
+ 
+ if (typeof globalThis.OrtApi === 'undefined') {
++  if (!Module) {
++    // Say which of the two things is wrong rather than dereferencing null. The
++    // caller records this message and shows it, so the difference between "this
++    // build has no native runtime" and "the runtime is here but broke" stays
++    // visible instead of collapsing into a property-of-null error.
++    throw new Error(
++      'The Onnxruntime native module is not registered. This build does not ' +
++        'include onnxruntime-react-native; rebuild the app and install that build.',
++    );
++  }
+   Module.install();
+ }
+ 
