@@ -2,7 +2,7 @@
   "expo": {
     "name": "Sākṣī",
     "slug": "sakshi",
-    "owner": "siddantasodari",
+    "owner": "siddantasodari-2",
     "scheme": "sakshi",
     "version": "0.1.0",
     "runtimeVersion": "0.1.0",
@@ -28,7 +28,11 @@
       "permissions": [
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION",
-        "android.permission.CAMERA"
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
       ]
     },
     "web": {
@@ -88,11 +92,11 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "e8454679-10b7-42cc-8961-95a421426705"
+        "projectId": "b41eee97-484c-4afd-b664-fa65fca50e66"
       }
     },
     "updates": {
-      "url": "https://u.expo.dev/e8454679-10b7-42cc-8961-95a421426705"
+      "url": "https://u.expo.dev/b41eee97-484c-4afd-b664-fa65fca50e66"
     }
   }
 }
