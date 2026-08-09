@@ -10,6 +10,8 @@ tools/test/package-lock.json
 dist/
 web-build/
 expo-env.d.ts
+# Local-only Expo project override for personal EAS builds.
+app.config.js
 
 # Native
 .kotlin/
