@@ -14,20 +14,20 @@ import { resolveSegment, type BilaraChunk } from './bilara.ts';
 import { hybridRetrieve, type RetrievalResult } from './retrieval.ts';
 import { DHAMMA_MODEL, hasProvider, LLM_API_KEY, LLM_ENDPOINT, LLM_TIMEOUT_MS } from './llm';
 
-export type Citation = {
-  segment_id: string;
-  sutta_uid: string;
-  display: string;
-};
+/**
+ * Declared once, in the shared vocabulary, and re-exported here so everything
+ * that already imports them from the engine keeps working.
+ *
+ * They used to be declared in both places with identical fields, which made
+ * `core/index.ts` ambiguous — two `export *` lines offering different
+ * `Citation` types under one name. TypeScript refuses that (TS2308), so
+ * importing `@/core` did not compile at all. Worth noting as one reason the
+ * barrel had no consumers: the contract in INTEGRATION.md said to import from
+ * here, and doing so was an error.
+ */
+import type { Citation, Passage } from '../../shared/types.ts';
 
-export type Passage = {
-  segment_id: string;
-  pali: string;
-  english: string;
-  translator: string;
-  collection: string;
-  licence: string;
-};
+export type { Citation, Passage };
 
 export type DhammaAskRequest = {
   question: string;

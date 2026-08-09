@@ -12,6 +12,8 @@ import { database } from '@/services';
 import { usePreferences } from '@/store';
 import { SITE_VISIT_RADIUS_M } from '@/constants';
 import { spacing } from '@/theme';
+import { AskThisPlace } from './AskThisPlace';
+import { depthFor, scriptureForSite } from './wisdom';
 import type { Source } from '@/types';
 import { distanceMeters, formatCoordinate, formatDistance } from '@/utils';
 
@@ -66,6 +68,11 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
   const { preferences } = usePreferences();
   const distanceM = coordinate ? distanceMeters(coordinate, site.coordinate) : null;
 
+  // One policy, shared with the arrival notification, so a person who asked for
+  // less does not get more pushed at them from the other direction.
+  const depth = depthFor(preferences.wisdomTier);
+  const scripture = depth.scripture ? scriptureForSite(site) : [];
+
   return (
     <Screen scroll>
       <View style={styles.head}>
@@ -86,8 +93,16 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
       </View>
 
       <Text variant="body" style={styles.description}>
-        {site.description}
+        {depth.prose === 'short' ? site.summary : site.description}
       </Text>
+
+      {depth.facts && site.facts && site.facts.length > 0 ? (
+        <View style={styles.facts}>
+          {site.facts.map((fact) => (
+            <MetaRow key={fact.label} label={fact.label} value={fact.value} />
+          ))}
+        </View>
+      ) : null}
 
       <Button
         label="Reflect from this place"
@@ -144,7 +159,7 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
         </>
       ) : null}
 
-      {sources.length > 0 ? (
+      {depth.sources && sources.length > 0 ? (
         <>
           <Divider />
           <View style={styles.sourceBlock}>
@@ -164,6 +179,39 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
               />
             ))}
           </View>
+        </>
+      ) : null}
+
+      {scripture.length > 0 ? (
+        <>
+          <Divider />
+          <View style={styles.sourceBlock}>
+            <Text variant="heading">In the canon</Text>
+            <Text variant="body" tone="secondary">
+              {scripture.length === 1
+                ? 'This place is named in one canonical text the app carries in full.'
+                : `This place is named in ${scripture.length} canonical texts the app carries in full.`}{' '}
+              Ask about it on the Dhamma surface and the answer will cite them.
+            </Text>
+            {scripture.map((text) => (
+              <View key={text.uid} style={styles.scripture}>
+                <Text variant="body">{text.titleEn}</Text>
+                <Text variant="body" tone="secondary">
+                  {text.titlePi}
+                </Text>
+                <Text variant="caption" tone="muted">
+                  {text.collection} · {text.segmentCount} passages · tr. {text.translator} · {text.licence}
+                </Text>
+              </View>
+            ))}
+          </View>
+        </>
+      ) : null}
+
+      {depth.ask ? (
+        <>
+          <Divider />
+          <AskThisPlace site={site} />
         </>
       ) : null}
 
@@ -204,6 +252,11 @@ const styles = StyleSheet.create({
   head: { paddingTop: spacing.lg, paddingBottom: spacing.lg, gap: spacing.sm },
   badges: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginTop: spacing.xs },
   description: { paddingBottom: spacing.lg },
+  facts: { paddingBottom: spacing.lg },
+  scripture: {
+    gap: spacing.xs,
+    paddingVertical: spacing.sm,
+  },
   meta: { paddingVertical: spacing.lg },
   sourceBlock: { paddingVertical: spacing.lg, gap: spacing.md },
   vantageBlock: { paddingTop: spacing.lg, gap: spacing.md },

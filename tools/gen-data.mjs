@@ -95,6 +95,11 @@ const appSites = sites.map((s) => ({
   radiusMeters: s.geofence_m,
   photography: s.photography,
   facts: (s.facts ?? []).map((f) => ({ label: f.label.en, value: f.value.en })),
+  // Sutta uids this site rests on, e.g. ['dn14', 'mn123']. Carried through so
+  // the deepest wisdom tier can show the canonical passage rather than assert
+  // that one exists. core/dhamma resolves them; tools/fetch-bilara.mjs makes
+  // sure every uid named here is actually in the corpus.
+  dhammaLinks: s.dhamma_links ?? [],
   sourceTier: sourceTierFor(s.zone),
   sourceIds: sourcesFor(s.id),
   condition: openSites.has(s.id) ? 'open' : 'stable',

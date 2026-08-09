@@ -11,6 +11,7 @@ import {
   OFFLINE_SYNC_OPTIONS,
   PHOTO_QUALITY_OPTIONS,
   SCRIPT_OPTIONS,
+  WISDOM_TIER_OPTIONS,
 } from '@/types';
 
 import { SettingsChoice, SettingsSection, SettingsToggle } from './components';
@@ -40,6 +41,18 @@ export function PreferencesScreen() {
           options={ALIGNMENT_TOLERANCE_OPTIONS}
           selected={preferences.alignmentTolerance}
           onSelect={(value) => void update('alignmentTolerance', value)}
+        />
+      </SettingsSection>
+
+      <SettingsSection
+        title="Wisdom"
+        footnote="This changes how much a place says when you reach it, not what it claims. Every tier draws on the same sourced material — the deeper ones simply stop leaving things out. Ask your own puts the question to the canonical texts, about wherever you are standing."
+      >
+        <SettingsChoice
+          legend="How much to tell me"
+          options={WISDOM_TIER_OPTIONS}
+          selected={preferences.wisdomTier}
+          onSelect={(value) => void update('wisdomTier', value)}
         />
       </SettingsSection>
 

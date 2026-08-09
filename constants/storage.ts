@@ -19,6 +19,7 @@ export const StorageKeys = {
   prefDistanceUnit: `${PREFIX}.preferences.distanceUnit`,
   prefOfflineSyncMode: `${PREFIX}.preferences.offlineSyncMode`,
   prefPhotoQuality: `${PREFIX}.preferences.photoQuality`,
+  prefWisdomTier: `${PREFIX}.preferences.wisdomTier`,
 
   /**
    * When each precinct last produced an arrival notification, as a JSON map of
@@ -48,6 +49,7 @@ export const PreferenceKeys = {
   distanceUnit: StorageKeys.prefDistanceUnit,
   offlineSyncMode: StorageKeys.prefOfflineSyncMode,
   photoQuality: StorageKeys.prefPhotoQuality,
+  wisdomTier: StorageKeys.prefWisdomTier,
 } as const;
 
 export const DATABASE_NAME = 'sakshi.db';

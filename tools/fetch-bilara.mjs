@@ -71,6 +71,20 @@ const SOURCES = [
   { uid: 'snp1.8', collection: 'kn/snp', path: 'sutta/kn/snp/vagga1/snp1.8',
     title_pi: 'Mettasutta', title_en: 'Loving-Kindness',
     note: 'Recited daily at Lumbini' },
+
+  // Named by `dhamma_links` in seed/sites.json. The seed already declares which
+  // sutta each site rests on; without these the High tier would show a site
+  // pointing at scripture the corpus cannot produce, which is a citation that
+  // cannot be checked — the one thing this engine is built not to do.
+  { uid: 'dn14', collection: 'dn', path: 'sutta/dn/dn14',
+    title_pi: 'Mahāpadānasutta', title_en: 'The Great Discourse on Traces Left Behind',
+    note: 'The nativity account — maya-devi-temple, puskarini, marker-stone' },
+  { uid: 'mn123', collection: 'mn', path: 'sutta/mn/mn123',
+    title_pi: 'Acchariyaabbhutasutta', title_en: 'Incredible and Amazing',
+    note: 'The birth narrative — maya-devi-temple, puskarini, marker-stone' },
+  { uid: 'mn26', collection: 'mn', path: 'sutta/mn/mn26',
+    title_pi: 'Pāsarāsisutta', title_en: 'The Noble Search',
+    note: 'The going forth from Kapilavatthu — tilaurakot' },
 ];
 
 async function fetchJson(url) {
