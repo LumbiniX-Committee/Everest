@@ -1,6 +1,8 @@
 import { DeviceMotion } from 'expo-sensors';
 import * as Location from 'expo-location';
 
+import { removeWatch, silenceWatchRemovalRejections } from '../location/watchTeardown';
+
 import { normalizeBearing } from '@/utils';
 
 /**
@@ -76,6 +78,10 @@ export function watchHeading(onHeading: (heading: Heading) => void): () => void 
   let subscription: Location.LocationSubscription | null = null;
   let cancelled = false;
 
+  // Heading watches tear down through the same expo-location subscriber as
+  // position watches, so they raise the same unhandled rejection.
+  silenceWatchRemovalRejections();
+
   Location.watchHeadingAsync((data) => {
     // trueHeading is -1 when unavailable; fall back to magnetic north.
     const source = data.trueHeading >= 0 ? data.trueHeading : data.magHeading;
@@ -85,7 +91,7 @@ export function watchHeading(onHeading: (heading: Heading) => void): () => void 
   })
     .then((sub) => {
       if (cancelled) {
-        sub.remove();
+        removeWatch(sub);
         return;
       }
       subscription = sub;
@@ -96,7 +102,7 @@ export function watchHeading(onHeading: (heading: Heading) => void): () => void 
 
   return () => {
     cancelled = true;
-    subscription?.remove();
+    removeWatch(subscription);
     subscription = null;
   };
 }
