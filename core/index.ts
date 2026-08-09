@@ -52,3 +52,10 @@ export * from './dhamma/index';
 
 // --- Wisdom tiers: how much a place says when you reach it ------------------
 export { depthFor, type WisdomDepth } from './wisdom/index.ts';
+
+// --- Condition reports crediting quest tasks ---------------------------------
+export {
+  tasksSatisfiedByReport,
+  type ReportableTask,
+  type ReportLink,
+} from './quests/reports.ts';

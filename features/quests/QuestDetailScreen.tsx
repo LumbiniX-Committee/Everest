@@ -1,9 +1,11 @@
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { ErrorState, LoadingState, ScreenHeader } from '@/components/common';
 import { BottomSheet, Button, Card, Screen, Text } from '@/components/ui';
+import { findSite } from '@/data';
+import { database } from '@/services';
 import { useQuests } from '@/store/quests';
 import { colors, spacing } from '@/theme';
 import type { QuestTask } from '@/types';
@@ -21,6 +23,31 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
   // unconditionally on every render, and the loading and not-found branches
   // below both return before this point otherwise.
   const [openTask, setOpenTask] = useState<QuestTask | null>(null);
+
+  /**
+   * Reports already filed, per site. Read once here rather than per task so a
+   * quest with several report tasks does not query the database once each.
+   */
+  const [reportsBySite, setReportsBySite] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    let active = true;
+    void database
+      .listConditionReports()
+      .then((reports) => {
+        if (!active) return;
+        const counts: Record<string, number> = {};
+        for (const report of reports) {
+          const id = findSite(report.siteId)?.id ?? report.siteId;
+          counts[id] = (counts[id] ?? 0) + 1;
+        }
+        setReportsBySite(counts);
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, []);
 
   if (!hydrated) return <LoadingState label="Reading quest details" />;
 
@@ -123,6 +150,11 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
               completed={progress.completedTasks.includes(task.id)}
               disabled={isCompleted || isNotStarted}
               onToggle={() => void handleTaskToggle(task.id)}
+              reportCount={
+                task.targetId
+                  ? reportsBySite[findSite(task.targetId)?.id ?? task.targetId] ?? 0
+                  : 0
+              }
             />
           ))}
         </View>
