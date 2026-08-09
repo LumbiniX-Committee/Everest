@@ -25,12 +25,23 @@ export function SitePlan({
   selectedSiteId,
   onSelectSite,
   height = 220,
+  siteState,
 }: {
   sites: HeritageSite[];
   observer?: Coordinate | null;
   selectedSiteId?: string;
   onSelectSite?: (siteId: string) => void;
   height?: number;
+  /**
+   * Optional per-site state, so a caller can say which places are settled and
+   * which are still owed. Used by the quest plan: done sites become hollow,
+   * remaining ones stay filled, and the difference is legible without reading
+   * a list.
+   *
+   * Absent means every marker renders the same, which is what the explore
+   * surface wants — there, no place is more finished than another.
+   */
+  siteState?: Record<string, 'done' | 'todo'>;
 }) {
   const [width, setWidth] = useState(0);
 
@@ -61,14 +72,22 @@ export function SitePlan({
         sites.map((site) => {
           const { left, top } = project(site.coordinate);
           const selected = site.id === selectedSiteId;
+          const state = siteState?.[site.id];
           return (
             <View
               key={site.id}
               accessible
               accessibilityRole={onSelectSite ? 'button' : 'image'}
-              accessibilityLabel={site.name}
+              accessibilityLabel={
+                state ? `${site.name}, ${state === 'done' ? 'done' : 'still to do'}` : site.name
+              }
               onTouchEnd={onSelectSite ? () => onSelectSite(site.id) : undefined}
-              style={[styles.marker, selected && styles.markerSelected, { left: left - 5, top: top - 5 }]}
+              style={[
+                styles.marker,
+                state === 'done' && styles.markerDone,
+                selected && styles.markerSelected,
+                { left: left - 5, top: top - 5 },
+              ]}
             />
           );
         })}
@@ -112,6 +131,13 @@ const styles = StyleSheet.create({
     height: 10,
     borderRadius: radii.full,
     backgroundColor: colors.sandstoneDeep,
+  },
+  // Hollow rather than faded: a finished place is still a place, and dimming it
+  // would read as less important rather than as already visited.
+  markerDone: {
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: colors.sandstoneDeep,
   },
   markerSelected: {
     backgroundColor: colors.earth,
