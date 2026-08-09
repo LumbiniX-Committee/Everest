@@ -37,6 +37,7 @@ export const nowImages: Record<string, number> = {
   'puskarini': require('../assets/plates/now.puskarini.webp'),
 };
 
+
 export type PlateMeta = {
   evidenceTier: EvidenceTier;
   caption: string;
