@@ -1,10 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'expo-router';
-import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
 import { LoadingState } from '@/components/common';
+import {
+  ChatBubble,
+  ChatComposer,
+  ChatTranscript,
+  type ChatTranscriptHandle,
+} from '@/components/chat';
 import { SpeakButton } from '@/components/voice/SpeakButton';
 import { useKeyboardInset } from '@/hooks';
 import { dhamma } from '@/services';
@@ -19,10 +25,11 @@ import { colors, radii, spacing } from '@/theme';
  * reflection drawn from the canon. Answers are used for this session only and
  * are never written to the audit log.
  *
- * This is the one conversational surface in Dhamma. The Answer surface is
- * deliberately not a chat (§14: a claim above a citation invites the sceptical
- * reading facts deserve). Reflection is the person's own words, not asserted
- * fact, so a back-and-forth belongs here and only here.
+ * It shares its bubbles, transcript and composer with Ask — see
+ * `components/chat`. They are two conversations with different jobs, not two
+ * chat implementations: Ask asserts cited fact and carries its sources inside
+ * every reply; this one holds the person's own words and asserts nothing until
+ * the closing reflection, which is cited like anything else.
  *
  * Honesty is preserved end to end: distress is caught on every message and
  * answered with verified helplines before anything else; the tailored questions
@@ -126,7 +133,7 @@ export function ReflectionScreen({ siteId }: { siteId?: string }) {
   const keyboardInset = useKeyboardInset();
   const insets = useSafeAreaInsets();
 
-  const scrollRef = useRef<ScrollView>(null);
+  const transcriptRef = useRef<ChatTranscriptHandle>(null);
   const idRef = useRef(0);
   const nextId = () => `m${(idRef.current += 1)}`;
   const t = T[language];
@@ -144,7 +151,7 @@ export function ReflectionScreen({ siteId }: { siteId?: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language, phase === 'intro']);
 
-  const scrollToEnd = () => scrollRef.current?.scrollToEnd({ animated: true });
+  const scrollToEnd = () => transcriptRef.current?.scrollToEnd();
 
   // Follow the transcript up as the keyboard opens, so the newest question is
   // not left behind the keys the moment someone taps to answer it.
@@ -299,13 +306,7 @@ export function ReflectionScreen({ siteId }: { siteId?: string }) {
           ) : null}
         </View>
 
-        <ScrollView
-          ref={scrollRef}
-          style={styles.transcript}
-          contentContainerStyle={styles.transcriptContent}
-          keyboardShouldPersistTaps="handled"
-          onContentSizeChange={scrollToEnd}
-        >
+        <ChatTranscript ref={transcriptRef}>
           {messages.map((msg) => (
             <MessageBubble key={msg.id} msg={msg} language={language} t={t} />
           ))}
@@ -346,33 +347,20 @@ export function ReflectionScreen({ siteId }: { siteId?: string }) {
               ) : null}
             </Card>
           ) : null}
-        </ScrollView>
+        </ChatTranscript>
 
         {inputActive ? (
-          <View
-            style={[
-              styles.inputBar,
-              // The safe area only needs paying for while the keyboard is down;
-              // when it is up the keys already cover that strip.
-              { paddingBottom: keyboardInset > 0 ? spacing.md : insets.bottom + spacing.md },
-            ]}
-          >
-            <TextInput
-              value={input}
-              onChangeText={setInput}
-              multiline
-              textAlignVertical="top"
-              placeholder={placeholder}
-              placeholderTextColor={colors.textMuted}
-              style={styles.input}
-              editable={!loading}
-              accessibilityLabel={placeholder}
-              // Keeps the caret and the line being typed on screen for a reply
-              // long enough to grow past the input's max height.
-              onContentSizeChange={scrollToEnd}
-            />
-            <Button label={t.send} onPress={() => void handleSend()} disabled={!input.trim() || loading} />
-          </View>
+          <ChatComposer
+            value={input}
+            onChangeText={setInput}
+            onSend={() => void handleSend()}
+            placeholder={placeholder}
+            busy={loading}
+            sendLabel={t.send}
+            // Keeps the caret and the line being typed on screen for a reply
+            // long enough to grow past the field's maximum height.
+            onGrow={scrollToEnd}
+          />
         ) : (
           <View
             style={[styles.footerActions, { paddingBottom: insets.bottom + spacing.md }]}
@@ -397,27 +385,27 @@ function MessageBubble({
 }) {
   if (msg.from === 'user') {
     return (
-      <View style={[styles.bubble, styles.userBubble]}>
+      <ChatBubble from="user">
         <Text variant="body">{msg.text}</Text>
-      </View>
+      </ChatBubble>
     );
   }
 
   if (msg.kind === 'question') {
     return (
-      <View style={[styles.bubble, styles.companionBubble, styles.questionBubble]}>
+      <ChatBubble from="companion" accent="sandstone">
         <Text variant="caption" tone="muted" uppercase>
           {t.questionOf(msg.step, msg.total)}
         </Text>
         <Text variant="bodyLarge">{msg.text}</Text>
         <SpeakButton text={msg.text} language={language} />
-      </View>
+      </ChatBubble>
     );
   }
 
   if (msg.kind === 'guidance') {
     return (
-      <View style={[styles.bubble, styles.companionBubble]}>
+      <ChatBubble from="companion" wide>
         <Text variant="label" tone="muted" uppercase>
           {t.reflection}
         </Text>
@@ -455,14 +443,14 @@ function MessageBubble({
         <Text variant="caption" tone="muted">
           {msg.disclaimer}
         </Text>
-      </View>
+      </ChatBubble>
     );
   }
 
   return (
-    <View style={[styles.bubble, styles.companionBubble]}>
+    <ChatBubble from="companion">
       <Text variant="body">{msg.text}</Text>
-    </View>
+    </ChatBubble>
   );
 }
 
@@ -475,34 +463,11 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   languageButtons: { flexDirection: 'row', gap: spacing.sm },
-  transcript: { flex: 1 },
-  transcriptContent: {
-    paddingHorizontal: spacing.gutter,
-    paddingVertical: spacing.md,
-    gap: spacing.md,
-  },
-  bubble: {
-    maxWidth: '88%',
-    padding: spacing.base,
-    borderRadius: radii.lg,
-    gap: spacing.sm,
-  },
-  companionBubble: {
-    alignSelf: 'flex-start',
-    backgroundColor: colors.surfaceSecondary,
-    borderTopLeftRadius: radii.sm,
-  },
-  questionBubble: {
-    borderLeftWidth: 3,
-    borderLeftColor: colors.sandstone,
-  },
-  userBubble: {
-    alignSelf: 'flex-end',
-    backgroundColor: colors.surface,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.border,
-    borderTopRightRadius: radii.sm,
-  },
+  /*
+    The transcript, the bubbles and the composer now come from
+    `components/chat`. They were hand-rolled here first and this screen got them
+    right — which is why they were lifted from here rather than rewritten.
+  */
   thinking: { alignSelf: 'flex-start', paddingVertical: spacing.sm },
   sources: {
     gap: spacing.sm,
@@ -518,31 +483,6 @@ const styles = StyleSheet.create({
     borderRadius: radii.md,
   },
   errorCard: { gap: spacing.md },
-  inputBar: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    gap: spacing.sm,
-    paddingHorizontal: spacing.gutter,
-    paddingTop: spacing.sm,
-    paddingBottom: spacing.md,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: colors.border,
-    backgroundColor: colors.background,
-  },
-  input: {
-    flex: 1,
-    maxHeight: 120,
-    minHeight: 44,
-    borderRadius: radii.md,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    paddingHorizontal: spacing.base,
-    paddingVertical: spacing.sm,
-    color: colors.textPrimary,
-    fontSize: 16,
-    lineHeight: 22,
-  },
   footerActions: {
     flexDirection: 'row',
     gap: spacing.sm,

@@ -5,6 +5,7 @@ export * from './reticle';
 export * from './site';
 export * from './map';
 export * from './source';
+export * from './chat';
 export * from './series';
 export * from './timeline';
 export * from './thennow';

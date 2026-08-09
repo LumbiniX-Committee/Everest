@@ -1,3 +1,3 @@
 export { DhammaScreen } from './DhammaScreen';
-export { AnswerScreen } from './AnswerScreen';
+export { DhammaChatScreen } from './DhammaChatScreen';
 export { ReflectionScreen } from './ReflectionScreen';

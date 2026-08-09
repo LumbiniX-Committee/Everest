@@ -12,7 +12,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Screen, Text } from '@/components/ui';
 import { SettingsButton } from '@/components/common';
 import { demoDhammaEntries, findSource } from '@/data';
-import { colors, radii, spacing } from '@/theme';
+import { colors, font, radii, spacing } from '@/theme';
 import { useVoiceInput } from '@/hooks/useVoiceInput';
 
 /**
@@ -102,22 +102,24 @@ export function DhammaScreen() {
       </View>
 
       <View style={styles.body}>
+        {/*
+          A composer, not a search box. The magnifier that used to sit here said
+          the reply would be a list of results; what actually happens is a
+          conversation that keeps going, so the field carries the send mark it
+          will carry on the next screen instead.
+        */}
         <View style={styles.searchField}>
-          <MaterialCommunityIcons name="magnify" size={22} color={colors.sandstoneDeep} />
           <TextInput
             value={question}
             onChangeText={setQuestion}
-            style={styles.searchInput}
+            style={[styles.searchInput, font('body')]}
             placeholder="Ask something about Lumbini or the early record"
             placeholderTextColor={colors.textMuted}
             multiline
-            returnKeyType="search"
+            returnKeyType="send"
             onSubmitEditing={askTyped}
             accessibilityLabel="Your question"
           />
-        </View>
-
-        <View style={styles.actions}>
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Ask"
@@ -125,17 +127,21 @@ export function DhammaScreen() {
             disabled={!canAsk}
             onPress={askTyped}
             style={({ pressed }) => [
-              styles.askButton,
-              !canAsk && styles.askButtonDisabled,
+              styles.sendRound,
+              !canAsk && styles.sendDisabled,
               pressed && canAsk && styles.pressed,
             ]}
           >
-            <MaterialCommunityIcons name="chat-outline" size={20} color={colors.surface} />
-            <Text variant="button" tone="inverse">
-              Ask
-            </Text>
+            <MaterialCommunityIcons name="send" size={20} color={colors.surface} />
           </Pressable>
+        </View>
 
+        {/*
+          Only the voice control here now. "Ask" used to sit beside it doing
+          exactly what the send mark inside the field does, and two controls for
+          one action is two things to decide between rather than one to press.
+        */}
+        <View style={styles.actions}>
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={voice.isListening ? 'Stop voice' : 'Voice'}
@@ -339,8 +345,9 @@ const styles = StyleSheet.create({
 
   searchField: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
+    // Bottom, so the send mark stays level with the last line as the field grows.
+    alignItems: 'flex-end',
+    gap: spacing.sm,
     minHeight: 60,
     paddingHorizontal: spacing.base,
     paddingVertical: spacing.sm,
@@ -357,25 +364,25 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
+    minHeight: 44,
     color: colors.textPrimary,
     fontSize: 16,
     lineHeight: 22,
-    padding: 0,
+    paddingVertical: spacing.xs,
     textAlignVertical: 'center',
   },
 
-  actions: { flexDirection: 'row', gap: spacing.md },
-  askButton: {
-    flex: 1,
-    flexDirection: 'row',
+  sendRound: {
+    width: 44,
+    height: 44,
+    borderRadius: radii.full,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: spacing.sm,
-    minHeight: 52,
-    borderRadius: radii.md,
     backgroundColor: colors.sandstoneDeep,
   },
-  askButtonDisabled: { opacity: 0.45 },
+  sendDisabled: { opacity: 0.35 },
+
+  actions: { flexDirection: 'row', gap: spacing.md },
   voiceButton: {
     flex: 1,
     flexDirection: 'row',
