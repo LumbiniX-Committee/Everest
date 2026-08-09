@@ -276,27 +276,46 @@ export function LiveMapScreen() {
         that is about the player rather than about the ground.
       */}
       <View style={[styles.topBar, { paddingTop: insets.top + spacing.sm }]} pointerEvents="box-none">
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={`${standing.title}, level ${standing.level}, ${standing.wisdom} wisdom`}
-          accessibilityHint="Back to Tīrtha"
-          onPress={() =>
-            router.canGoBack() ? router.back() : router.replace('/(main)/tirtha')
-          }
-          style={styles.standing}
-        >
-          <View style={styles.standingHead}>
-            <Text variant="caption" tone="sandstone" uppercase style={styles.standingTitle}>
-              {standing.title}
-            </Text>
-            <Text variant="caption" tone="muted">
-              {standing.wisdom}
-            </Text>
+        {/*
+          A readout and a way out, kept apart.
+          
+          These were one control: the level badge navigated. The app launches
+          straight onto this screen, so that badge was the only route to the
+          rest of Tīrtha — the site list, the quest list, then-and-now — and it
+          looked like a score. Everything else in the app was one tap away
+          behind something nobody would think to press.
+        */}
+        <View style={styles.topLeft} pointerEvents="box-none">
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Tīrtha"
+            accessibilityHint="Everything else at Lumbini — the sites, the quests, then and now"
+            onPress={() =>
+              router.canGoBack() ? router.back() : router.replace('/(main)/tirtha')
+            }
+            style={styles.homeButton}
+          >
+            <Text variant="body">‹</Text>
+          </Pressable>
+
+          <View
+            style={styles.standing}
+            accessibilityRole="progressbar"
+            accessibilityLabel={`${standing.title}, level ${standing.level}, ${standing.wisdom} wisdom`}
+          >
+            <View style={styles.standingHead}>
+              <Text variant="caption" tone="sandstone" uppercase style={styles.standingTitle}>
+                {standing.title}
+              </Text>
+              <Text variant="caption" tone="muted">
+                {standing.wisdom}
+              </Text>
+            </View>
+            <View style={styles.wisdomTrack}>
+              <View style={[styles.wisdomFill, { width: `${Math.round(standing.progress * 100)}%` }]} />
+            </View>
           </View>
-          <View style={styles.wisdomTrack}>
-            <View style={[styles.wisdomFill, { width: `${Math.round(standing.progress * 100)}%` }]} />
-          </View>
-        </Pressable>
+        </View>
 
         <View style={styles.topRight} pointerEvents="box-none">
           <Pressable
@@ -539,6 +558,10 @@ export function LiveMapScreen() {
         onCompleteTask={(questId, taskId) => void onCompleteTask(questId, taskId)}
         onUndoTask={(questId, taskId) => void uncompleteTask(questId, taskId)}
         onGoToSite={goToSite}
+        onOpenQuest={(questId) => {
+          setShowQuests(false);
+          router.push(`/(main)/tirtha/quests/${questId}`);
+        }}
         onWitness={openSakshi}
       />
 
@@ -595,6 +618,17 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   pillActive: { borderColor: colors.sandstone, backgroundColor: colors.surfaceSecondary },
+  topLeft: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, flexShrink: 1 },
+  homeButton: {
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: radii.full,
+    backgroundColor: colors.background,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
   topRight: { flexDirection: 'row', gap: spacing.xs, flexShrink: 0 },
   iconPill: {
     width: 44,
