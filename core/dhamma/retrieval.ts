@@ -16,12 +16,32 @@ export type RetrievalResult = {
 };
 
 /** Normalize query string into lowercase token array */
+/**
+ * Words carrying no retrieval signal, filtered out before scoring. Same
+ * rationale as the equivalent list in services/dhamma/index.ts: a query like
+ * "what is the Nara Document on Authenticity" scored 0.8 against an unrelated
+ * sutta chunk before this filter existed — not from "document" or
+ * "authenticity", but from "what" and "the", which appear as a substring
+ * match in nearly every chunk once the corpus is large enough (534 chunks
+ * across the Pali and heritage corpora, at the point this was found). The
+ * cost of the two errors is asymmetric here too: dropping a true stopword
+ * costs nothing a real query needs, and letting one through costs a
+ * confident, wrong-feeling answer.
+ */
+const STOPWORDS = new Set([
+  'the', 'a', 'an', 'is', 'are', 'was', 'were', 'be', 'been', 'being',
+  'what', 'when', 'where', 'who', 'why', 'how', 'which', 'does', 'did',
+  'do', 'this', 'that', 'these', 'those', 'and', 'or', 'but', 'not',
+  'for', 'with', 'about', 'from', 'into', 'onto', 'has', 'have', 'had',
+  'can', 'will', 'would', 'should', 'could', 'you', 'your', 'their',
+]);
+
 function tokenize(text: string): string[] {
   return text
     .toLowerCase()
     .replace(/[^\w\s]/g, ' ')
     .split(/\s+/)
-    .filter((t) => t.length > 2);
+    .filter((t) => t.length > 2 && !STOPWORDS.has(t));
 }
 
 /** Simple BM25 scoring calculation over English & Pali text */
@@ -63,6 +83,20 @@ function scoreVectorSimilarity(queryTokens: string[], chunk: BilaraChunk): numbe
  * This is equivalent to a learned dense retrieval router pre-computed offline.
  */
 const INTENT_ROUTES: Array<{ triggers: RegExp[]; preferred: string }> = [
+  // UNESCO — Lumbini (666). Checked before the DN 16:5.8 pilgrimage route
+  // below: that route's `/\blumbini\b/` trigger is broad by design (any
+  // paraphrase of "why is Lumbini a pilgrimage site" should hit it), which
+  // means a specifically UNESCO-flavoured Lumbini question has to be caught
+  // first or the general route wins on array order.
+  {
+    preferred: 'unesco-1997:criteria',
+    triggers: [
+      /\bwhen was lumbini (inscribed|listed|added)\b/i,
+      /\blumbini.*world heritage\b/i,
+      /\bworld heritage\b.*\blumbini\b/i,
+      /\blumbini.*criteri(on|a)\b/i,
+    ],
+  },
   // DN 16:6.7 — final words / impermanence / anicca / heedfulness / appamāda
   {
     preferred: 'dn16:6.7',
@@ -172,6 +206,189 @@ const INTENT_ROUTES: Array<{ triggers: RegExp[]; preferred: string }> = [
       /\bm.?l.?unkya\b/i,
       /\bmn ?63\b/i,
       /\bspeculation\b/i,
+    ],
+  },
+
+  // ── Heritage / conservation corpus (core/dhamma/heritage.ts) ─────────────
+  // Same technique as the Pali routes above: with a small corpus, BM25 alone
+  // cannot always separate two heritage chunks that share vocabulary (e.g.
+  // "restoration" appears in both Venice Art. 9 and Burra Art. 19). A trigger
+  // match boosts the chunk that actually answers the question.
+
+  // Venice 1964 Art. 9 — restoration stops where conjecture begins
+  {
+    preferred: 'venice-1964:art9',
+    triggers: [
+      /\bstop.*conjecture\b/i,
+      /\bconjecture begins\b/i,
+      /\bwhere does restoration stop\b/i,
+      /\bcontemporary stamp\b/i,
+      /\bvenice charter\b.*\brestoration\b/i,
+    ],
+  },
+  // Venice 1964 Art. 15 — excavation, anastylosis, no reconstruction a priori
+  {
+    preferred: 'venice-1964:art15',
+    triggers: [
+      /\banastylosis\b/i,
+      /\bexcavat(e|ion|ions)\b/i,
+      /\ba priori\b/i,
+      /\bruled out.*reconstruction\b/i,
+    ],
+  },
+  // Venice 1964 Art. 1 — definition of a monument
+  {
+    preferred: 'venice-1964:art1',
+    triggers: [
+      /\bwhat is a (historic )?monument\b/i,
+      /\bdefine.*monument\b/i,
+      /\bconcept of a historic monument\b/i,
+    ],
+  },
+  // Burra 2013 Art. 1.7/1.8 — restoration vs reconstruction, defined
+  {
+    preferred: 'burra-2013:art1.8',
+    triggers: [
+      /\bdifference between restoration and reconstruction\b/i,
+      /\bwhat is reconstruction\b/i,
+      /\bburra charter\b.*\breconstruction\b/i,
+    ],
+  },
+  {
+    preferred: 'burra-2013:art1.7',
+    triggers: [
+      /\bwhat is restoration\b/i,
+      /\bburra charter\b.*\brestoration\b/i,
+    ],
+  },
+  // Burra 2013 Art. 3.1/3.2 — cautious approach, no conjecture
+  {
+    preferred: 'burra-2013:art3.1',
+    triggers: [
+      /\bas much as necessary.*as little as possible\b/i,
+      /\bcautious approach\b/i,
+      /\bburra charter\b.*\bprinciple\b/i,
+    ],
+  },
+  // Burra 2013 Art. 20 — reconstruction conditions
+  {
+    preferred: 'burra-2013:art20.1',
+    triggers: [
+      /\bwhen is reconstruction appropriate\b/i,
+      /\breconstruction.*sufficient evidence\b/i,
+    ],
+  },
+  // Burra 2013 Art. 25 — interpretation
+  {
+    preferred: 'burra-2013:art25',
+    triggers: [
+      /\bwhat is interpretation\b/i,
+      /\bburra charter\b.*\binterpretation\b/i,
+    ],
+  },
+  // Burra 2013 Art. 26.1/27.2 — record before/after, precede work with study
+  {
+    preferred: 'burra-2013:art27.2',
+    triggers: [
+      /\brecord.*before and after\b/i,
+      /\bdocument.*before.*change\b/i,
+    ],
+  },
+  {
+    preferred: 'burra-2013:art26.1',
+    triggers: [
+      /\bstudies?.*before.*work\b/i,
+      /\bunderstand the place\b/i,
+    ],
+  },
+
+  // UNESCO — Kathmandu Valley (120bis): danger listing checked before the
+  // general zones route, since "Kathmandu Valley ... World Heritage" also
+  // appears in a danger-listing question and `.find()` takes the first match.
+  {
+    preferred: 'unesco-kv-1979:danger-list',
+    triggers: [
+      /\bdanger list\b/i,
+      /\bworld heritage in danger\b/i,
+      /\bendangered\b.*\bkathmandu\b/i,
+      /\bloss of authenticity\b/i,
+    ],
+  },
+  {
+    preferred: 'unesco-kv-1979:zones',
+    triggers: [
+      /\bseven monument zones\b/i,
+      /\bkathmandu valley\b.*\bworld heritage\b/i,
+      /\bworld heritage\b.*\bkathmandu valley\b/i,
+      /\bhow many (monument )?zones\b/i,
+      /\bdurbar squares?\b.*\bunesco\b/i,
+    ],
+  },
+
+  // Changu Narayan
+  {
+    preferred: 'changu-manadeva-inscription:date',
+    triggers: [
+      /\bm.?nadeva\b/i,
+      /\bchangu narayan\b.*\binscription\b/i,
+      /\boldest.*inscription\b.*\bnepal\b/i,
+      /\binscription\b.*\boldest\b.*\bnepal\b/i,
+    ],
+  },
+  {
+    preferred: 'changu-narayan:earthquake-2015',
+    triggers: [
+      /\bchangu narayan\b.*\bearthquake\b/i,
+      /\bchangu narayan\b.*\b(destroyed|damage|reconstruct)/i,
+    ],
+  },
+
+  // Patan Durbar Square
+  {
+    preferred: 'patan-durbar-square:construction',
+    triggers: [
+      /\bpatan durbar square\b.*\b(built|built by|history|malla|krishna mandir)\b/i,
+      /\bkrishna mandir\b/i,
+      /\bwho built patan\b/i,
+    ],
+  },
+  {
+    preferred: 'patan-durbar-square:earthquake-2015',
+    triggers: [
+      /\bpatan durbar square\b.*\bearthquake\b/i,
+      /\bhari shankar\b/i,
+    ],
+  },
+
+  // Dhunge dhara / hiti — water systems. Decline checked first: a question
+  // about how many are still working names the topic (dhunge dhara) and asks
+  // about its state, which the broader origin route would otherwise also match.
+  {
+    preferred: 'dhunge-dhara:decline',
+    triggers: [
+      /\b(hiti|dhunge dharas?).*(dying|dry|decline|survey|disappearing|lost|still|working|producing|water)\b/i,
+      /\bhow many\b.*\b(hiti|dhunge dharas?)\b/i,
+      /\btraditional water system.*(dying|declin)/i,
+    ],
+  },
+  {
+    preferred: 'dhunge-dhara:origin',
+    triggers: [
+      /\bdhunge dharas?\b/i,
+      /\bhiti\b/i,
+      /\bmanga hiti\b/i,
+      /\bstone (water )?spouts?\b/i,
+      /\blicchavi\b.*\bwater\b/i,
+    ],
+  },
+
+  // Department of Archaeology, Nepal
+  {
+    preferred: 'doa-nepal:role',
+    triggers: [
+      /\bdepartment of archaeology\b/i,
+      /\bwho (monitors|protects|manages) (heritage|monuments)\b.*\bnepal\b/i,
+      /\bancient monument preservation\b/i,
     ],
   },
 ];
