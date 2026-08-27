@@ -44,6 +44,9 @@ export const COLLECTIONS = [
   'Ashokan inscriptions',
   'Lumbini site records',
   'Sanskrit lexicography',
+  'ICOMOS Venice & Burra Charters',
+  'UNESCO World Heritage records',
+  'Kathmandu Valley archaeology',
 ];
 
 /**

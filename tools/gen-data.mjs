@@ -45,6 +45,9 @@ const SOURCE_MAP = {
   'puskarini': ['unesco-1997', 'ldt-conservation', 'mukherji-1901'],
   'vihara-remains': ['unesco-1997', 'ldt-excavation'],
   'marker-stone': ['unesco-1997', 'ldt-excavation'],
+  'patan-durbar-square': ['unesco-kv-1979', 'slusser-1982', 'doa-nepal'],
+  'changu-narayan': ['unesco-kv-1979', 'changu-manadeva-inscription', 'doa-nepal'],
+  'manga-hiti': ['slusser-1982'],
 };
 const sourcesFor = (id) => SOURCE_MAP[id] ?? ['unesco-1997'];
 
@@ -91,6 +94,7 @@ const appSites = sites.map((s) => ({
   description: s.summary.en,
   coordinate: { latitude: s.coords.lat, longitude: s.coords.lon },
   zone: s.zone,
+  region: s.region ?? 'lumbini',
   tier: s.tier,
   radiusMeters: s.geofence_m,
   photography: s.photography,

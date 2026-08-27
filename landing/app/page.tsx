@@ -1,7 +1,9 @@
+import Link from 'next/link';
 import {
   BookOpen,
   Camera,
   Check,
+  Compass,
   Download,
   MapPin,
   Settings,
@@ -171,6 +173,29 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* Coverage acquisition */}
+      <section className="mx-auto max-w-4xl px-6 pb-24">
+        <div className="flex flex-col gap-8 rounded-3xl border border-line bg-surface p-8 shadow-sm sm:flex-row sm:items-start sm:p-10">
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-tirtha/10 text-tirtha">
+            <Compass className="size-6" aria-hidden />
+          </span>
+          <div>
+            <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold text-ink sm:text-3xl">
+              Quests point at what nobody has checked lately
+            </h2>
+            <p className="mt-4 leading-relaxed text-ink-soft">
+              Tīrtha does not send visitors to what is popular. A quest exists at
+              a vantage because nobody has photographed it from that exact spot
+              in a while, or at a spout because nobody knows whether it is still
+              running. A visitor gets somewhere to go and something to notice;
+              the record gets a resurvey it would not otherwise have had. Those
+              are the same action, and the app is built so that doing one always
+              does the other.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Install instructions */}
       <section className="border-y border-line bg-ground-deep">
         <div className="mx-auto max-w-4xl px-6 py-20">
@@ -218,6 +243,11 @@ export default async function Home() {
         <p className="font-[family-name:var(--font-display)] text-lg text-ink">Sākṣī</p>
         <p className="mt-2 text-sm text-ink-muted">
           Built for LumbiniX 2026 · appamādena sampādetha
+        </p>
+        <p className="mt-4 text-sm">
+          <Link href="/ethics" className="text-ink-muted underline decoration-line underline-offset-4 transition hover:text-ink">
+            Ethics policy
+          </Link>
         </p>
       </footer>
     </main>

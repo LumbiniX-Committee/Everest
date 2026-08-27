@@ -184,6 +184,27 @@ const DOMAIN_VOCAB = new Set([
   'बुद्ध', 'बुद्धको', 'धम्म', 'सुत्त', 'निर्वाण', 'दुःख', 'तृष्णा', 'लुम्बिनी',
   'चार', 'आर्य', 'सत्य', 'अष्टांगिक', 'मार्ग', 'अनित्य',
   'अन्तिम', 'शब्द', 'शब्दहरू', 'जन्म', 'ज्ञान', 'ध्यान', 'के', 'थिए', 'हुन्', 'किन', 'महत्त्वपूर्ण',
+
+  // Heritage / conservation vocabulary (core/dhamma/heritage.ts). Widened
+  // alongside the corpus itself — see 15-POST-HACKATHON-STRATEGY §5: the
+  // engine stays a source-grounded interpretation engine, only the subject
+  // matter grows. Single words only, like every entry above — `isDomainQuery`
+  // tokenises on whitespace, so a phrase like "venice charter" would never
+  // match as one token and has to be listed as "venice" and "charter".
+  'conservation', 'conserve', 'restoration', 'restore', 'reconstruction',
+  'reconstruct', 'excavation', 'excavate', 'archaeology', 'archaeological',
+  'masonry', 'plinth', 'stratigraphy', 'anastylosis', 'conjecture',
+  'monument', 'monuments', 'heritage', 'unesco', 'icomos', 'authenticity',
+  'authentic', 'integrity', 'fabric', 'buffer', 'zone', 'zones', 'venice',
+  'burra', 'charter', 'interpretation', 'significance', 'condition',
+  'periodic', 'reporting', 'danger', 'hiti', 'dhunge', 'dhara', 'stupa',
+  'chaitya', 'newar', 'malla', 'licchavi', 'durbar', 'patan', 'lalitpur',
+  'changu', 'narayan', 'mānadeva', 'manadeva', 'bhaktapur', 'swayambhu',
+  'swayambhunath', 'boudhanath', 'pashupatinath', 'kathmandu', 'valley',
+  'torana', 'strut', 'struts', 'pagoda', 'inscription', 'inscriptions',
+  'krishna', 'mandir', 'manga', 'department', 'earthquake',
+  // Devanagari stems for the same vocabulary
+  'सम्पदा', 'पुरातत्त्व', 'पाटन', 'भक्तपुर', 'च्याङ्गुनारायण', 'काठमाडौं',
 ]);
 
 /** Returns true if the query contains at least one domain-relevant token */
@@ -201,7 +222,7 @@ export function askDhamma(req: DhammaAskRequest): DhammaAskResponse {
     return {
       answer: null,
       refused: true,
-      refusal_reason: 'This question is outside the scope of the canonical Buddhist texts. The Dhamma engine only draws on the Pali Tipiṭaka (Bilara corpus).',
+      refusal_reason: 'This question is outside the scope of what this engine draws on: the Pali Tipiṭaka, and heritage-conservation sources (UNESCO World Heritage records, the ICOMOS Venice and Burra Charters, and Kathmandu Valley archaeology).',
       citations: [],
       passages: [],
       tier: 'full_rag',

@@ -70,6 +70,14 @@ export function SettingsScreen() {
         />
       </SettingsSection>
 
+      <SettingsSection title="Institutional">
+        <SettingsRow
+          label="Custodian"
+          hint="Acknowledge and triage condition reports"
+          onPress={() => router.push('/(main)/settings/custodian')}
+        />
+      </SettingsSection>
+
       <SettingsSection title="About">
         <SettingsRow
           label="About Sākṣī"
