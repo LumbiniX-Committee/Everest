@@ -187,7 +187,7 @@ for (let daysAgo = DAYS; daysAgo >= 1; daysAgo--) {
             id: randomUUID(),
             report_id: report.id,
             custodian_id: 'lumbini-trust',
-            note: `Acknowledged — ${report.severity} ${report.category} at ${site.id}`,
+            note: `Acknowledged: ${report.severity} ${report.category} at ${site.id}`,
             status: report.status,
             acknowledged_at: ackDate,
           });
