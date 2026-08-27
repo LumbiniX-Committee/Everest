@@ -18,6 +18,7 @@ export const demoSites: HeritageSite[] = [
       "longitude": 83.275831
     },
     "zone": "sacred_garden",
+    "region": "lumbini",
     "tier": 1,
     "radiusMeters": 30,
     "photography": "restricted",
@@ -71,6 +72,7 @@ export const demoSites: HeritageSite[] = [
       "longitude": 83.275668
     },
     "zone": "sacred_garden",
+    "region": "lumbini",
     "tier": 1,
     "radiusMeters": 30,
     "photography": "allowed",
@@ -127,6 +129,7 @@ export const demoSites: HeritageSite[] = [
       "longitude": 83.2756
     },
     "zone": "sacred_garden",
+    "region": "lumbini",
     "tier": 1,
     "radiusMeters": 25,
     "photography": "allowed",
@@ -175,6 +178,7 @@ export const demoSites: HeritageSite[] = [
       "longitude": 83.275831
     },
     "zone": "sacred_garden",
+    "region": "lumbini",
     "tier": 1,
     "radiusMeters": 20,
     "photography": "restricted",
@@ -215,6 +219,7 @@ export const demoSites: HeritageSite[] = [
       "longitude": 83.2762
     },
     "zone": "sacred_garden",
+    "region": "lumbini",
     "tier": 1,
     "radiusMeters": 40,
     "photography": "allowed",
@@ -252,6 +257,7 @@ export const demoSites: HeritageSite[] = [
       "longitude": 83.277797
     },
     "zone": "monastic_east",
+    "region": "lumbini",
     "tier": 2,
     "radiusMeters": 45,
     "photography": "allowed",
@@ -284,6 +290,7 @@ export const demoSites: HeritageSite[] = [
       "longitude": 83.27201
     },
     "zone": "monastic_west",
+    "region": "lumbini",
     "tier": 2,
     "radiusMeters": 50,
     "photography": "allowed",
@@ -316,6 +323,7 @@ export const demoSites: HeritageSite[] = [
       "longitude": 83.271731
     },
     "zone": "monastic_west",
+    "region": "lumbini",
     "tier": 2,
     "radiusMeters": 50,
     "photography": "allowed",
@@ -348,6 +356,7 @@ export const demoSites: HeritageSite[] = [
       "longitude": 83.278385
     },
     "zone": "monastic_east",
+    "region": "lumbini",
     "tier": 2,
     "radiusMeters": 45,
     "photography": "allowed",
@@ -380,6 +389,7 @@ export const demoSites: HeritageSite[] = [
       "longitude": 83.27626
     },
     "zone": "monastic_east",
+    "region": "lumbini",
     "tier": 2,
     "radiusMeters": 50,
     "photography": "allowed",
@@ -412,6 +422,7 @@ export const demoSites: HeritageSite[] = [
       "longitude": 83.0536
     },
     "zone": "greater_lumbini",
+    "region": "lumbini",
     "tier": 3,
     "radiusMeters": 60,
     "photography": "allowed",
@@ -451,6 +462,7 @@ export const demoSites: HeritageSite[] = [
       "longitude": 83.687
     },
     "zone": "greater_lumbini",
+    "region": "lumbini",
     "tier": 3,
     "radiusMeters": 60,
     "photography": "allowed",
@@ -477,6 +489,142 @@ export const demoSites: HeritageSite[] = [
     ],
     "condition": "stable",
     "vantageIds": []
+  },
+  {
+    "id": "patan-durbar-square",
+    "name": "Patan Durbar Square",
+    "nameNepali": "पाटन दरबार क्षेत्र",
+    "summary": "Patan Durbar Square is the royal square of the Malla kings of Lalitpur, most of its present form …",
+    "description": "Patan Durbar Square is the royal square of the Malla kings of Lalitpur, most of its present form built in the 17th century. King Siddhi Narsingh Malla built the Krishna Mandir in 1667 and the Vishwanath Temple in 1627; his son Srinivasa Malla built the Bhimsen Temple in 1680. The Taleju Bhawani Temple was first built in 1640 and rebuilt in 1667. The square is one of seven monument zones making up the Kathmandu Valley UNESCO World Heritage property, inscribed in 1979. It was heavily damaged in the April 2015 earthquake, when the Hari Shankar Temple collapsed completely; restoration was completed in 2023, eight years later. Manga Hiti, a 6th-century stone water spout, stands at the square's southern corner.",
+    "coordinate": {
+      "latitude": 27.673445,
+      "longitude": 85.325035
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 1,
+    "radiusMeters": 60,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Built",
+        "value": "17th century, Malla kings of Lalitpur"
+      },
+      {
+        "label": "Krishna Mandir",
+        "value": "Built 1667 by Siddhi Narsingh Malla"
+      },
+      {
+        "label": "UNESCO status",
+        "value": "Kathmandu Valley World Heritage zone, inscribed 1979"
+      },
+      {
+        "label": "2015 earthquake",
+        "value": "Hari Shankar Temple collapsed; restored 2023"
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "archaeological",
+    "sourceIds": [
+      "unesco-kv-1979",
+      "slusser-1982",
+      "doa-nepal"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "patan-durbar-square.v1",
+      "patan-durbar-square.v2"
+    ]
+  },
+  {
+    "id": "changu-narayan",
+    "name": "Changu Narayan",
+    "nameNepali": "चाँगुनारायण",
+    "summary": "Changu Narayan stands on a hilltop above the Manohara valley, east of the Bagmati river.",
+    "description": "Changu Narayan stands on a hilltop above the Manohara valley, east of the Bagmati river. A pillar inscription of King Mānadeva, dated to his reign around 464 to 505 CE, is among the oldest surviving dated inscriptions in the Kathmandu Valley; it was first transcribed and published in 1885 by Georg Bühler and Bhagwanlal Indraji. The temple is one of seven monument zones making up the Kathmandu Valley UNESCO World Heritage property, inscribed in 1979. It was destroyed in the April 2015 earthquake; reconstruction, carried out with international technical support, was completed roughly five years later.",
+    "coordinate": {
+      "latitude": 27.716347,
+      "longitude": 85.427897
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 1,
+    "radiusMeters": 50,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Inscription",
+        "value": "Pillar of King Mānadeva, c. 464-505 CE"
+      },
+      {
+        "label": "First transcribed",
+        "value": "1885, by Bühler and Indraji"
+      },
+      {
+        "label": "UNESCO status",
+        "value": "Kathmandu Valley World Heritage zone, inscribed 1979"
+      },
+      {
+        "label": "2015 earthquake",
+        "value": "Temple destroyed; rebuilt in about five years"
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "archaeological",
+    "sourceIds": [
+      "unesco-kv-1979",
+      "changu-manadeva-inscription",
+      "doa-nepal"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "changu-narayan.v1",
+      "changu-narayan.v2"
+    ]
+  },
+  {
+    "id": "manga-hiti",
+    "name": "Manga Hiti",
+    "nameNepali": "मंग हिटी",
+    "summary": "Manga Hiti is a dhunge dhara, a carved stone water spout fed by an underground infiltration chamb…",
+    "description": "Manga Hiti is a dhunge dhara, a carved stone water spout fed by an underground infiltration chamber and stone conduits, a technology dating to the Licchavi period, roughly 400 to 750 CE. Built in 570 CE at Mangal Bazar in Patan, it is considered the oldest working dhunge dhara on record, and stands at the southern corner of Patan Durbar Square. A 2019 survey recorded 573 dhunge dharas across the Kathmandu Valley's municipalities; 94 had already been lost entirely, and only 224 of the remaining 479 still produced water. Manga Hiti's own flow is not watched on any continuous schedule.",
+    "coordinate": {
+      "latitude": 27.6735225,
+      "longitude": 85.3255348
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 15,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Built",
+        "value": "570 CE, Mangal Bazar, Patan"
+      },
+      {
+        "label": "Technology",
+        "value": "Licchavi-period stone spout, conduit-fed"
+      },
+      {
+        "label": "2019 survey",
+        "value": "573 recorded valley-wide; 94 lost entirely"
+      },
+      {
+        "label": "Monitoring",
+        "value": "Not on a continuous schedule"
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "archaeological",
+    "sourceIds": [
+      "slusser-1982"
+    ],
+    "condition": "open",
+    "vantageIds": [
+      "manga-hiti.v1",
+      "manga-hiti.v2"
+    ]
   }
 ];
 
@@ -564,6 +712,90 @@ export const demoVantages: Vantage[] = [
     "positionToleranceM": 8,
     "bearingToleranceDeg": 12,
     "hfovDeg": 60
+  },
+  {
+    "id": "patan-durbar-square.v1",
+    "siteId": "patan-durbar-square",
+    "label": "South approach, facing north",
+    "coordinate": {
+      "latitude": 27.67325,
+      "longitude": 85.325035
+    },
+    "bearing": 0,
+    "pitch": 0,
+    "positionToleranceM": 8,
+    "bearingToleranceDeg": 12,
+    "hfovDeg": 60
+  },
+  {
+    "id": "patan-durbar-square.v2",
+    "siteId": "patan-durbar-square",
+    "label": "East side, facing west",
+    "coordinate": {
+      "latitude": 27.673445,
+      "longitude": 85.32535
+    },
+    "bearing": 270,
+    "pitch": 0,
+    "positionToleranceM": 8,
+    "bearingToleranceDeg": 12,
+    "hfovDeg": 60
+  },
+  {
+    "id": "changu-narayan.v1",
+    "siteId": "changu-narayan",
+    "label": "South approach, facing north",
+    "coordinate": {
+      "latitude": 27.7161,
+      "longitude": 85.427897
+    },
+    "bearing": 0,
+    "pitch": 0,
+    "positionToleranceM": 8,
+    "bearingToleranceDeg": 12,
+    "hfovDeg": 55
+  },
+  {
+    "id": "changu-narayan.v2",
+    "siteId": "changu-narayan",
+    "label": "East side, facing west",
+    "coordinate": {
+      "latitude": 27.716347,
+      "longitude": 85.4282
+    },
+    "bearing": 270,
+    "pitch": 0,
+    "positionToleranceM": 8,
+    "bearingToleranceDeg": 12,
+    "hfovDeg": 55
+  },
+  {
+    "id": "manga-hiti.v1",
+    "siteId": "manga-hiti",
+    "label": "Tank rim, facing the spouts",
+    "coordinate": {
+      "latitude": 27.67357,
+      "longitude": 85.325535
+    },
+    "bearing": 220,
+    "pitch": 10,
+    "positionToleranceM": 5,
+    "bearingToleranceDeg": 10,
+    "hfovDeg": 50
+  },
+  {
+    "id": "manga-hiti.v2",
+    "siteId": "manga-hiti",
+    "label": "North step, facing south",
+    "coordinate": {
+      "latitude": 27.67348,
+      "longitude": 85.32565
+    },
+    "bearing": 280,
+    "pitch": 8,
+    "positionToleranceM": 5,
+    "bearingToleranceDeg": 10,
+    "hfovDeg": 50
   }
 ];
 

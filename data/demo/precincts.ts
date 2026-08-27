@@ -3,23 +3,25 @@ import { MIN_GEOFENCE_RADIUS_M, type Precinct } from '@/types';
 /**
  * The geofenced areas of Lumbini.
  *
- * Derived from the twelve sites in `data/generated/`, but grouped spatially
- * rather than by their `zone` field. The zones are conceptual and do not
- * enclose: `world-peace-pagoda` is zoned `monastic_east` while sitting 2.9 km
- * from it, and `greater_lumbini` holds Tilaurakot and Ramagrama, which are 41 km
- * apart. A geofence has to be a circle on the ground, so these are measured.
+ * Derived from the sites in `data/generated/`, but grouped spatially rather
+ * than by their `zone` field. The zones are conceptual and do not enclose:
+ * `world-peace-pagoda` is zoned `monastic_east` while sitting 2.9 km from it,
+ * and `greater_lumbini` holds Tilaurakot and Ramagrama, which are 41 km apart.
+ * A geofence has to be a circle on the ground, so these are measured.
  *
  * Centres and radii are authored, not computed at load. A centroid recomputed
  * from the site list drifts every time a site is added, silently moving a
  * geofence someone has already walked into.
  *
  * Measured spreads:
- *   Sacred Garden      5 sites within 47 m
- *   Monastic East      2 sites within 43 m
- *   Monastic West      2 sites within 129 m
- *   Peace Pagoda       alone, 2.9 km north of the garden
- *   Tilaurakot         alone, 27 km north-west
- *   Ramagrama          alone, 41 km east
+ *   Sacred Garden       5 sites within 47 m
+ *   Monastic East       2 sites within 43 m
+ *   Monastic West       2 sites within 129 m
+ *   Peace Pagoda        alone, 2.9 km north of the garden
+ *   Tilaurakot          alone, 27 km north-west
+ *   Ramagrama           alone, 41 km east
+ *   Patan Durbar Square 2 sites within 50 m, Kathmandu Valley
+ *   Changu Narayan      alone, 8.5 km north-east of Patan
  */
 export const demoPrecincts: Precinct[] = [
   {
@@ -81,6 +83,23 @@ export const demoPrecincts: Precinct[] = [
     centre: { latitude: 27.503, longitude: 83.687 },
     radiusMetres: 200,
     siteIds: ['ramagrama'],
+  },
+  {
+    id: 'patan-durbar-square',
+    name: 'Patan Durbar Square',
+    summary: 'The Malla royal square, with Manga Hiti at its southern corner, in the Kathmandu Valley.',
+    centre: { latitude: 27.673484, longitude: 85.325284 },
+    // Wide enough to cover the square and Manga Hiti together, ~50 m apart.
+    radiusMetres: 120,
+    siteIds: ['patan-durbar-square', 'manga-hiti'],
+  },
+  {
+    id: 'changu-narayan',
+    name: 'Changu Narayan',
+    summary: "The valley's oldest dated inscription, on a hilltop east of the Bagmati.",
+    centre: { latitude: 27.716347, longitude: 85.427897 },
+    radiusMetres: 150,
+    siteIds: ['changu-narayan'],
   },
 ];
 

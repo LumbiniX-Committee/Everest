@@ -24,10 +24,25 @@ const warn = (m) => warnings.push(m);
 // Tight core = the PMTiles extract (tier 1/2 live here). Greater Lumbini is the
 // wider region tier-3 pins (Tilaurakot, Ramagrama) sit in — map pins, not
 // physically demoed (05-CONTENT-SPEC §1).
-const CORE_BBOX = { west: 83.24, south: 27.44, east: 83.31, north: 27.51 };
-const GREATER_BBOX = { west: 82.9, south: 27.3, east: 84.2, north: 27.7 };
+//
+// Kathmandu Valley is a second region, added for the Patan/Manga Hiti/Changu
+// Narayan sites — see `region` on the site object. A site with no `region`
+// defaults to 'lumbini', matching `constants/geo.ts#regionOf`, so the original
+// twelve sites needed no edit when this was introduced.
+const REGION_BBOX = {
+  lumbini: {
+    core: { west: 83.24, south: 27.44, east: 83.31, north: 27.51 },
+    greater: { west: 82.9, south: 27.3, east: 84.2, north: 27.7 },
+  },
+  'kathmandu-valley': {
+    core: { west: 85.3, south: 27.65, east: 85.45, north: 27.73 },
+    greater: { west: 85.2, south: 27.55, east: 85.55, north: 27.8 },
+  },
+};
 const within = (c, b) => c && c.lon >= b.west && c.lon <= b.east && c.lat >= b.south && c.lat <= b.north;
-const inBbox = (c) => within(c, CORE_BBOX);
+const regionOf = (s) => s.region ?? 'lumbini';
+const inBbox = (c, region = 'lumbini') => within(c, REGION_BBOX[region].core);
+const inGreaterBbox = (c, region = 'lumbini') => within(c, REGION_BBOX[region].greater);
 
 const sites = read('sites.json');
 const vantages = read('vantages.json');
@@ -44,10 +59,11 @@ const timelineIds = new Set(timeline.map((t) => t.id));
 for (const s of sites) {
   const at = `site '${s.id}'`;
   if (!s.name?.en || !s.name?.ne) err(`${at}: missing name.en or name.ne`);
+  const region = regionOf(s);
   if (s.tier === 3) {
-    if (!within(s.coords, GREATER_BBOX)) err(`${at}: coords ${JSON.stringify(s.coords)} outside Greater Lumbini bbox`);
-  } else if (!inBbox(s.coords)) {
-    err(`${at}: coords ${JSON.stringify(s.coords)} outside Lumbini core bbox`);
+    if (!inGreaterBbox(s.coords, region)) err(`${at}: coords ${JSON.stringify(s.coords)} outside ${region} greater bbox`);
+  } else if (!inBbox(s.coords, region)) {
+    err(`${at}: coords ${JSON.stringify(s.coords)} outside ${region} core bbox`);
   }
   if (!s.coords_source) err(`${at}: missing coords_source`);
   else if (s.coords_source === 'doc') warn(`${at}: coords still 'doc' — verify against OSM/Wikidata before shipping`);
@@ -60,10 +76,12 @@ for (const s of sites) {
 }
 
 // --- vantages ---------------------------------------------------------------
+const siteById = new Map(sites.map((s) => [s.id, s]));
 for (const v of vantages) {
   const at = `vantage '${v.id}'`;
   if (!siteIds.has(v.site_id)) err(`${at}: references missing site '${v.site_id}'`);
-  if (!inBbox(v.coords)) err(`${at}: coords outside Lumbini bbox`);
+  const region = regionOf(siteById.get(v.site_id) ?? {});
+  if (!inBbox(v.coords, region)) err(`${at}: coords outside ${region} bbox`);
   if (typeof v.heading_deg !== 'number' || v.heading_deg < 0 || v.heading_deg > 360) err(`${at}: heading_deg out of range`);
 }
 

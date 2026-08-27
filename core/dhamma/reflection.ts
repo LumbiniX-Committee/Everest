@@ -137,6 +137,9 @@ const SITE_PROMPTS: Record<string, string> = {
   'marker-stone': 'It took a century of careful looking to fix this one spot with certainty.',
   'vihara-remains': 'Stupas recorded here in 1957 were gone by a later visit. Everything built is on its way to being ruins.',
   tilaurakot: 'This is the town Siddhartha grew up in and chose to leave. The place asks a quiet question.',
+  'patan-durbar-square': 'Kings built this square to be looked at forever. It is still being repaired from an earthquake ten years ago.',
+  'changu-narayan': 'A king recorded his own reign in stone here, fifteen hundred years ago. The stone has outlasted the reign by a long way.',
+  'manga-hiti': 'Water has run through this stone spout since before most of what stands nearby was built. Not all of it still runs.',
 };
 
 const SITE_PROMPTS_NE: Record<string, string> = {
@@ -146,6 +149,9 @@ const SITE_PROMPTS_NE: Record<string, string> = {
   'marker-stone': 'धेरै वर्षको ध्यानपूर्वक अवलोकनपछि मात्र यो स्थान निश्चित गरिएको थियो।',
   'vihara-remains': 'यहाँका अवशेषहरूले बनाइएका सबै कुरा परिवर्तन र क्षयतर्फ जाने कुरा सम्झाउँछन्।',
   tilaurakot: 'यो सिद्धार्थ हुर्किएको र छोडेर गएको नगर हो। यस ठाउँले शान्त प्रश्न सोध्छ।',
+  'patan-durbar-square': 'राजाहरूले यो चोक सधैंभरि हेरिने बनाए। दश वर्षअघिको भूकम्पबाट यो अझै मर्मत भइरहेको छ।',
+  'changu-narayan': 'एक राजाले आफ्नो शासनकाल ढुङ्गामा कुँदेर यहाँ लेखे, पन्ध्रसय वर्षअघि। त्यो ढुङ्गा उनको शासनभन्दा धेरै लामो समय टिक्यो।',
+  'manga-hiti': 'यो ढुङ्गे धाराबाट नजिकैका धेरै संरचना बन्नुअघिदेखि नै पानी बगेको छ। अहिले सबै त्यसरी बगिरहेको छैन।',
 };
 
 export function processReflection(req: ReflectionRequest): ReflectionResponse {

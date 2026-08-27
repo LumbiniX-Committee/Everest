@@ -10,7 +10,19 @@ export type SourceTier = 'archaeological' | 'documented' | 'community';
 export type ConditionStatus = 'stable' | 'watch' | 'open' | 'resolved';
 
 /** Which part of the property a site sits in (04-ARCHITECTURE schema). */
-export type Zone = 'sacred_garden' | 'monastic_east' | 'monastic_west' | 'greater_lumbini';
+export type Zone =
+  | 'sacred_garden'
+  | 'monastic_east'
+  | 'monastic_west'
+  | 'greater_lumbini'
+  | 'kathmandu_valley';
+
+/**
+ * Which cluster of sites a place belongs to, for map bounds, on-site radii and
+ * the schematic plan's projection. Defaults to `'lumbini'` when a site carries
+ * none, so the original twelve never needed a mass edit to gain one.
+ */
+export type RegionId = 'lumbini' | 'kathmandu-valley';
 
 /**
  * Whether photography is permitted at a site. Charter #8: capture is hard-disabled
@@ -39,6 +51,8 @@ export type HeritageSite = {
   coordinate: Coordinate;
   /** Which zone of the property this site sits in. */
   zone?: Zone;
+  /** Which region this site sits in. Absent means `'lumbini'`. */
+  region?: RegionId;
   /** Significance tier: 1 primary, 2 secondary, 3 contextual. */
   tier?: 1 | 2 | 3;
   /**

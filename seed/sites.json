@@ -920,5 +920,268 @@
         "url": "https://whc.unesco.org/en/list/666"
       }
     ]
+  },
+  {
+    "id": "patan-durbar-square",
+    "name": {
+      "en": "Patan Durbar Square",
+      "ne": "पाटन दरबार क्षेत्र"
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 1,
+    "coords": {
+      "lat": 27.673445,
+      "lon": 85.325035
+    },
+    "coords_source": "osm",
+    "geofence_m": 60,
+    "period": {
+      "from": 1627,
+      "to": null
+    },
+    "photography": "allowed",
+    "summary": {
+      "en": "Patan Durbar Square is the royal square of the Malla kings of Lalitpur, most of its present form built in the 17th century. King Siddhi Narsingh Malla built the Krishna Mandir in 1667 and the Vishwanath Temple in 1627; his son Srinivasa Malla built the Bhimsen Temple in 1680. The Taleju Bhawani Temple was first built in 1640 and rebuilt in 1667. The square is one of seven monument zones making up the Kathmandu Valley UNESCO World Heritage property, inscribed in 1979. It was heavily damaged in the April 2015 earthquake, when the Hari Shankar Temple collapsed completely; restoration was completed in 2023, eight years later. Manga Hiti, a 6th-century stone water spout, stands at the square's southern corner.",
+      "ne": "पाटन दरबार क्षेत्र ललितपुरका मल्ल राजाहरूको राजदरबार क्षेत्र हो, जसको हालको स्वरूप प्रायः १७औं शताब्दीमा बनेको हो। राजा सिद्धिनरसिंह मल्लले सन् १६६७ मा कृष्ण मन्दिर र सन् १६२७ मा विश्वनाथ मन्दिर बनाए; उनका छोरा श्रीनिवास मल्लले सन् १६८० मा भीमसेन मन्दिर बनाए। तलेजु भवानी मन्दिर पहिलोपटक सन् १६४० मा बनेको र सन् १६६७ मा पुनर्निर्माण गरिएको थियो। यो क्षेत्र काठमाडौं उपत्यका विश्व सम्पदा सम्पत्तिका सात स्मारक क्षेत्रमध्ये एक हो, जुन सन् १९७९ मा सूचीकृत भएको थियो। सन् २०१५ को अप्रिलको भूकम्पमा यो धेरै क्षतिग्रस्त भयो, जब हरिशंकर मन्दिर पूर्णतया ढल्यो; पुनर्स्थापना सन् २०२३ मा, आठ वर्षपछि सम्पन्न भयो। छैटौं शताब्दीको ढुङ्गे धारा मंग हिटी यस चोकको दक्षिणी कुनामा छ।"
+    },
+    "ne_review": "pending",
+    "facts": [
+      {
+        "label": {
+          "en": "Built",
+          "ne": "निर्माण"
+        },
+        "value": {
+          "en": "17th century, Malla kings of Lalitpur",
+          "ne": "१७औं शताब्दी, ललितपुरका मल्ल राजा"
+        }
+      },
+      {
+        "label": {
+          "en": "Krishna Mandir",
+          "ne": "कृष्ण मन्दिर"
+        },
+        "value": {
+          "en": "Built 1667 by Siddhi Narsingh Malla",
+          "ne": "सिद्धिनरसिंह मल्लद्वारा सन् १६६७ मा निर्मित"
+        }
+      },
+      {
+        "label": {
+          "en": "UNESCO status",
+          "ne": "युनेस्को स्थिति"
+        },
+        "value": {
+          "en": "Kathmandu Valley World Heritage zone, inscribed 1979",
+          "ne": "काठमाडौं उपत्यका विश्व सम्पदा क्षेत्र, सन् १९७९ मा सूचीकृत"
+        }
+      },
+      {
+        "label": {
+          "en": "2015 earthquake",
+          "ne": "सन् २०१५ भूकम्प"
+        },
+        "value": {
+          "en": "Hari Shankar Temple collapsed; restored 2023",
+          "ne": "हरिशंकर मन्दिर ढल्यो; सन् २०२३ मा पुनर्स्थापित"
+        }
+      }
+    ],
+    "timeline": [
+      "patan-malla-construction",
+      "patan-earthquake-2015"
+    ],
+    "plates": [],
+    "vantages": [
+      "patan-durbar-square.v1",
+      "patan-durbar-square.v2"
+    ],
+    "dhamma_links": [],
+    "sources": [
+      {
+        "title": "UNESCO WHC: Kathmandu Valley (121)",
+        "url": "https://whc.unesco.org/en/list/121"
+      },
+      {
+        "title": "Slusser 1982, Nepal Mandala: A Cultural Study of the Kathmandu Valley"
+      },
+      {
+        "title": "Department of Archaeology, Nepal"
+      }
+    ]
+  },
+  {
+    "id": "changu-narayan",
+    "name": {
+      "en": "Changu Narayan",
+      "ne": "चाँगुनारायण"
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 1,
+    "coords": {
+      "lat": 27.716347,
+      "lon": 85.427897
+    },
+    "coords_source": "osm",
+    "geofence_m": 50,
+    "period": {
+      "from": 464,
+      "to": null
+    },
+    "photography": "allowed",
+    "summary": {
+      "en": "Changu Narayan stands on a hilltop above the Manohara valley, east of the Bagmati river. A pillar inscription of King Mānadeva, dated to his reign around 464 to 505 CE, is among the oldest surviving dated inscriptions in the Kathmandu Valley; it was first transcribed and published in 1885 by Georg Bühler and Bhagwanlal Indraji. The temple is one of seven monument zones making up the Kathmandu Valley UNESCO World Heritage property, inscribed in 1979. It was destroyed in the April 2015 earthquake; reconstruction, carried out with international technical support, was completed roughly five years later.",
+      "ne": "चाँगुनारायण बागमती नदीको पूर्वमा, मनोहरा उपत्यकामाथिको डाँडामा अवस्थित छ। राजा मानदेवको स्तम्भ अभिलेख, जुन उनको शासनकाल करिब सन् ४६४ देखि ५०५ सम्मको मानिन्छ, काठमाडौं उपत्यकाका सबैभन्दा पुराना मितियुक्त अभिलेखमध्ये एक हो; यो सन् १८८५ मा जर्ज बुहलर र भगवानलाल इन्द्रजीले पहिलोपटक लिप्यन्तरण र प्रकाशित गरेका थिए। यो मन्दिर काठमाडौं उपत्यका विश्व सम्पदा सम्पत्तिका सात स्मारक क्षेत्रमध्ये एक हो, जुन सन् १९७९ मा सूचीकृत भएको थियो। यो सन् २०१५ को अप्रिलको भूकम्पमा भत्कियो; अन्तर्राष्ट्रिय प्राविधिक सहयोगमा भएको पुनर्निर्माण करिब पाँच वर्षपछि सम्पन्न भयो।"
+    },
+    "ne_review": "pending",
+    "facts": [
+      {
+        "label": {
+          "en": "Inscription",
+          "ne": "अभिलेख"
+        },
+        "value": {
+          "en": "Pillar of King Mānadeva, c. 464-505 CE",
+          "ne": "राजा मानदेवको स्तम्भ, करिब सन् ४६४-५०५"
+        }
+      },
+      {
+        "label": {
+          "en": "First transcribed",
+          "ne": "पहिलो लिप्यन्तरण"
+        },
+        "value": {
+          "en": "1885, by Bühler and Indraji",
+          "ne": "सन् १८८५, बुहलर र इन्द्रजीद्वारा"
+        }
+      },
+      {
+        "label": {
+          "en": "UNESCO status",
+          "ne": "युनेस्को स्थिति"
+        },
+        "value": {
+          "en": "Kathmandu Valley World Heritage zone, inscribed 1979",
+          "ne": "काठमाडौं उपत्यका विश्व सम्पदा क्षेत्र, सन् १९७९ मा सूचीकृत"
+        }
+      },
+      {
+        "label": {
+          "en": "2015 earthquake",
+          "ne": "सन् २०१५ भूकम्प"
+        },
+        "value": {
+          "en": "Temple destroyed; rebuilt in about five years",
+          "ne": "मन्दिर भत्कियो; करिब पाँच वर्षमा पुनर्निर्माण भयो"
+        }
+      }
+    ],
+    "timeline": [
+      "changu-manadeva-inscription-464",
+      "changu-earthquake-2015"
+    ],
+    "plates": [],
+    "vantages": [
+      "changu-narayan.v1",
+      "changu-narayan.v2"
+    ],
+    "dhamma_links": [],
+    "sources": [
+      {
+        "title": "UNESCO WHC: Kathmandu Valley (121)",
+        "url": "https://whc.unesco.org/en/list/121"
+      },
+      {
+        "title": "Pillar inscription of King Mānadeva, Changu Narayan (D. R. Regmi, Inscriptions of Ancient Nepal, 1983)"
+      },
+      {
+        "title": "Department of Archaeology, Nepal"
+      }
+    ]
+  },
+  {
+    "id": "manga-hiti",
+    "name": {
+      "en": "Manga Hiti",
+      "ne": "मंग हिटी"
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "coords": {
+      "lat": 27.6735225,
+      "lon": 85.3255348
+    },
+    "coords_source": "osm",
+    "geofence_m": 15,
+    "period": {
+      "from": 570,
+      "to": null
+    },
+    "photography": "allowed",
+    "summary": {
+      "en": "Manga Hiti is a dhunge dhara, a carved stone water spout fed by an underground infiltration chamber and stone conduits, a technology dating to the Licchavi period, roughly 400 to 750 CE. Built in 570 CE at Mangal Bazar in Patan, it is considered the oldest working dhunge dhara on record, and stands at the southern corner of Patan Durbar Square. A 2019 survey recorded 573 dhunge dharas across the Kathmandu Valley's municipalities; 94 had already been lost entirely, and only 224 of the remaining 479 still produced water. Manga Hiti's own flow is not watched on any continuous schedule.",
+      "ne": "मंग हिटी एउटा ढुङ्गे धारा हो, भूमिगत जलसञ्चय कक्ष र ढुङ्गाका नालीबाट पानी आउने, लिच्छवि कालदेखि (करिब सन् ४०० देखि ७५०) चलिआएको प्रविधि। पाटनको मंगल बजारमा सन् ५७० मा निर्मित, यसलाई अभिलेखमा रहेको सबैभन्दा पुरानो चालू ढुङ्गे धारा मानिन्छ, र यो पाटन दरबार क्षेत्रको दक्षिणी कुनामा छ। सन् २०१९ को एक सर्वेक्षणले काठमाडौं उपत्यकाका नगरपालिकाहरूभर ५७३ ढुङ्गे धारा फेला पार्‍यो; ९४ पूर्ण रूपमा हराइसकेका थिए, र बाँकी ४७९ मध्ये २२४ मात्र पानी दिइरहेका थिए। मंग हिटीको आफ्नै बहाव कुनै नियमित तालिकामा नियालिँदैन।"
+    },
+    "ne_review": "pending",
+    "facts": [
+      {
+        "label": {
+          "en": "Built",
+          "ne": "निर्माण"
+        },
+        "value": {
+          "en": "570 CE, Mangal Bazar, Patan",
+          "ne": "सन् ५७०, मंगल बजार, पाटन"
+        }
+      },
+      {
+        "label": {
+          "en": "Technology",
+          "ne": "प्रविधि"
+        },
+        "value": {
+          "en": "Licchavi-period stone spout, conduit-fed",
+          "ne": "लिच्छवि कालको ढुङ्गे धारा, नाली-आपूर्ति"
+        }
+      },
+      {
+        "label": {
+          "en": "2019 survey",
+          "ne": "सन् २०१९ सर्वेक्षण"
+        },
+        "value": {
+          "en": "573 recorded valley-wide; 94 lost entirely",
+          "ne": "उपत्यकाभर ५७३ अभिलेखित; ९४ पूर्ण हराए"
+        }
+      },
+      {
+        "label": {
+          "en": "Monitoring",
+          "ne": "अनुगमन"
+        },
+        "value": {
+          "en": "Not on a continuous schedule",
+          "ne": "नियमित तालिकामा छैन"
+        }
+      }
+    ],
+    "timeline": [
+      "dhunge-dhara-origin-570",
+      "dhunge-dhara-2019-survey"
+    ],
+    "plates": [],
+    "vantages": [
+      "manga-hiti.v1",
+      "manga-hiti.v2"
+    ],
+    "dhamma_links": [],
+    "sources": [
+      {
+        "title": "Slusser 1982, Nepal Mandala: A Cultural Study of the Kathmandu Valley"
+      }
+    ]
   }
 ]
