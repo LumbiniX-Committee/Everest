@@ -4,8 +4,10 @@
 running order, what to show on screen, what to say (voiceover), rough timings, and
 the exact setup so nothing fails on camera.*
 
-*Target length: about 3 to 4 minutes. If you need a very short cut, use the
-2-minute version at the end.*
+*Target length: about 4 to 4.5 minutes, extended from the original 3-to-4 once
+the custodian dashboard earned its own beat — that closed loop, shown live, is
+the moment that sells the institutional story. If you need a very short cut,
+use the 2-minute version at the end.*
 
 ---
 
@@ -30,16 +32,23 @@ Do all of this first. Most demo failures are setup failures.
    ideal) so the story stays coherent.
 7. **Screen-record at high resolution.** On Android use the built-in recorder or a
    USB screen mirror. Record voiceover separately if the room is noisy.
-8. **Have the five scripted Dhamma questions ready** (they are cached, so they
+8. **If showing the custodian dashboard**, run `node mock-api/server.mjs` and
+   `npm run dev` in `landing/` on a laptop on the same network, with
+   `NEXT_PUBLIC_API_URL` pointed at the mock API. Have `localhost:3000/custodian`
+   already open in a browser tab before you start recording, so the cut from
+   phone to laptop is instant.
+9. **Have the six scripted Dhamma questions ready** (they are cached, so they
    answer instantly even with no wifi):
    - "What are the four noble truths?"
    - "What did the Buddha say to the Kalamas?"
    - "What were the last words of the Buddha?"
+   - "What does the Burra Charter say about reconstruction?" (heritage corpus,
+     not the Pali canon — this is the widened-scope beat)
    - "What does Buddhism say about cryptocurrency?" (this one refuses, on purpose)
 
 ---
 
-## The running order (full 3 to 4 minute version)
+## The running order (full 4 to 4.5 minute version)
 
 ### 0:00 to 0:20 | Open with the problem
 
@@ -95,25 +104,48 @@ Do all of this first. Most demo failures are setup failures.
 - SAY: "The AI fills in what it found. The person always decides how urgent it is.
   And the saved report is flagged as AI-assisted, so a later reader knows."
 
-### 2:30 to 3:10 | Dhamma: the grounded AI
+### 2:30 to 3:00 | The custodian dashboard: closing the loop
+
+- SHOW: Cut to a laptop browser, already open on `localhost:3000/custodian`. The
+  report you just filed appears in the list. Filter to "Open", find it, type a
+  short note, and tap Acknowledge. The status updates live.
+- SAY: "That report doesn't just sit on the phone. It reaches a custodian
+  dashboard — the same view works in-app for a caretaker without a laptop —
+  showing every open report, and how long each one waited before someone
+  looked. This is the product a heritage authority actually pays for."
+- OPTIONAL SHOW: Tap the CSV or GeoJSON export link.
+- SAY (if shown): "Export opens straight in QGIS. This is a real GIS workflow,
+  not a screenshot of one."
+
+### 3:00 to 3:40 | Dhamma: the grounded AI, now wider than the canon
 
 - SHOW: Go to Dhamma. Ask "What are the four noble truths?" Show the answer with
   its citation and source card.
 - SAY: "Dhamma answers questions about Buddhist teaching, but only from real
   canonical sources, always with a citation."
+- SHOW: Ask "What does the Burra Charter say about reconstruction?" Show the
+  cited answer from the conservation corpus.
+- SAY: "Since the hackathon we widened the corpus. The same engine now answers
+  a conservation question — UNESCO records, the ICOMOS charters, Kathmandu
+  Valley archaeology — with the same discipline: cite a real source, or
+  refuse. Same behaviour, wider subject matter."
 - SHOW: Ask "What does Buddhism say about cryptocurrency?" Show the honest refusal.
 - SAY: "And when the sources don't support an answer, it refuses. That refusal is
   the feature. A grounded AI that never makes things up is exactly what a sacred
   and historical context needs."
 
-### 3:10 to 3:40 | The honest close
+### 3:40 to 4:15 | The honest close
 
-- SHOW: The Guardians leaderboard, briefly. Then return to the then-and-now fade.
+- SHOW: The Guardians leaderboard, briefly. Then a quick cut to the Manga Hiti
+  site in the Kathmandu Valley, then return to the then-and-now fade.
 - SAY: "Contribution is recognised without gamifying truth. Merit can't be spent or
   ranked, and the leaderboard ranks real uploaded evidence, so you can't fake it."
-- SAY: "Sākṣī: a witness that guides, an AI that never lies, and a record worth
-  trusting, built by the people already standing in front of the monument. Thank
-  you."
+- SAY: "We piloted this at Lumbini and just generalised it to three Kathmandu
+  Valley sites on the same architecture. There are over 1,200 UNESCO
+  properties with the same gap."
+- SAY: "Sākṣī: a witness that guides, an AI that never lies, a custodian who
+  can act, and a record worth trusting, built by the people already standing
+  in front of the monument. Thank you."
 
 ---
 
@@ -124,12 +156,15 @@ If you only have two minutes, keep these beats and drop the rest:
 1. Problem (0:00 to 0:15).
 2. Then-and-now fade (0:15 to 0:35).
 3. The witness loop: reticle locking, capture, and the by-eye honesty beat (0:35
-   to 1:20).
-4. The crack detector: scan, dashed boxes, file the report (1:20 to 1:45).
-5. Dhamma: one cited answer and one refusal (1:45 to 2:00).
+   to 1:15).
+4. The crack detector: scan, dashed boxes, file the report (1:15 to 1:35).
+5. The custodian dashboard: cut to the browser, acknowledge the report you just
+   filed (1:35 to 1:50).
+6. Dhamma: one cited answer and one refusal (1:50 to 2:05).
 
-The two things you must never cut, because they are the whole pitch: the **honesty
-beat** (by-eye vs measured) and the **refusal** (an AI that says no).
+The three things you must never cut, because they are the whole pitch: the
+**honesty beat** (by-eye vs measured), the **closed loop** (a custodian actually
+acting on the report), and the **refusal** (an AI that says no).
 
 ---
 
@@ -144,6 +179,9 @@ beat** (by-eye vs measured) and the **refusal** (an AI that says no).
 - **Show a real crack for the detector.** If you can point the camera at an actual
   cracked surface, do it; a real detection is far more convincing than a staged
   one.
+- **Cut cleanly between phone and laptop for the custodian beat.** Have the
+  dashboard tab already loaded and the report list already filtered, so the
+  cut lands on the acknowledgement itself, not on page-load spinners.
 - **Keep the voiceover calm.** The product's whole personality is honesty and
   restraint. Match that tone.
 - **Caption the honest bits.** Add on-screen text for "mAP50 0.8167", "framed by
@@ -161,9 +199,12 @@ beat** (by-eye vs measured) and the **refusal** (an AI that says no).
 | By-eye honesty beat | The charter is real and enforced, not marketing. |
 | Crack detector with dashed boxes | Real on-device AI, honest accuracy, candidates not verdicts. |
 | AI-assisted flag on the report | Provenance is recorded end to end. |
-| Cited Dhamma answer | Grounded, source-backed knowledge. |
+| Custodian dashboard, live acknowledgement | The loop actually closes. This is the product an institution pays for, not a mockup. |
+| Cited Dhamma answer (canon) | Grounded, source-backed knowledge. |
+| Cited Dhamma answer (heritage corpus) | The refuse-or-cite discipline generalises past the Pali canon. |
 | Dhamma refusal | The AI will not make things up. The trust feature. |
 | Guardians leaderboard | Motivation without gaming the truth. |
+| Manga Hiti / Kathmandu Valley cut | One pilot generalises to a platform, not a one-off demo. |
 
 ---
 

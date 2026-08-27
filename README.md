@@ -1,23 +1,28 @@
 # Sākṣī
 
-A heritage and pilgrimage app for Lumbini, Nepal, the birthplace of the Buddha.
+A conservation-evidence platform that uses pilgrimage and heritage tourism as
+its distribution channel. It launched at Lumbini, Nepal, the birthplace of the
+Buddha, and now covers three Kathmandu Valley UNESCO monument-zone sites
+alongside it: Patan Durbar Square, Changu Narayan, and Manga Hiti.
 
 Sākṣī (साक्षी) means *witness*: someone who sees a thing directly and can speak
 to it. The app takes the name at face value. You go to a heritage site, stand at
 a fixed viewpoint, line your phone up with it, and take a photo of what the place
 looks like today. Come back next month or next year, take the photo again from
 the same spot, and the two pictures line up. Over time they become a record of
-how a place is changing, made by the people standing in front of it.
+how a place is changing, made by the people standing in front of it — and
+brought to a custodian's dashboard where it can actually be acted on.
 
 Built for the LumbiniX 2026 hackathon by the LumbiniX-Committee team.
 
 ## What the app does, in one line
 
-It turns a visitor's attention into evidence a conservator can trust.
+It turns a visitor's attention into evidence a conservator can trust, and gets
+that evidence in front of the institution responsible for the site.
 
-Everything else in the app (the map, the history, the AI, the guided visits)
-exists to help you make, understand, or care about that one thing: a photo taken
-from a known spot on a known day.
+Everything else in the app (the map, the history, the AI, the guided visits,
+the custodian dashboard) exists to help you make, understand, act on, or care
+about that one thing: a photo taken from a known spot on a known day.
 
 ## The three parts
 
@@ -26,9 +31,9 @@ not just tabs. There is no Home, Explore, Profile, or Rewards.
 
 | Part | Name means | What you do there |
 | --- | --- | --- |
-| **Tīrtha** | a sacred place | Explore Lumbini on a map, read about each site, and fade between an old photo and a new one to see what changed. |
-| **Sākṣī** | witness | The main loop: pick a viewpoint, line up your phone, take the photo, and note the condition of the site. |
-| **Dhamma** | the teaching | Ask about Buddhist texts and get answers backed by real sources, or an honest "I cannot answer that." |
+| **Tīrtha** | a sacred place | Explore Lumbini and the Kathmandu Valley sites on a map, read about each place, and fade between an old photo and a new one to see what changed. Quests point at whatever vantage or spout has gone longest without a resurvey, not at what is popular. |
+| **Sākṣī** | witness | The main loop: pick a viewpoint, line up your phone, take the photo, and note the condition of the site. A custodian (web dashboard in `landing/custodian`, or in-app under Settings) reads the reports and acknowledges them. |
+| **Dhamma** | the teaching | Ask about Buddhist texts or heritage conservation — UNESCO records, the ICOMOS Venice and Burra Charters, Kathmandu Valley archaeology — and get answers backed by real, cited sources, or an honest "I cannot answer that." |
 
 ## What the app promises
 
@@ -132,16 +137,35 @@ AI's help is saved with a flag so a later reader knows.
 
 ### Dhamma: answers you can trust
 
-Dhamma answers questions about Buddhist teaching, but only from real sources. It
-finds the most relevant passages, writes an answer using only those passages, and
-checks every claim points back to a real passage. If the sources do not support
-an answer, it says so instead of guessing. It refuses to pretend to be the
-Buddha, resists attempts to trick it, and answers in Nepali by default with an
-English option. Source text and citations are never machine-translated.
+Dhamma answers questions about Buddhist teaching *and* heritage conservation,
+but only from real sources. Its corpus is the Pali canon alongside the ICOMOS
+Venice (1964) and Burra (2013) Charters, UNESCO World Heritage records for both
+Lumbini and the Kathmandu Valley, and named Kathmandu Valley archaeology (the
+Mānadeva inscription at Changu Narayan, Patan's Malla-era construction, the
+dhunge dhara water system). It finds the most relevant passages, writes an
+answer using only those passages, and checks every claim points back to a real
+passage. If the sources do not support an answer, it says so instead of
+guessing. It refuses to pretend to be the Buddha, resists attempts to trick it,
+and answers in Nepali by default with an English option. Source text and
+citations are never machine-translated.
 
 Without a network, the built-in text collection still works. An optional small
 model can be downloaded to the phone to write short answers offline, and even
 then it may only rephrase real passages, never invent facts.
+
+### The custodian dashboard: closing the loop
+
+A condition report a visitor files is only useful if someone responsible for
+the site actually sees it. The custodian surface — a web dashboard at
+`landing/custodian`, and an equivalent in-app screen under Settings →
+Institutional — shows coverage, median time to acknowledgement, and every open
+report by site and status, with CSV and GeoJSON export for a real GIS
+workflow. A custodian can acknowledge, mark in-progress, or resolve a report
+with a note, from either surface. There is deliberately no login: a
+remembered name attached to what a device acknowledges, not an account,
+because "no complex auth" is a stated design choice, not an oversight. The
+ethics policy at `landing/app/ethics/page.tsx` states plainly what funds this:
+no money from any commercial entity operating inside a site the app monitors.
 
 ## How the code is laid out
 
@@ -198,4 +222,9 @@ a phone.
 This is a hackathon build. Site and viewpoint coordinates are real but not all
 survey-grade, and a few are marked as approximate until field data replaces them.
 The damage detector, the camera loop, and the keyboard behaviour are best judged
-on a real phone build, not in a simulator.
+on a real phone build, not in a simulator. Patan Durbar Square, Changu Narayan,
+and Manga Hiti ship with real, sourced facts, timeline, narration, and vantages,
+but no reconstruction plate: producing one needs a harvested or generated image
+this session did not have the tokens to fetch. Nine of the twelve Lumbini sites
+already ship the same way, and the site detail screen says so honestly rather
+than showing a placeholder.
