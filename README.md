@@ -60,7 +60,7 @@ You need Node.js and the Expo tooling. Then:
 
 ```bash
 npm install                     # install everything (also applies a small fix, see below)
-cp .env.example .env.local      # then fill in your own values
+cp .env.example .env.local      # for Windows PowerShell: Copy-Item .env.example .env.local
 npx expo start                  # start the app
 ```
 
