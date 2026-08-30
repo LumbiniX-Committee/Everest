@@ -85,11 +85,10 @@ export function TirthaScreen() {
         <View style={styles.questSection}>
           <View style={styles.sectionHeader}>
             <Text variant="heading">Featured Quest</Text>
-            <Button
-              label="View All Quests"
-              variant="quiet"
-              onPress={() => router.push('/(main)/tirtha/quests')}
-            />
+            <View style={styles.sectionActions}>
+              <Button label="Memories" variant="quiet" onPress={() => router.push('./memories')} />
+              <Button label="All Quests" variant="quiet" onPress={() => router.push('/(main)/tirtha/quests')} />
+            </View>
           </View>
           <QuestCard
             quest={featuredQuest}
@@ -133,5 +132,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: spacing.xs,
   },
+  sectionActions: { flexDirection: 'row', alignItems: 'center' },
   list: { marginTop: spacing.lg, gap: spacing.md },
 });

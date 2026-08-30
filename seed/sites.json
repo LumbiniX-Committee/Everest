@@ -942,7 +942,7 @@
     },
     "photography": "allowed",
     "summary": {
-      "en": "Patan Durbar Square is the royal square of the Malla kings of Lalitpur, most of its present form built in the 17th century. King Siddhi Narsingh Malla built the Krishna Mandir in 1667 and the Vishwanath Temple in 1627; his son Srinivasa Malla built the Bhimsen Temple in 1680. The Taleju Bhawani Temple was first built in 1640 and rebuilt in 1667. The square is one of seven monument zones making up the Kathmandu Valley UNESCO World Heritage property, inscribed in 1979. It was heavily damaged in the April 2015 earthquake, when the Hari Shankar Temple collapsed completely; restoration was completed in 2023, eight years later. Manga Hiti, a 6th-century stone water spout, stands at the square's southern corner.",
+      "en": "Patan Durbar Square is the royal square of the Malla kings of Lalitpur, with most of its surviving palace and temple ensemble shaped between the 16th and 18th centuries. Krishna Mandir, Vishveshvara, Bhimsen, Char Narayan, Hari Shankar and the palace courtyards make the open square a dense record of Newar stone, brick, timber and metal craftsmanship. The square is one of seven monument zones making up the Kathmandu Valley UNESCO World Heritage property, inscribed in 1979. It was heavily damaged in the April 2015 earthquake; conservators subsequently rebuilt collapsed monuments and repaired damaged ones while reusing salvaged historic fabric. Manga Hiti, a 6th-century stone water spout, stands at the square's southern corner.",
       "ne": "पाटन दरबार क्षेत्र ललितपुरका मल्ल राजाहरूको राजदरबार क्षेत्र हो, जसको हालको स्वरूप प्रायः १७औं शताब्दीमा बनेको हो। राजा सिद्धिनरसिंह मल्लले सन् १६६७ मा कृष्ण मन्दिर र सन् १६२७ मा विश्वनाथ मन्दिर बनाए; उनका छोरा श्रीनिवास मल्लले सन् १६८० मा भीमसेन मन्दिर बनाए। तलेजु भवानी मन्दिर पहिलोपटक सन् १६४० मा बनेको र सन् १६६७ मा पुनर्निर्माण गरिएको थियो। यो क्षेत्र काठमाडौं उपत्यका विश्व सम्पदा सम्पत्तिका सात स्मारक क्षेत्रमध्ये एक हो, जुन सन् १९७९ मा सूचीकृत भएको थियो। सन् २०१५ को अप्रिलको भूकम्पमा यो धेरै क्षतिग्रस्त भयो, जब हरिशंकर मन्दिर पूर्णतया ढल्यो; पुनर्स्थापना सन् २०२३ मा, आठ वर्षपछि सम्पन्न भयो। छैटौं शताब्दीको ढुङ्गे धारा मंग हिटी यस चोकको दक्षिणी कुनामा छ।"
     },
     "ne_review": "pending",
@@ -963,7 +963,7 @@
           "ne": "कृष्ण मन्दिर"
         },
         "value": {
-          "en": "Built 1667 by Siddhi Narsingh Malla",
+          "en": "17th century, under Siddhi Narsingh Malla",
           "ne": "सिद्धिनरसिंह मल्लद्वारा सन् १६६७ मा निर्मित"
         }
       },
@@ -986,6 +986,48 @@
           "en": "Hari Shankar Temple collapsed; restored 2023",
           "ne": "हरिशंकर मन्दिर ढल्यो; सन् २०२३ मा पुनर्स्थापित"
         }
+      }
+    ],
+    "story": [
+      {
+        "title": { "en": "Krishna Mandir" },
+        "eyebrow": { "en": "A temple carved like a mountain" },
+        "body": { "en": "Unlike the valley's familiar timber-and-brick pagodas, Krishna Mandir rises in dressed stone. Its ascending pavilions make the temple read as one carved mass, while narrative reliefs turn the outer walls into a book that can be walked around. The monument survived the 2015 earthquake with damage and was conserved between 2016 and 2018, keeping repair visible as part of its continuing history." }
+      },
+      {
+        "title": { "en": "Vishveshvara Temple" },
+        "eyebrow": { "en": "Shiva beside the royal square" },
+        "body": { "en": "The two-tiered Vishveshvara temple sets carved timber, brick and a broad plinth against Krishna Mandir's stone verticality. Look for the paired stone elephants guarding its approach. Its post-earthquake conservation was completed in 2019, reusing historic fabric wherever it remained sound." }
+      },
+      {
+        "title": { "en": "Bhimsen Temple" },
+        "eyebrow": { "en": "The merchants' guardian" },
+        "body": { "en": "Bhimsen is honoured in Newar towns as a protector of trade and enterprise, which makes his large temple at the commercial heart of Patan more than a devotional building. Its scale marks the bond between the palace square and the market streets that keep converging here." }
+      },
+      {
+        "title": { "en": "Char Narayan and Hari Shankar" },
+        "eyebrow": { "en": "What the earthquake took" },
+        "body": { "en": "Both temples collapsed above their plinths in the 2015 earthquake. Conservators salvaged, numbered and studied the fallen carved wood and stone before rebuilding, returning surviving pieces to their earlier positions. Their restored silhouettes are therefore not replacements pretending nothing happened; they are records assembled from what endured." }
+      },
+      {
+        "title": { "en": "Sundari Chowk and Tusha Hiti" },
+        "eyebrow": { "en": "A hidden royal water world" },
+        "body": { "en": "Inside Sundari Chowk, the oval Tusha Hiti step-well descends below the palace paving. Commissioned in 1647 for royal ritual bathing, it is ringed by seventy-two carved stone figures, a protective serpent and a miniature Krishna Mandir. Water engineering, sculpture and court ritual occupy the same small, sunken space." }
+      },
+      {
+        "title": { "en": "Mul Chowk" },
+        "eyebrow": { "en": "The palace's ritual heart" },
+        "body": { "en": "Established by Srinivasa Malla in 1666, Mul Chowk remained the palace's principal ritual courtyard even after royal power left Patan. Later repairs, earthquake rebuilding and painted surfaces accumulated around that living use. Conservation kept those layers legible instead of forcing the courtyard back to a single imagined date." }
+      },
+      {
+        "title": { "en": "Keshav Narayan Chowk" },
+        "eyebrow": { "en": "A palace becomes a museum" },
+        "body": { "en": "The northern palace courtyard is named for the Keshav Narayan shrine at its centre and now houses the Patan Museum. Inscriptions show that this was a seat of power long before most surviving seventeenth-century façades. Its reuse lets the old palace remain a public place rather than a sealed royal shell." }
+      },
+      {
+        "title": { "en": "Yog Narendra Malla's pillar" },
+        "eyebrow": { "en": "The king who still watches" },
+        "body": { "en": "A gilded figure of King Yog Narendra Malla sits high on a stone pillar facing the palace, protected by a cobra canopy. The vertical monument changes how the square is read: temples are not isolated objects but part of a royal and ritual theatre whose sightlines still cross the open space." }
       }
     ],
     "timeline": [
@@ -1032,7 +1074,7 @@
     },
     "photography": "allowed",
     "summary": {
-      "en": "Changu Narayan stands on a hilltop above the Manohara valley, east of the Bagmati river. A pillar inscription of King Mānadeva, dated to his reign around 464 to 505 CE, is among the oldest surviving dated inscriptions in the Kathmandu Valley; it was first transcribed and published in 1885 by Georg Bühler and Bhagwanlal Indraji. The temple is one of seven monument zones making up the Kathmandu Valley UNESCO World Heritage property, inscribed in 1979. It was destroyed in the April 2015 earthquake; reconstruction, carried out with international technical support, was completed roughly five years later.",
+      "en": "Changu Narayan stands on a hilltop above the Manohara valley, east of the Bagmati river. A pillar inscription of King Mānadeva, dated to his reign around 464 to 505 CE, is among the oldest surviving dated inscriptions in the Kathmandu Valley; it was first transcribed and published in 1885 by Georg Bühler and Bhagwanlal Indraji. The temple is one of seven monument zones making up the Kathmandu Valley UNESCO World Heritage property, inscribed in 1979. The main temple was heavily affected by the April 2015 earthquake but did not collapse; it was conserved in place using traditional materials and skilled craftwork.",
       "ne": "चाँगुनारायण बागमती नदीको पूर्वमा, मनोहरा उपत्यकामाथिको डाँडामा अवस्थित छ। राजा मानदेवको स्तम्भ अभिलेख, जुन उनको शासनकाल करिब सन् ४६४ देखि ५०५ सम्मको मानिन्छ, काठमाडौं उपत्यकाका सबैभन्दा पुराना मितियुक्त अभिलेखमध्ये एक हो; यो सन् १८८५ मा जर्ज बुहलर र भगवानलाल इन्द्रजीले पहिलोपटक लिप्यन्तरण र प्रकाशित गरेका थिए। यो मन्दिर काठमाडौं उपत्यका विश्व सम्पदा सम्पत्तिका सात स्मारक क्षेत्रमध्ये एक हो, जुन सन् १९७९ मा सूचीकृत भएको थियो। यो सन् २०१५ को अप्रिलको भूकम्पमा भत्कियो; अन्तर्राष्ट्रिय प्राविधिक सहयोगमा भएको पुनर्निर्माण करिब पाँच वर्षपछि सम्पन्न भयो।"
     },
     "ne_review": "pending",
@@ -1073,9 +1115,31 @@
           "ne": "सन् २०१५ भूकम्प"
         },
         "value": {
-          "en": "Temple destroyed; rebuilt in about five years",
+          "en": "Temple damaged but standing; conserved in place",
           "ne": "मन्दिर भत्कियो; करिब पाँच वर्षमा पुनर्निर्माण भयो"
         }
+      }
+    ],
+    "story": [
+      {
+        "title": { "en": "Mānadeva's inscription" },
+        "eyebrow": { "en": "A reign held in stone" },
+        "body": { "en": "The fifth-century pillar inscription of King Mānadeva is among the earliest dated records surviving in the Kathmandu Valley. It anchors the hilltop sanctuary in documentary history: dynasties, devotion and political memory become readable rather than merely legendary." }
+      },
+      {
+        "title": { "en": "The main Changu Narayan temple" },
+        "eyebrow": { "en": "An old sanctuary, repeatedly renewed" },
+        "body": { "en": "The sanctuary's origins reach back far beyond the present building. The temple visible today was rebuilt after a fire in 1702 and conserved after the 2015 earthquake. Its brick, timber, gilded metal and carved struts show continuity through repair, not survival without change." }
+      },
+      {
+        "title": { "en": "Kileshwar Mahadev" },
+        "eyebrow": { "en": "Shiva within Vishnu's precinct" },
+        "body": { "en": "In the south-west corner stands the complex's only Shaivite shrine. Its four-faced lingam looks to the cardinal directions, while carved struts beneath the double roofs depict forms of Shiva. The small temple makes the larger ensemble's religious layering visible in one glance." }
+      },
+      {
+        "title": { "en": "The surrounding shrines" },
+        "eyebrow": { "en": "A complex, not one building" },
+        "body": { "en": "Chhinnamasta, Saraswati and other smaller shrines occupy the enclosure around the main temple. Read them together with the rest houses and the traditional settlement outside the gate: UNESCO protects a lived religious ensemble, not a single monument isolated on a hill." }
       }
     ],
     "timeline": [

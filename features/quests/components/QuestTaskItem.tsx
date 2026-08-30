@@ -1,6 +1,6 @@
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 
-import { Text } from '@/components/ui';
+import { Button, Text } from '@/components/ui';
 import { colors, radii, spacing } from '@/theme';
 import type {
   ConditionSeverity,
@@ -35,6 +35,8 @@ export type QuestTaskItemProps = {
   filedSeverities?: ConditionSeverity[];
   /** What was actually brought back for this task, if anything. */
   submission?: QuestSubmission;
+  /** Opens the aligned Sākṣī capture required by a vantage-backed task. */
+  onWitness?: () => void;
 };
 
 export function QuestTaskItem({
@@ -48,6 +50,7 @@ export function QuestTaskItem({
   distanceUnit = 'metric',
   filedSeverities = [],
   submission,
+  onWitness,
 }: QuestTaskItemProps) {
   return (
     <Pressable
@@ -76,7 +79,11 @@ export function QuestTaskItem({
         </Text>
         <View style={styles.typeBadge}>
           <Text variant="label" uppercase tone="muted" style={styles.typeText}>
-            {task.type.replace('_', ' ')}
+            {task.autoComplete === 'arrival'
+              ? 'COMPLETES WHEN YOU ARRIVE'
+              : task.autoComplete === 'vantage_capture'
+                ? 'COMPLETES WITH SĀKṢĪ CAPTURE'
+                : task.type.replace('_', ' ')}
           </Text>
         </View>
 
@@ -132,6 +139,19 @@ export function QuestTaskItem({
           <TaskProximity site={site} distanceM={distanceM} unit={distanceUnit} />
         ) : null}
 
+        {!completed && task.autoComplete === 'vantage_capture' && onWitness ? (
+          <Button label="Open Sākṣī vantage" variant="secondary" onPress={onWitness} />
+        ) : null}
+
+        {!completed && task.evidence === 'photo' ? (
+          <View style={styles.memoryAction}>
+            <Text variant="caption" tone="muted">
+              Capture a memory to add it to this quest and your Memories album.
+            </Text>
+            <Button label="Capture memory" variant="secondary" onPress={onToggle} />
+          </View>
+        ) : null}
+
         {task.type === 'condition_report' && reportCount > 0 ? (
           <View style={styles.filed}>
             {/*
@@ -181,6 +201,7 @@ const SEVERITY_COLOUR: Record<ConditionSeverity, string> = {
 };
 
 const styles = StyleSheet.create({
+  memoryAction: { gap: spacing.xs },
   filed: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: spacing.xs },
   evidence: { flexDirection: 'row', gap: spacing.sm, alignItems: 'flex-start' },
   thumb: {

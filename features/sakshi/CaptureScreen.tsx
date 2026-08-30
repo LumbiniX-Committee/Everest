@@ -10,7 +10,7 @@ import { Reticle } from '@/components/reticle';
 import { findSite, findVantage } from '@/data';
 import { useAlignment, useCurrentPosition } from '@/hooks';
 import { camera as cameraService, database } from '@/services';
-import { usePermission, usePreferences } from '@/store';
+import { usePermission, usePreferences, useQuests } from '@/store';
 import { colors, layers, radii, spacing } from '@/theme';
 import { formatBearing, formatDelta, formatDistance } from '@/utils';
 import type { Observation } from '@/types';
@@ -38,6 +38,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
   const site = vantage ? findSite(vantage.siteId) : undefined;
   const { state: cameraPermission, request: requestCamera, openSettings } = usePermission('camera');
   const { preferences } = usePreferences();
+  const { creditVantageObservation } = useQuests();
   const [nudgeDeg, setNudgeDeg] = useState(0);
 
   const alignment = useAlignment({ vantage, nudgeDeg });
@@ -129,6 +130,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
       };
 
       await database.insertObservation(observation);
+      await creditVantageObservation(vantage.id);
       router.replace({
         pathname: '/(main)/sakshi/observation',
         params: { observationId: observation.id },

@@ -9,7 +9,7 @@ import { GreetingMonk } from '@/components/monk';
 import { NarrationPlayer } from '@/components/site';
 import { BottomSheet, Card, Icon, Text } from '@/components/ui';
 import { reachedNewLevel, standingFor } from '@/core';
-import { findSite, findVantage, questsForSite, vantagesForSite } from '@/data';
+import { findSite, findVantage, questsForPrecinct, vantagesForSite } from '@/data';
 import {
   useCurrentPosition,
   useDemoWalk,
@@ -23,6 +23,7 @@ import { colors, radii, spacing } from '@/theme';
 
 import { BuddhaChat } from './BuddhaChat';
 import { DemoWalkPanel } from './DemoWalkPanel';
+import { DemoRoutePicker } from './DemoRoutePicker';
 import { PlacePicker } from './PlacePicker';
 import { QuestHud, RewardToast } from './QuestHud';
 import { QuestSheet } from './QuestSheet';
@@ -64,7 +65,7 @@ export function LiveMapScreen() {
 
   const { preferences } = usePreferences();
   const { summary, recognise } = usePractice();
-  const { quests, startQuest, completeTask, uncompleteTask } = useQuests();
+  const { quests, startQuest, completeTask, uncompleteTask, creditArrival } = useQuests();
   const story = useStoryProgress();
   // Mirror story into a ref so imperative code can always read the latest
   // value without being in a stale closure.
@@ -75,8 +76,25 @@ export function LiveMapScreen() {
   const [showChat, setShowChat] = useState(false);
   const [showQuests, setShowQuests] = useState(false);
   const [showPlaces, setShowPlaces] = useState(false);
+  const [showDemoRoutes, setShowDemoRoutes] = useState(false);
   const [reward, setReward] = useState<{ title: string; detail?: string } | null>(null);
   const hideReward = useCallback(() => setReward(null), []);
+
+  // A visit objective is evidence-backed by the same live position that drives
+  // the arrival story. Reaching a child monument also settles the parent
+  // complex's arrival objective, so entering Hanuman Dhoka immediately changes
+  // “Reach Kathmandu Durbar Square” to completed without asking for a tap.
+  useEffect(() => {
+    if (!atSiteId) return;
+    void creditArrival(atSiteId).then((count) => {
+      if (count > 0) {
+        setReward({
+          title: count === 1 ? '✓ Place reached' : `✓ ${count} visit objectives complete`,
+          detail: findSite(atSiteId)?.name,
+        });
+      }
+    });
+  }, [atSiteId, creditArrival]);
   /**
    * A commanded camera move.
    *
@@ -104,7 +122,7 @@ export function LiveMapScreen() {
    * with the way to them, because a quest you cannot see is not a reason to
    * walk anywhere.
    */
-  const questsHere = atSiteId ? questsForSite(atSiteId, quests) : [];
+  const questsHere = atSiteId ? questsForPrecinct(atSiteId, quests) : [];
   const questsElsewhere = quests.filter((q) => !questsHere.includes(q));
   const questsDoneHere = questsHere.filter((q) => q.progress?.status === 'completed').length;
   const questsOpenHere = questsHere.length - questsDoneHere;
@@ -396,9 +414,12 @@ export function LiveMapScreen() {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={demoMode ? 'Stop the demo walk' : 'Start the demo walk'}
-            accessibilityHint="Walks a pilgrim through Lumbini using synthetic positions"
+            accessibilityHint="Choose a heritage precinct and walk it using synthetic positions"
             accessibilityState={{ selected: demoMode }}
-            onPress={demo.toggle}
+            onPress={() => {
+              if (demoMode) demo.toggle();
+              else setShowDemoRoutes(true);
+            }}
             style={[styles.iconPill, demoMode && styles.pillActive]}
           >
             <Text variant="body">{demoMode ? '⏸' : '▶'}</Text>
@@ -599,6 +620,16 @@ export function LiveMapScreen() {
         atSiteId={atSiteId}
         canTravel={demo.active}
         onSelect={goToSite}
+      />
+
+      <DemoRoutePicker
+        visible={showDemoRoutes}
+        onClose={() => setShowDemoRoutes(false)}
+        onSelect={(walkId) => {
+          locationService.demo.selectWalk(walkId);
+          locationService.setDemoMode(true);
+          setShowDemoRoutes(false);
+        }}
       />
 
       {/*

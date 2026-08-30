@@ -73,16 +73,18 @@ export function QuestSheet({
   onWitness,
 }: QuestSheetProps) {
   const site = atSiteId ? findSite(atSiteId) : undefined;
+  const parentSite = site?.parentSiteId ? findSite(site.parentSiteId) : undefined;
+  const place = parentSite ?? site;
   const completedHere = here.filter(questDone).length;
 
   return (
     <BottomSheet
       visible={visible}
       onClose={onClose}
-      title={site ? site.name : 'Quests'}
+      title={place ? place.name : 'Quests'}
       subtitle={
         here.length > 0
-          ? `${completedHere} / ${here.length} complete`
+          ? `${site && parentSite ? `You reached ${site.name}` : 'You reached this place'} · ${completedHere} / ${here.length} complete`
           : 'Nothing to do where you are standing'
       }
       scroll
@@ -117,7 +119,7 @@ export function QuestSheet({
         {elsewhere.length > 0 ? (
           <View style={styles.section}>
             <Text variant="label" tone="muted" uppercase>
-              Elsewhere in Lumbini
+              Other heritage places
             </Text>
             {elsewhere.map((quest) => (
               <QuestRow
@@ -262,7 +264,7 @@ function QuestRow({
                     separate features — this is the seam, and the tick beside it
                     is still there for someone who cannot capture right now.
                   */}
-                  {task.evidence && task.evidence !== 'none' && homeSiteId ? (
+                  {task.autoComplete === 'vantage_capture' && homeSiteId ? (
                     <Button
                       label="Witness"
                       variant="secondary"
@@ -270,13 +272,26 @@ function QuestRow({
                       accessibilityHint="Opens Sākṣī to record what you can see here"
                     />
                   ) : null}
-                  <Button
-                    label="Mark done"
-                    variant="secondary"
-                    onPress={() => onCompleteTask(quest.id, task.id)}
-                    accessibilityHint="Records this objective as done"
-                  />
+                  {task.autoComplete === 'arrival' ? (
+                    <Text variant="caption" tone="muted">Completes when you arrive</Text>
+                  ) : task.evidence === 'photo' ? (
+                    <Button
+                      label="Capture memory"
+                      variant="secondary"
+                      onPress={() => onOpenQuest(quest.id)}
+                      accessibilityHint="Opens the separate quest memory camera"
+                    />
+                  ) : task.autoComplete !== 'vantage_capture' ? (
+                    <Button
+                      label="Mark done"
+                      variant="secondary"
+                      onPress={() => onCompleteTask(quest.id, task.id)}
+                      accessibilityHint="Records this objective as done"
+                    />
+                  ) : null}
                 </View>
+              ) : task.autoComplete ? (
+                <Text variant="caption" tone="sandstone">Verified</Text>
               ) : (
                 <Pressable
                   accessibilityRole="button"

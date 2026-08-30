@@ -158,6 +158,113 @@ export const demoSources: Source[] = [
     date: 'established 1953',
     caveat: 'Nepal’s heritage authority; led post-2015-earthquake damage assessment and reconstruction of monuments.',
   },
+  {
+    id: 'kvpt-patan',
+    kind: 'record',
+    title: 'Patan Palace and earthquake-response conservation records',
+    attribution: 'Kathmandu Valley Preservation Trust',
+    date: '2002–present',
+    url: 'https://www.kvptnepal.org/project/patan-palace-restoration-project',
+    caveat:
+      'Project records document individual palace, temple and water-system conservation campaigns, including work after the 2015 earthquake.',
+  },
+  {
+    id: 'patan-museum',
+    kind: 'record',
+    title: 'Patan Durbar Square: legend, history and palace collections',
+    attribution: 'Patan Museum, Government of Nepal',
+    url: 'https://patanmuseum.gov.np/content/22/2020/45547759/',
+    caveat:
+      'The museum distinguishes inscription-backed palace history from the multiple oral legends attached to the square.',
+  },
+  {
+    id: 'kvpt-changu',
+    kind: 'record',
+    title: 'Changu Narayan Protected Monument Zone conservation record',
+    attribution: 'Government of Nepal, Department of Archaeology; UNESCO World Heritage Centre',
+    date: 'post-2015 earthquake conservation',
+    url: 'https://whc.unesco.org/document/165534',
+    caveat:
+      'Documents the main temple’s in-place conservation and the Kileshwar Mahadev shrine after the 2015 earthquake.',
+  },
+  {
+    id: 'ldt-lumbini',
+    kind: 'record',
+    title: 'Lumbini: Sacred Garden, Master Plan and Monastic Zone',
+    attribution: 'Lumbini Development Trust, Government of Nepal',
+    date: 'updated 2026',
+    url: 'https://lumbinidevtrust.gov.np/page/2_667f837e0eee3',
+    caveat:
+      'Official visitor and site-management account. Religious traditions are identified as traditions; archaeological chronology should be checked against the cited excavation and UNESCO records.',
+  },
+  {
+    id: 'ldt-monastery-calendar',
+    kind: 'record',
+    title: 'Calendar of Buddhist Monasteries and Meditation Centres in Lumbini',
+    attribution: 'Lumbini Development Trust, Government of Nepal',
+    url: 'https://lumbinidevtrust.gov.np/upload_file/files/post/1719711730_388281290_Calendar_GLBC-%202074-final%20draft%2001.pdf',
+    caveat: 'Schedules can change; confirm current practice and visitor access with the monastery.',
+  },
+  {
+    id: 'unesco-tilaurakot',
+    kind: 'archaeological',
+    title: 'Tilaurakot–Kapilavastu, Archaeological Remains of the Ancient Shakya Kingdom',
+    attribution: 'Government of Nepal nomination evaluated by ICOMOS and UNESCO World Heritage Centre',
+    date: '2025 evaluation',
+    url: 'https://whc.unesco.org/document/221034',
+    caveat:
+      'The identification with ancient Kapilavastu is supported by a growing archaeological record; religious associations and excavated evidence are stated separately.',
+  },
+  {
+    id: 'unesco-ramagrama',
+    kind: 'record',
+    title: 'Ramagrama, the relic stupa of Lord Buddha — Tentative List record',
+    attribution: 'Department of Archaeology, Government of Nepal; UNESCO World Heritage Centre',
+    date: 'submitted 1996',
+    url: 'https://whc.unesco.org/en/tentativelists/843/',
+    caveat:
+      'Tentative-list status is not World Heritage inscription. The undisturbed relic association is a protected Buddhist tradition and should not be presented as an excavated interior finding.',
+  },
+  {
+    id: 'unesco-patan-inventory',
+    kind: 'record',
+    title: 'Patan Durbar Square Monument Zone — monuments listed in the nomination document',
+    attribution: 'Department of Archaeology, Government of Nepal; UNESCO World Heritage Centre',
+    date: 'inventory map reproduced 2017',
+    reference: 'Numbered list of 19 monuments',
+    url: 'https://whc.unesco.org/document/158654',
+    caveat:
+      'Names and dates follow the official map, including duplicate-looking Degutale and Vishwanath/Bishwanath entries. Several pin positions are map-derived approximations pending a monument survey.',
+  },
+  {
+    id: 'unesco-hanuman-dhoka-inventory',
+    kind: 'record',
+    title: 'Hanuman Dhoka Durbar Square Monument Zone — maps and post-earthquake monument records',
+    attribution: 'Department of Archaeology, Government of Nepal; UNESCO World Heritage Centre',
+    date: '2017–2025',
+    reference: 'Official monument-zone maps and rehabilitation tables',
+    url: 'https://whc.unesco.org/document/223752',
+    caveat:
+      'The official records mix whole monuments, palace wings and small shrine groups. Child pins in the app are map-derived approximations until a field survey supplies exact centroids.',
+  },
+  {
+    id: 'ntb-kathmandu-durbar',
+    kind: 'record',
+    title: 'Kathmandu Durbar Square visitor and monument guide',
+    attribution: 'Nepal Tourism Board, Government of Nepal',
+    url: 'https://ntb.gov.np/kathmandu-durbar-square',
+    caveat:
+      'The board describes over fifty temples in the vicinity. Opening hours, festival access and photography rules can change and must be followed on site.',
+  },
+  {
+    id: 'hanuman-dhoka-museum',
+    kind: 'record',
+    title: 'Hanumandhoka Durbar Museum history and conservation record',
+    attribution: 'Hanumandhoka Durbar Museum Development Committee, Government of Nepal',
+    url: 'https://hanumandhokamuseum.gov.np/en/pages/2/70332091',
+    caveat:
+      'Official institutional history of the palace and monuments. Museum access and interior photography remain subject to current posted rules.',
+  },
 ];
 
 export function findSource(id: string): Source | undefined {

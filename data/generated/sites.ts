@@ -44,6 +44,23 @@ export const demoSites: HeritageSite[] = [
         "value": "Interior restricted"
       }
     ],
+    "story": [
+      {
+        "title": "Marker Stone and Nativity Sculpture",
+        "eyebrow": "The place inside the shelter",
+        "body": "Inside the temple, two objects focus the birth tradition. The small Marker Stone identifies the venerated nativity point, while the worn red-sandstone Nativity Sculpture pictures Maya Devi holding a tree branch as the infant Siddhartha is received. They are protected together because devotion and archaeological evidence meet in the same confined space."
+      },
+      {
+        "title": "Shrines beneath shrines",
+        "eyebrow": "A site repeatedly rebuilt",
+        "body": "The visible brick walls are not one building from one date. Excavation found successive construction phases, including a Mauryan brick temple over earlier brick and timber remains. The cross-wall plan and circumambulatory passage show that pilgrims kept returning and rebuilding around the place they revered."
+      },
+      {
+        "title": "The protective temple",
+        "eyebrow": "Conservation is part of the story",
+        "body": "The present white shelter was completed by the Lumbini Development Trust in 2003. Its purpose is not to imitate an ancient temple but to let visitors see the remains while limiting damage. Water, humidity and heavy visitation still make the archaeology inside exceptionally difficult to protect."
+      }
+    ],
     "dhammaLinks": [
       "dn14",
       "mn123"
@@ -102,6 +119,23 @@ export const demoSites: HeritageSite[] = [
         "value": "1896"
       }
     ],
+    "story": [
+      {
+        "title": "The inscription",
+        "eyebrow": "A visit fixed in stone",
+        "body": "The Brahmi inscription records Emperor Ashoka's pilgrimage in his twentieth regnal year and identifies Lumbini as the Buddha's birthplace. It also records fiscal relief for the village. Because the words belong to a dated royal visit, the pillar is the earliest firmly dated written evidence tied to this ground."
+      },
+      {
+        "title": "The missing capital",
+        "eyebrow": "Read what is absent",
+        "body": "The sandstone shaft survives, but the capital once mounted above it does not. Historical accounts associate the lost element with a horse. The famous lions belong to the different Ashokan pillar at Sarnath; keeping the monuments separate is part of reading this one accurately."
+      },
+      {
+        "title": "Rediscovery in 1896",
+        "eyebrow": "Lumbini becomes readable again",
+        "body": "Khadga Shamsher Rana and Alois Führer exposed the pillar in 1896, and the inscription made the identification of Lumbini possible. P. C. Mukherji returned in 1899 to survey the pillar, temple mound and surrounding remains, creating an early record against which later change can be judged."
+      }
+    ],
     "dhammaLinks": [
       "dn16"
     ],
@@ -151,6 +185,23 @@ export const demoSites: HeritageSite[] = [
         "value": "Approximate, pending field survey"
       }
     ],
+    "story": [
+      {
+        "title": "The sacred bathing tradition",
+        "eyebrow": "Water beside the birthplace",
+        "body": "Buddhist tradition holds that Maya Devi bathed here before the birth and that the newborn Siddhartha received his first purification bath in the pond. Early Chinese pilgrims also described a pool near the birthplace, binding water, memory and pilgrimage together."
+      },
+      {
+        "title": "A pond reshaped",
+        "eyebrow": "The visible form is not timeless",
+        "body": "The pond was historically described as oval. During work led by Keshar Shumsher in the 1930s it was remodelled with the square brick embankment and descending steps seen today. The sacred location is old; its architectural edge records modern intervention."
+      },
+      {
+        "title": "Seasonal water",
+        "eyebrow": "Stillness requires maintenance",
+        "body": "The reflective surface depends on drainage, rainfall and regular care. Silt and monsoon inflow alter what a visitor sees, so repeat photographs of the steps and waterline can document real seasonal and conservation change without confusing it with legend."
+      }
+    ],
     "dhammaLinks": [
       "mn123",
       "dn14"
@@ -196,6 +247,23 @@ export const demoSites: HeritageSite[] = [
         "value": "Inside the temple, restricted"
       }
     ],
+    "story": [
+      {
+        "title": "A small stone with a precise claim",
+        "eyebrow": "The nativity point",
+        "body": "The Marker Stone is a conglomerate slab measuring roughly seventy by forty centimetres. Archaeologists identify it with the exact point revered as the Buddha's birthplace. Its modest scale is why it is enclosed and viewed from the temple walkway rather than approached directly."
+      },
+      {
+        "title": "Seven brick layers",
+        "eyebrow": "Found within an older platform",
+        "body": "Excavation between 1992 and 1996 found the stone on a platform of seven brick layers. Its position below the Nativity Sculpture and within successive temple remains connects a physical marker with centuries of rebuilding around it."
+      },
+      {
+        "title": "Protected inside the temple",
+        "eyebrow": "Access has limits",
+        "body": "The stone lies inside a sensitive archaeological shelter. Photography and close access may be restricted, so the honest observation is sometimes a written record made from the permitted walkway rather than an image taken by crossing a conservation boundary."
+      }
+    ],
     "dhammaLinks": [
       "mn123",
       "dn14"
@@ -237,6 +305,23 @@ export const demoSites: HeritageSite[] = [
         "value": "16 votive stupas, gone by a later visit"
       }
     ],
+    "story": [
+      {
+        "title": "Monasteries near the birthplace",
+        "eyebrow": "Pilgrims stayed as well as prayed",
+        "body": "Brick foundations south and southeast of the Maya Devi Temple belong to monasteries built in overlapping phases. Their density shows how strongly religious communities wanted to live close to the birthplace from the Mauryan through later periods."
+      },
+      {
+        "title": "Votive, relic and Dhamma stupas",
+        "eyebrow": "Many forms of commemoration",
+        "body": "The Lumbini Development Trust records thirty-one excavated stupas in the Sacred Garden: twenty-nine votive stupas, one relic stupa and one Dhamma stupa. Their square, rectangular and circular bases preserve different acts of dedication across centuries."
+      },
+      {
+        "title": "The remains that disappeared",
+        "eyebrow": "Why repeatable records matter",
+        "body": "Earlier investigators documented structures that later researchers could no longer trace, including a group of small votive stupas. A ruin can vanish through weather, rebuilding or poor care without one dramatic event; matched observations make that gradual loss visible."
+      }
+    ],
     "dhammaLinks": [],
     "sourceTier": "archaeological",
     "sourceIds": [
@@ -271,10 +356,27 @@ export const demoSites: HeritageSite[] = [
         "value": "Gold-and-white stupa"
       }
     ],
+    "story": [
+      {
+        "title": "The golden pagoda",
+        "eyebrow": "Myanmar architecture in Lumbini",
+        "body": "The gold-and-white central pagoda gives the complex its strongest identity and recalls Myanmar's stupa tradition. It is a modern act of international devotion at the Buddha's birthplace, not an excavated ancient monument."
+      },
+      {
+        "title": "The East Monastic Zone",
+        "eyebrow": "A Theravada neighbourhood",
+        "body": "The monastery occupies the Theravada side of Kenzo Tange's master plan. The canal separates this eastern zone from the Mahayana monasteries to the west while allowing each community to build in its own architectural language."
+      },
+      {
+        "title": "A living monastery",
+        "eyebrow": "Practice, not scenery",
+        "body": "This remains an active religious place used for worship, teaching and pilgrimage. Visitors should read opening hours and activity at the gate, keep voices low, and treat any ritual in progress as the life of the monastery rather than a performance."
+      }
+    ],
     "dhammaLinks": [],
     "sourceTier": "documented",
     "sourceIds": [
-      "unesco-1997"
+      "ldt-lumbini"
     ],
     "condition": "stable",
     "vantageIds": []
@@ -304,10 +406,27 @@ export const demoSites: HeritageSite[] = [
         "value": "Classical Chinese"
       }
     ],
+    "story": [
+      {
+        "title": "A walled Chinese complex",
+        "eyebrow": "Courtyards, roofs and thresholds",
+        "body": "Tiled roofs, axial courtyards, prayer halls and residential cells form a compound rather than a single temple object. Moving through successive gates is part of how the architecture changes a busy pilgrimage route into a quieter interior."
+      },
+      {
+        "title": "The West Monastic Zone",
+        "eyebrow": "Mahayana traditions together",
+        "body": "The Chinese monastery stands among the Mahayana and Vajrayana foundations west of the central canal. Its national architectural vocabulary sits beside Korean, Vietnamese, Tibetan and other communities within the shared master-plan grid."
+      },
+      {
+        "title": "Built for continuing practice",
+        "eyebrow": "A modern heritage layer",
+        "body": "The Buddhist Association of China created the complex for prayer, meditation and visiting pilgrims. Its significance comes from the modern international community gathered at Lumbini, so its present use is as important to record as its façades."
+      }
+    ],
     "dhammaLinks": [],
     "sourceTier": "documented",
     "sourceIds": [
-      "unesco-1997"
+      "ldt-lumbini"
     ],
     "condition": "stable",
     "vantageIds": []
@@ -337,10 +456,27 @@ export const demoSites: HeritageSite[] = [
         "value": "Temple & pilgrim guesthouse"
       }
     ],
+    "story": [
+      {
+        "title": "Dae Sung Shakya Temple",
+        "eyebrow": "A Korean foundation at the birthplace",
+        "body": "The large hall presents Korean Buddhist architecture within Lumbini's international monastic landscape. It should be read as a contemporary monastery dedicated at an ancient pilgrimage destination, not as an ancient structure itself."
+      },
+      {
+        "title": "Temple and guesthouse",
+        "eyebrow": "Hospitality is part of pilgrimage",
+        "body": "The complex combines worship space with accommodation for pilgrims. That pairing continues an old function of Buddhist monasteries: making long-distance religious travel possible through shelter, shared routine and community."
+      },
+      {
+        "title": "Across the central canal",
+        "eyebrow": "One voice in a global plan",
+        "body": "Its place in the western zone puts a Korean architectural voice beside other Mahayana communities. The differences between neighbouring compounds are intentional evidence of Buddhism's international reach."
+      }
+    ],
     "dhammaLinks": [],
     "sourceTier": "documented",
     "sourceIds": [
-      "unesco-1997"
+      "ldt-lumbini"
     ],
     "condition": "stable",
     "vantageIds": []
@@ -370,10 +506,28 @@ export const demoSites: HeritageSite[] = [
         "value": "Modelled on Swayambhu"
       }
     ],
+    "story": [
+      {
+        "title": "Mahapajapati Gotami",
+        "eyebrow": "The woman named by the temple",
+        "body": "The temple honours the Buddha's aunt and foster-mother, remembered in Buddhist tradition as the first woman admitted to the ordained community. Her name connects this modern nunnery with the history of women's monastic life."
+      },
+      {
+        "title": "The central stupa",
+        "eyebrow": "A Kathmandu form in Lumbini",
+        "body": "The central stupa takes Swayambhu in Kathmandu as its model. Its dome and watchful painted eyes bring a familiar Nepali Buddhist form into the more recent international monastic zone."
+      },
+      {
+        "title": "Daily practice",
+        "eyebrow": "A nunnery that keeps time",
+        "body": "The Lumbini Development Trust's monastery calendar records daily periods of puja, chanting, sutra recitation and meditation here. These routines make the temple a living institution; visiting respectfully means allowing that timetable to lead."
+      }
+    ],
     "dhammaLinks": [],
     "sourceTier": "documented",
     "sourceIds": [
-      "unesco-1997"
+      "ldt-lumbini",
+      "ldt-monastery-calendar"
     ],
     "condition": "stable",
     "vantageIds": []
@@ -403,10 +557,27 @@ export const demoSites: HeritageSite[] = [
         "value": "North end of the Tange axis"
       }
     ],
+    "story": [
+      {
+        "title": "A Japanese peace stupa",
+        "eyebrow": "Devotion expressed as a white dome",
+        "body": "The Nipponzan-Myōhōji order built this modern stupa as part of its international peace-pagoda movement. Its white dome and gilded Buddha figures make peace, rather than royal patronage or excavation, the monument's central theme."
+      },
+      {
+        "title": "The end of the master-plan axis",
+        "eyebrow": "A destination shaped by distance",
+        "body": "The pagoda stands north of the Sacred Garden beyond the monastic zone. Reaching it along the canal and central axis turns Kenzo Tange's plan into a bodily experience: the birthplace is left behind, crossed through international monasteries, and answered by an open monument to peace."
+      },
+      {
+        "title": "A contemporary pilgrimage landmark",
+        "eyebrow": "Modern, sacred and still changing",
+        "body": "Unlike the excavated remains at Maya Devi Temple, the pagoda belongs to Lumbini's modern development. Its condition can be observed directly in the white surface, drainage, paving and visitor pressure without assigning ancient age to it."
+      }
+    ],
     "dhammaLinks": [],
     "sourceTier": "documented",
     "sourceIds": [
-      "unesco-1997"
+      "ldt-lumbini"
     ],
     "condition": "stable",
     "vantageIds": []
@@ -440,13 +611,37 @@ export const demoSites: HeritageSite[] = [
         "value": "Approximate, pending verification"
       }
     ],
+    "story": [
+      {
+        "title": "The fortified citadel",
+        "eyebrow": "An early city behind ramparts",
+        "body": "Tilaurakot preserves a fortified settlement with earthen ramparts, brick defences and gateways. Archaeology describes an urban place that developed around the sixth century BCE, rather than a single palace building isolated in a field."
+      },
+      {
+        "title": "A city on a grid",
+        "eyebrow": "Streets beneath the ground",
+        "body": "Geophysical survey and targeted excavation reveal streets, residential areas and a central walled complex arranged within a planned settlement. Much remains below ground, so the map of buried features is as important as the masonry currently exposed."
+      },
+      {
+        "title": "Life beyond the walls",
+        "eyebrow": "Industry, monasteries and suburbs",
+        "body": "Associated remains extend outside the citadel, including industrial and religious areas. This wider archaeological landscape prevents the story of Kapilavastu from collapsing into one royal enclosure."
+      },
+      {
+        "title": "History and identification",
+        "eyebrow": "Evidence before certainty",
+        "body": "Tilaurakot is widely identified with the Shakya capital where Siddhartha spent his early life. The Buddhist association gives the place exceptional meaning, while excavation, survey and material chronology provide the evidence by which that identification must continue to be tested."
+      }
+    ],
     "dhammaLinks": [
       "dn16",
       "mn26"
     ],
     "sourceTier": "archaeological",
     "sourceIds": [
-      "unesco-1997"
+      "unesco-tilaurakot",
+      "doa-nepal",
+      "mukherji-1901"
     ],
     "condition": "stable",
     "vantageIds": []
@@ -480,12 +675,30 @@ export const demoSites: HeritageSite[] = [
         "value": "Approximate, pending verification"
       }
     ],
+    "story": [
+      {
+        "title": "The undisturbed relic tradition",
+        "eyebrow": "One stupa said to remain unopened",
+        "body": "Ramagrama is venerated as the only one of the original eight stupas containing the Buddha's bodily relics that was not opened for redistribution under Ashoka. That claim belongs to Buddhist tradition; the mound's undisturbed character is central to how the place is protected and approached."
+      },
+      {
+        "title": "An earthen mound enlarged in brick",
+        "eyebrow": "A monument built through layers",
+        "body": "UNESCO's tentative-list record describes a stupa originating in the sixth century BCE and later enlarged by brick encasement. The visible mound is therefore not empty landscape but the protected outer form of a layered monument."
+      },
+      {
+        "title": "The surrounding complex",
+        "eyebrow": "More than the central mound",
+        "body": "The protected site includes remains associated with monasteries around the stupa. Geophysical survey helps investigators examine this wider setting without opening the relic mound, allowing research and religious restraint to coexist."
+      }
+    ],
     "dhammaLinks": [
       "dn16"
     ],
     "sourceTier": "archaeological",
     "sourceIds": [
-      "unesco-1997"
+      "unesco-ramagrama",
+      "doa-nepal"
     ],
     "condition": "stable",
     "vantageIds": []
@@ -494,8 +707,8 @@ export const demoSites: HeritageSite[] = [
     "id": "patan-durbar-square",
     "name": "Patan Durbar Square",
     "nameNepali": "पाटन दरबार क्षेत्र",
-    "summary": "Patan Durbar Square is the royal square of the Malla kings of Lalitpur, most of its present form …",
-    "description": "Patan Durbar Square is the royal square of the Malla kings of Lalitpur, most of its present form built in the 17th century. King Siddhi Narsingh Malla built the Krishna Mandir in 1667 and the Vishwanath Temple in 1627; his son Srinivasa Malla built the Bhimsen Temple in 1680. The Taleju Bhawani Temple was first built in 1640 and rebuilt in 1667. The square is one of seven monument zones making up the Kathmandu Valley UNESCO World Heritage property, inscribed in 1979. It was heavily damaged in the April 2015 earthquake, when the Hari Shankar Temple collapsed completely; restoration was completed in 2023, eight years later. Manga Hiti, a 6th-century stone water spout, stands at the square's southern corner.",
+    "summary": "Patan Durbar Square is the royal square of the Malla kings of Lalitpur, with most of its survivin…",
+    "description": "Patan Durbar Square is the royal square of the Malla kings of Lalitpur, with most of its surviving palace and temple ensemble shaped between the 16th and 18th centuries. Krishna Mandir, Vishveshvara, Bhimsen, Char Narayan, Hari Shankar and the palace courtyards make the open square a dense record of Newar stone, brick, timber and metal craftsmanship. The square is one of seven monument zones making up the Kathmandu Valley UNESCO World Heritage property, inscribed in 1979. It was heavily damaged in the April 2015 earthquake; conservators subsequently rebuilt collapsed monuments and repaired damaged ones while reusing salvaged historic fabric. Manga Hiti, a 6th-century stone water spout, stands at the square's southern corner.",
     "coordinate": {
       "latitude": 27.673445,
       "longitude": 85.325035
@@ -512,7 +725,7 @@ export const demoSites: HeritageSite[] = [
       },
       {
         "label": "Krishna Mandir",
-        "value": "Built 1667 by Siddhi Narsingh Malla"
+        "value": "17th century, under Siddhi Narsingh Malla"
       },
       {
         "label": "UNESCO status",
@@ -523,10 +736,54 @@ export const demoSites: HeritageSite[] = [
         "value": "Hari Shankar Temple collapsed; restored 2023"
       }
     ],
+    "story": [
+      {
+        "title": "Krishna Mandir",
+        "eyebrow": "A temple carved like a mountain",
+        "body": "Unlike the valley's familiar timber-and-brick pagodas, Krishna Mandir rises in dressed stone. Its ascending pavilions make the temple read as one carved mass, while narrative reliefs turn the outer walls into a book that can be walked around. The monument survived the 2015 earthquake with damage and was conserved between 2016 and 2018, keeping repair visible as part of its continuing history."
+      },
+      {
+        "title": "Vishveshvara Temple",
+        "eyebrow": "Shiva beside the royal square",
+        "body": "The two-tiered Vishveshvara temple sets carved timber, brick and a broad plinth against Krishna Mandir's stone verticality. Look for the paired stone elephants guarding its approach. Its post-earthquake conservation was completed in 2019, reusing historic fabric wherever it remained sound."
+      },
+      {
+        "title": "Bhimsen Temple",
+        "eyebrow": "The merchants' guardian",
+        "body": "Bhimsen is honoured in Newar towns as a protector of trade and enterprise, which makes his large temple at the commercial heart of Patan more than a devotional building. Its scale marks the bond between the palace square and the market streets that keep converging here."
+      },
+      {
+        "title": "Char Narayan and Hari Shankar",
+        "eyebrow": "What the earthquake took",
+        "body": "Both temples collapsed above their plinths in the 2015 earthquake. Conservators salvaged, numbered and studied the fallen carved wood and stone before rebuilding, returning surviving pieces to their earlier positions. Their restored silhouettes are therefore not replacements pretending nothing happened; they are records assembled from what endured."
+      },
+      {
+        "title": "Sundari Chowk and Tusha Hiti",
+        "eyebrow": "A hidden royal water world",
+        "body": "Inside Sundari Chowk, the oval Tusha Hiti step-well descends below the palace paving. Commissioned in 1647 for royal ritual bathing, it is ringed by seventy-two carved stone figures, a protective serpent and a miniature Krishna Mandir. Water engineering, sculpture and court ritual occupy the same small, sunken space."
+      },
+      {
+        "title": "Mul Chowk",
+        "eyebrow": "The palace's ritual heart",
+        "body": "Established by Srinivasa Malla in 1666, Mul Chowk remained the palace's principal ritual courtyard even after royal power left Patan. Later repairs, earthquake rebuilding and painted surfaces accumulated around that living use. Conservation kept those layers legible instead of forcing the courtyard back to a single imagined date."
+      },
+      {
+        "title": "Keshav Narayan Chowk",
+        "eyebrow": "A palace becomes a museum",
+        "body": "The northern palace courtyard is named for the Keshav Narayan shrine at its centre and now houses the Patan Museum. Inscriptions show that this was a seat of power long before most surviving seventeenth-century façades. Its reuse lets the old palace remain a public place rather than a sealed royal shell."
+      },
+      {
+        "title": "Yog Narendra Malla's pillar",
+        "eyebrow": "The king who still watches",
+        "body": "A gilded figure of King Yog Narendra Malla sits high on a stone pillar facing the palace, protected by a cobra canopy. The vertical monument changes how the square is read: temples are not isolated objects but part of a royal and ritual theatre whose sightlines still cross the open space."
+      }
+    ],
     "dhammaLinks": [],
     "sourceTier": "archaeological",
     "sourceIds": [
       "unesco-kv-1979",
+      "kvpt-patan",
+      "patan-museum",
       "slusser-1982",
       "doa-nepal"
     ],
@@ -541,7 +798,7 @@ export const demoSites: HeritageSite[] = [
     "name": "Changu Narayan",
     "nameNepali": "चाँगुनारायण",
     "summary": "Changu Narayan stands on a hilltop above the Manohara valley, east of the Bagmati river.",
-    "description": "Changu Narayan stands on a hilltop above the Manohara valley, east of the Bagmati river. A pillar inscription of King Mānadeva, dated to his reign around 464 to 505 CE, is among the oldest surviving dated inscriptions in the Kathmandu Valley; it was first transcribed and published in 1885 by Georg Bühler and Bhagwanlal Indraji. The temple is one of seven monument zones making up the Kathmandu Valley UNESCO World Heritage property, inscribed in 1979. It was destroyed in the April 2015 earthquake; reconstruction, carried out with international technical support, was completed roughly five years later.",
+    "description": "Changu Narayan stands on a hilltop above the Manohara valley, east of the Bagmati river. A pillar inscription of King Mānadeva, dated to his reign around 464 to 505 CE, is among the oldest surviving dated inscriptions in the Kathmandu Valley; it was first transcribed and published in 1885 by Georg Bühler and Bhagwanlal Indraji. The temple is one of seven monument zones making up the Kathmandu Valley UNESCO World Heritage property, inscribed in 1979. The main temple was heavily affected by the April 2015 earthquake but did not collapse; it was conserved in place using traditional materials and skilled craftwork.",
     "coordinate": {
       "latitude": 27.716347,
       "longitude": 85.427897
@@ -566,13 +823,36 @@ export const demoSites: HeritageSite[] = [
       },
       {
         "label": "2015 earthquake",
-        "value": "Temple destroyed; rebuilt in about five years"
+        "value": "Temple damaged but standing; conserved in place"
+      }
+    ],
+    "story": [
+      {
+        "title": "Mānadeva's inscription",
+        "eyebrow": "A reign held in stone",
+        "body": "The fifth-century pillar inscription of King Mānadeva is among the earliest dated records surviving in the Kathmandu Valley. It anchors the hilltop sanctuary in documentary history: dynasties, devotion and political memory become readable rather than merely legendary."
+      },
+      {
+        "title": "The main Changu Narayan temple",
+        "eyebrow": "An old sanctuary, repeatedly renewed",
+        "body": "The sanctuary's origins reach back far beyond the present building. The temple visible today was rebuilt after a fire in 1702 and conserved after the 2015 earthquake. Its brick, timber, gilded metal and carved struts show continuity through repair, not survival without change."
+      },
+      {
+        "title": "Kileshwar Mahadev",
+        "eyebrow": "Shiva within Vishnu's precinct",
+        "body": "In the south-west corner stands the complex's only Shaivite shrine. Its four-faced lingam looks to the cardinal directions, while carved struts beneath the double roofs depict forms of Shiva. The small temple makes the larger ensemble's religious layering visible in one glance."
+      },
+      {
+        "title": "The surrounding shrines",
+        "eyebrow": "A complex, not one building",
+        "body": "Chhinnamasta, Saraswati and other smaller shrines occupy the enclosure around the main temple. Read them together with the rest houses and the traditional settlement outside the gate: UNESCO protects a lived religious ensemble, not a single monument isolated on a hill."
       }
     ],
     "dhammaLinks": [],
     "sourceTier": "archaeological",
     "sourceIds": [
       "unesco-kv-1979",
+      "kvpt-changu",
       "changu-manadeva-inscription",
       "doa-nepal"
     ],
@@ -584,6 +864,8 @@ export const demoSites: HeritageSite[] = [
   },
   {
     "id": "manga-hiti",
+    "parentSiteId": "patan-durbar-square",
+    "parentOrder": 17,
     "name": "Manga Hiti",
     "nameNepali": "मंग हिटी",
     "summary": "Manga Hiti is a dhunge dhara, a carved stone water spout fed by an underground infiltration chamb…",
@@ -615,6 +897,28 @@ export const demoSites: HeritageSite[] = [
         "value": "Not on a continuous schedule"
       }
     ],
+    "story": [
+      {
+        "title": "The carved spouts",
+        "eyebrow": "Water emerges as sculpture",
+        "body": "Manga Hiti is entered by descending below street level toward carved stone outlets. The spouts turn an underground supply system into a public architectural place where water collection, ritual and everyday meeting share the same steps."
+      },
+      {
+        "title": "A Licchavi-period system",
+        "eyebrow": "Built in 570 CE",
+        "body": "The hiti is dated to 570 CE and is regarded as the oldest working stone-spout system on record in the valley. Its importance lies not only in the carved face but in the infiltration chamber and conduits that allow gravity to deliver water."
+      },
+      {
+        "title": "One node in a valley network",
+        "eyebrow": "Infrastructure as heritage",
+        "body": "Stone spouts once formed a distributed water network across Kathmandu Valley towns. A 2019 survey recorded hundreds, but also many lost systems and many surviving spouts without flow. Manga Hiti must therefore be read as part of a vulnerable network, not an isolated ornament."
+      },
+      {
+        "title": "Watch the waterline",
+        "eyebrow": "A condition story still unfolding",
+        "body": "The app has no continuous official flow record for Manga Hiti. A repeat photograph from the same step, paired with a dated note on whether each outlet is running, can build evidence without pretending that one visit describes the whole year."
+      }
+    ],
     "dhammaLinks": [],
     "sourceTier": "archaeological",
     "sourceIds": [
@@ -624,6 +928,3477 @@ export const demoSites: HeritageSite[] = [
     "vantageIds": [
       "manga-hiti.v1",
       "manga-hiti.v2"
+    ]
+  },
+  {
+    "id": "patan-bhai-dega",
+    "parentSiteId": "patan-durbar-square",
+    "parentOrder": 1,
+    "name": "Bhai Dega Temple",
+    "summary": "Bhai Dega is the southernmost early temple in the official nineteen-monument Patan inventory.",
+    "description": "Bhai Dega is the southernmost early temple in the official nineteen-monument Patan inventory. Dated 1477 on the nomination map, it carries an older architectural layer into a square whose dominant surviving image is often associated with the seventeenth century.",
+    "coordinate": {
+      "latitude": 27.6731418,
+      "longitude": 85.324608
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 12,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Official inventory",
+        "value": "Patan monument 1 of 19"
+      },
+      {
+        "label": "Date",
+        "value": "1477"
+      },
+      {
+        "label": "Type",
+        "value": "Tiered temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "OSM point; verify by field survey"
+      }
+    ],
+    "story": [
+      {
+        "title": "An earlier Patan",
+        "eyebrow": "Before the great seventeenth-century works",
+        "body": "The official inventory dates Bhai Dega to 1477. Its place in the sequence matters because the royal square was not created in one campaign; later kings embellished ground that already held important shrines."
+      },
+      {
+        "title": "Read the tiered form",
+        "eyebrow": "Brick, timber and rooflines",
+        "body": "Look from plinth to carved timber supports and rising roofs. The temple's significance is architectural and spatial: it marks the southern approach and begins the northward rhythm of monuments across the square."
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-patan-inventory",
+      "kvpt-patan",
+      "patan-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": []
+  },
+  {
+    "id": "patan-lakshminarayan-temple",
+    "parentSiteId": "patan-durbar-square",
+    "parentOrder": 2,
+    "name": "Lakshminarayan Temple",
+    "summary": "The seventeenth-century Lakshminarayan Temple is listed immediately south of the palace courtyards.",
+    "description": "The seventeenth-century Lakshminarayan Temple is listed immediately south of the palace courtyards. Its dedication joins Lakshmi and Narayan and places Vaishnava worship within the dense royal and civic ensemble.",
+    "coordinate": {
+      "latitude": 27.67306,
+      "longitude": 85.32478
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 12,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Official inventory",
+        "value": "Patan monument 2 of 19"
+      },
+      {
+        "label": "Date",
+        "value": "17th century"
+      },
+      {
+        "label": "Type",
+        "value": "Temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Approximate from official monument map"
+      }
+    ],
+    "story": [
+      {
+        "title": "Lakshmi and Narayan",
+        "eyebrow": "Prosperity beside preservation",
+        "body": "The paired dedication brings the goddess Lakshmi together with Narayan, a form of Vishnu. In the royal square that association linked worship, prosperity and the ordering of civic life."
+      },
+      {
+        "title": "A temple in an ensemble",
+        "eyebrow": "No monument stands alone",
+        "body": "Its scale is quieter than Krishna Mandir, but that contrast is part of Patan's design. Minor and major shrines share sightlines, processions and daily offerings across the same paved ground."
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-patan-inventory",
+      "kvpt-patan",
+      "patan-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": []
+  },
+  {
+    "id": "patan-sundari-chowk",
+    "parentSiteId": "patan-durbar-square",
+    "parentOrder": 3,
+    "name": "Sundari Chowk",
+    "summary": "Sundari Chowk is the palace's southern royal courtyard, dated 1670 in the official inventory.",
+    "description": "Sundari Chowk is the palace's southern royal courtyard, dated 1670 in the official inventory. Its most extraordinary feature is Tusha Hiti, a sunken ritual bath where sculpture, water engineering and court ceremony occupy one enclosed space.",
+    "coordinate": {
+      "latitude": 27.6727257,
+      "longitude": 85.3251314
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 12,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Official inventory",
+        "value": "Patan monument 3 of 19"
+      },
+      {
+        "label": "Date",
+        "value": "1670"
+      },
+      {
+        "label": "Type",
+        "value": "Palace courtyard"
+      },
+      {
+        "label": "Coordinate",
+        "value": "OSM centre; verify by palace survey"
+      }
+    ],
+    "story": [
+      {
+        "title": "The royal courtyard",
+        "eyebrow": "An inward palace world",
+        "body": "The brick façades turn away from the open square and frame a controlled royal interior. Carved doors and windows make the courtyard ceremonial before the visitor even reaches its sunken water monument."
+      },
+      {
+        "title": "Tusha Hiti",
+        "eyebrow": "Ritual water below the paving",
+        "body": "The oval bath descends beneath the courtyard, encircled by carved deities, a protective serpent and a miniature stone Krishna temple. It is not merely decoration: sculpture was built around the movement and meaning of water."
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-patan-inventory",
+      "kvpt-patan",
+      "patan-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": []
+  },
+  {
+    "id": "patan-lohari-hiti",
+    "parentSiteId": "patan-durbar-square",
+    "parentOrder": 4,
+    "name": "Lohari Hiti",
+    "summary": "Lohari Hiti, dated 1646 in the official inventory, belongs to the palace water landscape.",
+    "description": "Lohari Hiti, dated 1646 in the official inventory, belongs to the palace water landscape. Its inclusion as a monument recognizes that conduits and ritual water places are as central to Patan's heritage as temples and palace façades.",
+    "coordinate": {
+      "latitude": 27.67286,
+      "longitude": 85.32518
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 12,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Official inventory",
+        "value": "Patan monument 4 of 19"
+      },
+      {
+        "label": "Date",
+        "value": "1646"
+      },
+      {
+        "label": "Type",
+        "value": "Stone water conduit"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Approximate from official monument map"
+      }
+    ],
+    "story": [
+      {
+        "title": "Water as architecture",
+        "eyebrow": "Infrastructure made visible",
+        "body": "A hiti reveals the public end of an underground hydraulic system. Steps, spout and basin turn water delivery into a social and ritual place rather than hiding it as a utility."
+      },
+      {
+        "title": "A vulnerable system",
+        "eyebrow": "The monument continues underground",
+        "body": "The visible stone survives only if channels, infiltration and drainage continue to work. A dry spout may record failure far beyond the carved outlet, so condition observation must include flow as well as masonry."
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-patan-inventory",
+      "kvpt-patan",
+      "patan-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": []
+  },
+  {
+    "id": "patan-keshav-narayan-chowk",
+    "parentSiteId": "patan-durbar-square",
+    "parentOrder": 5,
+    "name": "Keshav Narayan Chowk",
+    "summary": "Keshav Narayan Chowk is the northern palace courtyard and the principal home of Patan Museum.",
+    "description": "Keshav Narayan Chowk is the northern palace courtyard and the principal home of Patan Museum. The official map dates the present ensemble to 1723, while an inscription shows that the palace area held royal importance centuries earlier.",
+    "coordinate": {
+      "latitude": 27.6734438,
+      "longitude": 85.3253354
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 12,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Official inventory",
+        "value": "Patan monument 5 of 19"
+      },
+      {
+        "label": "Date",
+        "value": "1723"
+      },
+      {
+        "label": "Type",
+        "value": "Palace courtyard"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Patan Museum point; courtyard centre approximate"
+      }
+    ],
+    "story": [
+      {
+        "title": "A shrine at the centre",
+        "eyebrow": "The courtyard's name and axis",
+        "body": "The Keshav Narayan shrine organizes the court around a sacred centre. Palace rooms face inward toward it, binding royal residence, worship and controlled circulation."
+      },
+      {
+        "title": "Palace becomes museum",
+        "eyebrow": "A historic building kept public",
+        "body": "The restored courtyard now houses Patan Museum's collection of sacred art. Reuse keeps the palace inhabited and interpretable instead of turning it into an empty architectural shell."
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-patan-inventory",
+      "kvpt-patan",
+      "patan-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": []
+  },
+  {
+    "id": "patan-vishwanath-1666",
+    "parentSiteId": "patan-durbar-square",
+    "parentOrder": 6,
+    "name": "Vishwanath Temple (1666)",
+    "summary": "The official inventory separately lists a Vishwanath Temple dated 1666.",
+    "description": "The official inventory separately lists a Vishwanath Temple dated 1666. Dedicated to Shiva as Lord of the Universe, it contributes a tiered brick-and-timber form to the square's mixture of temple architectures.",
+    "coordinate": {
+      "latitude": 27.6736995,
+      "longitude": 85.3251787
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 12,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Official inventory",
+        "value": "Patan monument 6 of 19"
+      },
+      {
+        "label": "Date",
+        "value": "1666"
+      },
+      {
+        "label": "Type",
+        "value": "Tiered Shiva temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "OSM temple centre; inventory identity requires field check"
+      }
+    ],
+    "story": [
+      {
+        "title": "Shiva in the royal square",
+        "eyebrow": "Lord of the Universe",
+        "body": "Vishwanath is a title of Shiva. The dedication places Shaiva worship beside major Vaishnava monuments, showing that the square's religious life was never confined to one deity or one architectural form."
+      },
+      {
+        "title": "An inventory ambiguity",
+        "eyebrow": "Two related official entries",
+        "body": "The nomination map also lists a Bishwanath Temple dated 1626. The app keeps both official entries separate and labels the date, rather than silently merging records that require on-site identification."
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-patan-inventory",
+      "kvpt-patan",
+      "patan-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": []
+  },
+  {
+    "id": "patan-chyasin-dega",
+    "parentSiteId": "patan-durbar-square",
+    "parentOrder": 7,
+    "name": "Chyasin Dega",
+    "summary": "Chyasin Dega is the octagonal temple dated 1666 in the official inventory.",
+    "description": "Chyasin Dega is the octagonal temple dated 1666 in the official inventory. Its many-sided plan interrupts the square and tiered geometries around it, making shape itself the monument's clearest lesson.",
+    "coordinate": {
+      "latitude": 27.67355,
+      "longitude": 85.32502
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 12,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Official inventory",
+        "value": "Patan monument 7 of 19"
+      },
+      {
+        "label": "Date",
+        "value": "1666"
+      },
+      {
+        "label": "Type",
+        "value": "Octagonal temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Approximate from official monument map"
+      }
+    ],
+    "story": [
+      {
+        "title": "Eight sides",
+        "eyebrow": "A plan that changes the view",
+        "body": "Chyasin refers to the temple's eight-sided form. Walking around it produces a continuously changing profile, unlike the strong frontal axis of many neighbouring shrines."
+      },
+      {
+        "title": "Architecture through movement",
+        "eyebrow": "Do not judge it from one face",
+        "body": "The octagon is best understood by circling. Each turn reveals another alignment with palace, paving and nearby temples, which is why a walk simulation communicates more than one fixed photograph."
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-patan-inventory",
+      "kvpt-patan",
+      "patan-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": []
+  },
+  {
+    "id": "patan-mul-chowk",
+    "parentSiteId": "patan-durbar-square",
+    "parentOrder": 8,
+    "name": "Mul Chowk",
+    "summary": "Mul Chowk is the palace's principal ritual courtyard, listed as Malla Chok and dated 1590 on the …",
+    "description": "Mul Chowk is the palace's principal ritual courtyard, listed as Malla Chok and dated 1590 on the official monument map. Later rulers repaired and embellished it, but its continuing ritual role is more important than assigning the whole court to one moment.",
+    "coordinate": {
+      "latitude": 27.67308,
+      "longitude": 85.32527
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 12,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Official inventory",
+        "value": "Patan monument 8 of 19"
+      },
+      {
+        "label": "Date",
+        "value": "1590"
+      },
+      {
+        "label": "Type",
+        "value": "Palace ritual courtyard"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Approximate from palace plan"
+      }
+    ],
+    "story": [
+      {
+        "title": "The palace's ritual heart",
+        "eyebrow": "A court built for ceremony",
+        "body": "Mul means principal or root. The courtyard organized royal worship and festival practice within the palace, making it a working sacred space rather than simply an elegant enclosure."
+      },
+      {
+        "title": "Layers of repair",
+        "eyebrow": "Continuity is not untouched survival",
+        "body": "Earthquakes, repainting and conservation changed the surrounding wings. The court remains authentic through continued use and surviving fabric, not because every brick belongs to a single date."
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-patan-inventory",
+      "kvpt-patan",
+      "patan-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": []
+  },
+  {
+    "id": "patan-hari-shankar-temple",
+    "parentSiteId": "patan-durbar-square",
+    "parentOrder": 9,
+    "name": "Hari Shankar Temple",
+    "summary": "Hari Shankar Temple, dated 1666, joins the names of Vishnu and Shiva.",
+    "description": "Hari Shankar Temple, dated 1666, joins the names of Vishnu and Shiva. It collapsed in the 2015 earthquake and was reconstructed using recovered historic elements, making loss and careful reassembly part of its present meaning.",
+    "coordinate": {
+      "latitude": 27.6732136,
+      "longitude": 85.3249642
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 12,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Official inventory",
+        "value": "Patan monument 9 of 19"
+      },
+      {
+        "label": "Date",
+        "value": "1666"
+      },
+      {
+        "label": "Type",
+        "value": "Tiered temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "OSM temple centre"
+      }
+    ],
+    "story": [
+      {
+        "title": "Hari and Shankar",
+        "eyebrow": "Two divine names together",
+        "body": "Hari names Vishnu and Shankar names Shiva. The combined dedication expresses a religious synthesis that fits Patan's closely interwoven Shaiva and Vaishnava landscape."
+      },
+      {
+        "title": "After the collapse",
+        "eyebrow": "Fragments returned to place",
+        "body": "The upper structure fell in 2015. Conservators recovered, numbered and studied carved timber and masonry so surviving pieces could return during reconstruction instead of being replaced by an entirely new imitation."
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-patan-inventory",
+      "kvpt-patan",
+      "patan-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": []
+  },
+  {
+    "id": "patan-degutale-1560",
+    "parentSiteId": "patan-durbar-square",
+    "parentOrder": 10,
+    "name": "Degutale Temple (1560)",
+    "summary": "The first Degutale entry on the official map is dated 1560 and belongs to the palace's protected …",
+    "description": "The first Degutale entry on the official map is dated 1560 and belongs to the palace's protected ritual architecture. Its position between public square and restricted court marks a boundary between civic visibility and royal religious practice.",
+    "coordinate": {
+      "latitude": 27.6732,
+      "longitude": 85.32525
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 12,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Official inventory",
+        "value": "Patan monument 10 of 19"
+      },
+      {
+        "label": "Date",
+        "value": "1560"
+      },
+      {
+        "label": "Type",
+        "value": "Palace temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Approximate from official monument map"
+      }
+    ],
+    "story": [
+      {
+        "title": "A palace deity",
+        "eyebrow": "Worship behind controlled thresholds",
+        "body": "Degutale belongs to the palace ritual world. Unlike an open square shrine, access and sight were shaped by royal courtyards, gateways and the distinction between public and initiated space."
+      },
+      {
+        "title": "Stone gates",
+        "eyebrow": "A rare surviving approach",
+        "body": "Seventeenth-century carved stone gates beside the Degutale area were dismantled, cleaned and reassembled after damaging earlier repairs. Their conservation shows how an entrance can carry as much evidence as the shrine beyond it."
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-patan-inventory",
+      "kvpt-patan",
+      "patan-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": []
+  },
+  {
+    "id": "patan-narayan-temple",
+    "parentSiteId": "patan-durbar-square",
+    "parentOrder": 11,
+    "name": "Narayan Temple",
+    "summary": "The official inventory lists a seventeenth-century Narayan Temple as a monument distinct from Cha…",
+    "description": "The official inventory lists a seventeenth-century Narayan Temple as a monument distinct from Char Narayan and Lakshminarayan. Its separate entry preserves the density of Vaishnava shrines rather than collapsing similar names into one record.",
+    "coordinate": {
+      "latitude": 27.67334,
+      "longitude": 85.32503
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 12,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Official inventory",
+        "value": "Patan monument 11 of 19"
+      },
+      {
+        "label": "Date",
+        "value": "17th century"
+      },
+      {
+        "label": "Type",
+        "value": "Vaishnava temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Approximate from official monument map"
+      }
+    ],
+    "story": [
+      {
+        "title": "Narayan",
+        "eyebrow": "A name of Vishnu",
+        "body": "The dedication places another form of Vishnu within the royal ensemble. Repetition of a divine name across several temples reflects distinct foundations and communities, not duplicate data to be discarded."
+      },
+      {
+        "title": "Identify before merging",
+        "eyebrow": "Similar names, separate monuments",
+        "body": "Patan's official list contains several Narayan-related shrines. The date and map number remain visible so a visitor can distinguish this temple from Char Narayan and Lakshminarayan on the ground."
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-patan-inventory",
+      "kvpt-patan",
+      "patan-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": []
+  },
+  {
+    "id": "patan-degutale-1562",
+    "parentSiteId": "patan-durbar-square",
+    "parentOrder": 12,
+    "name": "Degutale Temple (1562)",
+    "summary": "A second Degutale Temple entry, dated 1562, appears independently as number twelve in the officia…",
+    "description": "A second Degutale Temple entry, dated 1562, appears independently as number twelve in the official nineteen-monument inventory. The app retains it as a separate record because the government map does so.",
+    "coordinate": {
+      "latitude": 27.6734,
+      "longitude": 85.32526
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 12,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Official inventory",
+        "value": "Patan monument 12 of 19"
+      },
+      {
+        "label": "Date",
+        "value": "1562"
+      },
+      {
+        "label": "Type",
+        "value": "Palace temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Approximate from official monument map"
+      }
+    ],
+    "story": [
+      {
+        "title": "The second official entry",
+        "eyebrow": "A record kept distinct",
+        "body": "This monument can look like a duplicate when read only as text. The numbered map locates it separately, so the app preserves the 1562 identity until a palace survey can supply a more precise local name."
+      },
+      {
+        "title": "Ritual architecture of the palace",
+        "eyebrow": "A sacred room in a royal system",
+        "body": "Degutale structures belonged to court worship and cannot be understood as freestanding street temples. Their meaning comes from the adjoining courtyards, restricted routes and ceremonial use."
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-patan-inventory",
+      "kvpt-patan",
+      "patan-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": []
+  },
+  {
+    "id": "patan-char-narayan-temple",
+    "parentSiteId": "patan-durbar-square",
+    "parentOrder": 13,
+    "name": "Char Narayan Temple",
+    "summary": "Char Narayan was a major seventeenth-century tiered temple in the open square.",
+    "description": "Char Narayan was a major seventeenth-century tiered temple in the open square. It collapsed in the 2015 earthquake and was reconstructed with salvaged historic material, so its current silhouette carries both Malla design and recent conservation history.",
+    "coordinate": {
+      "latitude": 27.67328,
+      "longitude": 85.32486
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 12,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Official inventory",
+        "value": "Patan monument 13 of 19"
+      },
+      {
+        "label": "Date",
+        "value": "17th century"
+      },
+      {
+        "label": "Type",
+        "value": "Tiered temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Approximate from official monument map"
+      }
+    ],
+    "story": [
+      {
+        "title": "Four-faced Narayan",
+        "eyebrow": "A temple addressing the square",
+        "body": "The name Char Narayan is associated with a four-directional form of Vishnu. The temple's open-square position allowed devotion and architecture to address movement from several directions."
+      },
+      {
+        "title": "Rebuilt after 2015",
+        "eyebrow": "A monument assembled from what endured",
+        "body": "Collapse did not erase every part. Recovered carved members were documented and returned where possible, making reconstruction a careful continuation of surviving evidence rather than a claim that nothing happened."
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-patan-inventory",
+      "kvpt-patan",
+      "patan-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": []
+  },
+  {
+    "id": "patan-krishna-mandir",
+    "parentSiteId": "patan-durbar-square",
+    "parentOrder": 14,
+    "name": "Krishna Mandir",
+    "summary": "Krishna Mandir, dated 1634 in the official inventory, is Patan's celebrated stone temple.",
+    "description": "Krishna Mandir, dated 1634 in the official inventory, is Patan's celebrated stone temple. Its ascending shikhara composition and narrative reliefs distinguish it sharply from the square's brick-and-timber tiered temples.",
+    "coordinate": {
+      "latitude": 27.6736383,
+      "longitude": 85.324954
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 12,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Official inventory",
+        "value": "Patan monument 14 of 19"
+      },
+      {
+        "label": "Date",
+        "value": "1634"
+      },
+      {
+        "label": "Type",
+        "value": "Stone shikhara temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "OSM building centre"
+      }
+    ],
+    "story": [
+      {
+        "title": "A temple carved in stone",
+        "eyebrow": "A different language in the square",
+        "body": "Dressed stone carries the structure upward through pillared levels and clustered towers. Against nearby timber pagodas, the material and vertical profile make the temple immediately legible."
+      },
+      {
+        "title": "Narrative walls",
+        "eyebrow": "Stories read by circling",
+        "body": "Reliefs from Hindu epics run around the exterior. Circumambulation becomes reading: the visitor encounters the monument's stories sequentially rather than receiving one façade as the whole building."
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-patan-inventory",
+      "kvpt-patan",
+      "patan-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": []
+  },
+  {
+    "id": "patan-kiskisila-temple",
+    "parentSiteId": "patan-durbar-square",
+    "parentOrder": 15,
+    "name": "Kiskisila Temple",
+    "summary": "Kiskisila Temple is dated 1734 on the official nomination map, making it one of the later monumen…",
+    "description": "Kiskisila Temple is dated 1734 on the official nomination map, making it one of the later monuments in the numbered ensemble. Its record helps show that Patan's royal square continued to acquire sacred architecture after its best-known seventeenth-century phase.",
+    "coordinate": {
+      "latitude": 27.67378,
+      "longitude": 85.32503
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 12,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Official inventory",
+        "value": "Patan monument 15 of 19"
+      },
+      {
+        "label": "Date",
+        "value": "1734"
+      },
+      {
+        "label": "Type",
+        "value": "Temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Approximate from official monument map"
+      }
+    ],
+    "story": [
+      {
+        "title": "A later addition",
+        "eyebrow": "The square kept changing",
+        "body": "The 1734 date places Kiskisila after many of the great Malla monuments around it. Patan's heritage is therefore an accumulation, not a frozen view of one king's reign."
+      },
+      {
+        "title": "A name requiring local reading",
+        "eyebrow": "Inventory first, interpretation with care",
+        "body": "The official map secures the monument's numbered identity but offers little narrative detail. The app states that limit instead of filling it with a borrowed legend; local inscription and ritual research should deepen this record."
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-patan-inventory",
+      "kvpt-patan",
+      "patan-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": []
+  },
+  {
+    "id": "patan-bishwanath-1626",
+    "parentSiteId": "patan-durbar-square",
+    "parentOrder": 16,
+    "name": "Bishwanath Temple (1626)",
+    "summary": "The official inventory separately lists Bishwanath Temple with a date of 1626.",
+    "description": "The official inventory separately lists Bishwanath Temple with a date of 1626. The spelling and date distinguish it in the app from the Vishwanath entry numbered six, pending precise field reconciliation.",
+    "coordinate": {
+      "latitude": 27.67362,
+      "longitude": 85.32514
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 12,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Official inventory",
+        "value": "Patan monument 16 of 19"
+      },
+      {
+        "label": "Date",
+        "value": "1626"
+      },
+      {
+        "label": "Type",
+        "value": "Tiered Shiva temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Approximate; distinguish from inventory no. 6 on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "The 1626 record",
+        "eyebrow": "A Shiva temple before Krishna Mandir",
+        "body": "The map's date places this Bishwanath foundation shortly before Krishna Mandir. Together their different forms show how stone shikhara and timber-tiered architectures came to share the square."
+      },
+      {
+        "title": "Do not hide uncertainty",
+        "eyebrow": "Two official Vishwanath names",
+        "body": "Names can shift between Bishwanath and Vishwanath in transliteration. Rather than pretending certainty, the app exposes the inventory number, date and coordinate caveat so future fieldwork can resolve the relationship."
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-patan-inventory",
+      "kvpt-patan",
+      "patan-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": []
+  },
+  {
+    "id": "patan-ganesh-temple",
+    "parentSiteId": "patan-durbar-square",
+    "parentOrder": 18,
+    "name": "Ganesh Temple",
+    "summary": "The Ganesh Temple is number eighteen in the official monument inventory.",
+    "description": "The Ganesh Temple is number eighteen in the official monument inventory. Ganesha's role at beginnings and thresholds makes a small shrine consequential within routes into the palace square.",
+    "coordinate": {
+      "latitude": 27.6728584,
+      "longitude": 85.3252871
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 12,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Official inventory",
+        "value": "Patan monument 18 of 19"
+      },
+      {
+        "label": "Date",
+        "value": "Date not stated on inventory map"
+      },
+      {
+        "label": "Type",
+        "value": "Temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "OSM Ganesh point; temple footprint requires survey"
+      }
+    ],
+    "story": [
+      {
+        "title": "A deity of beginnings",
+        "eyebrow": "Worship before proceeding",
+        "body": "Ganesha is approached at the start of undertakings and before crossing important thresholds. A shrine's modest size does not measure its ritual importance in the movement of the square."
+      },
+      {
+        "title": "A small monument in a large ensemble",
+        "eyebrow": "Attention changes scale",
+        "body": "The official list includes this temple beside palaces and monumental towers. That inclusion is a reminder that Patan's protected value lies in relationships among structures of very different scale."
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-patan-inventory",
+      "kvpt-patan",
+      "patan-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": []
+  },
+  {
+    "id": "patan-bhimsen-temple",
+    "parentSiteId": "patan-durbar-square",
+    "parentOrder": 19,
+    "name": "Bhimsen Temple",
+    "summary": "Bhimsen Temple closes the official numbered inventory.",
+    "description": "Bhimsen Temple closes the official numbered inventory. In Newar urban life Bhimsen is closely associated with merchants and trade, making the large temple especially meaningful at the commercial edge of the royal square.",
+    "coordinate": {
+      "latitude": 27.6738855,
+      "longitude": 85.325174
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 12,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Official inventory",
+        "value": "Patan monument 19 of 19"
+      },
+      {
+        "label": "Date",
+        "value": "Date not stated on inventory map"
+      },
+      {
+        "label": "Type",
+        "value": "Tiered temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "OSM temple centre"
+      }
+    ],
+    "story": [
+      {
+        "title": "The merchants' guardian",
+        "eyebrow": "Trade beside royal power",
+        "body": "Bhimsen's Newar cult is strongly tied to commerce and enterprise. The temple's scale at Mangal Bazaar shows that the square belonged to market life as well as kings and court ritual."
+      },
+      {
+        "title": "A temple facing a working city",
+        "eyebrow": "The square never became only a museum",
+        "body": "Shops, processions and daily offerings continue around the monument. Its story is therefore social as well as architectural: the temple watches a commercial centre that remains active."
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-patan-inventory",
+      "kvpt-patan",
+      "patan-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": []
+  },
+  {
+    "id": "kathmandu-durbar-square",
+    "name": "Kathmandu Durbar Square",
+    "nameNepali": "काठमाडौँ दरबार क्षेत्र",
+    "summary": "Hanuman Dhoka is Kathmandu’s layered royal square, where palace courtyards, public rest houses and a dense living temple landscape meet.",
+    "description": "Kathmandu Durbar Square—also called Hanuman Dhoka or Basantapur—is the largest of the valley’s three royal squares. Official Nepal Tourism Board material describes more than fifty temples in its vicinity, while its cultural-heritage guide records sixty important monuments. This catalogue gives forty named landmarks their own story and safe on-site activity; it does not pretend unnamed micro-shrines are absent.",
+    "coordinate": {
+      "latitude": 27.703889,
+      "longitude": 85.308333
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 1,
+    "radiusMeters": 180,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "UNESCO component",
+        "value": "Hanuman Dhoka Durbar Square Monument Zone"
+      },
+      {
+        "label": "Official scale",
+        "value": "More than 50 temples; 60 important monuments"
+      },
+      {
+        "label": "Individually interpreted here",
+        "value": "40 named landmarks"
+      },
+      {
+        "label": "Coordinates",
+        "value": "UNESCO component centre; child pins are map-derived approximations"
+      }
+    ],
+    "story": [
+      {
+        "title": "A palace assembled over centuries",
+        "eyebrow": "Not one king, not one style",
+        "body": "Malla rulers enlarged an older palace, Shah kings added a new royal layer, and Rana-era buildings introduced neoclassical forms. Read the square as an argument between periods rather than a frozen medieval scene."
+      },
+      {
+        "title": "A museum that is still alive",
+        "eyebrow": "Temple, street and festival",
+        "body": "The monuments are not only exhibits. Daily offerings, Kumari traditions, Dashain and Indra Jatra continue to move through this ground, so respectful distance and consent are part of understanding the site."
+      },
+      {
+        "title": "Collapse, salvage and return",
+        "eyebrow": "After the 2015 earthquake",
+        "body": "Eleven important monuments collapsed and many more were damaged. Recovered timber, stone and metal were documented and reused where possible, making reconstruction itself a chapter visitors can learn to read."
+      }
+    ],
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-kv-1979",
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "kathmandu-durbar-square.v1"
+    ]
+  },
+  {
+    "id": "ktm-hanuman-dhoka-palace",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 1,
+    "name": "Hanuman Dhoka Royal Palace",
+    "summary": "The palace grew across successive Malla, Shah and Rana reigns, turning a royal residence into a l…",
+    "description": "The palace grew across successive Malla, Shah and Rana reigns, turning a royal residence into a layered record of government, ceremony and craft.",
+    "coordinate": {
+      "latitude": 27.70418,
+      "longitude": 85.30778
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 1 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "15th–20th centuries"
+      },
+      {
+        "label": "Type",
+        "value": "Royal palace complex"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Hanuman Dhoka Royal Palace",
+        "eyebrow": "15th–20th centuries",
+        "body": "The palace grew across successive Malla, Shah and Rana reigns, turning a royal residence into a layered record of government, ceremony and craft."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Read the changing brick, timber and neoclassical fronts as additions rather than one uniform building."
+      }
+    ],
+    "questPrompt": "Make a wide exterior portrait that shows two architectural periods in one frame.",
+    "questMode": "solo-or-group",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-hanuman-dhoka-palace.v1"
+    ]
+  },
+  {
+    "id": "ktm-hanuman-gate",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 2,
+    "name": "Hanuman Gate",
+    "summary": "Pratap Malla placed the red-cloaked image of Hanuman beside the palace entrance, giving Hanuman D…",
+    "description": "Pratap Malla placed the red-cloaked image of Hanuman beside the palace entrance, giving Hanuman Dhoka its enduring name and a guardian at the royal threshold.",
+    "coordinate": {
+      "latitude": 27.70404,
+      "longitude": 85.30767
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 2 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "1672"
+      },
+      {
+        "label": "Type",
+        "value": "Palace gateway and guardian image"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Hanuman Gate",
+        "eyebrow": "1672",
+        "body": "Pratap Malla placed the red-cloaked image of Hanuman beside the palace entrance, giving Hanuman Dhoka its enduring name and a guardian at the royal threshold."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Notice how the sacred guardian, gate and flow of visitors share a very small threshold."
+      }
+    ],
+    "questPrompt": "Photograph your group beside—not touching—the gateway, leaving the guardian fully visible.",
+    "questMode": "group",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-hanuman-gate.v1"
+    ]
+  },
+  {
+    "id": "ktm-nasal-chowk",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 3,
+    "name": "Nasal Chowk",
+    "summary": "Nasal Chowk carried royal ceremony from the Malla era into the modern monarchy; coronations conti…",
+    "description": "Nasal Chowk carried royal ceremony from the Malla era into the modern monarchy; coronations continued here through 2001.",
+    "coordinate": {
+      "latitude": 27.70418,
+      "longitude": 85.30791
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 3 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "Malla period; later alterations"
+      },
+      {
+        "label": "Type",
+        "value": "Coronation courtyard"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Nasal Chowk",
+        "eyebrow": "Malla period; later alterations",
+        "body": "Nasal Chowk carried royal ceremony from the Malla era into the modern monarchy; coronations continued here through 2001."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Stand at the edge and trace how balconies turn an inward courtyard into a theatre of state."
+      }
+    ],
+    "questPrompt": "Create a symmetrical courtyard photograph from a permitted public position.",
+    "questMode": "architecture",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-nasal-chowk.v1"
+    ]
+  },
+  {
+    "id": "ktm-mohan-chowk",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 4,
+    "name": "Mohan Chowk",
+    "summary": "Mohan Chowk was an inward royal residence where access, water and ritual were tightly controlled …",
+    "description": "Mohan Chowk was an inward royal residence where access, water and ritual were tightly controlled within the palace.",
+    "coordinate": {
+      "latitude": 27.70438,
+      "longitude": 85.30793
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 4 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "17th century"
+      },
+      {
+        "label": "Type",
+        "value": "Royal residential courtyard"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Mohan Chowk",
+        "eyebrow": "17th century",
+        "body": "Mohan Chowk was an inward royal residence where access, water and ritual were tightly controlled within the palace."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Look for the repeated carved window rhythm and the way every side faces the court."
+      }
+    ],
+    "questPrompt": "Count one façade's window bays and record the number with a note; do not enter closed areas.",
+    "questMode": "count",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-mohan-chowk.v1"
+    ]
+  },
+  {
+    "id": "ktm-sundari-chowk",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 5,
+    "name": "Sundari Chowk",
+    "summary": "Pratap Malla's Sundari Chowk joined courtly beauty to an intensely private royal world inside Han…",
+    "description": "Pratap Malla's Sundari Chowk joined courtly beauty to an intensely private royal world inside Hanuman Dhoka.",
+    "coordinate": {
+      "latitude": 27.70437,
+      "longitude": 85.30772
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 5 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "17th century"
+      },
+      {
+        "label": "Type",
+        "value": "Palace courtyard"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Sundari Chowk",
+        "eyebrow": "17th century",
+        "body": "Pratap Malla's Sundari Chowk joined courtly beauty to an intensely private royal world inside Hanuman Dhoka."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Compare its enclosed scale with the open public square outside the palace walls."
+      }
+    ],
+    "questPrompt": "Write a short contrast between the enclosed court and the public square; respect palace photography signs.",
+    "questMode": "note",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-sundari-chowk.v1"
+    ]
+  },
+  {
+    "id": "ktm-basantapur-durbar",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 6,
+    "name": "Basantapur Durbar (Nine-Storey Palace)",
+    "summary": "The Nine-Storey Palace rose after the Shah conquest and linked four tower names—Kathmandu, Bhakta…",
+    "description": "The Nine-Storey Palace rose after the Shah conquest and linked four tower names—Kathmandu, Bhaktapur, Lalitpur and Kirtipur—to a new royal centre.",
+    "coordinate": {
+      "latitude": 27.70362,
+      "longitude": 85.30774
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 6 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "18th century"
+      },
+      {
+        "label": "Type",
+        "value": "Palace tower"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Basantapur Durbar (Nine-Storey Palace)",
+        "eyebrow": "18th century",
+        "body": "The Nine-Storey Palace rose after the Shah conquest and linked four tower names—Kathmandu, Bhaktapur, Lalitpur and Kirtipur—to a new royal centre."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Follow the tower upward through diminishing storeys and changing window scale."
+      }
+    ],
+    "questPrompt": "Take a vertical personal portrait that keeps the full tower above you without blocking the path.",
+    "questMode": "solo",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-basantapur-durbar.v1"
+    ]
+  },
+  {
+    "id": "ktm-taleju-temple",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 7,
+    "name": "Taleju Bhawani Temple",
+    "summary": "Mahendra Malla's high Taleju temple made the royal goddess visible over the city while keeping th…",
+    "description": "Mahendra Malla's high Taleju temple made the royal goddess visible over the city while keeping the sanctuary exceptionally restricted.",
+    "coordinate": {
+      "latitude": 27.70455,
+      "longitude": 85.30795
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "restricted",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 7 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "1562"
+      },
+      {
+        "label": "Type",
+        "value": "Royal deity temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Taleju Bhawani Temple",
+        "eyebrow": "1562",
+        "body": "Mahendra Malla's high Taleju temple made the royal goddess visible over the city while keeping the sanctuary exceptionally restricted."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Observe the twelve-stage plinth and 36.6-metre vertical rise only from an allowed public viewpoint."
+      }
+    ],
+    "questPrompt": "Frame the temple above surrounding roofs from outside; never ask to enter or photograph a restricted ritual.",
+    "questMode": "architecture",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-taleju-temple.v1"
+    ]
+  },
+  {
+    "id": "ktm-degu-taleju",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 8,
+    "name": "Degu Taleju Temple",
+    "summary": "Degu Taleju faced Pratap Malla's column across the royal square, joining palace worship to a deli…",
+    "description": "Degu Taleju faced Pratap Malla's column across the royal square, joining palace worship to a deliberately composed public axis.",
+    "coordinate": {
+      "latitude": 27.70412,
+      "longitude": 85.30755
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 8 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "Malla period"
+      },
+      {
+        "label": "Type",
+        "value": "Palace temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Degu Taleju Temple",
+        "eyebrow": "Malla period",
+        "body": "Degu Taleju faced Pratap Malla's column across the royal square, joining palace worship to a deliberately composed public axis."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Find the line between the praying king on his column and the temple he faces."
+      }
+    ],
+    "questPrompt": "Capture the column–temple sightline without stepping into worship or traffic.",
+    "questMode": "alignment",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-degu-taleju.v1"
+    ]
+  },
+  {
+    "id": "ktm-panchamukhi-hanuman",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 9,
+    "name": "Panchamukhi Hanuman Temple",
+    "summary": "Pratap Malla's Panchamukhi Hanuman temple places the five-faced protective form within Nasal Chow…",
+    "description": "Pratap Malla's Panchamukhi Hanuman temple places the five-faced protective form within Nasal Chowk's palace world.",
+    "coordinate": {
+      "latitude": 27.70423,
+      "longitude": 85.30803
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "restricted",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 9 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "17th century"
+      },
+      {
+        "label": "Type",
+        "value": "Five-faced Hanuman temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Panchamukhi Hanuman Temple",
+        "eyebrow": "17th century",
+        "body": "Pratap Malla's Panchamukhi Hanuman temple places the five-faced protective form within Nasal Chowk's palace world."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Study the tiered silhouette from a permitted area; the sacred interior is not a photo target."
+      }
+    ],
+    "questPrompt": "Sketch or describe the roof silhouette instead of photographing any restricted interior.",
+    "questMode": "note",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-panchamukhi-hanuman.v1"
+    ]
+  },
+  {
+    "id": "ktm-jagannath-temple",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 10,
+    "name": "Jagannath Temple",
+    "summary": "The Jagannath image was installed under Mahendra Malla; the temple's carved timber struts also pr…",
+    "description": "The Jagannath image was installed under Mahendra Malla; the temple's carved timber struts also preserve frank scenes of worldly life.",
+    "coordinate": {
+      "latitude": 27.70406,
+      "longitude": 85.30738
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 10 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "image installed 1563"
+      },
+      {
+        "label": "Type",
+        "value": "Tiered temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Jagannath Temple",
+        "eyebrow": "image installed 1563",
+        "body": "The Jagannath image was installed under Mahendra Malla; the temple's carved timber struts also preserve frank scenes of worldly life."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Examine the structural role and narrative detail of the struts without treating sacred carving as a joke."
+      }
+    ],
+    "questPrompt": "Photograph one full timber strut in context, avoiding intrusive close-ups of worshippers.",
+    "questMode": "detail",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-jagannath-temple.v1"
+    ]
+  },
+  {
+    "id": "ktm-mahendreshwar-temple",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 11,
+    "name": "Mahendreshwar Temple",
+    "summary": "Mahendra Malla's Shiva temple is one of the foundations that established the square's dense sixte…",
+    "description": "Mahendra Malla's Shiva temple is one of the foundations that established the square's dense sixteenth-century sacred landscape.",
+    "coordinate": {
+      "latitude": 27.70417,
+      "longitude": 85.3073
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 11 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "16th century"
+      },
+      {
+        "label": "Type",
+        "value": "Shiva temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Mahendreshwar Temple",
+        "eyebrow": "16th century",
+        "body": "Mahendra Malla's Shiva temple is one of the foundations that established the square's dense sixteenth-century sacred landscape."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Notice how a smaller shrine holds its ground beside much larger royal monuments."
+      }
+    ],
+    "questPrompt": "Make a scale photograph with the temple and a consenting companion at a respectful distance.",
+    "questMode": "group",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-mahendreshwar-temple.v1"
+    ]
+  },
+  {
+    "id": "ktm-kotilingeshwar-temple",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 12,
+    "name": "Kotilingeshwar Temple",
+    "summary": "Kotilingeshwar belongs to Mahendra Malla's temple-building campaign and the square's closely spac…",
+    "description": "Kotilingeshwar belongs to Mahendra Malla's temple-building campaign and the square's closely spaced Shaiva shrines.",
+    "coordinate": {
+      "latitude": 27.70428,
+      "longitude": 85.30734
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 12 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "16th century"
+      },
+      {
+        "label": "Type",
+        "value": "Shiva temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Kotilingeshwar Temple",
+        "eyebrow": "16th century",
+        "body": "Kotilingeshwar belongs to Mahendra Malla's temple-building campaign and the square's closely spaced Shaiva shrines."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Look for the linga dedication and how offerings keep a historic structure in present use."
+      }
+    ],
+    "questPrompt": "Record an exterior detail that shows living worship without photographing a person at prayer.",
+    "questMode": "detail",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-kotilingeshwar-temple.v1"
+    ]
+  },
+  {
+    "id": "ktm-krishna-temple",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 13,
+    "name": "Krishna Temple",
+    "summary": "Pratap Malla built the octagonal Krishna temple in memory of two queens, turning private loss int…",
+    "description": "Pratap Malla built the octagonal Krishna temple in memory of two queens, turning private loss into a public royal monument.",
+    "coordinate": {
+      "latitude": 27.7043,
+      "longitude": 85.30744
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 13 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "1649"
+      },
+      {
+        "label": "Type",
+        "value": "Octagonal temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Krishna Temple",
+        "eyebrow": "1649",
+        "body": "Pratap Malla built the octagonal Krishna temple in memory of two queens, turning private loss into a public royal monument."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Walk around its many-sided plan and notice how no single façade gives the whole building."
+      }
+    ],
+    "questPrompt": "Take three exterior frames from different sides and choose the one that best explains the octagon.",
+    "questMode": "sequence",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-krishna-temple.v1"
+    ]
+  },
+  {
+    "id": "ktm-kal-bhairav",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 14,
+    "name": "Kal Bhairav",
+    "summary": "The monumental black Bhairav made Shiva's fierce form a public focus of oath, justice and worship…",
+    "description": "The monumental black Bhairav made Shiva's fierce form a public focus of oath, justice and worship in the royal square.",
+    "coordinate": {
+      "latitude": 27.70442,
+      "longitude": 85.30743
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 14 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "17th century"
+      },
+      {
+        "label": "Type",
+        "value": "Monumental stone image"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Kal Bhairav",
+        "eyebrow": "17th century",
+        "body": "The monumental black Bhairav made Shiva's fierce form a public focus of oath, justice and worship in the royal square."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Observe scale, gesture and the open-air relationship between deity and crowd."
+      }
+    ],
+    "questPrompt": "Make a respectful group photograph from the edge, with everyone consenting and no offerings blocked.",
+    "questMode": "group",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-kal-bhairav.v1"
+    ]
+  },
+  {
+    "id": "ktm-swet-bhairav",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 15,
+    "name": "Swet Bhairav",
+    "summary": "Swet Bhairav remains concealed for most of the year and is revealed during Indra Jatra, making li…",
+    "description": "Swet Bhairav remains concealed for most of the year and is revealed during Indra Jatra, making limited visibility part of the monument's meaning.",
+    "coordinate": {
+      "latitude": 27.70408,
+      "longitude": 85.30755
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 15 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "17th century"
+      },
+      {
+        "label": "Type",
+        "value": "Festival shrine"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Swet Bhairav",
+        "eyebrow": "17th century",
+        "body": "Swet Bhairav remains concealed for most of the year and is revealed during Indra Jatra, making limited visibility part of the monument's meaning."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "When closed, study the screen and threshold rather than trying to defeat the restriction."
+      }
+    ],
+    "questPrompt": "Photograph the closed exterior or write what seasonal access teaches; never push through a ritual crowd.",
+    "questMode": "seasonal",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-swet-bhairav.v1"
+    ]
+  },
+  {
+    "id": "ktm-narsingha-statue",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 16,
+    "name": "Narsingha Statue",
+    "summary": "Pratap Malla erected Vishnu's man-lion form in 1673; its inscription ties royal performance, fear…",
+    "description": "Pratap Malla erected Vishnu's man-lion form in 1673; its inscription ties royal performance, fear and atonement to a single forceful image.",
+    "coordinate": {
+      "latitude": 27.70413,
+      "longitude": 85.3076
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 16 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "1673"
+      },
+      {
+        "label": "Type",
+        "value": "Stone image"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Narsingha Statue",
+        "eyebrow": "1673",
+        "body": "Pratap Malla erected Vishnu's man-lion form in 1673; its inscription ties royal performance, fear and atonement to a single forceful image."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Read the dramatic movement of protector, victim and carved stone as one composition."
+      }
+    ],
+    "questPrompt": "Recreate the statue's strong diagonal only with your camera angle—never climb or touch it.",
+    "questMode": "creative",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-narsingha-statue.v1"
+    ]
+  },
+  {
+    "id": "ktm-pratap-malla-column",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 17,
+    "name": "Pratap Malla Stone Column",
+    "summary": "The king kneels above the square facing Taleju, presenting royal authority as devotion rather tha…",
+    "description": "The king kneels above the square facing Taleju, presenting royal authority as devotion rather than a freestanding portrait.",
+    "coordinate": {
+      "latitude": 27.70418,
+      "longitude": 85.30749
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 17 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "17th century"
+      },
+      {
+        "label": "Type",
+        "value": "Royal portrait column"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Pratap Malla Stone Column",
+        "eyebrow": "17th century",
+        "body": "The king kneels above the square facing Taleju, presenting royal authority as devotion rather than a freestanding portrait."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Follow the figure's gaze to understand why the column stands where it does."
+      }
+    ],
+    "questPrompt": "Capture the full column and the temple it faces in one alignment study.",
+    "questMode": "alignment",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-pratap-malla-column.v1"
+    ]
+  },
+  {
+    "id": "ktm-kumari-ghar",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 18,
+    "name": "Kumari Ghar",
+    "summary": "Kumari Ghar is both an extraordinary carved courtyard and the present residence of Kathmandu's li…",
+    "description": "Kumari Ghar is both an extraordinary carved courtyard and the present residence of Kathmandu's living goddess, revered by Buddhist and Hindu communities.",
+    "coordinate": {
+      "latitude": 27.70357,
+      "longitude": 85.30738
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "restricted",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 18 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "18th century"
+      },
+      {
+        "label": "Type",
+        "value": "Courtyard residence and temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Kumari Ghar",
+        "eyebrow": "18th century",
+        "body": "Kumari Ghar is both an extraordinary carved courtyard and the present residence of Kathmandu's living goddess, revered by Buddhist and Hindu communities."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Study the exterior and courtyard woodwork while remembering that this is a child's home, not a performance set."
+      }
+    ],
+    "questPrompt": "Photograph only the architecture. Do not photograph the Kumari or any child, and ask consent before including people.",
+    "questMode": "privacy",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-kumari-ghar.v1"
+    ]
+  },
+  {
+    "id": "ktm-kasthamandap",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 19,
+    "name": "Kasthamandap (Maru Sattal)",
+    "summary": "Kasthamandap gave Kathmandu its name, collapsed catastrophically in 2015, and was rebuilt through…",
+    "description": "Kasthamandap gave Kathmandu its name, collapsed catastrophically in 2015, and was rebuilt through a community-led process using salvaged historic fabric where possible.",
+    "coordinate": {
+      "latitude": 27.70335,
+      "longitude": 85.30699
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 19 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "early origins; rebuilt after 2015"
+      },
+      {
+        "label": "Type",
+        "value": "Public rest house and shrine"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Kasthamandap (Maru Sattal)",
+        "eyebrow": "early origins; rebuilt after 2015",
+        "body": "Kasthamandap gave Kathmandu its name, collapsed catastrophically in 2015, and was rebuilt through a community-led process using salvaged historic fabric where possible."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Distinguish reused carved timber from new replacement work without assuming age from colour alone."
+      }
+    ],
+    "questPrompt": "Create a then-and-now-minded exterior record and note one old-looking and one new-looking element.",
+    "questMode": "condition",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-kasthamandap.v1"
+    ]
+  },
+  {
+    "id": "ktm-simha-sattal",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 20,
+    "name": "Simha Sattal",
+    "summary": "Simha Sattal extends the square's heritage beyond temples: open rest houses supported trade, enco…",
+    "description": "Simha Sattal extends the square's heritage beyond temples: open rest houses supported trade, encounter, shelter and festival life.",
+    "coordinate": {
+      "latitude": 27.70325,
+      "longitude": 85.30706
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 20 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "historic"
+      },
+      {
+        "label": "Type",
+        "value": "Public rest house"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Simha Sattal",
+        "eyebrow": "historic",
+        "body": "Simha Sattal extends the square's heritage beyond temples: open rest houses supported trade, encounter, shelter and festival life."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Notice the open ground floor and how a civic building receives people rather than enclosing them."
+      }
+    ],
+    "questPrompt": "Take a candid-free wide view showing the building's public function; blur or exclude faces when possible.",
+    "questMode": "wide",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-simha-sattal.v1"
+    ]
+  },
+  {
+    "id": "ktm-maju-dega",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 21,
+    "name": "Maju Dega",
+    "summary": "Maju Dega's tall stepped plinth long served as both sacred base and public lookout; its 2015 coll…",
+    "description": "Maju Dega's tall stepped plinth long served as both sacred base and public lookout; its 2015 collapse changed the square's skyline before reconstruction restored the form.",
+    "coordinate": {
+      "latitude": 27.7037,
+      "longitude": 85.30715
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 21 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "18th century; rebuilt after 2015"
+      },
+      {
+        "label": "Type",
+        "value": "Tiered temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Maju Dega",
+        "eyebrow": "18th century; rebuilt after 2015",
+        "body": "Maju Dega's tall stepped plinth long served as both sacred base and public lookout; its 2015 collapse changed the square's skyline before reconstruction restored the form."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Count how the broad steps lift the temple above everyday movement."
+      }
+    ],
+    "questPrompt": "Take a personal portrait from ground level with the steps behind you; do not climb where access is closed.",
+    "questMode": "solo",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-maju-dega.v1"
+    ]
+  },
+  {
+    "id": "ktm-shiva-parvati-temple",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 22,
+    "name": "Shiva–Parvati Temple",
+    "summary": "Shiva and Parvati lean from an upper window toward the square, turning a domestic-looking façade …",
+    "description": "Shiva and Parvati lean from an upper window toward the square, turning a domestic-looking façade into a divine observation point.",
+    "coordinate": {
+      "latitude": 27.70455,
+      "longitude": 85.30734
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 22 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "18th century"
+      },
+      {
+        "label": "Type",
+        "value": "Temple house"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Shiva–Parvati Temple",
+        "eyebrow": "18th century",
+        "body": "Shiva and Parvati lean from an upper window toward the square, turning a domestic-looking façade into a divine observation point."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Find the figures above before studying the carved windows below."
+      }
+    ],
+    "questPrompt": "Make a playful group frame looking upward like the divine couple, keeping the path clear.",
+    "questMode": "group",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-shiva-parvati-temple.v1"
+    ]
+  },
+  {
+    "id": "ktm-ashok-vinayak",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 23,
+    "name": "Ashok Vinayak (Kathmandu Ganesh)",
+    "summary": "Ashok Vinayak is a compact, intensely active Ganesh shrine whose importance comes from continuing…",
+    "description": "Ashok Vinayak is a compact, intensely active Ganesh shrine whose importance comes from continuing worship rather than monumental size.",
+    "coordinate": {
+      "latitude": 27.70318,
+      "longitude": 85.3068
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 23 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "historic"
+      },
+      {
+        "label": "Type",
+        "value": "Ganesh shrine"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Ashok Vinayak (Kathmandu Ganesh)",
+        "eyebrow": "historic",
+        "body": "Ashok Vinayak is a compact, intensely active Ganesh shrine whose importance comes from continuing worship rather than monumental size."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Notice the unusual roofless or low-canopy presence and the constant negotiation between shrine and street."
+      }
+    ],
+    "questPrompt": "Record a written sound-and-movement observation instead of aiming a camera at worshippers.",
+    "questMode": "note",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-ashok-vinayak.v1"
+    ]
+  },
+  {
+    "id": "ktm-kabindrapur",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 24,
+    "name": "Kabindrapur",
+    "summary": "Kabindrapur is counted among Pratap Malla's monuments and helps reveal how royal patronage filled…",
+    "description": "Kabindrapur is counted among Pratap Malla's monuments and helps reveal how royal patronage filled the square with distinct but interdependent shrines.",
+    "coordinate": {
+      "latitude": 27.70448,
+      "longitude": 85.30722
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 24 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "17th century"
+      },
+      {
+        "label": "Type",
+        "value": "Temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Kabindrapur",
+        "eyebrow": "17th century",
+        "body": "Kabindrapur is counted among Pratap Malla's monuments and helps reveal how royal patronage filled the square with distinct but interdependent shrines."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Find one carved feature that distinguishes it from its nearest neighbour."
+      }
+    ],
+    "questPrompt": "Photograph the distinguishing feature and name it in one sentence.",
+    "questMode": "detail",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-kabindrapur.v1"
+    ]
+  },
+  {
+    "id": "ktm-indrapur-temple",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 25,
+    "name": "Indrapur Temple",
+    "summary": "Indrapur connects the royal square to Indra, rain, kingship and the festival cycle that periodica…",
+    "description": "Indrapur connects the royal square to Indra, rain, kingship and the festival cycle that periodically transforms Kathmandu's streets.",
+    "coordinate": {
+      "latitude": 27.70462,
+      "longitude": 85.30727
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 25 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "17th century"
+      },
+      {
+        "label": "Type",
+        "value": "Temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Indrapur Temple",
+        "eyebrow": "17th century",
+        "body": "Indrapur connects the royal square to Indra, rain, kingship and the festival cycle that periodically transforms Kathmandu's streets."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Look for signs that the monument participates in a route larger than its footprint."
+      }
+    ],
+    "questPrompt": "Take a route-context photo showing the temple and the street continuing beyond it.",
+    "questMode": "wide",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-indrapur-temple.v1"
+    ]
+  },
+  {
+    "id": "ktm-gaddi-baithak",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 26,
+    "name": "Gaddi Baithak",
+    "summary": "Chandra Shumsher's white neoclassical audience hall deliberately interrupts the brick-and-timber …",
+    "description": "Chandra Shumsher's white neoclassical audience hall deliberately interrupts the brick-and-timber Malla setting, recording a later court's global architectural ambitions.",
+    "coordinate": {
+      "latitude": 27.7036,
+      "longitude": 85.30762
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 26 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "1908"
+      },
+      {
+        "label": "Type",
+        "value": "Neoclassical audience hall"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Gaddi Baithak",
+        "eyebrow": "1908",
+        "body": "Chandra Shumsher's white neoclassical audience hall deliberately interrupts the brick-and-timber Malla setting, recording a later court's global architectural ambitions."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Compare columns, arches and white plaster with the carved Newar buildings opposite."
+      }
+    ],
+    "questPrompt": "Split the frame between Gaddi Baithak and a traditional façade for an architecture comparison.",
+    "questMode": "comparison",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-gaddi-baithak.v1"
+    ]
+  },
+  {
+    "id": "ktm-trailokya-mohan",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 27,
+    "name": "Trailokya Mohan Narayan Temple",
+    "summary": "Trailokya Mohan's collapse in 2015 exposed how much of a temple's identity depends on recovered t…",
+    "description": "Trailokya Mohan's collapse in 2015 exposed how much of a temple's identity depends on recovered timber, remembered ritual and its place in the square.",
+    "coordinate": {
+      "latitude": 27.70385,
+      "longitude": 85.3072
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 27 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "17th century; rebuilt after 2015"
+      },
+      {
+        "label": "Type",
+        "value": "Tiered temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Trailokya Mohan Narayan Temple",
+        "eyebrow": "17th century; rebuilt after 2015",
+        "body": "Trailokya Mohan's collapse in 2015 exposed how much of a temple's identity depends on recovered timber, remembered ritual and its place in the square."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Study joints, fresh brick and older carved elements as evidence of reconstruction."
+      }
+    ],
+    "questPrompt": "Record one junction between old and new-looking fabric without crossing barriers.",
+    "questMode": "condition",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-trailokya-mohan.v1"
+    ]
+  },
+  {
+    "id": "ktm-gopinath-temple",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 28,
+    "name": "Gopinath Temple",
+    "summary": "Gopinath adds another Vaishnava dedication to an ensemble where similar divine names belong to se…",
+    "description": "Gopinath adds another Vaishnava dedication to an ensemble where similar divine names belong to separate foundations, communities and histories.",
+    "coordinate": {
+      "latitude": 27.70473,
+      "longitude": 85.30731
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 28 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "historic"
+      },
+      {
+        "label": "Type",
+        "value": "Vaishnava temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Gopinath Temple",
+        "eyebrow": "historic",
+        "body": "Gopinath adds another Vaishnava dedication to an ensemble where similar divine names belong to separate foundations, communities and histories."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Identify it by position and form rather than assuming every Narayan-related shrine is the same."
+      }
+    ],
+    "questPrompt": "Make an identification photo including the temple and one fixed neighbouring landmark.",
+    "questMode": "context",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-gopinath-temple.v1"
+    ]
+  },
+  {
+    "id": "ktm-saraswati-temple",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 29,
+    "name": "Saraswati Temple",
+    "summary": "The Saraswati shrine honours learning and music; reconstruction after the earthquake returned a s…",
+    "description": "The Saraswati shrine honours learning and music; reconstruction after the earthquake returned a small but meaningful element to the square's sacred network.",
+    "coordinate": {
+      "latitude": 27.70467,
+      "longitude": 85.3074
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 29 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "historic; rebuilt after 2015"
+      },
+      {
+        "label": "Type",
+        "value": "Temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Saraswati Temple",
+        "eyebrow": "historic; rebuilt after 2015",
+        "body": "The Saraswati shrine honours learning and music; reconstruction after the earthquake returned a small but meaningful element to the square's sacred network."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Notice musical or learning associations in offerings and iconography without disturbing them."
+      }
+    ],
+    "questPrompt": "Write three visual details that suggest the dedication; use a photo only when worship is not underway.",
+    "questMode": "note",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-saraswati-temple.v1"
+    ]
+  },
+  {
+    "id": "ktm-laxmi-narayan-temple",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 30,
+    "name": "Laxmi Narayan Temple",
+    "summary": "Laxmi and Narayan unite prosperity and preservation within a temple restored after the 2015 earth…",
+    "description": "Laxmi and Narayan unite prosperity and preservation within a temple restored after the 2015 earthquake.",
+    "coordinate": {
+      "latitude": 27.70475,
+      "longitude": 85.30745
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 30 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "historic"
+      },
+      {
+        "label": "Type",
+        "value": "Vaishnava temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Laxmi Narayan Temple",
+        "eyebrow": "historic",
+        "body": "Laxmi and Narayan unite prosperity and preservation within a temple restored after the 2015 earthquake."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Compare restored brick and timber surfaces for different weathering patterns."
+      }
+    ],
+    "questPrompt": "Take a material-study close-up that excludes faces, offerings and restricted interiors.",
+    "questMode": "detail",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-laxmi-narayan-temple.v1"
+    ]
+  },
+  {
+    "id": "ktm-chyasin-dega",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 31,
+    "name": "Chyasin Dega",
+    "summary": "Chyasin Dega's eight-sided plan makes movement essential to understanding it; recovered elements …",
+    "description": "Chyasin Dega's eight-sided plan makes movement essential to understanding it; recovered elements were repaired and returned during reconstruction.",
+    "coordinate": {
+      "latitude": 27.70482,
+      "longitude": 85.30749
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 31 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "historic; rebuilt after 2015"
+      },
+      {
+        "label": "Type",
+        "value": "Octagonal temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Chyasin Dega",
+        "eyebrow": "historic; rebuilt after 2015",
+        "body": "Chyasin Dega's eight-sided plan makes movement essential to understanding it; recovered elements were repaired and returned during reconstruction."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Walk a legal circuit and count the changing faces of the octagon."
+      }
+    ],
+    "questPrompt": "Capture a four-image sequence from alternating sides, or record the count if photography is crowded.",
+    "questMode": "sequence",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-chyasin-dega.v1"
+    ]
+  },
+  {
+    "id": "ktm-tarini-bahal",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 32,
+    "name": "Tarini Devi Temple (Tarini Bahal)",
+    "summary": "Tarini Bahal's conservation was led through community and municipal support under Department of A…",
+    "description": "Tarini Bahal's conservation was led through community and municipal support under Department of Archaeology oversight, showing stewardship beyond the palace administration.",
+    "coordinate": {
+      "latitude": 27.70505,
+      "longitude": 85.3072
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 32 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "historic"
+      },
+      {
+        "label": "Type",
+        "value": "Community temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Tarini Devi Temple (Tarini Bahal)",
+        "eyebrow": "historic",
+        "body": "Tarini Bahal's conservation was led through community and municipal support under Department of Archaeology oversight, showing stewardship beyond the palace administration."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Notice what makes the place feel locally maintained rather than museum-contained."
+      }
+    ],
+    "questPrompt": "Record one sign of community care and explain it in a note.",
+    "questMode": "community",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-tarini-bahal.v1"
+    ]
+  },
+  {
+    "id": "ktm-dashain-ghar",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 33,
+    "name": "Dashain Ghar",
+    "summary": "Dashain Ghar belongs to the ritual infrastructure of Nepal's major autumn festival, when palace s…",
+    "description": "Dashain Ghar belongs to the ritual infrastructure of Nepal's major autumn festival, when palace spaces and public authority are temporarily reordered.",
+    "coordinate": {
+      "latitude": 27.70442,
+      "longitude": 85.3081
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 33 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "historic"
+      },
+      {
+        "label": "Type",
+        "value": "Festival building"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Dashain Ghar",
+        "eyebrow": "historic",
+        "body": "Dashain Ghar belongs to the ritual infrastructure of Nepal's major autumn festival, when palace spaces and public authority are temporarily reordered."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Read doors and controlled thresholds as signs of seasonal use, not as invitations."
+      }
+    ],
+    "questPrompt": "Photograph only the public exterior and describe how a closed building can remain culturally active.",
+    "questMode": "seasonal",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-dashain-ghar.v1"
+    ]
+  },
+  {
+    "id": "ktm-nagara-ghar",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 34,
+    "name": "Nagara Ghar",
+    "summary": "Nagara Ghar supported ceremonial sound, reminding us that the heritage of the square was heard as…",
+    "description": "Nagara Ghar supported ceremonial sound, reminding us that the heritage of the square was heard as well as seen.",
+    "coordinate": {
+      "latitude": 27.70434,
+      "longitude": 85.30808
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 34 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "historic"
+      },
+      {
+        "label": "Type",
+        "value": "Ceremonial music building"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Nagara Ghar",
+        "eyebrow": "historic",
+        "body": "Nagara Ghar supported ceremonial sound, reminding us that the heritage of the square was heard as well as seen."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Pause for one minute and separate bells, voices, traffic and ritual sounds."
+      }
+    ],
+    "questPrompt": "Submit a written sound map with at least four sounds; no photograph required.",
+    "questMode": "note",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-nagara-ghar.v1"
+    ]
+  },
+  {
+    "id": "ktm-dhukuti-ghar",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 35,
+    "name": "Dhukuti Ghar",
+    "summary": "Dhukuti Ghar represents the palace's practical treasury and storage functions, the less visible s…",
+    "description": "Dhukuti Ghar represents the palace's practical treasury and storage functions, the less visible systems that sustained royal ceremony.",
+    "coordinate": {
+      "latitude": 27.70449,
+      "longitude": 85.30805
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 35 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "historic"
+      },
+      {
+        "label": "Type",
+        "value": "Palace storehouse"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Dhukuti Ghar",
+        "eyebrow": "historic",
+        "body": "Dhukuti Ghar represents the palace's practical treasury and storage functions, the less visible systems that sustained royal ceremony."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Compare its defensive, contained character with the display-oriented façades nearby."
+      }
+    ],
+    "questPrompt": "Make a texture study of the public exterior without attempting access.",
+    "questMode": "detail",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-dhukuti-ghar.v1"
+    ]
+  },
+  {
+    "id": "ktm-dasavatar-temple",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 36,
+    "name": "Dasavatar Temple",
+    "summary": "The Dasavatar dedication gathers Vishnu's ten descents into one narrative framework, joining arch…",
+    "description": "The Dasavatar dedication gathers Vishnu's ten descents into one narrative framework, joining architecture to a cycle of stories.",
+    "coordinate": {
+      "latitude": 27.70488,
+      "longitude": 85.30754
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 36 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "historic; rebuilt after 2015"
+      },
+      {
+        "label": "Type",
+        "value": "Vaishnava temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Dasavatar Temple",
+        "eyebrow": "historic; rebuilt after 2015",
+        "body": "The Dasavatar dedication gathers Vishnu's ten descents into one narrative framework, joining architecture to a cycle of stories."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Identify how repeated niches or images organize multiple episodes."
+      }
+    ],
+    "questPrompt": "Choose one visible narrative panel, photograph it in context and write what remains uncertain.",
+    "questMode": "story",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-dasavatar-temple.v1"
+    ]
+  },
+  {
+    "id": "ktm-natyeshwar-temple",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 37,
+    "name": "Natyeshwar Temple",
+    "summary": "Natyeshwar links sacred space with dance and performance, arts that activate the palace beyond st…",
+    "description": "Natyeshwar links sacred space with dance and performance, arts that activate the palace beyond static architecture.",
+    "coordinate": {
+      "latitude": 27.7043,
+      "longitude": 85.30814
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 37 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "historic"
+      },
+      {
+        "label": "Type",
+        "value": "Temple of dance"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Natyeshwar Temple",
+        "eyebrow": "historic",
+        "body": "Natyeshwar links sacred space with dance and performance, arts that activate the palace beyond static architecture."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Find a carved posture or rhythm and follow its line with your eyes."
+      }
+    ],
+    "questPrompt": "With consent, make a solo silhouette echoing one visible pose from a respectful distance.",
+    "questMode": "solo",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-natyeshwar-temple.v1"
+    ]
+  },
+  {
+    "id": "ktm-kageshwar-temple",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 38,
+    "name": "Kageshwar Temple",
+    "summary": "Kageshwar is another named shrine in the restored Hanuman Dhoka ensemble, part of the density tha…",
+    "description": "Kageshwar is another named shrine in the restored Hanuman Dhoka ensemble, part of the density that earns the square its 'museum of temples' description.",
+    "coordinate": {
+      "latitude": 27.70492,
+      "longitude": 85.30763
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "allowed",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 38 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "historic"
+      },
+      {
+        "label": "Type",
+        "value": "Shiva temple"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Kageshwar Temple",
+        "eyebrow": "historic",
+        "body": "Kageshwar is another named shrine in the restored Hanuman Dhoka ensemble, part of the density that earns the square its 'museum of temples' description."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Notice how its roofline overlaps neighbouring monuments from different positions."
+      }
+    ],
+    "questPrompt": "Find a viewpoint where three rooflines layer without hiding Kageshwar.",
+    "questMode": "composition",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-kageshwar-temple.v1"
+    ]
+  },
+  {
+    "id": "ktm-tribhuvan-gallery",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 39,
+    "name": "Tribhuvan Gallery and Museum",
+    "summary": "Royal rooms became museum galleries, changing private objects and spaces into a public account of…",
+    "description": "Royal rooms became museum galleries, changing private objects and spaces into a public account of the Shah monarchy.",
+    "coordinate": {
+      "latitude": 27.70412,
+      "longitude": 85.30786
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "restricted",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 39 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "20th century museum use"
+      },
+      {
+        "label": "Type",
+        "value": "Palace museum"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Tribhuvan Gallery and Museum",
+        "eyebrow": "20th century museum use",
+        "body": "Royal rooms became museum galleries, changing private objects and spaces into a public account of the Shah monarchy."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Distinguish the historic room from the later exhibition layer and follow current museum photo rules."
+      }
+    ],
+    "questPrompt": "Write about one object–room relationship; use a photo only where museum signs explicitly allow it.",
+    "questMode": "museum",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-tribhuvan-gallery.v1"
+    ]
+  },
+  {
+    "id": "ktm-shisha-baithak",
+    "parentSiteId": "kathmandu-durbar-square",
+    "parentOrder": 40,
+    "name": "Shisha Baithak",
+    "summary": "Shisha Baithak displays a Malla throne within a later palace presentation, compressing dynasties …",
+    "description": "Shisha Baithak displays a Malla throne within a later palace presentation, compressing dynasties and curatorial choices into one viewing space.",
+    "coordinate": {
+      "latitude": 27.70408,
+      "longitude": 85.30782
+    },
+    "zone": "kathmandu_valley",
+    "region": "kathmandu-valley",
+    "tier": 2,
+    "radiusMeters": 14,
+    "photography": "restricted",
+    "facts": [
+      {
+        "label": "Kathmandu catalogue",
+        "value": "Named landmark 40 of 40"
+      },
+      {
+        "label": "Date",
+        "value": "palace period"
+      },
+      {
+        "label": "Type",
+        "value": "Throne patio"
+      },
+      {
+        "label": "Coordinate",
+        "value": "Map-derived approximation; verify on site"
+      }
+    ],
+    "story": [
+      {
+        "title": "Shisha Baithak",
+        "eyebrow": "palace period",
+        "body": "Shisha Baithak displays a Malla throne within a later palace presentation, compressing dynasties and curatorial choices into one viewing space."
+      },
+      {
+        "title": "What to notice",
+        "eyebrow": "Read the place slowly",
+        "body": "Ask what belongs to the original setting and what was arranged later for visitors."
+      }
+    ],
+    "questPrompt": "Record a note separating object, architecture and exhibition; follow all indoor photo restrictions.",
+    "questMode": "museum",
+    "dhammaLinks": [],
+    "sourceTier": "documented",
+    "sourceIds": [
+      "unesco-hanuman-dhoka-inventory",
+      "ntb-kathmandu-durbar",
+      "hanuman-dhoka-museum"
+    ],
+    "condition": "stable",
+    "vantageIds": [
+      "ktm-shisha-baithak.v1"
     ]
   }
 ];
@@ -796,6 +4571,621 @@ export const demoVantages: Vantage[] = [
     "positionToleranceM": 5,
     "bearingToleranceDeg": 10,
     "hfovDeg": 50
+  },
+  {
+    "id": "kathmandu-durbar-square.v1",
+    "siteId": "kathmandu-durbar-square",
+    "label": "South public approach, facing north",
+    "coordinate": {
+      "latitude": 27.703691371541503,
+      "longitude": 85.308333
+    },
+    "bearing": 0,
+    "pitch": 8,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-hanuman-dhoka-palace.v1",
+    "siteId": "ktm-hanuman-dhoka-palace",
+    "label": "West public approach, facing east",
+    "coordinate": {
+      "latitude": 27.70418,
+      "longitude": 85.30768868343708
+    },
+    "bearing": 90,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-hanuman-gate.v1",
+    "siteId": "ktm-hanuman-gate",
+    "label": "North public approach, facing south",
+    "coordinate": {
+      "latitude": 27.704120848005747,
+      "longitude": 85.30767
+    },
+    "bearing": 180,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-nasal-chowk.v1",
+    "siteId": "ktm-nasal-chowk",
+    "label": "East public approach, facing west",
+    "coordinate": {
+      "latitude": 27.70418,
+      "longitude": 85.30800131656292
+    },
+    "bearing": 270,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-mohan-chowk.v1",
+    "siteId": "ktm-mohan-chowk",
+    "label": "South public approach, facing north",
+    "coordinate": {
+      "latitude": 27.704299151994253,
+      "longitude": 85.30793
+    },
+    "bearing": 0,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-sundari-chowk.v1",
+    "siteId": "ktm-sundari-chowk",
+    "label": "West public approach, facing east",
+    "coordinate": {
+      "latitude": 27.70437,
+      "longitude": 85.30762868327808
+    },
+    "bearing": 90,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-basantapur-durbar.v1",
+    "siteId": "ktm-basantapur-durbar",
+    "label": "North public approach, facing south",
+    "coordinate": {
+      "latitude": 27.70370084800575,
+      "longitude": 85.30774
+    },
+    "bearing": 180,
+    "pitch": 8,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-taleju-temple.v1",
+    "siteId": "ktm-taleju-temple",
+    "label": "East public approach, facing west",
+    "coordinate": {
+      "latitude": 27.70455,
+      "longitude": 85.30804131687258
+    },
+    "bearing": 270,
+    "pitch": 8,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-degu-taleju.v1",
+    "siteId": "ktm-degu-taleju",
+    "label": "South public approach, facing north",
+    "coordinate": {
+      "latitude": 27.70403915199425,
+      "longitude": 85.30755
+    },
+    "bearing": 0,
+    "pitch": 8,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-panchamukhi-hanuman.v1",
+    "siteId": "ktm-panchamukhi-hanuman",
+    "label": "West public approach, facing east",
+    "coordinate": {
+      "latitude": 27.70423,
+      "longitude": 85.30793868339524
+    },
+    "bearing": 90,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-jagannath-temple.v1",
+    "siteId": "ktm-jagannath-temple",
+    "label": "North public approach, facing south",
+    "coordinate": {
+      "latitude": 27.704140848005746,
+      "longitude": 85.30738
+    },
+    "bearing": 180,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-mahendreshwar-temple.v1",
+    "siteId": "ktm-mahendreshwar-temple",
+    "label": "East public approach, facing west",
+    "coordinate": {
+      "latitude": 27.70417,
+      "longitude": 85.30739131655454
+    },
+    "bearing": 270,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-kotilingeshwar-temple.v1",
+    "siteId": "ktm-kotilingeshwar-temple",
+    "label": "South public approach, facing north",
+    "coordinate": {
+      "latitude": 27.704199151994253,
+      "longitude": 85.30734
+    },
+    "bearing": 0,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-krishna-temple.v1",
+    "siteId": "ktm-krishna-temple",
+    "label": "West public approach, facing east",
+    "coordinate": {
+      "latitude": 27.7043,
+      "longitude": 85.30734868333666
+    },
+    "bearing": 90,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-kal-bhairav.v1",
+    "siteId": "ktm-kal-bhairav",
+    "label": "North public approach, facing south",
+    "coordinate": {
+      "latitude": 27.704500848005747,
+      "longitude": 85.30743
+    },
+    "bearing": 180,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-swet-bhairav.v1",
+    "siteId": "ktm-swet-bhairav",
+    "label": "East public approach, facing west",
+    "coordinate": {
+      "latitude": 27.70408,
+      "longitude": 85.30764131647923
+    },
+    "bearing": 270,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-narsingha-statue.v1",
+    "siteId": "ktm-narsingha-statue",
+    "label": "South public approach, facing north",
+    "coordinate": {
+      "latitude": 27.70404915199425,
+      "longitude": 85.3076
+    },
+    "bearing": 0,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-pratap-malla-column.v1",
+    "siteId": "ktm-pratap-malla-column",
+    "label": "West public approach, facing east",
+    "coordinate": {
+      "latitude": 27.70418,
+      "longitude": 85.30739868343709
+    },
+    "bearing": 90,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-kumari-ghar.v1",
+    "siteId": "ktm-kumari-ghar",
+    "label": "North public approach, facing south",
+    "coordinate": {
+      "latitude": 27.703650848005747,
+      "longitude": 85.30738
+    },
+    "bearing": 180,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-kasthamandap.v1",
+    "siteId": "ktm-kasthamandap",
+    "label": "East public approach, facing west",
+    "coordinate": {
+      "latitude": 27.70335,
+      "longitude": 85.3070813158683
+    },
+    "bearing": 270,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-simha-sattal.v1",
+    "siteId": "ktm-simha-sattal",
+    "label": "South public approach, facing north",
+    "coordinate": {
+      "latitude": 27.703169151994253,
+      "longitude": 85.30706
+    },
+    "bearing": 0,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-maju-dega.v1",
+    "siteId": "ktm-maju-dega",
+    "label": "West public approach, facing east",
+    "coordinate": {
+      "latitude": 27.7037,
+      "longitude": 85.30705868383879
+    },
+    "bearing": 90,
+    "pitch": 8,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-shiva-parvati-temple.v1",
+    "siteId": "ktm-shiva-parvati-temple",
+    "label": "North public approach, facing south",
+    "coordinate": {
+      "latitude": 27.70463084800575,
+      "longitude": 85.30734
+    },
+    "bearing": 180,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-ashok-vinayak.v1",
+    "siteId": "ktm-ashok-vinayak",
+    "label": "East public approach, facing west",
+    "coordinate": {
+      "latitude": 27.70318,
+      "longitude": 85.30689131572603
+    },
+    "bearing": 270,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-kabindrapur.v1",
+    "siteId": "ktm-kabindrapur",
+    "label": "South public approach, facing north",
+    "coordinate": {
+      "latitude": 27.704399151994252,
+      "longitude": 85.30722
+    },
+    "bearing": 0,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-indrapur-temple.v1",
+    "siteId": "ktm-indrapur-temple",
+    "label": "West public approach, facing east",
+    "coordinate": {
+      "latitude": 27.70462,
+      "longitude": 85.30717868306884
+    },
+    "bearing": 90,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-gaddi-baithak.v1",
+    "siteId": "ktm-gaddi-baithak",
+    "label": "North public approach, facing south",
+    "coordinate": {
+      "latitude": 27.70368084800575,
+      "longitude": 85.30762
+    },
+    "bearing": 180,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-trailokya-mohan.v1",
+    "siteId": "ktm-trailokya-mohan",
+    "label": "East public approach, facing west",
+    "coordinate": {
+      "latitude": 27.70385,
+      "longitude": 85.30729131628674
+    },
+    "bearing": 270,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-gopinath-temple.v1",
+    "siteId": "ktm-gopinath-temple",
+    "label": "South public approach, facing north",
+    "coordinate": {
+      "latitude": 27.704649151994253,
+      "longitude": 85.30731
+    },
+    "bearing": 0,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-saraswati-temple.v1",
+    "siteId": "ktm-saraswati-temple",
+    "label": "West public approach, facing east",
+    "coordinate": {
+      "latitude": 27.70467,
+      "longitude": 85.307308683027
+    },
+    "bearing": 90,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-laxmi-narayan-temple.v1",
+    "siteId": "ktm-laxmi-narayan-temple",
+    "label": "North public approach, facing south",
+    "coordinate": {
+      "latitude": 27.70483084800575,
+      "longitude": 85.30745
+    },
+    "bearing": 180,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-chyasin-dega.v1",
+    "siteId": "ktm-chyasin-dega",
+    "label": "East public approach, facing west",
+    "coordinate": {
+      "latitude": 27.70482,
+      "longitude": 85.30758131709854
+    },
+    "bearing": 270,
+    "pitch": 8,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-tarini-bahal.v1",
+    "siteId": "ktm-tarini-bahal",
+    "label": "South public approach, facing north",
+    "coordinate": {
+      "latitude": 27.704969151994252,
+      "longitude": 85.3072
+    },
+    "bearing": 0,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-dashain-ghar.v1",
+    "siteId": "ktm-dashain-ghar",
+    "label": "West public approach, facing east",
+    "coordinate": {
+      "latitude": 27.70442,
+      "longitude": 85.30800868323622
+    },
+    "bearing": 90,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-nagara-ghar.v1",
+    "siteId": "ktm-nagara-ghar",
+    "label": "North public approach, facing south",
+    "coordinate": {
+      "latitude": 27.704420848005746,
+      "longitude": 85.30808
+    },
+    "bearing": 180,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-dhukuti-ghar.v1",
+    "siteId": "ktm-dhukuti-ghar",
+    "label": "East public approach, facing west",
+    "coordinate": {
+      "latitude": 27.70449,
+      "longitude": 85.30814131682236
+    },
+    "bearing": 270,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-dasavatar-temple.v1",
+    "siteId": "ktm-dasavatar-temple",
+    "label": "South public approach, facing north",
+    "coordinate": {
+      "latitude": 27.70479915199425,
+      "longitude": 85.30754
+    },
+    "bearing": 0,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-natyeshwar-temple.v1",
+    "siteId": "ktm-natyeshwar-temple",
+    "label": "West public approach, facing east",
+    "coordinate": {
+      "latitude": 27.7043,
+      "longitude": 85.30804868333665
+    },
+    "bearing": 90,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-kageshwar-temple.v1",
+    "siteId": "ktm-kageshwar-temple",
+    "label": "North public approach, facing south",
+    "coordinate": {
+      "latitude": 27.70500084800575,
+      "longitude": 85.30763
+    },
+    "bearing": 180,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-tribhuvan-gallery.v1",
+    "siteId": "ktm-tribhuvan-gallery",
+    "label": "East public approach, facing west",
+    "coordinate": {
+      "latitude": 27.70412,
+      "longitude": 85.30795131651271
+    },
+    "bearing": 270,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
+  },
+  {
+    "id": "ktm-shisha-baithak.v1",
+    "siteId": "ktm-shisha-baithak",
+    "label": "South public approach, facing north",
+    "coordinate": {
+      "latitude": 27.703999151994253,
+      "longitude": 85.30782
+    },
+    "bearing": 0,
+    "pitch": 2,
+    "positionToleranceM": 12,
+    "bearingToleranceDeg": 18,
+    "hfovDeg": 60,
+    "note": "Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline."
   }
 ];
 
@@ -826,4 +5216,11 @@ export function findVantage(vantageId: string): Vantage | undefined {
 export function vantagesForSite(siteId: string): Vantage[] {
   const id = canonical(siteId);
   return demoVantages.filter((vantage) => vantage.siteId === id);
+}
+
+export function sitesForParent(parentSiteId: string): HeritageSite[] {
+  const id = canonical(parentSiteId);
+  return demoSites
+    .filter((site) => site.parentSiteId === id)
+    .sort((a, b) => (a.parentOrder ?? Number.MAX_SAFE_INTEGER) - (b.parentOrder ?? Number.MAX_SAFE_INTEGER));
 }

@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { useRouter } from 'expo-router';
 import { ActivityIndicator, Image, StyleSheet, TextInput, View } from 'react-native';
+import * as FileSystem from 'expo-file-system/legacy';
 
 import { Button, Divider, Text } from '@/components/ui';
 import { database, questReview } from '@/services';
@@ -74,6 +76,7 @@ export function TaskEvidenceSheet({
   onSubmitted,
   onCancel,
 }: TaskEvidenceSheetProps) {
+  const router = useRouter();
   const { preferences } = usePreferences();
   const [photoUri, setPhotoUri] = useState<string | undefined>(existing?.photoUri);
   const [count, setCount] = useState(existing?.count?.toString() ?? '');
@@ -113,10 +116,25 @@ export function TaskEvidenceSheet({
 
   const submit = async () => {
     setSaving(true);
+    let savedPhotoUri = photoUri;
+
+    // Camera-picker results may live in a temporary cache. Persist the memory
+    // before saving evidence so the album stays available after cache cleanup.
+    if (photoUri) {
+      const directory = `${FileSystem.documentDirectory}quest-memories/`;
+      const destination = `${directory}${questId}-${task.id}-${Date.now()}.jpg`;
+      try {
+        await FileSystem.makeDirectoryAsync(directory, { intermediates: true });
+        await FileSystem.copyAsync({ from: photoUri, to: destination });
+        savedPhotoUri = destination;
+      } catch {
+        // Retain the selected file when durable storage is momentarily unavailable.
+      }
+    }
     const submission: QuestSubmission = {
       questId,
       taskId: task.id,
-      photoUri,
+      photoUri: savedPhotoUri,
       count: count.trim() ? Number(count) : undefined,
       note: note.trim() || undefined,
       submittedAt: new Date().toISOString(),
@@ -144,6 +162,21 @@ export function TaskEvidenceSheet({
         {task.expectation ?? task.description}
       </Text>
 
+      {task.photoMode ? (
+        <View style={styles.guidance}>
+          <Text variant="label" tone="sandstone" uppercase>
+            {task.photoMode.replaceAll('-', ' ')} challenge
+          </Text>
+          {task.safetyNote ? (
+            <Text variant="caption" tone="secondary">{task.safetyNote}</Text>
+          ) : null}
+        </View>
+      ) : task.safetyNote ? (
+        <View style={styles.guidance}>
+          <Text variant="caption" tone="secondary">{task.safetyNote}</Text>
+        </View>
+      ) : null}
+
       {kind === 'photo' && !picker ? (
         <View style={styles.block}>
           <Text variant="body" tone="secondary">
@@ -161,10 +194,13 @@ export function TaskEvidenceSheet({
 
           <View style={styles.actions}>
             <Button
-              label={photoUri ? 'Retake' : 'Take a photograph'}
+              label="Open Memory Camera"
               variant="secondary"
               block
-              onPress={() => void pick(true)}
+              onPress={() => router.push({
+                pathname: '../../quest-camera',
+                params: { questId, taskId: task.id },
+              })}
             />
             <Button
               label="Choose from library"
@@ -244,7 +280,7 @@ export function TaskEvidenceSheet({
 
       <View style={styles.actions}>
         <Button
-          label={saving ? 'Saving…' : 'Record this'}
+          label={saving ? 'Storing…' : 'Store in memories'}
           block
           disabled={!ready || saving}
           loading={saving}
@@ -258,6 +294,14 @@ export function TaskEvidenceSheet({
 
 const styles = StyleSheet.create({
   sheet: { gap: spacing.base },
+  guidance: {
+    gap: spacing.xs,
+    padding: spacing.md,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surfaceSecondary,
+  },
   header: { gap: spacing.xs },
   block: { gap: spacing.sm },
   actions: { gap: spacing.sm },

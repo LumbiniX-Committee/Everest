@@ -91,7 +91,15 @@ export const demoPrecincts: Precinct[] = [
     centre: { latitude: 27.673484, longitude: 85.325284 },
     // Wide enough to cover the square and Manga Hiti together, ~50 m apart.
     radiusMetres: 120,
-    siteIds: ['patan-durbar-square', 'manga-hiti'],
+    siteIds: [
+      'patan-durbar-square', 'patan-bhai-dega', 'patan-lakshminarayan-temple',
+      'patan-sundari-chowk', 'patan-lohari-hiti', 'patan-keshav-narayan-chowk',
+      'patan-vishwanath-1666', 'patan-chyasin-dega', 'patan-mul-chowk',
+      'patan-hari-shankar-temple', 'patan-degutale-1560', 'patan-narayan-temple',
+      'patan-degutale-1562', 'patan-char-narayan-temple', 'patan-krishna-mandir',
+      'patan-kiskisila-temple', 'patan-bishwanath-1626', 'manga-hiti',
+      'patan-ganesh-temple', 'patan-bhimsen-temple',
+    ],
   },
   {
     id: 'changu-narayan',
@@ -100,6 +108,27 @@ export const demoPrecincts: Precinct[] = [
     centre: { latitude: 27.716347, longitude: 85.427897 },
     radiusMetres: 150,
     siteIds: ['changu-narayan'],
+  },
+  {
+    id: 'kathmandu-durbar-square',
+    name: 'Kathmandu Durbar Square',
+    summary: 'Hanuman Dhoka palace and forty individually interpreted landmarks in the living royal square.',
+    centre: { latitude: 27.703889, longitude: 85.308333 },
+    radiusMetres: 220,
+    siteIds: [
+      'kathmandu-durbar-square',
+      'ktm-hanuman-dhoka-palace', 'ktm-hanuman-gate', 'ktm-nasal-chowk', 'ktm-mohan-chowk',
+      'ktm-sundari-chowk', 'ktm-basantapur-durbar', 'ktm-taleju-temple', 'ktm-degu-taleju',
+      'ktm-panchamukhi-hanuman', 'ktm-jagannath-temple', 'ktm-mahendreshwar-temple',
+      'ktm-kotilingeshwar-temple', 'ktm-krishna-temple', 'ktm-kal-bhairav', 'ktm-swet-bhairav',
+      'ktm-narsingha-statue', 'ktm-pratap-malla-column', 'ktm-kumari-ghar', 'ktm-kasthamandap',
+      'ktm-simha-sattal', 'ktm-maju-dega', 'ktm-shiva-parvati-temple', 'ktm-ashok-vinayak',
+      'ktm-kabindrapur', 'ktm-indrapur-temple', 'ktm-gaddi-baithak', 'ktm-trailokya-mohan',
+      'ktm-gopinath-temple', 'ktm-saraswati-temple', 'ktm-laxmi-narayan-temple',
+      'ktm-chyasin-dega', 'ktm-tarini-bahal', 'ktm-dashain-ghar', 'ktm-nagara-ghar',
+      'ktm-dhukuti-ghar', 'ktm-dasavatar-temple', 'ktm-natyeshwar-temple',
+      'ktm-kageshwar-temple', 'ktm-tribhuvan-gallery', 'ktm-shisha-baithak',
+    ],
   },
 ];
 

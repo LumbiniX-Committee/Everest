@@ -34,6 +34,8 @@ export function QuestCard({ quest, onPress }: QuestCardProps) {
   const completedCount = progress.completedTasks.length;
   const isCompleted = progress.status === 'completed';
   const isInProgress = progress.status === 'in_progress';
+  const arrivalTask = tasks.find((task) => task.autoComplete === 'arrival');
+  const reached = arrivalTask ? progress.completedTasks.includes(arrivalTask.id) : false;
 
   // The first site any task names. Quests are built around a place, and the
   // first task is the one that takes you there.
@@ -85,6 +87,10 @@ export function QuestCard({ quest, onPress }: QuestCardProps) {
           {isCompleted ? (
             <Text variant="label" uppercase style={styles.completedTag}>
               Completed
+            </Text>
+          ) : arrivalTask ? (
+            <Text variant="label" uppercase style={reached ? styles.reachedTag : styles.visitTag}>
+              {reached ? 'Reached' : 'Visit to begin'}
             </Text>
           ) : null}
         </View>
@@ -144,6 +150,8 @@ const styles = StyleSheet.create({
   body: { padding: spacing.base, gap: spacing.sm },
   headRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   completedTag: { color: colors.resolved },
+  reachedTag: { color: colors.alignmentLocked },
+  visitTag: { color: colors.textMuted },
   title: {},
   footRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   meta: { flex: 1 },

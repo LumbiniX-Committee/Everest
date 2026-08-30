@@ -49,11 +49,45 @@ const vantages = read('vantages.json');
 const quests = read('quests.json');
 const needs = read('needs.json');
 const timeline = read('timeline.json');
+const storySections = read('story-sections.json');
+const patanMonuments = read('patan-monuments.json');
+const kathmanduMonuments = read('kathmandu-monuments.json');
 const plates = existsSync(join(seed, 'plates.json')) ? read('plates.json') : [];
 
 const siteIds = new Set(sites.map((s) => s.id));
 const vantageIds = new Set(vantages.map((v) => v.id));
 const timelineIds = new Set(timeline.map((t) => t.id));
+
+for (const id of Object.keys(storySections)) {
+  if (!siteIds.has(id)) err(`story-sections: unknown site '${id}'`);
+}
+
+if (patanMonuments.length !== 18) {
+  err(`patan-monuments: expected 18 child records plus existing Manga Hiti, found ${patanMonuments.length}`);
+}
+const patanNumbers = new Set(patanMonuments.map((monument) => monument.inventoryNumber));
+if (patanNumbers.size !== 18 || patanNumbers.has(17) || !patanNumbers.has(1) || !patanNumbers.has(19)) {
+  err('patan-monuments: inventory numbers must uniquely cover 1–16 and 18–19; Manga Hiti is number 17');
+}
+for (const monument of patanMonuments) {
+  const at = `patan monument '${monument.id}'`;
+  if (!monument.name || !monument.description) err(`${at}: missing name or description`);
+  if (!monument.coords || typeof monument.coords.lat !== 'number' || typeof monument.coords.lon !== 'number') {
+    err(`${at}: missing coordinates`);
+  }
+  if ((monument.story ?? []).length < 2) err(`${at}: fewer than two story chapters`);
+}
+
+if (kathmanduMonuments.length < 40) {
+  err(`kathmandu-monuments: expected the 40 named official landmarks, found ${kathmanduMonuments.length}`);
+}
+const kathmanduNumbers = new Set(kathmanduMonuments.map((monument) => monument.inventoryNumber));
+if (kathmanduNumbers.size !== kathmanduMonuments.length) err('kathmandu-monuments: duplicate inventory number');
+for (const monument of kathmanduMonuments) {
+  const at = `Kathmandu monument '${monument.id}'`;
+  if (!monument.name || !monument.description || !monument.lookFor || !monument.photoPrompt) err(`${at}: incomplete story or quest copy`);
+  if (!monument.coords || typeof monument.coords.lat !== 'number' || typeof monument.coords.lon !== 'number') err(`${at}: missing coordinates`);
+}
 
 // --- sites ------------------------------------------------------------------
 for (const s of sites) {
@@ -73,6 +107,11 @@ for (const s of sites) {
   if (!s.ne_review) err(`${at}: missing ne_review`);
   for (const v of s.vantages ?? []) if (!vantageIds.has(v)) err(`${at}: references missing vantage '${v}'`);
   for (const t of s.timeline ?? []) if (!timelineIds.has(t)) err(`${at}: references missing timeline '${t}'`);
+  const chapters = storySections[s.id] ?? s.story ?? [];
+  if (chapters.length < 2) err(`${at}: fewer than two story chapters`);
+  for (const chapter of chapters) {
+    if (!chapter.title?.en || !chapter.body?.en) err(`${at}: story chapter missing title.en or body.en`);
+  }
 }
 
 // --- vantages ---------------------------------------------------------------

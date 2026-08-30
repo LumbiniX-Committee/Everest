@@ -3,7 +3,7 @@ import { bearingDegrees, distanceMeters } from '@/utils';
 import type { Coordinate } from '@/types';
 
 /**
- * A pilgrim walking Lumbini, for a device that is not in Lumbini.
+ * Heritage walks for a device that is not standing at the selected precinct.
  *
  * ── Why this exists ─────────────────────────────────────────────────────────
  *
@@ -51,7 +51,7 @@ const METRES_PER_TICK = WALK_MPS * PACE * (DEMO_TICK_MS / 1000);
 /** Ticks spent standing at a site. Long enough to read what arrival put up. */
 const PAUSE_TICKS = 12;
 
-/** Radius of the circumambulation walked around the Maya Devi Temple. */
+/** Radius of a simulated clockwise circuit around a primary monument. */
 const CIRCUIT_RADIUS_M = 20;
 
 /**
@@ -70,6 +70,8 @@ export type DemoActivity =
   | { kind: 'circling'; aroundSiteId: string; degrees: number };
 
 export type DemoStep = {
+  walkId: string;
+  walkName: string;
   coordinate: Coordinate;
   /** Degrees from true north, in the direction of travel. */
   headingDeg: number;
@@ -79,6 +81,15 @@ export type DemoStep = {
   /** Index into the itinerary, and its length — the walk's own progress bar. */
   index: number;
   total: number;
+};
+
+type DemoLeg = { at: string } | { circle: string } | { start: Coordinate };
+
+export type DemoWalkDefinition = {
+  id: string;
+  name: string;
+  precinctId: string;
+  legs: readonly DemoLeg[];
 };
 
 /**
@@ -97,26 +108,166 @@ export type DemoStep = {
  * resolves nothing and silently skips every leg. If a waypoint here stops
  * resolving, check which of the two files the name came from.
  *
- * The Marker Stone is not a waypoint: it shares its coordinate with the temple
- * that encloses it, so a leg to it has zero length. Its arrival still fires —
- * it has the tightest reach of the five and the walk passes straight through it.
+ * The Marker Stone shares the temple coordinate, but remains an explicit dwell
+ * waypoint. That zero-distance pause is intentional: it opens the stone's own
+ * story instead of silently treating an enclosed monument as part of the
+ * temple's umbrella story.
  */
-const ITINERARY: readonly (
-  | { at: string }
-  | { circle: string }
-  | { start: Coordinate }
-)[] = [
-  // A little south of the Puskarini, roughly where the south gate path enters.
-  { start: { latitude: 27.46836, longitude: 83.27572 } },
-  { at: 'puskarini' },
-  { at: 'maya-devi-temple' },
-  { circle: 'maya-devi-temple' },
-  { at: 'ashokan-pillar' },
-  { at: 'vihara-remains' },
-  { at: 'myanmar-temple' },
-  { at: 'gautami-nuns-temple' },
-  { at: 'puskarini' },
+const WALK_DEFINITIONS: readonly DemoWalkDefinition[] = [
+  {
+    id: 'sacred-garden',
+    name: 'Sacred Garden walk',
+    precinctId: 'sacred-garden',
+    legs: [
+      { start: { latitude: 27.46795, longitude: 83.27572 } },
+      { at: 'puskarini' },
+      { at: 'maya-devi-temple' },
+      { at: 'marker-stone' },
+      { circle: 'maya-devi-temple' },
+      { at: 'ashokan-pillar' },
+      { at: 'vihara-remains' },
+      { at: 'puskarini' },
+    ],
+  },
+  {
+    id: 'monastic-east',
+    name: 'East Monastic Zone walk',
+    precinctId: 'monastic-east',
+    legs: [
+      { start: { latitude: 27.47435, longitude: 83.27805 } },
+      { at: 'gautami-nuns-temple' },
+      { at: 'myanmar-temple' },
+      { at: 'gautami-nuns-temple' },
+    ],
+  },
+  {
+    id: 'monastic-west',
+    name: 'West Monastic Zone walk',
+    precinctId: 'monastic-west',
+    legs: [
+      { start: { latitude: 27.4772, longitude: 83.27175 } },
+      { at: 'korean-temple' },
+      { at: 'china-temple' },
+      { at: 'korean-temple' },
+    ],
+  },
+  {
+    id: 'world-peace-pagoda',
+    name: 'World Peace Pagoda walk',
+    precinctId: 'world-peace-pagoda',
+    legs: [
+      { start: { latitude: 27.49685, longitude: 83.27626 } },
+      { at: 'world-peace-pagoda' },
+      { circle: 'world-peace-pagoda' },
+    ],
+  },
+  {
+    id: 'tilaurakot',
+    name: 'Tilaurakot rampart walk',
+    precinctId: 'tilaurakot',
+    legs: [
+      { start: { latitude: 27.5721, longitude: 83.0536 } },
+      { at: 'tilaurakot' },
+      { circle: 'tilaurakot' },
+    ],
+  },
+  {
+    id: 'ramagrama',
+    name: 'Ramagrama stupa walk',
+    precinctId: 'ramagrama',
+    legs: [
+      { start: { latitude: 27.50105, longitude: 83.687 } },
+      { at: 'ramagrama' },
+      { circle: 'ramagrama' },
+    ],
+  },
+  {
+    id: 'patan-durbar-square',
+    name: 'Patan nineteen-monument walk',
+    precinctId: 'patan-durbar-square',
+    legs: [
+      { start: { latitude: 27.67225, longitude: 85.32545 } },
+      { at: 'patan-bhai-dega' },
+      { at: 'patan-lakshminarayan-temple' },
+      { at: 'patan-sundari-chowk' },
+      { at: 'patan-lohari-hiti' },
+      { at: 'patan-ganesh-temple' },
+      { at: 'patan-mul-chowk' },
+      { at: 'patan-degutale-1560' },
+      { at: 'patan-narayan-temple' },
+      { at: 'patan-degutale-1562' },
+      { at: 'patan-hari-shankar-temple' },
+      { at: 'patan-char-narayan-temple' },
+      { at: 'patan-bishwanath-1626' },
+      { at: 'patan-chyasin-dega' },
+      { at: 'patan-keshav-narayan-chowk' },
+      { at: 'patan-krishna-mandir' },
+      { at: 'patan-vishwanath-1666' },
+      { at: 'patan-kiskisila-temple' },
+      { at: 'patan-bhimsen-temple' },
+      { at: 'manga-hiti' },
+      { at: 'patan-durbar-square' },
+      { circle: 'patan-durbar-square' },
+    ],
+  },
+  {
+    id: 'changu-narayan',
+    name: 'Changu Narayan temple walk',
+    precinctId: 'changu-narayan',
+    legs: [
+      { start: { latitude: 27.71475, longitude: 85.4279 } },
+      { at: 'changu-narayan' },
+      { circle: 'changu-narayan' },
+    ],
+  },
+  {
+    id: 'kathmandu-durbar-square',
+    name: 'Kathmandu forty-landmark walk',
+    precinctId: 'kathmandu-durbar-square',
+    legs: [
+      { start: { latitude: 27.70295, longitude: 85.30672 } },
+      { at: 'ktm-ashok-vinayak' }, { at: 'ktm-kasthamandap' }, { at: 'ktm-simha-sattal' },
+      { at: 'ktm-kumari-ghar' }, { at: 'ktm-gaddi-baithak' }, { at: 'ktm-basantapur-durbar' },
+      { at: 'ktm-maju-dega' }, { at: 'ktm-trailokya-mohan' }, { at: 'ktm-jagannath-temple' },
+      { at: 'ktm-mahendreshwar-temple' }, { at: 'ktm-kotilingeshwar-temple' },
+      { at: 'ktm-krishna-temple' }, { at: 'ktm-kal-bhairav' }, { at: 'ktm-shiva-parvati-temple' },
+      { at: 'ktm-kabindrapur' }, { at: 'ktm-indrapur-temple' }, { at: 'ktm-gopinath-temple' },
+      { at: 'ktm-saraswati-temple' }, { at: 'ktm-laxmi-narayan-temple' }, { at: 'ktm-chyasin-dega' },
+      { at: 'ktm-kageshwar-temple' }, { at: 'ktm-tarini-bahal' }, { at: 'ktm-hanuman-gate' },
+      { at: 'ktm-hanuman-dhoka-palace' }, { at: 'ktm-nasal-chowk' }, { at: 'ktm-panchamukhi-hanuman' },
+      { at: 'ktm-mohan-chowk' }, { at: 'ktm-sundari-chowk' }, { at: 'ktm-taleju-temple' },
+      { at: 'ktm-degu-taleju' }, { at: 'ktm-pratap-malla-column' }, { at: 'ktm-narsingha-statue' },
+      { at: 'ktm-swet-bhairav' }, { at: 'ktm-dashain-ghar' }, { at: 'ktm-nagara-ghar' },
+      { at: 'ktm-dhukuti-ghar' }, { at: 'ktm-dasavatar-temple' }, { at: 'ktm-natyeshwar-temple' },
+      { at: 'ktm-tribhuvan-gallery' }, { at: 'ktm-shisha-baithak' },
+      { at: 'kathmandu-durbar-square' }, { circle: 'kathmandu-durbar-square' },
+    ],
+  },
 ];
+
+let activeWalkId = WALK_DEFINITIONS[0].id;
+
+function activeDefinition(): DemoWalkDefinition {
+  return WALK_DEFINITIONS.find((walk) => walk.id === activeWalkId) ?? WALK_DEFINITIONS[0];
+}
+
+export function availableWalks(): readonly DemoWalkDefinition[] {
+  return WALK_DEFINITIONS;
+}
+
+export function selectedWalk(): DemoWalkDefinition {
+  return activeDefinition();
+}
+
+export function walkForSite(siteId: string): DemoWalkDefinition | undefined {
+  const parentId = demoSites.find((site) => site.id === siteId)?.parentSiteId;
+  const routeSiteId = parentId ?? siteId;
+  return WALK_DEFINITIONS.find((walk) =>
+    walk.legs.some((leg) =>
+      ('at' in leg && leg.at === routeSiteId) || ('circle' in leg && leg.circle === routeSiteId),
+    ),
+  );
+}
 
 function siteCoordinate(id: string): Coordinate | null {
   return demoSites.find((s) => s.id === id)?.coordinate ?? null;
@@ -129,7 +280,7 @@ function siteCoordinate(id: string): Coordinate | null {
  * instead of on someone's phone.
  */
 if (__DEV__) {
-  const missing = ITINERARY.flatMap((leg) =>
+  const missing = WALK_DEFINITIONS.flatMap((walk) => walk.legs).flatMap((leg) =>
     'at' in leg ? [leg.at] : 'circle' in leg ? [leg.circle] : [],
   ).filter((id) => !siteCoordinate(id));
   if (missing.length > 0) {
@@ -178,8 +329,8 @@ function interpolate(a: Coordinate, b: Coordinate, t: number): Coordinate {
  * it stopped, and the whole track is available up front for the map to draw as
  * a route before the pilgrim has walked any of it.
  */
-function buildItinerary(): DemoStep[] {
-  const steps: Omit<DemoStep, 'index' | 'total'>[] = [];
+function buildItinerary(definition: DemoWalkDefinition): DemoStep[] {
+  const steps: Omit<DemoStep, 'index' | 'total' | 'walkId' | 'walkName'>[] = [];
   const jitter = noise(0x5a4b53);
 
   let position: Coordinate | null = null;
@@ -199,7 +350,7 @@ function buildItinerary(): DemoStep[] {
     });
   };
 
-  for (const leg of ITINERARY) {
+  for (const leg of definition.legs) {
     if ('start' in leg) {
       position = leg.start;
       continue;
@@ -283,13 +434,19 @@ function buildItinerary(): DemoStep[] {
     position = target;
   }
 
-  return steps.map((step, index) => ({ ...step, index, total: steps.length }));
+  return steps.map((step, index) => ({
+    ...step,
+    walkId: definition.id,
+    walkName: definition.name,
+    index,
+    total: steps.length,
+  }));
 }
 
 let itinerary: DemoStep[] | null = null;
 
 function track(): DemoStep[] {
-  if (!itinerary) itinerary = buildItinerary();
+  if (!itinerary) itinerary = buildItinerary(activeDefinition());
   return itinerary;
 }
 
@@ -308,7 +465,7 @@ export function demoRoute(): [number, number][] {
 /** Precincts the walk passes through, named for the demo's own narration. */
 export function demoPrecinctNames(): string[] {
   const ids = new Set(
-    ITINERARY.flatMap((leg) => ('at' in leg ? [leg.at] : 'circle' in leg ? [leg.circle] : [])),
+    activeDefinition().legs.flatMap((leg) => ('at' in leg ? [leg.at] : 'circle' in leg ? [leg.circle] : [])),
   );
   return demoPrecincts
     .filter((p) => p.siteIds.some((id) => ids.has(id)))
@@ -347,8 +504,11 @@ let override: DemoStep[] | null = null;
 
 function tick(): void {
   if (override && override.length > 0) {
-    current = override.shift() as DemoStep;
-    if (override.length === 0) override = null;
+    // A site-page simulation is intentionally pinned until the visitor opens
+    // and finishes its story. Re-emit the first dwell fix while paused instead
+    // of draining the override and snapping back to the regional walk.
+    current = paused ? override[0] : (override.shift() as DemoStep);
+    if (!paused && override.length === 0) override = null;
     listeners.forEach((listener) => listener(current as DemoStep));
     return;
   }
@@ -366,7 +526,7 @@ function tick(): void {
   listeners.forEach((listener) => listener(current as DemoStep));
 }
 
-/** Begin, or restart from the south gate. Idempotent while already running. */
+/** Begin at the selected walk's approach. Idempotent while already running. */
 export function start(): void {
   if (timer) return;
   tick();
@@ -378,13 +538,28 @@ export function stop(): void {
   timer = null;
 }
 
-/** Back to the gate, keeping the walk running if it already was. */
+/** Back to the selected route's approach, keeping the walk running if it was. */
 export function restart(): void {
   cursor = 0;
   current = null;
   override = null;
   paused = false;
   if (timer) tick();
+}
+
+/** Switch to another complete regional itinerary and begin from its approach. */
+export function selectWalk(walkId: string): boolean {
+  const next = WALK_DEFINITIONS.find((walk) => walk.id === walkId);
+  if (!next) return false;
+
+  activeWalkId = next.id;
+  itinerary = null;
+  cursor = 0;
+  current = null;
+  override = null;
+  paused = false;
+  if (timer) tick();
+  return true;
 }
 
 /**
@@ -441,9 +616,13 @@ export function itinerarySiteIds(): string[] {
  * nearest point on its route.
  */
 export function goToSite(siteId: string): boolean {
-  const steps = track();
   const target = siteCoordinate(siteId);
   if (!target) return false;
+
+  const matchingWalk = walkForSite(siteId);
+  if (matchingWalk && matchingWalk.id !== activeWalkId) selectWalk(matchingWalk.id);
+
+  const steps = track();
 
   const onRoute = steps.findIndex(
     (s) => s.activity.kind === 'pausing' && s.activity.atSiteId === siteId,
@@ -457,6 +636,8 @@ export function goToSite(siteId: string): boolean {
     // closest — so the itinerary continues from somewhere plausible rather than
     // snapping back across Lumbini on the next tick.
     override = Array.from({ length: PAUSE_TICKS }, (_, i) => ({
+      walkId: activeDefinition().id,
+      walkName: activeDefinition().name,
       coordinate: target,
       headingDeg: 0,
       speedMps: 0,

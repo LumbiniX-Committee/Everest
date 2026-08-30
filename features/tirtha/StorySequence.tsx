@@ -227,7 +227,14 @@ function Pips({ count, at }: { count: number; at: number }) {
   return (
     <View style={styles.pips} accessibilityLabel={`Step ${at + 1} of ${count}`}>
       {Array.from({ length: count }, (_, i) => (
-        <View key={i} style={[styles.pip, i <= at && styles.pipOn]} />
+        <View
+          key={i}
+          style={[
+            styles.pip,
+            i < at && styles.pipDone,
+            i === at && styles.pipCurrent,
+          ]}
+        />
       ))}
     </View>
   );
@@ -261,6 +268,7 @@ export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQu
       siteSummary: significance.site.summary,
       narration: significance.narration,
       facts: significance.facts,
+      story: significance.story,
       dhamma: significance.dhamma,
     });
   }, [siteId, preferences.wisdomTier]);
@@ -460,6 +468,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.sm,
+    flexShrink: 1,
   },
 
   navBtn: {
@@ -491,12 +500,17 @@ const styles = StyleSheet.create({
     backgroundColor: colors.border,
   },
 
-  pipOn: {
+  pipDone: {
+    backgroundColor: colors.sandstone,
+  },
+
+  pipCurrent: {
     backgroundColor: colors.sandstone,
     width: 16,
   },
 
   nextBtn: {
+    flexShrink: 0,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs + 2,
     borderRadius: radii.full,
