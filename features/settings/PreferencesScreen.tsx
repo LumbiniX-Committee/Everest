@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 
 import { LoadingState, ScreenHeader } from '@/components/common';
 import { Button, Screen, Text } from '@/components/ui';
+import { application } from '@/services';
 import { usePreferences } from '@/store';
 import { spacing } from '@/theme';
 import {
@@ -23,6 +24,12 @@ export function PreferencesScreen() {
   if (!hydrated) {
     return <LoadingState label="Reading your preferences" />;
   }
+
+  const restoreDefaults = async () => {
+    await reset();
+    setConfirmingReset(false);
+    await application.reload('Restored preferences');
+  };
 
   return (
     <Screen scroll>
@@ -134,12 +141,11 @@ export function PreferencesScreen() {
       {confirmingReset ? (
         <SettingsSection title="Reset">
           <Text variant="body" tone="secondary" style={styles.resetBody}>
-            Restore all seven preferences to their defaults? Your observations, quests and
+            Restore all preferences to their defaults? Your observations, quests and
             condition reports are not affected.
           </Text>
           <Button label="Restore defaults" variant="primary" block onPress={() => {
-            void reset();
-            setConfirmingReset(false);
+            void restoreDefaults();
           }} />
           <Button label="Cancel" variant="quiet" block onPress={() => setConfirmingReset(false)} />
         </SettingsSection>

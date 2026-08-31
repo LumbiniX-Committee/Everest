@@ -17,4 +17,5 @@ export * as offlineModel from './offlineModel';
 export * as arrival from './arrival';
 export * as integrity from './integrity';
 export * as questReview from './questReview';
+export * as application from './application';
 export * as leaderboard from './leaderboard'; // lint-vocab:allow — the ranking surface, exempted by team decision

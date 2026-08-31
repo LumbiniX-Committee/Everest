@@ -15,7 +15,11 @@ export default function SettingsLayout() {
       screenOptions={{
         headerShown: false,
         contentStyle: { backgroundColor: colors.background },
+        animation: 'slide_from_right',
+        animationDuration: 280,
+        gestureEnabled: true,
       }}
     />
   );
 }
+

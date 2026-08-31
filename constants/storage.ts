@@ -12,6 +12,7 @@ export const StorageKeys = {
   // Preferences. One key each rather than a single serialised blob: a value
   // added later then reads as absent and falls back to its default, instead of
   // failing to parse an older shape and losing every setting at once.
+  prefColorTheme: `${PREFIX}.preferences.colorTheme`,
   prefAlignmentTolerance: `${PREFIX}.preferences.alignmentTolerance`,
   prefHapticsEnabled: `${PREFIX}.preferences.hapticsEnabled`,
   prefAutoCapture: `${PREFIX}.preferences.autoCapture`,
@@ -63,6 +64,7 @@ export const StorageKeys = {
 
 /** Preference field → storage key. The settings screen iterates this. */
 export const PreferenceKeys = {
+  colorTheme: StorageKeys.prefColorTheme,
   alignmentTolerance: StorageKeys.prefAlignmentTolerance,
   hapticsEnabled: StorageKeys.prefHapticsEnabled,
   autoCapture: StorageKeys.prefAutoCapture,

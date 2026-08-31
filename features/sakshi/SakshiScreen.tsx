@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 
-import { Button, Card, Chip, Divider, Screen, Text } from '@/components/ui';
+import { Button, Card, Chip, Divider, Icon, Screen, Text } from '@/components/ui';
 import { EmptyState, ScreenHeader, SettingsButton } from '@/components/common';
 import { VantageListItem } from '@/components/site';
 import { PracticeSummaryCard } from '@/components/practice';
@@ -16,7 +16,7 @@ import {
 } from '@/data';
 import { useCurrentPosition } from '@/hooks';
 import { database } from '@/services';
-import { onnxAvailable, onnxUnavailableReason } from '@/services/ai/onnx';
+import { onnxAvailable } from '@/services/ai/onnx';
 import { usePractice } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 import { distanceMeters, formatDistance, formatTimestamp } from '@/utils';
@@ -127,14 +127,17 @@ export function SakshiScreen() {
         APK built without the native module). It loads nothing itself.
       */}
       <View style={styles.detectorStatus}>
-        <Text variant="label" tone="muted" uppercase>
-          On-device damage detector
-        </Text>
-        <Text variant="caption" tone={onnxAvailable ? 'locked' : 'seeking'}>
-          {onnxAvailable
-            ? 'Ready in this build. Capture a photo and the scan runs on the observation screen.'
-            : `Not in this build. ${onnxUnavailableReason ?? 'Rebuild with the native runtime and install that APK, not Expo Go.'}`}
-        </Text>
+        <View style={styles.detectorIcon}>
+          <Icon name="alert-outline" size={29} color={colors.primary} />
+        </View>
+        <View style={styles.detectorCopy}>
+          <Text variant="label" tone="sandstone" uppercase>
+            On-device damage detector
+          </Text>
+          <Text variant="body" tone="secondary">
+            {onnxAvailable ? 'Ready in this build.' : 'Unavailable in this build.'}
+          </Text>
+        </View>
       </View>
 
       {/* The nearest viewpoint, and the way straight to it. */}
@@ -172,6 +175,8 @@ export function SakshiScreen() {
             */}
             <Button
               label="Take the photograph"
+              icon="camera-outline"
+              style={styles.photoButton}
               onPress={() =>
                 router.push({
                   pathname: '/(main)/sakshi/vantage',
@@ -213,20 +218,30 @@ export function SakshiScreen() {
       {/* Tab 1: the viewpoints at the place you are standing in */}
       {activeTab === 'vantages' ? (
         <View style={styles.section}>
+          <View style={styles.listHeader}>
+            <Icon name="bookmark-outline" size={18} color={colors.textMuted} />
+            <Text variant="heading">Saved viewpoints · {siteVantages.length}</Text>
+          </View>
           <View style={styles.list}>
-            {siteVantages.map((vantage) => (
-              <VantageListItem
-                key={vantage.id}
-                vantage={vantage}
-                distanceM={coordinate ? distanceMeters(coordinate, vantage.coordinate) : null}
-                onPress={() =>
-                  router.push({
-                    pathname: '/(main)/sakshi/vantage',
-                    params: { vantageId: vantage.id },
-                  })
-                }
-              />
-            ))}
+            {siteVantages.map((vantage) => {
+              // `observations` is newest-first (services/database `listObservations`),
+              // so the first match for this vantage is its most recent capture.
+              const lastCapture = observations.find((obs) => obs.vantageId === vantage.id);
+              return (
+                <VantageListItem
+                  key={vantage.id}
+                  vantage={vantage}
+                  distanceM={coordinate ? distanceMeters(coordinate, vantage.coordinate) : null}
+                  lastCaptureAt={lastCapture?.capturedAt ?? null}
+                  onPress={() =>
+                    router.push({
+                      pathname: '/(main)/sakshi/vantage',
+                      params: { vantageId: vantage.id },
+                    })
+                  }
+                />
+              );
+            })}
           </View>
         </View>
       ) : null}
@@ -378,28 +393,31 @@ const styles = StyleSheet.create({
   heroCard: {
     marginTop: spacing.md,
     borderRadius: radii.lg,
-    backgroundColor: colors.surfaceSecondary,
-    borderWidth: 1.5,
-    borderColor: colors.sandstone,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
     overflow: 'hidden',
   },
   heroImageBanner: {
     width: '100%',
-    aspectRatio: 2.8,
+    aspectRatio: 2.35,
   },
   heroImage: {
     width: '100%',
     height: '100%',
   },
   heroBody: {
-    padding: spacing.base,
-    gap: spacing.sm,
+    padding: spacing.content,
+    gap: spacing.md,
+    backgroundColor: colors.surface,
   },
   heroHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    gap: spacing.md,
   },
+  photoButton: { marginTop: spacing.xs },
   /*
     No size or weight overrides on the hero text. `fontWeight` does nothing once
     a real family is named — Android picks the file, not the axis — so an
@@ -410,32 +428,47 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: spacing.md,
     marginBottom: spacing.xs,
-    backgroundColor: colors.surfaceSecondary,
+    backgroundColor: colors.surface,
     borderRadius: radii.md,
-    padding: 3,
-    gap: 3,
+    borderWidth: 1,
+    borderColor: colors.border,
+    overflow: 'hidden',
   },
   tabItem: {
     flex: 1,
-    paddingVertical: spacing.sm,
+    minHeight: 54,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: spacing.md,
     alignItems: 'center',
-    borderRadius: radii.sm,
+    justifyContent: 'center',
+    borderBottomWidth: 3,
+    borderBottomColor: colors.surface,
   },
   tabItemActive: {
+    backgroundColor: colors.surfaceSelected,
+    borderBottomColor: colors.primary,
+  },
+  detectorStatus: {
+    marginTop: spacing.md,
+    minHeight: 76,
+    padding: spacing.base,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    borderRadius: radii.md,
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
   },
-  detectorStatus: {
-    marginTop: spacing.md,
-    padding: spacing.sm,
-    gap: spacing.xxs,
-    borderRadius: radii.md,
-    backgroundColor: colors.surfaceSecondary,
-    borderWidth: 1,
-    borderColor: colors.border,
+  detectorIcon: {
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
+  detectorCopy: { flex: 1, gap: spacing.xs },
   section: { paddingTop: spacing.md, gap: spacing.md },
+  listHeader: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   list: { gap: spacing.md },
   observationRow: {
     flexDirection: 'row',

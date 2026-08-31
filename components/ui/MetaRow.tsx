@@ -9,7 +9,7 @@ export type MetaRowProps = {
   value: string;
   /** Values that are measurements set in mono; prose values do not. */
   mono?: boolean;
-  tone?: 'primary' | 'secondary' | 'locked' | 'seeking' | 'open' | 'resolved';
+  tone?: 'primary' | 'secondary' | 'locked' | 'seeking' | 'warning' | 'open' | 'resolved';
 };
 
 /**

@@ -60,6 +60,12 @@ graph TD
 
 Boot order matters and is deliberately gated. From [app/_layout.tsx](../../app/_layout.tsx):
 
+Before Expo Router loads, the package entry [index.tsx](../../index.tsx) reads the
+persisted `colorTheme`, applies the navy or white semantic palette, aligns the
+platform colour scheme, and only then imports Expo Router's qualified app. The
+bootstrap registers synchronously and shows a loading surface while this happens.
+This ordering is load-bearing because screen modules create static `StyleSheet` objects.
+
 ```mermaid
 sequenceDiagram
     participant M as Module scope
@@ -75,9 +81,10 @@ sequenceDiagram
     R->>N: render RootNavigator
     N->>N: useAppFonts() → fontsReady
     N->>N: useAppState() → hydrated
-    alt not (fontsReady && hydrated)
+    N->>N: usePreferences() → preferencesHydrated
+    alt not (fontsReady && hydrated && preferencesHydrated)
         N-->>N: return null (splash stays up)
-    else both true
+    else all three true
         N->>N: SplashScreen.hideAsync()
         N->>N: subscribe AppState → syncPendingObservations()
         N->>N: subscribe arrival-notification taps
@@ -86,9 +93,14 @@ sequenceDiagram
     end
 ```
 
-**The gate is the architecture.** `RootNavigator` returns `null` — not a spinner — until fonts and hydration both settle, so the splash screen stays in place rather than showing "a half-styled frame."
+**The gate is the architecture.** `RootNavigator` returns `null` — not a spinner — until fonts, app-state hydration, and preference hydration all settle, so the splash screen stays in place rather than showing "a half-styled frame."
 
 The corresponding rule in [app/index.tsx](../../app/index.tsx): `hydrated` is guaranteed true by the time the redirect runs, "so there is no window in which we could redirect on a default value."
+
+The gate now includes preference hydration as well as app-state hydration.
+Changing `colorTheme` persists the preference and calls
+`services/application.reload()`. The reload lets every module-scope stylesheet
+rebuild from one palette instead of leaving a mixture of static styles.
 
 **Do not add UI that renders before this gate.**
 

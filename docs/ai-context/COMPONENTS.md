@@ -22,11 +22,11 @@ The 12 primitives every screen composes from. **Highest blast radius in the code
 | Component | Props | Purpose |
 |---|---|---|
 | [Text](../../components/ui/Text.tsx) | `RNTextProps & { variant?: TypographyVariant; tone?: ToneName; uppercase?; center? }` | **Use instead of RN `Text` everywhere.** Applies typography + tone tokens |
-| [Button](../../components/ui/Button.tsx) | `{ label; onPress?; variant?: ButtonVariant; disabled?; loading?; block?; style?; accessibilityHint? }` | Has a built-in `loading` state |
+| [Button](../../components/ui/Button.tsx) | `{ label; onPress?; variant?: ButtonVariant; disabled?; loading?; block?; style?; accessibilityHint?; icon?: IconName }` | Has a built-in `loading` state; `icon` draws an optional leading glyph via `Icon` |
 | [Screen](../../components/ui/Screen.tsx) | `{ children; scroll?; bleed?; edges?: readonly Edge[]; style?; contentStyle? }` | **Screen wrapper** — safe-area + scroll. `bleed` for edge-to-edge (camera, map) |
 | [Card](../../components/ui/Card.tsx) | `{ children; onPress?; style?; accessibilityLabel? }` | Surface container; pressable when `onPress` given |
 | [Chip](../../components/ui/Chip.tsx) | `{ label; selected?; onPress?; disabled?; style? }` | Filter/selection pill |
-| [Icon](../../components/ui/Icon.tsx) | `{ name; size? = 22; color? = colors.sandstoneDeep; style? }` | **The single icon surface** — wraps `@expo/vector-icons` |
+| [Icon](../../components/ui/Icon.tsx) | `{ name; size? = 22; color? = colors.primary; style? }` | **The single icon surface** — wraps `@expo/vector-icons`. Default tint is the navy/teal palette's primary teal (was `sandstoneDeep` before the navy/teal redesign) |
 | [MetaRow](../../components/ui/MetaRow.tsx) | `{ label; value; mono? = true; tone? = 'primary' }` | Label/value row. **Monospace by default** — for measurements |
 | [Badge](../../components/ui/Badge.tsx) | `ConditionBadge({ status: ConditionStatus })`, `SourceBadge({ tier: SourceTier })` | **Two domain-typed exports**, not a generic badge |
 | [Divider](../../components/ui/Divider.tsx) | `{ inset? }` | Separator |
@@ -45,6 +45,15 @@ The 12 primitives every screen composes from. **Highest blast radius in the code
 > "Emoji are drawn by the system emoji font, arrive pre-coloured, cannot be tinted to match a selected tab, and are a different drawing on every vendor's phone. The names below are typed against the glyph map at the call site, so a mistyped one is a compile error rather than a missing tab."
 
 **`Text` should always be preferred over React Native's `Text`** — it is the only place typography and tone tokens are applied.
+
+### Colour themes
+
+[theme/colors.ts](../../theme/colors.ts) defines matching `navyColors` and
+`whiteColors` semantic palettes. Components continue to consume `colors`; the
+root [index.tsx](../../index.tsx) selects that stable object's initial values
+before Expo Router loads. The Appearance toggle lives in
+[features/settings/SettingsScreen.tsx](../../features/settings/SettingsScreen.tsx)
+and performs a persisted app reload because most component styles are static.
 
 ---
 

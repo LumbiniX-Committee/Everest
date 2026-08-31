@@ -56,7 +56,7 @@ export function PlacePicker({
       visible={visible}
       onClose={onClose}
       title="Go to"
-      subtitle={canTravel ? 'Takes you there' : 'Moves the view: your position is your own'}
+      subtitle={canTravel ? 'Takes you there' : 'Moves the view; your position is your own'}
       scroll
     >
       <View style={styles.list}>
@@ -73,19 +73,19 @@ export function PlacePicker({
               onPress={() => onSelect(site.id)}
               style={({ pressed }) => [styles.row, here && styles.rowHere, pressed && styles.pressed]}
             >
-              <SiteVisual siteId={site.id} height={48} quiet style={styles.thumb} />
+              <SiteVisual siteId={site.id} height={76} quiet style={styles.thumb} />
 
               <View style={styles.rowText}>
-                <Text variant="body" numberOfLines={1}>
+                <Text variant="heading" numberOfLines={1} ellipsizeMode="tail">
                   {site.name}
                 </Text>
                 {site.summary ? (
-                  <Text variant="caption" tone="muted" numberOfLines={1}>
+                  <Text variant="caption" tone="secondary" numberOfLines={1} ellipsizeMode="tail">
                     {site.summary}
                   </Text>
                 ) : null}
               </View>
-              <Text variant="caption" tone={here ? 'sandstone' : 'muted'}>
+              <Text variant="mono" tone="sandstone" numberOfLines={1}>
                 {here ? 'you are here' : distanceM !== null ? formatDistance(distanceM) : '—'}
               </Text>
             </Pressable>
@@ -97,22 +97,22 @@ export function PlacePicker({
 }
 
 const styles = StyleSheet.create({
-  list: { gap: spacing.xs, paddingBottom: spacing.base },
+  list: { gap: spacing.sm, paddingBottom: spacing.base },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: spacing.md,
-    minHeight: 56,
-    paddingHorizontal: spacing.base,
+    minHeight: 94,
+    paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     borderRadius: radii.md,
     borderWidth: 1,
     borderColor: colors.border,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surfaceRaised,
   },
-  rowHere: { borderColor: colors.sandstone, backgroundColor: colors.surfaceSecondary },
+  rowHere: { borderColor: colors.borderStrong, backgroundColor: colors.surfaceSelected },
   pressed: { opacity: 0.7 },
-  thumb: { width: 64 },
-  rowText: { flex: 1, gap: 1 },
+  thumb: { width: 76 },
+  rowText: { flex: 1, minWidth: 0, gap: spacing.xs },
 });

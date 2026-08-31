@@ -68,6 +68,7 @@ export type SpeechCloudProps = {
   monkHeight?: number;
   /** Above the cloud, outside it. The guide puts the visitor's question here. */
   aboveCloud?: ReactNode;
+  isKeyboardOpen?: boolean;
 };
 
 export function SpeechCloud({
@@ -79,10 +80,13 @@ export function SpeechCloud({
   onBackdropPress,
   animationKey,
   bottomInset = 0,
-  monkHeight = 250,
+  monkHeight = 240,
   aboveCloud,
+  isKeyboardOpen = false,
 }: SpeechCloudProps) {
   const insets = useSafeAreaInsets();
+  const isKeyboardActive = isKeyboardOpen || bottomInset > 0;
+  const effectiveMonkHeight = isKeyboardActive ? 145 : monkHeight;
 
   // The monk slides in once, from the left.
   const avatarSlide = useRef(new Animated.Value(0)).current;
@@ -128,7 +132,10 @@ export function SpeechCloud({
       <Animated.View
         style={[
           styles.avatarWrap,
-          { bottom: insets.bottom + 72 + bottomInset },
+          {
+            bottom: isKeyboardActive ? bottomInset + spacing.sm : insets.bottom + 72,
+            left: isKeyboardActive ? -12 : -16,
+          },
           {
             opacity: avatarOpacity,
             transform: [
@@ -138,13 +145,16 @@ export function SpeechCloud({
         ]}
         pointerEvents="none"
       >
-        <GreetingMonk height={monkHeight} />
+        <GreetingMonk height={effectiveMonkHeight} />
       </Animated.View>
 
       <Animated.View
         style={[
           styles.speechArea,
-          { paddingBottom: insets.bottom + spacing.lg + bottomInset },
+          {
+            paddingBottom: isKeyboardActive ? bottomInset + spacing.sm : insets.bottom + spacing.lg,
+            paddingLeft: isKeyboardActive ? 120 : 142,
+          },
           {
             opacity: cloudAnim,
             transform: [
@@ -156,8 +166,8 @@ export function SpeechCloud({
       >
         {aboveCloud}
 
-        <View style={styles.bubble}>
-          <View style={styles.bubbleTail} />
+        <View style={[styles.bubble, isKeyboardActive && styles.bubbleKeyboard]}>
+          <View style={[styles.bubbleTail, isKeyboardActive && styles.bubbleTailKeyboard]} />
 
           <View style={styles.eyebrowRow}>
             <View style={styles.eyebrowLeft}>
@@ -192,8 +202,18 @@ export function SpeechCloud({
 }
 
 export const speechCloudStyles = StyleSheet.create({
-  body: { fontSize: 15, lineHeight: 24, color: colors.textPrimary },
-  original: { fontStyle: 'italic', fontSize: 13, color: colors.sandstoneDeep, lineHeight: 19 },
+  body: {
+    fontSize: 15,
+    lineHeight: 24,
+    color: colors.textPrimary,
+    letterSpacing: 0.2,
+  },
+  original: {
+    fontStyle: 'italic',
+    fontSize: 13,
+    color: colors.heritageGold,
+    lineHeight: 20,
+  },
   content: { gap: spacing.xs, minHeight: 68 },
 });
 
@@ -215,7 +235,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     // The map stays legible. A guide in the world, not a page over it.
-    backgroundColor: 'rgba(20, 25, 22, 0.42)',
+    backgroundColor: 'rgba(5, 21, 33, 0.55)',
   },
 
   avatarWrap: { position: 'absolute', left: -16 },
@@ -232,32 +252,42 @@ const styles = StyleSheet.create({
   },
 
   bubble: {
-    backgroundColor: 'rgba(255, 252, 246, 0.96)',
-    borderRadius: 20,
-    padding: spacing.base,
+    backgroundColor: 'rgba(12, 34, 52, 0.97)',
+    borderRadius: 22,
+    padding: spacing.base + 2,
     gap: spacing.sm + 2,
     overflow: 'visible',
-    shadowColor: '#A07A50',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.32,
-    shadowRadius: 20,
-    elevation: 14,
+    shadowColor: colors.shadow,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.5,
+    shadowRadius: 24,
+    elevation: 16,
     borderWidth: 1.5,
-    borderColor: 'rgba(183, 155, 114, 0.38)',
+    borderColor: 'rgba(77, 198, 194, 0.35)',
+  },
+
+  bubbleKeyboard: {
+    padding: spacing.sm + 2,
+    gap: spacing.xs + 2,
+    borderRadius: 18,
   },
 
   bubbleTail: {
     position: 'absolute',
-    left: -11,
+    left: -12,
     top: 28,
     width: 0,
     height: 0,
     borderTopWidth: 10,
     borderBottomWidth: 10,
-    borderRightWidth: 13,
+    borderRightWidth: 14,
     borderTopColor: 'transparent',
     borderBottomColor: 'transparent',
-    borderRightColor: 'rgba(255, 252, 246, 0.96)',
+    borderRightColor: 'rgba(12, 34, 52, 0.97)',
+  },
+
+  bubbleTailKeyboard: {
+    top: 16,
   },
 
   eyebrowRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
@@ -267,12 +297,24 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     backgroundColor: colors.sandstone,
     borderRadius: radii.full,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xxs,
+    paddingHorizontal: spacing.sm + 2,
+    paddingVertical: spacing.xxs + 1,
   },
 
-  eyebrowTxt: { fontSize: 10, fontWeight: '700', letterSpacing: 0.9, color: '#FFFFFF' },
+  eyebrowTxt: {
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 1,
+    color: colors.backgroundDeep,
+  },
 
-  closeBubble: { width: 26, height: 26, alignItems: 'center', justifyContent: 'center' },
-  closeBubbleTxt: { fontSize: 15, color: colors.textMuted },
+  closeBubble: {
+    width: 28,
+    height: 28,
+    borderRadius: radii.full,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  closeBubbleTxt: { fontSize: 14, fontWeight: '700', color: colors.textSecondary },
 });

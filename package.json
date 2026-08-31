@@ -1,7 +1,7 @@
 {
   "name": "sakshi",
   "version": "0.1.0",
-  "main": "expo-router/entry",
+  "main": "index.tsx",
   "scripts": {
     "start": "expo start",
     "api": "node --env-file-if-exists=.env.local --experimental-strip-types mock-api/server.mjs",

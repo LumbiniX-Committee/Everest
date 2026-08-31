@@ -4,7 +4,15 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Button, Icon, Screen, Text } from '@/components/ui';
 import { LoadingState } from '@/components/common';
-import { ChatBubble, ChatComposer, ChatTranscript, SourceList, type ChatTranscriptHandle } from '@/components/chat';
+import {
+  ChatBubble,
+  ChatComposer,
+  ChatTranscript,
+  SourceList,
+  TypewriterText,
+  type ChatTranscriptHandle,
+} from '@/components/chat';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { SourceDetailSheet } from '@/components/source';
 import { SpeakButton } from '@/components/voice/SpeakButton';
 import { findDhammaEntry } from '@/data';
@@ -202,7 +210,7 @@ export function DhammaChatScreen({ questionId, query }: { questionId?: string; q
         </View>
 
         <ChatTranscript ref={transcriptRef}>
-          {turns.map((turn) =>
+          {turns.map((turn, index) =>
             turn.from === 'user' ? (
               <ChatBubble key={turn.id} from="user">
                 <Text variant="body">{turn.text}</Text>
@@ -213,6 +221,8 @@ export function DhammaChatScreen({ questionId, query }: { questionId?: string; q
                 answer={turn.answer}
                 language={turn.language}
                 onOpenSource={setOpenSource}
+                isLatest={index === turns.length - 1}
+                onGrow={() => transcriptRef.current?.scrollToEnd()}
               />
             ),
           )}
@@ -264,60 +274,82 @@ function AnswerTurn({
   answer,
   language,
   onOpenSource,
+  isLatest = false,
+  onGrow,
 }: {
   answer: DhammaAnswer;
   language: DhammaLanguage;
   onOpenSource: (source: Source) => void;
+  isLatest?: boolean;
+  onGrow?: () => void;
 }) {
   const t = L[language];
+  const [typed, setTyped] = useState(!isLatest);
 
   if (isGrounded(answer)) {
     const passages = answer.evidence.filter((item) => item.passage);
     return (
       <ChatBubble from="companion" wide>
-        <Text variant="bodyLarge">{answer.text}</Text>
-        <SpeakButton text={answer.text} language={language} />
+        <TypewriterText
+          text={answer.text}
+          variant="bodyLarge"
+          animated={isLatest}
+          onComplete={() => {
+            setTyped(true);
+            onGrow?.();
+          }}
+        />
 
-        {passages.length > 0 ? (
-          <View style={styles.evidence}>
-            <Text variant="label" tone="muted" uppercase>
-              {t.restsOn}
-            </Text>
-            {passages.map((item, index) => (
-              <Text key={`${item.citation.sourceId}-${index}`} variant="mono" tone="sandstone">
-                {item.passage}
-              </Text>
-            ))}
-          </View>
-        ) : null}
+        {typed ? (
+          <Animated.View entering={FadeIn.duration(240)}>
+            <SpeakButton text={answer.text} language={language} />
 
-        {answer.caveat ? (
-          <View style={styles.caveat}>
-            <Text variant="label" tone="seeking" uppercase>
-              {t.doesNotSettle}
-            </Text>
-            <Text variant="body" tone="secondary">
-              {answer.caveat}
-            </Text>
-          </View>
-        ) : null}
+            {passages.length > 0 ? (
+              <View style={styles.evidence}>
+                <Text variant="label" tone="muted" uppercase>
+                  {t.restsOn}
+                </Text>
+                {passages.map((item, index) => (
+                  <Text key={`${item.citation.sourceId}-${index}`} variant="mono" tone="sandstone">
+                    {item.passage}
+                  </Text>
+                ))}
+              </View>
+            ) : null}
 
-        <SourceList citations={answer.citations} onOpenSource={onOpenSource} />
+            {answer.caveat ? (
+              <View style={styles.caveat}>
+                <Text variant="label" tone="seeking" uppercase>
+                  {t.doesNotSettle}
+                </Text>
+                <Text variant="body" tone="secondary">
+                  {answer.caveat}
+                </Text>
+              </View>
+            ) : null}
 
-        {answer.reflectionPrompt ? (
-          <View style={styles.prompt}>
-            <Text variant="label" tone="muted" uppercase>
-              {t.sitWith}
-            </Text>
-            {/*
-              A question, left open. No text box and nothing saved — §14 ends its
-              sequence at reflection, and an input would turn it into a task. The
-              composer below is for the next question, which is a different act.
-            */}
-            <Text variant="body" tone="secondary">
-              {answer.reflectionPrompt}
-            </Text>
-          </View>
+            <SourceList citations={answer.citations} onOpenSource={onOpenSource} />
+
+            {answer.reflectionPrompt ? (
+              <View style={styles.prompt}>
+                <Text variant="label" tone="muted" uppercase>
+                  {t.sitWith}
+                </Text>
+                {/*
+                  A question, left open. No text box and nothing saved — §14 ends its
+                  sequence at reflection, and an input would turn it into a task. The
+                  composer below is for the next question, which is a different act.
+                */}
+                <TypewriterText
+                  text={answer.reflectionPrompt}
+                  variant="body"
+                  tone="secondary"
+                  animated={isLatest}
+                  onComplete={onGrow}
+                />
+              </View>
+            ) : null}
+          </Animated.View>
         ) : null}
       </ChatBubble>
     );
@@ -329,26 +361,41 @@ function AnswerTurn({
         §25. The refusal is a trust feature, not an error state: it is set in the
         same type as an answer and says why it could not be answered.
       */}
-      <Text variant="bodyLarge">{answer.text}</Text>
+      <TypewriterText
+        text={answer.text}
+        variant="bodyLarge"
+        animated={isLatest}
+        onComplete={() => {
+          setTyped(true);
+          onGrow?.();
+        }}
+      />
 
-      <View style={styles.block}>
-        <Text variant="label" tone="muted" uppercase>
-          {t.why}
-        </Text>
-        <Text variant="body" tone="secondary">
-          {answer.reason}
-        </Text>
-      </View>
+      {typed ? (
+        <Animated.View entering={FadeIn.duration(240)}>
+          <View style={styles.block}>
+            <Text variant="label" tone="muted" uppercase>
+              {t.why}
+            </Text>
+            <TypewriterText
+              text={answer.reason}
+              variant="body"
+              tone="secondary"
+              animated={isLatest}
+              onComplete={onGrow}
+            />
+          </View>
 
-      {answer.related.length > 0 ? (
-        <SourceList
-          citations={answer.related}
-          label={t.related}
-          numbered={false}
-          onOpenSource={onOpenSource}
-        />
+          {answer.related.length > 0 ? (
+            <SourceList
+              citations={answer.related}
+              label={t.related}
+              numbered={false}
+              onOpenSource={onOpenSource}
+            />
+          ) : null}
+        </Animated.View>
       ) : null}
-
     </ChatBubble>
   );
 }

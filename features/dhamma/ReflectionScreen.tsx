@@ -8,8 +8,10 @@ import {
   ChatBubble,
   ChatComposer,
   ChatTranscript,
+  TypewriterText,
   type ChatTranscriptHandle,
 } from '@/components/chat';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { SpeakButton } from '@/components/voice/SpeakButton';
 import { useKeyboardInset, useSceneBottomGap } from '@/hooks';
 import { dhamma } from '@/services';
@@ -313,8 +315,15 @@ export function ReflectionScreen({ siteId }: { siteId?: string }) {
         </View>
 
         <ChatTranscript ref={transcriptRef}>
-          {messages.map((msg) => (
-            <MessageBubble key={msg.id} msg={msg} language={language} t={t} />
+          {messages.map((msg, index) => (
+            <MessageBubble
+              key={msg.id}
+              msg={msg}
+              language={language}
+              t={t}
+              isLatest={index === messages.length - 1}
+              onGrow={scrollToEnd}
+            />
           ))}
 
           {loading ? (
@@ -386,11 +395,17 @@ function MessageBubble({
   msg,
   language,
   t,
+  isLatest = false,
+  onGrow,
 }: {
   msg: Msg;
   language: DhammaLanguage;
   t: (typeof T)['en'] | (typeof T)['ne'];
+  isLatest?: boolean;
+  onGrow?: () => void;
 }) {
+  const [typed, setTyped] = useState(!isLatest);
+
   if (msg.from === 'user') {
     return (
       <ChatBubble from="user">
@@ -405,8 +420,20 @@ function MessageBubble({
         <Text variant="caption" tone="muted" uppercase>
           {t.questionOf(msg.step, msg.total)}
         </Text>
-        <Text variant="bodyLarge">{msg.text}</Text>
-        <SpeakButton text={msg.text} language={language} />
+        <TypewriterText
+          text={msg.text}
+          variant="bodyLarge"
+          animated={isLatest}
+          onComplete={() => {
+            setTyped(true);
+            onGrow?.();
+          }}
+        />
+        {typed ? (
+          <Animated.View entering={FadeIn.duration(200)}>
+            <SpeakButton text={msg.text} language={language} />
+          </Animated.View>
+        ) : null}
       </ChatBubble>
     );
   }
@@ -417,47 +444,64 @@ function MessageBubble({
         <Text variant="label" tone="muted" uppercase>
           {t.reflection}
         </Text>
-        <Text variant="bodyLarge">{msg.text}</Text>
-        <SpeakButton text={msg.text} language={language} />
-        {msg.citations.length > 0 ? (
-          <View style={styles.sources}>
-            <Text variant="label" tone="muted" uppercase>
-              {t.sources}
-            </Text>
-            {/*
-              Deduplicated by segment. `core/dhamma` now collapses a passage
-              cited twice before it reaches here, but the render must not be
-              what breaks if a duplicate ever arrives — a repeated segment id is
-              a repeated React key, and listing one passage twice would imply
-              two independent sources for the same reflection.
-            */}
-            {msg.citations
-              .filter(
-                (citation, index, all) =>
-                  all.findIndex((other) => other.segment_id === citation.segment_id) === index,
-              )
-              .map((citation) => (
-                <Text key={citation.segment_id} variant="mono" tone="sandstone">
-                  {citation.display} · [{citation.segment_id}]
+        <TypewriterText
+          text={msg.text}
+          variant="bodyLarge"
+          animated={isLatest}
+          onComplete={() => {
+            setTyped(true);
+            onGrow?.();
+          }}
+        />
+        {typed ? (
+          <Animated.View entering={FadeIn.duration(240)}>
+            <SpeakButton text={msg.text} language={language} />
+            {msg.citations.length > 0 ? (
+              <View style={styles.sources}>
+                <Text variant="label" tone="muted" uppercase>
+                  {t.sources}
                 </Text>
-              ))}
-          </View>
+                {/*
+                  Deduplicated by segment. `core/dhamma` now collapses a passage
+                  cited twice before it reaches here, but the render must not be
+                  what breaks if a duplicate ever arrives — a repeated segment id is
+                  a repeated React key, and listing one passage twice would imply
+                  two independent sources for the same reflection.
+                */}
+                {msg.citations
+                  .filter(
+                    (citation, index, all) =>
+                      all.findIndex((other) => other.segment_id === citation.segment_id) === index,
+                  )
+                  .map((citation) => (
+                    <Text key={citation.segment_id} variant="mono" tone="sandstone">
+                      {citation.display} · [{citation.segment_id}]
+                    </Text>
+                  ))}
+              </View>
+            ) : null}
+            {msg.tier === 'fallback' ? (
+              <Text variant="caption" tone="seeking">
+                {t.offlineNote}
+              </Text>
+            ) : null}
+            <Text variant="caption" tone="muted">
+              {msg.disclaimer}
+            </Text>
+          </Animated.View>
         ) : null}
-        {msg.tier === 'fallback' ? (
-          <Text variant="caption" tone="seeking">
-            {t.offlineNote}
-          </Text>
-        ) : null}
-        <Text variant="caption" tone="muted">
-          {msg.disclaimer}
-        </Text>
       </ChatBubble>
     );
   }
 
   return (
     <ChatBubble from="companion">
-      <Text variant="body">{msg.text}</Text>
+      <TypewriterText
+        text={msg.text}
+        variant="body"
+        animated={isLatest}
+        onComplete={onGrow}
+      />
     </ChatBubble>
   );
 }

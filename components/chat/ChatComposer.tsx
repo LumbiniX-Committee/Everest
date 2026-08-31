@@ -1,7 +1,17 @@
+import { useCallback } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 
 import { Icon, Text } from '@/components/ui';
+import { useHaptics } from '@/hooks';
 import { colors, font, radii, spacing } from '@/theme';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 /**
  * The bar you type into, pinned above the keyboard.
@@ -48,6 +58,28 @@ export function ChatComposer({
   onGrow,
 }: ChatComposerProps) {
   const canSend = value.trim().length > 0 && !busy;
+  const { pulse } = useHaptics();
+  const sendScale = useSharedValue(1);
+
+  const sendAnimStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: sendScale.value }],
+  }));
+
+  const handlePressIn = useCallback(() => {
+    if (!canSend) return;
+    sendScale.value = withSpring(0.88, { damping: 14, stiffness: 380, mass: 0.6 });
+  }, [canSend, sendScale]);
+
+  const handlePressOut = useCallback(() => {
+    if (!canSend) return;
+    sendScale.value = withSpring(1, { damping: 12, stiffness: 280, mass: 0.6 });
+  }, [canSend, sendScale]);
+
+  const handleSend = useCallback(() => {
+    if (!canSend) return;
+    pulse(Haptics.ImpactFeedbackStyle.Light);
+    onSend();
+  }, [canSend, onSend, pulse]);
 
   return (
     <View style={styles.bar}>
@@ -69,17 +101,19 @@ export function ChatComposer({
         accessibilityLabel={placeholder}
         onContentSizeChange={onGrow}
       />
-      <Pressable
+      <AnimatedPressable
         accessibilityRole="button"
         accessibilityLabel={sendLabel ?? 'Send'}
         accessibilityState={{ disabled: !canSend }}
         disabled={!canSend}
-        onPress={onSend}
-        style={({ pressed }) => [
+        onPress={handleSend}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        style={[
           styles.send,
           sendLabel ? styles.sendWide : styles.sendRound,
           !canSend && styles.sendDisabled,
-          pressed && canSend && styles.pressed,
+          sendAnimStyle,
         ]}
       >
         <Icon name="send" size={20} color={colors.surface} />
@@ -88,7 +122,7 @@ export function ChatComposer({
             {sendLabel}
           </Text>
         ) : null}
-      </Pressable>
+      </AnimatedPressable>
     </View>
   );
 }

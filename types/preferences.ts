@@ -2,7 +2,7 @@
  * User preferences.
  *
  * §52 names "a large settings system" as a non-goal, and this is written to
- * stay under that line: seven values, each one changing behaviour a person can
+ * stay under that line: each value changes behaviour a person can
  * observe. Nothing here is a toggle for its own sake, and nothing is stored
  * that the app does not read.
  *
@@ -34,6 +34,9 @@ export type OfflineSyncMode = 'wifi' | 'any' | 'manual';
 /** Higher quality costs storage on a device that may be offline for days. */
 export type PhotoQuality = 'standard' | 'high';
 
+/** The two complete visual systems that ship with the app. */
+export type ColorTheme = 'navy' | 'white';
+
 /**
  * How much a place is asked to say when you arrive at it.
  *
@@ -49,6 +52,7 @@ export type PhotoQuality = 'standard' | 'high';
 export type WisdomTier = 'basic' | 'medium' | 'high' | 'custom';
 
 export type UserPreferences = {
+  colorTheme: ColorTheme;
   alignmentTolerance: AlignmentTolerance;
   hapticsEnabled: boolean;
   /** Release the shutter automatically once alignment holds. */
@@ -65,6 +69,9 @@ export type UserPreferences = {
 };
 
 export const DEFAULT_USER_PREFERENCES: UserPreferences = {
+  // Preserve this branch's instrument-like interface unless a person chooses
+  // main's whitewashed daylight palette.
+  colorTheme: 'navy',
   alignmentTolerance: 'standard',
   hapticsEnabled: true,
   // Off by default. An automatic shutter takes the decision away from the

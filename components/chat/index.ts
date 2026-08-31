@@ -6,3 +6,4 @@ export {
 } from './ChatTranscript';
 export { ChatComposer, type ChatComposerProps } from './ChatComposer';
 export { SourceList, uniqueCitations, type SourceListProps } from './SourceList';
+export { TypewriterText, type TypewriterTextProps } from './TypewriterText';

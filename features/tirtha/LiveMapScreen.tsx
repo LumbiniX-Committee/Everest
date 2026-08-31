@@ -13,6 +13,7 @@ import { findSite, findVantage, questsForPrecinct, vantagesForSite } from '@/dat
 import {
   useCurrentPosition,
   useDemoWalk,
+  useHaptics,
   useHeading,
   useSiteArrival,
   useStoryProgress,
@@ -33,7 +34,7 @@ import { StorySequence } from './StorySequence';
  * Height of the top HUD row, so the things below it can clear it by arithmetic
  * rather than by a number someone guessed and then had to keep guessing.
  */
-const HUD_ROW_H = 60;
+const HUD_ROW_H = 72;
 
 /**
  * The map, full screen, with you standing on it.
@@ -52,6 +53,7 @@ export function LiveMapScreen() {
   const { coordinate, demoMode } = useCurrentPosition({ watch: true });
   const deviceHeading = useHeading();
   const demo = useDemoWalk();
+  const { pulse } = useHaptics();
   const { pauseWalk, resumeWalk } = demo;
   const [follow, setFollow] = useState(true);
   const [showWisdomModal, setShowWisdomModal] = useState(false);
@@ -349,45 +351,23 @@ export function LiveMapScreen() {
         topInset={insets.top}
       />
 
-      {/*
-        The HUD: a way out on the left, the world controls on the right.
-
-        The standing pill used to sit here — a title, a puṇya total and a
-        progress track, permanently over the map. Three reasons it is gone.
-        Nothing in the app reads the balance: quest availability is decided by
-        position, time and completion history, so the number gated nothing and
-        the bar filled towards nothing. It overflowed — `maxWidth: 180` left
-        about eighty points for a title needing eighty-eight, with no
-        `flexShrink` and no `numberOfLines`. And a running total pinned over a
-        sacred site is the one thing the vocabulary rules in `core/progression`
-        exist to prevent: puṇya is a record of attention paid, not a score
-        carried around.
-
-        It is still recorded, and still shown where it means something: in the
-        acknowledgement after an observation, and in the day's practice summary
-        under Sākṣī → Records.
-      */}
       <View style={[styles.topBar, { paddingTop: insets.top + spacing.sm }]} pointerEvents="box-none">
-        {/*
-          A readout and a way out, kept apart.
-          
-          These were one control: the level badge navigated. The app launches
-          straight onto this screen, so that badge was the only route to the
-          rest of Tīrtha — the site list, the quest list, then-and-now — and it
-          looked like a score. Everything else in the app was one tap away
-          behind something nobody would think to press.
-        */}
         <View style={styles.topLeft} pointerEvents="box-none">
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Tīrtha"
             accessibilityHint="Everything else at Lumbini: the sites, the quests, then and now"
-            onPress={() =>
-              router.canGoBack() ? router.back() : router.replace('/(main)/tirtha')
-            }
-            style={styles.homeButton}
+            onPress={() => {
+              pulse();
+              if (router.canGoBack()) {
+                router.back();
+              } else {
+                router.replace('/(main)/tirtha');
+              }
+            }}
+            style={({ pressed }) => [styles.homeButton, pressed && styles.buttonPressed]}
           >
-            <Text variant="body">‹</Text>
+            <Icon name="chevron-left" size={30} color={colors.primary} />
           </Pressable>
         </View>
 
@@ -395,20 +375,30 @@ export function LiveMapScreen() {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Go to a place"
-            onPress={() => setShowPlaces(true)}
-            style={styles.iconPill}
+            onPress={() => {
+              pulse();
+              setShowPlaces(true);
+            }}
+            style={({ pressed }) => [styles.iconPill, pressed && styles.buttonPressed]}
           >
-            <Icon name="compass-outline" size={20} />
+            <Icon name="compass-outline" size={25} color={colors.primary} />
           </Pressable>
 
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={follow ? 'Stop following your position' : 'Follow your position'}
             accessibilityState={{ selected: follow }}
-            onPress={() => setFollow((f) => !f)}
-            style={[styles.iconPill, follow && styles.pillActive]}
+            onPress={() => {
+              pulse();
+              setFollow((f) => !f);
+            }}
+            style={({ pressed }) => [styles.iconPill, follow && styles.pillActive, pressed && styles.buttonPressed]}
           >
-            <Text variant="body">{follow ? '◉' : '◎'}</Text>
+            <Icon
+              name={follow ? 'crosshairs-gps' : 'crosshairs'}
+              size={24}
+              color={follow ? colors.primary : colors.textSecondary}
+            />
           </Pressable>
 
           <Pressable
@@ -417,39 +407,33 @@ export function LiveMapScreen() {
             accessibilityHint="Choose a heritage precinct and walk it using synthetic positions"
             accessibilityState={{ selected: demoMode }}
             onPress={() => {
+              pulse();
               if (demoMode) demo.toggle();
               else setShowDemoRoutes(true);
             }}
-            style={[styles.iconPill, demoMode && styles.pillActive]}
+            style={({ pressed }) => [styles.iconPill, demoMode && styles.pillActive, pressed && styles.buttonPressed]}
           >
-            <Text variant="body">{demoMode ? '⏸' : '▶'}</Text>
+            <Icon
+              name={demoMode ? 'pause' : 'play'}
+              size={25}
+              color={demoMode ? colors.primary : colors.textSecondary}
+            />
           </Pressable>
         </View>
       </View>
 
-      {/*
-        The quest marker sits in the world, not in a bar — but on its own row
-        under the top bar, clear of it. Everything floating on this screen has a
-        lane: the bar across the top, the marker on the right beneath it, the
-        toast above the dock at the bottom. They were all pinned to the top
-        inset with hand-picked offsets, so the marker and the toast landed four
-        points apart and drew over each other.
-      */}
       <View style={[styles.worldControls, { top: insets.top + HUD_ROW_H }]} pointerEvents="box-none">
         <QuestHud
           available={questsOpenHere}
           completed={questsDoneHere}
           total={questsHere.length}
           pulse={questsOpenHere > 0 && !showStory}
-          onPress={() => setShowQuests(true)}
+          onPress={() => {
+            pulse();
+            setShowQuests(true);
+          }}
         />
 
-        {/*
-          The Buddha icon button on the right.
-          - If at a heritage site AND story is not yet read: opens StorySequence.
-          - If at a heritage site AND story is completed: opens BuddhaChat.
-          - If outside any site: opens BuddhaChat.
-        */}
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={
@@ -461,6 +445,7 @@ export function LiveMapScreen() {
           }
           accessibilityHint="Opens Buddha guide to listen to site stories or ask questions"
           onPress={() => {
+            pulse();
             if (atSiteId && !story.hasRead(atSiteId)) {
               setShowStory(true);
               if (demoMode) pauseWalk();
@@ -468,7 +453,7 @@ export function LiveMapScreen() {
               setShowChat(true);
             }
           }}
-          style={styles.worldButton}
+          style={({ pressed }) => [styles.worldButton, pressed && styles.buttonPressed]}
         >
           <GreetingMonk height={38} />
         </Pressable>
@@ -478,29 +463,18 @@ export function LiveMapScreen() {
             accessibilityRole="button"
             accessibilityLabel="Witness this place"
             accessibilityHint="Opens Sākṣī to record what you can see here"
-            onPress={() => openSakshi(atSiteId)}
-            style={styles.worldButton}
+            onPress={() => {
+              pulse();
+              openSakshi(atSiteId);
+            }}
+            style={({ pressed }) => [styles.worldButton, pressed && styles.buttonPressed]}
           >
             <Icon name="eye-outline" size={24} />
           </Pressable>
         ) : null}
       </View>
 
-      {/*
-        One column along the bottom rather than three absolutely-positioned
-        pieces. The demo panel appears and disappears, and with fixed offsets
-        every neighbour had to be told its height — the monk sat 80 points up
-        whether or not there was anything under him. Stacked, the layout is the
-        arithmetic.
-      */}
-      {/*
-        No bottom inset here. This screen sits inside the tab navigator, and
-        SurfaceTabBar already pads for the gesture bar — adding it again left a
-        transparent band of map between the readout and the tab bar, with the
-        readout floating above its own background.
-      */}
       <View style={styles.dock} pointerEvents="box-none">
-        {/* The toast rides above the dock, where nothing else is drawn. */}
         <View style={styles.toastSlot} pointerEvents="none">
           <RewardToast
             visible={reward !== null}
@@ -519,21 +493,8 @@ export function LiveMapScreen() {
             onExit={demo.toggle}
           />
         ) : null}
-
-        {/*
-          The name-and-distance strip that stood here is gone. It restated what
-          the map already draws, and "World Peace Pagoda · 25103 m" is a number
-          about somewhere you are not. Arrival is announced by the toast, and the
-          place you are at is the marker under you.
-        */}
       </View>
 
-      {/*
-        Titled from where you actually are. "Buddha Wisdom · <nearest site>"
-        named a passage after a place you might be 400 m from, and subtitled it
-        with the distance to that same place — so the sheet announced a site and
-        then said you were not at it. It says which of the two it is instead.
-      */}
       <BottomSheet
         visible={showWisdomModal}
         onClose={() => setShowWisdomModal(false)}
@@ -552,12 +513,6 @@ export function LiveMapScreen() {
             <GreetingMonk height={120} />
           </View>
 
-          {/*
-            The recorded narration, started on arrival when the reader has asked
-            for that. Above the passage rather than below it: it is the thing
-            that begins on its own, so the control that stops it has to be the
-            first thing found, not something to scroll for.
-          */}
           {activeSiteId ? (
             <NarrationPlayer
               siteId={activeSiteId}
@@ -570,7 +525,6 @@ export function LiveMapScreen() {
             <ArrivalWisdom coordinate={coordinate} notify={false} siteId={activeSiteId} />
           ) : null}
 
-          {/* Fallback Site Significance if user is not in reach of site */}
           {!atSiteId && activeSignificance ? (
             <Card style={styles.fallbackCard}>
               <Text variant="label" tone="sandstone" uppercase>
@@ -677,7 +631,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: spacing.base,
+    paddingHorizontal: spacing.content,
     gap: spacing.sm,
     zIndex: 10,
   },
@@ -690,28 +644,38 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
-  pillActive: { borderColor: colors.sandstone, backgroundColor: colors.surfaceSecondary },
+  pillActive: { borderColor: colors.borderStrong, backgroundColor: colors.primarySoft },
   topLeft: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, flexShrink: 1 },
   homeButton: {
-    width: 44,
-    height: 44,
+    width: 52,
+    height: 52,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: radii.full,
-    backgroundColor: colors.background,
+    backgroundColor: colors.backgroundDeep,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.borderStrong,
+    shadowColor: colors.shadow,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.22,
+    shadowRadius: 7,
+    elevation: 6,
   },
-  topRight: { flexDirection: 'row', gap: spacing.xs, flexShrink: 0 },
+  topRight: { flexDirection: 'row', gap: spacing.sm, flexShrink: 0 },
   iconPill: {
-    width: 44,
-    height: 44,
+    width: 52,
+    height: 52,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: radii.full,
-    backgroundColor: colors.background,
+    backgroundColor: colors.backgroundDeep,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.borderStrong,
+    shadowColor: colors.shadow,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.22,
+    shadowRadius: 7,
+    elevation: 6,
   },
   /** The world actions, in one right-hand column clear of the top bar. */
   worldControls: { position: 'absolute', right: spacing.base, zIndex: 12, gap: spacing.sm, alignItems: 'center' },
@@ -722,11 +686,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-    backgroundColor: colors.surface,
+    backgroundColor: colors.backgroundDeep,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.borderStrong,
     elevation: 5,
-    shadowColor: '#000000',
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.18,
     shadowRadius: 6,
@@ -759,6 +723,10 @@ const styles = StyleSheet.create({
   },
   dhammaOriginal: {
     fontStyle: 'italic',
+  },
+  buttonPressed: {
+    opacity: 0.75,
+    transform: [{ scale: 0.94 }],
   },
 });
 
