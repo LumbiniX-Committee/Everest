@@ -14,9 +14,12 @@ export type SiteWithDistance = HeritageSite & { distanceM: number | null };
 export function useNearbySites(coordinate: Coordinate | null): SiteWithDistance[] {
   return useMemo(() => {
     if (!coordinate) {
-      return demoSites.map((site) => ({ ...site, distanceM: null }));
+      return demoSites
+        .filter((site) => !site.parentSiteId)
+        .map((site) => ({ ...site, distanceM: null }));
     }
     return demoSites
+      .filter((site) => !site.parentSiteId)
       .map((site) => ({ ...site, distanceM: distanceMeters(coordinate, site.coordinate) }))
       .sort((a, b) => a.distanceM - b.distanceM);
   }, [coordinate]);

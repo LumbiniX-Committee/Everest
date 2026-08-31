@@ -87,13 +87,28 @@ const timelineById = new Map(timeline.map((t) => [t.id, t]));
 // --- in-memory mutable state (resets on restart — that is the point) --------
 const DAILY_CAP = 200; // mirrors shared/merit.ts; the mock is throwaway.
 const MERIT_QUEST_FALLBACK = 30;
+
+// seed/history.json (tools/seed-history.mjs) — synthetic captures, reports,
+// acknowledgements and merit events, spread over the run's window. Loaded so
+// the dashboard, coverage metrics and export are lived-in from first boot
+// rather than empty until a device actually visits. Optional: an empty
+// dashboard is a truthful start state too, so a missing or unreadable file
+// just means the mock starts blank, same as before this existed.
+let seededHistory = { captures: [], reports: [], meritEvents: [], acknowledgements: [] };
+try {
+  seededHistory = readSeed('history.json');
+  console.log(
+    `[history] loaded ${seededHistory.captures.length} captures, ${seededHistory.reports.length} reports, ${seededHistory.acknowledgements.length} acknowledgements`,
+  );
+} catch { /* seed/history.json not generated — start blank */ }
+
 const state = {
-  captures: [],
-  reports: [],
-  meritEvents: [],
+  captures: [...seededHistory.captures],
+  reports: [...seededHistory.reports],
+  meritEvents: [...seededHistory.meritEvents],
   allocations: [],
   questCompletions: [],
-  acknowledgements: [],
+  acknowledgements: [...seededHistory.acknowledgements],
   dhammaLog: [],        // audit trail: question, refusal, citations, tier
 };
 
@@ -628,21 +643,62 @@ function dashboardData() {
 on('GET', '/dashboard', (_req, res) => json(res, 200, dashboardData()));
 on('GET', '/dashboard/summary', (_req, res) => json(res, 200, dashboardData()));
 
+/**
+ * A report's own coordinates, for an export that has to open as a real layer
+ * in QGIS rather than stack every report at one site on its centroid.
+ *
+ * Prefers the capture that produced the report — the actual vantage the
+ * observer stood at — and falls back to the site centroid only when the
+ * report carries no capture_id (a riddle-quest report, or history seeded
+ * before capture_id was recorded). `source` says which, on every row, so a
+ * conservator reading the export is never silently shown a stand-in as if it
+ * were a measurement.
+ */
+function reportCoordsWith(captureById, report) {
+  const capture = report.capture_id ? captureById.get(report.capture_id) : null;
+  if (capture && typeof capture.lat === 'number' && typeof capture.lon === 'number') {
+    return { lat: capture.lat, lon: capture.lon, source: 'capture', align_score: capture.align_score ?? null, vantage_id: capture.vantage_id ?? null };
+  }
+  const site = siteById.get(report.site_id);
+  return { lat: site?.coords?.lat ?? 0, lon: site?.coords?.lon ?? 0, source: 'site_centroid', align_score: null, vantage_id: null };
+}
+
+/** Wraps a CSV field in quotes and escapes embedded quotes, only when needed. */
+function csvField(value) {
+  const s = value === null || value === undefined ? '' : String(value);
+  return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
 // GET /export?format=csv|geojson|crm
 on('GET', '/export', (_req, res, _p, q) => {
   const format = q.format || 'csv';
+  const captureById = new Map(state.captures.map((c) => [c.id, c]));
+
   if (format === 'geojson') {
-    return json(res, 200, {
+    const geojson = {
       type: 'FeatureCollection',
       features: state.reports.map((r) => {
-        const s = siteById.get(r.site_id);
+        const coords = reportCoordsWith(captureById, r);
         return {
           type: 'Feature',
-          geometry: { type: 'Point', coordinates: [s?.coords.lon ?? 0, s?.coords.lat ?? 0] },
-          properties: { id: r.id, site_id: r.site_id, category: r.category, severity: r.severity, status: r.status },
+          geometry: { type: 'Point', coordinates: [coords.lon, coords.lat] },
+          properties: {
+            id: r.id, site_id: r.site_id, category: r.category, subtype: r.subtype,
+            severity: r.severity, status: r.status, corroborations: r.corroborations,
+            acknowledged_at: r.acknowledged_at, created_at: r.created_at,
+            coord_source: coords.source, align_score: coords.align_score,
+          },
         };
       }),
+    };
+    const payload = JSON.stringify(geojson);
+    res.writeHead(200, {
+      'Content-Type': 'application/geo+json; charset=utf-8',
+      'Access-Control-Allow-Origin': '*',
+      'Content-Disposition': 'attachment; filename="saksi-export.geojson"',
+      'Content-Length': Buffer.byteLength(payload),
     });
+    return res.end(payload);
   }
   if (format === 'crm') {
     // CIDOC-CRM shape (04 §2): reports → E14 Condition Assessment / E3 Condition State
@@ -654,9 +710,17 @@ on('GET', '/export', (_req, res, _p, q) => {
       timespan: r.created_at,
     })));
   }
-  // csv
-  const rows = ['id,site_id,category,subtype,severity,status,created_at'];
-  for (const r of state.reports) rows.push([r.id, r.site_id, r.category, r.subtype, r.severity, r.status, r.created_at].join(','));
+  // csv — coordinates included, so a row is a point QGIS can place, not a
+  // record with an address for a place it cannot draw.
+  const rows = ['id,site_id,latitude,longitude,vantage_id,align_score,category,subtype,severity,status,corroborations,acknowledged_at,note,created_at'];
+  for (const r of state.reports) {
+    const coords = reportCoordsWith(captureById, r);
+    rows.push([
+      r.id, r.site_id, coords.lat, coords.lon, coords.vantage_id ?? '', coords.align_score ?? '',
+      r.category, r.subtype ?? '', r.severity, r.status, r.corroborations,
+      r.acknowledged_at ?? '', r.note ?? '', r.created_at,
+    ].map(csvField).join(','));
+  }
   const csv = rows.join('\n');
   res.writeHead(200, {
     'Content-Type': 'text/csv; charset=utf-8',

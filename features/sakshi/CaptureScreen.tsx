@@ -16,7 +16,7 @@ import {
 } from '@/data';
 import { useAlignment } from '@/hooks';
 import { camera as cameraService, database } from '@/services';
-import { usePermission, usePreferences } from '@/store';
+import { usePermission, usePreferences, useQuests } from '@/store';
 import { colors, layers, radii, spacing } from '@/theme';
 import {
   formatBearing,
@@ -60,6 +60,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
   const site = vantage ? findSite(vantage.siteId) : undefined;
   const { state: cameraPermission, request: requestCamera, openSettings } = usePermission('camera');
   const { preferences } = usePreferences();
+  const { creditVantageObservation } = useQuests();
   const [nudgeDeg, setNudgeDeg] = useState(0);
   const [draft, setDraft] = useState<CaptureDraft | null>(null);
   const [referenceResult, setReferenceResult] = useState<ReferenceResult | null>(null);
@@ -204,6 +205,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
 
       const observation = { ...draft.observation, photoUri: dest };
       await database.insertObservation(observation);
+      await creditVantageObservation(vantage.id);
       router.replace({
         pathname: '/(main)/sakshi/observation',
         params: { observationId: observation.id },

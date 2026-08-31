@@ -10,7 +10,19 @@ export type SourceTier = 'archaeological' | 'documented' | 'community';
 export type ConditionStatus = 'stable' | 'watch' | 'open' | 'resolved';
 
 /** Which part of the property a site sits in (04-ARCHITECTURE schema). */
-export type Zone = 'sacred_garden' | 'monastic_east' | 'monastic_west' | 'greater_lumbini';
+export type Zone =
+  | 'sacred_garden'
+  | 'monastic_east'
+  | 'monastic_west'
+  | 'greater_lumbini'
+  | 'kathmandu_valley';
+
+/**
+ * Which cluster of sites a place belongs to, for map bounds, on-site radii and
+ * the schematic plan's projection. Defaults to `'lumbini'` when a site carries
+ * none, so the original twelve never needed a mass edit to gain one.
+ */
+export type RegionId = 'lumbini' | 'kathmandu-valley';
 
 /**
  * Whether photography is permitted at a site. Charter #8: capture is hard-disabled
@@ -21,12 +33,26 @@ export type PhotographyPolicy = 'allowed' | 'restricted' | 'prohibited';
 /** A labelled fact shown in the site detail's data table. */
 export type SiteFact = { label: string; value: string };
 
+/** A sourced chapter within a composite heritage place. */
+export type SiteStorySection = {
+  /** Short monument or feature name. */
+  title: string;
+  /** A small chapter label, such as "Stone architecture". */
+  eyebrow?: string;
+  /** Visitor-facing narrative grounded in the site's listed sources. */
+  body: string;
+};
+
 /**
  * A heritage site in and around Lumbini — a temple, stupa, pillar, excavation,
  * or monastic zone plot.
  */
 export type HeritageSite = {
   id: string;
+  /** Parent complex for an individually explorable monument. */
+  parentSiteId?: string;
+  /** Display/walk order inside the parent complex. */
+  parentOrder?: number;
   /** Latin-script name used throughout the UI. */
   name: string;
   /** Devanagari name, rendered in Anek where present. */
@@ -39,6 +65,8 @@ export type HeritageSite = {
   coordinate: Coordinate;
   /** Which zone of the property this site sits in. */
   zone?: Zone;
+  /** Which region this site sits in. Absent means `'lumbini'`. */
+  region?: RegionId;
   /** Significance tier: 1 primary, 2 secondary, 3 contextual. */
   tier?: 1 | 2 | 3;
   /**
@@ -53,6 +81,12 @@ export type HeritageSite = {
   elevation?: number;
   /** Labelled facts for the site detail table. */
   facts?: SiteFact[];
+  /** Monument-by-monument narrative for palace squares and temple complexes. */
+  story?: SiteStorySection[];
+  /** Monument-specific field activity used to build the local quest. */
+  questPrompt?: string;
+  /** Editorial activity style; kept separate from the visitor-facing prompt. */
+  questMode?: string;
   /**
    * Sutta uids this site rests on, e.g. `['dn14', 'mn123']`.
    *

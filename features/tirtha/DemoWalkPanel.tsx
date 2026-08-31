@@ -174,7 +174,7 @@ export function DemoWalkPanel({
           style={styles.headerText}
         >
           <Text variant="label" tone="sandstone" uppercase>
-            Demo walk {expanded ? '▾' : '▸'}
+            {step?.walkName ?? 'Demo walk'} {expanded ? '▾' : '▸'}
           </Text>
           <Text variant="body" numberOfLines={expanded ? undefined : 1}>
             {activityLine(step)}
