@@ -21,11 +21,25 @@ export function OnboardingFrame({
   children,
   footer,
   showProgress = true,
+  scrollBody = true,
 }: {
   stepKey: string;
   children: ReactNode;
   footer: ReactNode;
   showProgress?: boolean;
+  /**
+   * Whether the body scrolls when it is taller than the space it is given.
+   *
+   * On by default. The body used to be a fixed `flex: 1` view, so a step with
+   * more content than fits simply ran past its own bounds: the permissions step
+   * carries four cards, and the fourth sat below the frame where Android
+   * delivers no touches at all. The card was drawn but could never be tapped.
+   *
+   * Short steps are unchanged, because the content container still grows to
+   * fill and centres itself. Turn this off only for a step that owns a vertical
+   * gesture, which a scroll view would otherwise take for itself.
+   */
+  scrollBody?: boolean;
 }) {
   const router = useRouter();
   const index = stepIndex(stepKey);
@@ -62,24 +76,19 @@ export function OnboardingFrame({
       {/* The body rises as it fades, and the footer follows a beat later, so a
           screen composes itself rather than appearing all at once. Short
           enough not to be a wait: 380ms, with a 90ms stagger. */}
-      {/* Scrolls, because one screen outgrew the frame. A centred `flex: 1`
-          view has nowhere to put content taller than itself, so the permissions
-          step — an intro plus four cards — overflowed in both directions at
-          once: the heading rode up under the status bar while the last card sat
-          beneath the footer, with "Enter Lumbini" printed over it.
-
-          `flexGrow: 1` with `justifyContent: 'center'` is what keeps the short
-          screens unchanged: while the content is shorter than the frame it is
-          still centred, and only once it is taller does the container grow and
-          scroll. Centring by `flex: 1` instead would strand the top of a long
-          screen out of reach. */}
-      <ScrollView
-        style={styles.body}
-        contentContainerStyle={styles.bodyContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <Animated.View entering={FadeInDown.duration(380).damping(18)}>{children}</Animated.View>
-      </ScrollView>
+      <Animated.View entering={FadeInDown.duration(380).damping(18)} style={styles.body}>
+        {scrollBody ? (
+          <ScrollView
+            style={styles.bodyScroll}
+            contentContainerStyle={styles.bodyContent}
+            keyboardShouldPersistTaps="handled"
+          >
+            {children}
+          </ScrollView>
+        ) : (
+          <View style={styles.bodyStatic}>{children}</View>
+        )}
+      </Animated.View>
 
       {/* Back sits beside the action rather than up in the corner. It is the
           one control someone reaches for while already holding the phone to
@@ -144,7 +153,12 @@ const styles = StyleSheet.create({
   markDone: { backgroundColor: colors.sandstoneDeep, opacity: 0.4 },
 
   body: { flex: 1 },
+  bodyScroll: { flex: 1 },
+  // `flexGrow` rather than `flex`, so a short step still centres in the space it
+  // has while a tall one is allowed to exceed it and scroll instead of spilling
+  // past the frame. Both branches keep the padding the body always had.
   bodyContent: { flexGrow: 1, justifyContent: 'center', paddingVertical: spacing.xxl },
+  bodyStatic: { flex: 1, justifyContent: 'center', paddingVertical: spacing.xxl },
   footerRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',

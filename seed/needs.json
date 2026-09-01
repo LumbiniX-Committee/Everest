@@ -2,7 +2,10 @@
   {
     "id": "n1",
     "site_id": "puskarini",
-    "title": { "en": "Puskarini drainage clearance", "ne": "पुष्करिणी निकास सफाइ" },
+    "title": {
+      "en": "Puskarini drainage clearance",
+      "ne": "पुष्करिणी निकास सफाइ"
+    },
     "description": {
       "en": "Silt removal and inlet repair before the monsoon, to protect the sacred pond from seasonal flooding.",
       "ne": "पवित्र पोखरीलाई मौसमी बाढीबाट जोगाउन मनसुनअघि पीलो हटाउने र प्रवेश-नाली मर्मत।"
@@ -16,7 +19,10 @@
   {
     "id": "n2",
     "site_id": "ashokan-pillar",
-    "title": { "en": "Protective canopy inspection", "ne": "सुरक्षा छाना निरीक्षण" },
+    "title": {
+      "en": "Protective canopy inspection",
+      "ne": "सुरक्षा छाना निरीक्षण"
+    },
     "description": {
       "en": "A structural check of the shelter over the Ashokan pillar, ahead of the next monsoon season.",
       "ne": "अर्को मनसुन मौसमअघि अशोक स्तम्भमाथिको छानाको संरचनात्मक जाँच।"
@@ -30,7 +36,10 @@
   {
     "id": "n3",
     "site_id": "maya-devi-temple",
-    "title": { "en": "Interpretive signage, four panels", "ne": "व्याख्यात्मक सूचना-पाटी, चार प्यानल" },
+    "title": {
+      "en": "Interpretive signage, four panels",
+      "ne": "व्याख्यात्मक सूचना-पाटी, चार प्यानल"
+    },
     "description": {
       "en": "Trilingual interpretive signage for the Sacred Garden, covering the temple, pillar and pond.",
       "ne": "पवित्र उद्यानका लागि त्रिभाषिक व्याख्यात्मक सूचना-पाटी, मन्दिर, स्तम्भ र पोखरीलाई समेट्दै।"
@@ -38,6 +47,23 @@
     "ne_review": "pending",
     "funded_by": "<sponsor>",
     "target_npr": 240000,
+    "allocated_merit": 0,
+    "status": "open"
+  },
+  {
+    "id": "n4",
+    "site_id": "manga-hiti",
+    "title": {
+      "en": "Manga Hiti flow monitoring and spout repair",
+      "ne": "मंग हिटीको बहाव अनुगमन र धारा मर्मत"
+    },
+    "description": {
+      "en": "Regular monitoring and minor conduit repair to keep water flowing at one of the valley's oldest dhunge dharas, most of which nobody watches on any continuous schedule.",
+      "ne": "उपत्यकाका सबैभन्दा पुराना ढुङ्गे धाराहरूमध्ये एकमा पानी बगिरहन नियमित अनुगमन र साना नाली मर्मत, जुन अधिकांशलाई कसैले पनि नियमित रूपमा नियाल्दैन।"
+    },
+    "ne_review": "pending",
+    "funded_by": "<sponsor>",
+    "target_npr": 150000,
     "allocated_merit": 0,
     "status": "open"
   }

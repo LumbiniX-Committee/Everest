@@ -27,13 +27,38 @@ export type AlignmentInput = {
   nudgeDeg?: number;
 };
 
-export function useAlignment({ vantage, active = true, nudgeDeg = 0 }: AlignmentInput): AlignmentState {
+export type AlignmentTelemetry = AlignmentState & {
+  /** The same GPS fix used to calculate distance and lock. */
+  coordinate: Coordinate | null;
+  /** The same true-north heading used to calculate bearing error. */
+  heading: number | null;
+  /** The same device attitude used to calculate pitch error. */
+  pitch: number | null;
+};
+
+export function useAlignment({
+  vantage,
+  active = true,
+  nudgeDeg = 0,
+}: AlignmentInput): AlignmentTelemetry {
   const { coordinate, accuracyM } = useCurrentPosition({ watch: active, highAccuracy: true });
   const heading = useHeading(active, nudgeDeg);
   const pitch = usePitch(active);
 
   return useMemo(
-    () => computeAlignment({ vantage, coordinate, gpsAccuracyM: accuracyM, heading, pitch, active }),
+    () => ({
+      ...computeAlignment({
+        vantage,
+        coordinate,
+        gpsAccuracyM: accuracyM,
+        heading,
+        pitch,
+        active,
+      }),
+      coordinate,
+      heading,
+      pitch,
+    }),
     [vantage, coordinate, accuracyM, heading, pitch, active],
   );
 }

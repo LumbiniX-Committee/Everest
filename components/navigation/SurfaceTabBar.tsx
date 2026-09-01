@@ -1,29 +1,36 @@
+import { useCallback, useEffect } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { BottomTabBarProps } from 'expo-router/js-tabs';
 
 import { Icon, Text, type IconName } from '@/components/ui';
 import { colors, radii, spacing } from '@/theme';
 import { SURFACES, SURFACE_LABELS, SURFACE_ICONS, type Surface } from '@/constants';
+import { useHaptics } from '@/hooks';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 /**
- * The bottom navigator: a floating sandstone bar over the three surfaces.
+ * The bottom navigator: one floating navy instrument for the three surfaces.
  *
  * Compass for Tīrtha, eye for Sākṣī, lotus for Dhamma — drawn icons, so the
- * selected one can take the sandstone tint the label and the top mark share.
- * The active surface carries a sandstone rule above it, a warm pill behind it,
+ * selected one can take the teal tint the label and the top mark share.
+ * The active surface carries a teal rule above it, a quiet panel behind it,
  * and a heavier label. There is no fourth entry; see `constants/app.ts`.
- *
- * The sync banner used to sit above the bar on every screen, on every surface,
- * saying "1 observation saved on this device". It was true and it was permanent
- * furniture over a map of a temple. The state it reported is unchanged and still
- * reachable in Settings, under Sync, where a failed upload can also be retried.
  */
 export function SurfaceTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
+  const { selection } = useHaptics();
 
   return (
-    <View style={[styles.container, { paddingBottom: Math.max(insets.bottom, spacing.xs) }]}>
+    <View style={[styles.container, { paddingBottom: Math.max(insets.bottom, spacing.sm) }]}>
       <View style={styles.bar}>
         {state.routes.map((route, index) => {
           if (!(SURFACES as readonly string[]).includes(route.name)) return null;
@@ -37,6 +44,7 @@ export function SurfaceTabBar({ state, descriptors, navigation }: BottomTabBarPr
           const onPress = () => {
             const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
             if (!focused && !event.defaultPrevented) {
+              selection();
               navigation.navigate(route.name, route.params);
             }
           };
@@ -46,37 +54,15 @@ export function SurfaceTabBar({ state, descriptors, navigation }: BottomTabBarPr
           };
 
           return (
-            <Pressable
+            <SurfaceTabItem
               key={route.key}
-              accessibilityRole="tab"
-              accessibilityState={{ selected: focused }}
+              label={label}
+              icon={icon}
+              focused={focused}
               accessibilityLabel={options.tabBarAccessibilityLabel ?? label}
               onPress={onPress}
               onLongPress={onLongPress}
-              style={({ pressed }) => [
-                styles.item,
-                focused && styles.itemActive,
-                pressed && styles.itemPressed,
-              ]}
-            >
-              <View style={[styles.indexMark, focused && styles.indexMarkActive]} />
-              <View style={styles.iconContainer}>
-                <Icon
-                  name={icon}
-                  size={focused ? 24 : 22}
-                  color={focused ? colors.sandstoneDeep : colors.textMuted}
-                />
-              </View>
-              <Text
-                variant="label"
-                style={[
-                  styles.label,
-                  focused ? styles.labelActive : styles.labelInactive,
-                ]}
-              >
-                {label}
-              </Text>
-            </Pressable>
+            />
           );
         })}
       </View>
@@ -84,66 +70,166 @@ export function SurfaceTabBar({ state, descriptors, navigation }: BottomTabBarPr
   );
 }
 
+function SurfaceTabItem({
+  label,
+  icon,
+  focused,
+  accessibilityLabel,
+  onPress,
+  onLongPress,
+}: {
+  label: string;
+  icon: IconName;
+  focused: boolean;
+  accessibilityLabel: string;
+  onPress: () => void;
+  onLongPress: () => void;
+}) {
+  const scale = useSharedValue(1);
+  const iconPop = useSharedValue(1);
+  const markWidth = useSharedValue(focused ? 28 : 0);
+
+  useEffect(() => {
+    if (focused) {
+      iconPop.value = withSequence(
+        withTiming(1.18, { duration: 120 }),
+        withSpring(1, { damping: 10, stiffness: 220, mass: 0.6 }),
+      );
+      markWidth.value = withSpring(28, { damping: 14, stiffness: 260 });
+    } else {
+      markWidth.value = withTiming(0, { duration: 160 });
+    }
+  }, [focused, iconPop, markWidth]);
+
+  const itemAnimStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const iconAnimStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: iconPop.value }],
+  }));
+
+  const markAnimStyle = useAnimatedStyle(() => ({
+    width: markWidth.value,
+    opacity: withTiming(focused ? 1 : 0, { duration: 140 }),
+  }));
+
+  const handlePressIn = useCallback(() => {
+    scale.value = withSpring(0.92, {
+      damping: 14,
+      stiffness: 380,
+      mass: 0.6,
+    });
+  }, [scale]);
+
+  const handlePressOut = useCallback(() => {
+    scale.value = withSpring(1, {
+      damping: 12,
+      stiffness: 280,
+      mass: 0.6,
+    });
+  }, [scale]);
+
+  return (
+    <AnimatedPressable
+      accessibilityRole="tab"
+      accessibilityState={{ selected: focused }}
+      accessibilityLabel={accessibilityLabel}
+      onPress={onPress}
+      onLongPress={onLongPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      style={[
+        styles.item,
+        focused && styles.itemActive,
+        itemAnimStyle,
+      ]}
+    >
+      <View style={styles.markTrack}>
+        <Animated.View style={[styles.indexMark, focused && styles.indexMarkActive, markAnimStyle]} />
+      </View>
+      <Animated.View style={[styles.iconContainer, iconAnimStyle]}>
+        <Icon
+          name={icon}
+          size={focused ? 30 : 27}
+          color={focused ? colors.primary : colors.textMuted}
+        />
+      </Animated.View>
+      <Text
+        variant="label"
+        style={[
+          styles.label,
+          focused ? styles.labelActive : styles.labelInactive,
+        ]}
+      >
+        {label}
+      </Text>
+    </AnimatedPressable>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'transparent',
-    paddingHorizontal: spacing.md,
-    paddingTop: spacing.xs,
+    paddingHorizontal: spacing.content,
+    paddingTop: spacing.sm,
   },
   bar: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    backgroundColor: colors.surface,
+    minHeight: 82,
+    backgroundColor: colors.backgroundDeep,
     borderRadius: radii.xl,
     borderWidth: 1,
-    borderColor: 'rgba(183, 155, 114, 0.25)',
+    borderColor: colors.border,
     paddingVertical: spacing.xs,
     paddingHorizontal: spacing.xxs,
-    shadowColor: '#000000',
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
-    elevation: 6,
+    shadowOpacity: 0.24,
+    shadowRadius: 12,
+    elevation: 8,
   },
   item: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    minHeight: 70,
     paddingVertical: spacing.xs,
     paddingHorizontal: spacing.xxs,
     borderRadius: radii.lg,
     gap: 2,
   },
   itemActive: {
-    backgroundColor: 'rgba(183, 155, 114, 0.12)',
+    backgroundColor: colors.surfaceRaised,
   },
-  itemPressed: {
-    opacity: 0.75,
+  markTrack: {
+    height: 3,
+    width: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 2,
   },
   indexMark: {
     height: 3,
-    width: 20,
     borderRadius: radii.full,
-    backgroundColor: 'transparent',
-    marginBottom: 2,
+    backgroundColor: colors.backgroundDeep,
   },
   indexMarkActive: {
-    backgroundColor: colors.sandstone,
+    backgroundColor: colors.primary,
   },
   iconContainer: {
-    // Fixed, so the two-point size change on selection moves the icon and not
-    // the label beneath it.
-    height: 26,
+    height: 32,
     alignItems: 'center',
     justifyContent: 'center',
   },
   label: {
-    fontSize: 11,
-    lineHeight: 14,
+    fontSize: 14,
+    lineHeight: 18,
   },
   labelActive: {
-    color: colors.sandstoneDeep,
+    color: colors.primary,
     fontWeight: '600',
   },
   labelInactive: {

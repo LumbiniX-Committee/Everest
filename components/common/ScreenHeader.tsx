@@ -1,9 +1,19 @@
+import { useCallback } from 'react';
 import { useRouter } from 'expo-router';
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 
 import { Text } from '@/components/ui';
+import { useHaptics } from '@/hooks';
 import { radii, spacing } from '@/theme';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 /**
  * Screen title block. The eyebrow carries the surface name so a screen deep in
@@ -44,30 +54,54 @@ export function ScreenHeader({
   onBack?: () => void;
 }) {
   const router = useRouter();
+  const { pulse } = useHaptics();
   const showBack = canGoBack && (onBack != null || router.canGoBack());
+
+  const backOffset = useSharedValue(0);
+  const backScale = useSharedValue(1);
+
+  const backAnimStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: backOffset.value }, { scale: backScale.value }],
+  }));
+
+  const handleBackIn = useCallback(() => {
+    backOffset.value = withSpring(-4, { damping: 14, stiffness: 350, mass: 0.6 });
+    backScale.value = withSpring(0.95, { damping: 14, stiffness: 350, mass: 0.6 });
+  }, [backOffset, backScale]);
+
+  const handleBackOut = useCallback(() => {
+    backOffset.value = withSpring(0, { damping: 12, stiffness: 280, mass: 0.6 });
+    backScale.value = withSpring(1, { damping: 12, stiffness: 280, mass: 0.6 });
+  }, [backOffset, backScale]);
+
+  const handleBackPress = useCallback(() => {
+    pulse(Haptics.ImpactFeedbackStyle.Light);
+    if (onBack) onBack();
+    else router.back();
+  }, [onBack, pulse, router]);
 
   return (
     <View style={styles.wrap}>
       {showBack ? (
-        <Pressable
+        <AnimatedPressable
           accessibilityRole="button"
           accessibilityLabel="Back"
-          onPress={() => (onBack ? onBack() : router.back())}
-          // 44dp, and hit-slopped wider: this is the control people reach for
-          // most and it sits at the top of the screen, away from the thumb.
+          onPress={handleBackPress}
+          onPressIn={handleBackIn}
+          onPressOut={handleBackOut}
           hitSlop={{ top: 8, bottom: 8, left: 12, right: 12 }}
-          style={({ pressed }) => [styles.back, pressed && styles.backPressed]}
+          style={[styles.back, backAnimStyle]}
         >
           <Text variant="body" tone="secondary">
             ‹ Back
           </Text>
-        </Pressable>
+        </AnimatedPressable>
       ) : null}
 
       <View style={styles.titleRow}>
         <View style={styles.titleColumn}>
           {eyebrow ? (
-            <Text variant="label" tone="muted" uppercase>
+            <Text variant="label" tone="sandstone" uppercase>
               {eyebrow}
             </Text>
           ) : null}
@@ -85,7 +119,7 @@ export function ScreenHeader({
 }
 
 const styles = StyleSheet.create({
-  wrap: { gap: spacing.sm, paddingTop: spacing.lg, paddingBottom: spacing.lg },
+  wrap: { gap: spacing.md, paddingTop: spacing.lg, paddingBottom: spacing.lg },
   back: {
     alignSelf: 'flex-start',
     minHeight: 44,
@@ -96,6 +130,6 @@ const styles = StyleSheet.create({
   },
   backPressed: { opacity: 0.6 },
   titleRow: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.md },
-  titleColumn: { flex: 1, gap: spacing.sm },
+  titleColumn: { flex: 1, gap: spacing.xs },
   action: { paddingTop: spacing.xs },
 });

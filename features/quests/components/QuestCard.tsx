@@ -1,11 +1,21 @@
+import { useCallback } from 'react';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 
 import { ProgressRing, Text } from '@/components/ui';
 import { findSite, nowImageForSite } from '@/data';
+import { useHaptics } from '@/hooks';
 import { colors, radii, spacing } from '@/theme';
 import type { QuestWithProgress } from '@/types';
 
 import { QuestCategoryBadge } from './QuestCategoryBadge';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export type QuestCardProps = {
   quest: QuestWithProgress;
@@ -31,9 +41,14 @@ export type QuestCardProps = {
  */
 export function QuestCard({ quest, onPress }: QuestCardProps) {
   const { progress, tasks, category, title, subtitle, estimatedMinutes } = quest;
+  const { pulse } = useHaptics();
+  const scale = useSharedValue(1);
+
   const completedCount = progress.completedTasks.length;
   const isCompleted = progress.status === 'completed';
   const isInProgress = progress.status === 'in_progress';
+  const arrivalTask = tasks.find((task) => task.autoComplete === 'arrival');
+  const reached = arrivalTask ? progress.completedTasks.includes(arrivalTask.id) : false;
 
   // The first site any task names. Quests are built around a place, and the
   // first task is the one that takes you there.
@@ -41,12 +56,31 @@ export function QuestCard({ quest, onPress }: QuestCardProps) {
   const canonicalId = siteId ? findSite(siteId)?.id ?? siteId : undefined;
   const image = canonicalId ? nowImageForSite(canonicalId) : undefined;
 
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = useCallback(() => {
+    scale.value = withSpring(0.98, { damping: 15, stiffness: 350, mass: 0.8 });
+  }, [scale]);
+
+  const handlePressOut = useCallback(() => {
+    scale.value = withSpring(1, { damping: 12, stiffness: 280, mass: 0.8 });
+  }, [scale]);
+
+  const handlePress = useCallback(() => {
+    pulse(Haptics.ImpactFeedbackStyle.Light);
+    onPress();
+  }, [onPress, pulse]);
+
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityRole="button"
       accessibilityLabel={`Quest: ${title}`}
-      onPress={onPress}
-      style={({ pressed }) => [styles.card, pressed && styles.pressed]}
+      onPress={handlePress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      style={[styles.card, animatedStyle]}
     >
       {image ? (
         <View style={styles.hero}>
@@ -86,6 +120,10 @@ export function QuestCard({ quest, onPress }: QuestCardProps) {
             <Text variant="label" uppercase style={styles.completedTag}>
               Completed
             </Text>
+          ) : arrivalTask ? (
+            <Text variant="label" uppercase style={reached ? styles.reachedTag : styles.visitTag}>
+              {reached ? 'Reached' : 'Visit to begin'}
+            </Text>
           ) : null}
         </View>
 
@@ -113,7 +151,7 @@ export function QuestCard({ quest, onPress }: QuestCardProps) {
           ) : null}
         </View>
       </View>
-    </Pressable>
+    </AnimatedPressable>
   );
 }
 
@@ -144,6 +182,8 @@ const styles = StyleSheet.create({
   body: { padding: spacing.base, gap: spacing.sm },
   headRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   completedTag: { color: colors.resolved },
+  reachedTag: { color: colors.alignmentLocked },
+  visitTag: { color: colors.textMuted },
   title: {},
   footRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   meta: { flex: 1 },

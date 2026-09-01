@@ -227,7 +227,14 @@ function Pips({ count, at }: { count: number; at: number }) {
   return (
     <View style={styles.pips} accessibilityLabel={`Step ${at + 1} of ${count}`}>
       {Array.from({ length: count }, (_, i) => (
-        <View key={i} style={[styles.pip, i <= at && styles.pipOn]} />
+        <View
+          key={i}
+          style={[
+            styles.pip,
+            i < at && styles.pipDone,
+            i === at && styles.pipCurrent,
+          ]}
+        />
       ))}
     </View>
   );
@@ -261,6 +268,7 @@ export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQu
       siteSummary: significance.site.summary,
       narration: significance.narration,
       facts: significance.facts,
+      story: significance.story,
       dhamma: significance.dhamma,
     });
   }, [siteId, preferences.wisdomTier]);
@@ -425,28 +433,28 @@ export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQu
 
 const styles = StyleSheet.create({
   voicePill: {
-    backgroundColor: 'rgba(180, 71, 42, 0.08)',
+    backgroundColor: 'rgba(77, 198, 194, 0.12)',
     borderRadius: radii.full,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xxs,
+    paddingHorizontal: spacing.sm + 2,
+    paddingVertical: spacing.xxs + 1,
     borderWidth: 1,
-    borderColor: 'rgba(180, 71, 42, 0.25)',
+    borderColor: 'rgba(77, 198, 194, 0.35)',
   },
 
   voicePillPlaying: {
-    backgroundColor: '#B4472A',
-    borderColor: '#B4472A',
+    backgroundColor: colors.sandstone,
+    borderColor: colors.sandstone,
   },
 
   voiceTxt: {
     fontSize: 10,
-    fontWeight: '700',
-    color: '#B4472A',
-    letterSpacing: 0.4,
+    fontWeight: '800',
+    color: colors.sandstone,
+    letterSpacing: 0.5,
   },
 
   voiceTxtPlaying: {
-    color: '#FFFFFF',
+    color: colors.backgroundDeep,
   },
 
   footer: {
@@ -460,6 +468,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.sm,
+    flexShrink: 1,
   },
 
   navBtn: {
@@ -468,16 +477,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: radii.full,
-    borderWidth: 1.5,
-    borderColor: colors.border,
+    borderWidth: 1,
+    borderColor: 'rgba(126, 169, 190, 0.35)',
+    backgroundColor: colors.surfaceSecondary,
   },
 
   navBtnOff: { opacity: 0.28 },
 
   navBtnTxt: {
     fontSize: 18,
-    color: colors.textSecondary,
+    color: colors.sandstone,
     lineHeight: 22,
+    fontWeight: '700',
   },
 
   navBtnTxtMuted: { color: colors.textMuted },
@@ -488,29 +499,34 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: radii.full,
-    backgroundColor: colors.border,
+    backgroundColor: 'rgba(126, 169, 190, 0.3)',
   },
 
-  pipOn: {
+  pipDone: {
+    backgroundColor: colors.sandstone,
+  },
+
+  pipCurrent: {
     backgroundColor: colors.sandstone,
     width: 16,
   },
 
   nextBtn: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs + 2,
+    flexShrink: 0,
+    paddingHorizontal: spacing.md + 2,
+    paddingVertical: spacing.xs + 3,
     borderRadius: radii.full,
     backgroundColor: colors.sandstone,
   },
 
   nextBtnClaim: {
-    backgroundColor: '#B4472A',
+    backgroundColor: colors.heritageGold,
   },
 
   nextBtnTxt: {
     fontSize: 14,
-    fontWeight: '700',
-    color: '#FFFFFF',
+    fontWeight: '800',
+    color: colors.backgroundDeep,
     letterSpacing: 0.4,
   },
 });
@@ -520,7 +536,7 @@ const styles = StyleSheet.create({
 const popup = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(20, 25, 22, 0.75)',
+    backgroundColor: 'rgba(5, 21, 33, 0.85)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -539,20 +555,20 @@ const popup = StyleSheet.create({
   },
 
   card: {
-    width: '82%',
-    backgroundColor: '#FFFCF6',
+    width: '84%',
+    backgroundColor: colors.surface,
     borderRadius: 26,
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.xl + 4,
     alignItems: 'center',
     gap: spacing.md,
-    shadowColor: '#000',
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 14 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.6,
     shadowRadius: 30,
     elevation: 22,
     borderWidth: 1.5,
-    borderColor: 'rgba(183, 155, 114, 0.42)',
+    borderColor: 'rgba(198, 166, 106, 0.45)',
   },
 
   closeBtn: {
@@ -569,8 +585,8 @@ const popup = StyleSheet.create({
 
   closeTxt: {
     fontSize: 13,
-    color: colors.textMuted,
-    fontWeight: '600',
+    color: colors.textSecondary,
+    fontWeight: '700',
   },
 
   star: {
@@ -582,7 +598,7 @@ const popup = StyleSheet.create({
     fontSize: 11,
     fontWeight: '800',
     letterSpacing: 1.6,
-    color: colors.sandstoneDeep,
+    color: colors.heritageGold,
     textTransform: 'uppercase',
   },
 
@@ -596,11 +612,13 @@ const popup = StyleSheet.create({
 
   progressBox: {
     width: '100%',
-    backgroundColor: 'rgba(183, 155, 114, 0.08)',
+    backgroundColor: colors.surfaceSecondary,
     borderRadius: radii.md,
     padding: spacing.md,
     gap: spacing.xs,
     marginVertical: spacing.xxs,
+    borderWidth: 1,
+    borderColor: 'rgba(126, 169, 190, 0.2)',
   },
 
   progressHead: {
@@ -612,7 +630,7 @@ const popup = StyleSheet.create({
   progressLabel: {
     fontSize: 12,
     fontWeight: '700',
-    color: colors.sandstoneDeep,
+    color: colors.heritageGold,
   },
 
   progressPts: {
@@ -624,7 +642,7 @@ const popup = StyleSheet.create({
   track: {
     width: '100%',
     height: 8,
-    backgroundColor: 'rgba(0, 0, 0, 0.08)',
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
     borderRadius: radii.full,
     overflow: 'hidden',
   },
@@ -637,7 +655,7 @@ const popup = StyleSheet.create({
 
   toNext: {
     fontSize: 11,
-    color: colors.textMuted,
+    color: colors.textSecondary,
     textAlign: 'center',
   },
 
@@ -651,13 +669,13 @@ const popup = StyleSheet.create({
   siteName: {
     fontSize: 16,
     fontWeight: '700',
-    color: colors.sandstoneDeep,
+    color: colors.sandstone,
     textAlign: 'center',
   },
 
   caption: {
     fontSize: 13,
-    color: colors.textMuted,
+    color: colors.textSecondary,
     textAlign: 'center',
     lineHeight: 19,
     fontStyle: 'italic',
@@ -679,7 +697,7 @@ const popup = StyleSheet.create({
   questBtnTxt: {
     fontSize: 15,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: colors.backgroundDeep,
     letterSpacing: 0.5,
   },
 });

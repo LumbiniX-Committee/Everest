@@ -8,70 +8,222 @@
         "ne": "यहाँ एउटा जीवन सुरु भएको मानिन्छ। सुरुवात कुनै अर्को कुराको अन्त्य पनि हो।"
       },
       "stages": [
-        { "en": "What are you carrying today that feels heavy?", "ne": "आज तपाईंले बोकिरहनुभएको कुनचाहिँ कुरा गह्रौं लाग्छ?" },
-        { "en": "Where does that heaviness seem to come from?", "ne": "त्यो गह्रौंपन कहाँबाट आएको जस्तो लाग्छ?" },
-        { "en": "Can you picture setting even a little of it down?", "ne": "त्यसको अलिकति भए पनि बिसाएको कल्पना गर्न सक्नुहुन्छ?" },
-        { "en": "What is one small thing you could do next?", "ne": "अब तपाईंले गर्न सक्ने एउटा सानो कुरा के हो?" }
+        {
+          "en": "What are you carrying today that feels heavy?",
+          "ne": "आज तपाईंले बोकिरहनुभएको कुनचाहिँ कुरा गह्रौं लाग्छ?"
+        },
+        {
+          "en": "Where does that heaviness seem to come from?",
+          "ne": "त्यो गह्रौंपन कहाँबाट आएको जस्तो लाग्छ?"
+        },
+        {
+          "en": "Can you picture setting even a little of it down?",
+          "ne": "त्यसको अलिकति भए पनि बिसाएको कल्पना गर्न सक्नुहुन्छ?"
+        },
+        {
+          "en": "What is one small thing you could do next?",
+          "ne": "अब तपाईंले गर्न सक्ने एउटा सानो कुरा के हो?"
+        }
       ]
     },
     {
       "site_id": "maya-devi-temple",
       "opening": {
         "en": "This is a place people travel across the world to stand in for a moment.",
-        "ne": "यो यस्तो स्थान हो जहाँ एक क्षण उभिन मानिसहरू संसारभरिबाट यात्रा गर्छन्।" },
+        "ne": "यो यस्तो स्थान हो जहाँ एक क्षण उभिन मानिसहरू संसारभरिबाट यात्रा गर्छन्।"
+      },
       "stages": [
-        { "en": "What made you want to come and see for yourself?", "ne": "आफैं आएर हेर्ने इच्छा तपाईंलाई किन जाग्यो?" },
-        { "en": "What were you hoping to find here?", "ne": "यहाँ के भेट्न आशा गर्नुभएको थियो?" },
-        { "en": "Is the thing you were looking for something a place can give?", "ne": "तपाईंले खोजेको कुरा कुनै स्थानले दिन सक्ने खालको हो?" },
-        { "en": "What will you take with you when you leave?", "ne": "जाँदा तपाईं आफूसँग के लैजानुहुनेछ?" }
+        {
+          "en": "What made you want to come and see for yourself?",
+          "ne": "आफैं आएर हेर्ने इच्छा तपाईंलाई किन जाग्यो?"
+        },
+        {
+          "en": "What were you hoping to find here?",
+          "ne": "यहाँ के भेट्न आशा गर्नुभएको थियो?"
+        },
+        {
+          "en": "Is the thing you were looking for something a place can give?",
+          "ne": "तपाईंले खोजेको कुरा कुनै स्थानले दिन सक्ने खालको हो?"
+        },
+        {
+          "en": "What will you take with you when you leave?",
+          "ne": "जाँदा तपाईं आफूसँग के लैजानुहुनेछ?"
+        }
       ]
     },
     {
       "site_id": "ashokan-pillar",
       "opening": {
         "en": "An emperor who once waged war stood here and left a mark meant to outlast him. It has.",
-        "ne": "कुनै बेला युद्ध लडेका सम्राट यहाँ उभिए र आफूभन्दा बढी टिक्ने चिन्ह छाडे। त्यो टिक्यो।" },
+        "ne": "कुनै बेला युद्ध लडेका सम्राट यहाँ उभिए र आफूभन्दा बढी टिक्ने चिन्ह छाडे। त्यो टिक्यो।"
+      },
       "stages": [
-        { "en": "What would you want to be remembered for?", "ne": "तपाईं केका लागि सम्झना गरिन चाहनुहुन्छ?" },
-        { "en": "What are you spending your days on instead?", "ne": "त्यसको सट्टा तपाईं आफ्ना दिनहरू केमा बिताइरहनुभएको छ?" },
-        { "en": "Could those two things move closer together?", "ne": "ती दुई कुरा एकअर्कानजिक ल्याउन सकिन्छ?" },
-        { "en": "What is one change within reach this week?", "ne": "यस हप्ता पुग्न सकिने एउटा परिवर्तन के हो?" }
+        {
+          "en": "What would you want to be remembered for?",
+          "ne": "तपाईं केका लागि सम्झना गरिन चाहनुहुन्छ?"
+        },
+        {
+          "en": "What are you spending your days on instead?",
+          "ne": "त्यसको सट्टा तपाईं आफ्ना दिनहरू केमा बिताइरहनुभएको छ?"
+        },
+        {
+          "en": "Could those two things move closer together?",
+          "ne": "ती दुई कुरा एकअर्कानजिक ल्याउन सकिन्छ?"
+        },
+        {
+          "en": "What is one change within reach this week?",
+          "ne": "यस हप्ता पुग्न सकिने एउटा परिवर्तन के हो?"
+        }
       ]
     },
     {
       "site_id": "marker-stone",
       "opening": {
         "en": "It took a century of careful looking to fix this one spot with certainty.",
-        "ne": "यो एउटा स्थान निश्चितताका साथ पहिचान गर्न एक शताब्दीको सूक्ष्म अवलोकन लाग्यो।" },
+        "ne": "यो एउटा स्थान निश्चितताका साथ पहिचान गर्न एक शताब्दीको सूक्ष्म अवलोकन लाग्यो।"
+      },
       "stages": [
-        { "en": "What is one thing you believe without having checked it?", "ne": "तपाईंले जाँच नगरी विश्वास गर्नुभएको एउटा कुरा के हो?" },
-        { "en": "What keeps you from going and looking?", "ne": "गएर हेर्नबाट तपाईंलाई केले रोक्छ?" },
-        { "en": "What would change if you saw it for yourself?", "ne": "आफ्नै आँखाले देख्नुभयो भने के फरक पर्थ्यो?" },
-        { "en": "What is one thing you could check this week?", "ne": "यस हप्ता तपाईंले जाँच्न सक्ने एउटा कुरा के हो?" }
+        {
+          "en": "What is one thing you believe without having checked it?",
+          "ne": "तपाईंले जाँच नगरी विश्वास गर्नुभएको एउटा कुरा के हो?"
+        },
+        {
+          "en": "What keeps you from going and looking?",
+          "ne": "गएर हेर्नबाट तपाईंलाई केले रोक्छ?"
+        },
+        {
+          "en": "What would change if you saw it for yourself?",
+          "ne": "आफ्नै आँखाले देख्नुभयो भने के फरक पर्थ्यो?"
+        },
+        {
+          "en": "What is one thing you could check this week?",
+          "ne": "यस हप्ता तपाईंले जाँच्न सक्ने एउटा कुरा के हो?"
+        }
       ]
     },
     {
       "site_id": "vihara-remains",
       "opening": {
         "en": "Stupas recorded here in 1957 were gone by a later visit. Everything built is on its way to being ruins.",
-        "ne": "सन् १९५७ मा यहाँ अभिलेख गरिएका स्तूप पछिको भ्रमणसम्म हराइसकेका थिए। बनेको हरेक कुरा भग्नावशेष बन्ने बाटोमा छ।" },
+        "ne": "सन् १९५७ मा यहाँ अभिलेख गरिएका स्तूप पछिको भ्रमणसम्म हराइसकेका थिए। बनेको हरेक कुरा भग्नावशेष बन्ने बाटोमा छ।"
+      },
       "stages": [
-        { "en": "What are you holding onto as if it will last?", "ne": "टिकिरहन्छ भन्ने ठानेर तपाईं केमा अल्झिरहनुभएको छ?" },
-        { "en": "What is it costing you to hold on?", "ne": "अल्झिरहँदा तपाईंलाई के मूल्य चुकाउनु परिरहेको छ?" },
-        { "en": "What might loosening the grip feel like?", "ne": "पकड खुकुलो पार्दा कस्तो अनुभव होला?" },
-        { "en": "What is one thing you can hold more lightly?", "ne": "तपाईंले अझ हलुका गरी समात्न सक्ने एउटा कुरा के हो?" }
+        {
+          "en": "What are you holding onto as if it will last?",
+          "ne": "टिकिरहन्छ भन्ने ठानेर तपाईं केमा अल्झिरहनुभएको छ?"
+        },
+        {
+          "en": "What is it costing you to hold on?",
+          "ne": "अल्झिरहँदा तपाईंलाई के मूल्य चुकाउनु परिरहेको छ?"
+        },
+        {
+          "en": "What might loosening the grip feel like?",
+          "ne": "पकड खुकुलो पार्दा कस्तो अनुभव होला?"
+        },
+        {
+          "en": "What is one thing you can hold more lightly?",
+          "ne": "तपाईंले अझ हलुका गरी समात्न सक्ने एउटा कुरा के हो?"
+        }
       ]
     },
     {
       "site_id": "tilaurakot",
       "opening": {
         "en": "This is the town Siddhartha grew up in and chose to leave. The place asks a quiet question.",
-        "ne": "यो त्यो नगर हो जहाँ सिद्धार्थ हुर्के र छाड्ने रोजाइ गरे। यो स्थलले एउटा मौन प्रश्न सोध्छ।" },
+        "ne": "यो त्यो नगर हो जहाँ सिद्धार्थ हुर्के र छाड्ने रोजाइ गरे। यो स्थलले एउटा मौन प्रश्न सोध्छ।"
+      },
       "stages": [
-        { "en": "What are you holding on to?", "ne": "तपाईं केमा अल्झिनुभएको छ?" },
-        { "en": "Why does it feel hard to let it go?", "ne": "त्यो छाड्न किन गाह्रो लाग्छ?" },
-        { "en": "What would be left if you did?", "ne": "छाड्नुभयो भने के बाँकी रहन्छ?" },
-        { "en": "What is one step you could take toward that?", "ne": "त्यसतर्फ तपाईंले चाल्न सक्ने एउटा पाइला के हो?" }
+        {
+          "en": "What are you holding on to?",
+          "ne": "तपाईं केमा अल्झिनुभएको छ?"
+        },
+        {
+          "en": "Why does it feel hard to let it go?",
+          "ne": "त्यो छाड्न किन गाह्रो लाग्छ?"
+        },
+        {
+          "en": "What would be left if you did?",
+          "ne": "छाड्नुभयो भने के बाँकी रहन्छ?"
+        },
+        {
+          "en": "What is one step you could take toward that?",
+          "ne": "त्यसतर्फ तपाईंले चाल्न सक्ने एउटा पाइला के हो?"
+        }
+      ]
+    },
+    {
+      "site_id": "patan-durbar-square",
+      "opening": {
+        "en": "Kings built this square to be looked at forever. It is still being repaired from an earthquake ten years ago.",
+        "ne": "राजाहरूले यो चोक सधैंभरि हेरिने बनाए। दश वर्षअघिको भूकम्पबाट यो अझै मर्मत भइरहेको छ।"
+      },
+      "stages": [
+        {
+          "en": "What are you carrying today that feels heavy?",
+          "ne": "आज तपाईंले बोकिरहनुभएको कुनचाहिँ कुरा गह्रौं लाग्छ?"
+        },
+        {
+          "en": "Where does that heaviness seem to come from?",
+          "ne": "त्यो गह्रौंपन कहाँबाट आएको जस्तो लाग्छ?"
+        },
+        {
+          "en": "Can you picture setting even a little of it down?",
+          "ne": "त्यसको अलिकति भए पनि बिसाएको कल्पना गर्न सक्नुहुन्छ?"
+        },
+        {
+          "en": "What is one small thing you could do next?",
+          "ne": "अब तपाईंले गर्न सक्ने एउटा सानो कुरा के हो?"
+        }
+      ]
+    },
+    {
+      "site_id": "changu-narayan",
+      "opening": {
+        "en": "A king recorded his own reign in stone here, fifteen hundred years ago. The stone has outlasted the reign by a long way.",
+        "ne": "एक राजाले आफ्नो शासनकाल ढुङ्गामा कुँदेर यहाँ लेखे, पन्ध्रसय वर्षअघि। त्यो ढुङ्गा उनको शासनभन्दा धेरै लामो समय टिक्यो।"
+      },
+      "stages": [
+        {
+          "en": "What are you carrying today that feels heavy?",
+          "ne": "आज तपाईंले बोकिरहनुभएको कुनचाहिँ कुरा गह्रौं लाग्छ?"
+        },
+        {
+          "en": "Where does that heaviness seem to come from?",
+          "ne": "त्यो गह्रौंपन कहाँबाट आएको जस्तो लाग्छ?"
+        },
+        {
+          "en": "Can you picture setting even a little of it down?",
+          "ne": "त्यसको अलिकति भए पनि बिसाएको कल्पना गर्न सक्नुहुन्छ?"
+        },
+        {
+          "en": "What is one small thing you could do next?",
+          "ne": "अब तपाईंले गर्न सक्ने एउटा सानो कुरा के हो?"
+        }
+      ]
+    },
+    {
+      "site_id": "manga-hiti",
+      "opening": {
+        "en": "Water has run through this stone spout since before most of what stands nearby was built. Not all of it still runs.",
+        "ne": "यो ढुङ्गे धाराबाट नजिकैका धेरै संरचना बन्नुअघिदेखि नै पानी बगेको छ। अहिले सबै त्यसरी बगिरहेको छैन।"
+      },
+      "stages": [
+        {
+          "en": "What are you carrying today that feels heavy?",
+          "ne": "आज तपाईंले बोकिरहनुभएको कुनचाहिँ कुरा गह्रौं लाग्छ?"
+        },
+        {
+          "en": "Where does that heaviness seem to come from?",
+          "ne": "त्यो गह्रौंपन कहाँबाट आएको जस्तो लाग्छ?"
+        },
+        {
+          "en": "Can you picture setting even a little of it down?",
+          "ne": "त्यसको अलिकति भए पनि बिसाएको कल्पना गर्न सक्नुहुन्छ?"
+        },
+        {
+          "en": "What is one small thing you could do next?",
+          "ne": "अब तपाईंले गर्न सक्ने एउटा सानो कुरा के हो?"
+        }
       ]
     }
   ]

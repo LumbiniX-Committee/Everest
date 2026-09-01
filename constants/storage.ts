@@ -12,6 +12,7 @@ export const StorageKeys = {
   // Preferences. One key each rather than a single serialised blob: a value
   // added later then reads as absent and falls back to its default, instead of
   // failing to parse an older shape and losing every setting at once.
+  prefColorTheme: `${PREFIX}.preferences.colorTheme`,
   prefAlignmentTolerance: `${PREFIX}.preferences.alignmentTolerance`,
   prefHapticsEnabled: `${PREFIX}.preferences.hapticsEnabled`,
   prefAutoCapture: `${PREFIX}.preferences.autoCapture`,
@@ -51,10 +52,19 @@ export const StorageKeys = {
    * grouping the id exists for, so it does not carry one.
    */
   deviceId: 'sakshi.device.id',
+
+  /**
+   * The name or office a custodian types into the mobile acknowledge screen
+   * (features/custodian). Not an account, not authenticated — see
+   * services/custodian's header comment for why. Remembered only so the same
+   * device does not have to retype it every visit.
+   */
+  custodianName: `${PREFIX}.custodian.name`,
 } as const;
 
 /** Preference field → storage key. The settings screen iterates this. */
 export const PreferenceKeys = {
+  colorTheme: StorageKeys.prefColorTheme,
   alignmentTolerance: StorageKeys.prefAlignmentTolerance,
   hapticsEnabled: StorageKeys.prefHapticsEnabled,
   autoCapture: StorageKeys.prefAutoCapture,

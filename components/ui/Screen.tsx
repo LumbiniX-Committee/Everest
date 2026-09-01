@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { ScrollView, StyleSheet, View, type ViewStyle } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { SafeAreaView, type Edge } from 'react-native-safe-area-context';
 
 import { colors, spacing } from '@/theme';
@@ -13,6 +14,8 @@ export type ScreenProps = {
   edges?: readonly Edge[];
   style?: ViewStyle;
   contentStyle?: ViewStyle;
+  /** Whether to animate screen entrance with a graceful fade. Defaults to true. */
+  animated?: boolean;
 };
 
 /**
@@ -28,21 +31,30 @@ export function Screen({
   edges = ['top'],
   style,
   contentStyle,
+  animated = true,
 }: ScreenProps) {
   const padding = bleed ? undefined : { paddingHorizontal: spacing.gutter };
 
+  const content = scroll ? (
+    <ScrollView
+      style={styles.flex}
+      contentContainerStyle={[styles.scrollContent, padding, contentStyle]}
+      keyboardShouldPersistTaps="handled"
+    >
+      {children}
+    </ScrollView>
+  ) : (
+    <View style={[styles.flex, padding, contentStyle]}>{children}</View>
+  );
+
   return (
     <SafeAreaView edges={edges} style={[styles.safe, style]}>
-      {scroll ? (
-        <ScrollView
-          style={styles.flex}
-          contentContainerStyle={[styles.scrollContent, padding, contentStyle]}
-          keyboardShouldPersistTaps="handled"
-        >
-          {children}
-        </ScrollView>
+      {animated ? (
+        <Animated.View entering={FadeIn.duration(240)} style={styles.flex}>
+          {content}
+        </Animated.View>
       ) : (
-        <View style={[styles.flex, padding, contentStyle]}>{children}</View>
+        content
       )}
     </SafeAreaView>
   );
@@ -53,3 +65,4 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   scrollContent: { paddingBottom: spacing.xxl, flexGrow: 1 },
 });
+

@@ -1,68 +1,84 @@
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Image, Pressable, StyleSheet, TextInput, View } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-// The family directly, not through the package barrel: the barrel pulls in
-// every icon family, and only this one is used here. No `@ts-ignore` — the
-// suppression this briefly carried was masking a stale node_modules rather than
-// a type error, and it would have gone on hiding real ones. Run `npm install`
-// if the editor cannot resolve it.
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
-import { Screen, Text } from '@/components/ui';
+import { Icon, Screen, Text, type IconName } from '@/components/ui';
 import { SettingsButton } from '@/components/common';
-import { demoDhammaEntries, findSource } from '@/data';
+import { demoDhammaEntries, findSource, type DhammaEntry } from '@/data';
+import { useHaptics } from '@/hooks';
 import { colors, font, radii, spacing } from '@/theme';
 
-/**
- * Dhamma — grounded knowledge.
- *
- * Ask, or browse. Both routes end in the same place, and the browse list is not
- * a fallback: showing what the collection can answer sets an honest expectation
- * of its size before someone types into it.
- *
- * The rule this surface is built on: nothing is asserted without a source, and
- * the source is visible before you tap in. Every visual decision below is in
- * service of that. The source line sits *inside* each card rather than being
- * revealed on tap; the footer states the guarantee in the same breath as the
- * list; and the collection's smallness is admitted above the fold rather than
- * discovered on a refusal.
- *
- * ── On the illustration ─────────────────────────────────────────────────────
- *
- * The header image is decorative and drawn, not photographic, and it depicts no
- * identifiable monument as it stands today. That distinction matters on this
- * app more than most: everywhere else an image of a place is *evidence*, ranked
- * by an evidence tier. Here it is a horizon. It carries no caption and no tier
- * badge precisely because it makes no claim — and it stays abstract so it can
- * never be mistaken for the archive plates in Sākṣī, which do.
- */
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 /**
  * The face each collection entry wears.
- *
  * Keyed by entry id and matched to what the entry actually rests on — a pillar
  * for the Rummindei inscription, a book for the Pali discourse, a dictionary
  * entry seated in meditation, a leaf for the invitation to test rather than
  * believe. An unmapped entry falls back to the wheel rather than to nothing, so
  * adding a fifth question never leaves a hole in the row.
  */
-const ENTRY_ICONS: Record<string, keyof typeof MaterialCommunityIcons.glyphMap> = {
+const ENTRY_ICONS: Record<string, IconName> = {
   'why-lumbini': 'pillar',
   appamada: 'book-open-page-variant-outline',
   'what-is-sakshi': 'meditation',
   ehipassiko: 'leaf',
 };
-const FALLBACK_ICON: keyof typeof MaterialCommunityIcons.glyphMap = 'dharmachakra';
+const FALLBACK_ICON: IconName = 'dharmachakra';
+
+function DhammaEntryCard({
+  entry,
+  source,
+  onPress,
+}: {
+  entry: DhammaEntry;
+  source: ReturnType<typeof findSource>;
+  onPress: () => void;
+}) {
+  const scale = useSharedValue(1);
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  return (
+    <AnimatedPressable
+      onPressIn={() => (scale.value = withSpring(0.98))}
+      onPressOut={() => (scale.value = withSpring(1))}
+      onPress={onPress}
+      style={[styles.entryCard, animatedStyle]}
+    >
+      <View style={styles.iconCircle}>
+        <Icon
+          name={ENTRY_ICONS[entry.id] ?? FALLBACK_ICON}
+          size={24}
+          color={colors.heritageGold}
+        />
+      </View>
+      <View style={styles.entryText}>
+        <Text variant="heading">{entry.question}</Text>
+        {source ? (
+          <Text variant="caption" tone="secondary">
+            {source.title} · {source.attribution}
+          </Text>
+        ) : null}
+      </View>
+      <Icon name="chevron-right" size={24} color={colors.primary} />
+    </AnimatedPressable>
+  );
+}
 
 export function DhammaScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { selection } = useHaptics();
   const [question, setQuestion] = useState('');
 
   const askTyped = () => {
     const text = question.trim();
     if (!text) return;
+    selection();
     router.push({ pathname: '/(main)/dhamma/question', params: { q: text } });
     setQuestion('');
   };
@@ -75,6 +91,7 @@ export function DhammaScreen() {
     <Screen scroll bleed edges={[]}>
       <View style={styles.hero}>
         <Image source={require('../../assets/dhamma/hero.png')} style={styles.heroImage} />
+        <View style={styles.heroShade} pointerEvents="none" />
         {/* Fades the illustration into the page so the band has no hard lower
             edge — the horizon should end, not stop. */}
         <View style={styles.heroFade} pointerEvents="none" />
@@ -126,7 +143,7 @@ export function DhammaScreen() {
               pressed && canAsk && styles.pressed,
             ]}
           >
-            <MaterialCommunityIcons name="send" size={20} color={colors.surface} />
+            <Icon name="send" size={21} color={colors.backgroundDeep} />
           </Pressable>
         </View>
 
@@ -136,7 +153,7 @@ export function DhammaScreen() {
           collection rather than as the app being evasive.
         */}
         <View style={styles.note}>
-          <MaterialCommunityIcons
+          <Icon
             name="information-outline"
             size={18}
             color={colors.textMuted}
@@ -149,10 +166,10 @@ export function DhammaScreen() {
         <View style={styles.reflectionCard}>
           <View style={styles.reflectionRow}>
             <View style={styles.iconCircleLarge}>
-              <MaterialCommunityIcons
+              <Icon
                 name="flower-outline"
                 size={30}
-                color={colors.sandstoneDeep}
+                color={colors.heritageGold}
               />
             </View>
             <View style={styles.reflectionText}>
@@ -169,10 +186,13 @@ export function DhammaScreen() {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Begin a reflection"
-            onPress={() => router.push('/(main)/dhamma/reflect' as never)}
+            onPress={() => {
+              selection();
+              router.push('/(main)/dhamma/reflect' as never);
+            }}
             style={({ pressed }) => [styles.reflectButton, pressed && styles.pressed]}
           >
-            <MaterialCommunityIcons
+            <Icon
               name="star-four-points"
               size={18}
               color={colors.sandstoneDeep}
@@ -191,59 +211,32 @@ export function DhammaScreen() {
           {demoDhammaEntries.map((entry) => {
             const source = findSource(entry.citations[0]?.sourceId);
             return (
-              <Pressable
+              <DhammaEntryCard
                 key={entry.id}
-                accessibilityRole="button"
-                accessibilityLabel={entry.question}
-                onPress={() =>
+                entry={entry}
+                source={source}
+                onPress={() => {
+                  selection();
                   router.push({
                     pathname: '/(main)/dhamma/question',
                     params: { questionId: entry.id },
-                  })
-                }
-                style={({ pressed }) => [styles.entryCard, pressed && styles.pressed]}
-              >
-                <View style={styles.iconCircle}>
-                  <MaterialCommunityIcons
-                    name={ENTRY_ICONS[entry.id] ?? FALLBACK_ICON}
-                    size={24}
-                    color={colors.sandstoneDeep}
-                  />
-                </View>
-                <View style={styles.entryText}>
-                  <Text variant="heading">{entry.question}</Text>
-                  {/*
-                    The provenance, before the tap rather than after it. A reader
-                    deciding whether a question is worth opening is really asking
-                    what stands behind the answer, and making them open it to
-                    find out is the small evasion this surface exists to avoid.
-                  */}
-                  {source ? (
-                    <Text variant="caption" tone="secondary">
-                      {source.title} · {source.attribution}
-                    </Text>
-                  ) : null}
-                </View>
-                <MaterialCommunityIcons
-                  name="chevron-right"
-                  size={24}
-                  color={colors.sandstoneDeep}
-                />
-              </Pressable>
+                  });
+                }}
+              />
             );
           })}
         </View>
 
         <View style={styles.trust}>
-          <MaterialCommunityIcons name="shield-check" size={26} color={colors.sandstoneDeep} />
-          <Text variant="body" tone="sandstone" style={styles.trustText}>
+          <Icon name="shield-check" size={26} color={colors.heritageGold} />
+          <Text variant="body" tone="secondary" style={styles.trustText}>
             All answers are cited. You can verify every source.
           </Text>
           {/* Watermark. Sits behind the text and never competes with it. */}
-          <MaterialCommunityIcons
+          <Icon
             name="flower-outline"
             size={64}
-            color={colors.sandstone}
+            color={colors.heritageGold}
             style={styles.trustWatermark}
           />
         </View>
@@ -263,14 +256,23 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'cover',
   },
+  heroShade: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: colors.overlay,
+    opacity: 0.48,
+  },
   heroFade: {
     position: 'absolute',
     left: 0,
     right: 0,
     bottom: 0,
-    height: spacing.xl,
+    height: spacing.xxl,
     backgroundColor: colors.background,
-    opacity: 0.55,
+    opacity: 0.72,
   },
   heroContent: {
     paddingHorizontal: spacing.gutter,
@@ -313,12 +315,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.base,
     paddingVertical: spacing.sm,
     borderRadius: radii.lg,
-    backgroundColor: colors.surface,
-    borderWidth: StyleSheet.hairlineWidth,
+    backgroundColor: colors.surfaceRaised,
+    borderWidth: 1,
     borderColor: colors.border,
     // Lifts the field off the illustration it overlaps.
-    shadowColor: '#000',
-    shadowOpacity: 0.08,
+    shadowColor: colors.shadow,
+    shadowOpacity: 0.24,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 4 },
     elevation: 3,
@@ -339,7 +341,7 @@ const styles = StyleSheet.create({
     borderRadius: radii.full,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.sandstoneDeep,
+    backgroundColor: colors.primary,
   },
   sendDisabled: { opacity: 0.35 },
 
@@ -355,8 +357,8 @@ const styles = StyleSheet.create({
   reflectionCard: {
     padding: spacing.base,
     borderRadius: radii.lg,
-    backgroundColor: colors.surface,
-    borderWidth: StyleSheet.hairlineWidth,
+    backgroundColor: colors.surfaceRaised,
+    borderWidth: 1,
     borderColor: colors.border,
     gap: spacing.base,
   },
@@ -369,7 +371,9 @@ const styles = StyleSheet.create({
     borderRadius: radii.full,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.surfaceSecondary,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   reflectButton: {
     flexDirection: 'row',
@@ -381,20 +385,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     borderRadius: radii.md,
     borderWidth: 1,
-    borderColor: colors.sandstone,
+    borderColor: colors.borderStrong,
+    backgroundColor: colors.surfaceSelected,
   },
 
   sectionTitle: { fontSize: 24, lineHeight: 30, marginTop: spacing.sm },
 
-  list: { gap: spacing.md },
+  list: { gap: spacing.sm },
   entryCard: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.base,
-    padding: spacing.base,
+    padding: spacing.md,
     borderRadius: radii.lg,
-    backgroundColor: colors.surface,
-    borderWidth: StyleSheet.hairlineWidth,
+    backgroundColor: colors.surfaceRaised,
+    borderWidth: 1,
     borderColor: colors.border,
   },
   iconCircle: {
@@ -403,9 +408,11 @@ const styles = StyleSheet.create({
     borderRadius: radii.full,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.surfaceSecondary,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
-  entryText: { flex: 1, gap: spacing.xxs },
+  entryText: { flex: 1, minWidth: 0, gap: spacing.xxs },
 
   trust: {
     flexDirection: 'row',
@@ -414,7 +421,9 @@ const styles = StyleSheet.create({
     marginTop: spacing.sm,
     padding: spacing.base,
     borderRadius: radii.lg,
-    backgroundColor: colors.surfaceSecondary,
+    backgroundColor: colors.surfaceRaised,
+    borderWidth: 1,
+    borderColor: colors.border,
     overflow: 'hidden',
   },
   trustText: { flex: 1 },

@@ -2,7 +2,18 @@ import { Text as RNText, type TextProps as RNTextProps } from 'react-native';
 
 import { colors, text as textStyle, type TypographyVariant } from '@/theme';
 
-type ToneName = 'primary' | 'secondary' | 'muted' | 'sandstone' | 'locked' | 'seeking' | 'open' | 'resolved' | 'inverse';
+type ToneName =
+  | 'primary'
+  | 'secondary'
+  | 'muted'
+  | 'sandstone'
+  | 'locked'
+  | 'seeking'
+  | 'warning'
+  | 'error'
+  | 'open'
+  | 'resolved'
+  | 'inverse';
 
 const tones: Record<ToneName, string> = {
   primary: colors.textPrimary,
@@ -11,9 +22,11 @@ const tones: Record<ToneName, string> = {
   sandstone: colors.sandstoneDeep,
   locked: colors.alignmentLocked,
   seeking: colors.alignmentSeeking,
+  warning: colors.warning,
+  error: colors.error,
   open: colors.openCondition,
   resolved: colors.resolved,
-  inverse: colors.surface,
+  inverse: colors.backgroundDeep,
 };
 
 export type TextProps = RNTextProps & {

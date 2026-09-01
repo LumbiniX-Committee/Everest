@@ -1,7 +1,17 @@
+import { useCallback } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 
 import { Text } from '@/components/ui';
+import { useHaptics } from '@/hooks';
 import { colors, radii, spacing } from '@/theme';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export type SettingsRowProps = {
   label: string;
@@ -20,16 +30,45 @@ export type SettingsRowProps = {
  * because these are read one-handed while standing in a temple precinct.
  */
 export function SettingsRow({ label, value, hint, onPress, danger = false }: SettingsRowProps) {
+  const { pulse } = useHaptics();
+  const scale = useSharedValue(1);
+  const chevronX = useSharedValue(0);
+
+  const rowAnimStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const chevronAnimStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: chevronX.value }],
+  }));
+
+  const handlePressIn = useCallback(() => {
+    scale.value = withSpring(0.985, { damping: 15, stiffness: 350, mass: 0.7 });
+    chevronX.value = withSpring(3, { damping: 15, stiffness: 350, mass: 0.7 });
+  }, [chevronX, scale]);
+
+  const handlePressOut = useCallback(() => {
+    scale.value = withSpring(1, { damping: 12, stiffness: 280, mass: 0.7 });
+    chevronX.value = withSpring(0, { damping: 12, stiffness: 280, mass: 0.7 });
+  }, [chevronX, scale]);
+
+  const handlePress = useCallback(() => {
+    pulse(Haptics.ImpactFeedbackStyle.Light);
+    onPress();
+  }, [onPress, pulse]);
+
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityRole="button"
       accessibilityLabel={value ? `${label}, ${value}` : label}
       accessibilityHint={hint}
-      onPress={onPress}
-      style={({ pressed }) => [styles.row, pressed && styles.pressed]}
+      onPress={handlePress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      style={[styles.row, rowAnimStyle]}
     >
       <View style={styles.textColumn}>
-        <Text variant="body" tone={danger ? 'open' : 'primary'}>
+        <Text variant="bodyStrong" tone={danger ? 'open' : 'primary'}>
           {label}
         </Text>
         {hint ? (
@@ -43,10 +82,12 @@ export function SettingsRow({ label, value, hint, onPress, danger = false }: Set
           {value}
         </Text>
       ) : null}
-      <Text variant="body" tone="muted" accessibilityElementsHidden importantForAccessibility="no">
-        ›
-      </Text>
-    </Pressable>
+      <Animated.View style={chevronAnimStyle}>
+        <Text variant="body" tone="muted" accessibilityElementsHidden importantForAccessibility="no">
+          ›
+        </Text>
+      </Animated.View>
+    </AnimatedPressable>
   );
 }
 
@@ -60,6 +101,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.base,
     borderRadius: radii.md,
   },
-  pressed: { backgroundColor: colors.surfaceSecondary },
   textColumn: { flex: 1, gap: spacing.xxs },
 });
+

@@ -1,4 +1,5 @@
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
+import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 
 import { Button, Card, Icon, ProgressIndicator, Text } from '@/components/ui';
 import { usePractice } from '@/store/practice';
@@ -58,8 +59,12 @@ export function MeritRewardModal({ visible, onClose, event }: MeritRewardModalPr
       onRequestClose={onClose}
     >
       <Pressable style={styles.modalOverlay} onPress={onClose}>
-        <Pressable style={styles.modalContainer} onPress={(e) => e.stopPropagation()}>
-          <Card style={styles.rewardCard}>
+        <Animated.View
+          entering={FadeInDown.duration(320).damping(16)}
+          style={styles.modalContainer}
+        >
+          <Pressable onPress={(e) => e.stopPropagation()}>
+            <Card style={styles.rewardCard}>
             <View style={styles.headerBadge}>
               <Icon name="flower-outline" size={30} />
             </View>
@@ -124,6 +129,7 @@ export function MeritRewardModal({ visible, onClose, event }: MeritRewardModalPr
             />
           </Card>
         </Pressable>
+        </Animated.View>
       </Pressable>
     </Modal>
   );

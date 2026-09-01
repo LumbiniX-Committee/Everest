@@ -47,6 +47,12 @@ export type QuestTask = {
    * look right" and a model inventing a standard of its own.
    */
   expectation?: string;
+  /** The intended social framing for a photograph; never forces a person into frame. */
+  photoMode?: 'solo' | 'group' | 'architecture' | 'detail' | 'creative' | 'sequence' | 'context';
+  /** A place-specific boundary shown before evidence is collected. */
+  safetyNote?: string;
+  /** Physical evidence that completes this task without a manual checkbox. */
+  autoComplete?: 'arrival' | 'vantage_capture';
 };
 
 /**

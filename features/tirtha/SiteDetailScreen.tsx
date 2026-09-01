@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
-import { Button, ConditionBadge, Divider, MetaRow, Screen, SourceBadge, Text } from '@/components/ui';
+import { Button, Card, ConditionBadge, Divider, MetaRow, Screen, SourceBadge, Text } from '@/components/ui';
 import { EmptyState } from '@/components/common';
-import { NarrationPlayer, VantageListItem } from '@/components/site';
+import { NarrationPlayer, SiteListItem, VantageListItem } from '@/components/site';
 import { SourceCard, SourceDetailSheet } from '@/components/source';
-import { audioForSite, findSite, historicalImagesForSite, narrationForSite, resolveSources, vantagesForSite } from '@/data';
+import { audioForSite, findSite, historicalImagesForSite, narrationForSite, questsForSite, resolveSources, sitesForParent, vantagesForSite } from '@/data';
 import { useCurrentPosition } from '@/hooks';
-import { database } from '@/services';
+import { database, location as locationService } from '@/services';
 import { usePreferences } from '@/store';
 import { SITE_VISIT_RADIUS_M } from '@/constants';
 import { spacing } from '@/theme';
@@ -28,6 +28,7 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
   const router = useRouter();
   const site = findSite(siteId);
   const { coordinate } = useCurrentPosition();
+  const { preferences } = usePreferences();
   const [openSource, setOpenSource] = useState<Source | null>(null);
 
   /**
@@ -61,12 +62,23 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
   }
 
   const vantages = vantagesForSite(site.id);
+  const childMonuments = sitesForParent(site.id);
+  const localQuests = questsForSite(site.id);
   const sources = resolveSources(site.sourceIds ?? []);
   const historical = historicalImagesForSite(site.id);
   const audioSource = audioForSite(site.id);
   const narration = narrationForSite(site.id);
-  const { preferences } = usePreferences();
   const distanceM = coordinate ? distanceMeters(coordinate, site.coordinate) : null;
+
+  const simulateHere = () => {
+    const walk = locationService.demo.walkForSite(site.id);
+    if (walk) locationService.demo.selectWalk(walk.id);
+    locationService.setDemoMode(true);
+    // Public-catalog sites do not have an invented walking route. Place the
+    // demo walker at the recorded coordinate so location-driven UI is testable.
+    locationService.demo.goToSite(site.id);
+    router.push('/(main)/tirtha/map');
+  };
 
   // One policy, shared with the arrival notification, so a person who asked for
   // less does not get more pushed at them from the other direction.
@@ -96,12 +108,71 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
         {depth.prose === 'short' ? site.summary : site.description}
       </Text>
 
+      {childMonuments.length > 0 ? (
+        <>
+          <Divider />
+          <View style={styles.storyBlock}>
+            <Text variant="heading">{childMonuments.length} monuments in this complex</Text>
+            <Text variant="body" tone="secondary">
+              Open each monument for its own history, significance and simulation.
+            </Text>
+            {childMonuments.map((monument) => (
+              <SiteListItem
+                key={monument.id}
+                site={{
+                  ...monument,
+                  distanceM: coordinate ? distanceMeters(coordinate, monument.coordinate) : null,
+                }}
+                onPress={() => router.push(`/(main)/tirtha/site/${monument.id}`)}
+              />
+            ))}
+          </View>
+        </>
+      ) : null}
+
       {depth.facts && site.facts && site.facts.length > 0 ? (
         <View style={styles.facts}>
           {site.facts.map((fact) => (
             <MetaRow key={fact.label} label={fact.label} value={fact.value} />
           ))}
         </View>
+      ) : null}
+
+      {site.story && site.story.length > 0 ? (
+        <>
+          <Divider />
+          <View style={styles.storyBlock}>
+            <Text variant="heading">Stories within this place</Text>
+            <Text variant="body" tone="secondary">
+              Walk the complex monument by monument. Each chapter explains what to notice and why it matters.
+            </Text>
+            {site.story.map((chapter) => (
+              <Card key={chapter.title} style={styles.storyCard}>
+                {chapter.eyebrow ? (
+                  <Text variant="label" tone="sandstone" uppercase>{chapter.eyebrow}</Text>
+                ) : null}
+                <Text variant="heading">{chapter.title}</Text>
+                <Text variant="body" tone="secondary">{chapter.body}</Text>
+              </Card>
+            ))}
+          </View>
+        </>
+      ) : null}
+
+      <Button
+        label="Walk this place in demo"
+        variant="secondary"
+        onPress={simulateHere}
+      />
+
+      {localQuests.length > 0 ? (
+        <Button
+          label={localQuests.length === 1 ? 'Try this place’s unique quest' : `Explore ${localQuests.length} monument quests`}
+          variant="secondary"
+          onPress={() => localQuests.length === 1
+            ? router.push(`/(main)/tirtha/quests/${localQuests[0].id}`)
+            : router.push('/(main)/tirtha/quests')}
+        />
       ) : null}
 
       <Button
@@ -262,6 +333,8 @@ const styles = StyleSheet.create({
   },
   meta: { paddingVertical: spacing.lg },
   sourceBlock: { paddingVertical: spacing.lg, gap: spacing.md },
+  storyBlock: { paddingVertical: spacing.lg, gap: spacing.md },
+  storyCard: { gap: spacing.sm },
   vantageBlock: { paddingTop: spacing.lg, gap: spacing.md },
   vantageList: { gap: spacing.md },
 });

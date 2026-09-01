@@ -96,21 +96,23 @@ type ScaleEntry = {
 /** Named text roles. Components reach for these, never for raw sizes. */
 const scale = {
   /** The wordmark and first-run titles. Wide tracking, quiet weight. */
-  display: { role: 'display', weight: 'medium', fontSize: 34, lineHeight: 42, letterSpacing: 2 },
+  display: { role: 'display', weight: 'semibold', fontSize: 38, lineHeight: 46, letterSpacing: 0.2 },
   /** Screen titles and heritage site names. */
-  title: { role: 'display', weight: 'medium', fontSize: 26, lineHeight: 34, letterSpacing: 0.4 },
+  title: { role: 'display', weight: 'semibold', fontSize: 34, lineHeight: 41, letterSpacing: 0.2 },
   /** Section heads inside a screen. */
-  heading: { role: 'body', weight: 'semibold', fontSize: 18, lineHeight: 26 },
+  heading: { role: 'body', weight: 'semibold', fontSize: 20, lineHeight: 27 },
   body: { role: 'body', weight: 'regular', fontSize: 16, lineHeight: 25 },
+  /** Same size as `body`, medium weight — an interactive row's own label. */
+  bodyStrong: { role: 'body', weight: 'medium', fontSize: 16, lineHeight: 25 },
   /** Onboarding prose — large type, large whitespace. */
   bodyLarge: { role: 'body', weight: 'regular', fontSize: 20, lineHeight: 31 },
-  caption: { role: 'body', weight: 'regular', fontSize: 13, lineHeight: 19 },
+  caption: { role: 'body', weight: 'regular', fontSize: 14, lineHeight: 20 },
   button: { role: 'body', weight: 'medium', fontSize: 16, letterSpacing: 0.3 },
   /** Field labels and nav labels. Set uppercase at the call site. */
-  label: { role: 'body', weight: 'medium', fontSize: 11, lineHeight: 14, letterSpacing: 1.4 },
+  label: { role: 'body', weight: 'semibold', fontSize: 12, lineHeight: 16, letterSpacing: 1.6 },
   /** Coordinates, bearings, distances, timestamps. Never prose. */
-  mono: { role: 'mono', weight: 'regular', fontSize: 13, lineHeight: 19, letterSpacing: 0.2 },
-  monoLarge: { role: 'mono', weight: 'medium', fontSize: 22, lineHeight: 28, letterSpacing: 0.5 },
+  mono: { role: 'mono', weight: 'regular', fontSize: 15, lineHeight: 21, letterSpacing: 0.2 },
+  monoLarge: { role: 'mono', weight: 'medium', fontSize: 20, lineHeight: 27, letterSpacing: 0.4 },
 } as const satisfies Record<string, ScaleEntry>;
 
 export type TypographyVariant = keyof typeof scale;

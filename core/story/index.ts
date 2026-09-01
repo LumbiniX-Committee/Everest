@@ -2,7 +2,9 @@
  * core/story — a place's material, arranged as a sequence of beats.
  *
  * The game layer wants a guide who says one short thing, waits for NEXT, and
- * says the next one — five steps ending in a discovery. This builds that
+ * says the next one — a short sequence ending in a discovery. Composite places
+ * may carry more chapters because collapsing eight monuments into one beat
+ * would recreate the umbrella-story problem this module now solves. This builds that
  * sequence, and the whole design rests on one constraint: it invents nothing.
  * Every beat is a projection of material the app already holds and can cite —
  * the site record, its facts table, the narration in `seed/`, the canonical
@@ -13,8 +15,8 @@
  * So this file has no prose of its own about any place. It decides *ordering*
  * and *shape*: which material becomes the opening, which becomes the turn, and
  * which is held back to be the discovery. Where a site lacks the material for a
- * beat, the beat is dropped rather than filled — a five-step sequence is the
- * maximum, never a quota.
+ * beat, the beat is dropped rather than filled — brevity is earned by the
+ * material rather than enforced by discarding authored monument chapters.
  *
  * Pure: no react, no data imports. The caller passes the material in, which is
  * what lets this be tested against a fixture and reused by any surface.
@@ -50,6 +52,7 @@ export type StoryMaterial = {
   siteSummary?: string;
   narration?: string;
   facts: { label: string; value: string }[];
+  story?: { title: string; eyebrow?: string; body: string }[];
   dhamma: { question?: string; answer: string; original?: string; citations?: { sourceId: string }[] }[];
 };
 
@@ -94,18 +97,30 @@ function secondSentence(text: string): string | null {
  */
 export function buildStory(material: StoryMaterial): StoryBeat[] {
   const beats: StoryBeat[] = [];
-  const { siteName, siteSummary, narration, facts, dhamma } = material;
+  const { siteName, siteSummary, narration, facts, story = [], dhamma } = material;
 
   const opening = narration ?? siteSummary;
   if (opening) {
     beats.push({ kind: 'arrival', eyebrow: 'You have arrived', body: firstSentence(opening) });
   }
 
-  // The history beat comes from the *rest* of the narration, which is where the
-  // record actually is; the summary is a label and has no second sentence.
-  const continuation = narration ? secondSentence(narration) : null;
-  if (continuation) {
-    beats.push({ kind: 'history', eyebrow: 'What happened here', body: continuation });
+  if (story.length > 0) {
+    // Composite places deserve more than one umbrella paragraph. Each authored
+    // chapter becomes a stop in the guided sequence; nothing is improvised.
+    story.forEach((chapter) => {
+      beats.push({
+        kind: 'history',
+        eyebrow: chapter.eyebrow ?? chapter.title,
+        body: firstSentence(chapter.body, 240),
+      });
+    });
+  } else {
+    // The history beat comes from the *rest* of the narration, which is where
+    // the record actually is; the summary is a label and has no second sentence.
+    const continuation = narration ? secondSentence(narration) : null;
+    if (continuation) {
+      beats.push({ kind: 'history', eyebrow: 'What happened here', body: continuation });
+    }
   }
 
   // The facts table is already a list of the things a place turns on, written

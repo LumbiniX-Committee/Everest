@@ -1,6 +1,15 @@
+import { useCallback, useEffect } from 'react';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 
-import { Text } from '@/components/ui';
+import { Button, Text } from '@/components/ui';
+import { useHaptics } from '@/hooks';
 import { colors, radii, spacing } from '@/theme';
 import type {
   ConditionSeverity,
@@ -11,6 +20,8 @@ import type {
 } from '@/types';
 
 import { TaskProximity } from './TaskProximity';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export type QuestTaskItemProps = {
   task: QuestTask;
@@ -35,6 +46,8 @@ export type QuestTaskItemProps = {
   filedSeverities?: ConditionSeverity[];
   /** What was actually brought back for this task, if anything. */
   submission?: QuestSubmission;
+  /** Opens the aligned Sākṣī capture required by a vantage-backed task. */
+  onWitness?: () => void;
 };
 
 export function QuestTaskItem({
@@ -48,20 +61,68 @@ export function QuestTaskItem({
   distanceUnit = 'metric',
   filedSeverities = [],
   submission,
+  onWitness,
 }: QuestTaskItemProps) {
+  const { selection, notification } = useHaptics();
+  const scale = useSharedValue(1);
+  const checkScale = useSharedValue(completed ? 1 : 0);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const checkAnimStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: checkScale.value }],
+  }));
+
+  useEffect(() => {
+    if (completed) {
+      checkScale.value = withSequence(
+        withTiming(0.7, { duration: 60 }),
+        withSpring(1.2, { damping: 10, stiffness: 280, mass: 0.6 }),
+        withSpring(1, { damping: 12, stiffness: 300, mass: 0.6 }),
+      );
+    } else {
+      checkScale.value = withTiming(0, { duration: 120 });
+    }
+  }, [completed, checkScale]);
+
+  const handlePressIn = useCallback(() => {
+    if (disabled) return;
+    scale.value = withSpring(0.985, { damping: 15, stiffness: 350, mass: 0.7 });
+  }, [disabled, scale]);
+
+  const handlePressOut = useCallback(() => {
+    if (disabled) return;
+    scale.value = withSpring(1, { damping: 12, stiffness: 280, mass: 0.7 });
+  }, [disabled, scale]);
+
+  const handlePress = useCallback(() => {
+    if (disabled) return;
+    if (!completed) notification();
+    else selection();
+    onToggle();
+  }, [completed, disabled, notification, onToggle, selection]);
+
   return (
-    <Pressable
-      style={({ pressed }) => [
+    <AnimatedPressable
+      style={[
         styles.container,
         completed && styles.containerCompleted,
-        pressed && !disabled && styles.pressed,
+        animatedStyle,
       ]}
-      onPress={disabled ? undefined : onToggle}
+      onPress={handlePress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
       accessibilityRole="checkbox"
       accessibilityState={{ checked: completed, disabled }}
     >
       <View style={[styles.checkbox, completed && styles.checkboxCompleted]}>
-        {completed ? <Text style={styles.checkmark}>✓</Text> : null}
+        {completed ? (
+          <Animated.View style={checkAnimStyle}>
+            <Text style={styles.checkmark}>✓</Text>
+          </Animated.View>
+        ) : null}
       </View>
 
       <View style={styles.content}>
@@ -76,7 +137,11 @@ export function QuestTaskItem({
         </Text>
         <View style={styles.typeBadge}>
           <Text variant="label" uppercase tone="muted" style={styles.typeText}>
-            {task.type.replace('_', ' ')}
+            {task.autoComplete === 'arrival'
+              ? 'COMPLETES WHEN YOU ARRIVE'
+              : task.autoComplete === 'vantage_capture'
+                ? 'COMPLETES WITH SĀKṢĪ CAPTURE'
+                : task.type.replace('_', ' ')}
           </Text>
         </View>
 
@@ -132,6 +197,19 @@ export function QuestTaskItem({
           <TaskProximity site={site} distanceM={distanceM} unit={distanceUnit} />
         ) : null}
 
+        {!completed && task.autoComplete === 'vantage_capture' && onWitness ? (
+          <Button label="Open Sākṣī vantage" variant="secondary" onPress={onWitness} />
+        ) : null}
+
+        {!completed && task.evidence === 'photo' ? (
+          <View style={styles.memoryAction}>
+            <Text variant="caption" tone="muted">
+              Capture a memory to add it to this quest and your Memories album.
+            </Text>
+            <Button label="Capture memory" variant="secondary" onPress={onToggle} />
+          </View>
+        ) : null}
+
         {task.type === 'condition_report' && reportCount > 0 ? (
           <View style={styles.filed}>
             {/*
@@ -155,7 +233,7 @@ export function QuestTaskItem({
           </View>
         ) : null}
       </View>
-    </Pressable>
+    </AnimatedPressable>
   );
 }
 
@@ -181,6 +259,7 @@ const SEVERITY_COLOUR: Record<ConditionSeverity, string> = {
 };
 
 const styles = StyleSheet.create({
+  memoryAction: { gap: spacing.xs },
   filed: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: spacing.xs },
   evidence: { flexDirection: 'row', gap: spacing.sm, alignItems: 'flex-start' },
   thumb: {

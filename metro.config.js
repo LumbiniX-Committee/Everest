@@ -16,4 +16,16 @@ config.server.enhanceMiddleware = (middleware) => (req, res, next) => {
   return middleware(req, res, next);
 };
 
+// Exclude problematic directories from file watching (Windows permission issues)
+config.watchman = {
+  useWatchman: true,
+  enableGlobSupport: true,
+  ignoreNodeModules: false,
+};
+
+config.resolver.blockList = [
+  /.*\.playwright-.*/,
+  /node_modules\/\.playwright-.*/,
+];
+
 module.exports = config;

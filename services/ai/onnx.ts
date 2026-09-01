@@ -111,7 +111,7 @@ export const onnxUnavailableReason: string | null = onnxAvailable
     : 'The on-device scanner is not part of this build.';
 
 if (!onnxAvailable) {
-  console.warn('[ai] on-device damage detection unavailable —', onnxUnavailableReason);
+  console.warn('[ai] on-device damage detection unavailable.', onnxUnavailableReason);
 }
 
 // ── Public API ──────────────────────────────────────────────────────────────
@@ -140,12 +140,39 @@ export type DetectOptions = {
 };
 
 /**
+ * Session options that decide how fast a scan runs.
+ *
+ * Without these the runtime uses a single-threaded, unoptimised CPU path, and a
+ * YOLOv8n inference at 640 takes long enough on a phone to read as "stuck". The
+ * three levers, in order of effect:
+ *
+ *   - `executionProviders`: XNNPACK is a mobile-tuned CPU backend that is several
+ *     times faster than the plain CPU provider for convolutions, and it is far
+ *     more reliable across devices than NNAPI, which silently falls back to CPU
+ *     (and can be slower, because of the tensor copies) whenever the graph uses
+ *     an op it does not implement. CPU is kept last as the guaranteed fallback,
+ *     so a device without XNNPACK still runs rather than failing.
+ *   - `graphOptimizationLevel: 'all'`: fuses and folds the graph once at load,
+ *     so every scan afterwards does less work.
+ *   - `intraOpNumThreads`: use more than one core for the heavy operators.
+ *
+ * The cost of all of this is paid once, at load, which is why the detector warms
+ * up before it reports ready (see `warmUpSession`).
+ */
+const SESSION_OPTIONS = {
+  executionProviders: ['xnnpack', 'cpu'],
+  graphOptimizationLevel: 'all',
+  intraOpNumThreads: 4,
+} as const;
+
+/**
  * Load the bundled model and create an inference session.
  *
- * The `.onnx` asset is read into bytes and the session is created from those
- * bytes rather than a file path — a path is formatted differently across
- * platforms (a `file://` URI on one, a bare path on another), whereas bytes are
- * unambiguous. Called once when the detector mounts; the session is reused for
+ * The `.onnx` asset is opened by local path where possible — the model is
+ * 11.7 MB, and reading it through base64 costs a ~16 MB JavaScript string plus
+ * the decoded copy beside it, on a phone that is also holding a camera preview.
+ * Bytes are the fallback because a path is formatted differently across
+ * platforms. Called once when the detector mounts; the session is reused for
  * every scan.
  */
 export async function createOnnxSession(modelSource: number): Promise<OnnxSession> {
@@ -156,12 +183,9 @@ export async function createOnnxSession(modelSource: number): Promise<OnnxSessio
   await asset.downloadAsync();
   const uri = asset.localUri ?? asset.uri;
 
-  // The local path first. The model is 11.7 MB, and reading it through base64
-  // costs a ~16 MB JavaScript string plus the decoded copy beside it, on a phone
-  // that is also holding a camera preview. The runtime can open the file itself.
   if (uri) {
     try {
-      return await ort.InferenceSession.create(uri.replace(/^file:\/\//, ''));
+      return await ort.InferenceSession.create(uri.replace(/^file:\/\//, ''), SESSION_OPTIONS);
     } catch {
       // Path handling differs between platforms and runtime versions. Bytes are
       // unambiguous, so they remain the fallback rather than the default.
@@ -170,7 +194,28 @@ export async function createOnnxSession(modelSource: number): Promise<OnnxSessio
 
   const base64 = await FileSystem.readAsStringAsync(uri, { encoding: 'base64' });
   const bytes = new Uint8Array(decodeBase64(base64));
-  return ort.InferenceSession.create(bytes);
+  return ort.InferenceSession.create(bytes, SESSION_OPTIONS);
+}
+
+/**
+ * Run one throwaway inference so the first real scan is not the slow one.
+ *
+ * The first `run` of a session pays for lazy allocation, kernel selection and
+ * XNNPACK's own setup — often several times the cost of every scan after it.
+ * Doing it here, against a zero tensor, moves that cost into the load phase while
+ * the visitor is still framing the shot, so the scan that fires the moment they
+ * capture is the warm, fast one. Best-effort: a failure here never blocks a real
+ * scan, it only means the first one is cold.
+ */
+export async function warmUpSession(session: OnnxSession, inputSize: number): Promise<void> {
+  if (!ort) return;
+  try {
+    const zeros = new Float32Array(1 * 3 * inputSize * inputSize);
+    const tensor = new ort.Tensor('float32', zeros, [1, 3, inputSize, inputSize]);
+    await session.run({ [session.inputNames[0]]: tensor });
+  } catch {
+    // A warm-up failure is not a scan failure; leave it to the real run to report.
+  }
 }
 
 function imageSize(uri: string): Promise<{ width: number; height: number }> {

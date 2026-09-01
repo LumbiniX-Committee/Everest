@@ -29,6 +29,10 @@ export function AlignScreen() {
   return (
     <OnboardingFrame
       stepKey="align"
+      // The rehearsal is dragged vertically. A scrolling body would read that
+      // drag as a scroll and the lock could never be felt, which is the one
+      // thing this step exists to teach.
+      scrollBody={false}
       footer={
         <Button
           label={locked ? 'Continue' : 'Skip for now'}

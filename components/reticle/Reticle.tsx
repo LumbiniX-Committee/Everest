@@ -31,13 +31,12 @@ export type ReticleProps = {
  *
  * This is the app's only emblem — no Buddha, no temple, no lotus. It is a
  * sighting instrument: an outer index ring, four cardinal ticks, and an inner
- * ring that contracts as alignment improves and snaps to the locked blue when
- * the device matches the vantage.
+ * ring that contracts as alignment improves and seats when the device matches
+ * the vantage.
  *
  * The colour transition is the entire feedback mechanism, so it is worth being
- * exact about it: amber while seeking, and `alignmentLocked` blue only on a
- * true lock. That blue appears nowhere else in the app, which is what makes it
- * readable at a glance from arm's length in daylight.
+ * exact about it: teal while seeking and a more settled centre on a true lock.
+ * Amber is reserved for the numeric turn warning in the readout below.
  */
 export function Reticle({
   size = 200,

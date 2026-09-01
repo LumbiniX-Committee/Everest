@@ -5,7 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import { ErrorState, LoadingState, ScreenHeader } from '@/components/common';
 import { BottomSheet, Button, Card, Screen, Text } from '@/components/ui';
 import { SitePlan } from '@/components/map';
-import { findSite } from '@/data';
+import { findSite, findVantage, vantagesForSite } from '@/data';
 import { useCurrentPosition } from '@/hooks';
 import { database } from '@/services';
 import { usePreferences } from '@/store';
@@ -13,14 +13,13 @@ import { useQuests } from '@/store/quests';
 import { colors, spacing } from '@/theme';
 import type { ConditionSeverity, HeritageSite, QuestSubmission, QuestTask } from '@/types';
 import { distanceMeters } from '@/utils';
-
-/** Least to most serious, so a sort by index puts urgent first. */
-const SEVERITY_ORDER: ConditionSeverity[] = ['noted', 'concerning', 'urgent'];
-
 import { QuestCategoryBadge } from './components/QuestCategoryBadge';
 import { QuestProgressBar } from './components/QuestProgressBar';
 import { TaskEvidenceSheet } from './components';
 import { QuestTaskItem } from './components/QuestTaskItem';
+
+/** Least to most serious, so a sort by index puts urgent first. */
+const SEVERITY_ORDER: ConditionSeverity[] = ['noted', 'concerning', 'urgent'];
 
 export function QuestDetailScreen({ questId }: { questId: string }) {
   const router = useRouter();
@@ -161,6 +160,13 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
         eyebrow="Quest Details"
         title={title}
         subtitle={subtitle}
+        rightAction={
+          <Button
+            label="Memories"
+            variant="quiet"
+            onPress={() => router.push('../../memories')}
+          />
+        }
       />
 
       <Card style={styles.summaryCard}>
@@ -237,7 +243,7 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
               key={task.id}
               task={task}
               completed={progress.completedTasks.includes(task.id)}
-              disabled={isCompleted || isNotStarted}
+              disabled={isCompleted || isNotStarted || task.autoComplete != null}
               onToggle={() => void handleTaskToggle(task.id)}
               site={task.targetId ? findSite(task.targetId) : undefined}
               distanceM={
@@ -260,6 +266,14 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
                   ? reportsBySite[findSite(task.targetId)?.id ?? task.targetId]?.severities ?? []
                   : []
               }
+              onWitness={task.autoComplete === 'vantage_capture' && task.targetId
+                ? () => {
+                    const direct = findVantage(task.targetId!);
+                    const siteTarget = findSite(task.targetId!);
+                    const vantage = direct ?? (siteTarget ? vantagesForSite(siteTarget.id)[0] : undefined);
+                    if (vantage) router.push({ pathname: '/(main)/sakshi/vantage', params: { vantageId: vantage.id } });
+                  }
+                : undefined}
             />
           ))}
         </View>

@@ -3,10 +3,15 @@
  *
  * Reflection companion engine — inquiry, not advice.
  *
- * Follows the four-truths inquiry scaffold (Dukkha -> Origin -> Cessation -> Path).
- * Incorporates site-aware prompts (Puskarini, Ashokan Pillar, Tilaurakot, etc.).
- * Includes mandatory Distress Override: halting generation immediately and returning
- * verified Nepali crisis numbers on self-harm / crisis detection.
+ * "Reflection on place": a four-question arc (name the difficulty, see where
+ * it comes from, sense whether it could ease, choose one small step) asked
+ * standing somewhere that matters, without religious framing — so the same
+ * mechanism that shipped as a Buddhist Four-Truths scaffold at Lumbini also
+ * works at a site with no Buddhist association. See
+ * 15-POST-HACKATHON-STRATEGY §5. Incorporates site-aware prompts (Puskarini,
+ * Ashokan Pillar, Tilaurakot, etc.). Includes mandatory Distress Override:
+ * halting generation immediately and returning verified Nepali crisis numbers
+ * on self-harm / crisis detection.
  */
 
 import { hybridRetrieve, type RetrievalResult } from './retrieval.ts';
@@ -132,6 +137,9 @@ const SITE_PROMPTS: Record<string, string> = {
   'marker-stone': 'It took a century of careful looking to fix this one spot with certainty.',
   'vihara-remains': 'Stupas recorded here in 1957 were gone by a later visit. Everything built is on its way to being ruins.',
   tilaurakot: 'This is the town Siddhartha grew up in and chose to leave. The place asks a quiet question.',
+  'patan-durbar-square': 'Kings built this square to be looked at forever. It is still being repaired from an earthquake ten years ago.',
+  'changu-narayan': 'A king recorded his own reign in stone here, fifteen hundred years ago. The stone has outlasted the reign by a long way.',
+  'manga-hiti': 'Water has run through this stone spout since before most of what stands nearby was built. Not all of it still runs.',
 };
 
 const SITE_PROMPTS_NE: Record<string, string> = {
@@ -141,6 +149,9 @@ const SITE_PROMPTS_NE: Record<string, string> = {
   'marker-stone': 'धेरै वर्षको ध्यानपूर्वक अवलोकनपछि मात्र यो स्थान निश्चित गरिएको थियो।',
   'vihara-remains': 'यहाँका अवशेषहरूले बनाइएका सबै कुरा परिवर्तन र क्षयतर्फ जाने कुरा सम्झाउँछन्।',
   tilaurakot: 'यो सिद्धार्थ हुर्किएको र छोडेर गएको नगर हो। यस ठाउँले शान्त प्रश्न सोध्छ।',
+  'patan-durbar-square': 'राजाहरूले यो चोक सधैंभरि हेरिने बनाए। दश वर्षअघिको भूकम्पबाट यो अझै मर्मत भइरहेको छ।',
+  'changu-narayan': 'एक राजाले आफ्नो शासनकाल ढुङ्गामा कुँदेर यहाँ लेखे, पन्ध्रसय वर्षअघि। त्यो ढुङ्गा उनको शासनभन्दा धेरै लामो समय टिक्यो।',
+  'manga-hiti': 'यो ढुङ्गे धाराबाट नजिकैका धेरै संरचना बन्नुअघिदेखि नै पानी बगेको छ। अहिले सबै त्यसरी बगिरहेको छैन।',
 };
 
 export function processReflection(req: ReflectionRequest): ReflectionResponse {
@@ -276,13 +287,20 @@ export async function generateReflectionQuestions(
   if (!hasProvider() || !input) return fallback;
 
   const responseLanguage = language === 'ne' ? 'Nepali in Devanagari script' : 'English';
+  // Reflection on place, not doctrine: the four-question arc (name the
+  // difficulty, see where it comes from, sense whether it could ease, choose
+  // one small step) is the mechanism worth keeping — it does not need a
+  // Buddhist label to work, and a label would not survive the reflection
+  // companion running at a non-Buddhist site. See
+  // 15-POST-HACKATHON-STRATEGY §5.
   const system =
-    'You are a careful Buddhist reflection companion. The person will share what is on their mind. ' +
-    'Generate exactly 4 short questions that help them look at their own experience through the Four ' +
-    'Noble Truths: naming the difficulty (dukkha), seeing its origin (craving or aversion), sensing ' +
-    'that it could ease (cessation), and choosing one small next step (path). Tailor every question to ' +
-    'their words. Ask, do not answer. Give no advice, no diagnosis, no moralising, and never claim to ' +
-    `be the Buddha or any teacher. Each question must be answerable by the person in their own words. ` +
+    'You are a careful reflection companion at a place of historical or cultural significance. The ' +
+    'person will share what is on their mind. Generate exactly 4 short questions, in this order: one ' +
+    'naming the difficulty as they experience it, one asking where it seems to come from, one asking ' +
+    'whether they can picture it easing even a little, and one asking for a single small next step. ' +
+    'Tailor every question to their words. Ask, do not answer. Give no advice, no diagnosis, no ' +
+    'moralising, and never claim to be a religious or historical figure or any kind of teacher. Each ' +
+    'question must be answerable by the person in their own words. ' +
     `Respond entirely in ${responseLanguage}. Output ONLY a JSON array of 4 strings and nothing else.`;
   const user = `The person shared:\n"""${input}"""`;
 
@@ -340,7 +358,7 @@ function fallbackGuidance(language: 'en' | 'ne', matches: RetrievalResult[], ans
       'आज एउटा त्यस्तो क्षण रोज्नुहोस् जहाँ तपाईंले तुरुन्तै प्रतिक्रिया दिनुहुन्छ; एक पल रोकिएर शरीर र मन दुवै अवलोकन गर्नुहोस्',
       'यो अनुभव फेरि आउँदा आफूलाई दोष नदिई, चाहना र विरोध दुवै परिवर्तनशील छन् कि छैनन् भनेर जाँच्नुहोस्',
     ];
-    return `तपाईंले ${focus} लाई चार प्रश्नमार्फत हेर्नुभयो${citation}। यसको अर्थ तपाईं कमजोर हुनुहुन्छ भन्ने होइन; अनुभवका कारण र त्यसप्रतिको प्रतिक्रियालाई छुट्याएर हेर्न सकिन्छ। आज एउटा सानो प्रयोग गर्नुहोस्: ${steps[variation]}। यो शिक्षालाई आफ्नै अनुभवमा जाँच्नुहोस्; यसलाई उपचार वा निश्चित जीवन-सल्लाह नठान्नुहोस्।`;
+    return `तपाईंले ${focus} लाई चार प्रश्नमार्फत हेर्नुभयो${citation}। यसको अर्थ तपाईं कमजोर हुनुहुन्छ भन्ने होइन; अनुभवका कारण र त्यसप्रतिको प्रतिक्रियालाई छुट्याएर हेर्न सकिन्छ। आज एउटा सानो प्रयोग गर्नुहोस्: ${steps[variation]}। यसलाई आफ्नै अनुभवमा जाँच्नुहोस्; यसलाई उपचार वा निश्चित जीवन-सल्लाह नठान्नुहोस्।`;
   }
   const focusEn = /तुलना|compare|comparison|jealous|jealousy/.test(joined)
     ? 'comparison and the habit of measuring yourself against others'
@@ -358,7 +376,7 @@ function fallbackGuidance(language: 'en' | 'ne', matches: RetrievalResult[], ans
     'choose one moment when you usually react quickly; pause and observe both body and mind',
     'when this experience returns, check whether the craving and aversion are changing rather than blaming yourself',
   ];
-  return `You looked at ${focusEn} through four questions${citation}. This does not mean something is wrong with you; it means the experience and your response to it can be seen separately. Try one small experiment today: ${stepsEn[variation]}. Test the teaching against your own experience; it is not treatment or a definitive life prescription.`;
+  return `You looked at ${focusEn} through four questions${citation}. This does not mean something is wrong with you; it means the experience and your response to it can be seen separately. Try one small experiment today: ${stepsEn[variation]}. Test this against your own experience; it is not treatment or a definitive life prescription.`;
 }
 
 /**
@@ -375,9 +393,15 @@ export async function processReflectionAsync(req: ReflectionRequest): Promise<Re
 
   if ((req.stage ?? 1) < 5) return processReflection({ ...req, language });
 
-  const query = `${answers.join(' ')} dukkha craving aversion attachment mindfulness path`;
+  // Not anchored to Pali vocabulary any more: a reflection completed at a
+  // heritage site should be free to close on a heritage citation, not forced
+  // toward the Pali canon regardless of where the conversation happened. The
+  // last-resort fallback below still guarantees a non-empty result — it
+  // matches an intent route in both corpora — for the case where a person's
+  // own words share no vocabulary with either.
+  const query = `${req.site_id ?? ''} ${answers.join(' ')} change impermanence meaning`.trim();
   const matches = hybridRetrieve(query, 4);
-  const validMatches = matches.length > 0 ? matches : hybridRetrieve('four noble truths suffering craving path', 4);
+  const validMatches = matches.length > 0 ? matches : hybridRetrieve('impermanence change monument reconstruction', 4);
   const finalPassages = reflectionPassages(validMatches);
   const disclaimer = language === 'ne'
     ? 'यो आत्म-चिन्तनको साधन हो; परामर्श, थेरापी वा मानसिक स्वास्थ्य उपचार होइन।'
@@ -408,7 +432,7 @@ export async function processReflectionAsync(req: ReflectionRequest): Promise<Re
     `[${match.chunk.chunk_id}] (${match.chunk.title_en}): "${match.chunk.english}"`,
   ).join('\n');
   const responseLanguage = language === 'ne' ? 'Nepali in Devanagari script' : 'English';
-  const system = `You are a careful Buddhist reflection companion. Respond entirely in ${responseLanguage}. Do not claim to be the Buddha, do not diagnose, predict, moralise, or give medical/legal/financial advice. Reflect the user's own answers back in 2-4 warm, concrete sentences. Offer one small experiment the user can choose, not an order. Use only the retrieved canonical passages and include at least one exact citation such as [sn56.11:4.2]. Say that the user should test the teaching against their own experience.`;
+  const system = `You are a careful reflection companion at a place of historical or cultural significance. Respond entirely in ${responseLanguage}. Do not claim to be a religious or historical figure, do not diagnose, predict, moralise, or give medical/legal/financial advice. Reflect the user's own answers back in 2-4 warm, concrete sentences. Offer one small experiment the user can choose, not an order. Use only the retrieved passages and include at least one exact citation such as [sn56.11:4.2] or [venice-1964:art9]. Say that the user should test this against their own experience.`;
   const user = `The person's reflections:\n${answers.map((answer, index) => `${index + 1}. ${answer}`).join('\n')}\n\nRetrieved canonical passages:\n${context}`;
 
   // Through `callLlm`, not a second hand-rolled fetch. This path used to shape

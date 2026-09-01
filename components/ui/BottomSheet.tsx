@@ -65,9 +65,9 @@ export function BottomSheet({
           <View style={styles.grip} />
 
           <View style={styles.header}>
-            <Text variant="heading">{title}</Text>
+            <Text variant="title">{title}</Text>
             {subtitle ? (
-              <Text variant="caption" tone="secondary">
+              <Text variant="body" tone="secondary">
                 {subtitle}
               </Text>
             ) : null}
@@ -99,27 +99,28 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    // The one raw colour in the app: a scrim is a light level, not a palette
-    // entry, and textPrimary at 35% is what sits behind the sheet.
-    backgroundColor: 'rgba(37, 42, 39, 0.35)',
+    backgroundColor: colors.overlay,
   },
   sheet: {
-    backgroundColor: colors.background,
+    backgroundColor: colors.backgroundDeep,
     borderTopLeftRadius: radii.xl,
     borderTopRightRadius: radii.xl,
     paddingHorizontal: spacing.gutter,
     paddingTop: spacing.md,
     maxHeight: '88%',
+    borderWidth: 1,
+    borderBottomWidth: 0,
+    borderColor: colors.border,
   },
   grip: {
     alignSelf: 'center',
-    width: 36,
-    height: 4,
+    width: 44,
+    height: 5,
     borderRadius: radii.full,
-    backgroundColor: colors.border,
+    backgroundColor: colors.primary,
     marginBottom: spacing.base,
   },
-  header: { gap: spacing.xxs, marginBottom: spacing.lg },
+  header: { gap: spacing.sm, marginBottom: spacing.lg },
   content: { gap: spacing.md },
   scrollContent: { gap: spacing.md, paddingBottom: spacing.base },
 });

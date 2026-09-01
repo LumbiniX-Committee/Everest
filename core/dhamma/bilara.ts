@@ -19,10 +19,29 @@ export type BilaraChunk = {
   title_pi: string;
   title_en: string;
   license: string;
+  /**
+   * 'heritage' marks a chunk from the conservation/heritage corpus (charters,
+   * WHS records, archaeology, law) rather than the Pali canon. Absent (or
+   * 'pali') is the original corpus this type was built for — every existing
+   * chunk and every consumer of `pali`/`title_pi` predates this field, so it
+   * defaults to the old behaviour rather than requiring every call site to
+   * branch on it.
+   */
+  corpus?: 'pali' | 'heritage';
+  /**
+   * Keys into `data/demo/sources.ts` — the app's shared source registry, so a
+   * heritage citation resolves to a real, checkable source card the same way
+   * a Dhamma citation resolves to a sutta (see `sourceIdFor` in
+   * services/dhamma/index.ts, which already falls back to a chunk's `uid` and
+   * so needs no change: a heritage chunk's `uid` is set to its `source_id`).
+   */
+  source_id?: string;
+  source_url?: string;
 };
 
 /** Seed canonical corpus chunks for offline execution & offline RAG indexing */
 import { GENERATED_CHUNKS } from './corpus.generated.ts';
+import { HERITAGE_CHUNKS } from './heritage.ts';
 
 export const CANONICAL_CHUNKS: BilaraChunk[] = [
   {
@@ -138,6 +157,10 @@ const ALL_CHUNKS: BilaraChunk[] = [
   ...GENERATED_CHUNKS.filter(
     (generated) => !CANONICAL_CHUNKS.some((seed) => seed.chunk_id === generated.chunk_id),
   ),
+  // Heritage corpus (charters, WHS records, archaeology, law) — see
+  // core/dhamma/heritage.ts for why this is a hand-written seed module rather
+  // than a fetched one, same as CANONICAL_CHUNKS above.
+  ...HERITAGE_CHUNKS,
 ];
 
 /** Map of chunk_id -> BilaraChunk for sub-second resolution */

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { StyleSheet, View, Image, type LayoutChangeEvent } from 'react-native';
 
 import { Text } from '@/components/ui';
-import { LUMBINI_BOUNDS } from '@/constants';
+import { LUMBINI_BOUNDS, REGIONS, regionOf } from '@/constants';
 import { colors, radii, spacing } from '@/theme';
 import type { Coordinate, HeritageSite } from '@/types';
 import { MONK_STILL } from '@/components/monk';
@@ -47,14 +47,24 @@ export function SitePlan({
 
   const onLayout = (event: LayoutChangeEvent) => setWidth(event.nativeEvent.layout.width);
 
+  /**
+   * The frame this plan draws within.
+   *
+   * When every site passed shares one region, that region's own bounds are
+   * used — this is what makes a Kathmandu Valley quest plan legible instead of
+   * pinning every site to the same corner of a Lumbini-shaped box. A mixed or
+   * empty set (the explore surface's all-sites fallback) keeps the original
+   * Lumbini framing, since that is still the home region and the common case.
+   */
+  const bounds =
+    sites.length > 0 && sites.every((site) => regionOf(site) === regionOf(sites[0]))
+      ? REGIONS[regionOf(sites[0])].bounds
+      : LUMBINI_BOUNDS;
+
   // Normalise a coordinate into the plan's pixel box. North is up.
   const project = (coordinate: Coordinate) => {
-    const x =
-      (coordinate.longitude - LUMBINI_BOUNDS.west) /
-      (LUMBINI_BOUNDS.east - LUMBINI_BOUNDS.west);
-    const y =
-      (LUMBINI_BOUNDS.north - coordinate.latitude) /
-      (LUMBINI_BOUNDS.north - LUMBINI_BOUNDS.south);
+    const x = (coordinate.longitude - bounds.west) / (bounds.east - bounds.west);
+    const y = (bounds.north - coordinate.latitude) / (bounds.north - bounds.south);
     return { left: clamp(x) * width, top: clamp(y) * height };
   };
 

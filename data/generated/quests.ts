@@ -207,6 +207,51 @@ export const seedQuests: SeedQuest[] = [
         "ne": "अझ खोज्नुहोस्, यात्री। यो दक्षिण एसियाका धेरै लिपिको पूर्वज हो, र यसैले यो स्थलको नाम राख्यो।"
       }
     }
+  },
+  {
+    "id": "q.patan-first-survey",
+    "family": "witness",
+    "title": {
+      "en": "Photograph the square from the south approach",
+      "ne": "दक्षिण प्रवेशबाट चोकको फोटो खिच्नुहोस्"
+    },
+    "description": {
+      "en": "Patan Durbar Square was fully restored in 2023, eight years after the 2015 earthquake. A dated photograph from this viewpoint becomes part of the record of how it holds up afterward.",
+      "ne": "पाटन दरबार क्षेत्र सन् २०१५ को भूकम्पको आठ वर्षपछि, सन् २०२३ मा पूर्ण रूपमा पुनर्स्थापित भयो। यस दृष्टिबिन्दुबाट मितियुक्त फोटो पछि यो कस्तो अवस्थामा रहन्छ भन्ने अभिलेखको हिस्सा बन्छ।"
+    },
+    "siteId": "patan-durbar-square",
+    "vantageId": "patan-durbar-square.v1",
+    "merit": 70
+  },
+  {
+    "id": "q.changu-first-survey",
+    "family": "witness",
+    "title": {
+      "en": "Photograph the temple from the south approach",
+      "ne": "दक्षिण प्रवेशबाट मन्दिरको फोटो खिच्नुहोस्"
+    },
+    "description": {
+      "en": "Changu Narayan was rebuilt after the 2015 earthquake. Few photographs of the rebuilt temple are dated and fixed to a known viewpoint; this one will be.",
+      "ne": "चाँगुनारायण सन् २०१५ को भूकम्पपछि पुनर्निर्माण गरिएको हो। पुनर्निर्मित मन्दिरका थोरै फोटो मात्र मिति र निश्चित दृष्टिबिन्दुमा टाँसिएका छन्; यो एक हुनेछ।"
+    },
+    "siteId": "changu-narayan",
+    "vantageId": "changu-narayan.v1",
+    "merit": 70
+  },
+  {
+    "id": "q.manga-hiti-flow",
+    "family": "witness",
+    "title": {
+      "en": "Record whether Manga Hiti is flowing",
+      "ne": "मंग हिटी बगिरहेको छ कि छैन अभिलेख गर्नुहोस्"
+    },
+    "description": {
+      "en": "A 2019 survey found fewer than half of the valley's stone spouts still produce water, and most are not watched on any continuous schedule. One dated photograph, noting whether water is running, adds to a record that barely exists.",
+      "ne": "सन् २०१९ को सर्वेक्षणले उपत्यकाका आधाभन्दा कम ढुङ्गे धाराले मात्र अझै पानी दिइरहेको फेला पार्‍यो, र अधिकांशलाई नियमित रूपमा नियालिँदैन। पानी बगेको छ कि छैन उल्लेख गरी लिइएको एउटा मितियुक्त फोटोले लगभग नभएको अभिलेखमा थप्छ।"
+    },
+    "siteId": "manga-hiti",
+    "vantageId": "manga-hiti.v1",
+    "merit": 90
   }
 ];
 

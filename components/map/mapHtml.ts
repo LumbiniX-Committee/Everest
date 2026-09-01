@@ -64,7 +64,7 @@ export function buildMapHtml({
   const pitch = camera.pitch;
   // Clear of the standing pill in the top-left of the app's HUD, which is
   // 60pt tall including its own top padding.
-  const controlTopOffset = fullscreen ? (topInset > 0 ? topInset + 72 : 116) : 10;
+  const controlTopOffset = fullscreen ? (topInset > 0 ? topInset + 132 : 156) : 10;
 
   return `<!doctype html>
 <html>
@@ -82,23 +82,53 @@ ${avatar ? '<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></s
   ${fullscreen ? `
   .maplibregl-ctrl-top-left {
     top: ${controlTopOffset}px !important;
-    left: 16px !important;
+    left: 20px !important;
     margin: 0 !important;
   }
   .maplibregl-ctrl-group {
-    background: ${colors.background} !important;
-    border: 1px solid ${colors.border} !important;
-    border-radius: 20px !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+    background: ${colors.backgroundDeep} !important;
+    border: 1px solid ${colors.borderStrong} !important;
+    border-radius: 24px !important;
+    box-shadow: 0 4px 14px ${colors.overlay} !important;
     overflow: hidden;
   }
   .maplibregl-ctrl-group button {
-    width: 44px !important;
-    height: 44px !important;
+    width: 52px !important;
+    height: 52px !important;
     border-bottom: 1px solid ${colors.border} !important;
+    background-color: ${colors.backgroundDeep} !important;
+  }
+  .maplibregl-ctrl-group button:active {
+    background-color: ${colors.primarySoft} !important;
   }
   .maplibregl-ctrl-group button:last-child {
     border-bottom: none !important;
+  }
+  .maplibregl-ctrl-group .maplibregl-ctrl-icon {
+    filter: invert(77%) sepia(35%) saturate(657%) hue-rotate(129deg) brightness(92%) contrast(88%);
+  }
+  .maplibregl-ctrl-bottom-right {
+    left: 20px !important;
+    right: 20px !important;
+    bottom: 10px !important;
+    display: flex;
+    justify-content: center;
+  }
+  .maplibregl-ctrl-bottom-right .maplibregl-ctrl {
+    margin: 0 !important;
+  }
+  .maplibregl-ctrl-attrib {
+    color: ${colors.textSecondary} !important;
+    background: ${colors.backgroundDeep} !important;
+    border: 1px solid ${colors.border} !important;
+    border-radius: 999px !important;
+    padding: 5px 12px !important;
+    font-size: 11px !important;
+    line-height: 18px !important;
+    box-shadow: 0 4px 12px ${colors.overlay} !important;
+  }
+  .maplibregl-ctrl-attrib a {
+    color: ${colors.primary} !important;
   }
   ` : ''}
 </style>
@@ -115,7 +145,7 @@ ${avatar ? '<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></s
       zoom: ${zoom},
       pitch: ${pitch},
       bearing: ${MAP_HOME.bearing},
-      attributionControl: { compact: true },
+      attributionControl: { compact: false },
       interactive: ${interactive},
       // Lumbini is a few square kilometres; there is no reason to allow a
       // whole-planet zoom-out that loses the place entirely.
