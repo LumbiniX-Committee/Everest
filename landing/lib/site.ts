@@ -43,8 +43,8 @@ export const SURFACES = [
   {
     name: 'Tīrtha',
     means: 'a sacred crossing',
-    subtitle: 'Place',
-    body: 'A map of the heritage sites, what each place is, and a fade between an old photograph and a new one taken from the same spot. Quests point at whatever vantage has gone longest without a resurvey, not at whatever is popular.',
+    subtitle: 'The explorer',
+    body: 'The live map, and the front door. Your position against the heritage sites around you, a place that speaks as you reach it at the depth you chose, a fade between an old photograph and today, and routes that point at whatever has gone longest without a resurvey.',
     accent: 'text-tirtha',
     chip: 'bg-tirtha/10',
     rule: 'bg-tirtha',

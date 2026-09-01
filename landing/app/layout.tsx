@@ -8,15 +8,15 @@ export const metadata: Metadata = {
    * Each page sets its own full title and this only fills the gap.
    */
   title: {
-    default: 'Sākṣī — Turning a visit into conservation evidence',
+    default: 'Sākṣī — A living map of a sacred landscape',
     template: '%s',
   },
   description:
-    'Sākṣī means witness. Stand at a fixed viewpoint at a heritage site, photograph what is there today, and the frames line up into a record of how the place is changing — delivered to the institution that can act on it. Lumbini and the Kathmandu Valley.',
+    'A real-time map explorer for the heritage sites of Lumbini and the Kathmandu Valley. Walk, and the places you reach speak — as deeply as you asked, from sources you can check. Everything else the app does exists so that walking through a place also leaves a record of it behind.',
   openGraph: {
-    title: 'Sākṣī — Turning a visit into conservation evidence',
+    title: 'Sākṣī — A living map of a sacred landscape',
     description:
-      'Stand at a fixed viewpoint, photograph what is there today, and the frames line up into a monitoring record a custodian can act on.',
+      'A real-time map explorer for heritage sites. Places speak as you reach them, at the depth you chose, from sources you can check — and every visit can leave a measurement behind.',
     type: 'website',
   },
 };

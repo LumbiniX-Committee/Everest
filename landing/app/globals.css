@@ -47,3 +47,169 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
+
+/* ── Map explorer ───────────────────────────────────────────────────────────
+ *
+ * Markers are DOM buttons rather than a symbol layer, so their look lives here
+ * rather than in a style spec. The dot carries the colour; the ring is the
+ * halo that grows on hover and pulses only for the selected place, because a
+ * map where everything pulses tells you nothing about where you are.
+ */
+.sk-pin {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sk-pin-dot {
+  position: relative;
+  z-index: 1;
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  background: var(--color-sandstone-deep);
+  box-shadow: 0 0 0 3px var(--color-surface), 0 1px 4px rgb(37 42 39 / 0.35);
+  transition:
+    width 0.18s ease,
+    height 0.18s ease,
+    background-color 0.18s ease;
+}
+
+/* Tier one is what a first-time visitor is actually looking for. */
+.sk-pin[data-tier='1'] .sk-pin-dot {
+  width: 14px;
+  height: 14px;
+  background: var(--color-earth);
+}
+
+.sk-pin-ring {
+  position: absolute;
+  inset: 6px;
+  border-radius: 999px;
+  border: 1.5px solid var(--color-sakshi);
+  opacity: 0;
+  transform: scale(0.7);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.sk-pin:hover .sk-pin-ring,
+.sk-pin:focus-visible .sk-pin-ring {
+  opacity: 0.55;
+  transform: scale(1);
+}
+
+.sk-pin:focus-visible {
+  outline: 2px solid var(--color-sakshi);
+  outline-offset: 3px;
+  border-radius: 999px;
+}
+
+/* Reached once already: filled, and quieter than the one you are on. */
+.sk-pin.is-visited .sk-pin-dot {
+  background: var(--color-sakshi);
+}
+
+.sk-pin.is-selected .sk-pin-dot {
+  width: 15px;
+  height: 15px;
+  background: var(--color-sakshi);
+}
+
+.sk-pin.is-selected .sk-pin-ring {
+  opacity: 1;
+  transform: scale(1);
+  animation: sk-pulse 2.4s ease-out infinite;
+}
+
+@keyframes sk-pulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+
+/* MapLibre's own chrome, brought into the page's palette. */
+.maplibregl-ctrl-group {
+  border: 1px solid var(--color-line) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 1px 3px rgb(37 42 39 / 0.08) !important;
+  overflow: hidden;
+}
+
+.maplibregl-ctrl-attrib {
+  font-size: 10px;
+  background: color-mix(in srgb, var(--color-surface) 85%, transparent) !important;
+}
+
+/* Panel content swapping between places or depths. Keyed on the selection, so
+   React remounts the node and the animation replays — which is the point: the
+   change is what the reader needs to notice. */
+.sk-fade {
+  animation: sk-fade-in 0.32s ease-out both;
+}
+
+@keyframes sk-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Scroll reveal ──────────────────────────────────────────────────────────
+ *
+ * The initial state is applied by script rather than by this rule, so a reader
+ * with JavaScript disabled is never left with permanently invisible content.
+ */
+[data-reveal] {
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-reveal='hidden'] {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+[data-reveal='shown'] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Anyone who has asked their system to stop animation gets the finished state
+   immediately — including the marker pulse, which is decoration, not signal. */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  .sk-fade,
+  .sk-pin-dot,
+  .sk-pin-ring {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  [data-reveal='hidden'] {
+    opacity: 1;
+    transform: none;
+  }
+}

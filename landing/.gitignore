@@ -6,3 +6,6 @@ next-env.d.ts
 .env*.local
 .vercel
 .env*
+
+# Staged from node_modules by scripts/copy-map-worker.mjs on every build.
+public/maplibre-gl-worker.mjs
