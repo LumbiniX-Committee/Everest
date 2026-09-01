@@ -6,6 +6,3 @@ next-env.d.ts
 .env*.local
 .vercel
 .env*
-
-# Copied out of ../docs by scripts/copy-reports.mjs; docs/ is the source.
-public/reports/

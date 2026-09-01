@@ -2,14 +2,18 @@
  * Copy the PDF reports out of the repo's `docs/` into `public/reports/`.
  *
  * The site links to documents that live one directory up, outside anything Next
- * will serve. Committing a second copy under `public/` would work until the day
- * someone regenerated `docs/` and the site quietly kept handing out the old
- * one, so the copy is generated instead: `docs/` is the only source, and
- * `predev`/`prebuild` make the copy before either command can read it.
+ * will serve, so a copy has to exist under `public/`. `docs/` stays the source
+ * and this script refreshes the copy before every dev run and every build.
  *
- * A missing source is a warning rather than a failure. The site is deployable
- * from a checkout that has not built the reports; the link 404s, and that is a
- * smaller problem than an unbuildable site.
+ * The copy is committed rather than ignored, because a deploy that uploads only
+ * this directory — the Vercel CLI run from here, or any zip of it — never sees
+ * `../../docs` at all, and would silently ship a site whose report links 404.
+ * Committing it also makes staleness visible: regenerate a PDF without
+ * rebuilding and the difference shows up as an uncommitted diff rather than as
+ * a site quietly handing out last month's document.
+ *
+ * A missing source is a warning rather than a failure, so a checkout that has
+ * not rebuilt the reports still builds.
  */
 import { copyFile, mkdir, access } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
