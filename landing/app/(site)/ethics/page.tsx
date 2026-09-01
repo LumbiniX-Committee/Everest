@@ -33,17 +33,14 @@ const commitments = [
 
 export default function EthicsPage() {
   return (
-    <main className="min-h-screen">
+    <main>
       <section className="mx-auto max-w-3xl px-6 pt-16 pb-24 sm:pt-24">
-        <Link
-          href="/"
-          className="text-sm font-medium text-ink-muted transition hover:text-ink"
-        >
-          ← Sākṣī
-        </Link>
+        <p className="text-sm font-semibold tracking-widest text-sandstone-deep uppercase">
+          Ethics
+        </p>
 
-        <h1 className="mt-8 font-[family-name:var(--font-display)] text-5xl font-semibold tracking-tight text-ink sm:text-6xl">
-          Ethics policy
+        <h1 className="mt-5 font-[family-name:var(--font-display)] text-5xl font-semibold tracking-tight text-ink sm:text-6xl">
+          What Sākṣī will not do
         </h1>
 
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-soft">
@@ -75,14 +72,16 @@ export default function EthicsPage() {
           disclosed here, and it will never come from a commercial operator
           inside a site we monitor.
         </p>
-      </section>
 
-      <footer className="mx-auto max-w-6xl px-6 py-12 text-center">
-        <p className="font-[family-name:var(--font-display)] text-lg text-ink">Sākṣī</p>
-        <p className="mt-2 text-sm text-ink-muted">
-          Built for LumbiniX 2026 · appamādena sampādetha
+        <p className="mt-8 text-sm">
+          <Link
+            href="/for-custodians"
+            className="font-semibold text-earth underline underline-offset-4"
+          >
+            What this means for an institution deploying Sākṣī →
+          </Link>
         </p>
-      </footer>
+      </section>
     </main>
   );
 }
