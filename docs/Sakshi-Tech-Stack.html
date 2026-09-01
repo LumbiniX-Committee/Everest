@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sākṣī — The Technology Stack, and What It Takes to Scale It</title>
+<style>
+  @page {
+    size: A4;
+    margin: 18mm 30mm 16mm 20mm;
+  }
+
+  :root {
+    --ink:        #1B1B19;
+    --ink-2:      #4A4A46;
+    --ink-3:      #7A786F;
+    --lock:       #2F5F8C;
+    --lock-tint:  #EDF2F7;
+    --earth:      #8A6A3D;
+    --earth-tint: #F8F3EA;
+    --ok:         #2C6647;
+    --warn:       #8A5E14;
+    --gap:        #97322A;
+    --rule:       #D6D2C8;
+    --rule-soft:  #E8E5DE;
+
+    --display: "EB Garamond", "Gentium Book Plus", Georgia, serif;
+    --body:    "Charis SIL", "Gentium Plus", "Bitstream Charter", Georgia, serif;
+    --sans:    "Clear Sans", "DejaVu Sans Condensed", "DejaVu Sans", sans-serif;
+    --mono:    "DejaVu Sans Mono", monospace;
+    --deva:    "Annapurna SIL", "Noto Sans Devanagari", "Lohit Devanagari", serif;
+  }
+
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  html { font-size: 10.5pt; }
+
+  body {
+    margin: 0;
+    font-family: var(--body);
+    color: var(--ink);
+    line-height: 1.52;
+    text-rendering: optimizeLegibility;
+    hyphens: auto;
+  }
+
+  /* ══ Page architecture: a narrow rail for numbers and marginal notes ══ */
+  .page { break-after: page; }
+  .page:last-child { break-after: auto; }
+
+  .band {
+    display: grid;
+    grid-template-columns: 26mm 1fr;
+    column-gap: 8mm;
+    align-items: start;
+  }
+
+  .rail {
+    font-family: var(--sans);
+    font-size: 7.4pt;
+    line-height: 1.35;
+    color: var(--ink-3);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding-top: .18rem;
+  }
+  .rail .num {
+    font-family: var(--display);
+    font-size: 15pt;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--lock);
+    display: block;
+    line-height: 1;
+    margin-bottom: .3rem;
+  }
+  .rail .note {
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 7.6pt;
+    line-height: 1.42;
+    color: var(--ink-3);
+    margin-top: .9rem;
+    padding-top: .55rem;
+    border-top: .5pt solid var(--rule);
+  }
+
+  .col { min-width: 0; }
+
+  /* ══ Cover ══ */
+  .cover { min-height: 256mm; display: flex; flex-direction: column; }
+  .cover-top { border-bottom: 1.5pt solid var(--lock); padding-bottom: 1.1rem; }
+  .cover .kicker {
+    font-family: var(--sans);
+    font-size: 8pt;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 2.6rem;
+  }
+  .cover .deva {
+    font-family: var(--deva);
+    font-size: 30pt;
+    line-height: 1;
+    color: var(--earth);
+    margin: 0 0 .5rem;
+  }
+  .cover h1 {
+    font-family: var(--display);
+    font-size: 46pt;
+    font-weight: 500;
+    letter-spacing: -.015em;
+    line-height: .98;
+    margin: 0 0 .7rem;
+  }
+  .cover .gloss {
+    font-family: var(--body);
+    font-size: 12pt;
+    font-style: italic;
+    color: var(--ink-2);
+    margin: 0;
+  }
+  .cover-theme {
+    margin: 2.1rem 0 0;
+    padding: 1.1rem 1.3rem;
+    background: var(--earth-tint);
+    border-left: 2pt solid var(--earth);
+  }
+  .cover-theme .lbl {
+    font-family: var(--sans);
+    font-size: 7.4pt;
+    letter-spacing: .17em;
+    text-transform: uppercase;
+    color: var(--earth);
+    display: block;
+    margin-bottom: .35rem;
+  }
+  .cover-theme p {
+    margin: 0;
+    font-family: var(--display);
+    font-size: 13.5pt;
+    line-height: 1.3;
+    font-style: italic;
+  }
+
+  .cover-meta {
+    margin-top: auto;
+    padding-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.4rem 2.2rem;
+  }
+  .cover-meta .blk h4 {
+    font-family: var(--sans);
+    font-size: 7.4pt;
+    letter-spacing: .17em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 .4rem;
+    padding-bottom: .3rem;
+    border-bottom: .5pt solid var(--rule);
+    font-weight: 400;
+  }
+  .cover-meta .blk p { margin: 0 0 .18rem; font-size: 9.4pt; line-height: 1.4; }
+  .cover-meta .blk .role { color: var(--ink-3); font-size: 8.6pt; }
+  .cover-meta .blk a, .cover-meta .blk .lnk {
+    font-family: var(--mono);
+    font-size: 7.6pt;
+    color: var(--lock);
+    word-break: break-all;
+    text-decoration: none;
+  }
+
+  /* ══ Contents ══ */
+  .toc-h {
+    font-family: var(--display);
+    font-size: 24pt;
+    font-weight: 500;
+    margin: 0 0 1.6rem;
+    padding-bottom: .6rem;
+    border-bottom: 1pt solid var(--rule);
+  }
+  ol.toc { list-style: none; margin: 0; padding: 0; }
+  ol.toc > li {
+    display: grid;
+    grid-template-columns: 8mm 1fr;
+    gap: 4mm;
+    padding: .55rem 0;
+    border-bottom: .5pt solid var(--rule-soft);
+  }
+  ol.toc .n { font-family: var(--display); font-size: 12pt; color: var(--lock); }
+  ol.toc .t { font-family: var(--display); font-size: 12pt; }
+  ol.toc .d { font-family: var(--sans); font-size: 8.2pt; color: var(--ink-3); display: block; margin-top: .12rem; line-height: 1.4; }
+
+  /* ══ Section headings ══ */
+  h2.sec {
+    font-family: var(--display);
+    font-size: 22pt;
+    font-weight: 500;
+    letter-spacing: -.012em;
+    line-height: 1.1;
+    margin: 0 0 1.1rem;
+    padding-bottom: .55rem;
+    border-bottom: 1pt solid var(--lock);
+  }
+
+  h3 {
+    font-family: var(--display);
+    font-size: 13pt;
+    font-weight: 600;
+    margin: 1.5rem 0 .4rem;
+    break-after: avoid;
+  }
+  h3:first-of-type { margin-top: .4rem; }
+
+  h4 {
+    font-family: var(--sans);
+    font-size: 7.6pt;
+    font-weight: 600;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 1.2rem 0 .35rem;
+    break-after: avoid;
+  }
+
+  p { margin: 0 0 .62rem; text-align: justify; }
+  p.lede { font-size: 11.2pt; line-height: 1.48; color: var(--ink-2); margin-bottom: 1rem; }
+
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+
+  ul, ol.body { margin: .3rem 0 .8rem; padding-left: 1.05rem; }
+  li { margin-bottom: .3rem; }
+  ul.plain { list-style: none; padding-left: 0; }
+
+  code, .m {
+    font-family: var(--mono);
+    font-size: .83em;
+    background: var(--lock-tint);
+    padding: .04em .25em;
+    border-radius: 1.5pt;
+  }
+
+  /* ══ Blocks ══ */
+  .callout {
+    margin: .9rem 0 1rem;
+    padding: .75rem .95rem;
+    background: var(--earth-tint);
+    border-left: 2pt solid var(--earth);
+    break-inside: avoid;
+  }
+  .callout.cool { background: var(--lock-tint); border-left-color: var(--lock); }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout h4 { margin-top: 0; color: var(--earth); }
+  .callout.cool h4 { color: var(--lock); }
+
+  /* ══ Module cards ══ */
+  .module {
+    border: .75pt solid var(--rule);
+    margin-bottom: .85rem;
+    break-inside: avoid;
+  }
+  .module .mh {
+    padding: .5rem .8rem;
+    background: var(--lock-tint);
+    border-bottom: .75pt solid var(--rule);
+    display: flex;
+    align-items: baseline;
+    gap: .6rem;
+  }
+  .module .mh .nm { font-family: var(--display); font-size: 13pt; font-weight: 600; }
+  .module .mh .gl {
+    font-family: var(--sans);
+    font-size: 7.4pt;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--lock);
+  }
+  .module .mb { padding: .65rem .8rem .35rem; }
+  .module .mb p { font-size: 9.8pt; }
+  .module .mb ul { font-size: 9.6pt; }
+
+  /* ══ Tables ══ */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: .7rem 0 1rem;
+    font-size: 8.9pt;
+    break-inside: avoid;
+  }
+  caption {
+    caption-side: top;
+    text-align: left;
+    font-family: var(--sans);
+    font-size: 7.6pt;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding-bottom: .35rem;
+  }
+  th, td { text-align: left; padding: .4rem .5rem; border-bottom: .5pt solid var(--rule-soft); vertical-align: top; }
+  thead th {
+    font-family: var(--sans);
+    font-size: 7.4pt;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 600;
+    border-bottom: .75pt solid var(--rule);
+    background: #FAF9F6;
+  }
+  td.num, th.num { font-family: var(--mono); font-size: 8.2pt; white-space: nowrap; }
+  tbody tr:last-child td { border-bottom: .75pt solid var(--rule); }
+
+  .tag {
+    font-family: var(--sans);
+    font-size: 7pt;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: .08rem .3rem;
+    border: .5pt solid currentColor;
+    border-radius: 1.5pt;
+    white-space: nowrap;
+  }
+  .t-ok { color: var(--ok); }
+  .t-warn { color: var(--warn); }
+  .t-gap { color: var(--gap); }
+
+  /* ══ Figures ══ */
+  figure {
+    margin: 1rem 0 1.1rem;
+    padding: .8rem .85rem .55rem;
+    border: .75pt solid var(--rule);
+    break-inside: avoid;
+  }
+  figure svg { display: block; width: 100%; height: auto; color: var(--ink-2); }
+  figcaption {
+    margin-top: .6rem;
+    padding-top: .45rem;
+    border-top: .5pt solid var(--rule-soft);
+    font-family: var(--sans);
+    font-size: 7.8pt;
+    line-height: 1.45;
+    color: var(--ink-3);
+  }
+  .sb { fill: #F7F6F2; stroke: var(--rule); stroke-width: .8; }
+  .sk { fill: var(--lock-tint); stroke: var(--lock); stroke-width: 1; }
+  .st { fill: var(--ink); font-family: "Clear Sans", "DejaVu Sans", sans-serif; font-size: 9px; }
+  .ss { fill: var(--ink-3); font-family: "DejaVu Sans Mono", monospace; font-size: 7px; }
+  .sc { fill: var(--lock); font-family: "DejaVu Sans Mono", monospace; font-size: 7px; }
+  .sx { fill: var(--gap); font-family: "DejaVu Sans Mono", monospace; font-size: 7px; }
+  .sl { fill: var(--ink-3); font-family: "DejaVu Sans Mono", monospace; font-size: 6.5px; letter-spacing: .03em; }
+  .scap { fill: var(--ink-3); font-family: "Clear Sans", "DejaVu Sans", sans-serif; font-size: 6.5px; letter-spacing: .12em; }
+  .ln { stroke: var(--ink-3); stroke-width: .9; fill: none; }
+  .lnk { stroke: var(--lock); stroke-width: 1.1; fill: none; }
+  .lnd { stroke: var(--ink-3); stroke-width: .9; fill: none; stroke-dasharray: 3 3; }
+  .lnx { stroke: var(--gap); stroke-width: 1; fill: none; }
+  .rl { stroke: var(--rule); stroke-width: .8; stroke-dasharray: 2.5 3.5; }
+
+  /* ══ Team ══ */
+  .team { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin: .8rem 0 1rem; }
+  .member { border: .75pt solid var(--rule); border-top: 2pt solid var(--lock); padding: .65rem .8rem .7rem; break-inside: avoid; }
+  .member .nm { font-family: var(--display); font-size: 12.5pt; font-weight: 600; display: block; }
+  .member .rl2 {
+    font-family: var(--sans);
+    font-size: 7.4pt;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--lock);
+    display: block;
+    margin: .12rem 0 .45rem;
+  }
+  .member p { font-size: 9.2pt; margin: 0; text-align: left; }
+
+  /* ══ Links block ══ */
+  .link-row {
+    display: grid;
+    grid-template-columns: 34mm 1fr;
+    gap: .6rem;
+    padding: .6rem 0;
+    border-bottom: .5pt solid var(--rule-soft);
+    align-items: baseline;
+  }
+  .link-row .k {
+    font-family: var(--sans);
+    font-size: 7.6pt;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .link-row .v { font-family: var(--mono); font-size: 8pt; color: var(--lock); word-break: break-all; }
+  .link-row .v .sub { font-family: var(--body); font-size: 8.6pt; color: var(--ink-3); display: block; margin-top: .15rem; word-break: normal; }
+
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border: .75pt solid var(--rule);
+    margin: .9rem 0 1.1rem;
+    break-inside: avoid;
+  }
+  .stat-strip > div { padding: .45rem .4rem .55rem; border-right: .5pt solid var(--rule-soft); min-width: 0; overflow-wrap: break-word; }
+  .stat-strip > div:last-child { border-right: 0; }
+  .stat-strip .v { font-family: var(--mono); font-size: 9.4pt; color: var(--lock); display: block; line-height: 1.1; }
+  .stat-strip .k {
+    font-family: var(--sans);
+    font-size: 6.2pt;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    display: block;
+    margin-top: .18rem;
+    line-height: 1.3;
+  }
+</style>
+<style>
+  /* ══ Report overrides: a denser grid than the submission document ══ */
+  @page { size: A4; margin: 12mm 14mm 11mm 14mm; }
+  html { font-size: 8.8pt; }
+  body { line-height: 1.36; }
+  p { margin: 0 0 .5rem; }
+  h2.sec { font-size: 18pt; margin-bottom: .8rem; padding-bottom: .4rem; }
+  h3 { font-size: 11.5pt; margin: 1rem 0 .3rem; }
+  table { font-size: 8.2pt; margin: .55rem 0 .8rem; }
+  th, td { padding: .32rem .42rem; }
+  .band { grid-template-columns: 21mm 1fr; column-gap: 6mm; }
+  ul, ol.body { margin: .25rem 0 .6rem; }
+  li { margin-bottom: .22rem; }
+  p.lede { font-size: 10.2pt; margin-bottom: .75rem; }
+
+  /* The rail note is a span carrying a top border. An inline box that wraps
+     draws that border on every line fragment (box-decoration-break: slice), so
+     a note longer than one line came out struck through. Block, so it draws
+     once — the rule under the rail label, which is what it was ever for. */
+  .rail .note { display: block; }
+
+  /* The report flows rather than paginating by section: forced breaks left
+     nearly half of page one empty, because a wide table with break-inside:avoid
+     could not fit in the space that remained and jumped whole. Long tables may
+     split; the header repeats, and no other block is allowed to. */
+  .page { break-after: auto; }
+  table.long { break-inside: auto; }
+  table.long thead { display: table-header-group; }
+  table.long tr { break-inside: avoid; }
+
+  /* ══ Additions for the stack report ══ */
+  .layer {
+    border-left: 2pt solid var(--lock);
+    padding: .35rem 0 .35rem .65rem;
+    margin-bottom: .6rem;
+    break-inside: avoid;
+  }
+  .layer .lk {
+    font-family: var(--sans);
+    font-size: 7pt;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--lock);
+    display: block;
+    margin-bottom: .18rem;
+  }
+  .layer .pick { font-family: var(--display); font-size: 11.5pt; font-weight: 600; display: block; margin-bottom: .18rem; }
+  .layer p { font-size: 8.9pt; margin: 0 0 .28rem; }
+  .layer p:last-child { margin-bottom: 0; }
+  .layer .alt { color: var(--ink-3); font-size: 8.4pt; }
+  .layer.keep { border-left-color: var(--ok); }
+  .layer.keep .lk { color: var(--ok); }
+  .layer.add { border-left-color: var(--earth); }
+  .layer.add .lk { color: var(--earth); }
+
+  .verdict {
+    font-family: var(--sans);
+    font-size: 6.4pt;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: .04rem .28rem;
+    border: .5pt solid currentColor;
+    border-radius: 1.5pt;
+    white-space: nowrap;
+    margin-left: .35rem;
+    vertical-align: .14em;
+  }
+  .v-keep { color: var(--ok); }
+  .v-add  { color: var(--earth); }
+  .v-swap { color: var(--lock); }
+
+  .cols2 { column-count: 2; column-gap: 6mm; column-rule: .5pt solid var(--rule-soft); }
+  .cols2 > * { break-inside: avoid; }
+  .cols2 h4 { margin: .55rem 0 .2rem; }
+  .cols2 h4:first-child { margin-top: 0; }
+  .cols2 p { font-size: 8.6pt; text-align: left; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ PAGE 1 ══════════════ -->
+<section class="page">
+  <div class="cover-top" style="padding-bottom:.4rem;margin-bottom:.65rem">
+    <p class="kicker" style="margin-bottom:.35rem">Sākṣī &nbsp;·&nbsp; साक्षी &nbsp;·&nbsp; Engineering Report 01 &nbsp;·&nbsp; September 2026</p>
+    <h1 style="font-family:var(--display);font-size:18pt;font-weight:500;letter-spacing:-.015em;line-height:1.06;margin:0 0 .2rem">
+      The Technology Stack, and What It Takes to Scale It
+    </h1>
+    <p class="gloss" style="font-size:9.4pt;margin:0">A conservation-evidence platform distributed through pilgrimage — from one heritage site to a national register.</p>
+  </div>
+
+  <div class="band">
+    <div class="rail">
+      <span class="num">1</span>
+      The load
+      <span class="note">Scope: the platform that carries the evidence. Model training, survey method and content editorial are covered elsewhere.</span>
+    </div>
+    <div class="col">
+      <h2 class="sec">What the stack has to carry</h2>
+
+      <p class="lede">Sākṣī produces one irreplaceable artefact: a photograph taken from a known point on a known day, with enough metadata that a photograph from the same point years later can be compared against it. Every choice below answers to that artefact, and to four properties it must hold.</p>
+
+      <p><strong>It must survive the absence of a network.</strong> A phone in the Sacred Garden can go hours without usable signal, and the moment of capture cannot be rescheduled. The device is the source of truth; the server is a copy. Anything that assumes connectivity at write time is disqualified whatever its other merits.</p>
+
+      <p><strong>It must be durable on a decadal horizon.</strong> A series is worthless if its early frames are lost or unreadable — which rules out proprietary media formats, lossy re-encoding of originals, hard deletes, and any storage whose exit cost is unbounded.</p>
+
+      <p><strong>It must stay honest under load.</strong> A sensor-verified alignment lock and a shot framed by eye must stay distinguishable at a million records exactly as at a hundred, which makes provenance a schema property rather than a UI convention.</p>
+
+      <p><strong>It must be affordable to an institution, not a venture round.</strong> The buyer is a site trust or a department of archaeology, and a licence that scales with visitor numbers is not a business model here — it is why a deployment never happens.</p>
+
+      <div class="callout cool">
+        <h4>The architecture in one sentence</h4>
+        <p>An append-only ledger on every device, a replicated Postgres of record in the cloud, immutable content-addressed media in object storage, and inference pushed to whichever side of that boundary can be held accountable for its answer.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="band" style="margin-top:.9rem">
+    <div class="rail">
+      <span class="num">2</span>
+      Shipped
+      <span class="note">September 2026 <span class="m">main</span>: ~55,000 lines of TypeScript, 18 pure modules in <span class="m">core/</span>, 24 boundaries in <span class="m">services/</span>, 8 Postgres migrations.</span>
+    </div>
+    <div class="col">
+      <h2 class="sec">The stack as it stands</h2>
+
+      <table class="long">
+        <caption>Current stack, judged against the four properties</caption>
+        <thead>
+          <tr><th style="width:24%">Layer</th><th style="width:30%">In use today</th><th>Verdict</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Client runtime</td><td>React&nbsp;Native&nbsp;0.86 / Expo SDK&nbsp;57, New Architecture, React&nbsp;19</td><td><span class="tag t-ok">keep</span> &nbsp;One codebase, two platforms, and the native escape hatch the sensors and the ONNX runtime require.</td></tr>
+          <tr><td>Navigation</td><td>Expo Router, file-based typed routes</td><td><span class="tag t-ok">keep</span> &nbsp;The route tree doubles as a readable map of the product.</td></tr>
+          <tr><td>Local ledger</td><td><span class="m">expo-sqlite</span>, WAL, versioned migrations</td><td><span class="tag t-ok">keep</span> &nbsp;A real SQL database on the phone makes the offline guarantee structural rather than aspirational.</td></tr>
+          <tr><td>Cloud of record</td><td>Supabase Postgres, 8 migrations, RLS</td><td><span class="tag t-ok">keep</span> &nbsp;Managed Postgres is the right floor; what sits on it changes.</td></tr>
+          <tr><td>Sync</td><td>Hand-rolled outbound queue</td><td><span class="tag t-warn">replace</span> &nbsp;Correct at one site; does not survive partial replication, multi-device authorship, or conflict.</td></tr>
+          <tr><td>Media</td><td>Device filesystem, then bundled cloud storage</td><td><span class="tag t-warn">re-seat</span> &nbsp;The right shape, on storage whose egress cost is the wrong shape.</td></tr>
+          <tr><td>Map</td><td>MapLibre GL Native, hosted tiles</td><td><span class="tag t-warn">re-seat</span> &nbsp;Renderer stays; the tile supply changes.</td></tr>
+          <tr><td>On-device AI</td><td><span class="m">onnxruntime-react-native</span> with XNNPACK; <span class="m">llama.rn</span> for an optional small model</td><td><span class="tag t-ok">keep</span> &nbsp;Portable and already tuned; an NPU path is additive, not a replacement.</td></tr>
+          <tr><td>Grounded answers</td><td>Retrieve → synthesise → verify, with a refusal path and an eval gate</td><td><span class="tag t-ok">keep</span> &nbsp;The pipeline is right; the index and the evaluation both need to grow.</td></tr>
+          <tr><td>Web &amp; delivery</td><td>Next.js&nbsp;16 site and custodian dashboard; EAS Build and EAS Update on an <span class="m">appVersion</span> runtime policy</td><td><span class="tag t-ok">keep</span> &nbsp;One web deployment; over-the-air for JavaScript, a binary only for native change.</td></tr>
+        </tbody>
+      </table>
+
+      <p>Read together the verdict is narrow: <strong>three seats change — sync, media, tiles — and everything else earns its place.</strong> That is the thesis; the rest is the argument.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ PAGE 2 ══════════════ -->
+<section class="page">
+  <div class="band">
+    <div class="rail">
+      <span class="num">3</span>
+      Target stack
+      <span class="note">Each layer states the pick, the reason, and the alternative seriously considered and set aside.</span>
+    </div>
+    <div class="col">
+      <h2 class="sec">The stack that scales, layer by layer</h2>
+
+      <p class="lede">Scaling here does not mean more requests per second. It means more sites, more custodial institutions, more languages and a longer record, without weakening the guarantee that a record made offline in 2026 is legible and trustworthy in 2046.</p>
+
+      <div class="layer keep">
+        <span class="lk">3.1 &nbsp;Client — React Native · Expo SDK 57</span>
+        <span class="pick">Stay on React Native and Expo <span class="verdict v-keep">keep</span></span>
+        <p>The camera, GPS, magnetometer, accelerometer and two AI runtimes all sit behind native modules, and Expo's config plugins keep that native surface declarative instead of a hand-maintained <span class="m">android/</span> folder. The New Architecture is already on, and the vision module requires it.</p>
+        <p class="alt"><em>Rejected:</em> Flutter, which discards ~55,000 lines and both AI integrations for a rendering model this product does not benefit from; and native twin apps, which double the field-testing cost of the one loop that matters.</p>
+      </div>
+
+      <div class="layer keep">
+        <span class="lk">3.2 &nbsp;Local ledger — SQLite, append-only</span>
+        <span class="pick">SQLite as an append-only evidence ledger <span class="verdict v-keep">keep</span></span>
+        <p>Observations, reports and corrections are inserts. A mistake is fixed by a superseding row that names what it supersedes, never by an <span class="m">UPDATE</span> over history. That makes the record auditable, and it also makes synchronisation tractable: an append-only log has a far smaller conflict surface than mutable state. Unknown measurements are stored as <span class="m">NULL</span>, never zero — a zeroed GPS accuracy is indistinguishable from a perfect fix, and one such row poisons a decade of series analysis.</p>
+      </div>
+
+      <div class="layer add">
+        <span class="lk">3.3 &nbsp;Sync — the one real replacement</span>
+        <span class="pick">PowerSync between SQLite and Postgres <span class="verdict v-swap">swap</span></span>
+        <p>The hand-written queue is correct for one site and one device per person, and fails on the three things multi-site operation introduces at once: <strong>partial replication</strong> (a guide in Patan must not carry Lumbini's whole corpus), <strong>multi-device authorship</strong>, and <strong>conflict</strong> when a custodian acts from both phone and dashboard.</p>
+        <p>PowerSync streams Postgres logical replication into on-device SQLite bidirectionally, with declarative sync rules scoping exactly which rows a device receives, behind a first-class React Native SDK. The sync-rule model is the feature being bought; bidirectionality is table stakes.</p>
+        <p class="alt"><em>Rejected:</em> ElectricSQL, whose read-path sync is elegant and whose write path is the weaker half — the wrong trade for a product whose entire value is the write. Turso solves a latency problem this application does not have.</p>
+      </div>
+
+      <div class="layer add">
+        <span class="lk">3.4 &nbsp;Identity — provenance without an account wall</span>
+        <span class="pick">Anonymous sessions, upgradeable in place <span class="verdict v-add">add</span></span>
+        <p>Demanding a login before a visitor can contribute kills the funnel the product depends on. Demanding nothing costs three things: the record cannot name its author, personal history cannot survive a reinstall, and row-level security can only be scoped to a role rather than a person. An anonymous session issued at first launch and later linkable to an email resolves all three without a wall in front of the capture.</p>
+      </div>
+
+      <div class="layer keep">
+        <span class="lk">3.5 &nbsp;Cloud of record — Postgres, PostGIS, pgvector</span>
+        <span class="pick">One Postgres, three extensions <span class="verdict v-keep">keep</span></span>
+        <p><strong>PostGIS</strong> turns site boundaries, vantage geometry and "what within 500&nbsp;m has gone longest without a resurvey" into an index rather than an application loop, and makes the GeoJSON export a real GIS artefact rather than a courtesy. <strong>pgvector</strong> holds the Dhamma corpus embeddings: published guidance puts an HNSW index at sub-10&nbsp;ms up to roughly 50&nbsp;million vectors, and this corpus sits four to five orders of magnitude below that ceiling, so a dedicated vector database would add an operational component, a second consistency story, and no measurable latency.</p>
+        <p><strong>Row-level security</strong> scoped to author and custodial institution is the authorisation model. Keeping policy in the database rather than an API tier lets phone, dashboard and any future integration share one rule set.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ PAGE 3 ══════════════ -->
+<section class="page">
+  <div class="band">
+    <div class="rail">
+      <span class="num">3</span>
+      <span style="font-size:7pt">continued</span>
+      <span class="note">Media and tiles are where a heritage platform quietly goes bankrupt. Both are fixed by owning the bytes rather than renting access to them.</span>
+    </div>
+    <div class="col">
+      <h3 style="margin-top:0">3.6 &nbsp;Media — the real cost centre <span class="verdict v-swap">re-seat</span></h3>
+
+      <p>Photographs are the product, and the only part whose volume grows without bound. Ten thousand observations a year at four megabytes each is forty gigabytes of originals — trivial to store, expensive to serve carelessly.</p>
+
+      <ul>
+        <li><strong>Originals are immutable and content-addressed.</strong> The object key is the SHA-256 the capture-integrity migration already computes: re-upload is idempotent, corruption is detectable, and no process can silently rewrite an original.</li>
+        <li><strong>Derivatives are generated, never authoritative.</strong> Thumbnails, then-and-now plates and dashboard previews are reproducible from the original, and may be rebuilt at will.</li>
+        <li><strong>Object storage with zero egress fees</strong> — Cloudflare R2, or any S3-compatible store on the same terms. A then-and-now plate travelling round a heritage newsletter is a success, not a bandwidth invoice.</li>
+        <li><strong>A cold tier for originals past two years.</strong> Consulted rarely; never deleted.</li>
+      </ul>
+
+      <h3>3.7 &nbsp;Maps — own the basemap <span class="verdict v-swap">re-seat</span></h3>
+
+      <p>MapLibre stays as the renderer; the tile <em>supply</em> moves to a PMTiles archive — one Hilbert-ordered pyramid file served from object storage over HTTP range requests, with no tile server to run. Two things follow:</p>
+
+      <ul>
+        <li><strong>Offline map packs become a file copy.</strong> A regional extract downloaded before a visit is exactly the artefact the format is built around — the difference between a map that works in the Sacred Garden and one that does not.</li>
+        <li><strong>Per-view pricing disappears.</strong> Published figures for self-hosted PMTiles on zero-egress storage run to cents per month in storage and well under a dollar per million range reads, against commercial tile APIs charging low single-digit dollars per thousand map loads. At pilgrimage volumes that is the difference between a rounding error and a line item that scales with the thing we most want to grow.</li>
+      </ul>
+
+      <table>
+        <caption>The three replacements, stated as decisions</caption>
+        <thead><tr><th style="width:12%">Seat</th><th style="width:24%">From</th><th style="width:24%">To</th><th>Property being bought</th></tr></thead>
+        <tbody>
+          <tr><td>Sync</td><td>Hand-rolled outbound queue</td><td>PowerSync sync rules</td><td>Partial replication and conflict handling, so a device carries its region and nothing more.</td></tr>
+          <tr><td>Media</td><td>Bundled storage, metered egress</td><td>S3-compatible, zero egress, content-addressed</td><td>Distributing the evidence stops being a cost the project must ration.</td></tr>
+          <tr><td>Tiles</td><td>Hosted tile API</td><td>PMTiles archive on object storage</td><td>Offline packs by construction, and a basemap bill that does not track visitor growth.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="band" style="margin-top:.9rem">
+    <div class="rail">
+      <span class="num">4</span>
+      Intelligence
+      <span class="note">Two models, two entirely different accountability regimes. Neither is allowed the last word.</span>
+    </div>
+    <div class="col">
+      <h2 class="sec">The AI stack</h2>
+
+      <h3 style="margin-top:.3rem">4.1 &nbsp;Vision, on the device</h3>
+      <p>A segmentation model proposes crack candidates on the photograph just taken, drawn as dashed boxes so nothing reads as a verdict; a person confirms severity, and the report records that the AI assisted. It runs on the phone because the network is unavailable at the moment it is needed, and because a photograph of a monument should not have to leave the country to be looked at.</p>
+      <p>ONNX Runtime with the XNNPACK provider stays the portable baseline. <strong>ExecuTorch is the recommended second path</strong> where latency justifies it: 1.0 general availability in October 2025, a roughly 50&nbsp;KB runtime, and vendor backends for Qualcomm, MediaTek, Arm and Apple — the only realistic route to NPU execution on the mid-range Android hardware this product actually meets in the field. The two coexist behind one interface, and the device picks.</p>
+
+      <h3>4.2 &nbsp;Language, grounded or silent</h3>
+      <p>Dhamma retrieves passages from a fixed corpus — the Pali canon alongside the ICOMOS Venice and Burra Charters, UNESCO World Heritage records, and named Kathmandu Valley archaeology — writes an answer using only those passages, and verifies every claim resolves to a retrieved span. When it cannot, it refuses. Source text and citations are never machine-translated.</p>
+      <p>Scaling this is not a bigger model. It is <strong>a bigger evaluation</strong>: the answer-quality gate should grow into span-level faithfulness scoring of the kind the RAGTruth corpus and the public hallucination leaderboards established, run in continuous integration, so a corpus addition or model change that raises unsupported spans fails the build rather than shipping quietly. Model access belongs behind a provider-agnostic gateway: the corpus, the retrieval, the verifier and the refusal policy are the asset; the generating model is a replaceable part.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ PAGE 4 ══════════════ -->
+<section class="page">
+  <div class="band">
+    <div class="rail">
+      <span class="num">5</span>
+      The ladder
+      <span class="note">Nothing is built before the scale that needs it. Each rung names the trigger that promotes it.</span>
+    </div>
+    <div class="col">
+      <h2 class="sec">What changes, and exactly when</h2>
+
+      <p class="lede">The failure mode here is not under-engineering. It is buying the 2031 architecture in 2026 and running out of runway before one custodian acknowledges one report.</p>
+
+      <table class="long">
+        <caption>The scaling ladder</caption>
+        <thead>
+          <tr><th style="width:13%">Rung</th><th style="width:20%">Shape</th><th style="width:34%">What is added</th><th>Trigger</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Pilot</strong><br><span class="m">now</span></td>
+            <td>4 sites, hundreds of observations, one custodian</td>
+            <td>Today's stack, plus anonymous identity and the PMTiles basemap.</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><strong>Programme</strong></td>
+            <td>Tens of sites, one country, several institutions</td>
+            <td>PowerSync sync rules; PostGIS; content-addressed media on zero-egress storage; per-institution RLS; reference content moved from the app bundle into Postgres, with the bundle kept as offline fallback.</td>
+            <td>A second custodial institution, <em>or</em> a factual correction that cannot wait for an app release.</td>
+          </tr>
+          <tr>
+            <td><strong>Register</strong></td>
+            <td>Hundreds of sites, several countries, external analysts</td>
+            <td>Read replica for analytics; a versioned public API with IIIF or OAI-PMH export; regional media buckets for data-residency law; multi-tenant custodial accounts.</td>
+            <td>A partner institution asks to run its own analysis, <em>or</em> a jurisdiction requires in-country storage.</td>
+          </tr>
+          <tr>
+            <td><strong>Infrastructure</strong></td>
+            <td>The record outlives the organisation</td>
+            <td>Accession into a national archive or institutional repository; signed manifests over the media set; a rehearsed exit from every managed dependency.</td>
+            <td>The first ten-year series completes. A promise made at the start, not an option taken at the end.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <h4>The exit test</h4>
+        <p>Every managed service here is chosen so that leaving it is a migration rather than a rewrite. Postgres is Postgres, S3-compatible storage is a byte copy, SQLite and PMTiles are files, and MapLibre and ONNX Runtime are open source. The one place this could quietly break is the sync layer, which is why the on-device schema stays legible on its own terms: were PowerSync removed tomorrow, the ledger on every phone and the Postgres behind it both remain readable.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="band" style="margin-top:.9rem">
+    <div class="rail">
+      <span class="num">6</span>
+      Not buying
+      <span class="note">A stack is defined as much by what it refuses as by what it adopts.</span>
+    </div>
+    <div class="col">
+      <h2 class="sec">What we deliberately do not adopt</h2>
+
+      <div class="cols2">
+        <h4>A dedicated vector database</h4>
+        <p>The corpus sits four to five orders of magnitude below the scale at which pgvector stops being the right answer. Adding one buys a second consistency model and no latency.</p>
+
+        <h4>A microservice backend</h4>
+        <p>One aggregate — the observation — and one hard constraint, the offline write. Splitting that across services multiplies the failure modes of the only path that must never fail.</p>
+
+        <h4>Kubernetes</h4>
+        <p>A few thousand writes a day against managed Postgres. A cluster adds an on-call rotation a heritage trust cannot staff.</p>
+
+        <h4>A gamification layer</h4>
+        <p>Streaks and points reward volume, and volume is the wrong incentive for evidence. Merit here is <em>puṇya</em>: unscored, unspendable, untransferable — and a linter fails the build if the vocabulary creeps back.</p>
+
+        <h4>Client-side AI verdicts</h4>
+        <p>The detector proposes; a person disposes. Letting a model set severity makes the dataset unusable as evidence, which is the only thing it is for.</p>
+
+        <h4>Analytics in the capture path</h4>
+        <p>Location traces of individuals at religious sites are not telemetry. Measurement is aggregate and first-party, or it does not happen.</p>
+      </div>
+
+      <h3>In summary</h3>
+      <p>The honest finding is that <strong>three seats need replacing and the rest needs defending</strong>. Sync moves to a replication engine that understands partial datasets; media and tiles move onto storage the project owns outright, so success in distribution is not punished by price. Everything else — React Native and Expo, SQLite as an append-only ledger, one Postgres with PostGIS and pgvector, on-device vision, and retrieval that refuses rather than guesses — holds, because it was chosen against the evidence rather than against fashion.</p>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
