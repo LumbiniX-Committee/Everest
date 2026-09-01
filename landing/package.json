@@ -2,6 +2,7 @@
   "name": "sakshi-landing",
   "version": "0.1.0",
   "private": true,
+  "license": "Apache-2.0",
   "scripts": {
     "data": "node scripts/build-explorer-data.mjs && node scripts/build-open-data.mjs && node scripts/copy-reports.mjs && node scripts/copy-map-worker.mjs",
     "predev": "npm run data",

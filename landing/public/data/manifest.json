@@ -9,8 +9,10 @@
     "sites_with_checked_coordinates": 10,
     "established_vantages": 12
   },
-  "licence": null,
-  "licence_note": "The project has not yet declared a licence. Coordinates marked coords_source \"osm\" derive from OpenStreetMap and carry ODbL obligations. Per-record sources are named in the sources field. Contact the maintainers before redistribution.",
+  "licence": "CC-BY-4.0",
+  "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+  "attribution": "Heritage site register from Sākṣī (LumbiniX-Committee), CC BY 4.0, https://github.com/LumbiniX-Committee/Everest",
+  "licence_note": "The compilation is CC BY 4.0. Coordinates recorded with coords_source \"osm\" derive from OpenStreetMap, are © OpenStreetMap contributors under the Open Database Licence, and carry ODbL attribution and share-alike terms that this grant cannot relicense. Source code is Apache-2.0. Third-party media is itemised in LICENCES.md.",
   "caveats": [
     "A site with surveyed=false has a coordinate read from a document and never checked against a gazetteer. It is indicative, not survey-grade.",
     "Vantage tolerances describe when the application accepts an alignment as measured; they are not an accuracy claim about the coordinate itself.",

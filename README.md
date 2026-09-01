@@ -217,6 +217,24 @@ a phone.
 - **The offline and multilingual plan:** `docs/MULTILINGUAL-AI-PLAN.md`
 - **Build and deploy:** `docs/BUILD-AND-RUN.md` and `docs/DEPLOYMENT.md`
 
+## Licence
+
+| What | Licence |
+| --- | --- |
+| Source code | [Apache 2.0](LICENSE) |
+| Content and data — `seed/`, the site register, the published exports | [CC BY 4.0](LICENSE-CONTENT) |
+| Coordinates marked `coords_source: osm` | ODbL applies in addition — © OpenStreetMap contributors |
+| Photographs, audio, fonts, the damage model | Unchanged, per rights holder — itemised in [LICENCES.md](LICENCES.md) |
+
+Two licences, because code and content carry different obligations. Permissive
+on the code so a heritage office can adopt it without a legal review;
+attribution on the content so the sourced record travels with its provenance,
+which is the same rule the app holds itself to. The reasoning is written up in
+[docs/LICENSING.md](docs/LICENSING.md).
+
+The name **Sākṣī**, the wordmark and the reticle mark are not licensed. You may
+say your product is built on Sākṣī; you may not call it Sākṣī.
+
 ## Status
 
 This is a hackathon build. Site and viewpoint coordinates are real but not all

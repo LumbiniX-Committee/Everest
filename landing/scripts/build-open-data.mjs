@@ -135,12 +135,14 @@ const manifest = {
     sites_with_checked_coordinates: siteFeatures.filter((f) => f.properties.surveyed).length,
     established_vantages: vantageFeatures.length,
   },
-  /* Undeclared rather than assumed. The repository carries no project licence
-     yet, and inventing one here would be the export asserting something its own
-     source does not. LICENCES.md covers third-party media only. */
-  licence: null,
+  licence: 'CC-BY-4.0',
+  licence_url: 'https://creativecommons.org/licenses/by/4.0/',
+  attribution:
+    'Heritage site register from Sākṣī (LumbiniX-Committee), CC BY 4.0, https://github.com/LumbiniX-Committee/Everest',
+  /* The OSM obligation is not ours to waive, so it travels with the file
+     rather than living only in a licence document nobody fetches. */
   licence_note:
-    'The project has not yet declared a licence. Coordinates marked coords_source "osm" derive from OpenStreetMap and carry ODbL obligations. Per-record sources are named in the sources field. Contact the maintainers before redistribution.',
+    'The compilation is CC BY 4.0. Coordinates recorded with coords_source "osm" derive from OpenStreetMap, are © OpenStreetMap contributors under the Open Database Licence, and carry ODbL attribution and share-alike terms that this grant cannot relicense. Source code is Apache-2.0. Third-party media is itemised in LICENCES.md.',
   caveats: [
     'A site with surveyed=false has a coordinate read from a document and never checked against a gazetteer. It is indicative, not survey-grade.',
     'Vantage tolerances describe when the application accepts an alignment as measured; they are not an accuracy claim about the coordinate itself.',

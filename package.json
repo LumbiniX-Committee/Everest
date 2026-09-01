@@ -1,6 +1,7 @@
 {
   "name": "sakshi",
   "version": "0.1.0",
+  "license": "Apache-2.0",
   "main": "index.tsx",
   "engines": {
     "node": ">=22"

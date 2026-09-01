@@ -113,36 +113,73 @@ export default function DataPage() {
         </div>
       </Section>
 
-      <Section kicker="Licence" title="Not yet declared, and said so plainly">
+      <Section kicker="Licence" title="CC BY 4.0, with one obligation we cannot waive">
         <Prose>
           <p>
-            The project has not settled a licence, and inventing one on this page
-            would be the export asserting something its own source does not.{' '}
-            <code className="rounded bg-surface-secondary px-1.5 py-0.5 font-mono text-sm">
-              licence
-            </code>{' '}
-            in the manifest is therefore <code className="rounded bg-surface-secondary px-1.5 py-0.5 font-mono text-sm">null</code>, and it will
-            stay that way until there is a real answer.
+            The register is licensed{' '}
+            <a href={manifest.licence_url}>Creative Commons Attribution 4.0</a>.
+            Take it, use it, fold it into your own inventory, build on it — and
+            say where it came from. Attribution is the whole condition, and it is
+            the same rule the application holds itself to.
           </p>
           <p>
-            What can be said now: coordinates marked{' '}
-            <code className="rounded bg-surface-secondary px-1.5 py-0.5 font-mono text-sm">osm</code>{' '}
-            derive from OpenStreetMap and carry ODbL obligations, every record
-            names the sources behind it, and third-party media shipped with the
-            app is itemised in{' '}
+            The source code is separately licensed{' '}
+            <a href={`${REPO_URL}/blob/main/LICENSE`}>Apache 2.0</a>, and the
+            reasoning behind both is written up in{' '}
+            <a href={`${REPO_URL}/blob/main/docs/LICENSING.md`}>docs/LICENSING.md</a>.
+          </p>
+        </Prose>
+
+        <div className="mt-8 rounded-3xl border border-line bg-surface p-6 shadow-sm">
+          <h3 className="text-xs font-semibold tracking-widest text-ink-muted uppercase">
+            Suggested attribution
+          </h3>
+          <p className="mt-3 rounded-2xl bg-ground-deep p-4 font-mono text-sm leading-relaxed text-ink">
+            {manifest.attribution}
+          </p>
+        </div>
+
+        <div className="mt-4 flex gap-4 rounded-3xl border border-line border-l-4 border-l-earth bg-surface p-6">
+          <AlertTriangle className="mt-0.5 size-5 shrink-0 text-earth" aria-hidden />
+          <div>
+            <h3 className="font-semibold text-ink">
+              OpenStreetMap coordinates carry ODbL, whatever we say
+            </h3>
+            <p className="mt-2 leading-relaxed text-ink-soft">
+              Ten of the fifteen sites carry a coordinate recorded as{' '}
+              <code className="rounded bg-surface-secondary px-1.5 py-0.5 font-mono text-sm">
+                coords_source: osm
+              </code>
+              . Those positions were checked against, and in places taken from,
+              OpenStreetMap — © OpenStreetMap contributors, under the{' '}
+              <a
+                href="https://www.openstreetmap.org/copyright"
+                className="text-earth underline underline-offset-4"
+              >
+                Open Database Licence
+              </a>
+              . Our grant covers our compilation. It cannot relicense theirs, so
+              if you extract those coordinates into a database of your own,
+              ODbL&rsquo;s attribution and share-alike terms apply to you.
+            </p>
+          </div>
+        </div>
+
+        <Prose>
+          <p className="mt-8">
+            Third-party media shipped with the app — photographs, audio, fonts
+            and the damage-detection model — stays under its own licences, all
+            107 assets itemised in{' '}
             <a href={`${REPO_URL}/blob/main/LICENCES.md`}>LICENCES.md</a>. If you
-            want to redistribute this, talk to the maintainers first — that is a
-            conversation we want to have, not a barrier.
-          </p>
-          <p>
-            If you are a custodial institution, the{' '}
+            are a custodial institution, the{' '}
             <Link href="/for-custodians">custodian dashboard</Link> exports live
             condition reports on the same terms, and{' '}
             <Link href="/research">the research report</Link> sets out why we
-            think this belongs in your inventory rather than in ours.
+            think this belongs in your inventory rather than only in ours.
           </p>
         </Prose>
       </Section>
+
     </main>
   );
 }

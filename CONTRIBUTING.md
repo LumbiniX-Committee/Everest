@@ -117,3 +117,21 @@ checkable record. If you cannot cite it, it does not ship.
 A wrong coordinate or a mistranslated inscription is a more serious bug than a
 layout glitch. Open an issue using the **Site data correction** template and
 include the source that shows the current value is wrong.
+
+## Licensing your contribution
+
+Inbound equals outbound. What you contribute is offered under the same licence
+as the part of the repository it touches:
+
+- **Code** — [Apache License 2.0](LICENSE)
+- **Content and data** — [CC BY 4.0](LICENSE-CONTENT)
+
+There is no separate agreement to sign; this is the Apache-2.0 Section 5
+default, stated here so it is not a surprise. By opening a pull request you
+confirm you have the right to contribute the work under those terms — which
+matters most for content: do not paste in text or imagery you do not have the
+right to relicense, and cite the source of anything you did not write.
+
+If you add a photograph, a font, audio, or a model file, it must be added to
+[LICENCES.md](LICENCES.md) with its source and its licence. An asset with no
+recorded provenance cannot ship.

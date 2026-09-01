@@ -25,10 +25,10 @@ Three findings shape the whole list below:
 1. **The repository had no CI and no `.github/` directory at all.** Five checks
    that encode the project's promises existed and ran only when somebody
    remembered. A gate nobody runs is already open.
-2. **There is no project licence.** `LICENCES.md` is third-party media
-   attribution, not a licence. No institution can legally adopt, fund, or build
-   on this until that changes. It is the single highest-leverage unblocked item
-   and it is not an engineering task.
+2. **There was no project licence.** `LICENCES.md` is third-party media
+   attribution, not a licence, so no institution could legally adopt, fund, or
+   build on this. Settled on 2026-09-01: Apache-2.0 for the code, CC BY 4.0 for
+   the content, with OpenStreetMap's ODbL acknowledged where it applies.
 3. **Forty-two remote branches, thirty-five of them fully merged.** Work was already being lost to drift.
 
 ---
@@ -40,7 +40,7 @@ Three findings shape the whole list below:
 | # | Strategy | Why it matters | Cost | State |
 |---|---|---|---|---|
 | 1 | **Run the honesty gate in CI** | The vocabulary linter, seed validation, and the Dhamma evaluation *are* the product's integrity claims. Unenforced, they rot within a month of the next contributor. | Low | **Done** |
-| 2 | **Declare a licence** | Legally blocks every institutional path in Band B. Needs the agreement of eight contributors, so it is a decision, not a task. | Low effort, high consequence | **Blocked on the team** |
+| 2 | **Declare a licence** | Legally blocked every institutional path in Band B. Apache-2.0 for the code, CC BY 4.0 for the content, ODbL acknowledged on OSM-derived coordinates. See [LICENSING.md](LICENSING.md). | Low effort, high consequence | **Done** |
 | 3 | **Contribution scaffolding** | `CONTRIBUTING.md`, a security policy, pull-request and issue templates — including one for data corrections, which are the most serious bug class here. | Low | **Done** |
 | 4 | **Pin the toolchain** | `npm run verify` silently never starts on Node 20, because `--experimental-strip-types` is rejected before the suite runs. Nothing warned about this. | Trivial | **Done** |
 | 5 | **Merge or close the stale branches** | Drift compounds. It was 42 branches, not seven — the earlier count came from a truncated listing. | Low | **Done** |
@@ -98,19 +98,36 @@ issue templates include a **site data correction** form that requires a source,
 because a wrong coordinate is a more serious bug than a layout glitch and needs
 to be reported like one.
 
-## What is deliberately not done
+## The licence (#2), settled
 
-**The licence (#2) was not chosen.** It is the highest-leverage item on this
-list, and it belongs to eight contributors rather than to whoever edits the
-repository next. The open data manifest therefore reports `"licence": null` and
-says so on the page, which is the honest state and makes the decision visibly
-blocking rather than quietly missing.
+Two licences, because code and content carry different obligations and one
+instrument would have got one of them wrong.
 
-A recommendation, for whenever that conversation happens: the code and the
-content want different answers. Something permissive for the code, so an
-institution can build on it without a legal review; something like CC BY for the
-content, so the sourced facts travel with their attribution intact. Coordinates
-marked `osm` already carry ODbL obligations regardless of what is chosen.
+**Apache-2.0 for the code.** The decision was made against a single question:
+what does a heritage institution need in order to say yes? Everything in Band B
+runs through a buyer who cannot commission a legal review, and permissive
+removes that barrier outright. Apache rather than MIT for three things MIT
+lacks — an explicit patent grant, an explicit trademark reservation, and a
+requirement that modifications be declared, which is the licence agreeing with a
+product whose whole claim is that provenance travels with the record. Not
+AGPL-3.0, which Arches itself uses: its network copyleft is attractive, and
+public-sector procurement frequently forbids it. Compatibility runs the way we
+need anyway, since Apache code can be folded into an AGPL project and not the
+reverse, so choosing Apache keeps an Arches integration possible.
+
+**CC BY 4.0 for the content.** Not CC0, which would strip provenance off the one
+thing the record exists to preserve. Not BY-SA, which would quarantine the data
+from the institutional inventories we are trying to get absorbed into.
+
+**ODbL where it applies.** Ten of fifteen coordinates are OSM-derived. Our grant
+covers our compilation and cannot relicense OpenStreetMap's data; that is stated
+in `LICENSE-CONTENT`, in `docs/LICENSING.md`, on the `/data` page, and inside the
+published manifest itself, so a consumer meets it without reading any of them.
+
+The remaining weakness is named rather than hidden: eight people have committed
+here, and this was decided by the project lead. Apache-2.0 Section 5 is the
+ordinary reading for their existing contributions, and the position would be
+stronger with each of them agreeing on the record.
 
 ## The branch cleanup (#5), and how to get anything back
 
@@ -144,9 +161,11 @@ would have preserved the credential.
 
 ## The next three, in order
 
-1. **Decide the licence.** Nothing in Band B can start without it.
-2. **Rotate the credential that was committed to the `claude` branch.** Deleting
+1. **Rotate the credential that was committed to the `claude` branch.** Deleting
    the branch does not undo the exposure — it was pushed to a public repository.
+2. **Get the other seven contributors on the record agreeing to the licence.**
+   An issue they each comment on is enough, and it closes the one soft spot in
+   the decision above.
 3. **Find one custodian (#9).** Not more features. One institution, one real
    report, one acknowledgement — and then the honest answer about whether any of
    this works.
