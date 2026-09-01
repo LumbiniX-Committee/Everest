@@ -1,0 +1,87 @@
+name: verify
+
+# The repository already carries the checks that make its claims true — a type
+# check, unit tests, seed validation, a vocabulary linter, and a Dhamma answer
+# evaluation. Until now nothing ran them except a person remembering to. A gate
+# nobody runs is a gate that is already open, so this runs all of them on every
+# push and every pull request.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# A second push to the same branch makes the first run irrelevant.
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  app:
+    name: app — typecheck, tests, seed, vocabulary, Dhamma
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Node 22, not 20. `npm test` runs the suite through
+      # `--experimental-strip-types`, which Node 20 rejects outright with
+      # `bad option` — the gate does not fail, it never starts.
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      # Kept as separate steps rather than one `npm run verify`, so a failure
+      # names which promise broke instead of which script did.
+      - name: Types
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm run test
+
+      - name: Seed data is valid
+        run: npm run validate
+
+      - name: No gamification vocabulary, no em dashes
+        run: npm run vocab
+
+      - name: Dhamma answers only from retrieved sources
+        run: npm run eval:dhamma
+
+  site:
+    name: site — typecheck and build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: landing
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: landing/package-lock.json
+
+      - run: npm ci
+
+      - name: Types
+        run: npx tsc --noEmit
+
+      # The build also regenerates the explorer dataset and the open data from
+      # seed/, so a seed change that breaks either is caught here rather than
+      # after a deploy.
+      - name: Build
+        run: npm run build
+
+      # The generated files are committed so a deploy of landing/ alone still
+      # ships them. That only holds if they are in step with seed/.
+      - name: Generated files are in step with seed/
+        run: |
+          if ! git diff --quiet -- lib/generated public/data; then
+            echo "::error::Generated data is stale. Run 'npm run data' in landing/ and commit the result."
+            git diff --stat -- lib/generated public/data
+            exit 1
+          fi

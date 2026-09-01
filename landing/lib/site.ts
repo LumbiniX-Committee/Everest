@@ -11,6 +11,7 @@ export const NAV = [
   { href: '/technology', label: 'Technology' },
   { href: '/research', label: 'Research' },
   { href: '/for-custodians', label: 'For custodians' },
+  { href: '/data', label: 'Open data' },
   { href: '/ethics', label: 'Ethics' },
 ] as const;
 

@@ -30,6 +30,9 @@ export function SiteFooter() {
               <Link href="/custodian" className="text-ink-soft transition hover:text-ink">
                 Custodian dashboard
               </Link>
+              <Link href="/data" className="text-ink-soft transition hover:text-ink">
+                Open data
+              </Link>
               <a href={REPO_URL} className="text-ink-soft transition hover:text-ink">
                 Source code
               </a>

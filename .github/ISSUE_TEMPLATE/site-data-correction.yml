@@ -1,0 +1,40 @@
+name: Site data correction
+description: A coordinate, date, name, translation or fact that is wrong
+labels: [data, correction]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A wrong coordinate or a mistranslated inscription is a more serious bug
+        than a layout glitch, because it travels into the record. Thank you for
+        catching it.
+  - type: input
+    id: site
+    attributes:
+      label: Which site or vantage
+      description: The `id` from `seed/sites.json` or `seed/vantages.json` if you know it.
+      placeholder: maya-devi-temple
+    validations:
+      required: true
+  - type: textarea
+    id: wrong
+    attributes:
+      label: What the app currently says
+    validations:
+      required: true
+  - type: textarea
+    id: right
+    attributes:
+      label: What it should say
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: The source that shows this
+      description: >
+        A UNESCO record, an excavation report, a gazetteer entry, an inscription
+        edition, a survey. A claim with nowhere to point cannot be shipped, even
+        when it is right.
+    validations:
+      required: true

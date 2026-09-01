@@ -1,0 +1,36 @@
+{
+  "name": "Sākṣī heritage site register",
+  "description": "Heritage sites and established photographic vantages for Lumbini and three Kathmandu Valley monument-zone sites, as shipped in the Sākṣī application.",
+  "version": "ad4d88f28fd4",
+  "source": "https://github.com/LumbiniX-Committee/Everest — seed/sites.json, seed/vantages.json",
+  "crs": "EPSG:4326 (WGS 84), longitude before latitude",
+  "counts": {
+    "sites": 15,
+    "sites_with_checked_coordinates": 10,
+    "established_vantages": 12
+  },
+  "licence": null,
+  "licence_note": "The project has not yet declared a licence. Coordinates marked coords_source \"osm\" derive from OpenStreetMap and carry ODbL obligations. Per-record sources are named in the sources field. Contact the maintainers before redistribution.",
+  "caveats": [
+    "A site with surveyed=false has a coordinate read from a document and never checked against a gazetteer. It is indicative, not survey-grade.",
+    "Vantage tolerances describe when the application accepts an alignment as measured; they are not an accuracy claim about the coordinate itself.",
+    "Absent values are null. No field is defaulted to zero, because a zero here would read as a measurement."
+  ],
+  "files": [
+    {
+      "path": "sites.geojson",
+      "format": "GeoJSON",
+      "records": 15
+    },
+    {
+      "path": "sites.csv",
+      "format": "CSV (RFC 4180, UTF-8)",
+      "records": 15
+    },
+    {
+      "path": "vantages.geojson",
+      "format": "GeoJSON",
+      "records": 12
+    }
+  ]
+}

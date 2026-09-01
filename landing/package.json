@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "data": "node scripts/build-explorer-data.mjs && node scripts/copy-reports.mjs && node scripts/copy-map-worker.mjs",
+    "data": "node scripts/build-explorer-data.mjs && node scripts/build-open-data.mjs && node scripts/copy-reports.mjs && node scripts/copy-map-worker.mjs",
     "predev": "npm run data",
     "dev": "next dev",
     "prebuild": "npm run data",

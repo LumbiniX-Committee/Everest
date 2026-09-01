@@ -2,6 +2,9 @@
   "name": "sakshi",
   "version": "0.1.0",
   "main": "index.tsx",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "start": "expo start",
     "api": "node --env-file-if-exists=.env.local --experimental-strip-types mock-api/server.mjs",
