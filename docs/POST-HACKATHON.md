@@ -29,7 +29,7 @@ Three findings shape the whole list below:
    attribution, not a licence. No institution can legally adopt, fund, or build
    on this until that changes. It is the single highest-leverage unblocked item
    and it is not an engineering task.
-3. **Seven remote branches are unmerged.** Work is already being lost to drift.
+3. **Forty-two remote branches, thirty-five of them fully merged.** Work was already being lost to drift.
 
 ---
 
@@ -43,7 +43,7 @@ Three findings shape the whole list below:
 | 2 | **Declare a licence** | Legally blocks every institutional path in Band B. Needs the agreement of eight contributors, so it is a decision, not a task. | Low effort, high consequence | **Blocked on the team** |
 | 3 | **Contribution scaffolding** | `CONTRIBUTING.md`, a security policy, pull-request and issue templates — including one for data corrections, which are the most serious bug class here. | Low | **Done** |
 | 4 | **Pin the toolchain** | `npm run verify` silently never starts on Node 20, because `--experimental-strip-types` is rejected before the suite runs. Nothing warned about this. | Trivial | **Done** |
-| 5 | **Merge or close the seven stale branches** | Drift compounds. Every week they diverge, the merge that reconciles them gets more expensive and less likely to happen. | Low | Open |
+| 5 | **Merge or close the stale branches** | Drift compounds. It was 42 branches, not seven — the earlier count came from a truncated listing. | Low | **Done** |
 
 ### Band B — Adoption: an institution can say yes
 
@@ -112,11 +112,41 @@ institution can build on it without a legal review; something like CC BY for the
 content, so the sourced facts travel with their attribution intact. Coordinates
 marked `osm` already carry ODbL obligations regardless of what is chosen.
 
+## The branch cleanup (#5), and how to get anything back
+
+The repository carried 42 branches besides `main`. Thirty-five had **zero**
+commits that were not already in `main`, so closing them lost nothing. Seven
+carried unique commits, and examining them showed that six were behind `main` in
+substance rather than ahead of it:
+
+| Branch | Finding |
+| --- | --- |
+| `quests-less-textual` | Already merged through pull request #37 and then rebased, so git had lost the ancestry. `QuestCompletedScreen.tsx` is byte-identical to `main`. |
+| `map-zoom-responsive` | Superseded. `main` carries 18 zoom references in `mapHtml.ts` against this branch's 8, and a `useSiteArrival` grown from 88 lines to 129. |
+| `tirtha-realtime-significance` | A strict subset of `map-zoom-responsive`. |
+| `fullscreen-map-and-figure` | Superseded by the navy and white theme system; `theme/colors.ts` grew from 107 lines to 146 over six later commits. |
+| `feature/dhamma-questions-banner-ui` | Targets a screen that no longer exists in that form. `DhammaScreen.tsx` has been rewritten six times since. |
+| `feature/buddha` | Genuinely unmerged work — a reflection overlay and `expo-video`. The author's later `feature/sakshi-capture-review-submit` covered the capture-review ground and did merge. |
+
+**Nothing was thrown away.** Each of those six is preserved as an annotated tag
+that records why it was closed:
+
+```bash
+git fetch --tags
+git tag -l 'archive/*'
+git show archive/feature/buddha            # the reason it was closed
+git checkout -b feature/buddha archive/feature/buddha   # bring it back
+```
+
+A seventh branch, `claude`, was deleted **without** an archive tag: it contained
+one file and nothing else, and that file was an encoded credential. Preserving it
+would have preserved the credential.
+
 ## The next three, in order
 
 1. **Decide the licence.** Nothing in Band B can start without it.
-2. **Merge or close the seven stale branches (#5),** before they cost more than
-   they are worth.
+2. **Rotate the credential that was committed to the `claude` branch.** Deleting
+   the branch does not undo the exposure — it was pushed to a public repository.
 3. **Find one custodian (#9).** Not more features. One institution, one real
    report, one acknowledgement — and then the honest answer about whether any of
    this works.
