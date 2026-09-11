@@ -490,10 +490,16 @@
         "photography": "allowed",
         "established_vantages": 2,
         "sources": [
-          "Slusser 1982, Nepal Mandala: A Cultural Study of the Kathmandu Valley"
+          "UNESCO WHC: Kathmandu Valley (121)",
+          "Slusser 1982, Nepal Mandala: A Cultural Study of the Kathmandu Valley",
+          "Department of Archaeology, Nepal",
+          "World Monuments Fund: Hitis (Water Fountains) of the Kathmandu Valley, 2022 World Monuments Watch"
         ],
         "source_urls": [
-          null
+          "https://whc.unesco.org/en/list/121",
+          null,
+          null,
+          "https://www.wmf.org/projects/hitis-water-fountains-kathmandu-valley"
         ]
       }
     }

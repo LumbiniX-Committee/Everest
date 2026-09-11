@@ -807,8 +807,20 @@ export const SITES: ExplorerSite[] = [
     ],
     "sources": [
       {
+        "title": "UNESCO WHC: Kathmandu Valley (121)",
+        "url": "https://whc.unesco.org/en/list/121"
+      },
+      {
         "title": "Slusser 1982, Nepal Mandala: A Cultural Study of the Kathmandu Valley",
         "url": null
+      },
+      {
+        "title": "Department of Archaeology, Nepal",
+        "url": null
+      },
+      {
+        "title": "World Monuments Fund: Hitis (Water Fountains) of the Kathmandu Valley, 2022 World Monuments Watch",
+        "url": "https://www.wmf.org/projects/hitis-water-fountains-kathmandu-valley"
       }
     ],
     "passages": [],
