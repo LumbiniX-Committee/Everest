@@ -62,7 +62,27 @@ jobs:
       - uses: supabase/setup-cli@v1
         with:
           version: 2.117.0
-      - run: supabase start
+      - name: Start Supabase
+        shell: bash
+        run: |
+          set +e
+          supabase start --debug 2>&1 | tee supabase-start.log
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "### Supabase start failed"
+              echo '```text'
+              tail -n 120 supabase-start.log
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            details=$(grep -Ei 'error|failed|fatal|panic|denied|invalid|syntax' supabase-start.log | tail -n 20 | tr '\n' ' ')
+            if [ -z "$details" ]; then
+              details=$(tail -n 20 supabase-start.log | tr '\n' ' ')
+            fi
+            details=${details//'%'/'%25'}
+            echo "::error title=Supabase start failed::$details"
+            exit "$status"
+          fi
       - run: supabase test db
       - if: always()
         run: supabase stop --no-backup
