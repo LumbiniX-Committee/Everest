@@ -7,4 +7,5 @@ export * from './demo';
 export * from './generated';
 export * from './plates';
 export * from './audio';
+export * from './questExperiences';
 

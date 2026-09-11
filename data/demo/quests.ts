@@ -1,6 +1,7 @@
 import { findSite, findVantage, sitesForParent } from '../generated/sites';
 import { precinctForSite } from './precincts';
 import type { Quest } from '@/types';
+import { experienceQuests } from '../questExperiences';
 
 const NO_CAMERA_MODES = new Set(['note', 'privacy', 'museum', 'seasonal']);
 const PHOTO_MODE = {
@@ -47,7 +48,9 @@ const kathmanduMonumentQuests: Quest[] = sitesForParent('kathmandu-durbar-square
         expectation: site.questPrompt,
         type: evidence === 'note' ? 'reading' : 'observation',
         evidence,
-        autoComplete: evidence === 'photo' ? 'vantage_capture' : undefined,
+        // A photo task is a personal quest memory by default. Only authored
+        // viewpoint surveys explicitly opt into Sākṣī's aligned capture.
+        autoComplete: undefined,
         photoMode: evidence === 'photo' ? PHOTO_MODE[mode as keyof typeof PHOTO_MODE] ?? 'detail' : undefined,
         safetyNote,
         targetId: site.id,
@@ -93,7 +96,8 @@ const kathmanduLivingCultureQuest: Quest = {
   ], createdAt: 1787899998000,
 };
 
-export const demoQuests: Quest[] = [
+const catalogue: Quest[] = [
+  ...experienceQuests,
   {
     id: 'quest-sacred-garden-survey',
     title: 'Sacred Garden Foundation Survey',
@@ -435,6 +439,15 @@ export const demoQuests: Quest[] = [
   kathmanduLivingCultureQuest,
   ...kathmanduMonumentQuests,
 ];
+
+// Legacy surveys named their surveyed vantage without the explicit completion
+// flag. Migrate the catalogue in place, keeping existing task/progress IDs.
+export const demoQuests: Quest[] = catalogue.map((quest) => ({
+  ...quest,
+  tasks: quest.tasks.map((task) => task.evidence === 'photo' && /vantage/i.test(task.title) && task.targetId && findVantage(task.targetId)
+    ? { ...task, autoComplete: 'vantage_capture' as const }
+    : task),
+}));
 
 /**
  * Which sites a quest is about.
