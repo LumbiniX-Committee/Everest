@@ -384,16 +384,16 @@ as $$
     order by action.vantage_id, action.created_at desc, action.id desc
   )
   select
-    vantage.id,
-    vantage.site_id,
-    last_capture.captured_at,
+    vantage.id as vantage_id,
+    vantage.site_id as site_id,
+    last_capture.captured_at as last_capture_at,
     case
       when last_capture.captured_at is null then null
       else floor(extract(epoch from (now() - last_capture.captured_at)) / 86400)::integer
-    end,
+    end as survey_age_days,
     (case when coalesce(latest_priority.urgent, vantage.urgent) then 1000000 else 0 end)
-      + coalesce(floor(extract(epoch from (now() - last_capture.captured_at)) / 86400)::integer, 36500),
-    coalesce(latest_priority.urgent, vantage.urgent)
+      + coalesce(floor(extract(epoch from (now() - last_capture.captured_at)) / 86400)::integer, 36500) as priority,
+    coalesce(latest_priority.urgent, vantage.urgent) as urgent
   from public.monitored_vantages vantage
   left join last_capture on last_capture.vantage_id = vantage.id
   left join latest_priority on latest_priority.vantage_id = vantage.id
