@@ -6,6 +6,16 @@
 
 ## Status labels
 
+### Visitor quest update — 2026-09-12
+
+`data/questExperiences.ts` adds 22 short, respectful photo activities, grouped into cultural areas (including a shared Lumbini collection and Bhaktapur food/craft activities). `QuestAreaCollection` shows areas within 5 km sorted by distance, or only the nearest destination when none are in range. Area headings expand into direct capture cards; reading and condition-report workflows are not part of this visitor feed. The map's `QuestHud` remains visible without nearby activities.
+
+`QuestMemoryCameraScreen` opens directly from a capture card and supports front/back cameras, a five-second timer, existing photos, a reflection sheet and a saved confirmation. `services/questMemories.ts` retains a durable local photo and submission before completing the activity, then requests existing Supabase sync. `MemoriesScreen` opens photos with their full reflections; the collection also shows completed photo evidence. Cloud upload requires configured Supabase and connectivity; device-gallery export is not implemented by this change.
+
+`LiveMapScreen` distinguishes manual pause from temporary story pause. `demoWalk.tick` re-emits the exact last position during pause, including after an explicit place selection. Guide me draws a yellow direction line and destination marker; street/path navigation opens Google Maps walking directions. The in-app line is not a computed walking route.
+
+Validation: `node tools/check-quest-experiences.cjs` covers area grouping/range, ordinary/vantage capture separation, and pause/resume. Physical-device camera/keyboard presentation still requires a device check.
+
 | Label | Meaning |
 |---|---|
 | **Fully implemented** | Complete, reachable path from a screen through to persistence or display |

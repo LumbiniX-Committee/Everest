@@ -31,7 +31,8 @@ Cross-reference for impact analysis: given any one column, find everything conne
 | Sync | *(auto)* + `/settings/sync` | `settings/SyncScreen` | — | `supabase/sync`, `sync`, `net` | `net/breaker` ❓ | all remote | — | ✅ breaker only | ✅ |
 | Settings | `/(main)/settings/*` (8) | `features/settings/*Screen` | `preferences`, `permissions` | `storage`, `device` | — | AsyncStorage | all | ❌ | ✅ |
 | Offline AI | `/settings/offline-ai` | `settings/OfflineAIScreen` | — | `offlineModel` | — | — | — | ❌ | ❓ |
-| Demo walk | *(within map)* | `tirtha/DemoWalkPanel` | `arrival` | `location/demoWalk` | — | — | location | ❌ | ✅ demo |
+| Demo walk | *(within map)* | `tirtha/DemoWalkPanel` | `arrival` | `location/demoWalk` | — | — | location | `tools/check-quest-experiences.cjs` pause regression | ✅ demo |
+| Visitor experiences | map quest sheet, `/tirtha/quests`, `/tirtha/quest-camera`, `/tirtha/memories` | `QuestAreaCollection`, `QuestMemoryCameraScreen`, `MemoriesScreen` | `quests` | `questMemories`, `database`, Supabase sync | — | `quest_submissions`, `quest_progress` | camera, optional photo selection | `tools/check-quest-experiences.cjs` | Implemented; physical camera UI needs device check |
 
 ---
 
