@@ -1,5 +1,13 @@
 # Deployment
 
+> This file's mobile/EAS material remains useful, but Sākṣī now also has a
+> production-pilot web and database path. Deploy `supabase/migrations/0009_*` to
+> staging, synchronise the monitored catalogue with `npm run catalog:apply`, and
+> deploy `landing/` with invite-only Supabase Auth. Production builds set
+> `SAKSHI_REQUIRE_PRODUCTION_CONFIG=1`, which rejects missing or mock endpoints.
+> Follow [PRODUCTION-PILOT.md](PRODUCTION-PILOT.md) for security, rollout, and
+> operational acceptance; do not deploy `mock-api/`.
+
 How a change gets from this repo onto a device. Android only for now — iOS has
 never been built and has no credentials.
 

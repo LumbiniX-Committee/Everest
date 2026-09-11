@@ -283,6 +283,7 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
         visible={openTask !== null}
         onClose={() => setOpenTask(null)}
         title={openTask?.title ?? 'Record what you saw'}
+        translateTitle={!openTask}
         scroll
       >
         {openTask ? (

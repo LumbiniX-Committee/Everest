@@ -36,7 +36,7 @@ console.log(`running ${tests.length} test file(s) under node --experimental-stri
 
 const res = spawnSync(
   process.execPath,
-  ['--experimental-strip-types', '--test', ...tests],
+  ['--disable-warning=MODULE_TYPELESS_PACKAGE_JSON', '--experimental-strip-types', '--test', ...tests],
   { stdio: 'inherit' },
 );
 process.exit(res.status ?? 1);

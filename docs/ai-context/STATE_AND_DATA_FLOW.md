@@ -1,5 +1,13 @@
 # State and Data Flow
 
+> **Production-pilot overlay (10 September 2026):** captures still commit to
+> local SQLite before sync. Coverage priority is fetched from the public landing
+> endpoint, cached on-device, and falls back to bundled quest order offline.
+> Custodian state is server-derived from the latest append-only report action;
+> no client supplies an actor identity. Interface language (`en`/`ne`) and the
+> cached coverage list are persisted preferences. See
+> [docs/PRODUCTION-PILOT.md](../PRODUCTION-PILOT.md).
+
 **Audited commit:** `dbe6d45e7297c5d889be9e69c3e2e190a578e6b1` (branch `main`)
 
 ---

@@ -7,6 +7,7 @@ import {
   DISTANCE_UNIT_OPTIONS,
   OFFLINE_SYNC_OPTIONS,
   PHOTO_QUALITY_OPTIONS,
+  INTERFACE_LANGUAGE_OPTIONS,
   WISDOM_TIER_OPTIONS,
   SCRIPT_OPTIONS,
   type UserPreferences,
@@ -96,6 +97,7 @@ export async function getUserPreferences(): Promise<UserPreferences> {
 
   return {
     colorTheme: raw.colorTheme === 'white' ? 'white' : DEFAULT_USER_PREFERENCES.colorTheme,
+    interfaceLanguage: oneOf(raw.interfaceLanguage, INTERFACE_LANGUAGE_OPTIONS, 'interfaceLanguage'),
     alignmentTolerance: oneOf(raw.alignmentTolerance, ALIGNMENT_TOLERANCE_OPTIONS, 'alignmentTolerance'),
     hapticsEnabled: bool(raw.hapticsEnabled, 'hapticsEnabled'),
     autoCapture: bool(raw.autoCapture, 'autoCapture'),

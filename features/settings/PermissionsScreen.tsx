@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 import { LoadingState, ScreenHeader } from '@/components/common';
 import { Button, Screen, Text } from '@/components/ui';
 import { usePermissions } from '@/store';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { spacing } from '@/theme';
 import { canPrompt, needsSettings, type PermissionKind, type PermissionState } from '@/types';
 
@@ -38,6 +39,7 @@ const STATUS_TEXT: Record<PermissionState['status'], string> = {
  * blocked gets a route to system Settings instead.
  */
 export function PermissionsScreen() {
+  const ui = useVisitorLiteralCopy();
   const { hydrated, states, request, openSettings } = usePermissions();
 
   if (!hydrated) {
@@ -71,7 +73,7 @@ export function PermissionsScreen() {
                 label="Open system settings"
                 variant="secondary"
                 block
-                accessibilityHint="The app can no longer ask for this. Only system settings can change it."
+                accessibilityHint={ui('The app can no longer ask for this. Only system settings can change it.')}
                 onPress={() => void openSettings()}
               />
             ) : null}

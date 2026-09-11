@@ -1,6 +1,9 @@
 import type { Session } from '@supabase/supabase-js';
 
 import { getSupabase, isConfigured } from './index';
+import { resolveAnonymousSession } from './session';
+
+export { resolveAnonymousSession } from './session';
 
 /**
  * The session a sync pass writes under.
@@ -53,10 +56,7 @@ export async function ensureSession(): Promise<Session | null> {
 
       // Restored from AsyncStorage on a warm start, and refreshed by the client
       // itself when it has expired.
-      const { data: existing } = await supabase.auth.getSession();
-      if (existing.session) return existing.session;
-
-      const { data, error } = await supabase.auth.signInAnonymously();
+      const { session, error } = await resolveAnonymousSession(supabase.auth);
       if (error) {
         if (!reportedUnavailable) {
           reportedUnavailable = true;
@@ -69,7 +69,7 @@ export async function ensureSession(): Promise<Session | null> {
         return null;
       }
 
-      return data.session;
+      return session;
     })().catch((error) => {
       // Do not cache a rejected promise: a pass that failed on a dead network
       // must be free to succeed on the next one.

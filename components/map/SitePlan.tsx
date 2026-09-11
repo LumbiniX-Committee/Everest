@@ -6,6 +6,7 @@ import { LUMBINI_BOUNDS, REGIONS, regionOf } from '@/constants';
 import { colors, radii, spacing } from '@/theme';
 import type { Coordinate, HeritageSite } from '@/types';
 import { MONK_STILL } from '@/components/monk';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 
 /**
  * A schematic site plan, not a map.
@@ -43,6 +44,7 @@ export function SitePlan({
    */
   siteState?: Record<string, 'done' | 'todo'>;
 }) {
+  const ui = useVisitorLiteralCopy();
   const [width, setWidth] = useState(0);
 
   const onLayout = (event: LayoutChangeEvent) => setWidth(event.nativeEvent.layout.width);
@@ -89,7 +91,7 @@ export function SitePlan({
               accessible
               accessibilityRole={onSelectSite ? 'button' : 'image'}
               accessibilityLabel={
-                state ? `${site.name}, ${state === 'done' ? 'done' : 'still to do'}` : site.name
+                state ? `${site.name}, ${ui(state === 'done' ? 'done' : 'still to do')}` : site.name
               }
               onTouchEnd={onSelectSite ? () => onSelectSite(site.id) : undefined}
               style={[
@@ -105,7 +107,7 @@ export function SitePlan({
       {width > 0 && observer ? (
         <Image
           accessible
-          accessibilityLabel="Your position"
+          accessibilityLabel={ui('Your position')}
           source={MONK_STILL}
           style={[styles.observer, positionStyle(project(observer))]}
           resizeMode="contain"

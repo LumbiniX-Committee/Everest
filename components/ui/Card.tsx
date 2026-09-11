@@ -8,6 +8,8 @@ import Animated, {
 import * as Haptics from 'expo-haptics';
 
 import { useHaptics } from '@/hooks';
+import { useInterfaceLanguage } from '@/i18n/context';
+import { visitorLiteralCopy } from '@/i18n/literals';
 import { colors, radii, spacing } from '@/theme';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -24,6 +26,7 @@ export type CardProps = {
  */
 export function Card({ children, onPress, style, accessibilityLabel }: CardProps) {
   const { pulse } = useHaptics();
+  const language = useInterfaceLanguage();
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -31,19 +34,19 @@ export function Card({ children, onPress, style, accessibilityLabel }: CardProps
   }));
 
   const handlePressIn = useCallback(() => {
-    scale.value = withSpring(0.985, {
+    scale.set(withSpring(0.985, {
       damping: 15,
       stiffness: 350,
       mass: 0.8,
-    });
+    }));
   }, [scale]);
 
   const handlePressOut = useCallback(() => {
-    scale.value = withSpring(1, {
+    scale.set(withSpring(1, {
       damping: 12,
       stiffness: 280,
       mass: 0.8,
-    });
+    }));
   }, [scale]);
 
   const handlePress = useCallback(() => {
@@ -59,7 +62,7 @@ export function Card({ children, onPress, style, accessibilityLabel }: CardProps
   return (
     <AnimatedPressable
       accessibilityRole="button"
-      accessibilityLabel={accessibilityLabel}
+      accessibilityLabel={accessibilityLabel ? visitorLiteralCopy(language, accessibilityLabel) : undefined}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}

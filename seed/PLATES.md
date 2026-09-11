@@ -1,6 +1,6 @@
 # Reconstruction plates — production guide
 
-`seed/plates.json` is the manifest of the eight plates the app shows in its
+`seed/plates.json` is the manifest of the thirteen evidence-labelled plates the app can show in its
 then/now and site-detail surfaces. This file is how they get **made** — and the
 rules are not optional, because a mislabelled or hallucinated plate is the exact
 failure mode the whole project argues against (TEAM-CHARTER #6, 02-ASSETS §6.1).
@@ -83,9 +83,17 @@ Two `conditioned_reconstruction` plates remain **not** produced
 cited. Two `historical_photograph` entries (`nativity-sculpture`,
 `puskarini.1899-view`) are not in Mukherji and await a harvest match.
 
+Three `artistic_impression` plates are produced for the Kathmandu Valley pilot
+sites: Patan Durbar Square, Changu Narayan, and Manga Hiti. They are deliberately
+watercolour-and-graphite illustrations, not synthetic photographs, and every
+caption says that they are neither photographs nor measured reconstructions.
+They remain the weakest evidence tier and must not be presented as historical
+records. Replace them only when licence-clean historical material or a properly
+conditioned reconstruction becomes available.
+
 ## Output
 
-- Format: `.webp`, long edge ~2048px, into `app/assets/plates/` at the `image`
+- Format: `.webp`, long edge ~2048px, into `assets/plates/` at the `image`
   path named in the manifest.
 - Licences: Mukherji/Hultzsch plates are Public Domain (pre-1928). Reconstructed
   plates ship **CC BY-SA 4.0, clearly labelled as reconstructions**. Harvested

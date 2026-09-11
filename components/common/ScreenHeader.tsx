@@ -11,6 +11,8 @@ import * as Haptics from 'expo-haptics';
 
 import { Text } from '@/components/ui';
 import { useHaptics } from '@/hooks';
+import { useInterfaceLanguage } from '@/i18n/context';
+import { visitorLiteralCopy } from '@/i18n/literals';
 import { radii, spacing } from '@/theme';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -55,6 +57,7 @@ export function ScreenHeader({
 }) {
   const router = useRouter();
   const { pulse } = useHaptics();
+  const language = useInterfaceLanguage();
   const showBack = canGoBack && (onBack != null || router.canGoBack());
 
   const backOffset = useSharedValue(0);
@@ -65,13 +68,13 @@ export function ScreenHeader({
   }));
 
   const handleBackIn = useCallback(() => {
-    backOffset.value = withSpring(-4, { damping: 14, stiffness: 350, mass: 0.6 });
-    backScale.value = withSpring(0.95, { damping: 14, stiffness: 350, mass: 0.6 });
+    backOffset.set(withSpring(-4, { damping: 14, stiffness: 350, mass: 0.6 }));
+    backScale.set(withSpring(0.95, { damping: 14, stiffness: 350, mass: 0.6 }));
   }, [backOffset, backScale]);
 
   const handleBackOut = useCallback(() => {
-    backOffset.value = withSpring(0, { damping: 12, stiffness: 280, mass: 0.6 });
-    backScale.value = withSpring(1, { damping: 12, stiffness: 280, mass: 0.6 });
+    backOffset.set(withSpring(0, { damping: 12, stiffness: 280, mass: 0.6 }));
+    backScale.set(withSpring(1, { damping: 12, stiffness: 280, mass: 0.6 }));
   }, [backOffset, backScale]);
 
   const handleBackPress = useCallback(() => {
@@ -85,7 +88,7 @@ export function ScreenHeader({
       {showBack ? (
         <AnimatedPressable
           accessibilityRole="button"
-          accessibilityLabel="Back"
+          accessibilityLabel={visitorLiteralCopy(language, 'Back')}
           onPress={handleBackPress}
           onPressIn={handleBackIn}
           onPressOut={handleBackOut}

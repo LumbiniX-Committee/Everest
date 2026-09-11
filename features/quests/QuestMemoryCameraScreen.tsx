@@ -6,6 +6,7 @@ import { Image, Pressable, StyleSheet, View } from 'react-native';
 
 import { EmptyState } from '@/components/common';
 import { Button, Screen, Text } from '@/components/ui';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { camera as cameraService, database } from '@/services';
 import { usePermission, usePreferences } from '@/store';
 import { useQuests } from '@/store/quests';
@@ -17,6 +18,7 @@ import { colors, radii, spacing } from '@/theme';
  * a personal memory tied to the quest task.
  */
 export function QuestMemoryCameraScreen() {
+  const ui = useVisitorLiteralCopy();
   const router = useRouter();
   const { questId, taskId } = useLocalSearchParams<{ questId: string; taskId: string }>();
   const { getQuestById, completeTask } = useQuests();
@@ -70,7 +72,7 @@ export function QuestMemoryCameraScreen() {
       <View style={styles.hud}><Text variant="label" uppercase style={styles.hudText}>Quest memory · {task.title}</Text><Button label="Back" variant="quiet" onPress={() => router.back()} /></View>
       <View style={styles.controls}>
         <Text variant="caption" tone="secondary" center>{photoUri ? 'Keep this moment, or take it again.' : 'This is a personal memory camera, not an aligned Sākṣī witness capture.'}</Text>
-        {photoUri ? <View style={styles.actions}><Button label="Retake" variant="secondary" onPress={() => setPhotoUri(undefined)} /><Button label={saving ? 'Storing…' : 'Store in Memories'} disabled={saving} loading={saving} onPress={() => void store()} /></View> : <Pressable style={styles.shutter} onPress={() => void capture()} accessibilityRole="button" accessibilityLabel="Take memory photograph"><View style={styles.shutterCore} /></Pressable>}
+        {photoUri ? <View style={styles.actions}><Button label="Retake" variant="secondary" onPress={() => setPhotoUri(undefined)} /><Button label={saving ? 'Storing…' : 'Store in Memories'} disabled={saving} loading={saving} onPress={() => void store()} /></View> : <Pressable style={styles.shutter} onPress={() => void capture()} accessibilityRole="button" accessibilityLabel={ui('Take memory photograph')}><View style={styles.shutterCore} /></Pressable>}
       </View>
     </Screen>
   );

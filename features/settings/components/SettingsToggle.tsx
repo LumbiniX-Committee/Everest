@@ -1,6 +1,8 @@
 import { StyleSheet, Switch, View } from 'react-native';
 
 import { Text } from '@/components/ui';
+import { useInterfaceLanguage } from '@/i18n/context';
+import { visitorLiteralCopy } from '@/i18n/literals';
 import { colors, spacing } from '@/theme';
 
 export type SettingsToggleProps = {
@@ -18,15 +20,18 @@ export function SettingsToggle({
   onValueChange,
   disabled = false,
 }: SettingsToggleProps) {
+  const language = useInterfaceLanguage();
+  const displayLabel = visitorLiteralCopy(language, label);
+  const displayHint = hint ? visitorLiteralCopy(language, hint) : undefined;
   return (
     <View style={styles.row}>
       <View style={styles.textColumn}>
         <Text variant="body" tone={disabled ? 'muted' : 'primary'}>
-          {label}
+          {displayLabel}
         </Text>
         {hint ? (
           <Text variant="caption" tone="muted">
-            {hint}
+            {displayHint}
           </Text>
         ) : null}
       </View>
@@ -34,8 +39,8 @@ export function SettingsToggle({
         value={value}
         onValueChange={onValueChange}
         disabled={disabled}
-        accessibilityLabel={label}
-        accessibilityHint={hint}
+        accessibilityLabel={displayLabel}
+        accessibilityHint={displayHint}
         // alignmentLocked is reserved for the reticle (theme/colors.ts), so the
         // on state uses sandstone — the app's ordinary accent.
         trackColor={{ false: colors.surfaceSecondary, true: colors.sandstone }}

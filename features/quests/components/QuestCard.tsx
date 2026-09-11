@@ -10,6 +10,7 @@ import * as Haptics from 'expo-haptics';
 import { ProgressRing, Text } from '@/components/ui';
 import { findSite, nowImageForSite } from '@/data';
 import { useHaptics } from '@/hooks';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { colors, radii, spacing } from '@/theme';
 import type { QuestWithProgress } from '@/types';
 
@@ -40,6 +41,7 @@ export type QuestCardProps = {
  * than a card that never promised one.
  */
 export function QuestCard({ quest, onPress }: QuestCardProps) {
+  const ui = useVisitorLiteralCopy();
   const { progress, tasks, category, title, subtitle, estimatedMinutes } = quest;
   const { pulse } = useHaptics();
   const scale = useSharedValue(1);
@@ -76,7 +78,7 @@ export function QuestCard({ quest, onPress }: QuestCardProps) {
   return (
     <AnimatedPressable
       accessibilityRole="button"
-      accessibilityLabel={`Quest: ${title}`}
+      accessibilityLabel={`${ui('Quest:')} ${title}`}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}

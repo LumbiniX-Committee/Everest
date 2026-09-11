@@ -6,6 +6,7 @@ import { EmptyState, ScreenHeader } from '@/components/common';
 import { Card, Screen, Text } from '@/components/ui';
 import { findSite } from '@/data';
 import { database } from '@/services';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { useQuests } from '@/store/quests';
 import { colors, spacing } from '@/theme';
 import type { QuestSubmission } from '@/types';
@@ -18,6 +19,7 @@ type Memory = QuestSubmission & {
 
 /** A personal album made from the photographs already stored as quest evidence. */
 export function MemoriesScreen() {
+  const ui = useVisitorLiteralCopy();
   const router = useRouter();
   const { quests } = useQuests();
   const [memories, setMemories] = useState<Memory[]>([]);
@@ -63,19 +65,19 @@ export function MemoriesScreen() {
             <Pressable
               key={`${memory.questId}-${memory.taskId}`}
               accessibilityRole="button"
-              accessibilityLabel={`Open ${memory.taskTitle} in ${memory.questTitle}`}
+              accessibilityLabel={`${ui('Open')} ${memory.taskTitle} ${ui('in')} ${memory.questTitle}`}
               onPress={() => router.push(`/(main)/tirtha/quests/${memory.questId}`)}
             >
               <Card style={styles.memory}>
                 <Image source={{ uri: memory.photoUri }} style={styles.photo} resizeMode="cover" />
                 <View style={styles.copy}>
-                  <Text variant="label" uppercase tone="sandstone">{memory.questTitle}</Text>
-                  <Text variant="body">{memory.taskTitle}</Text>
-                  <Text variant="caption" tone="secondary">
+                  <Text variant="label" uppercase tone="sandstone" translate={false}>{memory.questTitle}</Text>
+                  <Text variant="body" translate={false}>{memory.taskTitle}</Text>
+                  <Text variant="caption" tone="secondary" translate={false}>
                     {memory.siteName ?? 'Quest memory'} · {new Date(memory.submittedAt).toLocaleDateString()}
                   </Text>
                   {memory.note ? (
-                    <Text variant="caption" tone="muted" numberOfLines={2}>{memory.note}</Text>
+                    <Text variant="caption" tone="muted" numberOfLines={2} translate={false}>{memory.note}</Text>
                   ) : null}
                 </View>
               </Card>

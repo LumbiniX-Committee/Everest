@@ -1,5 +1,7 @@
 import { Text as RNText, type TextProps as RNTextProps } from 'react-native';
 
+import { useInterfaceLanguage } from '@/i18n/context';
+import { localizeVisitorNode } from '@/i18n/literals';
 import { colors, text as textStyle, type TypographyVariant } from '@/theme';
 
 type ToneName =
@@ -35,6 +37,8 @@ export type TextProps = RNTextProps & {
   /** Convenience for `label`, which is almost always set in caps. */
   uppercase?: boolean;
   center?: boolean;
+  /** False for quotations, authored heritage text, and visitor evidence. */
+  translate?: boolean;
 };
 
 /**
@@ -49,9 +53,12 @@ export function Text({
   tone = 'primary',
   uppercase = false,
   center = false,
+  translate = true,
+  children,
   style,
   ...rest
 }: TextProps) {
+  const language = useInterfaceLanguage();
   return (
     <RNText
       {...rest}
@@ -62,6 +69,8 @@ export function Text({
         center && { textAlign: 'center' },
         style,
       ]}
-    />
+    >
+      {translate ? localizeVisitorNode(language, children) : children}
+    </RNText>
   );
 }

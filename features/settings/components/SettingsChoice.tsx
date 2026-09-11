@@ -10,6 +10,8 @@ import Animated, {
 
 import { Text } from '@/components/ui';
 import { useHaptics } from '@/hooks';
+import { useInterfaceLanguage } from '@/i18n/context';
+import { visitorLiteralCopy } from '@/i18n/literals';
 import { colors, radii, spacing } from '@/theme';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -41,9 +43,10 @@ export function SettingsChoice<T extends string>({
   onSelect,
 }: SettingsChoiceProps<T>) {
   const { selection } = useHaptics();
+  const language = useInterfaceLanguage();
 
   return (
-    <View accessibilityRole="radiogroup" accessibilityLabel={legend} style={styles.group}>
+    <View accessibilityRole="radiogroup" accessibilityLabel={visitorLiteralCopy(language, legend)} style={styles.group}>
       {options.map((option) => (
         <ChoiceRow
           key={option.value}
@@ -68,6 +71,9 @@ function ChoiceRow<T extends string>({
   isSelected: boolean;
   onSelect: (val: string) => void;
 }) {
+  const language = useInterfaceLanguage();
+  const displayLabel = visitorLiteralCopy(language, option.label);
+  const displayHint = visitorLiteralCopy(language, option.hint);
   const scale = useSharedValue(1);
   const dotScale = useSharedValue(isSelected ? 1 : 0.8);
 
@@ -103,8 +109,8 @@ function ChoiceRow<T extends string>({
     <AnimatedPressable
       accessibilityRole="radio"
       accessibilityState={{ selected: isSelected, checked: isSelected }}
-      accessibilityLabel={option.label}
-      accessibilityHint={option.hint}
+      accessibilityLabel={displayLabel}
+      accessibilityHint={displayHint}
       onPress={() => onSelect(option.value)}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
@@ -116,10 +122,10 @@ function ChoiceRow<T extends string>({
     >
       <View style={styles.textColumn}>
         <Text variant="body" tone={isSelected ? 'sandstone' : 'primary'}>
-          {option.label}
+          {displayLabel}
         </Text>
         <Text variant="caption" tone="muted">
-          {option.hint}
+          {displayHint}
         </Text>
       </View>
       {/* Not the only signal — the selected row also carries a border and

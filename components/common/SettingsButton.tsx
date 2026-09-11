@@ -10,6 +10,8 @@ import * as Haptics from 'expo-haptics';
 
 import { Icon } from '@/components/ui';
 import { useHaptics } from '@/hooks';
+import { useInterfaceLanguage } from '@/i18n/context';
+import { visitorLiteralCopy } from '@/i18n/literals';
 import { colors, radii } from '@/theme';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -24,6 +26,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 export function SettingsButton() {
   const router = useRouter();
   const { pulse } = useHaptics();
+  const language = useInterfaceLanguage();
   const scale = useSharedValue(1);
   const rotation = useSharedValue(0);
 
@@ -35,13 +38,13 @@ export function SettingsButton() {
   }));
 
   const handlePressIn = useCallback(() => {
-    scale.value = withSpring(0.92, { damping: 14, stiffness: 350, mass: 0.6 });
-    rotation.value = withSpring(35, { damping: 12, stiffness: 300, mass: 0.6 });
+    scale.set(withSpring(0.92, { damping: 14, stiffness: 350, mass: 0.6 }));
+    rotation.set(withSpring(35, { damping: 12, stiffness: 300, mass: 0.6 }));
   }, [rotation, scale]);
 
   const handlePressOut = useCallback(() => {
-    scale.value = withSpring(1, { damping: 12, stiffness: 280, mass: 0.6 });
-    rotation.value = withSpring(0, { damping: 12, stiffness: 280, mass: 0.6 });
+    scale.set(withSpring(1, { damping: 12, stiffness: 280, mass: 0.6 }));
+    rotation.set(withSpring(0, { damping: 12, stiffness: 280, mass: 0.6 }));
   }, [rotation, scale]);
 
   const handlePress = useCallback(() => {
@@ -52,8 +55,8 @@ export function SettingsButton() {
   return (
     <AnimatedPressable
       accessibilityRole="button"
-      accessibilityLabel="Settings"
-      accessibilityHint="Preferences, permissions, sync and storage"
+      accessibilityLabel={visitorLiteralCopy(language, 'Settings')}
+      accessibilityHint={visitorLiteralCopy(language, 'Preferences, permissions, sync and storage')}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}

@@ -6,6 +6,7 @@ import { Card, ProgressIndicator, Screen, Text } from '@/components/ui';
 import { LoadingState, ScreenHeader } from '@/components/common';
 import { demoSites } from '@/data';
 import { database } from '@/services';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { colors, spacing } from '@/theme';
 import { formatTimestamp } from '@/utils';
 
@@ -29,6 +30,7 @@ import {
  * over a week has used this app better than somebody who ticks off nine.
  */
 export function ChaityavaliScreen() {
+  const ui = useVisitorLiteralCopy();
   const router = useRouter();
   const [entries, setEntries] = useState<RegisterEntry[] | null>(null);
 
@@ -90,7 +92,7 @@ export function ChaityavaliScreen() {
                 params: { siteId: entry.site.id },
               })
             }
-            accessibilityLabel={`${entry.site.name}. ${REGISTER_LABELS[entry.state]}.`}
+            accessibilityLabel={`${entry.site.name}. ${ui(REGISTER_LABELS[entry.state])}.`}
           >
             <View style={styles.row}>
               <View style={styles.rowText}>

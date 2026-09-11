@@ -1,5 +1,17 @@
 # Testing and Quality
 
+> **Production-pilot overlay (11 September 2026):** root `npm run verify` now
+> includes Expo TypeScript, core/shared TypeScript, 132 domain tests, 16 native
+> React/service integration tests, seed validation,
+> vocabulary, completeness of 274 typed EN/NE semantic keys and 601 registered
+> legacy interface phrases,
+> the 68/68 Dhamma evaluation, and
+> lint. Seed validation is warning-free. `landing/npm run verify` runs
+> TypeScript, lint, 27 Vitest tests, and `next build`. CI performs clean installs
+> in separate Expo and landing jobs plus 24 pgTAP assertions in local Supabase.
+> Hosted RLS/export and three-phone field
+> acceptance remain rollout gates in [docs/PRODUCTION-PILOT.md](../PRODUCTION-PILOT.md).
+
 **Audited commit:** `dbe6d45e7297c5d889be9e69c3e2e190a578e6b1` (branch `main`)
 
 All results below were **actually executed** during this audit.

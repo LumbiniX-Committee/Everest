@@ -1,10 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { EmptyState, LoadingState, ScreenHeader } from '@/components/common';
 import { Chip, Screen, Text } from '@/components/ui';
-import { findSite, primarySiteForQuest } from '@/data';
+import { findSite, findVantage, primarySiteForQuest } from '@/data';
+import { rankQuestsByCoverage } from '@/core/quests/priority';
+import { coverage } from '@/services';
+import { visitorCopy } from '@/i18n/visitor';
+import { usePreferences } from '@/store';
 import { useQuests } from '@/store/quests';
 import { spacing } from '@/theme';
 
@@ -15,13 +19,20 @@ type FilterTab = 'all' | 'active' | 'available' | 'completed';
 export function QuestListScreen() {
   const router = useRouter();
   const { hydrated, quests, inProgressQuests, availableQuests, completedQuests } = useQuests();
+  const { preferences } = usePreferences();
+  const t = (key: Parameters<typeof visitorCopy>[1]) => visitorCopy(preferences.interfaceLanguage, key);
   const [activeTab, setActiveTab] = useState<FilterTab>('all');
+  const [coverageRows, setCoverageRows] = useState<coverage.VantageCoverage[]>([]);
+
+  useEffect(() => {
+    void coverage.getVantageCoverage().then(setCoverageRows);
+  }, []);
 
   if (!hydrated) {
     return <LoadingState label="Reading the quest record" />;
   }
 
-  const displayedQuests =
+  const filteredQuests =
     activeTab === 'active'
       ? inProgressQuests
       : activeTab === 'available'
@@ -29,6 +40,15 @@ export function QuestListScreen() {
       : activeTab === 'completed'
       ? completedQuests
       : quests;
+  const displayedQuests = rankQuestsByCoverage(
+    filteredQuests,
+    coverageRows.map((row) => ({
+      vantageId: row.vantage_id,
+      siteId: row.site_id,
+      priority: row.priority,
+    })),
+    (targetId) => findVantage(targetId)?.siteId ?? findSite(targetId)?.id,
+  );
 
   const groups = Array.from(displayedQuests.reduce((map, quest) => {
     const primaryId = primarySiteForQuest(quest);
@@ -43,22 +63,24 @@ export function QuestListScreen() {
   return (
     <Screen scroll>
       <ScreenHeader
-        eyebrow="Tīrtha"
-        title="Heritage Quests"
-        subtitle="Mindful walking, historical epigraphy, and conservation practice."
+        eyebrow={t('quest.eyebrow')}
+        title={t('quest.title')}
+        subtitle={coverageRows.length
+          ? t('quest.prioritySubtitle')
+          : t('quest.subtitle')}
       />
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
-        <Chip label={`All (${quests.length})`} selected={activeTab === 'all'} onPress={() => setActiveTab('all')} />
-        <Chip label={`Active (${inProgressQuests.length})`} selected={activeTab === 'active'} onPress={() => setActiveTab('active')} />
-        <Chip label={`Available (${availableQuests.length})`} selected={activeTab === 'available'} onPress={() => setActiveTab('available')} />
-        <Chip label={`Completed (${completedQuests.length})`} selected={activeTab === 'completed'} onPress={() => setActiveTab('completed')} />
+        <Chip label={`${t('quest.all')} (${quests.length})`} selected={activeTab === 'all'} onPress={() => setActiveTab('all')} />
+        <Chip label={`${t('quest.active')} (${inProgressQuests.length})`} selected={activeTab === 'active'} onPress={() => setActiveTab('active')} />
+        <Chip label={`${t('quest.available')} (${availableQuests.length})`} selected={activeTab === 'available'} onPress={() => setActiveTab('available')} />
+        <Chip label={`${t('quest.completed')} (${completedQuests.length})`} selected={activeTab === 'completed'} onPress={() => setActiveTab('completed')} />
       </ScrollView>
 
       {displayedQuests.length === 0 ? (
         <EmptyState
-          title="No Quests Found"
-          body="There are no quests in this category right now."
+          title={t('quest.emptyTitle')}
+          body={t('quest.emptyBody')}
         />
       ) : (
         <View style={styles.list}>
@@ -71,10 +93,10 @@ export function QuestListScreen() {
             return (
               <View key={rootId} style={styles.placeGroup}>
                 <View style={styles.placeHead}>
-                  <Text variant="title">{root?.name ?? 'Heritage journeys'}</Text>
+                  <Text variant="title">{root?.name ?? t('quest.group')}</Text>
                   <Text variant="body" tone={reached ? 'secondary' : 'muted'}>
-                    {reached ? 'You reached this place' : 'Reach this place to begin automatically'}
-                    {` · ${completed} / ${groupQuests.length} quests complete`}
+                    {reached ? t('quest.reached') : t('quest.reachToBegin')}
+                    {` · ${completed} / ${groupQuests.length} ${t('quest.complete')}`}
                   </Text>
                 </View>
                 {groupQuests.map((quest) => {

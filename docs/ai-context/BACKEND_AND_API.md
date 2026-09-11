@@ -1,5 +1,13 @@
 # Backend and API
 
+> **Production-pilot overlay (10 September 2026):** `mock-api/` is a local-only
+> fixture. Production uses authenticated same-origin Next.js handlers for the
+> custodian dashboard, reports, append-only actions, signed photos, and exports.
+> Invite-only memberships and site-scoped RLS are defined in migration `0009`;
+> public coverage/condition data comes only from narrow aggregate functions.
+> The endpoint list and disclosure boundary are maintained in
+> [docs/PRODUCTION-PILOT.md](../PRODUCTION-PILOT.md).
+
 **Audited commit:** `dbe6d45e7297c5d889be9e69c3e2e190a578e6b1` (branch `main`)
 **Backend provider:** Supabase (`@supabase/supabase-js` ^2.109.0)
 
