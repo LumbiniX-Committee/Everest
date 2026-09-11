@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,9 +7,9 @@ import { ArrivalWisdom } from '@/components/arrival';
 import { MapWebView } from '@/components/map';
 import { GreetingMonk } from '@/components/monk';
 import { NarrationPlayer } from '@/components/site';
-import { BottomSheet, Card, Icon, Text } from '@/components/ui';
+import { BottomSheet, Button, Card, Icon, Text } from '@/components/ui';
 import { reachedNewLevel, standingFor } from '@/core';
-import { findSite, findVantage, questsForPrecinct, vantagesForSite } from '@/data';
+import { findSite, findVantage, questsForPrecinct, vantagesForSite, questAreas, type QuestArea } from '@/data';
 import {
   useCurrentPosition,
   useDemoWalk,
@@ -18,7 +18,7 @@ import {
   useSiteArrival,
   useStoryProgress,
 } from '@/hooks';
-import { arrival, location as locationService } from '@/services';
+import { arrival, location as locationService, questMemories } from '@/services';
 import { usePractice, usePreferences, useQuests } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 
@@ -49,6 +49,8 @@ const HUD_ROW_H = 72;
  */
 export function LiveMapScreen() {
   const router = useRouter();
+  const { guideArea } = useLocalSearchParams<{ guideArea?: string }>();
+  const returnToQuests = useRef(false);
   const insets = useSafeAreaInsets();
   const { coordinate, demoMode } = useCurrentPosition({ watch: true });
   const deviceHeading = useHeading();
@@ -67,16 +69,23 @@ export function LiveMapScreen() {
 
   const { preferences } = usePreferences();
   const { summary, recognise } = usePractice();
-  const { quests, startQuest, completeTask, uncompleteTask, creditArrival } = useQuests();
+  const { quests, creditArrival } = useQuests();
   const story = useStoryProgress();
   // Mirror story into a ref so imperative code can always read the latest
   // value without being in a stale closure.
   const storyRef = useRef(story);
-  storyRef.current = story;
+  useEffect(() => { storyRef.current = story; }, [story]);
 
   const [showStory, setShowStory] = useState(false);
+  const manualPause = useRef(false);
+  const pauseManually = () => { manualPause.current = true; pauseWalk(); };
+  const resumeManually = () => { manualPause.current = false; if (!showStory) resumeWalk(); };
+  const resumeAfterStory = () => { if (demoMode && !manualPause.current) resumeWalk(); };
   const [showChat, setShowChat] = useState(false);
   const [showQuests, setShowQuests] = useState(false);
+  useFocusEffect(useCallback(() => {
+    if (returnToQuests.current) { returnToQuests.current = false; setShowQuests(true); }
+  }, []));
   const [showPlaces, setShowPlaces] = useState(false);
   const [showDemoRoutes, setShowDemoRoutes] = useState(false);
   const [reward, setReward] = useState<{ title: string; detail?: string } | null>(null);
@@ -112,20 +121,25 @@ export function LiveMapScreen() {
     nonce: number;
   } | null>(null);
   const cameraNonce = useRef(0);
-  const flyTo = (longitude: number, latitude: number, distance: 'world' | 'close') => {
+  const flyTo = useCallback((longitude: number, latitude: number, distance: 'world' | 'close') => {
     cameraNonce.current += 1;
     setCamera({ longitude, latitude, distance, nonce: cameraNonce.current });
-  };
+  }, []);
+  const [guideTargetId, setGuideTargetId] = useState<string | null>(null);
+  const guideTarget = guideTargetId ? questAreas.find((area) => area.id === guideTargetId) : undefined;
+  useFocusEffect(useCallback(() => {
+    if (guideArea && questAreas.some((area) => area.id === guideArea)) {
+      setGuideTargetId(guideArea);
+      setFollow(false);
+    }
+  }, [guideArea]));
+  const guideRoute = coordinate && guideTarget
+    ? [[coordinate.longitude, coordinate.latitude], [guideTarget.coordinate.longitude, guideTarget.coordinate.latitude]] as const
+    : [];
 
-  /**
-   * The quests belonging to where the player is, and everywhere else.
-   *
-   * Split rather than filtered: §15 asks for the locked ones to stay visible
-   * with the way to them, because a quest you cannot see is not a reason to
-   * walk anywhere.
-   */
-  const questsHere = atSiteId ? questsForPrecinct(atSiteId, quests) : [];
-  const questsElsewhere = quests.filter((q) => !questsHere.includes(q));
+  /** Quests belong to the nearby cultural area, not an exact monument pin. */
+  const questAreaSiteId = near && near.distanceM <= 5_000 ? near.site.id : null;
+  const questsHere = questAreaSiteId ? questsForPrecinct(questAreaSiteId, quests) : [];
   const questsDoneHere = questsHere.filter((q) => q.progress?.status === 'completed').length;
   const questsOpenHere = questsHere.length - questsDoneHere;
 
@@ -157,13 +171,14 @@ export function LiveMapScreen() {
   // Preferences ref so the trigger always reads current prefs without being
   // listed as a dependency (prefs change does not constitute a new arrival).
   const prefsRef = useRef(preferences);
-  prefsRef.current = preferences;
+  useEffect(() => { prefsRef.current = preferences; }, [preferences]);
   const demoModeRef = useRef(demoMode);
-  demoModeRef.current = demoMode;
+  useEffect(() => { demoModeRef.current = demoMode; }, [demoMode]);
 
   // The actual trigger — runs on every render but only fires side-effects when
   // atSiteId has genuinely changed to a new, non-null value.
-  if (atSiteId !== prevAtSiteIdRef.current) {
+  useEffect(() => {
+    if (atSiteId === prevAtSiteIdRef.current) return;
     prevAtSiteIdRef.current = atSiteId;
 
     if (!atSiteId) {
@@ -179,14 +194,15 @@ export function LiveMapScreen() {
       // Schedule the story open and camera move on the next tick so React can
       // finish the current render before we set state.
       const capturedId = atSiteId;
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         setShowStory(true);
         if (demoModeRef.current) pauseWalk();
         const site = findSite(capturedId);
         if (site) flyTo(site.coordinate.longitude, site.coordinate.latitude, 'close');
       }, 0);
+      return () => clearTimeout(timer);
     }
-  }
+  }, [atSiteId, pauseWalk, flyTo]);
 
 
   /**
@@ -200,6 +216,7 @@ export function LiveMapScreen() {
    * fires fresh.
    */
   const handleDemoRestart = () => {
+    manualPause.current = false;
     openedFor.current = null;
     prevAtSiteIdRef.current = null;
     void story.reset();
@@ -226,7 +243,7 @@ export function LiveMapScreen() {
     setShowStory(false);
     setCamera(null);
     // Resume the demo walker — story is done, character can move to next site.
-    if (demoMode) resumeWalk();
+    resumeAfterStory();
     await story.markRead(siteId);
 
     const before = summary.balance;
@@ -257,26 +274,6 @@ export function LiveMapScreen() {
     );
   };
 
-  const onCompleteTask = async (questId: string, taskId: string) => {
-    const quest = quests.find((q) => q.id === questId);
-    if (quest && quest.progress?.status === 'not_started') await startQuest(questId);
-
-    const result = await completeTask(questId, taskId);
-
-    if (!result.questCompleted) {
-      setReward({ title: '✓ Objective done' });
-      return;
-    }
-
-    // Finishing the last quest at a place is the bigger event, and it is the
-    // one the loop is built to end on.
-    const wasLastHere = atSiteId ? questsOpenHere <= 1 && story.hasRead(atSiteId) : false;
-    setReward(
-      wasLastHere
-        ? { title: '✦ Place complete', detail: findSite(atSiteId!)?.name }
-        : { title: '✦ Quest complete', detail: quest?.title },
-    );
-  };
 
   /**
    * Hand off to Sākṣī, from the place you are standing in.
@@ -328,6 +325,14 @@ export function LiveMapScreen() {
     if (demo.active) locationService.demo.goToSite(siteId);
   };
 
+  /** Guide the visitor without changing either their real or simulated location. */
+  const guideToSite = (site: QuestArea) => {
+    setShowQuests(false);
+    setGuideTargetId(site.id);
+    setFollow(false);
+    setCamera(null);
+  };
+
   // On the walk the figure faces the way it is going. The magnetometer is
   // reporting which way the phone is pointing on a desk, which has nothing to
   // do with the pilgrim on the map and makes the character spin as you move it.
@@ -345,7 +350,9 @@ export function LiveMapScreen() {
         coordinate={coordinate}
         heading={heading}
         follow={follow}
-        route={demo.route}
+        route={guideTarget ? guideRoute : demo.route}
+        routeColor={guideTarget ? colors.warning : colors.sandstoneDeep}
+        guideDestination={guideTarget ? { ...guideTarget.coordinate, name: guideTarget.name } : null}
         camera={camera}
         onSelectSite={(id) => router.push(`/(main)/tirtha/site/${id}`)}
         topInset={insets.top}
@@ -368,6 +375,15 @@ export function LiveMapScreen() {
             style={({ pressed }) => [styles.homeButton, pressed && styles.buttonPressed]}
           >
             <Icon name="chevron-left" size={30} color={colors.primary} />
+          </Pressable>
+
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Open your quest memories"
+            onPress={() => router.push('/(main)/tirtha/memories')}
+            style={({ pressed }) => [styles.iconPill, pressed && styles.buttonPressed]}
+          >
+            <Icon name="image-multiple-outline" size={23} color={colors.primary} />
           </Pressable>
         </View>
 
@@ -403,18 +419,21 @@ export function LiveMapScreen() {
 
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={demoMode ? 'Stop the demo walk' : 'Start the demo walk'}
-            accessibilityHint="Choose a heritage precinct and walk it using synthetic positions"
+            accessibilityLabel={demoMode ? (demo.paused ? 'Resume the demo walk' : 'Pause the demo walk') : 'Start the demo walk'}
+            accessibilityHint={demoMode ? 'Keeps the simulated location fixed until you resume' : 'Choose a heritage precinct and walk it using synthetic positions'}
             accessibilityState={{ selected: demoMode }}
             onPress={() => {
               pulse();
-              if (demoMode) demo.toggle();
+              if (demoMode) {
+                if (demo.paused) resumeManually();
+                else pauseManually();
+              }
               else setShowDemoRoutes(true);
             }}
             style={({ pressed }) => [styles.iconPill, demoMode && styles.pillActive, pressed && styles.buttonPressed]}
           >
             <Icon
-              name={demoMode ? 'pause' : 'play'}
+              name={demoMode && !demo.paused ? 'pause' : 'play'}
               size={25}
               color={demoMode ? colors.primary : colors.textSecondary}
             />
@@ -430,6 +449,7 @@ export function LiveMapScreen() {
           pulse={questsOpenHere > 0 && !showStory}
           onPress={() => {
             pulse();
+            if (demoMode) pauseManually();
             setShowQuests(true);
           }}
         />
@@ -475,6 +495,12 @@ export function LiveMapScreen() {
       </View>
 
       <View style={styles.dock} pointerEvents="box-none">
+        {guideTarget ? <View style={styles.guideCard}>
+          <Text variant="heading">{guideTarget.name}</Text>
+          <Text variant="caption" tone="secondary">Yellow line shows the direction. Use walking directions for streets and paths.</Text>
+          <Button label="Walking directions" icon="directions" onPress={() => { void questMemories.walkingDirections(guideTarget.coordinate).catch(() => setReward({ title: 'Could not open directions', detail: 'Please try again.' })); }} />
+          <Button label="Clear destination" variant="quiet" onPress={() => setGuideTargetId(null)} />
+        </View> : null}
         <View style={styles.toastSlot} pointerEvents="none">
           <RewardToast
             visible={reward !== null}
@@ -489,7 +515,10 @@ export function LiveMapScreen() {
             step={demo.step}
             coordinate={coordinate}
             atSiteId={atSiteId}
+            paused={demo.paused}
             onRestart={handleDemoRestart}
+            onPause={pauseManually}
+            onResume={resumeManually}
             onExit={demo.toggle}
           />
         ) : null}
@@ -554,16 +583,16 @@ export function LiveMapScreen() {
       <QuestSheet
         visible={showQuests}
         onClose={() => setShowQuests(false)}
-        atSiteId={atSiteId}
-        here={questsHere}
-        elsewhere={questsElsewhere}
-        onCompleteTask={(questId, taskId) => void onCompleteTask(questId, taskId)}
-        onUndoTask={(questId, taskId) => void uncompleteTask(questId, taskId)}
-        onGoToSite={goToSite}
-        onOpenQuest={(questId) => {
+        coordinate={coordinate}
+        quests={quests}
+        onGuide={guideToSite}
+        onCapture={(questId, taskId) => {
+          returnToQuests.current = true;
           setShowQuests(false);
-          router.push(`/(main)/tirtha/quests/${questId}`);
+          if (demoMode) pauseManually();
+          router.push({ pathname: '/(main)/tirtha/quest-camera', params: { questId, taskId } });
         }}
+        onMemories={() => { setShowQuests(false); router.push('/(main)/tirtha/memories'); }}
         onWitness={openSakshi}
       />
 
@@ -580,6 +609,8 @@ export function LiveMapScreen() {
         visible={showDemoRoutes}
         onClose={() => setShowDemoRoutes(false)}
         onSelect={(walkId) => {
+          manualPause.current = false;
+          setGuideTargetId(null);
           locationService.demo.selectWalk(walkId);
           locationService.setDemoMode(true);
           setShowDemoRoutes(false);
@@ -600,12 +631,12 @@ export function LiveMapScreen() {
             setShowStory(false);
             setCamera(null);
             // Dismissed without completing — still unfreeze so demo can continue.
-            if (demoMode) resumeWalk();
+            resumeAfterStory();
           }}
           onOpenQuests={() => {
             setShowStory(false);
             setCamera(null);
-            if (demoMode) resumeWalk();
+            resumeAfterStory();
             setShowQuests(true);
           }}
         />
@@ -622,6 +653,7 @@ export function LiveMapScreen() {
 }
 
 const styles = StyleSheet.create({
+  guideCard: { margin: spacing.md, padding: spacing.md, gap: spacing.xs, borderRadius: radii.lg, backgroundColor: colors.surface, borderColor: colors.warning, borderWidth: 1 },
   root: { flex: 1, backgroundColor: colors.background },
   topBar: {
     position: 'absolute',

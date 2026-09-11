@@ -84,7 +84,7 @@ export function TirthaScreen() {
       {featuredQuest ? (
         <View style={styles.questSection}>
           <View style={styles.sectionHeader}>
-            <Text variant="heading">Featured Quest</Text>
+            <Text variant="heading">Things to try</Text>
             <View style={styles.sectionActions}>
               <Button label="Memories" variant="quiet" onPress={() => router.push('./memories')} />
               <Button label="All Quests" variant="quiet" onPress={() => router.push('/(main)/tirtha/quests')} />
@@ -92,7 +92,7 @@ export function TirthaScreen() {
           </View>
           <QuestCard
             quest={featuredQuest}
-            onPress={() => router.push(`/(main)/tirtha/quests/${featuredQuest.id}`)}
+            onPress={() => router.push('/(main)/tirtha/quests')}
           />
         </View>
       ) : null}

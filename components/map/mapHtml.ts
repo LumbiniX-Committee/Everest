@@ -522,6 +522,21 @@ const POSITION_MARKER = `
         });
       };
 
+      window.sakshiSetRouteColor = function (color) {
+        if (color) map.setPaintProperty('route-line', 'line-color', color);
+      };
+
+      var guideMarker = null;
+      window.sakshiSetGuide = function (destination) {
+        if (guideMarker) { guideMarker.remove(); guideMarker = null; }
+        if (!destination) return;
+        guideMarker = new maplibregl.Marker({ color: ${JSON.stringify(colors.warning)} })
+          .setLngLat([destination.longitude, destination.latitude])
+          .setPopup(new maplibregl.Popup().setText(destination.name)).addTo(map);
+        if (pose.has) map.fitBounds([[pose.lng, pose.lat], [destination.longitude, destination.latitude]], { padding: 100, maxZoom: 17, duration: 700 });
+        else map.easeTo({ center: [destination.longitude, destination.latitude], zoom: 15 });
+      };
+
       /**
        * Take the camera somewhere, by name of distance rather than by number.
        *

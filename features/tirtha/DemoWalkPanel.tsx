@@ -29,7 +29,10 @@ export type DemoWalkPanelProps = {
   coordinate: Coordinate | null;
   /** The site within reach, from `useSiteArrival` — the same value the map uses. */
   atSiteId: string | null;
+  paused: boolean;
   onRestart: () => void;
+  onPause: () => void;
+  onResume: () => void;
   onExit: () => void;
 };
 
@@ -68,7 +71,10 @@ export function DemoWalkPanel({
   step,
   coordinate,
   atSiteId,
+  paused,
   onRestart,
+  onPause,
+  onResume,
   onExit,
 }: DemoWalkPanelProps) {
   const { preferences } = usePreferences();
@@ -177,11 +183,21 @@ export function DemoWalkPanel({
             {step?.walkName ?? 'Demo walk'} {expanded ? '▾' : '▸'}
           </Text>
           <Text variant="body" numberOfLines={expanded ? undefined : 1}>
-            {activityLine(step)}
+            {paused ? 'Paused here. Resume when you are ready.' : activityLine(step)}
           </Text>
         </Pressable>
         {expanded ? (
           <>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={paused ? 'Resume the demo walk' : 'Pause the demo walk'}
+              onPress={paused ? onResume : onPause}
+              style={styles.action}
+            >
+              <Text variant="caption" tone="secondary">
+                {paused ? 'Resume' : 'Pause'}
+              </Text>
+            </Pressable>
             <Pressable
               accessibilityRole="button"
               accessibilityLabel="Restart the demo walk"

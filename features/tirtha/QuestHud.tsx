@@ -52,9 +52,7 @@ export function QuestHud({ available, completed, total, pulse, onPress }: QuestH
     return () => loop.stop();
   }, [pulse, beat]);
 
-  if (total === 0) return null;
-
-  const done = completed >= total;
+  const done = total > 0 && completed >= total;
 
   return (
     <View style={styles.wrap} pointerEvents="box-none">
@@ -79,7 +77,7 @@ export function QuestHud({ available, completed, total, pulse, onPress }: QuestH
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={
-          done
+          total === 0 ? 'Explore nearby quests' : done
             ? `Quests here complete, ${completed} of ${total}`
             : `${available} quest${available === 1 ? '' : 's'} available here, ${completed} of ${total} done`
         }
@@ -93,7 +91,7 @@ export function QuestHud({ available, completed, total, pulse, onPress }: QuestH
           color={done ? colors.primary : colors.textSecondary}
         />
         <Text variant="caption" tone={done ? 'sandstone' : 'secondary'} style={styles.count}>
-          {completed}/{total}
+          Quests
         </Text>
       </Pressable>
     </View>

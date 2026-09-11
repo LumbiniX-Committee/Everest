@@ -39,6 +39,9 @@ export type MapWebViewProps = {
    * there. Pass an empty array or omit it and no route is drawn.
    */
   route?: readonly (readonly [number, number])[];
+  /** Distinguishes a simulation itinerary from the visitor's yellow guide line. */
+  routeColor?: string;
+  guideDestination?: (Coordinate & { name: string }) | null;
   /**
    * Where the camera should be, and how close.
    *
@@ -71,6 +74,8 @@ export function MapWebView({
   showFigure = false,
   topInset = 0,
   route,
+  routeColor = colors.sandstoneDeep,
+  guideDestination,
   camera,
 }: MapWebViewProps) {
   const [failed, setFailed] = useState(false);
@@ -130,6 +135,13 @@ export function MapWebView({
     );
   }, [ready, routeJson]);
 
+  useEffect(() => {
+    if (!ready) return;
+    webRef.current?.injectJavaScript(
+      `window.sakshiSetRouteColor && window.sakshiSetRouteColor(${JSON.stringify(routeColor)}); true;`,
+    );
+  }, [ready, routeColor]);
+
   /**
    * A commanded camera move.
    *
@@ -138,6 +150,11 @@ export function MapWebView({
    * render is a camera nobody can pan away from.
    */
   const cameraJson = camera ? JSON.stringify(camera) : null;
+  const guideJson = JSON.stringify(guideDestination ?? null);
+  useEffect(() => {
+    if (!ready) return;
+    webRef.current?.injectJavaScript(`window.sakshiSetGuide && window.sakshiSetGuide(${guideJson}); true;`);
+  }, [ready, guideJson]);
   useEffect(() => {
     if (!ready || !cameraJson) return;
     const target = JSON.parse(cameraJson) as NonNullable<MapWebViewProps['camera']>;
