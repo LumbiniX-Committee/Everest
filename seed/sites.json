@@ -1241,6 +1241,23 @@
         }
       }
     ],
+    "story": [
+      {
+        "title": { "en": "The oldest spout still running" },
+        "eyebrow": { "en": "Built in 570 CE" },
+        "body": { "en": "Manga Hiti is a dhunge dhara: a carved stone water spout drawing on Licchavi-period hydraulic technology, roughly 400 to 750 CE. Built in 570 CE at Mangal Bazar, it is considered the oldest working dhunge dhara on record, still running at the southern corner of Patan Durbar Square." }
+      },
+      {
+        "title": { "en": "Water carried from the hills" },
+        "eyebrow": { "en": "A canal, not a well" },
+        "body": { "en": "A dhunge dhara is fed indirectly. Historic rajkulo canals carried water from rivers and springs in the surrounding hills into ponds that recharged the valley's shallow aquifer, which underground stone and terracotta conduits then delivered to the spout itself. The carved outlet is only the visible end of a much older engineered system." }
+      },
+      {
+        "title": { "en": "A widely used technology now falling behind" },
+        "eyebrow": { "en": "573 recorded, most no longer flowing" },
+        "body": { "en": "A 2019 valley-wide survey recorded 573 dhunge dharas; 94 had already been lost entirely, and only 224 of the remaining 479 still produced water. In March 2022 the World Monuments Fund placed the Kathmandu Valley's hitis on its World Monuments Watch. Manga Hiti still runs, but like the others its flow is not checked on any continuous schedule." }
+      }
+    ],
     "timeline": [
       "dhunge-dhara-origin-570",
       "dhunge-dhara-2019-survey"
@@ -1255,7 +1272,18 @@
     "dhamma_links": [],
     "sources": [
       {
+        "title": "UNESCO WHC: Kathmandu Valley (121)",
+        "url": "https://whc.unesco.org/en/list/121"
+      },
+      {
         "title": "Slusser 1982, Nepal Mandala: A Cultural Study of the Kathmandu Valley"
+      },
+      {
+        "title": "Department of Archaeology, Nepal"
+      },
+      {
+        "title": "World Monuments Fund: Hitis (Water Fountains) of the Kathmandu Valley, 2022 World Monuments Watch",
+        "url": "https://www.wmf.org/projects/hitis-water-fountains-kathmandu-valley"
       }
     ]
   }

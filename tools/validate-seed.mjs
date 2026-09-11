@@ -46,7 +46,6 @@ const inGreaterBbox = (c, region = 'lumbini') => within(c, REGION_BBOX[region].g
 
 const sites = read('sites.json');
 const vantages = read('vantages.json');
-const quests = read('quests.json');
 const needs = read('needs.json');
 const timeline = read('timeline.json');
 const storySections = read('story-sections.json');
@@ -150,15 +149,6 @@ for (const p of plates) {
 const plateIds = new Set(plates.map((p) => p.id));
 for (const s of sites) for (const p of s.plates ?? []) if (!plateIds.has(p)) warn(`site '${s.id}': plate '${p}' not yet produced`);
 
-// --- quests -----------------------------------------------------------------
-for (const q of quests) {
-  const at = `quest '${q.id}'`;
-  if (q.site_id && !siteIds.has(q.site_id)) err(`${at}: references missing site '${q.site_id}'`);
-  if (q.vantage_id && !vantageIds.has(q.vantage_id)) err(`${at}: references missing vantage '${q.vantage_id}'`);
-  if (typeof q.merit !== 'number') err(`${at}: missing merit`);
-  if (q.riddle && (!Array.isArray(q.riddle.accept) || !q.riddle.accept.length)) err(`${at}: riddle has no accepted answers`);
-}
-
 // --- needs ------------------------------------------------------------------
 for (const n of needs) {
   const at = `need '${n.id}'`;
@@ -167,7 +157,7 @@ for (const n of needs) {
 }
 
 // --- report -----------------------------------------------------------------
-console.log(`seed: ${sites.length} sites, ${vantages.length} vantages, ${quests.length} quests, ${needs.length} needs, ${timeline.length} timeline, ${plates.length} plates`);
+console.log(`seed: ${sites.length} sites, ${vantages.length} vantages, ${needs.length} needs, ${timeline.length} timeline, ${plates.length} plates`);
 for (const w of warnings) console.log(`  WARN  ${w}`);
 if (errors.length) {
   for (const e of errors) console.error(`  ERROR ${e}`);

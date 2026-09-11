@@ -899,30 +899,27 @@ export const demoSites: HeritageSite[] = [
     ],
     "story": [
       {
-        "title": "The carved spouts",
-        "eyebrow": "Water emerges as sculpture",
-        "body": "Manga Hiti is entered by descending below street level toward carved stone outlets. The spouts turn an underground supply system into a public architectural place where water collection, ritual and everyday meeting share the same steps."
-      },
-      {
-        "title": "A Licchavi-period system",
+        "title": "The oldest spout still running",
         "eyebrow": "Built in 570 CE",
-        "body": "The hiti is dated to 570 CE and is regarded as the oldest working stone-spout system on record in the valley. Its importance lies not only in the carved face but in the infiltration chamber and conduits that allow gravity to deliver water."
+        "body": "Manga Hiti is a dhunge dhara: a carved stone water spout drawing on Licchavi-period hydraulic technology, roughly 400 to 750 CE. Built in 570 CE at Mangal Bazar, it is considered the oldest working dhunge dhara on record, still running at the southern corner of Patan Durbar Square."
       },
       {
-        "title": "One node in a valley network",
-        "eyebrow": "Infrastructure as heritage",
-        "body": "Stone spouts once formed a distributed water network across Kathmandu Valley towns. A 2019 survey recorded hundreds, but also many lost systems and many surviving spouts without flow. Manga Hiti must therefore be read as part of a vulnerable network, not an isolated ornament."
+        "title": "Water carried from the hills",
+        "eyebrow": "A canal, not a well",
+        "body": "A dhunge dhara is fed indirectly. Historic rajkulo canals carried water from rivers and springs in the surrounding hills into ponds that recharged the valley's shallow aquifer, which underground stone and terracotta conduits then delivered to the spout itself. The carved outlet is only the visible end of a much older engineered system."
       },
       {
-        "title": "Watch the waterline",
-        "eyebrow": "A condition story still unfolding",
-        "body": "The app has no continuous official flow record for Manga Hiti. A repeat photograph from the same step, paired with a dated note on whether each outlet is running, can build evidence without pretending that one visit describes the whole year."
+        "title": "A widely used technology now falling behind",
+        "eyebrow": "573 recorded, most no longer flowing",
+        "body": "A 2019 valley-wide survey recorded 573 dhunge dharas; 94 had already been lost entirely, and only 224 of the remaining 479 still produced water. In March 2022 the World Monuments Fund placed the Kathmandu Valley's hitis on its World Monuments Watch. Manga Hiti still runs, but like the others its flow is not checked on any continuous schedule."
       }
     ],
     "dhammaLinks": [],
     "sourceTier": "archaeological",
     "sourceIds": [
-      "slusser-1982"
+      "slusser-1982",
+      "unesco-kv-1979",
+      "doa-nepal"
     ],
     "condition": "open",
     "vantageIds": [

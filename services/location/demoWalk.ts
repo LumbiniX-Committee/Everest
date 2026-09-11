@@ -102,11 +102,10 @@ export type DemoWalkDefinition = {
  * rather than re-announcing everything.
  *
  * The ids are the ones in `data/generated/sites.ts`, which is the list `@/data`
- * actually exports. `data/demo/sites.ts` still exists on disk with a *different*
- * set of ids (`ashoka-pillar`, `puskarini-pond`, `bodhi-tree`) and is no longer
- * exported by `data/demo/index.ts` — an itinerary written against those names
- * resolves nothing and silently skips every leg. If a waypoint here stops
- * resolving, check which of the two files the name came from.
+ * actually exports (`data/demo/sites.ts`, an earlier draft with a different id
+ * scheme — `ashoka-pillar`, `puskarini-pond`, `bodhi-tree` — has been deleted;
+ * an itinerary written against those names would have resolved nothing and
+ * silently skipped every leg).
  *
  * The Marker Stone shares the temple coordinate, but remains an explicit dwell
  * waypoint. That zero-distance pause is intentional: it opens the stone's own
