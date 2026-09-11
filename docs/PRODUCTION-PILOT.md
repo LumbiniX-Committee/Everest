@@ -75,6 +75,25 @@ rows reject changed upserts while allowing exact sync retries. Missing
 measurements remain null. Evidence photographs are create-only: a retry can
 reuse an existing object but cannot replace its bytes.
 
+**Corroborations are mock-only.** `shared/types.ts`, `core/merit/rules.ts`,
+`shared/merit.ts`, `services/custodian/index.ts`, and `mock-api/server.mjs`
+implement a peer-corroboration count and a `corroborated` report status, and
+the mock API's own CSV/GeoJSON exports include a `corroborations` column. No
+Supabase migration backs this: `condition_reports` and
+`condition_report_actions` in `0009_production_pilot.sql` have no
+corroboration table, column, or status value, and `services/custodian/index.ts`
+has no live-backend implementation to call. This is a deliberate scope
+decision, not an oversight — corroboration needs its own abuse model (who may
+corroborate, whether self-corroboration or a single custodian's repeat
+corroboration should count, and how it interacts with the existing
+merit-award ledger) that has not been designed for a real multi-user
+deployment. `landing/lib/custodian-export.ts` does not export a
+`corroborations` field for this reason; adding one before the schema exists
+would export a column that can never populate. Treat this as a rollout gate:
+before corroboration ships against Supabase, add a migration with its own RLS
+policy (mirroring the append-only pattern of `condition_report_actions`) and
+wire `services/custodian/index.ts` to it.
+
 ## Web routes and disclosure boundary
 
 Privileged same-origin APIs:
@@ -114,6 +133,19 @@ SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... npm run catalog:apply
 key, upserts the 15 sites and 12 vantages, and never deletes remote rows. Never
 place that key in an `EXPO_PUBLIC_*` or `NEXT_PUBLIC_*` variable.
 
+To make a fresh staging dashboard show real numbers instead of dashes before
+any pilot custodian has visited, run `npm run seed:staging:apply` after the
+catalogue exists. `tools/seed-history-supabase.mjs` reuses the same history
+generator `tools/seed-history.mjs` uses for the mock API, so the two do not
+drift, and inserts observations, condition reports and (through a provisioned
+seed custodian session, since the append-only action trail requires a real
+authenticated actor) condition report actions. It needs `SUPABASE_ANON_KEY` in
+addition to the service-role key. Read the file's header comment before
+running it against anything other than a disposable staging project: seeded
+acknowledgement timestamps reflect when the script ran, not the simulated
+historical time, because the audit-trail trigger stamps `created_at` itself
+and cannot be backdated by any caller.
+
 Configure `landing/.env.local` from `landing/.env.example`, and set
 `SAKSHI_REQUIRE_PRODUCTION_CONFIG=1` in the deployment environment. Invite each
 pilot custodian through Supabase Auth, then provision only the required site
@@ -138,6 +170,9 @@ Code-complete does not mean field-ready. The remaining operational sequence is:
    acceptance passes. Release public transparency only after it approves the
    disclosure taxonomy; release adoption only after consent and cadence are
    approved.
+8. Corroboration stays mock-only until a migration and abuse model exist for
+   it (see "Production architecture" above); do not enable it against a real
+   custodian organisation before then.
 
 The repository cannot itself verify hosted Supabase settings, invite real
 accounts, approve a disclosure policy, contact institutions, open exports in

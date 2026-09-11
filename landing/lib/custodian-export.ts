@@ -20,7 +20,8 @@ export function conditionReportsCsv(
 ): string {
   const rows: unknown[][] = [[
     'id', 'site_id', 'latitude', 'longitude', 'coordinate_source', 'vantage_id', 'align_score',
-    'category', 'subtype', 'severity', 'status', 'status_changed_at', 'created_at',
+    'category', 'subtype', 'severity', 'note', 'status', 'status_changed_at', 'acknowledged_at',
+    'custodian_note', 'created_at',
   ]];
   reports.forEach((report) => {
     const observation = observations.get(report.capture_id);
@@ -36,8 +37,11 @@ export function conditionReportsCsv(
       report.category,
       report.subtype ?? '',
       report.severity,
+      report.note ?? '',
       report.status,
       report.status_changed_at ?? '',
+      report.acknowledged_at ?? '',
+      report.custodian_note ?? '',
       report.created_at,
     ]);
   });
@@ -72,7 +76,11 @@ export function conditionReportsGeoJson(
           category: report.category,
           subtype: report.subtype,
           severity: report.severity,
+          note: report.note,
           status: report.status,
+          status_changed_at: report.status_changed_at,
+          acknowledged_at: report.acknowledged_at,
+          custodian_note: report.custodian_note,
           created_at: report.created_at,
           coordinate_source: 'capture' as const,
         },

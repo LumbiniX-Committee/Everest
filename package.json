@@ -20,6 +20,8 @@
     "gen": "node tools/gen-data.mjs",
     "catalog:plan": "node tools/sync-catalog.mjs",
     "catalog:apply": "node tools/sync-catalog.mjs --apply",
+    "seed:staging:plan": "node tools/seed-history-supabase.mjs",
+    "seed:staging:apply": "node tools/seed-history-supabase.mjs --apply",
     "release:check": "node --env-file-if-exists=.env.local tools/check-release-config.mjs",
     "eas-build-pre-install": "node tools/check-release-config.mjs",
     "test": "node tools/run-tests.mjs",

@@ -17,6 +17,8 @@ export type ConditionReport = {
   status: ReportStatus;
   custodian_note: string | null;
   status_changed_at: string | null;
+  /** When this report first reached `acknowledged`, or null if it never has. Not a stored column: derived from the earliest matching row in the append-only `condition_report_actions` table. */
+  acknowledged_at: string | null;
   created_at: string;
 };
 
@@ -71,7 +73,22 @@ function latestActions(actions: RawAction[]): Map<string, RawAction> {
   return latest;
 }
 
-function toReport(report: RawReport, action?: RawAction): ConditionReport {
+/**
+ * The earliest `acknowledged` action per report, not the latest — a report
+ * that moved on to `in_progress` or `resolved` should still show when it was
+ * first acknowledged. `actions` is fetched ordered by `created_at` descending
+ * (same convention as `latestActions`), so an unconditional `set()` for every
+ * match leaves the chronologically-earliest one as the last write.
+ */
+function earliestAcknowledgedAt(actions: RawAction[]): Map<string, string> {
+  const earliest = new Map<string, string>();
+  for (const action of actions) {
+    if (action.target_status === 'acknowledged') earliest.set(action.report_id, action.created_at);
+  }
+  return earliest;
+}
+
+function toReport(report: RawReport, action?: RawAction, acknowledgedAt?: string): ConditionReport {
   return {
     id: report.id,
     capture_id: report.observation_id,
@@ -83,6 +100,7 @@ function toReport(report: RawReport, action?: RawAction): ConditionReport {
     status: action?.target_status ?? 'open',
     custodian_note: action?.note ?? null,
     status_changed_at: action?.created_at ?? null,
+    acknowledged_at: acknowledgedAt ?? null,
     created_at: report.recorded_at,
   };
 }
@@ -158,8 +176,9 @@ export async function listReports(query: ReportQuery = {}, client?: SupabaseClie
     }
 
     const latest = latestActions(actions);
+    const acknowledged = earliestAcknowledgedAt(actions);
     matches.push(...reports
-      .map((report) => toReport(report, latest.get(report.id)))
+      .map((report) => toReport(report, latest.get(report.id), acknowledged.get(report.id)))
       .filter((report) => !query.status || report.status === query.status));
     exhausted = reports.length < pageSize;
     if (reports.length) {
@@ -286,6 +305,7 @@ export async function dashboard(
   }
 
   const latest = latestActions(actions);
+  const acknowledged = earliestAcknowledgedAt(actions);
   const activeVantageIds = vantages.map((vantage) => vantage.id);
   let priorityActions: Array<{ vantage_id: string; urgent: boolean; created_at: string; id: string }> = [];
   if (activeVantageIds.length) {
@@ -303,7 +323,7 @@ export async function dashboard(
     if (!latestPriority.has(action.vantage_id)) latestPriority.set(action.vantage_id, action.urgent);
   });
   const surveyed = new Set(observations.map((observation) => observation.vantage_id));
-  const currentReports = reports.map((report) => toReport(report, latest.get(report.id)));
+  const currentReports = reports.map((report) => toReport(report, latest.get(report.id), acknowledged.get(report.id)));
   const statuses: Record<ReportStatus, number> = { open: 0, acknowledged: 0, in_progress: 0, resolved: 0 };
   currentReports.forEach((report) => { statuses[report.status] += 1; });
 
