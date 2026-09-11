@@ -1085,3 +1085,54 @@ export async function markQuestSubmissionSynced(
     taskId,
   );
 }
+
+/** Every quest submission regardless of site or photo, for a full export. */
+export async function listEveryQuestSubmission(): Promise<QuestSubmission[]> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<QuestSubmissionRow>('SELECT * FROM quest_submissions');
+  return rows.map(toQuestSubmission);
+}
+
+export type PersonalRecordPhotos = {
+  observationPhotoUris: string[];
+  questSubmissionPhotoUris: string[];
+};
+
+/**
+ * Deletes every personal-activity table this device holds — observations,
+ * condition reports, quest submissions, merit events, site visits and quest
+ * completions — and returns the local photo file URIs so the caller can
+ * remove those files too (this module does no file-system I/O).
+ *
+ * Quests and quest_progress are untouched: they are catalogue content and
+ * re-seedable derived progress, already separately resettable via
+ * `resetQuestProgress`, not personal-activity evidence.
+ *
+ * This clears only what this device is holding. Anything already synced to
+ * Supabase before this call remains there as anonymous conservation evidence
+ * — see "Deliberately not planned: Deleting observations" in
+ * docs/DATA-ARCHITECTURE.md, and services/privacy for the full picture of
+ * what "delete my records" actually does.
+ */
+export async function wipeAllPersonalRecords(): Promise<PersonalRecordPhotos> {
+  const db = await getDatabase();
+  const observationPhotoUris = (
+    await db.getAllAsync<{ photo_uri: string }>('SELECT photo_uri FROM observations')
+  ).map((row) => row.photo_uri);
+  const questSubmissionPhotoUris = (
+    await db.getAllAsync<{ photo_uri: string | null }>(
+      'SELECT photo_uri FROM quest_submissions WHERE photo_uri IS NOT NULL',
+    )
+  ).map((row) => row.photo_uri as string);
+
+  await db.withTransactionAsync(async () => {
+    await db.runAsync('DELETE FROM condition_reports');
+    await db.runAsync('DELETE FROM observations');
+    await db.runAsync('DELETE FROM quest_submissions');
+    await db.runAsync('DELETE FROM merit_events');
+    await db.runAsync('DELETE FROM site_visits');
+    await db.runAsync('DELETE FROM quest_completions');
+  });
+
+  return { observationPhotoUris, questSubmissionPhotoUris };
+}

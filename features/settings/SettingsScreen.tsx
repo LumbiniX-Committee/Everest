@@ -89,6 +89,11 @@ export function SettingsScreen() {
           hint={t('settings.storageHint')}
           onPress={() => router.push('/(main)/settings/storage')}
         />
+        <SettingsRow
+          label={t('settings.privacy')}
+          hint={t('settings.privacyHint')}
+          onPress={() => router.push('/(main)/settings/privacy')}
+        />
       </SettingsSection>
 
       <SettingsSection title={t('settings.institutional')}>

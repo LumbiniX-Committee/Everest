@@ -173,6 +173,11 @@ Code-complete does not mean field-ready. The remaining operational sequence is:
 8. Corroboration stays mock-only until a migration and abuse model exist for
    it (see "Production architecture" above); do not enable it against a real
    custodian organisation before then.
+9. [PRIVACY.md](PRIVACY.md) records what is collected, the lawful basis and
+   retention position the product team has taken, and what Settings →
+   Privacy actually does and does not delete. It is a product position, not
+   legal advice, and needs review by counsel before a government or
+   institutional partner treats it as a compliance document.
 
 The repository cannot itself verify hosted Supabase settings, invite real
 accounts, approve a disclosure policy, contact institutions, open exports in

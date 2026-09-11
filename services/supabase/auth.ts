@@ -102,3 +102,23 @@ export function resetSessionCache(): void {
   pending = null;
   reportedUnavailable = false;
 }
+
+/**
+ * Ends the current anonymous session so the next sync signs in as a new one.
+ *
+ * This is the account half of "forget this device" (see services/privacy):
+ * the anonymous user existed only to own rows going forward, never to
+ * identify anyone, so ending it and starting fresh is a complete answer, not
+ * a partial one. Rows already written under the old id are unaffected — the
+ * id itself was never a name.
+ *
+ * Safe with no configured project or no active session: signOut on a signed-
+ * out client is a no-op, not an error.
+ */
+export async function forgetIdentity(): Promise<void> {
+  if (isConfigured()) {
+    const supabase = getSupabase();
+    await supabase.auth.signOut();
+  }
+  resetSessionCache();
+}

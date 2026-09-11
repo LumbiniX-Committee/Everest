@@ -58,14 +58,14 @@ Three findings shape the whole list below:
 | 7 | **Replace `mock-api` with a real backend** | The custodian dashboard — the half we would sell — depends on scaffolding whose own README says to delete it. | High | Open |
 | 8 | **Survey-grade coordinates from the Lumbini Development Trust** | Five of fifteen sites still carry coordinates read off a document. Partnership converts the app from illustrative to authoritative, and it is the highest-value thing an institution can contribute. | Relationship, not code | Open |
 | 9 | **One custodian pilot, named and real** | One institution acknowledging one real report is worth more than any amount of further building. It is also the only way to learn whether the loop closes in practice. | Medium | Open |
-| 10 | **A data-protection posture** | The ethics policy governs money and says nothing about data law. The app records where individuals stood at places of worship. Retention, deletion, and lawful basis need answering before a government partner asks. | Medium | Open |
+| 10 | **A data-protection posture** | The ethics policy governs money and says nothing about data law. The app records where individuals stood at places of worship. Retention, deletion, and lawful basis need answering before a government partner asks. | Medium | **Done** — see [PRIVACY.md](PRIVACY.md), the `/privacy` page, and Settings → Privacy's export/delete. Needs counsel review before it is treated as a compliance document. |
 
 ### Band C — Evidence: the claims get tested
 
 | # | Strategy | Why it matters | Cost | State |
 |---|---|---|---|---|
 | 11 | **Ship the three stack replacements** | Sync to a real replication engine, media to content-addressed zero-egress storage, tiles to a self-hosted archive. Detailed in the engineering report; none is urgent until a second institution exists. | High | Open |
-| 12 | **Span-level faithfulness evaluation** | The existing Dhamma benchmark scores answers. The 2024–2026 literature scores *spans*, and finds models introduce unsupported statements even with correct context in front of them. Retrieving is not the same as being grounded. | Medium | Open |
+| 12 | **Span-level faithfulness evaluation** | The existing Dhamma benchmark scores answers. The 2024–2026 literature scores *spans*, and finds models introduce unsupported statements even with correct context in front of them. Retrieving is not the same as being grounded. | Medium | **Done** — `tools/dhamma-eval.mjs` checks each cited span's content-word coverage against the segment it names, not the union of retrieved passages; caught and fixed a real unfaithful citation in `DEMO_CACHE`. |
 | 13 | **Close the damage-model loop** | Confirmed reports become the training set. Generalisation across brick, coursed stone, lime plaster and eroded sandstone is the open problem in the crack-detection literature, and our own corpus is the only fix. | Medium | Open |
 
 ### Band D — Growth

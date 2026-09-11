@@ -13,6 +13,7 @@ export const NAV = [
   { href: '/for-custodians', label: 'For custodians' },
   { href: '/data', label: 'Open data' },
   { href: '/ethics', label: 'Ethics' },
+  { href: '/privacy', label: 'Privacy' },
 ] as const;
 
 export const REPO_URL = 'https://github.com/LumbiniX-Committee/Everest';
