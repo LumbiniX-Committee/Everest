@@ -3,6 +3,8 @@ import { StyleSheet, View } from 'react-native';
 
 import { ScreenHeader } from '@/components/common';
 import { Button, Screen, Text } from '@/components/ui';
+import { useInterfaceLanguage } from '@/i18n/context';
+import { formatVisitorCopy } from '@/i18n/visitor';
 import {
   deleteOfflineModel,
   downloadOfflineModel,
@@ -15,6 +17,7 @@ import { spacing } from '@/theme';
 import { SettingsSection } from './components';
 
 export function OfflineAIScreen() {
+  const language = useInterfaceLanguage();
   const [status, setStatus] = useState<OfflineModelStatus>({ state: 'missing' });
   const [error, setError] = useState<string | null>(null);
 
@@ -65,7 +68,7 @@ export function OfflineAIScreen() {
             : status.state === 'unsupported'
               ? 'This build does not contain the native llama.cpp runtime. Install a Sakshi development build; Expo Go cannot run offline generation.'
               : status.state === 'downloading'
-                ? `Downloading… ${progress}%`
+                ? formatVisitorCopy(language, 'offline.downloading', { progress })
                 : status.state === 'error'
                   ? status.message
                   : 'Not downloaded. The deterministic local corpus remains available.'}
@@ -75,7 +78,7 @@ export function OfflineAIScreen() {
           <Button label="Delete offline model" variant="quiet" block onPress={() => void remove()} />
         ) : (
           <Button
-            label={isDownloading ? `Downloading… ${progress}%` : 'Download offline model'}
+            label={isDownloading ? formatVisitorCopy(language, 'offline.downloading', { progress }) : 'Download offline model'}
             variant="primary"
             block
             loading={isDownloading}

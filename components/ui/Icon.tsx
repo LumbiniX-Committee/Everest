@@ -27,11 +27,11 @@ export type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
 export type IconProps = {
   name: IconName;
   size?: number;
-  /** Defaults to the sandstone the rest of the chrome is drawn in. */
+  /** Defaults to the teal the rest of the interactive chrome is drawn in. */
   color?: string;
   style?: React.ComponentProps<typeof MaterialCommunityIcons>['style'];
 };
 
-export function Icon({ name, size = 22, color = colors.sandstoneDeep, style }: IconProps) {
+export function Icon({ name, size = 22, color = colors.primary, style }: IconProps) {
   return <MaterialCommunityIcons name={name} size={size} color={color} style={style} />;
 }

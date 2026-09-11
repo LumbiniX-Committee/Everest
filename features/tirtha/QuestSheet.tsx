@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { Button, BottomSheet, Icon, ProgressIndicator, Text } from '@/components/ui';
 import { SiteVisual } from '@/components/site';
 import { findSite, siteIdsForQuest } from '@/data';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { colors, radii, spacing } from '@/theme';
 import type { QuestWithProgress } from '@/types';
 
@@ -73,16 +74,19 @@ export function QuestSheet({
   onWitness,
 }: QuestSheetProps) {
   const site = atSiteId ? findSite(atSiteId) : undefined;
+  const parentSite = site?.parentSiteId ? findSite(site.parentSiteId) : undefined;
+  const place = parentSite ?? site;
   const completedHere = here.filter(questDone).length;
 
   return (
     <BottomSheet
       visible={visible}
       onClose={onClose}
-      title={site ? site.name : 'Quests'}
+      title={place ? place.name : 'Quests'}
+      translateTitle={!place}
       subtitle={
         here.length > 0
-          ? `${completedHere} / ${here.length} complete`
+          ? `${site && parentSite ? `You reached ${site.name}` : 'You reached this place'} · ${completedHere} / ${here.length} complete`
           : 'Nothing to do where you are standing'
       }
       scroll
@@ -117,7 +121,7 @@ export function QuestSheet({
         {elsewhere.length > 0 ? (
           <View style={styles.section}>
             <Text variant="label" tone="muted" uppercase>
-              Elsewhere in Lumbini
+              Other heritage places
             </Text>
             {elsewhere.map((quest) => (
               <QuestRow
@@ -155,6 +159,7 @@ function QuestRow({
   onOpenQuest: (questId: string) => void;
   onWitness: (siteId: string) => void;
 }) {
+  const ui = useVisitorLiteralCopy();
   const done = questDone(quest);
   const completedIds = quest.progress?.completedTasks ?? [];
   const homeSiteId = siteIdsForQuest(quest)[0];
@@ -168,7 +173,7 @@ function QuestRow({
         <View style={styles.cardHead}>
           <Icon name="lock-outline" size={20} color={colors.textMuted} />
           <View style={styles.cardTitle}>
-            <Text variant="heading">{quest.title}</Text>
+            <Text variant="heading" translate={false}>{quest.title}</Text>
             <Text variant="caption" tone="muted">
               {homeSite ? `Visit ${homeSite.name} to unlock this quest.` : 'Locked.'}
             </Text>
@@ -179,7 +184,7 @@ function QuestRow({
             label="Go to location"
             variant="secondary"
             onPress={() => onGoToSite(homeSiteId)}
-            accessibilityHint={`Takes you to ${homeSite?.name ?? 'the place this quest belongs to'}`}
+            accessibilityHint={`${ui('Takes you to')} ${homeSite?.name ?? ui('the place this quest belongs to')}`}
           />
         ) : null}
       </View>
@@ -190,8 +195,8 @@ function QuestRow({
     <View style={[styles.card, done && styles.cardDone]}>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={`Open ${quest.title}`}
-        accessibilityHint="Shows the full quest, its intention and any evidence filed"
+        accessibilityLabel={`${ui('Open')} ${quest.title}`}
+        accessibilityHint={ui('Shows the full quest, its intention and any evidence filed')}
         onPress={() => onOpenQuest(quest.id)}
         style={({ pressed }) => [styles.cardOpen, pressed && styles.cardPressed]}
       >
@@ -203,7 +208,7 @@ function QuestRow({
             color={done ? colors.sandstoneDeep : colors.textSecondary}
           />
           <View style={styles.cardTitle}>
-            <Text variant="heading">{quest.title}</Text>
+            <Text variant="heading" translate={false}>{quest.title}</Text>
             {/*
               No amount. `+{tasks.length * 100}` used to sit here, and it was
               invented twice over: quests carry no value of their own — puṇya is
@@ -235,13 +240,13 @@ function QuestRow({
               </View>
 
               <View style={styles.taskText}>
-                <Text variant="body" tone={taskDone ? 'muted' : 'primary'}>
+                <Text variant="body" tone={taskDone ? 'muted' : 'primary'} translate={false}>
                   {task.title}
                 </Text>
                 {/* The description is the instruction. Once done it has been
                     followed, so it stops being worth the two lines. */}
                 {!taskDone ? (
-                  <Text variant="caption" tone="muted" numberOfLines={2}>
+                  <Text variant="caption" tone="muted" numberOfLines={2} translate={false}>
                     {task.description}
                   </Text>
                 ) : null}
@@ -262,25 +267,38 @@ function QuestRow({
                     separate features — this is the seam, and the tick beside it
                     is still there for someone who cannot capture right now.
                   */}
-                  {task.evidence && task.evidence !== 'none' && homeSiteId ? (
+                  {task.autoComplete === 'vantage_capture' && homeSiteId ? (
                     <Button
                       label="Witness"
                       variant="secondary"
                       onPress={() => onWitness(task.targetId ?? homeSiteId)}
-                      accessibilityHint="Opens Sākṣī to record what you can see here"
+                      accessibilityHint={ui('Opens Sākṣī to record what you can see here')}
                     />
                   ) : null}
-                  <Button
-                    label="Mark done"
-                    variant="secondary"
-                    onPress={() => onCompleteTask(quest.id, task.id)}
-                    accessibilityHint="Records this objective as done"
-                  />
+                  {task.autoComplete === 'arrival' ? (
+                    <Text variant="caption" tone="muted">Completes when you arrive</Text>
+                  ) : task.evidence === 'photo' ? (
+                    <Button
+                      label="Capture memory"
+                      variant="secondary"
+                      onPress={() => onOpenQuest(quest.id)}
+                      accessibilityHint={ui('Opens the separate quest memory camera')}
+                    />
+                  ) : task.autoComplete !== 'vantage_capture' ? (
+                    <Button
+                      label="Mark done"
+                      variant="secondary"
+                      onPress={() => onCompleteTask(quest.id, task.id)}
+                      accessibilityHint={ui('Records this objective as done')}
+                    />
+                  ) : null}
                 </View>
+              ) : task.autoComplete ? (
+                <Text variant="caption" tone="sandstone">Verified</Text>
               ) : (
                 <Pressable
                   accessibilityRole="button"
-                  accessibilityLabel={`Undo ${task.title}`}
+                  accessibilityLabel={`${ui('Undo')} ${task.title}`}
                   onPress={() => onUndoTask(quest.id, task.id)}
                   hitSlop={10}
                   style={styles.undo}

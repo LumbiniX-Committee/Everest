@@ -4,6 +4,7 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { Text } from '@/components/ui';
 import { demoPrecincts, findSite } from '@/data';
 import { arrival } from '@/services';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import type { DemoStep } from '@/services/location/demoWalk';
 import { usePractice, usePreferences } from '@/store';
 import { colors, radii, spacing } from '@/theme';
@@ -71,6 +72,7 @@ export function DemoWalkPanel({
   onRestart,
   onExit,
 }: DemoWalkPanelProps) {
+  const ui = useVisitorLiteralCopy();
   const { preferences } = usePreferences();
   const { events, summary } = usePractice();
   const [log, setLog] = useState<string[]>([]);
@@ -169,12 +171,12 @@ export function DemoWalkPanel({
         <Pressable
           accessibilityRole="button"
           accessibilityState={{ expanded }}
-          accessibilityLabel={expanded ? 'Collapse the demo detail' : 'Expand the demo detail'}
+          accessibilityLabel={ui(expanded ? 'Collapse the demo detail' : 'Expand the demo detail')}
           onPress={() => setExpanded((open) => !open)}
           style={styles.headerText}
         >
           <Text variant="label" tone="sandstone" uppercase>
-            Demo walk {expanded ? '▾' : '▸'}
+            {step?.walkName ?? 'Demo walk'} {expanded ? '▾' : '▸'}
           </Text>
           <Text variant="body" numberOfLines={expanded ? undefined : 1}>
             {activityLine(step)}
@@ -184,7 +186,7 @@ export function DemoWalkPanel({
           <>
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Restart the demo walk"
+              accessibilityLabel={ui('Restart the demo walk')}
               onPress={onRestart}
               style={styles.action}
             >
@@ -194,7 +196,7 @@ export function DemoWalkPanel({
             </Pressable>
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Leave demo mode"
+              accessibilityLabel={ui('Leave demo mode')}
               onPress={onExit}
               style={styles.action}
             >

@@ -9,6 +9,7 @@ import { SiteListItem } from '@/components/site';
 import { demoSites } from '@/data';
 import { QuestCard } from '@/features/quests';
 import { useCurrentPosition, useNearbySites } from '@/hooks';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { usePermission, useQuests } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 
@@ -21,6 +22,7 @@ import { colors, radii, spacing } from '@/theme';
  * inline, as an offer, and never blocks the list.
  */
 export function TirthaScreen() {
+  const ui = useVisitorLiteralCopy();
   const router = useRouter();
   const { coordinate } = useCurrentPosition({ watch: true });
   const sites = useNearbySites(coordinate);
@@ -52,8 +54,8 @@ export function TirthaScreen() {
           where nothing competes for the touches. */}
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel="Open the full screen map"
-        accessibilityHint="Shows the map full screen, where you can pan and zoom"
+        accessibilityLabel={ui('Open the full screen map')}
+        accessibilityHint={ui('Shows the map full screen, where you can pan and zoom')}
         onPress={() => router.push('/(main)/tirtha/map')}
       >
         <SiteMap3D onSelectSite={(id) => router.push(`/(main)/tirtha/site/${id}`)} />
@@ -61,8 +63,8 @@ export function TirthaScreen() {
 
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel="Open the full screen map"
-        accessibilityHint="Shows the map full screen with your position on it"
+        accessibilityLabel={ui('Open the full screen map')}
+        accessibilityHint={ui('Shows the map full screen with your position on it')}
         onPress={() => router.push('/(main)/tirtha/map')}
         style={({ pressed }) => [styles.mapCta, pressed && styles.mapCtaPressed]}
       >
@@ -85,11 +87,10 @@ export function TirthaScreen() {
         <View style={styles.questSection}>
           <View style={styles.sectionHeader}>
             <Text variant="heading">Featured Quest</Text>
-            <Button
-              label="View All Quests"
-              variant="quiet"
-              onPress={() => router.push('/(main)/tirtha/quests')}
-            />
+            <View style={styles.sectionActions}>
+              <Button label="Memories" variant="quiet" onPress={() => router.push('./memories')} />
+              <Button label="All Quests" variant="quiet" onPress={() => router.push('/(main)/tirtha/quests')} />
+            </View>
           </View>
           <QuestCard
             quest={featuredQuest}
@@ -133,5 +134,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: spacing.xs,
   },
+  sectionActions: { flexDirection: 'row', alignItems: 'center' },
   list: { marginTop: spacing.lg, gap: spacing.md },
 });

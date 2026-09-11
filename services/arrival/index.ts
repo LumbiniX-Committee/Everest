@@ -171,6 +171,8 @@ export type SiteSignificance = {
   narrationSeconds?: number;
   /** Label/value pairs — what it enshrines, how it is built, when. */
   facts: { label: string; value: string }[];
+  /** Monument-level chapters for a palace square or temple complex. */
+  story: NonNullable<HeritageSite['story']>;
   /** Cited passages that genuinely concern this site. Often none. */
   dhamma: ReturnType<typeof dhammaForSite>;
 };
@@ -191,6 +193,7 @@ export function significanceOf(siteId: string, tier: WisdomTier = 'medium'): Sit
     narration: narration?.en,
     narrationSeconds: narration?.approx_seconds,
     facts: depth.facts ? site.facts ?? [] : [],
+    story: depth.facts ? site.story ?? [] : [],
     dhamma: depth.scripture ? dhammaForSite(siteId) : [],
   };
 }
@@ -198,5 +201,5 @@ export function significanceOf(siteId: string, tier: WisdomTier = 'medium'): Sit
 /** True when there is something worth saying on arrival at this site. */
 export function hasSomethingToSay(siteId: string, tier: WisdomTier = 'medium'): boolean {
   const s = significanceOf(siteId, tier);
-  return !!s && (!!s.narration || s.facts.length > 0 || s.dhamma.length > 0);
+  return !!s && (!!s.narration || s.facts.length > 0 || s.story.length > 0 || s.dhamma.length > 0);
 }

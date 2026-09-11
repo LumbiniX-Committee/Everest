@@ -1,0 +1,728 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "audit": {
+    "generatedAt": "2026-08-25",
+    "commit": "dbe6d45e7297c5d889be9e69c3e2e190a578e6b1",
+    "method": "Filename and path substring search over ts/tsx/js/jsx/mjs/cjs/json/md/ps1/py/ipynb/html outside node_modules, .git, .expo, dist and assets itself. Dimensions were not extracted (no image tooling used).",
+    "caution": "Status is a static-reference heuristic. Never delete an asset on the strength of this file alone."
+  },
+  "summary": {
+    "total": 44,
+    "totalBytes": 20002847,
+    "referenced": 41,
+    "toolingOrDocsOnly": 3,
+    "unreferenced": 0
+  },
+  "assets": [
+    {
+      "path": "assets/android-icon-background.png",
+      "fileType": "image/png",
+      "extension": ".png",
+      "bytes": 2204,
+      "referencedBy": {
+        "code": [],
+        "config": [
+          "app.json"
+        ],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/android-icon-foreground.png",
+      "fileType": "image/png",
+      "extension": ".png",
+      "bytes": 318016,
+      "referencedBy": {
+        "code": [],
+        "config": [
+          "app.json"
+        ],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/android-icon-monochrome.png",
+      "fileType": "image/png",
+      "extension": ".png",
+      "bytes": 4362,
+      "referencedBy": {
+        "code": [],
+        "config": [
+          "app.json"
+        ],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/audio/ashokan-pillar.en.opus",
+      "fileType": "audio/opus",
+      "extension": ".opus",
+      "bytes": 87027,
+      "referencedBy": {
+        "code": [
+          "data/audio.ts"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/audio/china-temple.en.opus",
+      "fileType": "audio/opus",
+      "extension": ".opus",
+      "bytes": 59481,
+      "referencedBy": {
+        "code": [
+          "data/audio.ts"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/audio/gautami-nuns-temple.en.opus",
+      "fileType": "audio/opus",
+      "extension": ".opus",
+      "bytes": 57256,
+      "referencedBy": {
+        "code": [
+          "data/audio.ts"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/audio/korean-temple.en.opus",
+      "fileType": "audio/opus",
+      "extension": ".opus",
+      "bytes": 37952,
+      "referencedBy": {
+        "code": [
+          "data/audio.ts"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/audio/marker-stone.en.opus",
+      "fileType": "audio/opus",
+      "extension": ".opus",
+      "bytes": 73211,
+      "referencedBy": {
+        "code": [
+          "data/audio.ts"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/audio/maya-devi-temple.en.opus",
+      "fileType": "audio/opus",
+      "extension": ".opus",
+      "bytes": 85165,
+      "referencedBy": {
+        "code": [
+          "data/audio.ts"
+        ],
+        "config": [],
+        "docs": [
+          "seed/NARRATION.md"
+        ],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/audio/myanmar-temple.en.opus",
+      "fileType": "audio/opus",
+      "extension": ".opus",
+      "bytes": 51148,
+      "referencedBy": {
+        "code": [
+          "data/audio.ts"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/audio/puskarini.en.opus",
+      "fileType": "audio/opus",
+      "extension": ".opus",
+      "bytes": 65568,
+      "referencedBy": {
+        "code": [
+          "data/audio.ts"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/audio/ramagrama.en.opus",
+      "fileType": "audio/opus",
+      "extension": ".opus",
+      "bytes": 56898,
+      "referencedBy": {
+        "code": [
+          "data/audio.ts"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/audio/tilaurakot.en.opus",
+      "fileType": "audio/opus",
+      "extension": ".opus",
+      "bytes": 77582,
+      "referencedBy": {
+        "code": [
+          "data/audio.ts"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/audio/vihara-remains.en.opus",
+      "fileType": "audio/opus",
+      "extension": ".opus",
+      "bytes": 93829,
+      "referencedBy": {
+        "code": [
+          "data/audio.ts"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/audio/world-peace-pagoda.en.opus",
+      "fileType": "audio/opus",
+      "extension": ".opus",
+      "bytes": 62987,
+      "referencedBy": {
+        "code": [
+          "data/audio.ts"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/dhamma/hero.png",
+      "fileType": "image/png",
+      "extension": ".png",
+      "bytes": 365895,
+      "referencedBy": {
+        "code": [
+          "features/dhamma/DhammaScreen.tsx"
+        ],
+        "config": [],
+        "docs": [
+          "docs/ai-context/SCREENS_AND_NAVIGATION.md"
+        ],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/favicon.png",
+      "fileType": "image/png",
+      "extension": ".png",
+      "bytes": 4073,
+      "referencedBy": {
+        "code": [],
+        "config": [
+          "app.json"
+        ],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/fonts/README.md",
+      "fileType": "text/markdown",
+      "extension": ".md",
+      "bytes": 1244,
+      "referencedBy": {
+        "code": [],
+        "config": [],
+        "docs": [
+          "SAKSHI-COMPLETE.md",
+          "SAKSHI-PROJECT-STATUS.md",
+          "deck/failure-drills.md",
+          "docs/MULTILINGUAL-AI-PLAN.md",
+          "docs/ai-context/PROJECT_OVERVIEW.md",
+          "docs/ai-context/ARCHITECTURE.md",
+          "docs/ai-context/REPOSITORY_MAP.md",
+          "docs/ai-context/FEATURES.md"
+        ],
+        "tools": []
+      },
+      "status": "referenced-by-tooling-or-docs-only"
+    },
+    {
+      "path": "assets/icon.png",
+      "fileType": "image/png",
+      "extension": ".png",
+      "bytes": 731777,
+      "referencedBy": {
+        "code": [],
+        "config": [
+          "app.json"
+        ],
+        "docs": [
+          "slides.md"
+        ],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/models/crack-seg.onnx",
+      "fileType": "model/onnx",
+      "extension": ".onnx",
+      "bytes": 12265327,
+      "referencedBy": {
+        "code": [
+          "services/ai/yoloEngine.ts"
+        ],
+        "config": [],
+        "docs": [
+          "docs/DAMAGE-MODEL.md",
+          "docs/train-crack-seg.ipynb",
+          "docs/ai-context/PROJECT_OVERVIEW.md",
+          "docs/ai-context/FEATURES.md",
+          "handbook.md"
+        ],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/models/README.md",
+      "fileType": "text/markdown",
+      "extension": ".md",
+      "bytes": 1024,
+      "referencedBy": {
+        "code": [],
+        "config": [],
+        "docs": [
+          "SAKSHI-COMPLETE.md",
+          "SAKSHI-PROJECT-STATUS.md",
+          "deck/failure-drills.md",
+          "docs/MULTILINGUAL-AI-PLAN.md",
+          "docs/ai-context/PROJECT_OVERVIEW.md",
+          "docs/ai-context/ARCHITECTURE.md",
+          "docs/ai-context/REPOSITORY_MAP.md",
+          "docs/ai-context/FEATURES.md"
+        ],
+        "tools": []
+      },
+      "status": "referenced-by-tooling-or-docs-only"
+    },
+    {
+      "path": "assets/monk/monk-00.webp",
+      "fileType": "image/webp",
+      "extension": ".webp",
+      "bytes": 24068,
+      "referencedBy": {
+        "code": [
+          "components/monk/GreetingMonk.tsx"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/monk/monk-01.webp",
+      "fileType": "image/webp",
+      "extension": ".webp",
+      "bytes": 24082,
+      "referencedBy": {
+        "code": [
+          "components/monk/GreetingMonk.tsx"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/monk/monk-02.webp",
+      "fileType": "image/webp",
+      "extension": ".webp",
+      "bytes": 24358,
+      "referencedBy": {
+        "code": [
+          "components/monk/GreetingMonk.tsx"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/monk/monk-03.webp",
+      "fileType": "image/webp",
+      "extension": ".webp",
+      "bytes": 24596,
+      "referencedBy": {
+        "code": [
+          "components/monk/GreetingMonk.tsx"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/monk/monk-04.webp",
+      "fileType": "image/webp",
+      "extension": ".webp",
+      "bytes": 24756,
+      "referencedBy": {
+        "code": [
+          "components/monk/GreetingMonk.tsx"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/monk/monk-05.webp",
+      "fileType": "image/webp",
+      "extension": ".webp",
+      "bytes": 24974,
+      "referencedBy": {
+        "code": [
+          "components/monk/GreetingMonk.tsx"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/monk/monk-06.webp",
+      "fileType": "image/webp",
+      "extension": ".webp",
+      "bytes": 24338,
+      "referencedBy": {
+        "code": [
+          "components/monk/GreetingMonk.tsx"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/monk/monk-07.webp",
+      "fileType": "image/webp",
+      "extension": ".webp",
+      "bytes": 24620,
+      "referencedBy": {
+        "code": [
+          "components/monk/GreetingMonk.tsx"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/monk/monk-08.webp",
+      "fileType": "image/webp",
+      "extension": ".webp",
+      "bytes": 25344,
+      "referencedBy": {
+        "code": [
+          "components/monk/GreetingMonk.tsx"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/monk/monk-09.webp",
+      "fileType": "image/webp",
+      "extension": ".webp",
+      "bytes": 24428,
+      "referencedBy": {
+        "code": [
+          "components/monk/GreetingMonk.tsx"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/monk/monk-10.webp",
+      "fileType": "image/webp",
+      "extension": ".webp",
+      "bytes": 24396,
+      "referencedBy": {
+        "code": [
+          "components/monk/GreetingMonk.tsx"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/plates/ashokan-pillar.1899-south.webp",
+      "fileType": "image/webp",
+      "extension": ".webp",
+      "bytes": 104716,
+      "referencedBy": {
+        "code": [
+          "data/plates.ts"
+        ],
+        "config": [],
+        "docs": [
+          "seed/RECONSTRUCTION-PROMPTS.md",
+          "seed/plates.json"
+        ],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/plates/ashokan-pillar.pre1896-jungle.source.webp",
+      "fileType": "image/webp",
+      "extension": ".webp",
+      "bytes": 77664,
+      "referencedBy": {
+        "code": [],
+        "config": [],
+        "docs": [
+          "seed/RECONSTRUCTION-PROMPTS.md",
+          "seed/plates.json"
+        ],
+        "tools": []
+      },
+      "status": "referenced-by-tooling-or-docs-only"
+    },
+    {
+      "path": "assets/plates/ashokan-pillar.pre1896-jungle.webp",
+      "fileType": "image/webp",
+      "extension": ".webp",
+      "bytes": 287996,
+      "referencedBy": {
+        "code": [
+          "data/plates.ts"
+        ],
+        "config": [],
+        "docs": [
+          "seed/plates.json"
+        ],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/plates/ashokan-pillar.rummindei-inscription.webp",
+      "fileType": "image/webp",
+      "extension": ".webp",
+      "bytes": 23908,
+      "referencedBy": {
+        "code": [
+          "data/plates.ts"
+        ],
+        "config": [],
+        "docs": [
+          "seed/plates.json"
+        ],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/plates/lumbini.mukherji-1899-general-plan.webp",
+      "fileType": "image/webp",
+      "extension": ".webp",
+      "bytes": 155026,
+      "referencedBy": {
+        "code": [
+          "data/plates.ts"
+        ],
+        "config": [],
+        "docs": [
+          "seed/plates.json"
+        ],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/plates/maya-devi-temple.aerial.jpg",
+      "fileType": "image/jpeg",
+      "extension": ".jpg",
+      "bytes": 2008239,
+      "referencedBy": {
+        "code": [
+          "features/sakshi/SakshiScreen.tsx"
+        ],
+        "config": [],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/plates/maya-devi-temple.mukherji-1899-plan.webp",
+      "fileType": "image/webp",
+      "extension": ".webp",
+      "bytes": 41472,
+      "referencedBy": {
+        "code": [
+          "data/plates.ts"
+        ],
+        "config": [],
+        "docs": [
+          "seed/plates.json"
+        ],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/plates/now.ashokan-pillar.webp",
+      "fileType": "image/webp",
+      "extension": ".webp",
+      "bytes": 374250,
+      "referencedBy": {
+        "code": [
+          "data/plates.ts"
+        ],
+        "config": [],
+        "docs": [
+          "seed/RECONSTRUCTION-PROMPTS.md",
+          "seed/now-images.json"
+        ],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/plates/now.maya-devi-temple.webp",
+      "fileType": "image/webp",
+      "extension": ".webp",
+      "bytes": 311468,
+      "referencedBy": {
+        "code": [
+          "data/plates.ts"
+        ],
+        "config": [],
+        "docs": [
+          "seed/now-images.json"
+        ],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/plates/now.puskarini.webp",
+      "fileType": "image/webp",
+      "extension": ".webp",
+      "bytes": 658002,
+      "referencedBy": {
+        "code": [
+          "data/plates.ts"
+        ],
+        "config": [],
+        "docs": [
+          "seed/PLATES.md",
+          "seed/RECONSTRUCTION-PROMPTS.md",
+          "seed/now-images.json",
+          "seed/plates.json"
+        ],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/plates/puskarini.earthen-pond-pre1930s.webp",
+      "fileType": "image/webp",
+      "extension": ".webp",
+      "bytes": 347720,
+      "referencedBy": {
+        "code": [
+          "data/plates.ts"
+        ],
+        "config": [],
+        "docs": [
+          "seed/plates.json"
+        ],
+        "tools": []
+      },
+      "status": "referenced"
+    },
+    {
+      "path": "assets/splash-icon.png",
+      "fileType": "image/png",
+      "extension": ".png",
+      "bytes": 840400,
+      "referencedBy": {
+        "code": [],
+        "config": [
+          "app.json"
+        ],
+        "docs": [],
+        "tools": []
+      },
+      "status": "referenced"
+    }
+  ]
+}

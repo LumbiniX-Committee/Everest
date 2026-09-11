@@ -11,7 +11,7 @@ export type DemoWalkState = {
   /** The whole planned way, for the map to draw. Empty when not walking. */
   route: readonly (readonly [number, number])[];
   toggle: () => void;
-  /** Back to the south gate without leaving demo mode. */
+  /** Back to the selected route's approach without leaving demo mode. */
   restart: () => void;
   /** Freeze the walker at its current site while a story is shown. */
   pauseWalk: () => void;
@@ -52,7 +52,7 @@ export function useDemoWalk(): DemoWalkState {
   // is passed to the map as injected JavaScript on every change of identity.
   const route = useMemo(
     () => (active ? locationService.demo.demoRoute() : NO_ROUTE),
-    [active],
+    [active, step?.walkId],
   );
 
   const toggle = useCallback(() => {

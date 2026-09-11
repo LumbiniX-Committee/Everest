@@ -11,12 +11,13 @@ export const spacing = {
   sm: 8,
   md: 12,
   base: 16,
+  content: 20,
   lg: 24,
   xl: 32,
   xxl: 48,
   xxxl: 64,
   /** Full-bleed screen gutter. */
-  gutter: 24,
+  gutter: 20,
 } as const;
 
 export type SpacingToken = keyof typeof spacing;

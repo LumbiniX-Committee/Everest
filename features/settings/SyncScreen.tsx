@@ -3,6 +3,7 @@ import { ScreenHeader } from '@/components/common';
 import { Button, Screen, Text } from '@/components/ui';
 import { useSync } from '@/hooks';
 import { usePreferences } from '@/store';
+import { formatVisitorCopy, visitorCopy } from '@/i18n/visitor';
 import { OFFLINE_SYNC_OPTIONS } from '@/types';
 
 import { spacing } from '@/theme';
@@ -19,6 +20,7 @@ const SYNC_TEXT = {
 export function SyncScreen() {
   const { syncState, pendingCount, triggerSync } = useSync();
   const { preferences, update } = usePreferences();
+  const language = preferences.interfaceLanguage;
 
   const nothingPending = pendingCount === 0;
 
@@ -35,12 +37,16 @@ export function SyncScreen() {
         footnote="Nothing is deleted locally once uploaded. A failed sync costs a retry, never a record."
       >
         <Text variant="body" style={styles.body}>
-          {SYNC_TEXT[syncState] ?? 'Unknown.'}
+          {SYNC_TEXT[syncState] ?? visitorCopy(language, 'sync.unknown')}
         </Text>
         <Text variant="body" tone={nothingPending ? 'secondary' : 'sandstone'} style={styles.body}>
           {nothingPending
             ? 'Nothing waiting.'
-            : `${pendingCount} ${pendingCount === 1 ? 'record' : 'records'} waiting to upload.`}
+            : formatVisitorCopy(
+                language,
+                pendingCount === 1 ? 'sync.pendingOne' : 'sync.pendingMany',
+                { count: pendingCount },
+              )}
         </Text>
 
         <Button

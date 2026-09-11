@@ -8,7 +8,7 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import { notifications } from '@/services';
 import { syncPendingObservations } from '@/services/sync';
-import { AppProviders, useAppState } from '@/store';
+import { AppProviders, useAppState, usePreferences } from '@/store';
 import { colors, useAppFonts } from '@/theme';
 
 // Held until we know both the fonts and the first-launch answer. Without this
@@ -30,13 +30,16 @@ export default function RootLayout() {
 function RootNavigator() {
   const { ready: fontsReady } = useAppFonts();
   const { hydrated } = useAppState();
+  const { hydrated: preferencesHydrated, preferences } = usePreferences();
   const router = useRouter();
 
+  const ready = fontsReady && hydrated && preferencesHydrated;
+
   useEffect(() => {
-    if (fontsReady && hydrated) {
+    if (ready) {
       void SplashScreen.hideAsync();
     }
-  }, [fontsReady, hydrated]);
+  }, [ready]);
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextState) => {
@@ -66,22 +69,23 @@ function RootNavigator() {
   );
 
   // Rendering nothing here keeps the splash in place rather than showing a
-  // half-styled frame; the effect above lifts it once both are settled.
-  if (!fontsReady || !hydrated) return null;
+  // half-styled frame; the effect above lifts it once all three are settled.
+  if (!ready) return null;
 
   return (
     <>
-      <StatusBar style="dark" />
+      <StatusBar style={preferences.colorTheme === 'navy' ? 'light' : 'dark'} />
       <Stack
         screenOptions={{
           headerShown: false,
           contentStyle: { backgroundColor: colors.background },
           animation: 'fade',
+          animationDuration: 280,
         }}
       >
         <Stack.Screen name="index" />
-        <Stack.Screen name="onboarding" />
-        <Stack.Screen name="(main)" />
+        <Stack.Screen name="onboarding" options={{ animation: 'fade', animationDuration: 280 }} />
+        <Stack.Screen name="(main)" options={{ animation: 'fade', animationDuration: 280 }} />
       </Stack>
     </>
   );

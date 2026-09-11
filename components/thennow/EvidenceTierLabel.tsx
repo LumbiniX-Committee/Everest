@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 
 import { Text } from '@/components/ui';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { radii, spacing } from '@/theme';
 import type { EvidenceTier } from '@/types';
 
@@ -28,16 +29,17 @@ const GENERATED: ReadonlySet<EvidenceTier> = new Set<EvidenceTier>([
 ]);
 
 export function EvidenceTierLabel({ tier }: { tier: EvidenceTier }) {
+  const ui = useVisitorLiteralCopy();
   const generated = GENERATED.has(tier);
   return (
     <View
       style={styles.badge}
-      accessibilityLabel={`Evidence tier: ${TIER_LABELS[tier]}${
-        generated ? ', a reconstruction, not a photograph' : ''
+      accessibilityLabel={`${ui('Evidence tier:')} ${ui(TIER_LABELS[tier])}${
+        generated ? `, ${ui('Reconstruction')}, ${ui('not a photograph')}` : ''
       }`}
     >
       <Text variant="label" tone={generated ? 'seeking' : 'inverse'} uppercase>
-        {TIER_LABELS[tier]}
+        {ui(TIER_LABELS[tier])}
       </Text>
     </View>
   );

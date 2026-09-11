@@ -31,7 +31,7 @@ export function AlignmentReadout({
       <MetaRow
         label="Turn"
         value={formatDelta(alignment.bearingDeltaDeg)}
-        tone={locked ? 'locked' : 'seeking'}
+        tone={locked ? 'locked' : 'warning'}
       />
       <MetaRow label="Target bearing" value={formatBearing(vantage.bearing)} tone="secondary" />
       <MetaRow

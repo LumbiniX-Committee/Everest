@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { Button, Chip, Divider, MetaRow, Screen, Text } from '@/components/ui';
-import { EmptyState } from '@/components/common';
+import { EmptyState, SettingsButton } from '@/components/common';
 import { AlignmentReadout, Reticle } from '@/components/reticle';
 import { SpeakButton } from '@/components/voice/SpeakButton';
 import { findSite, findVantage } from '@/data';
 import { useAlignment, useHaptics } from '@/hooks';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { usePermission } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 import { formatCoordinate } from '@/utils';
@@ -20,10 +21,12 @@ import { alignmentHint } from '@/utils/alignmentHint';
  * numeric readout in floating mobile cards below, capture unlocked on alignment.
  */
 export function VantageScreen({ vantageId }: { vantageId: string }) {
+  const ui = useVisitorLiteralCopy();
   const router = useRouter();
   const vantage = findVantage(vantageId);
   const { state: locationPermission, request: requestLocation } = usePermission('location');
   const { pulse } = useHaptics();
+  const { width } = useWindowDimensions();
 
   const alignment = useAlignment({ vantage });
 
@@ -44,6 +47,7 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
   const locked = alignment.phase === 'locked';
   const needsLocation = locationPermission.status !== 'granted';
   const spokenHint = alignmentHint(alignment);
+  const reticleSize = Math.min(280, width - spacing.gutter * 2);
 
   useEffect(() => {
     if (locked) {
@@ -61,15 +65,16 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
   return (
     <Screen scroll>
       <View style={styles.head}>
-        <View style={styles.badgeRow}>
-          <Chip label={site?.name ?? 'VANTAGE'} />
+        <View style={styles.instrumentHeader}>
+          <Chip label={site?.name ?? 'VANTAGE'} style={styles.siteChip} />
           <Chip label={phaseLabel(alignment.phase)} selected={locked} />
+          <SettingsButton />
         </View>
         <Text variant="title">{vantage.label}</Text>
       </View>
 
       <View style={styles.reticleBlock}>
-        <Reticle size={240} progress={alignment.progress} phase={alignment.phase} />
+        <Reticle size={reticleSize} progress={alignment.progress} phase={alignment.phase} />
       </View>
 
       {needsLocation ? (
@@ -109,9 +114,10 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
       <View style={styles.actions}>
         <Button
           label={locked ? 'Take it, aligned' : 'Match by eye'}
+          icon={locked ? 'camera-outline' : 'eye-outline'}
           block
           onPress={openCapture}
-          accessibilityHint="Opens the camera to record an observation"
+          accessibilityHint={ui('Opens the camera to record an observation')}
         />
 
         {!locked ? (
@@ -142,15 +148,20 @@ function phaseLabel(phase: string): string {
 }
 
 const styles = StyleSheet.create({
-  head: { paddingTop: spacing.md, gap: spacing.xs },
-  badgeRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  head: { paddingTop: spacing.md, gap: spacing.lg },
+  instrumentHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  siteChip: { flex: 1 },
   reticleBlock: { alignItems: 'center', paddingVertical: spacing.lg },
   notice: { gap: spacing.md, alignItems: 'flex-start', paddingBottom: spacing.lg },
   voiceHint: { gap: spacing.xs, paddingBottom: spacing.md },
   readoutCard: {
     padding: spacing.base,
     borderRadius: radii.lg,
-    backgroundColor: colors.surfaceSecondary,
+    backgroundColor: colors.surfaceRaised,
     borderWidth: 1,
     borderColor: colors.border,
     marginBottom: spacing.lg,

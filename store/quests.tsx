@@ -8,9 +8,8 @@ import {
   type ReactNode,
 } from 'react';
 
-import { demoQuests } from '@/data';
+import { demoQuests, findSite, findVantage } from '@/data';
 import { tasksSatisfiedByReport, type ReportableTask } from '@/core';
-import { findSite } from '@/data';
 import { database } from '@/services';
 import { usePractice } from '@/store/practice';
 import type { MeritKind, QuestProgress, QuestWithProgress } from '@/types';
@@ -45,6 +44,10 @@ export type QuestsContextValue = {
    * for one at this site. Returns how many tasks it satisfied.
    */
   creditConditionReport: (siteId: string) => Promise<number>;
+  /** Complete location-backed objectives when the live position reaches a site. */
+  creditArrival: (siteId: string) => Promise<number>;
+  /** Complete Sākṣī-backed objectives after an observation is safely stored. */
+  creditVantageObservation: (vantageId: string) => Promise<number>;
   /** Reset all quest progress (for testing/debug). */
   resetQuests: () => Promise<void>;
   /** Re-query SQLite to synchronize local state. */
@@ -78,14 +81,18 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
 
   const refresh = useCallback(async () => {
     try {
-      // Seed the catalogue only when the table is empty. Re-seeding on every
-      // mount (INSERT OR REPLACE) would silently revert any later edit to a
-      // quest row; the guard is what makes the "if empty" comment true.
-      let list = await database.listQuests();
-      if (list.length === 0) {
+      // Synchronise authored catalogue rows on every load. The database uses
+      // insert-then-update, not REPLACE, so progress rows survive while newly
+      // shipped place journeys and objectives appear on existing installs.
+      try {
         await database.seedDefaultQuests(demoQuests);
-        list = await database.listQuests();
+      } catch (catalogueError) {
+        // Catalogue refresh and quest loading are separate operations. A
+        // device-specific SQL problem must not hide quests already stored on
+        // the phone; load those below and report only the update failure.
+        console.warn('Could not update the quest catalogue:', catalogueError);
       }
+      const list = await database.listQuests();
       setQuests(list);
     } catch (error) {
       console.error('Failed to load quests from database:', error);
@@ -190,6 +197,52 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
     [quests, refresh],
   );
 
+  const creditArrival = useCallback(
+    async (siteId: string): Promise<number> => {
+      const reached = findSite(siteId);
+      if (!reached) return 0;
+
+      await database.recordSiteVisit(reached.id).catch(() => undefined);
+      if (reached.parentSiteId) await database.recordSiteVisit(reached.parentSiteId).catch(() => undefined);
+
+      const matches = quests.flatMap((quest) => quest.tasks
+        .filter((task) => {
+          if (task.autoComplete !== 'arrival' || !task.targetId) return false;
+          if (quest.progress.completedTasks.includes(task.id)) return false;
+          const target = findSite(task.targetId);
+          return target?.id === reached.id || target?.id === reached.parentSiteId;
+        })
+        .map((task) => ({ questId: quest.id, taskId: task.id })));
+
+      for (const match of matches) await database.completeQuestTask(match.questId, match.taskId);
+      if (matches.length > 0) await refresh();
+      return matches.length;
+    },
+    [quests, refresh],
+  );
+
+  const creditVantageObservation = useCallback(
+    async (vantageId: string): Promise<number> => {
+      const vantage = findVantage(vantageId);
+      if (!vantage) return 0;
+      const site = findSite(vantage.siteId);
+
+      const matches = quests.flatMap((quest) => quest.tasks
+        .filter((task) => {
+          if (task.autoComplete !== 'vantage_capture' || !task.targetId) return false;
+          if (quest.progress.completedTasks.includes(task.id)) return false;
+          const targetSite = findSite(task.targetId);
+          return task.targetId === vantage.id || targetSite?.id === vantage.siteId || targetSite?.id === site?.parentSiteId;
+        })
+        .map((task) => ({ questId: quest.id, taskId: task.id })));
+
+      for (const match of matches) await database.completeQuestTask(match.questId, match.taskId);
+      if (matches.length > 0) await refresh();
+      return matches.length;
+    },
+    [quests, refresh],
+  );
+
   const resetQuests = useCallback(async () => {
     await database.resetQuestProgress();
     await refresh();
@@ -227,6 +280,8 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
       completeTask,
       uncompleteTask,
       creditConditionReport,
+      creditArrival,
+      creditVantageObservation,
       resetQuests: resetQuests,
       refresh,
     }),
@@ -241,6 +296,8 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
       completeTask,
       uncompleteTask,
       creditConditionReport,
+      creditArrival,
+      creditVantageObservation,
       resetQuests,
       refresh,
     ],

@@ -224,5 +224,74 @@
         "url": "https://whc.unesco.org/en/list/666"
       }
     ]
+  },
+  {
+    "id": "patan-durbar-square.artistic-impression",
+    "site_id": "patan-durbar-square",
+    "caption": {
+      "en": "Artistic impression—not a photograph or measured reconstruction—of the late-Malla palace and temple ensemble.",
+      "ne": "कलात्मक परिकल्पना—तस्बिर वा नापी पुनर्निर्माण होइन—उत्तर-मल्लकालीन दरबार र मन्दिर समूहको।"
+    },
+    "image": "patan-durbar-square.artistic-impression.webp",
+    "evidence_tier": "artistic_impression",
+    "produced": true,
+    "licence": "CC BY-SA 4.0 (Sākṣī artistic impression; not historical evidence)",
+    "attribution": "Sākṣī team, generated interpretive illustration",
+    "sources": [
+      {
+        "title": "UNESCO WHC: Kathmandu Valley (121)",
+        "url": "https://whc.unesco.org/en/list/121"
+      },
+      {
+        "title": "Patan Durbar Square monument-zone inventory",
+        "url": "https://whc.unesco.org/document/158654"
+      }
+    ]
+  },
+  {
+    "id": "changu-narayan.artistic-impression",
+    "site_id": "changu-narayan",
+    "caption": {
+      "en": "Artistic impression—not a photograph or measured reconstruction—of the Changu Narayan hilltop courtyard.",
+      "ne": "कलात्मक परिकल्पना—तस्बिर वा नापी पुनर्निर्माण होइन—चाँगुनारायणको डाँडास्थित प्राङ्गणको।"
+    },
+    "image": "changu-narayan.artistic-impression.webp",
+    "evidence_tier": "artistic_impression",
+    "produced": true,
+    "licence": "CC BY-SA 4.0 (Sākṣī artistic impression; not historical evidence)",
+    "attribution": "Sākṣī team, generated interpretive illustration",
+    "sources": [
+      {
+        "title": "UNESCO WHC: Kathmandu Valley (121)",
+        "url": "https://whc.unesco.org/en/list/121"
+      },
+      {
+        "title": "Changu Narayan conservation record",
+        "url": "https://whc.unesco.org/document/165534"
+      }
+    ]
+  },
+  {
+    "id": "manga-hiti.artistic-impression",
+    "site_id": "manga-hiti",
+    "caption": {
+      "en": "Artistic impression—not a photograph or measured reconstruction—of Manga Hiti as a functioning public water place.",
+      "ne": "कलात्मक परिकल्पना—तस्बिर वा नापी पुनर्निर्माण होइन—सञ्चालित सार्वजनिक जलस्थलका रूपमा मंग हिटीको।"
+    },
+    "image": "manga-hiti.artistic-impression.webp",
+    "evidence_tier": "artistic_impression",
+    "produced": true,
+    "licence": "CC BY-SA 4.0 (Sākṣī artistic impression; not historical evidence)",
+    "attribution": "Sākṣī team, generated interpretive illustration",
+    "sources": [
+      {
+        "title": "UNESCO WHC: Kathmandu Valley (121)",
+        "url": "https://whc.unesco.org/en/list/121"
+      },
+      {
+        "title": "Kathmandu Valley Preservation Trust: Patan Palace Restoration Project",
+        "url": "https://www.kvptnepal.org/project/patan-palace-restoration-project"
+      }
+    ]
   }
 ]

@@ -1,6 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 
 import { colors, radii, spacing } from '@/theme';
+import { useInterfaceLanguage } from '@/i18n/context';
+import { visitorLiteralCopy } from '@/i18n/literals';
 
 import { Text } from './Text';
 
@@ -34,6 +36,7 @@ export function ProgressIndicator({
   showCount = true,
   color = colors.sandstone,
 }: ProgressIndicatorProps) {
+  const language = useInterfaceLanguage();
   const safeTotal = Math.max(1, total);
   const done = Math.min(Math.max(0, value), safeTotal);
   const segmented = safeTotal <= 8;
@@ -43,7 +46,7 @@ export function ProgressIndicator({
       style={styles.wrap}
       accessibilityRole="progressbar"
       accessibilityValue={{ min: 0, max: safeTotal, now: done }}
-      accessibilityLabel={label}
+      accessibilityLabel={label ? visitorLiteralCopy(language, label) : undefined}
     >
       {label || showCount ? (
         <View style={styles.head}>

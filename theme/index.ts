@@ -1,4 +1,16 @@
-export { colors, type ColorToken } from './colors';
+import { colors } from './colors';
+import { spacing } from './spacing';
+import { radii } from './radii';
+
+export {
+  colors,
+  navyColors,
+  whiteColors,
+  getInitialColorTheme,
+  setInitialColorTheme,
+  type ColorPalette,
+  type ColorToken,
+} from './colors';
 export { spacing, type SpacingToken } from './spacing';
 export { radii, type RadiusToken } from './radii';
 export {
@@ -15,10 +27,6 @@ export {
 export { useAppFonts } from './fonts';
 export { layers } from './layers';
 export { sakshiMapStyle, sakshiMapStyleJSON, MAP_TILES_URL, MAP_GLYPHS_URL } from './mapStyle';
-
-import { colors } from './colors';
-import { spacing } from './spacing';
-import { radii } from './radii';
 
 /** Convenience bundle for anything that wants the whole set at once. */
 export const theme = { colors, spacing, radii } as const;

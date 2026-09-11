@@ -1,17 +1,16 @@
 /**
  * Corner radii.
  *
- * The visual metaphor is a measuring instrument cut from stone — corners are
- * softened, never rounded into pills, except for genuinely circular controls.
+ * Cards stay clearly rectangular while controls remain soft enough for touch.
  */
 export const radii = {
   none: 0,
-  sm: 4,
-  md: 8,
-  lg: 12,
-  xl: 20,
-  /** Circles only: the reticle, capture control, avatar. */
-  full: 9999,
+  sm: 10,
+  md: 14,
+  lg: 18,
+  xl: 24,
+  /** Pills and circles. */
+  full: 999,
 } as const;
 
 export type RadiusToken = keyof typeof radii;

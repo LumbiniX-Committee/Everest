@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 import { Icon, Text } from '@/components/ui';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { colors, radii, spacing } from '@/theme';
 import type { EvidenceTier } from '@/types';
 
@@ -47,6 +48,7 @@ export type ThenNowCompareProps = {
  * instead of being revealed.
  */
 export function ThenNowCompare({ then: thenPanel, now: nowPanel, aspectRatio = 4 / 3 }: ThenNowCompareProps) {
+  const ui = useVisitorLiteralCopy();
   const [size, setSize] = useState({ width: 0, height: 0 });
   /**
    * Where the divider rests between gestures. State rather than a ref: the
@@ -88,7 +90,7 @@ export function ThenNowCompare({ then: thenPanel, now: nowPanel, aspectRatio = 4
     <View
       style={[styles.frame, size.height ? { height: size.height } : { aspectRatio }]}
       onLayout={onLayout}
-      accessibilityLabel={`Comparison between ${thenPanel.date} and ${nowPanel.date}. Drag the divider to wipe between them.`}
+      accessibilityLabel={`${ui('Comparison between')} ${thenPanel.date} ${ui('and')} ${nowPanel.date}${ui('. Drag the divider to wipe between them.')}`}
     >
       <Panel panel={nowPanel} width={size.width} height={size.height} align="right" />
 

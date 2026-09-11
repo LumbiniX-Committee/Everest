@@ -9,7 +9,7 @@ export type MetaRowProps = {
   value: string;
   /** Values that are measurements set in mono; prose values do not. */
   mono?: boolean;
-  tone?: 'primary' | 'secondary' | 'locked' | 'seeking' | 'open' | 'resolved';
+  tone?: 'primary' | 'secondary' | 'locked' | 'seeking' | 'warning' | 'open' | 'resolved';
 };
 
 /**
@@ -22,7 +22,7 @@ export function MetaRow({ label, value, mono = true, tone = 'primary' }: MetaRow
       <Text variant="label" tone="muted" uppercase style={styles.label}>
         {label}
       </Text>
-      <Text variant={mono ? 'mono' : 'caption'} tone={tone} style={styles.value}>
+      <Text variant={mono ? 'mono' : 'caption'} tone={tone} style={styles.value} translate={false}>
         {value}
       </Text>
     </View>

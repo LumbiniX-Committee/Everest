@@ -1,0 +1,88 @@
+name: Verify production pilot
+
+on:
+  push:
+  pull_request:
+
+# A second push to the same branch makes the first run irrelevant.
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  expo:
+    name: Expo, core, tests, content and seed integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run verify
+
+  landing:
+    name: Authenticated portal and public web
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: landing
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: landing/package-lock.json
+      - run: npm ci
+      - run: npm run verify
+
+      # The generated files are committed so a deploy of landing/ alone still
+      # ships them. That only holds if they are in step with seed/.
+      - name: Generated files are in step with seed
+        run: |
+          if ! git diff --quiet -- lib/generated public/data; then
+            echo "::error::Generated data is stale. Run 'npm run data' in landing/ and commit the result."
+            git diff --stat -- lib/generated public/data
+            exit 1
+          fi
+
+  database:
+    name: Supabase migrations and RLS
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 2.117.0
+      - name: Start Supabase
+        shell: bash
+        run: |
+          set +e
+          supabase start --debug 2>&1 | tee supabase-start.log
+          status=${PIPESTATUS[0]}
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "### Supabase start failed"
+              echo '```text'
+              tail -n 120 supabase-start.log
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            details=$(grep -Ei 'error|failed|fatal|panic|denied|invalid|syntax' supabase-start.log | tail -n 20 | tr '\n' ' ')
+            if [ -z "$details" ]; then
+              details=$(tail -n 20 supabase-start.log | tr '\n' ' ')
+            fi
+            details=${details//'%'/'%25'}
+            echo "::error title=Supabase start failed::$details"
+            exit "$status"
+          fi
+      - run: supabase test db
+      - if: always()
+        run: supabase stop --no-backup

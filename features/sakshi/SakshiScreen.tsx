@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 
-import { Button, Card, Chip, Divider, Screen, Text } from '@/components/ui';
+import { Button, Card, Chip, Divider, Icon, Screen, Text } from '@/components/ui';
 import { EmptyState, ScreenHeader, SettingsButton } from '@/components/common';
 import { VantageListItem } from '@/components/site';
 import { PracticeSummaryCard } from '@/components/practice';
@@ -15,9 +15,11 @@ import {
   vantagesForSite,
 } from '@/data';
 import { useCurrentPosition } from '@/hooks';
+import { visitorCopy, type VisitorCopyKey } from '@/i18n/visitor';
+import { visitorLiteralCopy } from '@/i18n/literals';
 import { database } from '@/services';
-import { onnxAvailable, onnxUnavailableReason } from '@/services/ai/onnx';
-import { usePractice } from '@/store';
+import { onnxAvailable } from '@/services/ai/onnx';
+import { usePractice, usePreferences } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 import { distanceMeters, formatDistance, formatTimestamp } from '@/utils';
 import type { Observation, ObservationAssessment } from '@/types';
@@ -43,13 +45,13 @@ type TabCounts = { siteVantages: unknown[]; observations: unknown[] };
 
 const TABS: ReadonlyArray<{
   key: TabMode;
-  label: string;
+  labelKey: VisitorCopyKey;
   /** Tabs that carry a number say how many; Then/Now opens a list and does not. */
   count?: (counts: TabCounts) => number;
 }> = [
-  { key: 'vantages', label: 'Vantages', count: (c) => c.siteVantages.length },
-  { key: 'thennow', label: 'Then / Now' },
-  { key: 'records', label: 'Records', count: (c) => c.observations.length },
+  { key: 'vantages', labelKey: 'sakshi.vantages', count: (c) => c.siteVantages.length },
+  { key: 'thennow', labelKey: 'sakshi.thenNow' },
+  { key: 'records', labelKey: 'sakshi.records', count: (c) => c.observations.length },
 ];
 
 const COMPARABLE_SITES = demoSites.filter((site) => historicalImagesForSite(site.id).length > 0);
@@ -67,6 +69,8 @@ export function SakshiScreen() {
   const [observations, setObservations] = useState<Observation[]>([]);
   const [activeTab, setActiveTab] = useState<TabMode>('vantages');
   const { summary, refresh: refreshPractice } = usePractice();
+  const { preferences } = usePreferences();
+  const t = (key: VisitorCopyKey) => visitorCopy(preferences.interfaceLanguage, key);
 
   // Re-read on focus: an observation may have been recorded since we last looked.
   useFocusEffect(
@@ -110,9 +114,9 @@ export function SakshiScreen() {
     <Screen scroll>
       <ScreenHeader
         canGoBack={false}
-        eyebrow="Sākṣī"
-        title="Witness"
-        subtitle="Return to a fixed viewpoint, align, and record what is there today."
+        eyebrow={t('sakshi.eyebrow')}
+        title={t('sakshi.title')}
+        subtitle={t('sakshi.subtitle')}
         rightAction={<SettingsButton />}
       />
 
@@ -127,14 +131,17 @@ export function SakshiScreen() {
         APK built without the native module). It loads nothing itself.
       */}
       <View style={styles.detectorStatus}>
-        <Text variant="label" tone="muted" uppercase>
-          On-device damage detector
-        </Text>
-        <Text variant="caption" tone={onnxAvailable ? 'locked' : 'seeking'}>
-          {onnxAvailable
-            ? 'Ready in this build. Capture a photo and the scan runs on the observation screen.'
-            : `Not in this build. ${onnxUnavailableReason ?? 'Rebuild with the native runtime and install that APK, not Expo Go.'}`}
-        </Text>
+        <View style={styles.detectorIcon}>
+          <Icon name="alert-outline" size={29} color={colors.primary} />
+        </View>
+        <View style={styles.detectorCopy}>
+          <Text variant="label" tone="sandstone" uppercase>
+            {t('sakshi.detector')}
+          </Text>
+          <Text variant="body" tone="secondary">
+            {onnxAvailable ? t('sakshi.detectorReady') : t('sakshi.detectorUnavailable')}
+          </Text>
+        </View>
       </View>
 
       {/* The nearest viewpoint, and the way straight to it. */}
@@ -151,7 +158,7 @@ export function SakshiScreen() {
           ) : null}
           <View style={styles.heroBody}>
             <View style={styles.heroHeader}>
-              <Chip label="NEAREST" />
+              <Chip label={t('sakshi.nearest').toUpperCase()} />
               {distanceToSite != null ? (
                 <Text variant="mono" tone="sandstone">
                   {formatDistance(distanceToSite)}
@@ -159,7 +166,7 @@ export function SakshiScreen() {
               ) : null}
             </View>
             <Text variant="heading">
-              {activeSite?.name ?? 'Sacred Site'}
+              {activeSite?.name ?? t('sakshi.sacredSite')}
             </Text>
             <Text variant="caption" tone="secondary">
               {primaryVantage.label}
@@ -171,7 +178,9 @@ export function SakshiScreen() {
               were a specification of a thing not yet being done.
             */}
             <Button
-              label="Take the photograph"
+              label={t('sakshi.takePhoto')}
+              icon="camera-outline"
+              style={styles.photoButton}
               onPress={() =>
                 router.push({
                   pathname: '/(main)/sakshi/vantage',
@@ -192,7 +201,8 @@ export function SakshiScreen() {
       <View style={styles.tabBar} accessibilityRole="tablist">
         {TABS.map((tab) => {
           const selected = activeTab === tab.key;
-          const label = tab.count ? `${tab.label} (${tab.count({ siteVantages, observations })})` : tab.label;
+          const tabLabel = t(tab.labelKey);
+          const label = tab.count ? `${tabLabel} (${tab.count({ siteVantages, observations })})` : tabLabel;
           return (
             <Pressable
               key={tab.key}
@@ -213,20 +223,30 @@ export function SakshiScreen() {
       {/* Tab 1: the viewpoints at the place you are standing in */}
       {activeTab === 'vantages' ? (
         <View style={styles.section}>
+          <View style={styles.listHeader}>
+            <Icon name="bookmark-outline" size={18} color={colors.textMuted} />
+            <Text variant="heading">{t('sakshi.savedViewpoints')} · {siteVantages.length}</Text>
+          </View>
           <View style={styles.list}>
-            {siteVantages.map((vantage) => (
-              <VantageListItem
-                key={vantage.id}
-                vantage={vantage}
-                distanceM={coordinate ? distanceMeters(coordinate, vantage.coordinate) : null}
-                onPress={() =>
-                  router.push({
-                    pathname: '/(main)/sakshi/vantage',
-                    params: { vantageId: vantage.id },
-                  })
-                }
-              />
-            ))}
+            {siteVantages.map((vantage) => {
+              // `observations` is newest-first (services/database `listObservations`),
+              // so the first match for this vantage is its most recent capture.
+              const lastCapture = observations.find((obs) => obs.vantageId === vantage.id);
+              return (
+                <VantageListItem
+                  key={vantage.id}
+                  vantage={vantage}
+                  distanceM={coordinate ? distanceMeters(coordinate, vantage.coordinate) : null}
+                  lastCaptureAt={lastCapture?.capturedAt ?? null}
+                  onPress={() =>
+                    router.push({
+                      pathname: '/(main)/sakshi/vantage',
+                      params: { vantageId: vantage.id },
+                    })
+                  }
+                />
+              );
+            })}
           </View>
         </View>
       ) : null}
@@ -240,8 +260,8 @@ export function SakshiScreen() {
         <View style={styles.section}>
           {COMPARABLE_SITES.length === 0 ? (
             <EmptyState
-              title="No comparisons yet"
-              body="A comparison needs a dated archive photograph matched to a viewpoint. None are bundled yet."
+              title={t('sakshi.noComparisonsTitle')}
+              body={t('sakshi.noComparisonsBody')}
             />
           ) : (
             <View style={styles.list}>
@@ -257,14 +277,14 @@ export function SakshiScreen() {
                         params: { siteId: site.id },
                       })
                     }
-                    accessibilityLabel={`Compare ${site.name} across time`}
+                    accessibilityLabel={`${visitorLiteralCopy(preferences.interfaceLanguage, 'Compare')} ${site.name} ${visitorLiteralCopy(preferences.interfaceLanguage, 'across time')}`}
                   >
-                    <Text variant="heading">{site.name}</Text>
+                    <Text variant="heading" translate={false}>{site.name}</Text>
                     <Text variant="mono" tone="sandstone">
-                      {oldest.date} → today
+                      {oldest.date} → {t('sakshi.today')}
                     </Text>
                     <Text variant="caption" tone="muted">
-                      {images.length === 1 ? '1 archive image' : `${images.length} archive images`}
+                      {images.length} {t('sakshi.archiveImages')}
                     </Text>
                   </Card>
                 );
@@ -287,7 +307,7 @@ export function SakshiScreen() {
             <>
               <TimeSeriesScrubber
                 observations={siteObservations}
-                vantageLabel={activeSite?.name ?? 'This place'}
+                vantageLabel={activeSite?.name ?? t('sakshi.thisPlace')}
                 onSelectObservation={(obs) =>
                   router.push({
                     pathname: '/(main)/sakshi/observation',
@@ -301,8 +321,8 @@ export function SakshiScreen() {
 
           {observations.length === 0 ? (
             <EmptyState
-              title="Nothing recorded yet"
-              body="A series begins with one observation. Choose a vantage point and stand in it."
+              title={t('sakshi.nothingTitle')}
+              body={t('sakshi.nothingBody')}
             />
           ) : (
             <View style={styles.list}>
@@ -310,6 +330,7 @@ export function SakshiScreen() {
                 <ObservationRow
                   key={observation.id}
                   observation={observation}
+                  assessment={t(ASSESSMENT_KEYS[observation.assessment])}
                   onPress={() =>
                     router.push({
                       pathname: '/(main)/sakshi/observation',
@@ -323,12 +344,12 @@ export function SakshiScreen() {
 
           <PracticeSummaryCard summary={summary} />
           <Button
-            label="Open complete site register"
+            label={t('sakshi.openRegister')}
             variant="secondary"
             onPress={() => router.push('/(main)/sakshi/register' as any)}
           />
           <Button
-            label="Who is contributing"
+            label={t('sakshi.contributors')}
             variant="quiet"
             onPress={() => router.push('/(main)/sakshi/guardians' as any)}
           />
@@ -340,9 +361,11 @@ export function SakshiScreen() {
 
 function ObservationRow({
   observation,
+  assessment,
   onPress,
 }: {
   observation: Observation;
+  assessment: string;
   onPress: () => void;
 }) {
   const site = findSite(observation.siteId);
@@ -360,7 +383,7 @@ function ObservationRow({
           </Text>
         </View>
         <Chip
-          label={assessmentLabel[observation.assessment]}
+          label={assessment}
           selected={observation.assessment !== 'unreviewed'}
         />
       </View>
@@ -368,38 +391,41 @@ function ObservationRow({
   );
 }
 
-const assessmentLabel: Record<ObservationAssessment, string> = {
-  unreviewed: 'Needs review',
-  'no-change': 'No change',
-  reported: 'Reported',
+const ASSESSMENT_KEYS: Record<ObservationAssessment, VisitorCopyKey> = {
+  unreviewed: 'sakshi.needsReview',
+  'no-change': 'sakshi.noChange',
+  reported: 'sakshi.reported',
 };
 
 const styles = StyleSheet.create({
   heroCard: {
     marginTop: spacing.md,
     borderRadius: radii.lg,
-    backgroundColor: colors.surfaceSecondary,
-    borderWidth: 1.5,
-    borderColor: colors.sandstone,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
     overflow: 'hidden',
   },
   heroImageBanner: {
     width: '100%',
-    aspectRatio: 2.8,
+    aspectRatio: 2.35,
   },
   heroImage: {
     width: '100%',
     height: '100%',
   },
   heroBody: {
-    padding: spacing.base,
-    gap: spacing.sm,
+    padding: spacing.content,
+    gap: spacing.md,
+    backgroundColor: colors.surface,
   },
   heroHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    gap: spacing.md,
   },
+  photoButton: { marginTop: spacing.xs },
   /*
     No size or weight overrides on the hero text. `fontWeight` does nothing once
     a real family is named — Android picks the file, not the axis — so an
@@ -410,32 +436,47 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: spacing.md,
     marginBottom: spacing.xs,
-    backgroundColor: colors.surfaceSecondary,
+    backgroundColor: colors.surface,
     borderRadius: radii.md,
-    padding: 3,
-    gap: 3,
+    borderWidth: 1,
+    borderColor: colors.border,
+    overflow: 'hidden',
   },
   tabItem: {
     flex: 1,
-    paddingVertical: spacing.sm,
+    minHeight: 54,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: spacing.md,
     alignItems: 'center',
-    borderRadius: radii.sm,
+    justifyContent: 'center',
+    borderBottomWidth: 3,
+    borderBottomColor: colors.surface,
   },
   tabItemActive: {
+    backgroundColor: colors.surfaceSelected,
+    borderBottomColor: colors.primary,
+  },
+  detectorStatus: {
+    marginTop: spacing.md,
+    minHeight: 76,
+    padding: spacing.base,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    borderRadius: radii.md,
     backgroundColor: colors.surface,
     borderWidth: 1,
     borderColor: colors.border,
   },
-  detectorStatus: {
-    marginTop: spacing.md,
-    padding: spacing.sm,
-    gap: spacing.xxs,
-    borderRadius: radii.md,
-    backgroundColor: colors.surfaceSecondary,
-    borderWidth: 1,
-    borderColor: colors.border,
+  detectorIcon: {
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
+  detectorCopy: { flex: 1, gap: spacing.xs },
   section: { paddingTop: spacing.md, gap: spacing.md },
+  listHeader: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   list: { gap: spacing.md },
   observationRow: {
     flexDirection: 'row',

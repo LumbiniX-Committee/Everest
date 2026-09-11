@@ -1,8 +1,20 @@
+import { useCallback } from 'react';
 import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 
 import { Icon } from '@/components/ui';
+import { useHaptics } from '@/hooks';
+import { useInterfaceLanguage } from '@/i18n/context';
+import { visitorLiteralCopy } from '@/i18n/literals';
 import { colors, radii } from '@/theme';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 /**
  * The Settings entry, sat in each surface's header.
@@ -13,17 +25,45 @@ import { colors, radii } from '@/theme';
  */
 export function SettingsButton() {
   const router = useRouter();
+  const { pulse } = useHaptics();
+  const language = useInterfaceLanguage();
+  const scale = useSharedValue(1);
+  const rotation = useSharedValue(0);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      { scale: scale.value },
+      { rotate: `${rotation.value}deg` },
+    ],
+  }));
+
+  const handlePressIn = useCallback(() => {
+    scale.set(withSpring(0.92, { damping: 14, stiffness: 350, mass: 0.6 }));
+    rotation.set(withSpring(35, { damping: 12, stiffness: 300, mass: 0.6 }));
+  }, [rotation, scale]);
+
+  const handlePressOut = useCallback(() => {
+    scale.set(withSpring(1, { damping: 12, stiffness: 280, mass: 0.6 }));
+    rotation.set(withSpring(0, { damping: 12, stiffness: 280, mass: 0.6 }));
+  }, [rotation, scale]);
+
+  const handlePress = useCallback(() => {
+    pulse(Haptics.ImpactFeedbackStyle.Light);
+    router.push('/(main)/settings');
+  }, [pulse, router]);
 
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityRole="button"
-      accessibilityLabel="Settings"
-      accessibilityHint="Preferences, permissions, sync and storage"
-      onPress={() => router.push('/(main)/settings')}
-      style={({ pressed }) => [styles.button, pressed && styles.pressed]}
+      accessibilityLabel={visitorLiteralCopy(language, 'Settings')}
+      accessibilityHint={visitorLiteralCopy(language, 'Preferences, permissions, sync and storage')}
+      onPress={handlePress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      style={[styles.button, animatedStyle]}
     >
-      <Icon name="cog-outline" size={22} color={colors.textSecondary} />
-    </Pressable>
+      <Icon name="cog-outline" size={25} color={colors.textSecondary} />
+    </AnimatedPressable>
   );
 }
 
@@ -34,6 +74,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: radii.full,
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
   },
-  pressed: { backgroundColor: colors.surfaceSecondary },
 });

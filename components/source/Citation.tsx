@@ -43,8 +43,8 @@ export function Citation({ source, citation, index, onPress }: CitationProps) {
       ) : null}
 
       <View style={styles.body}>
-        <Text variant="caption">{source.title}</Text>
-        <Text variant="caption" tone="muted">
+        <Text variant="caption" translate={false}>{source.title}</Text>
+        <Text variant="caption" tone="muted" translate={false}>
           {line}
           {locator ? ` · ${locator}` : ''}
         </Text>

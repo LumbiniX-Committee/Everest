@@ -2,24 +2,41 @@
   "name": "sakshi-landing",
   "version": "0.1.0",
   "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
   "scripts": {
+    "data": "node scripts/build-explorer-data.mjs && node scripts/build-open-data.mjs && node scripts/copy-reports.mjs && node scripts/copy-map-worker.mjs",
+    "predev": "npm run data",
     "dev": "next dev",
+    "prebuild": "npm run data && node --env-file-if-exists=.env.local tools/check-production-config.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "verify": "npm run typecheck && npm run lint && npm run test && npm run build"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.116.0",
     "lucide-react": "^1.30.0",
-    "next": "^16.3.0",
+    "maplibre-gl": "^6.6.0",
+    "next": "^16.3.4",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
     "@types/node": "^26.2.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.4",
+    "jsdom": "^30.0.1",
     "tailwindcss": "^4.3.3",
-    "typescript": "^7.0.2"
+    "typescript": "5.9.3",
+    "vitest": "^5.0.0"
   }
 }

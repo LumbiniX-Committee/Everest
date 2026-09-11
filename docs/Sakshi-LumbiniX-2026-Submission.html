@@ -1,0 +1,1191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sākṣī — LumbiniX Hackathon 2026 Submission</title>
+<style>
+  @page {
+    size: A4;
+    margin: 18mm 30mm 16mm 20mm;
+  }
+
+  :root {
+    --ink:        #1B1B19;
+    --ink-2:      #4A4A46;
+    --ink-3:      #7A786F;
+    --lock:       #2F5F8C;
+    --lock-tint:  #EDF2F7;
+    --earth:      #8A6A3D;
+    --earth-tint: #F8F3EA;
+    --ok:         #2C6647;
+    --warn:       #8A5E14;
+    --gap:        #97322A;
+    --rule:       #D6D2C8;
+    --rule-soft:  #E8E5DE;
+
+    --display: "EB Garamond", "Gentium Book Plus", Georgia, serif;
+    --body:    "Charis SIL", "Gentium Plus", "Bitstream Charter", Georgia, serif;
+    --sans:    "Clear Sans", "DejaVu Sans Condensed", "DejaVu Sans", sans-serif;
+    --mono:    "DejaVu Sans Mono", monospace;
+    --deva:    "Annapurna SIL", "Noto Sans Devanagari", "Lohit Devanagari", serif;
+  }
+
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  html { font-size: 10.5pt; }
+
+  body {
+    margin: 0;
+    font-family: var(--body);
+    color: var(--ink);
+    line-height: 1.52;
+    text-rendering: optimizeLegibility;
+    hyphens: auto;
+  }
+
+  /* ══ Page architecture: a narrow rail for numbers and marginal notes ══ */
+  .page { break-after: page; }
+  .page:last-child { break-after: auto; }
+
+  .band {
+    display: grid;
+    grid-template-columns: 26mm 1fr;
+    column-gap: 8mm;
+    align-items: start;
+  }
+
+  .rail {
+    font-family: var(--sans);
+    font-size: 7.4pt;
+    line-height: 1.35;
+    color: var(--ink-3);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding-top: .18rem;
+  }
+  .rail .num {
+    font-family: var(--display);
+    font-size: 15pt;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--lock);
+    display: block;
+    line-height: 1;
+    margin-bottom: .3rem;
+  }
+  .rail .note {
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 7.6pt;
+    line-height: 1.42;
+    color: var(--ink-3);
+    margin-top: .9rem;
+    padding-top: .55rem;
+    border-top: .5pt solid var(--rule);
+  }
+
+  .col { min-width: 0; }
+
+  /* ══ Cover ══ */
+  .cover { min-height: 256mm; display: flex; flex-direction: column; }
+  .cover-top { border-bottom: 1.5pt solid var(--lock); padding-bottom: 1.1rem; }
+  .cover .kicker {
+    font-family: var(--sans);
+    font-size: 8pt;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 2.6rem;
+  }
+  .cover .deva {
+    font-family: var(--deva);
+    font-size: 30pt;
+    line-height: 1;
+    color: var(--earth);
+    margin: 0 0 .5rem;
+  }
+  .cover h1 {
+    font-family: var(--display);
+    font-size: 46pt;
+    font-weight: 500;
+    letter-spacing: -.015em;
+    line-height: .98;
+    margin: 0 0 .7rem;
+  }
+  .cover .gloss {
+    font-family: var(--body);
+    font-size: 12pt;
+    font-style: italic;
+    color: var(--ink-2);
+    margin: 0;
+  }
+  .cover-theme {
+    margin: 2.1rem 0 0;
+    padding: 1.1rem 1.3rem;
+    background: var(--earth-tint);
+    border-left: 2pt solid var(--earth);
+  }
+  .cover-theme .lbl {
+    font-family: var(--sans);
+    font-size: 7.4pt;
+    letter-spacing: .17em;
+    text-transform: uppercase;
+    color: var(--earth);
+    display: block;
+    margin-bottom: .35rem;
+  }
+  .cover-theme p {
+    margin: 0;
+    font-family: var(--display);
+    font-size: 13.5pt;
+    line-height: 1.3;
+    font-style: italic;
+  }
+
+  .cover-meta {
+    margin-top: auto;
+    padding-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.4rem 2.2rem;
+  }
+  .cover-meta .blk h4 {
+    font-family: var(--sans);
+    font-size: 7.4pt;
+    letter-spacing: .17em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 .4rem;
+    padding-bottom: .3rem;
+    border-bottom: .5pt solid var(--rule);
+    font-weight: 400;
+  }
+  .cover-meta .blk p { margin: 0 0 .18rem; font-size: 9.4pt; line-height: 1.4; }
+  .cover-meta .blk .role { color: var(--ink-3); font-size: 8.6pt; }
+  .cover-meta .blk a, .cover-meta .blk .lnk {
+    font-family: var(--mono);
+    font-size: 7.6pt;
+    color: var(--lock);
+    word-break: break-all;
+    text-decoration: none;
+  }
+
+  /* ══ Contents ══ */
+  .toc-h {
+    font-family: var(--display);
+    font-size: 24pt;
+    font-weight: 500;
+    margin: 0 0 1.6rem;
+    padding-bottom: .6rem;
+    border-bottom: 1pt solid var(--rule);
+  }
+  ol.toc { list-style: none; margin: 0; padding: 0; }
+  ol.toc > li {
+    display: grid;
+    grid-template-columns: 8mm 1fr;
+    gap: 4mm;
+    padding: .55rem 0;
+    border-bottom: .5pt solid var(--rule-soft);
+  }
+  ol.toc .n { font-family: var(--display); font-size: 12pt; color: var(--lock); }
+  ol.toc .t { font-family: var(--display); font-size: 12pt; }
+  ol.toc .d { font-family: var(--sans); font-size: 8.2pt; color: var(--ink-3); display: block; margin-top: .12rem; line-height: 1.4; }
+
+  /* ══ Section headings ══ */
+  h2.sec {
+    font-family: var(--display);
+    font-size: 22pt;
+    font-weight: 500;
+    letter-spacing: -.012em;
+    line-height: 1.1;
+    margin: 0 0 1.1rem;
+    padding-bottom: .55rem;
+    border-bottom: 1pt solid var(--lock);
+  }
+
+  h3 {
+    font-family: var(--display);
+    font-size: 13pt;
+    font-weight: 600;
+    margin: 1.5rem 0 .4rem;
+    break-after: avoid;
+  }
+  h3:first-of-type { margin-top: .4rem; }
+
+  h4 {
+    font-family: var(--sans);
+    font-size: 7.6pt;
+    font-weight: 600;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 1.2rem 0 .35rem;
+    break-after: avoid;
+  }
+
+  p { margin: 0 0 .62rem; text-align: justify; }
+  p.lede { font-size: 11.2pt; line-height: 1.48; color: var(--ink-2); margin-bottom: 1rem; }
+
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+
+  ul, ol.body { margin: .3rem 0 .8rem; padding-left: 1.05rem; }
+  li { margin-bottom: .3rem; }
+  ul.plain { list-style: none; padding-left: 0; }
+
+  code, .m {
+    font-family: var(--mono);
+    font-size: .83em;
+    background: var(--lock-tint);
+    padding: .04em .25em;
+    border-radius: 1.5pt;
+  }
+
+  /* ══ Blocks ══ */
+  .callout {
+    margin: .9rem 0 1rem;
+    padding: .75rem .95rem;
+    background: var(--earth-tint);
+    border-left: 2pt solid var(--earth);
+    break-inside: avoid;
+  }
+  .callout.cool { background: var(--lock-tint); border-left-color: var(--lock); }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout h4 { margin-top: 0; color: var(--earth); }
+  .callout.cool h4 { color: var(--lock); }
+
+  /* ══ Module cards ══ */
+  .module {
+    border: .75pt solid var(--rule);
+    margin-bottom: .85rem;
+    break-inside: avoid;
+  }
+  .module .mh {
+    padding: .5rem .8rem;
+    background: var(--lock-tint);
+    border-bottom: .75pt solid var(--rule);
+    display: flex;
+    align-items: baseline;
+    gap: .6rem;
+  }
+  .module .mh .nm { font-family: var(--display); font-size: 13pt; font-weight: 600; }
+  .module .mh .gl {
+    font-family: var(--sans);
+    font-size: 7.4pt;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--lock);
+  }
+  .module .mb { padding: .65rem .8rem .35rem; }
+  .module .mb p { font-size: 9.8pt; }
+  .module .mb ul { font-size: 9.6pt; }
+
+  /* ══ Tables ══ */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: .7rem 0 1rem;
+    font-size: 8.9pt;
+    break-inside: avoid;
+  }
+  caption {
+    caption-side: top;
+    text-align: left;
+    font-family: var(--sans);
+    font-size: 7.6pt;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding-bottom: .35rem;
+  }
+  th, td { text-align: left; padding: .4rem .5rem; border-bottom: .5pt solid var(--rule-soft); vertical-align: top; }
+  thead th {
+    font-family: var(--sans);
+    font-size: 7.4pt;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 600;
+    border-bottom: .75pt solid var(--rule);
+    background: #FAF9F6;
+  }
+  td.num, th.num { font-family: var(--mono); font-size: 8.2pt; white-space: nowrap; }
+  tbody tr:last-child td { border-bottom: .75pt solid var(--rule); }
+
+  .tag {
+    font-family: var(--sans);
+    font-size: 7pt;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: .08rem .3rem;
+    border: .5pt solid currentColor;
+    border-radius: 1.5pt;
+    white-space: nowrap;
+  }
+  .t-ok { color: var(--ok); }
+  .t-warn { color: var(--warn); }
+  .t-gap { color: var(--gap); }
+
+  /* ══ Figures ══ */
+  figure {
+    margin: 1rem 0 1.1rem;
+    padding: .8rem .85rem .55rem;
+    border: .75pt solid var(--rule);
+    break-inside: avoid;
+  }
+  figure svg { display: block; width: 100%; height: auto; color: var(--ink-2); }
+  figcaption {
+    margin-top: .6rem;
+    padding-top: .45rem;
+    border-top: .5pt solid var(--rule-soft);
+    font-family: var(--sans);
+    font-size: 7.8pt;
+    line-height: 1.45;
+    color: var(--ink-3);
+  }
+  .sb { fill: #F7F6F2; stroke: var(--rule); stroke-width: .8; }
+  .sk { fill: var(--lock-tint); stroke: var(--lock); stroke-width: 1; }
+  .st { fill: var(--ink); font-family: "Clear Sans", "DejaVu Sans", sans-serif; font-size: 9px; }
+  .ss { fill: var(--ink-3); font-family: "DejaVu Sans Mono", monospace; font-size: 7px; }
+  .sc { fill: var(--lock); font-family: "DejaVu Sans Mono", monospace; font-size: 7px; }
+  .sx { fill: var(--gap); font-family: "DejaVu Sans Mono", monospace; font-size: 7px; }
+  .sl { fill: var(--ink-3); font-family: "DejaVu Sans Mono", monospace; font-size: 6.5px; letter-spacing: .03em; }
+  .scap { fill: var(--ink-3); font-family: "Clear Sans", "DejaVu Sans", sans-serif; font-size: 6.5px; letter-spacing: .12em; }
+  .ln { stroke: var(--ink-3); stroke-width: .9; fill: none; }
+  .lnk { stroke: var(--lock); stroke-width: 1.1; fill: none; }
+  .lnd { stroke: var(--ink-3); stroke-width: .9; fill: none; stroke-dasharray: 3 3; }
+  .lnx { stroke: var(--gap); stroke-width: 1; fill: none; }
+  .rl { stroke: var(--rule); stroke-width: .8; stroke-dasharray: 2.5 3.5; }
+
+  /* ══ Team ══ */
+  .team { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin: .8rem 0 1rem; }
+  .member { border: .75pt solid var(--rule); border-top: 2pt solid var(--lock); padding: .65rem .8rem .7rem; break-inside: avoid; }
+  .member .nm { font-family: var(--display); font-size: 12.5pt; font-weight: 600; display: block; }
+  .member .rl2 {
+    font-family: var(--sans);
+    font-size: 7.4pt;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--lock);
+    display: block;
+    margin: .12rem 0 .45rem;
+  }
+  .member p { font-size: 9.2pt; margin: 0; text-align: left; }
+
+  /* ══ Links block ══ */
+  .link-row {
+    display: grid;
+    grid-template-columns: 34mm 1fr;
+    gap: .6rem;
+    padding: .6rem 0;
+    border-bottom: .5pt solid var(--rule-soft);
+    align-items: baseline;
+  }
+  .link-row .k {
+    font-family: var(--sans);
+    font-size: 7.6pt;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .link-row .v { font-family: var(--mono); font-size: 8pt; color: var(--lock); word-break: break-all; }
+  .link-row .v .sub { font-family: var(--body); font-size: 8.6pt; color: var(--ink-3); display: block; margin-top: .15rem; word-break: normal; }
+
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border: .75pt solid var(--rule);
+    margin: .9rem 0 1.1rem;
+    break-inside: avoid;
+  }
+  .stat-strip > div { padding: .45rem .4rem .55rem; border-right: .5pt solid var(--rule-soft); min-width: 0; overflow-wrap: break-word; }
+  .stat-strip > div:last-child { border-right: 0; }
+  .stat-strip .v { font-family: var(--mono); font-size: 9.4pt; color: var(--lock); display: block; line-height: 1.1; }
+  .stat-strip .k {
+    font-family: var(--sans);
+    font-size: 6.2pt;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    display: block;
+    margin-top: .18rem;
+    line-height: 1.3;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ COVER ══════════════ -->
+<section class="page cover">
+  <div class="cover-top">
+    <p class="kicker">LumbiniX Hackathon 2026 &nbsp;·&nbsp; Project Submission Document</p>
+    <div class="deva">साक्षी</div>
+    <h1>Sākṣī</h1>
+    <p class="gloss">The witness: one who sees a thing directly, and can testify to it.</p>
+  </div>
+
+  <div class="cover-theme">
+    <span class="lbl">Hackathon theme</span>
+    <p>What if Buddha were born in 2026? Build the future guided by the timeless wisdom of Lord Gautam Buddha.</p>
+  </div>
+
+  <div class="cover-meta">
+    <div class="blk">
+      <h4>Team</h4>
+      <p>Aaditya Sapkota <span class="role">/ AI Backend Engineer</span></p>
+      <p>Binayak Gautam <span class="role">/ 3D Rendering &amp; Frontend Engineer</span></p>
+      <p>Nabin Poudel <span class="role">/ Research &amp; Documentation</span></p>
+      <p>Siddanta Sodari <span class="role">/ Full Stack Developer</span></p>
+    </div>
+    <div class="blk">
+      <h4>Submission</h4>
+      <p><span class="role">Repository</span><br><span class="lnk">github.com/LumbiniX-Committee/Everest</span></p>
+      <p style="margin-top:.5rem"><span class="role">Live build</span><br><span class="lnk">application-a925ec89-66ca-48ae-a9c8-744067a46082.apk</span></p>
+      <p style="margin-top:.5rem"><span class="role">Demo video</span><br><span class="lnk">drive.google.com/drive/folders/1by7PGKVBpTmufWhx-YoBqBDkdZ02BofS</span></p>
+    </div>
+    <div class="blk" style="grid-column: 1 / -1;">
+      <h4>Document status</h4>
+      <p style="font-size:8.8pt; color:var(--ink-2)">Every figure in this document was verified against the working tree on 10 August 2026. Where a capability is implemented but not yet demonstrated on the presentation device, this document says so rather than implying otherwise. Section 7 and Section 5.6 record the open gaps in full.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ CONTENTS ══════════════ -->
+<section class="page">
+  <div class="band">
+    <div class="rail"><span class="num">·</span>Contents</div>
+    <div class="col">
+      <h2 class="toc-h">Contents</h2>
+      <ol class="toc">
+        <li><span class="n">1</span><span class="t">Executive Summary<span class="d">Project vision, and the pitch in one paragraph</span></span></li>
+        <li><span class="n">2</span><span class="t">Problem Statement<span class="d">The disconnect, heritage maintenance, and machine misinformation</span></span></li>
+        <li><span class="n">3</span><span class="t">Proposed Solution<span class="d">Overview of the application and its value proposition</span></span></li>
+        <li><span class="n">4</span><span class="t">Core Modules &amp; MVP Features<span class="d">Tīrtha, Sākṣī and Dhamma, feature by feature</span></span></li>
+        <li><span class="n">5</span><span class="t">Technical Architecture &amp; Stack<span class="d">What we built, why, the alternatives, and the verification record</span></span></li>
+        <li><span class="n">6</span><span class="t">Business Model &amp; Viability<span class="d">Audience, revenue streams, and the impact metric</span></span></li>
+        <li><span class="n">7</span><span class="t">Challenges Faced During the Hackathon<span class="d">Technical hurdles, and how the Dhamma corpus was validated</span></span></li>
+        <li><span class="n">8</span><span class="t">Future Roadmap<span class="d">Three phases, from a Lumbini pilot to the Kathmandu Valley Circuit</span></span></li>
+        <li><span class="n">9</span><span class="t">The Team<span class="d">Four members, and what each of them owns</span></span></li>
+        <li><span class="n">10</span><span class="t">Repository &amp; Live Demo Links<span class="d">Source, installable build, and demo video</span></span></li>
+      </ol>
+
+      <div class="callout" style="margin-top:1.6rem">
+        <h4>The one idea, if you read nothing else</h4>
+        <p>The Buddha's first instruction to the Kālāmas was not to accept a teaching because it is traditional, because it is repeated, or because a teacher said it. Test it, and see for yourself. Sākṣī is that instruction rendered as software: an app that never claims more than it can support. A photograph matched by eye is not recorded as a sensor lock. A missing sensor reading is stored as unknown, never as zero. An answer that cannot cite a canonical passage is a refusal, not a paragraph. A detected crack is a candidate until a person confirms it. A documentary coordinate is never presented as a survey.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 1 ══════════════ -->
+<section class="page">
+  <div class="band">
+    <div class="rail">
+      <span class="num">1</span>Executive Summary
+      <div class="note">Sākṣī (Sanskrit: <em>sākṣin</em>), one who is present at an event and can bear witness to it.</div>
+    </div>
+    <div class="col">
+      <h2 class="sec">Executive Summary</h2>
+
+      <h3>Project Vision</h3>
+      <p class="lede">In 2026, the technology that surrounds a visitor to Lumbini is optimised to hold attention. The teaching that was first given at Lumbini is about placing attention deliberately. Sākṣī is built on the belief that these need not be opposed: that a phone can be an instrument of attention rather than a competitor for it, and that the most modern thing we can do with machine learning near a sacred site is to make it admit what it does not know.</p>
+
+      <p>If the Buddha were born in 2026, the sermon would not need a new medium so much as a new discipline. The Kālāma Sutta asks a listener not to accept a claim on the strength of tradition, repetition, rumour, scripture, logic, inference, appearance, agreement with one's own views, apparent competence, or the authority of a teacher, but to test it. That is a specification, and it is an unusually demanding one for software built in the age of the confident language model. We took it literally. Every subsystem in this application is designed so that a claim it makes can be traced to something a person can check: a canonical passage id, a timestamped photograph, a sensor reading with its accuracy attached, or a coordinate with its provenance tier printed beside it.</p>
+
+      <p>The name states the thesis. <em>Sākṣī</em> means witness: someone who sees a thing directly and can testify to it. A witness who embellishes is worse than no witness at all.</p>
+
+      <h3>The Pitch</h3>
+      <p>Sākṣī is a map-based Android application for the Greater Lumbini Circuit that turns a visitor's attention into conservation evidence. A pilgrim or tourist opens the map, walks to one of twelve heritage sites, and receives that place's own material at a depth that grows as they return. At each site there are fixed photographic viewpoints: the app guides the visitor to stand where an earlier observer stood, aligns the device against a stored heading and tilt, and records what is there today. Those repeated frames become a comparable time-series that a conservation authority can actually use, and any damage a visitor notices becomes a structured condition report with a photograph, a location and a severity attached. Alongside it sits a question-answering surface restricted to a narrow canonical Buddhist corpus, which answers in Nepali or English with a citation to a specific passage, and refuses when the sources do not support an answer. The app is built for three audiences at once: international pilgrims and local travellers who want context that is true, and the Lumbini Development Trust and municipal heritage officers who currently have no continuous record of how these monuments are changing.</p>
+
+      <div class="stat-strip">
+        <div><span class="v">3</span><span class="k">product surfaces</span></div>
+        <div><span class="v">12</span><span class="k">heritage sites seeded</span></div>
+        <div><span class="v">113/113</span><span class="k">domain tests passing</span></div>
+        <div><span class="v">49/50</span><span class="k">dhamma benchmark</span></div>
+        <div><span class="v">100%</span><span class="k">adversarial refusal</span></div>
+      </div>
+
+      <p>The application is offline-first by design, because the Sacred Garden has patchy signal and because a photograph taken at a vantage on a particular day cannot be retaken if an upload fails. Every observation is written to the device database first and synchronised opportunistically afterwards. On-device machine learning does the same work without a network: a crack detector runs entirely on the phone, and a small quantised language model can answer with the radio switched off.</p>
+
+      <table>
+        <caption>The three surfaces at a glance (expanded in Section 4)</caption>
+        <thead><tr><th style="width:20%">Surface</th><th style="width:24%">The question it answers</th><th>What it produces</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Tīrtha</strong><br><span style="font-size:8pt;color:var(--ink-3)">the journey</span></td><td>What am I looking at, and what happened here?</td><td>Arrival-aware context that deepens across four wisdom tiers, historical comparison imagery, and a restrained quest layer.</td></tr>
+          <tr><td><strong>Sākṣī</strong><br><span style="font-size:8pt;color:var(--ink-3)">the witness</span></td><td>What does this look like today, compared with last time?</td><td>Aligned, dated, positioned photographs at fixed vantages, plus structured condition reports with severity and corroboration.</td></tr>
+          <tr><td><strong>Dhamma</strong><br><span style="font-size:8pt;color:var(--ink-3)">the truth</span></td><td>What do the sources actually say, and where?</td><td>Answers in Nepali or English carrying a canonical passage identifier, or an explicit refusal naming the missing evidence.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 2 ══════════════ -->
+<section class="page">
+  <div class="band">
+    <div class="rail">
+      <span class="num">2</span>Problem Statement
+      <div class="note">Lumbini receives well over a million visitors a year across a site complex spanning several square kilometres, with monuments dating from the third century BCE.</div>
+    </div>
+    <div class="col">
+      <h2 class="sec">Problem Statement</h2>
+
+      <h3>2.1 The Disconnect</h3>
+      <p>A visitor standing in front of the Māyādevī Temple has three options for understanding what they are looking at. They can read a weathered interpretive board written for a general audience a decade ago. They can hire a guide, whose quality is uneven and whose availability is seasonal. Or they can search the internet, which returns a mixture of tourism marketing, devotional writing, and confident summaries of uncertain provenance. None of these is anchored to where the person is standing, none of them adapts to whether this is their first visit or their fifth, and none of them can tell them which claims are archaeologically established and which are traditional.</p>
+      <p>The result is a specific kind of loss. A person travels a long way to a place of genuine significance and leaves with a photograph and a vague impression. The Ashokan pillar, which carries the inscription that identifies this site as the birthplace, becomes a stone column in a queue. The nativity sculpture becomes a thing behind glass. The material is extraordinary and the encounter is thin, because nothing bridges the two at the moment the person is actually there.</p>
+
+      <h3>2.2 Heritage Maintenance</h3>
+      <p>The conservation problem is quieter and more serious. The monuments of the Greater Lumbini Circuit are spread across a wide area, several of them are excavated brick structures exposed to monsoon, and the authorities responsible for them have a small staff relative to the ground they cover. Condition assessment is therefore episodic: a specialist survey happens, produces a report, and the next one happens years later. Between those points there is no continuous record.</p>
+      <p>This matters because most heritage degradation is not dramatic. It is a crack widening by millimetres a season, biological growth spreading across a brick face, water pooling where drainage has silted up, and salt efflorescence appearing after a wet year. These are visible to anyone who looks, and invisible to anyone who is not comparing against a previous image from the same position. Meanwhile several hundred thousand people a year photograph these monuments from roughly the same spots, and none of that imagery is comparable, positioned, or retained.</p>
+      <div class="callout">
+        <h4>The specific gap</h4>
+        <p>There is no cheap, continuous, positionally comparable photographic record of the Lumbini monuments, despite an enormous volume of photography happening at them every day. The imagery exists. What is missing is the discipline of standing in the same place, the metadata to prove you did, and somewhere for it to go.</p>
+      </div>
+
+      <h3>2.3 Misinformation</h3>
+      <p>The third problem arrived recently and is getting worse. General-purpose language models answer questions about Buddhist doctrine and Lumbini's history fluently, at length, and with no reliable signal of when they are reconstructing from pattern rather than reporting from a source. The failure modes are specific and damaging in this domain: they invent sutta references and attribute quotations to passages that do not contain them; they blend traditions, presenting a later Mahāyāna or Tibetan formulation as if it were an early Pāli teaching; they will adopt the voice of the Buddha and generate first-person scripture on request; and they are markedly worse in Nepali than in English, which means the people closest to the site get the least reliable answers.</p>
+      <p>For a religious and historical corpus this is not a quality-of-service issue. A fabricated citation that looks like a real one is worse than a refusal, because it is repeatable, quotable, and indistinguishable from a genuine reference to a reader who does not have the canon open. Every safeguard in our knowledge surface is a response to a failure mode we reproduced first.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 3 ══════════════ -->
+<section class="page">
+  <div class="band">
+    <div class="rail">
+      <span class="num">3</span>Proposed Solution
+      <div class="note">The app has exactly three destinations. There is no Home, Explore, Rewards or Profile tab. Adding a fourth would require an argument.</div>
+    </div>
+    <div class="col">
+      <h2 class="sec">Proposed Solution</h2>
+
+      <h3>3.1 Overview</h3>
+      <p class="lede">Sākṣī is a map-based Android application organised around three surfaces, each answering one question a person actually has while standing in Lumbini. The three surfaces are the conceptual model of the product, not a navigation convenience.</p>
+
+      <div class="module">
+        <div class="mh"><span class="nm">Tīrtha</span><span class="gl">the journey · the place</span></div>
+        <div class="mb"><p>A live map of the Greater Lumbini Circuit with real-time position, arrival detection at twelve seeded sites, site detail, historical Then and Now plates, narration, and a restrained quest layer. It answers: <em>what am I looking at, and what happened here?</em></p></div>
+      </div>
+
+      <div class="module">
+        <div class="mh"><span class="nm">Sākṣī</span><span class="gl">the witness · the evidence</span></div>
+        <div class="mb"><p>Fixed-point rephotography. Walk to a vantage, align heading and tilt against the stored target, capture, and file a structured condition report. A register holds the resulting time-series, and a global leaderboard ranks contributors. It answers: <em>what does this look like today, compared with the last time somebody stood here?</em></p></div>
+      </div>
+
+      <div class="module">
+        <div class="mh"><span class="nm">Dhamma</span><span class="gl">the truth · the sources</span></div>
+        <div class="mb"><p>Citation-locked question answering over a deliberately narrow canonical corpus, in Nepali by default with an English toggle. It refuses when the sources are thin, and it will not impersonate the Buddha. It answers: <em>what do the texts actually say, and where exactly do they say it?</em></p></div>
+      </div>
+
+      <h3>3.2 Value Proposition</h3>
+      <p>The bridge between past and future in this application is a single mechanism used three ways: <strong>an attentive person, standing in a specific place, produces something durable.</strong></p>
+
+      <table>
+        <caption>What each audience gives, and what each receives</caption>
+        <thead><tr><th style="width:24%">Audience</th><th style="width:38%">What they get</th><th>What they contribute without extra effort</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Pilgrims</strong><br><span style="font-size:8.2pt;color:var(--ink-3)">international and devotional</span></td><td>Context anchored to where they stand, deepening with return visits; answers about doctrine that carry a verifiable citation; a practice register rather than a score.</td><td>A dated, positioned photograph of a monument, and any condition they noticed while looking closely.</td></tr>
+          <tr><td><strong>Tourists</strong><br><span style="font-size:8.2pt;color:var(--ink-3)">domestic and regional</span></td><td>A guided route, historical comparison imagery that makes the ruins legible, and a reason to look carefully rather than to photograph and move on.</td><td>The same photographic record, plus corroboration of reports other visitors filed.</td></tr>
+          <tr><td><strong>Heritage authorities</strong><br><span style="font-size:8.2pt;color:var(--ink-3)">LDT, municipalities, DoA</span></td><td>A continuous, positionally comparable condition record they did not have to staff, with structured reports triaged by severity and corroboration count.</td><td>Survey-grade coordinates and vantage definitions, which is the one input only they can provide.</td></tr>
+        </tbody>
+      </table>
+
+      <p>The reciprocity matters to the design. We deliberately did not build a system where the visitor is unpaid labour dressed as a game. The photographic contribution is a by-product of an experience that is worth having on its own terms, and the merit system that acknowledges it is explicitly non-transferable, non-purchasable and capped, so that it can never become the reason someone visits.</p>
+
+      <div class="callout cool">
+        <h4>The timeless wisdom, made operational</h4>
+        <p><strong>Right view</strong> becomes a citation validator: no claim reaches the reader without a source. <strong>Right speech</strong> becomes a vocabulary linter that fails the build if engagement or gambling language reaches a screen. <strong>Non-attachment</strong> becomes a merit ledger with no transfer function, no expiry and no purchase path. <strong>Mindfulness</strong> becomes a stillness practice that requires the screen to be off. These are not metaphors bolted onto a feature list; each one is enforced in code and each one is tested.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 4 ══════════════ -->
+<section class="page">
+  <div class="band">
+    <div class="rail">
+      <span class="num">4</span>Core Modules
+      <div class="note">Seeded content: 12 sites, 6 vantages, 10 quests, 10 historical plates, 5 timeline entries, 3 conservation needs.</div>
+    </div>
+    <div class="col">
+      <h2 class="sec">Core Modules &amp; MVP Features</h2>
+
+      <h3>4.1 Tīrtha — The Journey</h3>
+      <p>Tīrtha is the place layer. It opens on a vector map of the Greater Lumbini Circuit with the visitor's live position, twelve seeded heritage sites, and their precinct groupings. Sites carry real attributes rather than decorative ones: an evidence tier, a zone classification, a photography policy (some areas of the Sacred Garden restrict or prohibit photography, and the app enforces this rather than relying on signage), and a geofence radius that ranges from thirty metres for the Ashokan pillar to forty-five metres for the temple.</p>
+
+      <h4>Real-time, location-based mapping</h4>
+      <ul>
+        <li><strong>Arrival detection with hysteresis.</strong> The geofence watcher fires an <code>enter</code> event at radius <em>r</em> and an <code>exit</code> only at <em>r</em> × 1.15, so a visitor standing on a boundary does not trigger a storm of notifications. A separate <code>dwell</code> event fires after sixty continuous seconds inside, which is what unlocks the deeper material.</li>
+        <li><strong>Nearest-site guidance.</strong> A persistent card names the nearest site and the distance to it, so the map is useful while walking rather than only while stopped.</li>
+        <li><strong>Pradakṣiṇā tracking.</strong> Clockwise circumambulation of a stupa is scored from the walked track: completion requires at least 330 degrees clockwise with no more than 30 degrees of reverse travel. Walking anticlockwise is never treated as a failure. It returns a gentle directional hint, because the practice is the point and a scolding notification is not.</li>
+        <li><strong>Silence on consecrated ground.</strong> Inside a designated zone the app suppresses its own notifications. A device that buzzes during someone else's prostration is a design failure regardless of what the notification says.</li>
+      </ul>
+
+      <h4>The tiered wisdom system</h4>
+      <p>How much a place says depends on how much attention the visitor has given it. This is a deliberate inversion of the usual pattern, where the app front-loads everything and hopes something is read.</p>
+      <table>
+        <thead><tr><th style="width:16%">Tier</th><th style="width:30%">Unlocked by</th><th>What the place says</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Basic</strong></td><td>Arrival inside the geofence</td><td>Identification, date range, and the one fact that makes the place legible: what it is and why it is here.</td></tr>
+          <tr><td><strong>Medium</strong></td><td>Dwell, or a completed observation</td><td>The site's own story beats: excavation history, what the evidence tier actually rests on, the Then and Now comparison.</td></tr>
+          <tr><td><strong>High</strong></td><td>Repeat visits, quest completion, contributed observations</td><td>Epigraphic detail, contested interpretations stated as contested, source references, and the conservation status of the fabric.</td></tr>
+          <tr><td><strong>Custom</strong></td><td>Asking</td><td>An on-site guide answers free-form questions about the building in front of the visitor, in Nepali or English, at the depth they ask for.</td></tr>
+        </tbody>
+      </table>
+      <p>The guide deliberately does not run through the Dhamma engine. We tried that first, and it was instructive: a visitor standing in front of a monastery asking "what is this building" received the answer <em>"I do not have enough reliable evidence to answer this confidently,"</em> followed by a reading list. A true sentence, and a useless one. Grounding rules calibrated for scripture are wrong for architecture, so the guide is a separate voice with its own limits, sharing no code path with the citation engine.</p>
+
+      <h4>The quest layer</h4>
+      <p>Quests are restrained on purpose: ten of them, categorised as survey, epigraphy, ecology or monastic, each with a difficulty, an estimated duration, an optional prerequisite, and a availability window evaluated against proximity and time of day. Three mechanics are worth naming. <strong>Observation riddles</strong> give a hint on a wrong answer and never a penalty. <strong>Stillness</strong> requires the screen off, low accelerometer variance, and presence inside a geofence, held for a target duration: the phone-down quest, which the app cannot fake and cannot rush. <strong>The close ritual</strong> offers a card after twenty minutes inside the Sacred Garden suggesting the session end, which is the only feature in the application designed to reduce its own usage.</p>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <div class="band">
+    <div class="rail">
+      <span class="num">4</span>Core Modules
+      <div class="note">Alignment weighting: 0.30 position, 0.50 heading, 0.20 pitch. Lock needs align ≥ 0.75, GPS accuracy ≤ 15 m, and heading at least half satisfied.</div>
+    </div>
+    <div class="col">
+      <h3 style="margin-top:0">4.2 Sākṣī — The Witness</h3>
+      <p>This is the module the project is named after and the reason the rest of it exists. Fixed-point rephotography is an established conservation technique: return to a defined viewpoint, reproduce the framing, and the difference between two images becomes measurable rather than impressionistic. It is normally expensive because it requires a trained surveyor to travel. Sākṣī makes it something an ordinary visitor can do correctly, by moving the discipline into the device.</p>
+
+      <h4>Before-and-after monument comparison</h4>
+      <p>Two comparison modes are implemented. <strong>Then and Now</strong> pairs a historical plate (archival photographs and documented reconstructions, each carrying its evidence tier and licence provenance) against modern imagery, presented through a scrubber. Where an honest alignment between an archival plate and a modern frame is not possible, the app shows the pair unaligned and says so rather than warping one to fit the other. <strong>The observation series</strong> is the live product: every capture at a given vantage, in date order, from the same position, so that change over a season is visible by scrubbing rather than by argument.</p>
+
+      <figure>
+        <svg viewBox="0 0 620 235" role="img" aria-label="The witness loop: sensors feed an alignment score, a lock gate opens the shutter, the capture and report are written to the device database and an offline queue, and only the queue crosses the network boundary. A separate match-by-eye path reaches capture without a sensor lock and is stored as unverified.">
+          <defs>
+            <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4A4A46"/></marker>
+            <marker id="a1k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2F5F8C"/></marker>
+          </defs>
+          <text class="scap" x="8" y="12">ON DEVICE</text>
+
+          <rect class="sb" x="8" y="20" width="104" height="46" rx="2"/>
+          <text class="st" x="60" y="40" text-anchor="middle">Sensors</text>
+          <text class="ss" x="60" y="53" text-anchor="middle">GPS, compass, tilt</text>
+
+          <rect class="sk" x="130" y="20" width="112" height="46" rx="2"/>
+          <text class="st" x="186" y="38" text-anchor="middle">Alignment score</text>
+          <text class="sc" x="186" y="50" text-anchor="middle">.30 pos + .50 head</text>
+          <text class="sc" x="186" y="60" text-anchor="middle">+ .20 pitch</text>
+
+          <rect class="sk" x="260" y="20" width="112" height="46" rx="2"/>
+          <text class="st" x="316" y="38" text-anchor="middle">Lock gate</text>
+          <text class="sc" x="316" y="50" text-anchor="middle">align ≥ .75, GPS ≤ 15 m</text>
+          <text class="sc" x="316" y="60" text-anchor="middle">heading floor .50</text>
+
+          <rect class="sb" x="390" y="20" width="104" height="46" rx="2"/>
+          <text class="st" x="442" y="38" text-anchor="middle">Capture</text>
+          <text class="ss" x="442" y="50" text-anchor="middle">real observer fix,</text>
+          <text class="ss" x="442" y="60" text-anchor="middle">not the target</text>
+
+          <rect class="sb" x="512" y="20" width="100" height="46" rx="2"/>
+          <text class="st" x="562" y="38" text-anchor="middle">SQLite</text>
+          <text class="ss" x="562" y="50" text-anchor="middle">observations +</text>
+          <text class="ss" x="562" y="60" text-anchor="middle">condition_reports</text>
+
+          <line class="ln" x1="112" y1="43" x2="126" y2="43" marker-end="url(#a1)"/>
+          <line class="lnk" x1="242" y1="43" x2="256" y2="43" marker-end="url(#a1k)"/>
+          <line class="lnk" x1="372" y1="43" x2="386" y2="43" marker-end="url(#a1k)"/>
+          <text class="sc" x="379" y="36" text-anchor="middle">unlock</text>
+          <line class="ln" x1="494" y1="43" x2="508" y2="43" marker-end="url(#a1)"/>
+
+          <rect class="sb" x="260" y="102" width="112" height="40" rx="2"/>
+          <text class="st" x="316" y="120" text-anchor="middle">Match by eye</text>
+          <text class="ss" x="316" y="132" text-anchor="middle">the honest escape hatch</text>
+          <path class="ln" d="M 372 122 L 442 122 L 442 70" marker-end="url(#a1)"/>
+          <text class="sl" x="407" y="116" text-anchor="middle">verified: false</text>
+
+          <rect class="sb" x="512" y="102" width="100" height="40" rx="2"/>
+          <text class="st" x="562" y="120" text-anchor="middle">Offline queue</text>
+          <text class="ss" x="562" y="132" text-anchor="middle">unsynced rows</text>
+          <line class="ln" x1="562" y1="70" x2="562" y2="98" marker-end="url(#a1)"/>
+
+          <line class="rl" x1="8" y1="168" x2="612" y2="168"/>
+          <text class="scap" x="8" y="163">NOTHING ABOVE THIS LINE NEEDS A NETWORK</text>
+          <text class="scap" x="8" y="184">NETWORK</text>
+
+          <rect class="sb" x="466" y="192" width="146" height="36" rx="2"/>
+          <text class="st" x="539" y="209" text-anchor="middle">Supabase (Postgres + RLS)</text>
+          <text class="ss" x="539" y="221" text-anchor="middle">retried when a network returns</text>
+          <path class="lnd" d="M 562 142 L 562 188" marker-end="url(#a1)"/>
+          <text class="sl" x="570" y="168">sync</text>
+        </svg>
+        <figcaption>The alignment score is computed once and governs both the on-screen reticle and whether the shutter unlocks, so there is only ever one truth about how well aligned a capture is. Heading carries the heaviest weight because a perfect GPS fix pointed at the wrong wall is not an aligned photograph, while GPS is the noisiest axis and must not be able to veto an otherwise good alignment.</figcaption>
+      </figure>
+
+      <h4>The reporting mechanism for heritage issues</h4>
+      <p>A condition report is structured, not free text. It carries a category (structural, biological, water, surface, vegetation), a subtype, a severity, an optional note, the photograph, the observer's real position, and a link to the observation it came from. Reports are written to the device database immediately and enter the same offline queue as the captures.</p>
+      <p>An on-device damage detector assists this. A YOLOv8 crack detector, exported to ONNX and running through the phone's neural runtime, proposes candidate regions on the captured photograph. It offers them to the surveyor and it never writes a report on its own. When the model file or the native runtime is absent, the surface says which of the two is missing and offers the manual path, because a feature that stays silent when it cannot run is indistinguishable from one that was never built. Corroboration is a first-class action: a second visitor confirming an existing report is worth recording, and is separately rewarded.</p>
+
+      <h4>Merit, and the gamified global leaderboard</h4>
+      <p>Two scoring systems exist and they are deliberately kept apart, because conflating them would undo the property the schema exists to preserve.</p>
+      <table>
+        <thead><tr><th style="width:26%"></th><th style="width:37%">Puṇya (merit)</th><th>Global leaderboard</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Lives</strong></td><td>On the device, unsynced</td><td>In Postgres, global</td></tr>
+          <tr><td><strong>Ranked</strong></td><td>Never. There is no total shown as a score.</td><td>Yes, openly competitive</td></tr>
+          <tr><td><strong>Computed</strong></td><td>Derived from an append-only event log</td><td>Server-side, from evidence that already synced</td></tr>
+          <tr><td><strong>Transferable</strong></td><td>No transfer function exists in the codebase</td><td>Not applicable</td></tr>
+          <tr><td><strong>Anti-gaming</strong></td><td>200 per day cap; one merit-earning resurvey per vantage per 24 hours; severity never scales a reward</td><td>There is no <code>submitScore</code> endpoint. Points cannot be claimed, only earned by uploading work.</td></tr>
+        </tbody>
+      </table>
+      <p>The merit values are fixed and public: a resurvey pays 50 regardless of what it finds, because "nothing has changed" is a valuable observation and paying more for damage would pay people to find damage. Corroboration and a first report each pay 25. An attention quest pays 70, a path quest 40, a contribution such as a translation or a transcription 30.</p>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <div class="band">
+    <div class="rail">
+      <span class="num">4</span>Core Modules
+      <div class="note">Canonical segment ids look like <code style="font-size:7pt">dn16:6.7</code> or <code style="font-size:7pt">sn56.11:4.2</code>. A reader can open the passage and check.</div>
+    </div>
+    <div class="col">
+      <h3 style="margin-top:0">4.3 Dhamma — The Truth</h3>
+      <p>Dhamma is a question-answering surface restricted to a deliberately narrow canonical corpus, built on segment-aligned Bilara source texts. The narrowness is the feature. A wide corpus invites the system to answer questions it should decline, and every additional tradition admitted multiplies the chance of a subtle attribution error that no reader will catch.</p>
+
+      <figure>
+        <svg viewBox="0 0 620 300" role="img" aria-label="The Dhamma answer pipeline: a question passes a grounding gate, hybrid retrieval, synthesis, and a citation validator before becoming a cited answer. Both the gate and the validator exit to a refusal. A bypass path skips synthesis when no provider is reachable, producing a deterministic answer built from the same retrieved passages.">
+          <defs>
+            <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4A4A46"/></marker>
+            <marker id="a2k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2F5F8C"/></marker>
+            <marker id="a2x" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#97322A"/></marker>
+          </defs>
+
+          <rect class="sb" x="186" y="8" width="200" height="30" rx="2"/>
+          <text class="st" x="286" y="22" text-anchor="middle">Question</text>
+          <text class="ss" x="286" y="33" text-anchor="middle">Nepali by default, English on toggle</text>
+          <line class="ln" x1="286" y1="38" x2="286" y2="52" marker-end="url(#a2)"/>
+
+          <rect class="sk" x="186" y="56" width="200" height="38" rx="2"/>
+          <text class="st" x="286" y="71" text-anchor="middle">Grounding gate</text>
+          <text class="sc" x="286" y="82" text-anchor="middle">domain vocabulary · injection · impersonation</text>
+          <text class="sc" x="286" y="91" text-anchor="middle">Nepali distress override</text>
+          <line class="ln" x1="286" y1="94" x2="286" y2="108" marker-end="url(#a2)"/>
+
+          <rect class="sb" x="186" y="112" width="200" height="38" rx="2"/>
+          <text class="st" x="286" y="127" text-anchor="middle">Hybrid retrieval</text>
+          <text class="ss" x="286" y="138" text-anchor="middle">lexical + semantic proxy,</text>
+          <text class="ss" x="286" y="147" text-anchor="middle">fused by reciprocal rank</text>
+          <line class="ln" x1="286" y1="150" x2="286" y2="164" marker-end="url(#a2)"/>
+
+          <rect class="sb" x="186" y="168" width="200" height="32" rx="2"/>
+          <text class="st" x="286" y="183" text-anchor="middle">Synthesis</text>
+          <text class="ss" x="286" y="194" text-anchor="middle">retrieved passages in the prompt</text>
+          <line class="ln" x1="286" y1="200" x2="286" y2="214" marker-end="url(#a2)"/>
+
+          <rect class="sk" x="186" y="218" width="200" height="36" rx="2"/>
+          <text class="st" x="286" y="233" text-anchor="middle">Citation validator</text>
+          <text class="sc" x="286" y="245" text-anchor="middle">every claim maps to a segment id</text>
+          <line class="lnk" x1="286" y1="254" x2="286" y2="268" marker-end="url(#a2k)"/>
+
+          <rect class="sb" x="186" y="272" width="200" height="24" rx="2"/>
+          <text class="st" x="286" y="288" text-anchor="middle">Answer, with its sources attached</text>
+
+          <rect class="sb" x="432" y="132" width="180" height="38" rx="2" style="stroke:#97322A"/>
+          <text class="st" x="522" y="147" text-anchor="middle">Refusal</text>
+          <text class="sx" x="522" y="158" text-anchor="middle">names the missing evidence,</text>
+          <text class="sx" x="522" y="167" text-anchor="middle">and stops there</text>
+          <path class="lnx" d="M 386 75 L 410 75 L 410 143 L 428 143" marker-end="url(#a2x)"/>
+          <text class="sx" x="392" y="70">off-corpus</text>
+          <path class="lnx" d="M 386 236 L 410 236 L 410 160 L 428 160" marker-end="url(#a2x)"/>
+          <text class="sx" x="392" y="248">uncitable</text>
+
+          <path class="lnd" d="M 186 131 L 118 131 L 118 236 L 182 236" marker-end="url(#a2)"/>
+          <text class="sl" x="112" y="168" text-anchor="end">no provider, or</text>
+          <text class="sl" x="112" y="180" text-anchor="end">no network:</text>
+          <text class="sl" x="112" y="192" text-anchor="end">deterministic answer</text>
+          <text class="sl" x="112" y="204" text-anchor="end">from the same passages</text>
+        </svg>
+        <figcaption>The bypass is the important edge. A missing provider degrades the prose; it never removes the citation. Every path out of this pipeline is either cited or a refusal, which is why adversarial refusal can be reported as 100 percent rather than as "usually".</figcaption>
+      </figure>
+
+      <h4>The four safeguards</h4>
+      <ol class="body">
+        <li><strong>The grounding gate, before anything is generated.</strong> A domain vocabulary check establishes whether the question is even in scope. A prompt-injection and impersonation check catches "ignore your instructions" and "answer as the Buddha in the first person". A Nepali distress and self-harm detector bypasses the entire pipeline and returns helpline information, because that is not a retrieval problem and must not be handled as one.</li>
+        <li><strong>Retrieval before generation, always.</strong> The model never answers from its own parameters. It is given retrieved passages and asked to write from them. Retrieval fuses a lexical ranking with a semantic ranking using reciprocal rank fusion, which gives usable recall with no index server and no embedding cost, and therefore runs identically inside the app and inside the backend.</li>
+        <li><strong>The citation validator, after generation.</strong> Every claim in the drafted answer must map to a segment id that was actually retrieved. An answer that cannot be validated does not get softened or hedged. It becomes a refusal that names what is missing.</li>
+        <li><strong>A deterministic cited fallback.</strong> If no model provider is reachable, the engine assembles an answer directly from the retrieved passages. The prose is plainer. The citations are identical. A missing API key degrades an answer; it never fabricates one.</li>
+      </ol>
+
+      <h4>Strictly rooted in the Four Noble Truths</h4>
+      <p>The corpus is anchored on the Dhammacakkappavattana Sutta (SN 56.11), which sets out the four truths and the eightfold path, and the Mahāparinibbāna Sutta (DN 16), together with the Kālāma Sutta's instruction on testing claims and a small set of related discourses. Questions that sit outside this material are refused with a statement of what the corpus does and does not contain, rather than answered from a wider tradition without saying so. Reflection is offered as a companion mode, framed as inquiry rather than advice: it asks questions back rather than telling a person what to do, because the corpus does not license personal counsel and the honest position is to say so.</p>
+
+      <table>
+        <caption>Benchmark: 50 questions, all mandatory gates passing</caption>
+        <thead><tr><th style="width:26%">Category</th><th class="num" style="width:16%">Score</th><th>What it tests</th></tr></thead>
+        <tbody>
+          <tr><td>Answerable</td><td class="num">18 / 18</td><td>Questions the corpus genuinely supports</td></tr>
+          <tr><td>Adjacent</td><td class="num">9 / 10</td><td>Near the corpus edge, where over-answering is the risk</td></tr>
+          <tr><td>Out of scope</td><td class="num">12 / 12</td><td>Must refuse, and must say why</td></tr>
+          <tr><td>Adversarial</td><td class="num">6 / 6</td><td>Injection and impersonation attempts</td></tr>
+          <tr><td>Nepali</td><td class="num">4 / 4</td><td>Nepali intent handling, including the distress override</td></tr>
+          <tr><td><strong>Overall</strong></td><td class="num"><strong>49 / 50</strong></td><td>Refusal precision and recall, and citation hit rate, all above threshold</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 5 ══════════════ -->
+<section class="page">
+  <div class="band">
+    <div class="rail">
+      <span class="num">5</span>Technical Architecture
+      <div class="note">The layering rule: <code style="font-size:7pt">core/</code> imports nothing from React, React Native, or the network. It computes; the app decides what to render and when to save.</div>
+    </div>
+    <div class="col">
+      <h2 class="sec">Technical Architecture &amp; Stack</h2>
+
+      <div class="callout cool">
+        <h4>A note on the stack, stated plainly</h4>
+        <p>The submission template anticipates a Next.js and FastAPI web application. Sākṣī is a native Android application, because its core features are hardware features: camera, GPS, magnetometer, accelerometer, on-device inference and durable local storage. A browser cannot deliver an alignment-locked capture with a compass reading attached. We do ship Next.js and Tailwind, for the public landing site, and the knowledge engine is a service the app calls, but it runs on Node rather than Python so that the identical engine file executes on the phone and on the server. Section 5.2 maps each of the template's expected components onto what we actually built and why.</p>
+      </div>
+
+      <h3>5.1 The layered architecture</h3>
+      <figure>
+        <svg viewBox="0 0 620 292" role="img" aria-label="Layered architecture: thin typed routes delegate to feature screens, which read context providers and hooks; providers call services, the only layer permitted to touch the device or the network; services call the pure core layer and the generated data layer. Only services reach outward to Supabase and the knowledge API, and only the API calls the hosted model.">
+          <defs><marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4A4A46"/></marker></defs>
+
+          <rect class="sb" x="8" y="10" width="386" height="36" rx="2"/>
+          <text class="st" x="20" y="26">app/</text>
+          <text class="ss" x="20" y="38">thin typed routes; a broken link fails the type check, not the demo</text>
+          <text class="sl" x="384" y="32" text-anchor="end">expo-router</text>
+
+          <rect class="sb" x="8" y="54" width="386" height="36" rx="2"/>
+          <text class="st" x="20" y="70">features/</text>
+          <text class="ss" x="20" y="82">tirtha · sakshi · dhamma · quests · chaityavali · practice · settings</text>
+
+          <rect class="sb" x="8" y="98" width="386" height="36" rx="2"/>
+          <text class="st" x="20" y="114">store/ + hooks/</text>
+          <text class="ss" x="20" y="126">app state · permissions · quests · arrival · practice · preferences</text>
+          <text class="sl" x="384" y="120" text-anchor="end">React Context</text>
+
+          <rect class="sk" x="8" y="142" width="386" height="36" rx="2"/>
+          <text class="st" x="20" y="158">services/</text>
+          <text class="sc" x="20" y="170">the only layer permitted to touch a device or a socket</text>
+          <text class="sc" x="384" y="164" text-anchor="end">21 boundaries</text>
+
+          <rect class="sk" x="8" y="186" width="386" height="36" rx="2"/>
+          <text class="st" x="20" y="202">core/</text>
+          <text class="sc" x="20" y="214">alignment · merit · geofence · quests · vision · dhamma · story · dāna</text>
+          <text class="sc" x="384" y="208" text-anchor="end">pure TypeScript</text>
+
+          <rect class="sb" x="8" y="230" width="386" height="36" rx="2"/>
+          <text class="st" x="20" y="246">data/ + SQLite</text>
+          <text class="ss" x="20" y="258">seed JSON compiled to typed constants · 8 versioned tables, WAL</text>
+
+          <line class="ln" x1="201" y1="46" x2="201" y2="51" marker-end="url(#a3)"/>
+          <line class="ln" x1="201" y1="90" x2="201" y2="95" marker-end="url(#a3)"/>
+          <line class="ln" x1="201" y1="134" x2="201" y2="139" marker-end="url(#a3)"/>
+          <line class="ln" x1="201" y1="178" x2="201" y2="183" marker-end="url(#a3)"/>
+          <line class="ln" x1="201" y1="222" x2="201" y2="227" marker-end="url(#a3)"/>
+
+          <text class="scap" x="446" y="20">OUTSIDE THE APP</text>
+          <rect class="sb" x="446" y="28" width="166" height="34" rx="2"/>
+          <text class="st" x="529" y="44" text-anchor="middle">Supabase</text>
+          <text class="ss" x="529" y="56" text-anchor="middle">Postgres · RLS · storage · leaderboard</text>
+
+          <rect class="sb" x="446" y="76" width="166" height="34" rx="2"/>
+          <text class="st" x="529" y="92" text-anchor="middle">Knowledge API</text>
+          <text class="ss" x="529" y="104" text-anchor="middle">Node service running core/dhamma</text>
+
+          <rect class="sb" x="446" y="124" width="166" height="34" rx="2"/>
+          <text class="st" x="529" y="140" text-anchor="middle">Hosted model</text>
+          <text class="ss" x="529" y="152" text-anchor="middle">OpenAI-shaped chat completions</text>
+
+          <path class="lnd" d="M 394 160 L 420 160 L 420 45 L 442 45" marker-end="url(#a3)"/>
+          <path class="lnd" d="M 420 160 L 420 93 L 442 93" marker-end="url(#a3)"/>
+          <path class="lnd" d="M 529 110 L 529 120" marker-end="url(#a3)"/>
+          <text class="sl" x="446" y="176">Only services reach outward, and only the API</text>
+          <text class="sl" x="446" y="187">calls the model, so a key can stay a secret.</text>
+
+          <line class="rl" x1="446" y1="200" x2="612" y2="200"/>
+          <text class="scap" x="446" y="216">THE RULE</text>
+          <text class="ss" x="446" y="232">core/ imports nothing from react,</text>
+          <text class="ss" x="446" y="243">react-native or the network. That is why the</text>
+          <text class="ss" x="446" y="254">whole domain layer is testable in plain Node,</text>
+          <text class="ss" x="446" y="265">and why the same alignment and knowledge</text>
+          <text class="ss" x="446" y="276">code runs on the phone and on the server.</text>
+        </svg>
+        <figcaption>Imports go downward only, and everything crosses through a single barrel module rather than reaching into internal files, so the domain layer stays free to be reorganised. Coordinates convert at the seam: the app speaks latitude and longitude, the domain layer speaks lat and lon.</figcaption>
+      </figure>
+
+      <h3>5.2 The stack, component by component</h3>
+      <table>
+        <caption>Template expectation, mapped to what we shipped</caption>
+        <thead><tr><th style="width:22%">Component</th><th style="width:34%">What we shipped</th><th>Why, in one sentence</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Frontend</strong></td><td>Expo SDK 57, React Native 0.86, React 19, expo-router with typed routes</td><td>Every core feature is hardware-bound, and typed routes turn a broken link into a compile error.</td></tr>
+          <tr><td><strong>Web presence</strong></td><td>Next.js 16, React 19, Tailwind CSS 4</td><td>The public landing site, deployed independently of the app.</td></tr>
+          <tr><td><strong>Local database</strong></td><td>SQLite in WAL mode, 8 versioned migrations</td><td>A photograph taken at a vantage on a given day cannot be retaken, so the device is the record.</td></tr>
+          <tr><td><strong>Cloud database</strong></td><td>Supabase, PostgreSQL, Row Level Security, 8 migrations</td><td>Real relational Postgres, with RLS as the actual protection so a publishable key in the bundle is by design.</td></tr>
+          <tr><td><strong>AI &amp; logic service</strong></td><td>Zero-dependency Node HTTP service importing the same <code>core/dhamma</code> engine the tests cover</td><td>Chosen over FastAPI so the engine that answers on the server is literally the file that runs on the phone.</td></tr>
+          <tr><td><strong>Retrieval</strong></td><td>Bilara segment-aligned corpus, lexical plus semantic ranking fused by reciprocal rank</td><td>Usable recall over a deliberately narrow canon with no index server and no cold start.</td></tr>
+          <tr><td><strong>Mapping service</strong></td><td>MapLibre GL Native, with a WebView implementation and a 3D site plan as fallbacks</td><td>Vector tiles, offline styling, no per-view billing, and an open licence appropriate to a public trust.</td></tr>
+          <tr><td><strong>On-device vision</strong></td><td>ONNX Runtime, YOLOv8 crack detector, mAP50 0.82</td><td>Damage detection has to work in a garden with no signal, and the photograph should not have to leave the phone.</td></tr>
+          <tr><td><strong>On-device language</strong></td><td>llama.rn with Qwen3 0.6B Q4_K_M, 484 MB, downloaded and checksum-verified rather than bundled</td><td>An answer with the radio switched off, without shipping half a gigabyte inside the APK.</td></tr>
+          <tr><td><strong>Distribution</strong></td><td>EAS Build and EAS Update, runtime version pinned to app version</td><td>A JavaScript fix ships in seconds; a native change is forced through a new binary instead of crashing an old one.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <div class="band">
+    <div class="rail">
+      <span class="num">5</span>Technical Architecture
+      <div class="note">Because the domain layer is pure TypeScript, 113 tests across 16 files run in about two seconds with no transpiler and no test framework.</div>
+    </div>
+    <div class="col">
+      <h3 style="margin-top:0">5.3 Data flow and content provenance</h3>
+      <p>Content is never typed into components. It lives as reviewable JSON, is compiled into typed TypeScript constants by a generator, and is checked by a validator before it can ship. A change to a coordinate, an evidence tier or a photography policy therefore arrives as a diff with an author attached, which is the audit trail heritage claims require. A startup integrity pass then verifies that every site identifier referenced by a precinct, quest or vantage actually resolves, so that a rename cannot silently disable arrivals across half the Sacred Garden.</p>
+
+      <h3>5.4 Choices we would defend, and the alternatives</h3>
+      <table>
+        <thead><tr><th style="width:24%">Decision</th><th style="width:38%">Why we chose it</th><th>The stronger alternative, honestly</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Expo over bare native</strong></td><td>Config plugins let us add MapLibre, ONNX Runtime and llama.rn without hand-maintaining an Android project, and EAS produces a signed build from a laptop.</td><td>Kotlin would win decisively on camera latency and sensor fusion, which is exactly where our hardest feature lives, at the cost of any iOS path.</td></tr>
+          <tr><td><strong>React Context over a store</strong></td><td>The genuinely global state is six providers of small values; the heavy state lives in SQLite and is queried, not held.</td><td>Zustand, and this is the closest call. Selector subscriptions would stop a provider that changes on every GPS tick from re-rendering a subtree.</td></tr>
+          <tr><td><strong>ONNX over TFLite</strong></td><td>It matched the export path straight out of the training notebook, and one runtime serves any future model.</td><td>LiteRT is faster on Android through mature GPU and NNAPI delegation, and is the upgrade when latency becomes the complaint.</td></tr>
+          <tr><td><strong>Rank fusion over embeddings</strong></td><td>Usable recall over a narrow canon with no index server, no embedding cost and no cold start.</td><td>Real embeddings in pgvector would beat us on paraphrase and on Nepali. It is the first upgrade at ten times the corpus.</td></tr>
+          <tr><td><strong>Supabase over Firebase</strong></td><td>A conservation time-series is relational, and PostGIS is one extension away when coordinates become survey-grade.</td><td>Firebase is faster to wire and has the better turnkey offline SDK, and is weaker exactly where this domain is strong.</td></tr>
+          <tr><td><strong>An append-only merit log</strong></td><td>The history is the record; balance, daily cap and cooldown are all derived by reading rows, so they cannot drift out of step with a stored total.</td><td>This is also our answer to the blockchain question: merit is non-transferable by construction, so the problem a distributed ledger solves never arises.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>5.5 Verification record</h3>
+      <p>Every gate below was executed against the working tree while this document was being written.</p>
+      <table>
+        <thead><tr><th style="width:42%">Gate</th><th style="width:26%">Command</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td>Type safety, including typed routes</td><td class="num">tsc --noEmit</td><td><span class="tag t-ok">clean</span></td></tr>
+          <tr><td>Domain logic, 16 test files</td><td class="num">npm test</td><td><span class="tag t-ok">113 / 113 pass</span></td></tr>
+          <tr><td>Seed content and coordinate provenance</td><td class="num">npm run validate</td><td><span class="tag t-warn">ok, 5 warnings</span></td></tr>
+          <tr><td>Product vocabulary and typography</td><td class="num">npm run vocab</td><td><span class="tag t-ok">clean</span></td></tr>
+          <tr><td>Knowledge benchmark, 50 questions</td><td class="num">npm run eval:dhamma</td><td><span class="tag t-ok">49 / 50</span></td></tr>
+        </tbody>
+      </table>
+      <p>The vocabulary linter is worth a sentence of explanation, because it is unusual. It fails the build if engagement, gambling or game vocabulary reaches a user-facing string. That is how a product principle stays true at the fiftieth commit rather than only in the README, and it caught real drift during the hackathon.</p>
+
+      <h3>5.6 What is implemented but not yet proven</h3>
+      <p>Unit tests prove domain logic and nothing at all about a compass in a garden. We keep this list explicitly so that nothing in this document overstates the position.</p>
+      <table>
+        <thead><tr><th style="width:34%">Claim</th><th style="width:20%">Status</th><th>Why it is open</th></tr></thead>
+        <tbody>
+          <tr><td>Camera, GPS and compass at Lumbini</td><td><span class="tag t-warn">device only</span></td><td>Calibration and GPS accuracy under tree cover are field facts, not test facts.</td></tr>
+          <tr><td>Live sync to a provisioned cloud project</td><td><span class="tag t-warn">unconfigured</span></td><td>Client and migrations exist; an end-to-end run against a live project with RLS enabled has not been done.</td></tr>
+          <tr><td>Full offline behaviour in airplane mode</td><td><span class="tag t-warn">untested</span></td><td>Needs the exact build on the exact device with the radio off.</td></tr>
+          <tr><td>iOS, anything at all</td><td><span class="tag t-gap">never built</span></td><td>No credentials and no build has ever run. Android only, and we say so rather than implying parity.</td></tr>
+          <tr><td>Five site coordinates</td><td><span class="tag t-warn">documentary</span></td><td>Puskarini, Marker Stone, Vihara Remains, Tilaurakot and Ramagrama are documentary, not surveyed. The validator warns on every build.</td></tr>
+          <tr><td>Provider key handling</td><td><span class="tag t-gap">known defect</span></td><td>A public-prefixed key is inlined into the bundle and readable by anyone with the APK. Acceptable only for a scoped, rotatable demo key. Moving it behind the service is the first item on the roadmap.</td></tr>
+          <tr><td>Device and end-to-end test coverage</td><td><span class="tag t-gap">absent</span></td><td>The paths most likely to fail on stage are the ones with no automated coverage.</td></tr>
+        </tbody>
+      </table>
+      <p>The demo service deserves the same candour: most of its mutable state is in memory, it authenticates nobody, and it should be deleted the day a real API exists. It is a harness that lets the whole offline queue path be exercised on venue wifi with no install step, and it is not infrastructure.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 6 ══════════════ -->
+<section class="page">
+  <div class="band">
+    <div class="rail">
+      <span class="num">6</span>Business Model
+      <div class="note">Nothing in the revenue model touches the merit system. Puṇya has no purchase path, and adding one would break the property it exists to hold.</div>
+    </div>
+    <div class="col">
+      <h2 class="sec">Business Model &amp; Viability</h2>
+
+      <h3>6.1 Target Audience</h3>
+      <table>
+        <thead><tr><th style="width:26%">Segment</th><th style="width:20%">Scale</th><th>What they are paying for, if anything</th></tr></thead>
+        <tbody>
+          <tr><td><strong>International pilgrims</strong></td><td>Large, seasonal, high intent</td><td>Depth and trustworthiness. This group already pays for guides and is unusually sensitive to whether a claim is sourced.</td></tr>
+          <tr><td><strong>Domestic and regional travellers</strong></td><td>The largest group by headcount</td><td>Little or nothing. This tier must stay free and must work on a mid-range Android phone with poor connectivity.</td></tr>
+          <tr><td><strong>Heritage authorities</strong></td><td>LDT, municipalities, Department of Archaeology</td><td>A continuous condition record and a triage dashboard they would otherwise have to staff.</td></tr>
+          <tr><td><strong>Institutions</strong></td><td>Universities, conservation NGOs, monastic bodies</td><td>Access to the longitudinal dataset, and the ability to define their own vantages.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>6.2 Revenue Streams</h3>
+      <h4>Freemium tiers on Tīrtha</h4>
+      <p>The free tier is not a demo. It carries the full map, arrival detection, basic and medium wisdom, the complete witness workflow, and unrestricted use of the knowledge surface. This is a deliberate constraint: the conservation value of the product depends on volume of observations, so anything that reduces the number of people capturing is self-defeating. The paid tier sells depth, not access: curated multi-day routes across the Greater Lumbini Circuit, offline map and narration bundles, the high wisdom tier with its epigraphic and source detail, and multilingual audio guides as they are produced. A guided-circuit pass sold seasonally to international visitors is the realistic first revenue line.</p>
+
+      <h4>B2G licensing on Sākṣī</h4>
+      <p>This is the durable business. The civic dashboard is licensed per municipality or per heritage authority: the condition register, severity and corroboration triage, the observation time-series at each vantage, exports in CSV and GeoJSON, and CRM-shaped output for whatever case system the authority already runs. The pricing argument is straightforward, because the counterfactual is a commissioned survey. A licence that costs a fraction of one specialist survey and produces a continuous record instead of a single snapshot is an easy comparison to make, and it is made against a budget line that already exists.</p>
+
+      <h4>Ethical B2B sponsorship</h4>
+      <p>Sponsorship exists, and it is fenced. Named restoration and conservation needs can be sponsored by institutions, monastic bodies and businesses, with acknowledgement rendered as a line in a register rather than as advertising placed between a visitor and a monument. Three rules hold: no interstitials, no sponsored content inside the knowledge surface, and no sponsor influence on what the condition data says. The directed dāna mechanism already models allocation against named needs in the codebase, without moving real money, so the shape of this is built and the payments integration is deferred rather than the concept being speculative.</p>
+
+      <div class="callout">
+        <h4>What we will not sell</h4>
+        <p>Visitor location traces, merit points or any in-app currency, ranking positions on the leaderboard, and placement inside a Dhamma answer. Each of these would generate revenue and each would destroy the property that makes the corresponding feature worth having. The condition dataset is licensed to authorities and researchers, and the underlying observation record belongs to the heritage authority, not to us.</p>
+      </div>
+
+      <h3>6.3 Impact Metric</h3>
+      <p>The headline metric is <strong>monitored vantage coverage</strong>: the number of established viewpoints receiving at least one aligned capture per month, and the median interval between captures at each. That single number is the difference between an episodic survey regime and a continuous one, and it is the number a heritage authority can act on. Secondary metrics follow from it: time from a condition first appearing in imagery to a report being filed, corroboration rate, and the proportion of reports that reach a resolution.</p>
+      <p>The benefit to the local ecosystem in Nepal is meant to be structural rather than charitable. The dataset is generated in Nepal, held for the authority responsible for the site, and licensed on terms that keep it there. Content production, that is narration, translation into Nepali and regional languages, and transcription, is work that is credited and compensable, and the merit system already recognises contribution as a distinct earning category. Local guides are complemented rather than displaced: the app handles the material a guide should not have to repeat forty times a day, and directs paid demand toward the depth only a person can provide. Above all, a heritage authority that can see a crack widening across six months of comparable photographs can intervene while the intervention is still cheap, which is the whole economic argument for preventive conservation.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 7 ══════════════ -->
+<section class="page">
+  <div class="band">
+    <div class="rail">
+      <span class="num">7</span>Challenges
+      <div class="note">Each of these is a bug we shipped and then fixed, not a hypothetical. The fixes are all in the repository history.</div>
+    </div>
+    <div class="col">
+      <h2 class="sec">Challenges Faced During the Hackathon</h2>
+
+      <h3>7.1 Technical Hurdles</h3>
+
+      <h4>The environment variable that was never read</h4>
+      <p>The knowledge engine read its provider key from an unprefixed environment variable. Expo only inlines variables carrying the public prefix into the JavaScript bundle, so on every physical device the key was undefined and the model provider was never called at all. The system did not fail: it fell through to the deterministic cited fallback and returned a plausible, correctly cited answer every time, which is precisely why nobody noticed. A graceful degradation path can hide a total outage of the thing being degraded from. We now assert the provider path explicitly rather than inferring it from a good-looking answer, and the provider note is part of the response we check.</p>
+
+      <h4>A damage detector that invented its own findings</h4>
+      <p>The first version of the on-device damage detector hashed the image <em>filename</em> into deterministic bounding boxes, confidence scores and a "surface integrity" percentage. It looked convincing in a demo and it was fabrication. We replaced it with a real YOLOv8 detector exported to ONNX. The runtime returns a raw tensor, so the letterboxing, decoding, non-maximum suppression and mapping back to original photograph pixels are all explicit pure functions with their own tests rather than hidden inside a helper. The rule we adopted afterwards is that every exit path from the detector must carry a reason string that reaches the screen, because honest-by-silence is indistinguishable from a feature that was never built.</p>
+
+      <h4>The rename that broke arrivals without breaking anything</h4>
+      <p>A parallel branch migrated the site list onto generated seed data and renamed identifiers on the way: <code>ashoka-pillar</code> became <code>ashokan-pillar</code>, <code>puskarini-pond</code> became <code>puskarini</code>, and two sites were dropped. Nothing in the type system noticed. The site lookup returned undefined, every caller skipped it, and arrivals silently stopped firing across three quarters of the Sacred Garden while continuing to look like they worked. Git was perfectly satisfied. We now run a referential integrity pass over the content at startup that fails loudly when a precinct, quest or vantage references a site that does not resolve.</p>
+
+      <h4>Half a gigabyte, rehashed on every question</h4>
+      <p>The offline language model is a 484 MB file downloaded into app-private storage rather than bundled into the APK. The first implementation verified its checksum to answer the question "is this file the model", which meant hashing 484 MB before every answer, and a download that failed at 90 percent restarted from zero. The fix was a resumable download plus a marker file written once after verification succeeds, so the question can be answered without re-reading the file.</p>
+
+      <h4>Optional native modules and the bundler</h4>
+      <p>ONNX Runtime, llama.rn, MapLibre, speech and notifications are native modules that exist only in a build that installed them. A static import of an absent package makes the bundler fail to build the entire application: not the feature, the application, including for a teammate who simply had not rebuilt yet, and including for an over-the-air update landing on an older binary. Every optional native module is now loaded through a guarded runtime require that resolves to null, so one feature reports an honest unsupported state and every other surface keeps running.</p>
+
+      <h4>Real-time mapping</h4>
+      <p>Two mapping problems took real time. The first was the native and web split: MapLibre's native module has no web equivalent, so a WebView implementation and a hand-drawn 3D site plan sit behind the same component interface. The second was geofence chatter. A naive radius test fires enter and exit repeatedly when a visitor stands near a boundary with normal GPS jitter, producing a stream of notifications on consecrated ground. Hysteresis solved it: enter at the radius, exit only at 1.15 times the radius, with a dwell timer for the events that should require actually staying.</p>
+
+      <h3>7.2 Validation: ensuring the authenticity of Dhamma text processing</h3>
+      <p>Authenticity here is not a matter of good intentions, so we made it measurable.</p>
+      <ol class="body">
+        <li><strong>Segment-aligned canonical source.</strong> The corpus is built from Bilara segment-aligned texts, which means every passage carries a canonical identifier such as <code>dn16:6.7</code>. This is the load-bearing decision: a reader can open that exact segment and check us. A corpus of loose paragraphs would make every downstream guarantee unverifiable.</li>
+        <li><strong>A deliberately narrow canon.</strong> Admitting more material makes the system able to answer more questions and much likelier to blend traditions without saying so. We anchored on the Dhammacakkappavattana Sutta, the Mahāparinibbāna Sutta and the Kālāma Sutta with a small set of related discourses, and we accept refusals as the cost.</li>
+        <li><strong>Validation after generation, not only before.</strong> Every claim in a drafted answer is checked against the segment identifiers actually retrieved. An unvalidatable answer becomes a refusal rather than a hedge, which is what makes the refusal figures meaningful.</li>
+        <li><strong>An adversarial suite, written to break our own system.</strong> Fifty questions in five categories: answerable, adjacent to the corpus edge, out of scope, adversarial, and Nepali. Adjacent is the hardest category and the one we still lose a point on, because it is where over-answering is most tempting. Adversarial covers prompt injection and requests for the system to speak as the Buddha in the first person, and it passes at 100 percent, which was a mandatory gate rather than a target.</li>
+        <li><strong>A Nepali distress override that bypasses everything.</strong> A Nepali self-harm or distress query does not go anywhere near retrieval. It returns helpline information. Treating that as a retrieval problem would have been a serious failure, and it is the one path in the system with no fallback, no degradation and no clever behaviour.</li>
+        <li><strong>Language parity checks.</strong> Nepali is the default answer language, and hosted models are markedly weaker in Nepali than English. Citations and source evidence are attached identically in both languages, and the language toggle re-requests the same question rather than machine-translating an English answer, so a Nepali reader is never given a translation of a claim that was only ever validated in English.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 8 ══════════════ -->
+<section class="page">
+  <div class="band">
+    <div class="rail">
+      <span class="num">8</span>Future Roadmap
+      <div class="note">Phase 1 is deliberately unglamorous. Nothing else is worth doing until the coordinates are survey-grade and the key is off the client.</div>
+    </div>
+    <div class="col">
+      <h2 class="sec">Future Roadmap</h2>
+
+      <h3>Phase 1 — Immediate: a pilot in the Greater Lumbini Circuit</h3>
+      <p>The goal of this phase is not new features. It is to make the existing path trustworthy enough that a heritage authority can rely on what comes out of it.</p>
+      <ol class="body">
+        <li><strong>Move the model provider key behind the service.</strong> One environment variable and one request path. This closes the only genuine security defect in the current build and it is the first thing we do.</li>
+        <li><strong>Replace the demo service with a real API.</strong> Authentication, durable storage, rate limiting and monitoring, then delete the harness rather than letting it drift into production by accident.</li>
+        <li><strong>Establish survey-grade vantages with the Lumbini Development Trust.</strong> This is the input only they can provide, and it is what converts the app from a prototype into an instrument. Five site coordinates are currently documentary rather than surveyed, and the vantage points are not yet established viewpoints. Until both are fixed, the app should keep saying so on screen.</li>
+        <li><strong>Field-test on the actual ground.</strong> GPS accuracy under tree cover in the Sacred Garden, compass calibration, capture in bright daylight, and the complete flow in airplane mode.</li>
+        <li><strong>Add device-level test coverage</strong> for the capture, permission and offline flows, since that is where a live failure will come from.</li>
+        <li><strong>Retrain the crack detector</strong> on Lumbini brick and sandstone specifically. A single-class model at 0.82 mAP50 demonstrates the pipeline; it is not yet a conservation instrument.</li>
+        <li><strong>Run a bounded pilot</strong>: a defined set of vantages, a small cohort of repeat observers, and a monthly report to the Trust, so that the impact metric has a real baseline.</li>
+      </ol>
+
+      <h3>Phase 2 — Mid-term: the civic dashboard, beyond Lumbini</h3>
+      <ul>
+        <li><strong>Municipal onboarding.</strong> A heritage officer defines their own sites, vantages and geofences without an engineer, which is the precondition for the product working anywhere we are not personally standing.</li>
+        <li><strong>Triage and workflow.</strong> Reports ranked by severity, corroboration count and rate of change; assignment, resolution and a resolved-condition record so that the register shows repair as well as damage.</li>
+        <li><strong>Change detection across the series.</strong> Automatic flagging when consecutive captures at the same vantage differ beyond a threshold, which turns the archive from a lookup into an alert.</li>
+        <li><strong>Data custody and export.</strong> Formal agreements placing the observation record with the heritage authority, plus CSV, GeoJSON and CRM-shaped export into whatever case system already exists.</li>
+        <li><strong>Migrate retrieval to real embeddings</strong> in pgvector as the corpus outgrows rank fusion, and move the hosted model to a provider materially stronger in Nepali. The latter is a single-file change through an existing seam.</li>
+        <li><strong>iOS.</strong> Not yet begun, and honestly out of reach until Phase 1 is complete.</li>
+      </ul>
+
+      <h3>Phase 3 — Long-term: the Kathmandu Valley Circuit</h3>
+      <ul>
+        <li><strong>Scale to the Valley.</strong> Swayambhunath, Boudhanath, Pashupatinath and the three Durbar Squares, which are denser, more contested and under far heavier visitor pressure than Lumbini. Post-2015 reconstruction makes a continuous photographic record particularly valuable there.</li>
+        <li><strong>Multilingual audio guides.</strong> Nepali, English, Hindi, Chinese, Japanese, Korean, Thai, Sinhala and Burmese, matching the actual pilgrimage traffic. Recorded by people rather than synthesised where the material is devotional, and credited as contribution work.</li>
+        <li><strong>Open the dataset for research.</strong> A longitudinal, positionally consistent photographic archive of South Asian heritage monuments is a genuinely novel research asset. Licensed openly for academic use, held in Nepal.</li>
+        <li><strong>A vantage standard others can adopt.</strong> The alignment scoring, the metadata schema and the honesty rules generalise well beyond Buddhist heritage, and are more valuable as a published specification than as our private implementation.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ 9 & 10 ══════════════ -->
+<section class="page">
+  <div class="band">
+    <div class="rail">
+      <span class="num">9</span>The Team
+      <div class="note">Four members. LumbiniX Committee, Nepal.</div>
+    </div>
+    <div class="col">
+      <h2 class="sec">The Team</h2>
+
+      <div class="team">
+        <div class="member">
+          <span class="nm">Aaditya Sapkota</span>
+          <span class="rl2">AI Backend Engineer</span>
+          <p>Owns the knowledge engine end to end: the Bilara corpus loader, hybrid retrieval and reciprocal rank fusion, the grounding gate, the citation validator, the deterministic fallback, and the 50-question adversarial benchmark. Also responsible for the on-device inference path, covering the ONNX vision runtime and the quantised offline language model.</p>
+        </div>
+        <div class="member">
+          <span class="nm">Binayak Gautam</span>
+          <span class="rl2">3D Rendering &amp; Frontend Engineer</span>
+          <p>Owns the visual surface: the MapLibre implementation with its native, web and 3D site-plan variants, monument massing and site plans, the Then and Now comparison and scrubber, the capture and alignment reticle, and the theme and component system that keeps colour and type out of individual screens.</p>
+        </div>
+        <div class="member">
+          <span class="nm">Nabin Poudel</span>
+          <span class="rl2">Research &amp; Documentation</span>
+          <p>Owns content authenticity: site research, evidence tiers and coordinate provenance, historical plate licensing, the canonical corpus selection and its narrowness, Nepali language review, and this document. Also maintains the seed validator warnings that keep documentary coordinates from being presented as surveyed.</p>
+        </div>
+        <div class="member">
+          <span class="nm">Siddanta Sodari</span>
+          <span class="rl2">Full Stack Developer</span>
+          <p>Owns the application architecture and the platform: the layered structure and its purity rule, SQLite schema and migrations, the offline queue and cloud sync, permissions and sensor boundaries, the alignment scoring and merit systems, the demo service, the landing site, and the EAS build and update pipeline.</p>
+        </div>
+      </div>
+
+      <h2 class="sec" style="margin-top:2rem">Repository &amp; Live Demo Links</h2>
+
+      <div class="link-row">
+        <span class="k">GitHub Repository</span>
+        <span class="v">https://github.com/LumbiniX-Committee/Everest
+          <span class="sub">Full source: the Expo application, the pure domain layer, the knowledge engine, seed content, database migrations, tooling and the landing site.</span>
+        </span>
+      </div>
+
+      <div class="link-row">
+        <span class="k">Live MVP / Prototype</span>
+        <span class="v">application-a925ec89-66ca-48ae-a9c8-744067a46082.apk
+          <span class="sub">Installable Android build produced by EAS. Camera, location and motion sensors require a physical device; the map, knowledge surface and register work in an emulator.</span>
+        </span>
+      </div>
+
+      <div class="link-row" style="border-bottom:none">
+        <span class="k">Demo Video</span>
+        <span class="v">https://drive.google.com/drive/folders/1by7PGKVBpTmufWhx-YoBqBDkdZ02BofS
+          <span class="sub">Walkthrough of the three surfaces: arrival and tiered wisdom in Tīrtha, the alignment and capture loop in Sākṣī, and a cited answer plus a refusal in Dhamma.</span>
+        </span>
+      </div>
+
+      <div class="callout" style="margin-top:2rem">
+        <h4>Closing note</h4>
+        <p>Most of the architecture in this document exists to hold one property: the application never claims more than it can support. A match by eye is not a sensor lock. A missing reading is not a zero. An uncited claim is not an answer. A detected crack is not a report until a person confirms it. A documentary coordinate is not a survey. Those are five separate mechanisms in five separate subsystems, and they are all the same decision, taken from the same instruction: do not accept a thing because it is said confidently. Test it, and see for yourself.</p>
+      </div>
+
+      <p style="text-align:center; margin-top:2.4rem; font-family:var(--deva); font-size:15pt; color:var(--earth)">साक्षी</p>
+      <p style="text-align:center; font-family:var(--sans); font-size:7.6pt; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-3)">LumbiniX Hackathon 2026 · LumbiniX Committee, Nepal</p>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

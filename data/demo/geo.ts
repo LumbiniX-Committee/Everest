@@ -1,7 +1,7 @@
 import type { Feature, FeatureCollection, Point, Polygon } from 'geojson';
 
 import { demoPrecincts } from './precincts';
-import { demoSites } from './sites';
+import { demoSites } from '../generated/sites';
 
 /**
  * The app's own geometry, as GeoJSON.

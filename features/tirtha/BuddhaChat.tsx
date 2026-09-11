@@ -1,6 +1,8 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
+  Keyboard,
   Modal,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -12,28 +14,14 @@ import {
 import { SpeechCloud, speechCloudStyles, useTypingText } from '@/components/monk';
 import { Icon } from '@/components/ui';
 import { useKeyboardInset } from '@/hooks';
+import { useInterfaceLanguage } from '@/i18n/context';
+import { visitorLiteralCopy } from '@/i18n/literals';
+import { formatVisitorCopy, visitorCopy } from '@/i18n/visitor';
 import { guide as guideService, voice } from '@/services';
 import { colors, font, radii, spacing } from '@/theme';
 
 /**
  * The guide you can ask, from where you are standing.
- *
- * Two changes from the version this replaces, and they are the same change seen
- * from two sides.
- *
- * **It answers as a guide.** It used to run `dhamma.ask`, which retrieves,
- * grounds, cites and refuses when the corpus does not cover the question. Asked
- * "tell me about the peace pagoda" it answered "I don't have enough reliable
- * evidence to answer this confidently" and listed three suttas. Correct, and no
- * use at all to someone looking at the building. It now runs `services/guide`,
- * which is free to speak plainly and never refuses. The two limits it keeps are
- * in the prompt: nothing about a monument's physical condition, which is Sākṣī's
- * to measure, and no claim to be quoting a source, which is Dhamma's to cite.
- *
- * **It looks like the story.** Not a chat log with bubbles and a transcript, but
- * the same monk and the same cloud the story speaks from, one exchange at a
- * time. `‹` goes back through what has been said. The shared cloud is
- * `components/monk/SpeechCloud.tsx`.
  */
 
 type Exchange = { question: string; answer: string };
@@ -46,7 +34,22 @@ export type BuddhaChatProps = {
 };
 
 export function BuddhaChat({ visible, onClose, siteId, siteName }: BuddhaChatProps) {
+  const language = useInterfaceLanguage();
   const keyboardInset = useKeyboardInset();
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
+
+  useEffect(() => {
+    const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+    const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+
+    const showSub = Keyboard.addListener(showEvent, () => setKeyboardOpen(true));
+    const hideSub = Keyboard.addListener(hideEvent, () => setKeyboardOpen(false));
+
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, []);
 
   const [exchanges, setExchanges] = useState<Exchange[]>([]);
   const [at, setAt] = useState(0);
@@ -74,7 +77,7 @@ export function BuddhaChat({ visible, onClose, siteId, siteName }: BuddhaChatPro
     // `askGuide` resolves whatever happens: provider, then the site's own
     // description, then a general line. There is no failure branch to render,
     // which is why there is no error state on this screen.
-    const reply = await guideService.askGuide({ question, siteId, siteName, language: 'en' });
+    const reply = await guideService.askGuide({ question, siteId, siteName, language });
 
     setExchanges((prev) => {
       const next = [...prev, { question, answer: reply.text }];
@@ -87,11 +90,11 @@ export function BuddhaChat({ visible, onClose, siteId, siteName }: BuddhaChatPro
     // Outside the request on purpose. `voice.speakText` throws on a device with
     // no speech engine, and a nicety must not be able to discard the answer.
     try {
-      voice.speakText(reply.text, 'en');
+      voice.speakText(reply.text, language);
     } catch {
       // Spoken delivery is optional. The text is already on screen.
     }
-  }, [draft, siteId, siteName]);
+  }, [draft, language, siteId, siteName]);
 
   const handleClose = useCallback(() => {
     voice.stopSpeaking();
@@ -102,8 +105,15 @@ export function BuddhaChat({ visible, onClose, siteId, siteName }: BuddhaChatPro
   if (!visible) return null;
 
   const current = exchanges[at];
-  const opening = guideService.opening(siteName);
-  const body = busy ? 'Let me think about that.' : (current?.answer ?? opening);
+  const opening = siteName
+    ? formatVisitorCopy(language, 'guide.openingSite', { site: siteName })
+    : visitorCopy(language, 'guide.openingGeneral');
+  const body = busy ? visitorCopy(language, 'guide.thinking') : (current?.answer ?? opening);
+
+  const isTypingActive = keyboardOpen || keyboardInset > 0;
+  // On iOS, window does not automatically resize, so we use measured inset.
+  // On Android, the Modal window already resizes/pans, so we avoid double-shifting.
+  const effectiveBottomInset = Platform.OS === 'ios' ? keyboardInset : 0;
 
   return (
     <Modal
@@ -116,16 +126,19 @@ export function BuddhaChat({ visible, onClose, siteId, siteName }: BuddhaChatPro
       statusBarTranslucent
     >
       <SpeechCloud
-        eyebrow={siteName ? siteName.toUpperCase() : 'YOUR GUIDE'}
+        eyebrow={siteName ? siteName.toUpperCase() : visitorCopy(language, 'guide.eyebrow').toUpperCase()}
         onClose={handleClose}
         animationKey={busy ? 'thinking' : `${at}:${exchanges.length}`}
-        bottomInset={keyboardInset}
-        monkHeight={keyboardInset > 0 ? 170 : 230}
+        bottomInset={effectiveBottomInset}
+        isKeyboardOpen={isTypingActive}
         aboveCloud={
           current ? (
             <View style={s.askedRow}>
-              <View style={s.asked}>
-                <RNText style={s.askedTxt} numberOfLines={2}>
+              <View style={[s.asked, isTypingActive && s.askedKeyboard]}>
+                <RNText
+                  style={[s.askedTxt, isTypingActive && s.askedTxtKeyboard]}
+                  numberOfLines={isTypingActive ? 1 : 2}
+                >
                   {current.question}
                 </RNText>
               </View>
@@ -142,7 +155,7 @@ export function BuddhaChat({ visible, onClose, siteId, siteName }: BuddhaChatPro
                   hitSlop={10}
                   style={[s.navBtn, at === 0 && s.navBtnOff]}
                   accessibilityRole="button"
-                  accessibilityLabel="Previous answer"
+                  accessibilityLabel={visitorLiteralCopy(language, 'Previous answer')}
                 >
                   <RNText style={s.navTxt}>‹</RNText>
                 </Pressable>
@@ -155,7 +168,7 @@ export function BuddhaChat({ visible, onClose, siteId, siteName }: BuddhaChatPro
                   hitSlop={10}
                   style={[s.navBtn, at >= exchanges.length - 1 && s.navBtnOff]}
                   accessibilityRole="button"
-                  accessibilityLabel="Next answer"
+                  accessibilityLabel={visitorLiteralCopy(language, 'Next answer')}
                 >
                   <RNText style={s.navTxt}>›</RNText>
                 </Pressable>
@@ -166,34 +179,35 @@ export function BuddhaChat({ visible, onClose, siteId, siteName }: BuddhaChatPro
               <TextInput
                 value={draft}
                 onChangeText={setDraft}
-                multiline
-                placeholder="Ask about this place"
+                multiline={!isTypingActive}
+                placeholder={visitorLiteralCopy(language, 'Ask about this place')}
                 placeholderTextColor={colors.textMuted}
                 // `font()` resolves at call time; a StyleSheet is built once at
                 // module scope, before the real families have loaded.
-                style={[s.input, font('body')]}
+                style={[s.input, font('body'), isTypingActive && s.inputKeyboard]}
                 editable={!busy}
-                accessibilityLabel="Ask about this place"
+                accessibilityLabel={visitorLiteralCopy(language, 'Ask about this place')}
                 onSubmitEditing={() => void ask()}
               />
               <Pressable
                 onPress={() => void ask()}
                 disabled={busy || draft.trim().length === 0}
                 accessibilityRole="button"
-                accessibilityLabel="Ask"
+                accessibilityLabel={visitorLiteralCopy(language, 'Ask')}
                 style={({ pressed }) => [
                   s.send,
+                  isTypingActive && s.sendKeyboard,
                   (busy || draft.trim().length === 0) && s.sendOff,
                   pressed && s.pressed,
                 ]}
               >
-                <Icon name="send" size={18} color="#FFFFFF" />
+                <Icon name="send" size={isTypingActive ? 16 : 18} color={colors.backgroundDeep} />
               </Pressable>
             </View>
           </View>
         }
       >
-        <CloudBody text={body} typing={!busy && current != null} />
+        <CloudBody text={body} typing={!busy && current != null} isKeyboardOpen={isTypingActive} language={language} />
       </SpeechCloud>
     </Modal>
   );
@@ -208,7 +222,17 @@ export function BuddhaChat({ visible, onClose, siteId, siteName }: BuddhaChatPro
  * previous unbounded bubble did not: a long answer simply grew off the top of
  * the screen and its first sentence became unreadable.
  */
-function CloudBody({ text, typing }: { text: string; typing: boolean }) {
+function CloudBody({
+  text,
+  typing,
+  isKeyboardOpen,
+  language,
+}: {
+  text: string;
+  typing: boolean;
+  isKeyboardOpen: boolean;
+  language: 'en' | 'ne';
+}) {
   const { displayed, done, skip } = useTypingText(typing ? text : '', 16, 2);
   const shown = typing ? displayed : text;
 
@@ -217,11 +241,18 @@ function CloudBody({ text, typing }: { text: string; typing: boolean }) {
       onPress={skip}
       disabled={!typing || done}
       accessibilityRole={typing && !done ? 'button' : undefined}
-      accessibilityLabel={typing && !done ? 'Show the whole answer' : undefined}
+      accessibilityLabel={typing && !done ? visitorLiteralCopy(language, 'Show the whole answer') : undefined}
     >
-      <ScrollView style={s.scroll} nestedScrollEnabled keyboardShouldPersistTaps="handled">
+      <ScrollView
+        style={[s.scroll, isKeyboardOpen && s.scrollKeyboard]}
+        nestedScrollEnabled
+        keyboardShouldPersistTaps="handled"
+      >
         <View style={speechCloudStyles.content}>
-          <RNText style={speechCloudStyles.body}>{shown}</RNText>
+          <RNText style={speechCloudStyles.body}>
+            {shown}
+            {typing && !done ? <RNText style={s.cursor}> ▎</RNText> : null}
+          </RNText>
         </View>
       </ScrollView>
     </Pressable>
@@ -229,17 +260,31 @@ function CloudBody({ text, typing }: { text: string; typing: boolean }) {
 }
 
 const s = StyleSheet.create({
-  scroll: { maxHeight: 210 },
+  scroll: { maxHeight: 180 },
+  scrollKeyboard: { maxHeight: 96 },
 
   askedRow: { alignItems: 'flex-end' },
   asked: {
     maxWidth: '92%',
-    paddingHorizontal: spacing.sm + 2,
-    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs + 2,
     borderRadius: radii.lg,
-    backgroundColor: 'rgba(20, 25, 22, 0.55)',
+    backgroundColor: 'rgba(16, 43, 61, 0.94)',
+    borderWidth: 1,
+    borderColor: 'rgba(77, 198, 194, 0.4)',
+    shadowColor: colors.shadow,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 10,
+    elevation: 6,
   },
-  askedTxt: { fontSize: 13, lineHeight: 18, color: '#FFFFFF' },
+  askedKeyboard: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xxs,
+    borderRadius: radii.md,
+  },
+  askedTxt: { fontSize: 13, lineHeight: 18, color: colors.textPrimary, fontWeight: '500' },
+  askedTxtKeyboard: { fontSize: 11, lineHeight: 15 },
 
   footer: { gap: spacing.sm },
 
@@ -250,36 +295,56 @@ const s = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: radii.full,
-    borderWidth: 1.5,
-    borderColor: colors.border,
+    borderWidth: 1,
+    borderColor: 'rgba(126, 169, 190, 0.35)',
+    backgroundColor: colors.surfaceSecondary,
   },
   navBtnOff: { opacity: 0.28 },
-  navTxt: { fontSize: 17, lineHeight: 21, color: colors.textSecondary },
-  navCount: { fontSize: 11, color: colors.textMuted },
+  navTxt: { fontSize: 16, lineHeight: 20, color: colors.sandstone, fontWeight: '700' },
+  navCount: { fontSize: 11, color: colors.textSecondary, fontWeight: '600' },
 
   composer: { flexDirection: 'row', alignItems: 'flex-end', gap: spacing.sm },
   input: {
     flex: 1,
     maxHeight: 96,
-    minHeight: 42,
+    minHeight: 44,
     borderRadius: radii.lg,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-    paddingHorizontal: spacing.sm + 2,
-    paddingVertical: spacing.xs + 2,
+    borderWidth: 1,
+    borderColor: 'rgba(126, 169, 190, 0.32)',
+    backgroundColor: colors.surfaceSecondary,
+    paddingHorizontal: spacing.sm + 4,
+    paddingVertical: spacing.xs + 3,
     color: colors.textPrimary,
     fontSize: 15,
     lineHeight: 20,
   },
+  inputKeyboard: {
+    minHeight: 38,
+    maxHeight: 56,
+    paddingHorizontal: spacing.sm + 2,
+    paddingVertical: spacing.xxs + 2,
+    fontSize: 14,
+    lineHeight: 18,
+    borderRadius: radii.md,
+  },
   send: {
-    width: 42,
-    height: 42,
+    width: 44,
+    height: 44,
     borderRadius: radii.full,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.sandstoneDeep,
+    backgroundColor: colors.sandstone,
+    shadowColor: colors.sandstone,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
+    elevation: 4,
   },
-  sendOff: { opacity: 0.4 },
+  sendKeyboard: {
+    width: 38,
+    height: 38,
+  },
+  sendOff: { opacity: 0.35 },
   pressed: { opacity: 0.75 },
+  cursor: { color: colors.sandstone, fontWeight: '700' },
 });

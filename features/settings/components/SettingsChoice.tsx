@@ -1,7 +1,20 @@
+import { useCallback, useEffect } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 
 import { Text } from '@/components/ui';
+import { useHaptics } from '@/hooks';
+import { useInterfaceLanguage } from '@/i18n/context';
+import { visitorLiteralCopy } from '@/i18n/literals';
 import { colors, radii, spacing } from '@/theme';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export type ChoiceOption<T extends string> = {
   value: T;
@@ -29,46 +42,105 @@ export function SettingsChoice<T extends string>({
   selected,
   onSelect,
 }: SettingsChoiceProps<T>) {
+  const { selection } = useHaptics();
+  const language = useInterfaceLanguage();
+
   return (
-    <View accessibilityRole="radiogroup" accessibilityLabel={legend} style={styles.group}>
-      {options.map((option) => {
-        const isSelected = option.value === selected;
-        return (
-          <Pressable
-            key={option.value}
-            accessibilityRole="radio"
-            accessibilityState={{ selected: isSelected, checked: isSelected }}
-            accessibilityLabel={option.label}
-            accessibilityHint={option.hint}
-            onPress={() => onSelect(option.value)}
-            style={({ pressed }) => [
-              styles.option,
-              isSelected && styles.optionSelected,
-              pressed && styles.pressed,
-            ]}
-          >
-            <View style={styles.textColumn}>
-              <Text variant="body" tone={isSelected ? 'sandstone' : 'primary'}>
-                {option.label}
-              </Text>
-              <Text variant="caption" tone="muted">
-                {option.hint}
-              </Text>
-            </View>
-            {/* Not the only signal — the selected row also carries a border and
-                a toned label, so the choice survives a colourblind reading. */}
-            <Text
-              variant="body"
-              tone={isSelected ? 'sandstone' : 'muted'}
-              accessibilityElementsHidden
-              importantForAccessibility="no"
-            >
-              {isSelected ? '●' : '○'}
-            </Text>
-          </Pressable>
-        );
-      })}
+    <View accessibilityRole="radiogroup" accessibilityLabel={visitorLiteralCopy(language, legend)} style={styles.group}>
+      {options.map((option) => (
+        <ChoiceRow
+          key={option.value}
+          option={option}
+          isSelected={option.value === selected}
+          onSelect={(val) => {
+            selection();
+            onSelect(val as T);
+          }}
+        />
+      ))}
     </View>
+  );
+}
+
+function ChoiceRow<T extends string>({
+  option,
+  isSelected,
+  onSelect,
+}: {
+  option: ChoiceOption<T>;
+  isSelected: boolean;
+  onSelect: (val: string) => void;
+}) {
+  const language = useInterfaceLanguage();
+  const displayLabel = visitorLiteralCopy(language, option.label);
+  const displayHint = visitorLiteralCopy(language, option.hint);
+  const scale = useSharedValue(1);
+  const dotScale = useSharedValue(isSelected ? 1 : 0.8);
+
+  useEffect(() => {
+    if (isSelected) {
+      dotScale.value = withSequence(
+        withTiming(0.6, { duration: 60 }),
+        withSpring(1.2, { damping: 10, stiffness: 280, mass: 0.6 }),
+        withSpring(1, { damping: 12, stiffness: 300, mass: 0.6 }),
+      );
+    } else {
+      dotScale.value = withTiming(0.8, { duration: 120 });
+    }
+  }, [isSelected, dotScale]);
+
+  const rowAnimStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const dotAnimStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: dotScale.value }],
+  }));
+
+  const handlePressIn = useCallback(() => {
+    scale.value = withSpring(0.985, { damping: 15, stiffness: 350, mass: 0.7 });
+  }, [scale]);
+
+  const handlePressOut = useCallback(() => {
+    scale.value = withSpring(1, { damping: 12, stiffness: 280, mass: 0.7 });
+  }, [scale]);
+
+  return (
+    <AnimatedPressable
+      accessibilityRole="radio"
+      accessibilityState={{ selected: isSelected, checked: isSelected }}
+      accessibilityLabel={displayLabel}
+      accessibilityHint={displayHint}
+      onPress={() => onSelect(option.value)}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      style={[
+        styles.option,
+        isSelected && styles.optionSelected,
+        rowAnimStyle,
+      ]}
+    >
+      <View style={styles.textColumn}>
+        <Text variant="body" tone={isSelected ? 'sandstone' : 'primary'}>
+          {displayLabel}
+        </Text>
+        <Text variant="caption" tone="muted">
+          {displayHint}
+        </Text>
+      </View>
+      {/* Not the only signal — the selected row also carries a border and
+          a toned label, so the choice survives a colourblind reading. */}
+      <Animated.View style={dotAnimStyle}>
+        <Text
+          variant="body"
+          tone={isSelected ? 'sandstone' : 'muted'}
+          accessibilityElementsHidden
+          importantForAccessibility="no"
+        >
+          {isSelected ? '●' : '○'}
+        </Text>
+      </Animated.View>
+    </AnimatedPressable>
   );
 }
 
@@ -87,6 +159,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
   },
   optionSelected: { borderColor: colors.sandstone, backgroundColor: colors.surfaceSecondary },
-  pressed: { opacity: 0.7 },
   textColumn: { flex: 1, gap: spacing.xxs },
 });
+

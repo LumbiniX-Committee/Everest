@@ -3,6 +3,8 @@ import { StyleSheet } from 'react-native';
 
 import { LoadingState, ScreenHeader } from '@/components/common';
 import { Button, Screen, Text } from '@/components/ui';
+import { application } from '@/services';
+import { visitorCopy, type VisitorCopyKey } from '@/i18n/visitor';
 import { usePreferences } from '@/store';
 import { spacing } from '@/theme';
 import {
@@ -10,6 +12,7 @@ import {
   DISTANCE_UNIT_OPTIONS,
   OFFLINE_SYNC_OPTIONS,
   PHOTO_QUALITY_OPTIONS,
+  INTERFACE_LANGUAGE_OPTIONS,
   SCRIPT_OPTIONS,
   WISDOM_TIER_OPTIONS,
 } from '@/types';
@@ -19,18 +22,37 @@ import { SettingsChoice, SettingsSection, SettingsToggle } from './components';
 export function PreferencesScreen() {
   const { hydrated, preferences, update, reset } = usePreferences();
   const [confirmingReset, setConfirmingReset] = useState(false);
+  const t = (key: VisitorCopyKey) => visitorCopy(preferences.interfaceLanguage, key);
 
   if (!hydrated) {
-    return <LoadingState label="Reading your preferences" />;
+    return <LoadingState label={t('preferences.reading')} />;
   }
+
+  const restoreDefaults = async () => {
+    await reset();
+    setConfirmingReset(false);
+    await application.reload('Restored preferences');
+  };
 
   return (
     <Screen scroll>
       <ScreenHeader
-        eyebrow="Settings"
-        title="Preferences"
-        subtitle="Each of these changes something you can see. Nothing here is cosmetic."
+        eyebrow={t('preferences.eyebrow')}
+        title={t('preferences.title')}
+        subtitle={t('preferences.subtitle')}
       />
+
+      <SettingsSection
+        title={t('preferences.language')}
+        footnote={t('preferences.languageFootnote')}
+      >
+        <SettingsChoice
+          legend={t('preferences.visitorInterface')}
+          options={INTERFACE_LANGUAGE_OPTIONS}
+          selected={preferences.interfaceLanguage}
+          onSelect={(value) => void update('interfaceLanguage', value)}
+        />
+      </SettingsSection>
 
       <SettingsSection
         title="Alignment"
@@ -134,12 +156,11 @@ export function PreferencesScreen() {
       {confirmingReset ? (
         <SettingsSection title="Reset">
           <Text variant="body" tone="secondary" style={styles.resetBody}>
-            Restore all seven preferences to their defaults? Your observations, quests and
+            Restore all preferences to their defaults? Your observations, quests and
             condition reports are not affected.
           </Text>
           <Button label="Restore defaults" variant="primary" block onPress={() => {
-            void reset();
-            setConfirmingReset(false);
+            void restoreDefaults();
           }} />
           <Button label="Cancel" variant="quiet" block onPress={() => setConfirmingReset(false)} />
         </SettingsSection>

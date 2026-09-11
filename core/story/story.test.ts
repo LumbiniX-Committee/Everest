@@ -38,6 +38,19 @@ test('the sequence never runs past five beats', () => {
   assert.ok(beats.length <= 5, `got ${beats.length} beats`);
 });
 
+test('a composite place keeps every authored monument chapter in order', () => {
+  const story = Array.from({ length: 8 }, (_, i) => ({
+    title: `Monument ${i + 1}`,
+    body: `The sourced story of monument ${i + 1}.`,
+  }));
+  const beats = buildStory(material({ story, dhamma: [] }));
+  assert.deepEqual(
+    beats.filter((beat) => beat.kind === 'history').map((beat) => beat.eyebrow),
+    story.map((chapter) => chapter.title),
+  );
+  assert.equal(beats.at(-1)?.kind, 'discovery');
+});
+
 test('history does not repeat the opening line', () => {
   const beats = buildStory(material());
   const arrival = beats.find((b) => b.kind === 'arrival')!;

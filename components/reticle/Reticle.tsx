@@ -12,6 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { colors, radii } from '@/theme';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import type { AlignmentPhase } from '@/types';
 
 export type ReticleProps = {
@@ -31,13 +32,12 @@ export type ReticleProps = {
  *
  * This is the app's only emblem — no Buddha, no temple, no lotus. It is a
  * sighting instrument: an outer index ring, four cardinal ticks, and an inner
- * ring that contracts as alignment improves and snaps to the locked blue when
- * the device matches the vantage.
+ * ring that contracts as alignment improves and seats when the device matches
+ * the vantage.
  *
  * The colour transition is the entire feedback mechanism, so it is worth being
- * exact about it: amber while seeking, and `alignmentLocked` blue only on a
- * true lock. That blue appears nowhere else in the app, which is what makes it
- * readable at a glance from arm's length in daylight.
+ * exact about it: teal while seeking and a more settled centre on a true lock.
+ * Amber is reserved for the numeric turn warning in the readout below.
  */
 export function Reticle({
   size = 200,
@@ -45,6 +45,7 @@ export function Reticle({
   phase = 'idle',
   idleAnimation = false,
 }: ReticleProps) {
+  const ui = useVisitorLiteralCopy();
   const locked = phase === 'locked';
   // `manual` is the by-eye escape hatch: show it as inert (static, muted) rather
   // than seeking or locked — the instrument is not tracking, the user has taken over.
@@ -121,7 +122,7 @@ export function Reticle({
     <View
       accessible
       accessibilityRole="image"
-      accessibilityLabel={reticleLabel(phase)}
+      accessibilityLabel={ui(reticleLabel(phase))}
       style={[styles.frame, { width: size, height: size }]}
     >
       <Animated.View style={[styles.ring, StyleSheet.absoluteFill, outerStyle]} />

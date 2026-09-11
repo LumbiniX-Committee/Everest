@@ -1,7 +1,19 @@
+import { useCallback } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 
 import { Icon, Text } from '@/components/ui';
+import { useHaptics } from '@/hooks';
+import { useInterfaceLanguage } from '@/i18n/context';
+import { visitorLiteralCopy } from '@/i18n/literals';
 import { colors, font, radii, spacing } from '@/theme';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 /**
  * The bar you type into, pinned above the keyboard.
@@ -48,6 +60,31 @@ export function ChatComposer({
   onGrow,
 }: ChatComposerProps) {
   const canSend = value.trim().length > 0 && !busy;
+  const { pulse } = useHaptics();
+  const language = useInterfaceLanguage();
+  const displayPlaceholder = visitorLiteralCopy(language, placeholder);
+  const displaySendLabel = visitorLiteralCopy(language, sendLabel ?? 'Send');
+  const sendScale = useSharedValue(1);
+
+  const sendAnimStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: sendScale.value }],
+  }));
+
+  const handlePressIn = useCallback(() => {
+    if (!canSend) return;
+    sendScale.set(withSpring(0.88, { damping: 14, stiffness: 380, mass: 0.6 }));
+  }, [canSend, sendScale]);
+
+  const handlePressOut = useCallback(() => {
+    if (!canSend) return;
+    sendScale.set(withSpring(1, { damping: 12, stiffness: 280, mass: 0.6 }));
+  }, [canSend, sendScale]);
+
+  const handleSend = useCallback(() => {
+    if (!canSend) return;
+    pulse(Haptics.ImpactFeedbackStyle.Light);
+    onSend();
+  }, [canSend, onSend, pulse]);
 
   return (
     <View style={styles.bar}>
@@ -56,7 +93,7 @@ export function ChatComposer({
         onChangeText={onChangeText}
         multiline
         textAlignVertical="top"
-        placeholder={placeholder}
+        placeholder={displayPlaceholder}
         placeholderTextColor={colors.textMuted}
         /*
           The family is applied here rather than in the StyleSheet: `font()`
@@ -66,29 +103,31 @@ export function ChatComposer({
         */
         style={[styles.input, font('body')]}
         editable={!busy}
-        accessibilityLabel={placeholder}
+        accessibilityLabel={displayPlaceholder}
         onContentSizeChange={onGrow}
       />
-      <Pressable
+      <AnimatedPressable
         accessibilityRole="button"
-        accessibilityLabel={sendLabel ?? 'Send'}
+        accessibilityLabel={displaySendLabel}
         accessibilityState={{ disabled: !canSend }}
         disabled={!canSend}
-        onPress={onSend}
-        style={({ pressed }) => [
+        onPress={handleSend}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        style={[
           styles.send,
           sendLabel ? styles.sendWide : styles.sendRound,
           !canSend && styles.sendDisabled,
-          pressed && canSend && styles.pressed,
+          sendAnimStyle,
         ]}
       >
         <Icon name="send" size={20} color={colors.surface} />
         {sendLabel ? (
           <Text variant="button" tone="inverse">
-            {sendLabel}
+            {displaySendLabel}
           </Text>
         ) : null}
-      </Pressable>
+      </AnimatedPressable>
     </View>
   );
 }

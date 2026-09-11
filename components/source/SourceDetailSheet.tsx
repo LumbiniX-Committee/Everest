@@ -26,6 +26,7 @@ export function SourceDetailSheet({ source, citation, onClose }: SourceDetailShe
       onClose={onClose}
       title={source?.title ?? 'Source'}
       subtitle={source ? SOURCE_KIND_LABELS[source.kind] : undefined}
+      translateTitle={!source}
       scroll
     >
       {source ? (
@@ -46,7 +47,7 @@ export function SourceDetailSheet({ source, citation, onClose }: SourceDetailShe
                 <Text variant="label" tone="seeking" uppercase>
                   What this does not settle
                 </Text>
-                <Text variant="body" tone="secondary">
+                <Text variant="body" tone="secondary" translate={false}>
                   {source.caveat}
                 </Text>
               </View>

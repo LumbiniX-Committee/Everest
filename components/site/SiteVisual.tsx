@@ -161,18 +161,18 @@ const styles = StyleSheet.create({
 
   stupa: { alignItems: 'center' },
   dome: {
-    backgroundColor: colors.sandstone,
+    backgroundColor: colors.heritageGold,
     borderTopLeftRadius: 999,
     borderTopRightRadius: 999,
   },
   harmika: {
     width: 14,
     height: 8,
-    backgroundColor: colors.sandstoneDeep,
+    backgroundColor: colors.earth,
   },
   spire: {
     width: 4,
-    backgroundColor: colors.sandstoneDeep,
+    backgroundColor: colors.earth,
     borderRadius: radii.full,
   },
 
@@ -189,15 +189,15 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.earth,
     transform: [{ rotate: '180deg' }],
   },
-  wall: { backgroundColor: colors.sandstone },
+  wall: { backgroundColor: colors.heritageGold },
 
   tank: { alignItems: 'center', justifyContent: 'flex-end' },
   tankRim: {
-    backgroundColor: colors.sandstone,
+    backgroundColor: colors.heritageGold,
     borderTopLeftRadius: 999,
     borderTopRightRadius: 999,
   },
-  tankRimInner: { position: 'absolute', backgroundColor: colors.sandstoneDeep },
+  tankRimInner: { position: 'absolute', backgroundColor: colors.earth },
   tankWater: {
     position: 'absolute',
     backgroundColor: colors.mapWater,
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
 
   plinth: {
     height: 6,
-    backgroundColor: colors.sandstoneDeep,
+    backgroundColor: colors.earth,
     borderRadius: 2,
   },
 
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.xs,
     paddingVertical: 2,
     borderRadius: radii.sm,
-    backgroundColor: 'rgba(37, 42, 39, 0.72)',
+    backgroundColor: colors.overlay,
   },
   tagText: { fontSize: 10 },
 });

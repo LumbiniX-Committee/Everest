@@ -1,8 +1,21 @@
 import { Text as RNText, type TextProps as RNTextProps } from 'react-native';
 
+import { useInterfaceLanguage } from '@/i18n/context';
+import { localizeVisitorNode } from '@/i18n/literals';
 import { colors, text as textStyle, type TypographyVariant } from '@/theme';
 
-type ToneName = 'primary' | 'secondary' | 'muted' | 'sandstone' | 'locked' | 'seeking' | 'open' | 'resolved' | 'inverse';
+type ToneName =
+  | 'primary'
+  | 'secondary'
+  | 'muted'
+  | 'sandstone'
+  | 'locked'
+  | 'seeking'
+  | 'warning'
+  | 'error'
+  | 'open'
+  | 'resolved'
+  | 'inverse';
 
 const tones: Record<ToneName, string> = {
   primary: colors.textPrimary,
@@ -11,9 +24,11 @@ const tones: Record<ToneName, string> = {
   sandstone: colors.sandstoneDeep,
   locked: colors.alignmentLocked,
   seeking: colors.alignmentSeeking,
+  warning: colors.warning,
+  error: colors.error,
   open: colors.openCondition,
   resolved: colors.resolved,
-  inverse: colors.surface,
+  inverse: colors.backgroundDeep,
 };
 
 export type TextProps = RNTextProps & {
@@ -22,6 +37,8 @@ export type TextProps = RNTextProps & {
   /** Convenience for `label`, which is almost always set in caps. */
   uppercase?: boolean;
   center?: boolean;
+  /** False for quotations, authored heritage text, and visitor evidence. */
+  translate?: boolean;
 };
 
 /**
@@ -36,9 +53,12 @@ export function Text({
   tone = 'primary',
   uppercase = false,
   center = false,
+  translate = true,
+  children,
   style,
   ...rest
 }: TextProps) {
+  const language = useInterfaceLanguage();
   return (
     <RNText
       {...rest}
@@ -49,6 +69,8 @@ export function Text({
         center && { textAlign: 'center' },
         style,
       ]}
-    />
+    >
+      {translate ? localizeVisitorNode(language, children) : children}
+    </RNText>
   );
 }

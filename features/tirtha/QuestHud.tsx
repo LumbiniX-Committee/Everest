@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { Animated, Easing, Pressable, StyleSheet, View } from 'react-native';
 
 import { Icon, Text } from '@/components/ui';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { colors, radii, spacing } from '@/theme';
 
 /**
@@ -28,6 +29,7 @@ export type QuestHudProps = {
 };
 
 export function QuestHud({ available, completed, total, pulse, onPress }: QuestHudProps) {
+  const ui = useVisitorLiteralCopy();
   const beat = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -80,17 +82,17 @@ export function QuestHud({ available, completed, total, pulse, onPress }: QuestH
         accessibilityRole="button"
         accessibilityLabel={
           done
-            ? `Quests here complete, ${completed} of ${total}`
-            : `${available} quest${available === 1 ? '' : 's'} available here, ${completed} of ${total} done`
+            ? `${ui('Quests here complete,')} ${completed} ${ui('of')} ${total}`
+            : `${available} ${ui(available === 1 ? 'quest' : 'Quests')} ${ui('available here,')} ${completed} ${ui('of')} ${total} ${ui('done')}`
         }
-        accessibilityHint="Opens the quests for this place"
+        accessibilityHint={ui('Opens the quests for this place')}
         onPress={onPress}
         style={({ pressed }) => [styles.button, done && styles.buttonDone, pressed && styles.pressed]}
       >
         <Icon
           name={done ? 'flag-checkered' : 'target'}
           size={20}
-          color={done ? colors.sandstoneDeep : colors.textSecondary}
+          color={done ? colors.primary : colors.textSecondary}
         />
         <Text variant="caption" tone={done ? 'sandstone' : 'secondary'} style={styles.count}>
           {completed}/{total}
@@ -107,7 +109,7 @@ const styles = StyleSheet.create({
     width: 58,
     height: 58,
     borderRadius: radii.full,
-    backgroundColor: colors.sandstone,
+    backgroundColor: colors.primary,
   },
   button: {
     width: 58,
@@ -115,11 +117,11 @@ const styles = StyleSheet.create({
     borderRadius: radii.full,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.surface,
+    backgroundColor: colors.backgroundDeep,
     borderWidth: 1.5,
-    borderColor: colors.sandstone,
+    borderColor: colors.borderStrong,
     elevation: 6,
-    shadowColor: '#000000',
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
     shadowRadius: 6,
@@ -148,11 +150,6 @@ export function RewardToast({
   onHide: () => void;
 }) {
   const enter = useRef(new Animated.Value(0)).current;
-  // Keep the latest onHide in a ref so the animation effect never lists it
-  // as a dependency. onHide is an inline arrow in the parent and gets a new
-  // identity on every render (GPS ticks, demo walk updates). Listing it caused
-  // the effect to restart the animation on every parent re-render, producing
-  // the repeated flickering toast.
   const onHideRef = useRef(onHide);
   onHideRef.current = onHide;
 
@@ -173,7 +170,6 @@ export function RewardToast({
       if (finished) onHideRef.current();
     });
     return () => anim.stop();
-    // Only restart when visibility flips — NOT when onHide changes identity.
   }, [visible, enter]);
 
   if (!visible) return null;
@@ -213,9 +209,9 @@ const styles2 = StyleSheet.create({
     borderRadius: radii.full,
     backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: colors.sandstone,
+    borderColor: colors.borderStrong,
     elevation: 8,
-    shadowColor: '#000000',
+    shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.18,
     shadowRadius: 10,

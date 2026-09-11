@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { ActivityIndicator, StyleSheet, TextInput, View } from 'react-native';
 
 import { Button, Text } from '@/components/ui';
+import { useInterfaceLanguage } from '@/i18n/context';
+import { visitorLiteralCopy } from '@/i18n/literals';
 import { dhamma } from '@/services';
 import { colors, radii, spacing } from '@/theme';
 import type { DhammaAnswer, HeritageSite } from '@/types';
@@ -24,6 +26,7 @@ import type { DhammaAnswer, HeritageSite } from '@/types';
  * Ashokan Pillar. What the person typed is preserved and shown back to them.
  */
 export function AskThisPlace({ site }: { site: HeritageSite }) {
+  const language = useInterfaceLanguage();
   const [question, setQuestion] = useState('');
   const [asking, setAsking] = useState(false);
   const [answer, setAnswer] = useState<DhammaAnswer | null>(null);
@@ -36,7 +39,7 @@ export function AskThisPlace({ site }: { site: HeritageSite }) {
     setAsking(true);
     setAsked(text);
     try {
-      const { answer: result } = await dhamma.ask(`${site.name}: ${text}`, 'en');
+      const { answer: result } = await dhamma.ask(`${site.name}: ${text}`, language);
       setAnswer(result);
     } catch {
       setAnswer(null);
@@ -56,11 +59,11 @@ export function AskThisPlace({ site }: { site: HeritageSite }) {
       <TextInput
         value={question}
         onChangeText={setQuestion}
-        placeholder={`What would you like to know about ${site.name}?`}
+        placeholder={`${visitorLiteralCopy(language, 'What would you like to know about')} ${site.name}?`}
         placeholderTextColor={colors.textMuted}
         style={styles.input}
         multiline
-        accessibilityLabel="Your question about this place"
+        accessibilityLabel={visitorLiteralCopy(language, 'Your question about this place')}
       />
 
       <Button
@@ -73,7 +76,7 @@ export function AskThisPlace({ site }: { site: HeritageSite }) {
       {asking ? (
         <View style={styles.searching}>
           <ActivityIndicator color={colors.sandstoneDeep} />
-          <Text variant="caption" tone="muted">
+          <Text variant="caption" tone="muted" translate={false}>
             Searching the canon
           </Text>
         </View>
@@ -89,7 +92,7 @@ export function AskThisPlace({ site }: { site: HeritageSite }) {
 
           {answer.status === 'grounded' ? (
             <>
-              <Text variant="body">{answer.text}</Text>
+              <Text variant="body" translate={false}>{answer.text}</Text>
               <Text variant="caption" tone="muted">
                 {answer.citations.length === 1
                   ? '1 canonical citation'
@@ -101,12 +104,12 @@ export function AskThisPlace({ site }: { site: HeritageSite }) {
             </>
           ) : (
             <>
-              <Text variant="body">{answer.text}</Text>
-              <Text variant="body" tone="secondary">
+              <Text variant="body" translate={false}>{answer.text}</Text>
+              <Text variant="body" tone="secondary" translate={false}>
                 {answer.reason}
               </Text>
               {answer.suggestions.length > 0 ? (
-                <Text variant="caption" tone="muted">
+                <Text variant="caption" tone="muted" translate={false}>
                   Try: {answer.suggestions.slice(0, 2).join(' · ')}
                 </Text>
               ) : null}

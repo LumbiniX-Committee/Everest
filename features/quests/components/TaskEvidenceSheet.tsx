@@ -1,7 +1,10 @@
 import { useState } from 'react';
+import { useRouter } from 'expo-router';
 import { ActivityIndicator, Image, StyleSheet, TextInput, View } from 'react-native';
+import * as FileSystem from 'expo-file-system/legacy';
 
 import { Button, Divider, Text } from '@/components/ui';
+import { visitorLiteralCopy } from '@/i18n/literals';
 import { database, questReview } from '@/services';
 import { usePreferences } from '@/store';
 import { colors, radii, spacing } from '@/theme';
@@ -74,7 +77,9 @@ export function TaskEvidenceSheet({
   onSubmitted,
   onCancel,
 }: TaskEvidenceSheetProps) {
+  const router = useRouter();
   const { preferences } = usePreferences();
+  const language = preferences.interfaceLanguage;
   const [photoUri, setPhotoUri] = useState<string | undefined>(existing?.photoUri);
   const [count, setCount] = useState(existing?.count?.toString() ?? '');
   const [note, setNote] = useState(existing?.note ?? '');
@@ -113,10 +118,25 @@ export function TaskEvidenceSheet({
 
   const submit = async () => {
     setSaving(true);
+    let savedPhotoUri = photoUri;
+
+    // Camera-picker results may live in a temporary cache. Persist the memory
+    // before saving evidence so the album stays available after cache cleanup.
+    if (photoUri) {
+      const directory = `${FileSystem.documentDirectory}quest-memories/`;
+      const destination = `${directory}${questId}-${task.id}-${Date.now()}.jpg`;
+      try {
+        await FileSystem.makeDirectoryAsync(directory, { intermediates: true });
+        await FileSystem.copyAsync({ from: photoUri, to: destination });
+        savedPhotoUri = destination;
+      } catch {
+        // Retain the selected file when durable storage is momentarily unavailable.
+      }
+    }
     const submission: QuestSubmission = {
       questId,
       taskId: task.id,
-      photoUri,
+      photoUri: savedPhotoUri,
       count: count.trim() ? Number(count) : undefined,
       note: note.trim() || undefined,
       submittedAt: new Date().toISOString(),
@@ -140,9 +160,24 @@ export function TaskEvidenceSheet({
     <View style={styles.sheet}>
       {/* The sheet chrome already carries the task title, so this states the
           ask rather than repeating the name. */}
-      <Text variant="body" tone="secondary">
+      <Text variant="body" tone="secondary" translate={false}>
         {task.expectation ?? task.description}
       </Text>
+
+      {task.photoMode ? (
+        <View style={styles.guidance}>
+          <Text variant="label" tone="sandstone" uppercase>
+            {task.photoMode.replaceAll('-', ' ')} challenge
+          </Text>
+          {task.safetyNote ? (
+            <Text variant="caption" tone="secondary" translate={false}>{task.safetyNote}</Text>
+          ) : null}
+        </View>
+      ) : task.safetyNote ? (
+        <View style={styles.guidance}>
+          <Text variant="caption" tone="secondary" translate={false}>{task.safetyNote}</Text>
+        </View>
+      ) : null}
 
       {kind === 'photo' && !picker ? (
         <View style={styles.block}>
@@ -161,10 +196,13 @@ export function TaskEvidenceSheet({
 
           <View style={styles.actions}>
             <Button
-              label={photoUri ? 'Retake' : 'Take a photograph'}
+              label="Open Memory Camera"
               variant="secondary"
               block
-              onPress={() => void pick(true)}
+              onPress={() => router.push({
+                pathname: '../../quest-camera',
+                params: { questId, taskId: task.id },
+              })}
             />
             <Button
               label="Choose from library"
@@ -191,7 +229,7 @@ export function TaskEvidenceSheet({
               <Text variant="body" tone={VERDICT_TONE[review.verdict]}>
                 {VERDICT_LABEL[review.verdict]}
               </Text>
-              <Text variant="body" tone="secondary">
+              <Text variant="body" tone="secondary" translate={false}>
                 {review.comment}
               </Text>
               {/* Named, because an opinion without an author is just an
@@ -218,7 +256,7 @@ export function TaskEvidenceSheet({
             placeholder="0"
             placeholderTextColor={colors.textMuted}
             style={styles.input}
-            accessibilityLabel="Count"
+            accessibilityLabel={visitorLiteralCopy(language, 'Count')}
           />
         </View>
       ) : null}
@@ -232,10 +270,10 @@ export function TaskEvidenceSheet({
             value={note}
             onChangeText={setNote}
             multiline
-            placeholder="Optional"
+            placeholder={visitorLiteralCopy(language, 'Optional')}
             placeholderTextColor={colors.textMuted}
             style={[styles.input, styles.multiline]}
-            accessibilityLabel="Note"
+            accessibilityLabel={visitorLiteralCopy(language, 'Note')}
           />
         </View>
       ) : null}
@@ -244,7 +282,7 @@ export function TaskEvidenceSheet({
 
       <View style={styles.actions}>
         <Button
-          label={saving ? 'Saving…' : 'Record this'}
+          label={saving ? 'Storing…' : 'Store in memories'}
           block
           disabled={!ready || saving}
           loading={saving}
@@ -258,6 +296,14 @@ export function TaskEvidenceSheet({
 
 const styles = StyleSheet.create({
   sheet: { gap: spacing.base },
+  guidance: {
+    gap: spacing.xs,
+    padding: spacing.md,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surfaceSecondary,
+  },
   header: { gap: spacing.xs },
   block: { gap: spacing.sm },
   actions: { gap: spacing.sm },

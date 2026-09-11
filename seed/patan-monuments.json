@@ -1,0 +1,236 @@
+[
+  {
+    "id": "patan-bhai-dega",
+    "inventoryNumber": 1,
+    "name": "Bhai Dega Temple",
+    "date": "1477",
+    "type": "Tiered temple",
+    "coords": { "lat": 27.6731418, "lon": 85.324608, "quality": "OSM point; verify by field survey" },
+    "description": "Bhai Dega is the southernmost early temple in the official nineteen-monument Patan inventory. Dated 1477 on the nomination map, it carries an older architectural layer into a square whose dominant surviving image is often associated with the seventeenth century.",
+    "story": [
+      { "title": "An earlier Patan", "eyebrow": "Before the great seventeenth-century works", "body": "The official inventory dates Bhai Dega to 1477. Its place in the sequence matters because the royal square was not created in one campaign; later kings embellished ground that already held important shrines." },
+      { "title": "Read the tiered form", "eyebrow": "Brick, timber and rooflines", "body": "Look from plinth to carved timber supports and rising roofs. The temple's significance is architectural and spatial: it marks the southern approach and begins the northward rhythm of monuments across the square." }
+    ]
+  },
+  {
+    "id": "patan-lakshminarayan-temple",
+    "inventoryNumber": 2,
+    "name": "Lakshminarayan Temple",
+    "date": "17th century",
+    "type": "Temple",
+    "coords": { "lat": 27.67306, "lon": 85.32478, "quality": "Approximate from official monument map" },
+    "description": "The seventeenth-century Lakshminarayan Temple is listed immediately south of the palace courtyards. Its dedication joins Lakshmi and Narayan and places Vaishnava worship within the dense royal and civic ensemble.",
+    "story": [
+      { "title": "Lakshmi and Narayan", "eyebrow": "Prosperity beside preservation", "body": "The paired dedication brings the goddess Lakshmi together with Narayan, a form of Vishnu. In the royal square that association linked worship, prosperity and the ordering of civic life." },
+      { "title": "A temple in an ensemble", "eyebrow": "No monument stands alone", "body": "Its scale is quieter than Krishna Mandir, but that contrast is part of Patan's design. Minor and major shrines share sightlines, processions and daily offerings across the same paved ground." }
+    ]
+  },
+  {
+    "id": "patan-sundari-chowk",
+    "inventoryNumber": 3,
+    "name": "Sundari Chowk",
+    "date": "1670",
+    "type": "Palace courtyard",
+    "coords": { "lat": 27.6727257, "lon": 85.3251314, "quality": "OSM centre; verify by palace survey" },
+    "description": "Sundari Chowk is the palace's southern royal courtyard, dated 1670 in the official inventory. Its most extraordinary feature is Tusha Hiti, a sunken ritual bath where sculpture, water engineering and court ceremony occupy one enclosed space.",
+    "story": [
+      { "title": "The royal courtyard", "eyebrow": "An inward palace world", "body": "The brick façades turn away from the open square and frame a controlled royal interior. Carved doors and windows make the courtyard ceremonial before the visitor even reaches its sunken water monument." },
+      { "title": "Tusha Hiti", "eyebrow": "Ritual water below the paving", "body": "The oval bath descends beneath the courtyard, encircled by carved deities, a protective serpent and a miniature stone Krishna temple. It is not merely decoration: sculpture was built around the movement and meaning of water." }
+    ]
+  },
+  {
+    "id": "patan-lohari-hiti",
+    "inventoryNumber": 4,
+    "name": "Lohari Hiti",
+    "date": "1646",
+    "type": "Stone water conduit",
+    "coords": { "lat": 27.67286, "lon": 85.32518, "quality": "Approximate from official monument map" },
+    "description": "Lohari Hiti, dated 1646 in the official inventory, belongs to the palace water landscape. Its inclusion as a monument recognizes that conduits and ritual water places are as central to Patan's heritage as temples and palace façades.",
+    "story": [
+      { "title": "Water as architecture", "eyebrow": "Infrastructure made visible", "body": "A hiti reveals the public end of an underground hydraulic system. Steps, spout and basin turn water delivery into a social and ritual place rather than hiding it as a utility." },
+      { "title": "A vulnerable system", "eyebrow": "The monument continues underground", "body": "The visible stone survives only if channels, infiltration and drainage continue to work. A dry spout may record failure far beyond the carved outlet, so condition observation must include flow as well as masonry." }
+    ]
+  },
+  {
+    "id": "patan-keshav-narayan-chowk",
+    "inventoryNumber": 5,
+    "name": "Keshav Narayan Chowk",
+    "date": "1723",
+    "type": "Palace courtyard",
+    "coords": { "lat": 27.6734438, "lon": 85.3253354, "quality": "Patan Museum point; courtyard centre approximate" },
+    "description": "Keshav Narayan Chowk is the northern palace courtyard and the principal home of Patan Museum. The official map dates the present ensemble to 1723, while an inscription shows that the palace area held royal importance centuries earlier.",
+    "story": [
+      { "title": "A shrine at the centre", "eyebrow": "The courtyard's name and axis", "body": "The Keshav Narayan shrine organizes the court around a sacred centre. Palace rooms face inward toward it, binding royal residence, worship and controlled circulation." },
+      { "title": "Palace becomes museum", "eyebrow": "A historic building kept public", "body": "The restored courtyard now houses Patan Museum's collection of sacred art. Reuse keeps the palace inhabited and interpretable instead of turning it into an empty architectural shell." }
+    ]
+  },
+  {
+    "id": "patan-vishwanath-1666",
+    "inventoryNumber": 6,
+    "name": "Vishwanath Temple (1666)",
+    "date": "1666",
+    "type": "Tiered Shiva temple",
+    "coords": { "lat": 27.6736995, "lon": 85.3251787, "quality": "OSM temple centre; inventory identity requires field check" },
+    "description": "The official inventory separately lists a Vishwanath Temple dated 1666. Dedicated to Shiva as Lord of the Universe, it contributes a tiered brick-and-timber form to the square's mixture of temple architectures.",
+    "story": [
+      { "title": "Shiva in the royal square", "eyebrow": "Lord of the Universe", "body": "Vishwanath is a title of Shiva. The dedication places Shaiva worship beside major Vaishnava monuments, showing that the square's religious life was never confined to one deity or one architectural form." },
+      { "title": "An inventory ambiguity", "eyebrow": "Two related official entries", "body": "The nomination map also lists a Bishwanath Temple dated 1626. The app keeps both official entries separate and labels the date, rather than silently merging records that require on-site identification." }
+    ]
+  },
+  {
+    "id": "patan-chyasin-dega",
+    "inventoryNumber": 7,
+    "name": "Chyasin Dega",
+    "date": "1666",
+    "type": "Octagonal temple",
+    "coords": { "lat": 27.67355, "lon": 85.32502, "quality": "Approximate from official monument map" },
+    "description": "Chyasin Dega is the octagonal temple dated 1666 in the official inventory. Its many-sided plan interrupts the square and tiered geometries around it, making shape itself the monument's clearest lesson.",
+    "story": [
+      { "title": "Eight sides", "eyebrow": "A plan that changes the view", "body": "Chyasin refers to the temple's eight-sided form. Walking around it produces a continuously changing profile, unlike the strong frontal axis of many neighbouring shrines." },
+      { "title": "Architecture through movement", "eyebrow": "Do not judge it from one face", "body": "The octagon is best understood by circling. Each turn reveals another alignment with palace, paving and nearby temples, which is why a walk simulation communicates more than one fixed photograph." }
+    ]
+  },
+  {
+    "id": "patan-mul-chowk",
+    "inventoryNumber": 8,
+    "name": "Mul Chowk",
+    "date": "1590",
+    "type": "Palace ritual courtyard",
+    "coords": { "lat": 27.67308, "lon": 85.32527, "quality": "Approximate from palace plan" },
+    "description": "Mul Chowk is the palace's principal ritual courtyard, listed as Malla Chok and dated 1590 on the official monument map. Later rulers repaired and embellished it, but its continuing ritual role is more important than assigning the whole court to one moment.",
+    "story": [
+      { "title": "The palace's ritual heart", "eyebrow": "A court built for ceremony", "body": "Mul means principal or root. The courtyard organized royal worship and festival practice within the palace, making it a working sacred space rather than simply an elegant enclosure." },
+      { "title": "Layers of repair", "eyebrow": "Continuity is not untouched survival", "body": "Earthquakes, repainting and conservation changed the surrounding wings. The court remains authentic through continued use and surviving fabric, not because every brick belongs to a single date." }
+    ]
+  },
+  {
+    "id": "patan-hari-shankar-temple",
+    "inventoryNumber": 9,
+    "name": "Hari Shankar Temple",
+    "date": "1666",
+    "type": "Tiered temple",
+    "coords": { "lat": 27.6732136, "lon": 85.3249642, "quality": "OSM temple centre" },
+    "description": "Hari Shankar Temple, dated 1666, joins the names of Vishnu and Shiva. It collapsed in the 2015 earthquake and was reconstructed using recovered historic elements, making loss and careful reassembly part of its present meaning.",
+    "story": [
+      { "title": "Hari and Shankar", "eyebrow": "Two divine names together", "body": "Hari names Vishnu and Shankar names Shiva. The combined dedication expresses a religious synthesis that fits Patan's closely interwoven Shaiva and Vaishnava landscape." },
+      { "title": "After the collapse", "eyebrow": "Fragments returned to place", "body": "The upper structure fell in 2015. Conservators recovered, numbered and studied carved timber and masonry so surviving pieces could return during reconstruction instead of being replaced by an entirely new imitation." }
+    ]
+  },
+  {
+    "id": "patan-degutale-1560",
+    "inventoryNumber": 10,
+    "name": "Degutale Temple (1560)",
+    "date": "1560",
+    "type": "Palace temple",
+    "coords": { "lat": 27.6732, "lon": 85.32525, "quality": "Approximate from official monument map" },
+    "description": "The first Degutale entry on the official map is dated 1560 and belongs to the palace's protected ritual architecture. Its position between public square and restricted court marks a boundary between civic visibility and royal religious practice.",
+    "story": [
+      { "title": "A palace deity", "eyebrow": "Worship behind controlled thresholds", "body": "Degutale belongs to the palace ritual world. Unlike an open square shrine, access and sight were shaped by royal courtyards, gateways and the distinction between public and initiated space." },
+      { "title": "Stone gates", "eyebrow": "A rare surviving approach", "body": "Seventeenth-century carved stone gates beside the Degutale area were dismantled, cleaned and reassembled after damaging earlier repairs. Their conservation shows how an entrance can carry as much evidence as the shrine beyond it." }
+    ]
+  },
+  {
+    "id": "patan-narayan-temple",
+    "inventoryNumber": 11,
+    "name": "Narayan Temple",
+    "date": "17th century",
+    "type": "Vaishnava temple",
+    "coords": { "lat": 27.67334, "lon": 85.32503, "quality": "Approximate from official monument map" },
+    "description": "The official inventory lists a seventeenth-century Narayan Temple as a monument distinct from Char Narayan and Lakshminarayan. Its separate entry preserves the density of Vaishnava shrines rather than collapsing similar names into one record.",
+    "story": [
+      { "title": "Narayan", "eyebrow": "A name of Vishnu", "body": "The dedication places another form of Vishnu within the royal ensemble. Repetition of a divine name across several temples reflects distinct foundations and communities, not duplicate data to be discarded." },
+      { "title": "Identify before merging", "eyebrow": "Similar names, separate monuments", "body": "Patan's official list contains several Narayan-related shrines. The date and map number remain visible so a visitor can distinguish this temple from Char Narayan and Lakshminarayan on the ground." }
+    ]
+  },
+  {
+    "id": "patan-degutale-1562",
+    "inventoryNumber": 12,
+    "name": "Degutale Temple (1562)",
+    "date": "1562",
+    "type": "Palace temple",
+    "coords": { "lat": 27.6734, "lon": 85.32526, "quality": "Approximate from official monument map" },
+    "description": "A second Degutale Temple entry, dated 1562, appears independently as number twelve in the official nineteen-monument inventory. The app retains it as a separate record because the government map does so.",
+    "story": [
+      { "title": "The second official entry", "eyebrow": "A record kept distinct", "body": "This monument can look like a duplicate when read only as text. The numbered map locates it separately, so the app preserves the 1562 identity until a palace survey can supply a more precise local name." },
+      { "title": "Ritual architecture of the palace", "eyebrow": "A sacred room in a royal system", "body": "Degutale structures belonged to court worship and cannot be understood as freestanding street temples. Their meaning comes from the adjoining courtyards, restricted routes and ceremonial use." }
+    ]
+  },
+  {
+    "id": "patan-char-narayan-temple",
+    "inventoryNumber": 13,
+    "name": "Char Narayan Temple",
+    "date": "17th century",
+    "type": "Tiered temple",
+    "coords": { "lat": 27.67328, "lon": 85.32486, "quality": "Approximate from official monument map" },
+    "description": "Char Narayan was a major seventeenth-century tiered temple in the open square. It collapsed in the 2015 earthquake and was reconstructed with salvaged historic material, so its current silhouette carries both Malla design and recent conservation history.",
+    "story": [
+      { "title": "Four-faced Narayan", "eyebrow": "A temple addressing the square", "body": "The name Char Narayan is associated with a four-directional form of Vishnu. The temple's open-square position allowed devotion and architecture to address movement from several directions." },
+      { "title": "Rebuilt after 2015", "eyebrow": "A monument assembled from what endured", "body": "Collapse did not erase every part. Recovered carved members were documented and returned where possible, making reconstruction a careful continuation of surviving evidence rather than a claim that nothing happened." }
+    ]
+  },
+  {
+    "id": "patan-krishna-mandir",
+    "inventoryNumber": 14,
+    "name": "Krishna Mandir",
+    "date": "1634",
+    "type": "Stone shikhara temple",
+    "coords": { "lat": 27.6736383, "lon": 85.324954, "quality": "OSM building centre" },
+    "description": "Krishna Mandir, dated 1634 in the official inventory, is Patan's celebrated stone temple. Its ascending shikhara composition and narrative reliefs distinguish it sharply from the square's brick-and-timber tiered temples.",
+    "story": [
+      { "title": "A temple carved in stone", "eyebrow": "A different language in the square", "body": "Dressed stone carries the structure upward through pillared levels and clustered towers. Against nearby timber pagodas, the material and vertical profile make the temple immediately legible." },
+      { "title": "Narrative walls", "eyebrow": "Stories read by circling", "body": "Reliefs from Hindu epics run around the exterior. Circumambulation becomes reading: the visitor encounters the monument's stories sequentially rather than receiving one façade as the whole building." }
+    ]
+  },
+  {
+    "id": "patan-kiskisila-temple",
+    "inventoryNumber": 15,
+    "name": "Kiskisila Temple",
+    "date": "1734",
+    "type": "Temple",
+    "coords": { "lat": 27.67378, "lon": 85.32503, "quality": "Approximate from official monument map" },
+    "description": "Kiskisila Temple is dated 1734 on the official nomination map, making it one of the later monuments in the numbered ensemble. Its record helps show that Patan's royal square continued to acquire sacred architecture after its best-known seventeenth-century phase.",
+    "story": [
+      { "title": "A later addition", "eyebrow": "The square kept changing", "body": "The 1734 date places Kiskisila after many of the great Malla monuments around it. Patan's heritage is therefore an accumulation, not a frozen view of one king's reign." },
+      { "title": "A name requiring local reading", "eyebrow": "Inventory first, interpretation with care", "body": "The official map secures the monument's numbered identity but offers little narrative detail. The app states that limit instead of filling it with a borrowed legend; local inscription and ritual research should deepen this record." }
+    ]
+  },
+  {
+    "id": "patan-bishwanath-1626",
+    "inventoryNumber": 16,
+    "name": "Bishwanath Temple (1626)",
+    "date": "1626",
+    "type": "Tiered Shiva temple",
+    "coords": { "lat": 27.67362, "lon": 85.32514, "quality": "Approximate; distinguish from inventory no. 6 on site" },
+    "description": "The official inventory separately lists Bishwanath Temple with a date of 1626. The spelling and date distinguish it in the app from the Vishwanath entry numbered six, pending precise field reconciliation.",
+    "story": [
+      { "title": "The 1626 record", "eyebrow": "A Shiva temple before Krishna Mandir", "body": "The map's date places this Bishwanath foundation shortly before Krishna Mandir. Together their different forms show how stone shikhara and timber-tiered architectures came to share the square." },
+      { "title": "Do not hide uncertainty", "eyebrow": "Two official Vishwanath names", "body": "Names can shift between Bishwanath and Vishwanath in transliteration. Rather than pretending certainty, the app exposes the inventory number, date and coordinate caveat so future fieldwork can resolve the relationship." }
+    ]
+  },
+  {
+    "id": "patan-ganesh-temple",
+    "inventoryNumber": 18,
+    "name": "Ganesh Temple",
+    "date": "Date not stated on inventory map",
+    "type": "Temple",
+    "coords": { "lat": 27.6728584, "lon": 85.3252871, "quality": "OSM Ganesh point; temple footprint requires survey" },
+    "description": "The Ganesh Temple is number eighteen in the official monument inventory. Ganesha's role at beginnings and thresholds makes a small shrine consequential within routes into the palace square.",
+    "story": [
+      { "title": "A deity of beginnings", "eyebrow": "Worship before proceeding", "body": "Ganesha is approached at the start of undertakings and before crossing important thresholds. A shrine's modest size does not measure its ritual importance in the movement of the square." },
+      { "title": "A small monument in a large ensemble", "eyebrow": "Attention changes scale", "body": "The official list includes this temple beside palaces and monumental towers. That inclusion is a reminder that Patan's protected value lies in relationships among structures of very different scale." }
+    ]
+  },
+  {
+    "id": "patan-bhimsen-temple",
+    "inventoryNumber": 19,
+    "name": "Bhimsen Temple",
+    "date": "Date not stated on inventory map",
+    "type": "Tiered temple",
+    "coords": { "lat": 27.6738855, "lon": 85.325174, "quality": "OSM temple centre" },
+    "description": "Bhimsen Temple closes the official numbered inventory. In Newar urban life Bhimsen is closely associated with merchants and trade, making the large temple especially meaningful at the commercial edge of the royal square.",
+    "story": [
+      { "title": "The merchants' guardian", "eyebrow": "Trade beside royal power", "body": "Bhimsen's Newar cult is strongly tied to commerce and enterprise. The temple's scale at Mangal Bazaar shows that the square belonged to market life as well as kings and court ritual." },
+      { "title": "A temple facing a working city", "eyebrow": "The square never became only a museum", "body": "Shops, processions and daily offerings continue around the monument. Its story is therefore social as well as architectural: the temple watches a commercial centre that remains active." }
+    ]
+  }
+]

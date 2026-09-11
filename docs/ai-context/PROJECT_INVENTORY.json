@@ -1,0 +1,467 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "audit": {
+    "generatedAt": "2026-08-25",
+    "commit": "dbe6d45e7297c5d889be9e69c3e2e190a578e6b1",
+    "branch": "main",
+    "commitDate": "2026-08-10",
+    "workingTreeClean": true,
+    "untracked": ["docs/ai-context/"],
+    "method": "Manual evidence-based audit. Commands executed on Windows 11, Node 24.18.1.",
+    "caution": "Snapshot at the commit above. Verify against source before relying on details."
+  },
+
+  "project": {
+    "name": "Sākṣī",
+    "packageName": "sakshi",
+    "displayName": "Sākṣī",
+    "subtitle": "the witness",
+    "epigraph": "appamādena sampādetha",
+    "version": "0.1.0",
+    "runtimeVersion": "0.1.0",
+    "description": "Heritage and pilgrimage app for Lumbini, Nepal. Turns a visitor's attention into evidence a conservator can trust.",
+    "builtFor": "LumbiniX 2026 hackathon",
+    "team": "LumbiniX-Committee",
+    "repositoryRoot": "Everest/",
+    "private": true
+  },
+
+  "framework": {
+    "workflow": "Expo managed (no android/ or ios/ directories)",
+    "expoSdk": 57,
+    "expo": "~57.0.11",
+    "expoUpdateAvailable": "~57.0.16",
+    "reactNative": "0.86.2",
+    "react": "19.2.3",
+    "reactDom": "19.2.3",
+    "typescript": "~6.0.3",
+    "typescriptStrict": true,
+    "router": "expo-router ~57.0.11",
+    "experiments": { "typedRoutes": true, "tsconfigPaths": true },
+    "packageManager": "npm",
+    "lockfileVersion": 3,
+    "nodeRequirement": ">=22 (undeclared; required by --experimental-strip-types)",
+    "pathAlias": { "@/*": "./*" }
+  },
+
+  "identity": {
+    "androidPackage": "org.lumbinix.sakshi",
+    "iosBundleIdentifier": "org.lumbinix.sakshi",
+    "scheme": "sakshi",
+    "expoOwner": "siddantasodari",
+    "easProjectId": "e8454679-10b7-42cc-8961-95a421426705",
+    "updatesUrl": "https://u.expo.dev/e8454679-10b7-42cc-8961-95a421426705",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "supportsTablet": true,
+    "predictiveBackGestureEnabled": false
+  },
+
+  "entryPoints": {
+    "packageMain": "index.tsx (synchronous root registration, theme bootstrap, then expo-router)",
+    "rootLayout": "app/_layout.tsx",
+    "launchDecision": "app/index.tsx",
+    "providerComposition": "store/index.tsx",
+    "serviceRegistry": "services/index.ts",
+    "dataBarrel": "data/index.ts",
+    "mainTabsLayout": "app/(main)/_layout.tsx"
+  },
+
+  "directories": {
+    "app": { "files": 43, "role": "Routes (expo-router). Thin wrappers only." },
+    "features": { "files": 68, "role": "Screen implementations by domain." },
+    "components": { "files": 70, "role": "Presentation: ui/ design system + feature support." },
+    "core": { "files": 54, "role": "Pure domain logic. No React. Excluded from app tsconfig." },
+    "services": { "files": 30, "role": "Platform boundary: device, network, storage." },
+    "store": { "files": 7, "role": "6 React Context providers + barrel." },
+    "hooks": { "files": 13, "role": "React glue." },
+    "data": { "files": 14, "role": "Runtime content barrel (demo + generated)." },
+    "seed": { "files": 20, "role": "Hand-authored source content (JSON)." },
+    "types": { "files": 12, "role": "TypeScript domain models." },
+    "theme": { "files": 8, "role": "Design tokens." },
+    "constants": { "files": 4, "role": "App identity, geo, storage keys." },
+    "utils": { "files": 4, "role": "Pure helpers." },
+    "shared": { "files": 3, "role": "Cross-cutting pure logic. Excluded from app tsconfig." },
+    "assets": { "files": 44, "role": "Images, audio, ONNX model. All bundled." },
+    "supabase/migrations": { "files": 8, "role": "Remote schema source of truth." },
+    "tools": { "files": 16, "role": "Build, verify, generation scripts." },
+    "harvest": { "files": 12, "role": "Python imagery pipeline. Not shipped." },
+    "mock-api": { "files": 3, "role": "Zero-dependency local API server." },
+    "landing": { "files": 15, "role": "Standalone Next.js download page. Separate app." },
+    "plugins": { "files": 1, "role": "Custom Expo config plugin (ONNX autolink)." },
+    "patches": { "files": 1, "role": "patch-package patch (onnxruntime)." },
+    "deck": { "files": 8, "role": "Demo and presentation material." }
+  },
+
+  "navigation": {
+    "model": "Three surfaces (Tīrtha, Sākṣī, Dhamma) + hidden Settings stack",
+    "surfaces": ["tirtha", "sakshi", "dhamma"],
+    "surfaceLabels": { "tirtha": "Tīrtha", "sakshi": "Sākṣī", "dhamma": "Dhamma" },
+    "tabBar": "components/navigation/SurfaceTabBar.tsx (custom)",
+    "settingsHidden": "Registered with href: null — deliberately not a fourth tab",
+    "totalRoutes": 33,
+    "layoutFiles": 7,
+    "authGating": "None. Only gate is the first-run onboardingComplete flag.",
+    "bootGate": "RootNavigator returns null until fontsReady && hydrated"
+  },
+
+  "routes": [
+    { "path": "/", "file": "app/index.tsx", "renders": "Redirect", "params": [] },
+    { "path": "/onboarding", "file": "app/onboarding/index.tsx", "renders": "Redirect", "params": [] },
+    { "path": "/onboarding/welcome", "file": "app/onboarding/welcome.tsx", "renders": "WelcomeScreen", "params": [] },
+    { "path": "/onboarding/purpose", "file": "app/onboarding/purpose.tsx", "renders": "PurposeScreen", "params": [] },
+    { "path": "/onboarding/how-it-works", "file": "app/onboarding/how-it-works.tsx", "renders": "HowItWorksScreen", "params": [] },
+    { "path": "/onboarding/align", "file": "app/onboarding/align.tsx", "renders": "AlignScreen", "params": [] },
+    { "path": "/onboarding/permissions", "file": "app/onboarding/permissions.tsx", "renders": "PermissionsScreen (onboarding)", "params": [] },
+    { "path": "/(main)/tirtha", "file": "app/(main)/tirtha/index.tsx", "renders": "TirthaScreen", "params": [] },
+    { "path": "/(main)/tirtha/map", "file": "app/(main)/tirtha/map.tsx", "renders": "LiveMapScreen", "params": [] },
+    { "path": "/(main)/tirtha/site/[siteId]", "file": "app/(main)/tirtha/site/[siteId].tsx", "renders": "SiteDetailScreen", "params": ["siteId:string"] },
+    { "path": "/(main)/tirtha/then-now/[siteId]", "file": "app/(main)/tirtha/then-now/[siteId].tsx", "renders": "ThenNowScreen", "params": ["siteId:string"] },
+    { "path": "/(main)/tirtha/quests", "file": "app/(main)/tirtha/quests/index.tsx", "renders": "QuestListScreen", "params": [] },
+    { "path": "/(main)/tirtha/quests/[questId]", "file": "app/(main)/tirtha/quests/[questId].tsx", "renders": "QuestDetailScreen", "params": ["questId:string"] },
+    { "path": "/(main)/tirtha/quests/completed/[questId]", "file": "app/(main)/tirtha/quests/completed/[questId].tsx", "renders": "QuestCompletedScreen", "params": ["questId:string"] },
+    { "path": "/(main)/sakshi", "file": "app/(main)/sakshi/index.tsx", "renders": "SakshiScreen", "params": [] },
+    { "path": "/(main)/sakshi/vantage", "file": "app/(main)/sakshi/vantage.tsx", "renders": "VantageScreen", "params": ["vantageId:string"] },
+    { "path": "/(main)/sakshi/capture", "file": "app/(main)/sakshi/capture.tsx", "renders": "CaptureScreen", "params": ["vantageId:string"] },
+    { "path": "/(main)/sakshi/observation", "file": "app/(main)/sakshi/observation.tsx", "renders": "ObservationScreen", "params": ["observationId:string"] },
+    { "path": "/(main)/sakshi/guardians", "file": "app/(main)/sakshi/guardians.tsx", "renders": "LeaderboardScreen", "params": [] },
+    { "path": "/(main)/sakshi/register", "file": "app/(main)/sakshi/register/index.tsx", "renders": "ChaityavaliScreen", "params": [] },
+    { "path": "/(main)/sakshi/register/[siteId]", "file": "app/(main)/sakshi/register/[siteId].tsx", "renders": "SiteHistoryScreen", "params": ["siteId:string"] },
+    { "path": "/(main)/sakshi/then-now/[siteId]", "file": "app/(main)/sakshi/then-now/[siteId].tsx", "renders": "ThenNowScreen", "params": ["siteId:string"] },
+    { "path": "/(main)/dhamma", "file": "app/(main)/dhamma/index.tsx", "renders": "DhammaScreen", "params": [] },
+    { "path": "/(main)/dhamma/question", "file": "app/(main)/dhamma/question.tsx", "renders": "DhammaChatScreen", "params": ["questionId?:string", "q?:string"] },
+    { "path": "/(main)/dhamma/reflect", "file": "app/(main)/dhamma/reflect.tsx", "renders": "ReflectionScreen", "params": ["siteId?:string"] },
+    { "path": "/(main)/settings", "file": "app/(main)/settings/index.tsx", "renders": "SettingsScreen", "params": [] },
+    { "path": "/(main)/settings/about", "file": "app/(main)/settings/about.tsx", "renders": "AboutScreen", "params": [] },
+    { "path": "/(main)/settings/arrivals", "file": "app/(main)/settings/arrivals.tsx", "renders": "ArrivalsScreen", "params": [] },
+    { "path": "/(main)/settings/offline-ai", "file": "app/(main)/settings/offline-ai.tsx", "renders": "OfflineAIScreen", "params": [] },
+    { "path": "/(main)/settings/permissions", "file": "app/(main)/settings/permissions.tsx", "renders": "PermissionsScreen (settings)", "params": [] },
+    { "path": "/(main)/settings/preferences", "file": "app/(main)/settings/preferences.tsx", "renders": "PreferencesScreen", "params": [] },
+    { "path": "/(main)/settings/storage", "file": "app/(main)/settings/storage.tsx", "renders": "StorageScreen", "params": [] },
+    { "path": "/(main)/settings/sync", "file": "app/(main)/settings/sync.tsx", "renders": "SyncScreen", "params": [] }
+  ],
+
+  "screens": {
+    "count": 29,
+    "byFeature": {
+      "tirtha": ["TirthaScreen", "LiveMapScreen", "SiteDetailScreen", "ThenNowScreen"],
+      "sakshi": ["SakshiScreen", "VantageScreen", "CaptureScreen", "ObservationScreen"],
+      "quests": ["QuestListScreen", "QuestDetailScreen", "QuestCompletedScreen"],
+      "dhamma": ["DhammaScreen", "DhammaChatScreen", "ReflectionScreen"],
+      "onboarding": ["WelcomeScreen", "PurposeScreen", "HowItWorksScreen", "AlignScreen", "PermissionsScreen"],
+      "settings": ["SettingsScreen", "AboutScreen", "ArrivalsScreen", "OfflineAIScreen", "PermissionsScreen", "PreferencesScreen", "StorageScreen", "SyncScreen"],
+      "chaityavali": ["ChaityavaliScreen", "SiteHistoryScreen"],
+      "leaderboard": ["LeaderboardScreen"]
+    },
+    "crossSurfaceMounts": [
+      "ThenNowScreen (features/tirtha) mounted under both tirtha/ and sakshi/",
+      "LeaderboardScreen (features/leaderboard) mounted under sakshi/ as guardians",
+      "ChaityavaliScreen + SiteHistoryScreen (features/chaityavali) mounted under sakshi/ as register",
+      "Quest screens (features/quests) mounted under tirtha/"
+    ],
+    "nameCollisions": ["PermissionsScreen exists in both features/onboarding and features/settings"]
+  },
+
+  "stores": [
+    { "name": "AppStateProvider", "hook": "useAppState", "file": "store/app-state.tsx", "persistence": "AsyncStorage", "fields": ["hydrated", "onboardingComplete", "completeOnboarding", "resetOnboarding"] },
+    { "name": "PreferencesProvider", "hook": "usePreferences", "file": "store/preferences.tsx", "persistence": "AsyncStorage (11 keys)", "fields": ["hydrated", "preferences", "update", "reset"] },
+    { "name": "PermissionsProvider", "hook": "usePermissions/usePermission", "file": "store/permissions.tsx", "persistence": "none (live)", "fields": ["hydrated", "states", "request", "refresh", "openSettings"] },
+    { "name": "PracticeProvider", "hook": "usePractice", "file": "store/practice.tsx", "persistence": "SQLite merit_events", "fields": ["hydrated", "summary", "events", "recognise", "refresh"] },
+    { "name": "QuestsProvider", "hook": "useQuests", "file": "store/quests.tsx", "persistence": "SQLite quest tables", "fields": ["hydrated", "quests", "inProgressQuests", "availableQuests", "completedQuests", "getQuestById", "startQuest", "completeTask", "uncompleteTask", "creditConditionReport", "resetQuests", "refresh"] },
+    { "name": "ArrivalProvider", "hook": "useArrival", "file": "store/arrival.tsx", "persistence": "AsyncStorage", "fields": ["hydrated", "status", "problem", "precincts", "lastArrival", "enable", "disable", "simulateArrival", "clearLastArrival"] }
+  ],
+
+  "providerNestingOrder": [
+    "GestureHandlerRootView", "SafeAreaProvider", "AppStateProvider", "PreferencesProvider",
+    "PermissionsProvider", "PracticeProvider", "QuestsProvider", "ArrivalProvider", "RootNavigator"
+  ],
+
+  "hooks": [
+    "useAlignment", "useCurrentPosition", "useDemoWalk", "useHaptics", "useHeading",
+    "useKeyboardInset", "useNarration", "useNearbySites", "useSceneBottomGap",
+    "useSiteArrival", "useStoryProgress", "useSync"
+  ],
+
+  "services": [
+    "permissions", "storage", "application", "custodian", "database", "device", "location", "sensors", "camera",
+    "supabase", "sync", "dhamma", "guide", "geofencing", "notifications", "audio",
+    "voice", "offlineModel", "arrival", "integrity", "questReview", "leaderboard", "ai", "net"
+  ],
+
+  "coreModules": [
+    { "module": "adapters", "tested": false },
+    { "module": "alignment", "tested": true },
+    { "module": "chaityavali", "tested": true },
+    { "module": "copy", "tested": false },
+    { "module": "dana", "tested": true, "uiSurface": "not traced" },
+    { "module": "dhamma", "tested": true, "testFiles": 3 },
+    { "module": "guide", "tested": true },
+    { "module": "map", "tested": true },
+    { "module": "merit", "tested": true },
+    { "module": "net", "tested": true, "consumer": "not traced" },
+    { "module": "progression", "tested": true, "uiSurface": "not traced" },
+    { "module": "quests", "tested": true },
+    { "module": "session", "tested": true },
+    { "module": "story", "tested": true },
+    { "module": "vision", "tested": true, "testFiles": 4 },
+    { "module": "wisdom", "tested": false }
+  ],
+
+  "backend": {
+    "provider": "Supabase",
+    "client": "services/supabase/index.ts (lazy construction — load-bearing)",
+    "auth": "Anonymous sessions only. No login screen.",
+    "authFile": "services/supabase/auth.ts",
+    "remoteMigrations": 8,
+    "remoteTables": ["observations", "condition_reports", "quest_submissions", "profiles"],
+    "remoteViews": ["leaderboard"],
+    "storageBuckets": [
+      { "id": "observations", "public": false },
+      { "id": "quest-evidence", "public": false }
+    ],
+    "rlsEnabled": true,
+    "syncStrategy": "offline-first; upload photo BEFORE row upsert; idempotent upsert",
+    "syncTrigger": "AppState -> active, in app/_layout.tsx; also manual via SyncScreen",
+    "localDatabase": "expo-sqlite, sakshi.db",
+    "localMigrations": 8,
+    "localMigrationMechanism": "PRAGMA user_version, append-only array in services/database/index.ts",
+    "localTables": ["observations", "condition_reports", "merit_events", "site_visits", "quests", "quest_progress", "quest_completions", "quest_submissions"],
+    "leaderboardPoints": { "observation": 50, "conditionReport": 25, "questSubmission": 30, "dailyCap": 200 },
+    "criticalHazard": "Migration 0007 drops anon write policies; must not be applied before anonymous sign-in is enabled. Applied state UNVERIFIED."
+  },
+
+  "features": [
+    { "name": "Onboarding", "status": "Fully implemented", "entry": "/onboarding" },
+    { "name": "Fixed-viewpoint capture", "status": "Fully implemented", "entry": "/(main)/sakshi/capture" },
+    { "name": "Alignment gate", "status": "Fully implemented", "entry": "within capture" },
+    { "name": "Condition reporting", "status": "Fully implemented", "entry": "/(main)/sakshi/observation" },
+    { "name": "On-device damage detection", "status": "Fully implemented", "entry": "within capture" },
+    { "name": "Map exploration", "status": "Fully implemented (needs dev build)", "entry": "/(main)/tirtha/map" },
+    { "name": "Site detail and narration", "status": "Fully implemented", "entry": "/(main)/tirtha/site/[siteId]" },
+    { "name": "Then/Now comparison", "status": "Fully implemented", "entry": "/(main)/tirtha/then-now/[siteId]" },
+    { "name": "Dhamma Q&A", "status": "Fully implemented; LLM optional", "entry": "/(main)/dhamma" },
+    { "name": "Reflection", "status": "Fully implemented", "entry": "/(main)/dhamma/reflect" },
+    { "name": "Quests", "status": "Fully implemented", "entry": "/(main)/tirtha/quests" },
+    { "name": "AI quest photo review", "status": "Partially implemented (advisory by design)", "entry": "within quest task" },
+    { "name": "Merit ledger", "status": "Fully implemented", "entry": "cross-cutting" },
+    { "name": "Leaderboard", "status": "Fully implemented (live Supabase)", "entry": "/(main)/sakshi/guardians" },
+    { "name": "Chaityavali register", "status": "Fully implemented", "entry": "/(main)/sakshi/register" },
+    { "name": "Arrival notifications", "status": "Fully implemented", "entry": "background + settings" },
+    { "name": "Offline sync", "status": "Fully implemented", "entry": "automatic + /settings/sync" },
+    { "name": "Settings and colour themes", "status": "Fully implemented", "entry": "/(main)/settings" },
+    { "name": "Offline on-device LLM", "status": "Needs verification", "entry": "/settings/offline-ai" },
+    { "name": "Demo walk", "status": "Fully implemented (demo tool)", "entry": "within map" },
+    { "name": "features/practice directory", "status": "Unused / dead code", "entry": null }
+  ],
+
+  "featureStatusCounts": {
+    "fullyImplemented": 18,
+    "partiallyImplemented": 1,
+    "needsVerification": 1,
+    "unusedDeadCode": 1,
+    "total": 21
+  },
+
+  "dataModels": {
+    "typeFiles": ["heritage", "permissions", "source", "condition", "practice", "dhamma", "quests", "preferences", "precinct"],
+    "ambientDeclarations": "types/declarations.d.ts (not in barrel)",
+    "keyTypes": ["Coordinate", "HeritageSite", "Vantage", "Observation", "ObservationAssessment", "UserPreferences", "PermissionKind", "PermissionState", "MeritKind", "PracticeSummary", "Quest", "QuestProgress", "QuestWithProgress", "Precinct"],
+    "criticalInvariants": [
+      "positionErrorM and bearingErrorDeg are `number | null` — null means not measured, NEVER zero",
+      "gateMode 'aligned' vs 'manual' — a manual capture never claims tolerance comparability",
+      "ObservationAssessment 'no-change' is a positive finding, not an absence"
+    ]
+  },
+
+  "content": {
+    "sites": 12,
+    "vantages": 6,
+    "quests": 10,
+    "needs": 3,
+    "timelineEntries": 5,
+    "plates": 10,
+    "narrationFiles": 12,
+    "liveSource": "data/generated/* (built from seed/ by tools/gen-data.mjs)",
+    "accessBarrel": "data/index.ts — all 30 consumers import from '@/data', none from subfolders",
+    "deadFile": "data/demo/sites.ts — NOT barrel-exported, DIFFERENT site ids, silent-failure trap"
+  },
+
+  "assets": {
+    "total": 44,
+    "totalBytes": 20002847,
+    "referenced": 41,
+    "toolingOrDocsOnly": 3,
+    "unreferenced": 0,
+    "bundlePattern": "assets/**/*",
+    "categories": {
+      "appIcons": 6, "narrationAudio": 12, "historicalPlates": 11,
+      "monkFrames": 11, "mlModel": 1, "other": 3
+    },
+    "note": "Fonts are npm packages (@expo-google-fonts/*), not bundled files"
+  },
+
+  "dependencies": {
+    "directProduction": 44,
+    "directDevelopment": 7,
+    "resolvedTransitiveUnique": 815,
+    "lockEntriesTotal": 980,
+    "installationVerified": true,
+    "vulnerabilities": { "total": 22, "moderate": 13, "high": 9, "assessed": false },
+    "declaredButNoDirectImport": 12,
+    "patches": ["onnxruntime-react-native+1.24.3.patch"],
+    "customPlugins": ["plugins/withOnnxAutolink.js"],
+    "nativeModules": ["onnxruntime-react-native", "llama.rn", "@maplibre/maplibre-react-native", "react-native-webview"]
+  },
+
+  "environmentVariables": [
+    { "name": "EXPO_PUBLIC_SUPABASE_URL", "required": "for sync", "public": true },
+    { "name": "EXPO_PUBLIC_SUPABASE_KEY", "required": "for sync", "public": true, "note": "publishable anon key" },
+    { "name": "EXPO_PUBLIC_API_URL", "required": false, "public": true, "note": "no confirmed importer" },
+    { "name": "PORT", "required": false, "public": false, "note": "mock-api only" },
+    { "name": "EXPO_PUBLIC_LLM_API_KEY", "required": false, "public": true },
+    { "name": "EXPO_PUBLIC_LLM_ENDPOINT", "required": false, "public": true },
+    { "name": "EXPO_PUBLIC_VISION_MODEL", "required": false, "public": true },
+    { "name": "EXPO_PUBLIC_DHAMMA_MODEL", "required": false, "public": true },
+    { "name": "MAPILLARY_TOKEN", "required": false, "public": false, "note": "harvest pipeline only" },
+    { "name": "FLICKR_API_KEY", "required": false, "public": false, "note": "harvest pipeline only" }
+  ],
+
+  "permissions": {
+    "declaredAndroid": ["android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION", "android.permission.CAMERA"],
+    "runtimeKinds": ["location", "camera", "motion"],
+    "service": "services/permissions/index.ts",
+    "store": "store/permissions.tsx",
+    "policy": "Nothing requested at launch; asked at point of use",
+    "permanentlyDeniedPath": "Linking.openSettings() via openSettings()",
+    "notDeclared": ["ACCESS_BACKGROUND_LOCATION"],
+    "unverified": ["notification permission request timing", "whether arrivals need background location"]
+  },
+
+  "storageKeys": {
+    "prefix": "sakshi.v1",
+    "definedIn": "constants/storage.ts",
+    "databaseName": "sakshi.db",
+    "keys": [
+      "onboarding.complete", "onboarding.stage", "permissions.primerSeen",
+      "preferences.alignmentTolerance", "preferences.hapticsEnabled", "preferences.autoCapture", "preferences.colorTheme",
+      "preferences.scriptPreference", "preferences.distanceUnit", "preferences.offlineSyncMode",
+      "preferences.photoQuality", "preferences.wisdomTier", "preferences.autoWisdom",
+      "preferences.autoNarration", "tirtha.storiesRead", "arrivals.lastNotified"
+    ],
+    "unprefixedKey": { "key": "sakshi.device.id", "reason": "Deliberate — bumping a version prefix would silently re-identify every install" }
+  },
+
+  "testing": {
+    "runner": "node --experimental-strip-types --test via tools/run-tests.mjs",
+    "testFiles": 18,
+    "testCount": 126,
+    "passing": 126,
+    "failing": 0,
+    "scope": "core/ only",
+    "reactLayerTests": 0,
+    "e2eTests": 0,
+    "secondaryHarness": "tools/test/ (Vitest) — no root script invokes it; status unverified",
+    "contentGates": ["validate-seed", "lint-vocab", "dhamma-eval"],
+    "dhammaEval": { "total": 50, "passing": 50, "ungroundedCitations": 0 },
+    "coverageGaps": ["screens", "components", "hooks", "stores", "services", "navigation"]
+  },
+
+  "commandsVerified": {
+    "passing": [
+      "npm install",
+      "npm test (126/126)",
+      "npm run typecheck",
+      "npm run validate (5 warnings)",
+      "npm run vocab",
+      "npm run eval:dhamma (50/50)",
+      "npm run verify",
+      "npx expo start --web"
+    ],
+    "failing": [
+      "npm run lint (16 errors, all in components/monk/SpeechCloud.tsx)"
+    ],
+    "notTested": [
+      "eas build (any profile)",
+      "npx expo run:android",
+      "npx expo run:ios",
+      "npm run gen",
+      "npm run corpus:fetch",
+      "npm run api"
+    ]
+  },
+
+  "knownIssues": {
+    "critical": 1,
+    "high": 5,
+    "medium": 11,
+    "low": 10,
+    "total": 27,
+    "topItems": [
+      { "id": "C1", "severity": "critical", "summary": "Migration 0007 can lock out all writes if anonymous sign-in is disabled", "unverified": true },
+      { "id": "H1", "severity": "high", "summary": "data/demo/sites.ts is dead code with different site ids; fails silently" },
+      { "id": "H2", "severity": "high", "summary": "lint is excluded from npm run verify" },
+      { "id": "H3", "severity": "high", "summary": "16 lint errors in components/monk/SpeechCloud.tsx" },
+      { "id": "H4", "severity": "high", "summary": "expo-file-system/legacy used on the capture path" },
+      { "id": "H5", "severity": "high", "summary": "No tests for the entire React layer" }
+    ],
+    "todoMarkersInSource": 0
+  },
+
+  "qualityInvariants": [
+    "A measurement is never faked — unmeasured is null, never zero",
+    "By eye is never dressed up as measured — gateMode aligned vs manual",
+    "The AI suggests, it never decides — candidates and advisory verdicts only",
+    "Nothing is ever deleted — correct by adding a record",
+    "The phone is the source of truth — local write first, cloud is a copy"
+  ],
+
+  "architecturalConstraints": [
+    "Exactly three surfaces; Settings is a hidden stack, not a fourth tab",
+    "core/ and shared/ must stay framework-free (no React imports)",
+    "services/ is the only layer touching device APIs or the network",
+    "Never edit an applied migration (local or remote) — append",
+    "Sync: upload photo before row insert; use upsert, never insert",
+    "Supabase client must stay lazily constructed",
+    "EXPO_PUBLIC_ prefix required for any client-read env var",
+    "Storage keys live in constants/storage.ts"
+  ],
+
+  "documentationFiles": [
+    "README.md", "PROJECT_OVERVIEW.md", "ARCHITECTURE.md", "REPOSITORY_MAP.md",
+    "FEATURES.md", "SCREENS_AND_NAVIGATION.md", "COMPONENTS.md", "STATE_AND_DATA_FLOW.md",
+    "BACKEND_AND_API.md", "DATA_MODELS.md", "DEPENDENCIES.md", "ASSETS.md",
+    "CONFIGURATION_AND_ENVIRONMENT.md", "NATIVE_AND_PERMISSIONS.md",
+    "BUILD_RUN_AND_DEPLOYMENT.md", "TESTING_AND_QUALITY.md",
+    "KNOWN_ISSUES_AND_TECHNICAL_DEBT.md", "CHANGE_IMPACT_PLAYBOOK.md",
+    "CODEX_WORKING_GUIDE.md", "TRACEABILITY_MATRIX.md", "GLOSSARY.md",
+    "DOCUMENTATION_MAINTENANCE.md", "CURRENT_IMPLEMENTATION_PLAN.md",
+    "PROJECT_INVENTORY.json", "DEPENDENCY_INVENTORY.json", "ASSET_INVENTORY.json"
+  ],
+
+  "rootEntryDocuments": ["CODEX_START_HERE.md", "AGENTS.md"],
+
+  "staleDocumentation": [
+    { "file": "PROJECT.md", "issues": ["references hooks/useUserPreferences.ts which does not exist", "screen names SettingsHomeScreen/PermissionsSettingsScreen/StorageExportScreen/OfflineRetentionScreen/AboutLegalScreen no longer match"] },
+    { "note": "~700KB of root markdown (SAKSHI-COMPLETE.md, handbook.md, documentation.md, explanation.md, SAKSHI-PROJECT-STATUS.md, HANDOFF-PHASE-8-9.md) was NOT verified in this audit" }
+  ],
+
+  "ciCd": { "present": false, "detail": "No .github/workflows, .gitlab-ci.yml, or equivalent found" },
+
+  "needsVerification": [
+    "Whether migration 0007 is applied and anonymous sign-in is enabled in the live Supabase project",
+    "Exact column definitions of the 8 local SQLite tables",
+    "Relationship between services/sync/index.ts and services/supabase/sync.ts",
+    "Circuit breaker (core/net/breaker.ts) call sites — possibly dead code",
+    "Whether EXPO_PUBLIC_API_URL is consumed by any app code path",
+    "llama.rn model acquisition path (no GGUF bundled)",
+    "Whether arrival geofencing requires ACCESS_BACKGROUND_LOCATION",
+    "Whether /(main)/tirtha (TirthaScreen) is reachable in normal use",
+    "Whether the Vitest harness in tools/test/ currently runs",
+    "Per-screen loading/empty/error state coverage",
+    "Accessibility coverage across all 67 components",
+    "UI surfaces for core/dana and core/progression",
+    "Full EvidenceTier enum members",
+    "Differences between Quest and SeedQuest types",
+    "Whether shared/types.ts duplicates types/*"
+  ]
+}

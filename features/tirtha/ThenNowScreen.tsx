@@ -95,7 +95,7 @@ export function ThenNowScreen({ siteId }: { siteId: string }) {
         </View>
       ) : null}
 
-      <Text variant="body" style={styles.caption}>
+      <Text variant="body" style={styles.caption} translate={false}>
         {selected.caption}
       </Text>
 
@@ -159,7 +159,7 @@ function Header({ name }: { name: string }) {
       <Text variant="label" tone="muted" uppercase>
         Then / Now
       </Text>
-      <Text variant="title">{name}</Text>
+      <Text variant="title" translate={false}>{name}</Text>
     </View>
   );
 }

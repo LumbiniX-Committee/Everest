@@ -1,5 +1,97 @@
-import { findSite, findVantage } from '../generated/sites';
+import { findSite, findVantage, sitesForParent } from '../generated/sites';
+import { precinctForSite } from './precincts';
 import type { Quest } from '@/types';
+
+const NO_CAMERA_MODES = new Set(['note', 'privacy', 'museum', 'seasonal']);
+const PHOTO_MODE = {
+  'solo-or-group': 'creative',
+  group: 'group', solo: 'solo', architecture: 'architecture', detail: 'detail',
+  alignment: 'architecture', sequence: 'sequence', creative: 'creative', wide: 'context',
+  comparison: 'context', context: 'context', condition: 'detail', community: 'context',
+  story: 'detail', composition: 'architecture',
+} as const;
+
+const kathmanduMonumentQuests: Quest[] = sitesForParent('kathmandu-durbar-square').map((site, index) => {
+  const mode = site.questMode ?? 'detail';
+  const isCount = mode === 'count';
+  const evidence = NO_CAMERA_MODES.has(mode) ? 'note' as const : isCount ? 'count' as const : 'photo' as const;
+  const safetyNote = site.photography === 'restricted'
+    ? 'Photography may be restricted here. Follow current signs and staff instructions; the written-note alternative is always valid.'
+    : mode === 'group' || mode === 'solo' || mode === 'solo-or-group' || mode === 'creative'
+      ? 'Only include people who clearly consent. Keep worship, entrances and walking routes unobstructed.'
+      : 'Stay behind barriers, never climb or touch historic fabric, and avoid identifiable worshippers.';
+  return {
+    id: `quest-${site.id}`,
+    title: `${site.name}: ${mode.replaceAll('-', ' ')} challenge`,
+    subtitle: site.questPrompt ?? `Look closely at ${site.name} and bring back one careful observation.`,
+    description: `A place-specific activity at ${site.name}. It can be completed without entering a restricted area, photographing a non-consenting person or touching the monument.`,
+    category: mode === 'condition' ? 'survey' : mode === 'count' || mode === 'story' ? 'epigraphy' : 'survey',
+    difficulty: index % 5 === 0 ? 'moderate' : 'easy',
+    intention: `A memorable image or observation should reveal what makes ${site.name} distinct—not merely prove that you stood there.`,
+    estimatedMinutes: evidence === 'photo' ? 8 : 6,
+    icon: evidence === 'photo' ? 'camera-outline' : isCount ? 'calculator-outline' : 'eye-outline',
+    tasks: [
+      {
+        id: `task-${site.id}-arrive`,
+        title: `Find ${site.name}`,
+        description: 'Reach the public exterior and check current access and photography signs.',
+        type: 'site_visit',
+        evidence: 'none',
+        autoComplete: 'arrival',
+        targetId: site.id,
+      },
+      {
+        id: `task-${site.id}-create`,
+        title: site.questPrompt ?? `Record ${site.name}`,
+        description: site.questPrompt ?? `Record one detail unique to ${site.name}.`,
+        expectation: site.questPrompt,
+        type: evidence === 'note' ? 'reading' : 'observation',
+        evidence,
+        autoComplete: evidence === 'photo' ? 'vantage_capture' : undefined,
+        photoMode: evidence === 'photo' ? PHOTO_MODE[mode as keyof typeof PHOTO_MODE] ?? 'detail' : undefined,
+        safetyNote,
+        targetId: site.id,
+      },
+    ],
+    createdAt: 1787900000000 + index,
+  };
+});
+
+const kathmanduJourney: Quest = {
+  id: 'quest-kathmandu-durbar-journey',
+  title: 'Kathmandu Durbar Square: Living Palace Journey',
+  subtitle: 'Arrive, witness the royal square, follow its four anchor stories and leave a thoughtful record.',
+  description: 'A place-level journey through Hanuman Dhoka. Arrival and monument visits complete from location; the panorama completes when you make a Sākṣī observation.',
+  category: 'survey',
+  difficulty: 'moderate',
+  intention: 'The square becomes legible when palace, rest house, deity, living tradition and reconstruction are encountered as one connected place.',
+  estimatedMinutes: 55,
+  icon: 'map-outline',
+  tasks: [
+    { id: 'task-ktm-journey-arrive', title: 'Reach Kathmandu Durbar Square', description: 'Enter the Hanuman Dhoka monument zone. This completes automatically from your location.', type: 'site_visit', evidence: 'none', autoComplete: 'arrival', targetId: 'kathmandu-durbar-square' },
+    { id: 'task-ktm-journey-witness', title: 'Make the square’s Sākṣī panorama', description: 'Align at the guided public vantage and record the palace-square relationship.', type: 'observation', evidence: 'photo', autoComplete: 'vantage_capture', photoMode: 'architecture', safetyNote: 'Keep entrances clear and exclude identifiable people who have not consented.', targetId: 'kathmandu-durbar-square' },
+    { id: 'task-ktm-journey-kasthamandap', title: 'Meet the city’s namesake', description: 'Reach Kasthamandap and read how collapse, salvage and community reconstruction changed its story.', type: 'site_visit', evidence: 'none', autoComplete: 'arrival', targetId: 'ktm-kasthamandap' },
+    { id: 'task-ktm-journey-palace', title: 'Cross the royal threshold', description: 'Reach Hanuman Gate and notice how guardian, palace and public square meet.', type: 'site_visit', evidence: 'none', autoComplete: 'arrival', targetId: 'ktm-hanuman-gate' },
+    { id: 'task-ktm-journey-kumari', title: 'Learn respectful looking', description: 'Reach Kumari Ghar. Study architecture while protecting the Kumari’s privacy and avoiding photographs of children.', type: 'site_visit', evidence: 'none', autoComplete: 'arrival', targetId: 'ktm-kumari-ghar' },
+    { id: 'task-ktm-journey-bhairav', title: 'Stand before Kal Bhairav', description: 'Reach the public image and compare divine scale with the everyday crowd around it.', type: 'site_visit', evidence: 'none', autoComplete: 'arrival', targetId: 'ktm-kal-bhairav' },
+    { id: 'task-ktm-journey-reflect', title: 'Connect four kinds of importance', description: 'In one note, connect royal power, living worship, public life and post-earthquake conservation.', type: 'reading', evidence: 'note', expectation: 'Write one observation about each of the four themes.', safetyNote: 'There is no single correct answer; ground the note in what you encountered.' },
+  ],
+  createdAt: 1787899999000,
+};
+
+const kathmanduLivingCultureQuest: Quest = {
+  id: 'quest-kathmandu-living-culture',
+  title: 'Kathmandu Durbar Square: Living Culture Memory',
+  subtitle: 'Notice a living tradition in the square and keep one respectful memory.',
+  description: 'This area-wide quest can be completed anywhere inside Kathmandu Durbar Square. Choose a public, consented moment that connects the heritage square with the life around it.',
+  category: 'monastic', difficulty: 'easy',
+  intention: 'A heritage place is not only its monuments; it is also the living culture that gives the square meaning today.',
+  estimatedMinutes: 12, icon: 'camera-outline',
+  tasks: [
+    { id: 'task-ktm-culture-arrive', title: 'Enter Kathmandu Durbar Square', description: 'Enter the cultural area. This completes automatically when you arrive at any landmark in the square.', type: 'site_visit', evidence: 'none', autoComplete: 'arrival', targetId: 'kathmandu-durbar-square' },
+    { id: 'task-ktm-culture-memory', title: 'Capture a living-culture memory', description: 'Photograph a public detail such as a local craft, food, courtyard life or festival preparation. Ask first before including a person or shopkeeper.', expectation: 'One respectful, public image that shows living culture around Kathmandu Durbar Square.', type: 'observation', evidence: 'photo', photoMode: 'context', safetyNote: 'Ask permission before photographing people, vendors or inside a shop. Do not photograph worshippers or restricted interiors.', targetId: 'kathmandu-durbar-square' },
+  ], createdAt: 1787899998000,
+};
 
 export const demoQuests: Quest[] = [
   {
@@ -339,6 +431,9 @@ export const demoQuests: Quest[] = [
     ],
     createdAt: 1770540000000,
   },
+  kathmanduJourney,
+  kathmanduLivingCultureQuest,
+  ...kathmanduMonumentQuests,
 ];
 
 /**
@@ -379,7 +474,25 @@ export function questsForSite<T extends Quest>(
   siteId: string,
   quests: readonly T[] | readonly Quest[] = demoQuests,
 ): (T | Quest)[] {
-  return quests.filter((quest) => siteIdsForQuest(quest).includes(siteId));
+  return quests.filter((quest) => {
+    const questSiteIds = siteIdsForQuest(quest);
+    const target = findSite(siteId);
+    if (questSiteIds.includes(siteId)) return true;
+    if (target?.parentSiteId && questSiteIds.includes(target.parentSiteId)) return true;
+    return !target?.parentSiteId && questSiteIds.some((id) => findSite(id)?.parentSiteId === siteId);
+  });
+}
+
+/** All quests for the cultural area containing this site. */
+export function questsForPrecinct<T extends Quest>(siteId: string, quests: readonly T[]): T[];
+export function questsForPrecinct(siteId: string): Quest[];
+export function questsForPrecinct<T extends Quest>(
+  siteId: string,
+  quests: readonly T[] | readonly Quest[] = demoQuests,
+): (T | Quest)[] {
+  const precinct = precinctForSite(siteId);
+  if (!precinct) return questsForSite(siteId, quests as readonly T[]);
+  return quests.filter((quest) => siteIdsForQuest(quest).some((id) => precinct.siteIds.includes(id)));
 }
 
 /** The place a quest is primarily about — the first site any of its tasks names. */

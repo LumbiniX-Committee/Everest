@@ -1,145 +1,146 @@
-/**
- * Sākṣī colour tokens.
- *
- * The palette is the whitewashed temple under Terai daylight — the lime render
- * of the Maya Devi shrine, Chunar sandstone, weathered Mauryan brick, and the
- * still water of the Puskarini.
- *
- * Never hardcode a hex value in a component. Import from `@/theme`.
- *
- * ── A note on the direction of this palette ────────────────────────────────
- *
- * 07-DESIGN-SYSTEM §1 argues for a dark interface, and the argument is
- * functional rather than decorative: the witness screen is a live viewfinder in
- * bright Terai sunlight, and a light UI washes out the overlay a person is
- * trying to judge alignment against.
- *
- * That reasoning is sound, and it is about *one surface*. It does not extend to
- * Tīrtha's lists, Settings, Chaityāvalī or Dhamma, which are read in the same
- * daylight as any other document. This palette is light because the app is
- * mostly a document; if the viewfinder proves to wash out on site, the fix is
- * to darken the capture surface specifically rather than the whole app.
- *
- * Two naming layers are exported: spec names (`ground`, `sand`, `lock`) and the
- * legacy role names every component actually uses. Values move together.
- */
-
-// ── Ground: the whitewashed shrine ──────────────────────────────────────────
-const ground = '#F5F3EE'; // lime render, barely warm — the page
-const ground2 = '#FFFFFF'; // raised surfaces, cards, sheets
-const ground3 = '#E8E5DD'; // recessed, pressed, inactive
-const line = '#D6D1C6'; // hairlines, dividers, field outlines
-
-// ── Sandstone: the pillar's own colour ──────────────────────────────────────
-const sand = '#B79B72'; // fills and large areas, 2.38:1
-const sand_dim = '#8E7657'; // accent text and pressed states, 3.88:1
-const sand_faint = '#6E7069'; // tertiary text — 4.53:1, clears AA for body
-
-// ── Structure ───────────────────────────────────────────────────────────────
-const brick = '#8A5A45'; // weathered Mauryan brick
-const ink = '#252A27'; // primary text, 13.16:1
-const ink_soft = '#5A5C56'; // secondary text, 6.11:1
+import type { ColorTheme } from '@/types';
 
 /**
- * Signal colours, darkened for a light ground.
+ * Saksi colour tokens.
  *
- * The spec's values were tuned against near-black. Carried across unchanged,
- * `seek` measured 2.03:1 here — an amber that cannot be seen is not a signal.
- * Each of these now clears 3:1 against the ground, so a state reads as a state.
+ * Both palettes expose the same semantic roles. Components name the role they
+ * need, while the boot entry selects navy or white before route modules create
+ * their static StyleSheets. That ordering keeps the switch consistent across
+ * native and web without duplicating component styles.
  */
-const lock = '#3E7CC4'; // alignment achieved. Lapis. Appears nowhere else. 3.88:1
-const seek = '#A9761D'; // alignment in progress, amber. 3.58:1
-const change = '#A8443A'; // detected change / open condition. 5.33:1
-const resolvedGreen = '#477052'; // acknowledged / resolved. 5.11:1
+export const navyColors = {
+  backgroundDeep: '#051521',
+  surfaceRaised: '#102B3D',
+  surfaceSelected: 'rgba(77, 198, 194, 0.10)',
+  primary: '#4DC6C2',
+  primaryPressed: '#38AAA8',
+  primarySoft: 'rgba(77, 198, 194, 0.16)',
+  borderStrong: 'rgba(77, 198, 194, 0.55)',
+  warning: '#F0B23B',
+  error: '#E16F6F',
+  overlay: 'rgba(3, 14, 23, 0.66)',
+  shadow: '#020B12',
+  heritageGold: '#C6A66A',
 
-/**
- * Map terrain.
- *
- * A vocabulary of its own, so the map never borrows a semantic token. Water in
- * particular must never be `lock`: that lapis means "you are standing in the
- * right place" and spending it on a pond destroys the one signal the witness
- * view depends on.
- *
- * Terrain sits deliberately low against the ground — present, but never
- * competing with the monuments, which are the content.
- */
-const map_base = '#F2EFE7'; // the map's own ground, a shade warmer than the page
-const map_water = '#8FBBD9'; // still water — a blue that reads as water
-const map_vegetation = '#A9C99A'; // the sal grove
-const map_park = '#BBD6A8'; // maintained park and garden
-const map_landuse = '#E7DFCC'; // compound and precinct ground
-const map_road = '#FFFFFF'; // carriageway fill
-const map_road_casing = '#D8CBB2'; // the outline that makes a road read as a road
-const map_path = '#C08A4E'; // packed earth walking path
-const map_building = '#DDCFB6'; // ordinary built context
-const map_building_roof = '#CBB99A'; // roof, a step darker so volumes read
-const map_label = '#4A4438'; // place and road labels
-const map_label_halo = '#F7F4EC'; // halo, so labels survive over any fill
+  ground: '#071A2A',
+  ground2: '#0C2234',
+  ground3: '#102B3D',
+  sand: '#4DC6C2',
+  sand_dim: '#38AAA8',
+  sand_faint: '#7890A2',
+  brick: '#9A6D4E',
+  lock: '#4DC6C2',
+  seek: '#F0B23B',
+  change: '#E16F6F',
+  white: '#F4F7FA',
 
-export const colors = {
-  // Spec names — prefer these in new code.
-  ground,
-  ground2,
-  ground3,
-  sand,
-  sand_dim,
-  sand_faint,
-  brick,
-  lock,
-  seek,
-  change,
-  white: ground2,
+  mapBase: '#071B2B',
+  mapWater: '#0A4050',
+  mapVegetation: '#103A3B',
+  mapPark: '#164541',
+  mapLanduse: '#102B38',
+  mapRoad: '#3A5267',
+  mapRoadCasing: '#1D3549',
+  mapPath: '#3F7775',
+  mapBuilding: '#193447',
+  mapBuildingRoof: '#27465A',
+  mapLabel: '#DCE6ED',
+  mapLabelHalo: '#071A2A',
 
-  /** Map terrain. Not interchangeable with the semantic tokens above. */
-  mapBase: map_base,
-  mapWater: map_water,
-  mapVegetation: map_vegetation,
-  mapPark: map_park,
-  mapLanduse: map_landuse,
-  mapRoad: map_road,
-  mapRoadCasing: map_road_casing,
-  mapPath: map_path,
-  mapBuilding: map_building,
-  mapBuildingRoof: map_building_roof,
-  mapLabel: map_label,
-  mapLabelHalo: map_label_halo,
-
-  // ── Legacy role names ─────────────────────────────────────────────────────
-  /** Page ground. */
-  background: ground,
-  /** Raised cards, sheets, list rows. */
-  surface: ground2,
-  /** Recessed surfaces, inactive fields, muted blocks. */
-  surfaceSecondary: ground3,
-  /** Hairlines, dividers, field outlines. */
-  border: line,
-
-  /** Primary accent — sandstone. Buttons, active navigation, emphasis. */
-  sandstone: sand,
-  /** Pressed / hovered sandstone, and sandstone text on pale ground. */
-  sandstoneDeep: sand_dim,
-  /** Excavated brick. Sparingly, for the deepest accent. */
-  earth: brick,
-
-  textPrimary: ink,
-  textSecondary: ink_soft,
-  textMuted: sand_faint,
-
-  /** Alignment in progress — the reticle is searching for the vantage. */
-  alignmentSeeking: seek,
-  /**
-   * Alignment achieved — the device matches the fixed viewpoint.
-   *
-   * RESERVED. This lapis means "locked" and nothing else. Never a generic
-   * primary, link, brand, or the manual "match by eye" escape hatch. Spending
-   * it anywhere else destroys its meaning.
-   */
-  alignmentLocked: lock,
-
-  /** A condition observation that is open / unresolved. Not an error colour. */
-  openCondition: change,
-  /** A condition observation that has been resolved. */
-  resolved: resolvedGreen,
+  background: '#071A2A',
+  surface: '#0C2234',
+  surfaceSecondary: '#102B3D',
+  border: 'rgba(126, 169, 190, 0.28)',
+  sandstone: '#4DC6C2',
+  sandstoneDeep: '#38AAA8',
+  earth: '#9A6D4E',
+  textPrimary: '#F4F7FA',
+  textSecondary: '#A7B8C5',
+  textMuted: '#7890A2',
+  alignmentSeeking: '#4DC6C2',
+  alignmentLocked: '#4DC6C2',
+  openCondition: '#E16F6F',
+  resolved: '#64A67B',
 } as const;
 
-export type ColorToken = keyof typeof colors;
+export type ColorPalette = { [K in keyof typeof navyColors]: string };
+
+/** Main's daylight palette, extended with the roles used by the navy UI. */
+export const whiteColors = {
+  backgroundDeep: '#252A27',
+  surfaceRaised: '#FFFFFF',
+  surfaceSelected: 'rgba(183, 155, 114, 0.14)',
+  primary: '#B79B72',
+  primaryPressed: '#8E7657',
+  primarySoft: 'rgba(183, 155, 114, 0.18)',
+  borderStrong: '#B79B72',
+  warning: '#A9761D',
+  error: '#A8443A',
+  overlay: 'rgba(37, 42, 39, 0.58)',
+  shadow: '#252A27',
+  heritageGold: '#A9761D',
+
+  ground: '#F5F3EE',
+  ground2: '#FFFFFF',
+  ground3: '#E8E5DD',
+  sand: '#B79B72',
+  sand_dim: '#8E7657',
+  sand_faint: '#6E7069',
+  brick: '#8A5A45',
+  lock: '#3E7CC4',
+  seek: '#A9761D',
+  change: '#A8443A',
+  white: '#FFFFFF',
+
+  mapBase: '#F2EFE7',
+  mapWater: '#8FBBD9',
+  mapVegetation: '#A9C99A',
+  mapPark: '#BBD6A8',
+  mapLanduse: '#E7DFCC',
+  mapRoad: '#FFFFFF',
+  mapRoadCasing: '#D8CBB2',
+  mapPath: '#C08A4E',
+  mapBuilding: '#DDCFB6',
+  mapBuildingRoof: '#CBB99A',
+  mapLabel: '#4A4438',
+  mapLabelHalo: '#F7F4EC',
+
+  background: '#F5F3EE',
+  surface: '#FFFFFF',
+  surfaceSecondary: '#E8E5DD',
+  border: '#D6D1C6',
+  sandstone: '#B79B72',
+  sandstoneDeep: '#8E7657',
+  earth: '#8A5A45',
+  textPrimary: '#252A27',
+  textSecondary: '#5A5C56',
+  textMuted: '#6E7069',
+  alignmentSeeking: '#A9761D',
+  alignmentLocked: '#3E7CC4',
+  openCondition: '#A8443A',
+  resolved: '#477052',
+} satisfies ColorPalette;
+
+const palettes: Record<ColorTheme, ColorPalette> = {
+  navy: navyColors,
+  white: whiteColors,
+};
+
+let initialColorTheme: ColorTheme = 'navy';
+
+/**
+ * A stable object is intentional: the theme barrel and any early importer keep
+ * the same reference while boot replaces its values before screens load.
+ */
+export const colors: ColorPalette = { ...navyColors };
+
+export function setInitialColorTheme(theme: ColorTheme): void {
+  initialColorTheme = theme;
+  Object.assign(colors, palettes[theme]);
+}
+
+export function getInitialColorTheme(): ColorTheme {
+  return initialColorTheme;
+}
+
+export type ColorToken = keyof ColorPalette;

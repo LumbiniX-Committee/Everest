@@ -873,7 +873,7 @@ export async function seedDefaultQuests(quests: Quest[]): Promise<void> {
   await db.withTransactionAsync(async () => {
     for (const quest of quests) {
       await db.runAsync(
-        `INSERT OR REPLACE INTO quests
+        `INSERT OR IGNORE INTO quests
            (id, title, subtitle, description, intention, category, difficulty, estimated_minutes, icon, tasks, created_at)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         quest.id,
@@ -887,6 +887,37 @@ export async function seedDefaultQuests(quests: Quest[]): Promise<void> {
         quest.icon,
         JSON.stringify(quest.tasks),
         quest.createdAt
+      );
+
+      // UPDATE after INSERT OR IGNORE is intentionally more conservative than
+      // `ON CONFLICT DO UPDATE`. Some Expo Go/device SQLite builds reject the
+      // newer upsert grammar even though desktop SQLite accepts it. This pair
+      // works on every supported SQLite version and, unlike OR REPLACE, never
+      // deletes the quest row, so its quest_progress foreign-key row survives.
+      await db.runAsync(
+        `UPDATE quests SET
+           title = ?,
+           subtitle = ?,
+           description = ?,
+           intention = ?,
+           category = ?,
+           difficulty = ?,
+           estimated_minutes = ?,
+           icon = ?,
+           tasks = ?,
+           created_at = ?
+         WHERE id = ?`,
+        quest.title,
+        quest.subtitle,
+        quest.description,
+        quest.intention,
+        quest.category,
+        quest.difficulty,
+        quest.estimatedMinutes,
+        quest.icon,
+        JSON.stringify(quest.tasks),
+        quest.createdAt,
+        quest.id,
       );
 
       await db.runAsync(
@@ -1022,6 +1053,15 @@ export async function listQuestSubmissions(questId: string): Promise<QuestSubmis
   const rows = await db.getAllAsync<QuestSubmissionRow>(
     'SELECT * FROM quest_submissions WHERE quest_id = ?',
     questId,
+  );
+  return rows.map(toQuestSubmission);
+}
+
+/** Every photographed quest submission, newest first, for the Memories album. */
+export async function listAllQuestSubmissions(): Promise<QuestSubmission[]> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<QuestSubmissionRow>(
+    'SELECT * FROM quest_submissions WHERE photo_uri IS NOT NULL ORDER BY submitted_at DESC',
   );
   return rows.map(toQuestSubmission);
 }

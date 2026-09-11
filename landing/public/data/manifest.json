@@ -1,0 +1,38 @@
+{
+  "name": "Sākṣī heritage site register",
+  "description": "Heritage sites and established photographic vantages for Lumbini and three Kathmandu Valley monument-zone sites, as shipped in the Sākṣī application.",
+  "version": "0fa0528ae37e",
+  "source": "https://github.com/LumbiniX-Committee/Everest — seed/sites.json, seed/vantages.json",
+  "crs": "EPSG:4326 (WGS 84), longitude before latitude",
+  "counts": {
+    "sites": 15,
+    "sites_with_checked_coordinates": 13,
+    "established_vantages": 12
+  },
+  "licence": "CC-BY-4.0",
+  "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+  "attribution": "Heritage site register from Sākṣī (LumbiniX-Committee), CC BY 4.0, https://github.com/LumbiniX-Committee/Everest",
+  "licence_note": "The compilation is CC BY 4.0. Coordinates recorded with coords_source \"osm\" derive from OpenStreetMap, are © OpenStreetMap contributors under the Open Database Licence, and carry ODbL attribution and share-alike terms that this grant cannot relicense. Source code is Apache-2.0. Third-party media is itemised in LICENCES.md.",
+  "caveats": [
+    "A site with surveyed=false has a coordinate read from a document and never checked against a gazetteer. It is indicative, not survey-grade.",
+    "Vantage tolerances describe when the application accepts an alignment as measured; they are not an accuracy claim about the coordinate itself.",
+    "Absent values are null. No field is defaulted to zero, because a zero here would read as a measurement."
+  ],
+  "files": [
+    {
+      "path": "sites.geojson",
+      "format": "GeoJSON",
+      "records": 15
+    },
+    {
+      "path": "sites.csv",
+      "format": "CSV (RFC 4180, UTF-8)",
+      "records": 15
+    },
+    {
+      "path": "vantages.geojson",
+      "format": "GeoJSON",
+      "records": 12
+    }
+  ]
+}

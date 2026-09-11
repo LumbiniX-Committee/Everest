@@ -2,7 +2,7 @@
  * User preferences.
  *
  * §52 names "a large settings system" as a non-goal, and this is written to
- * stay under that line: seven values, each one changing behaviour a person can
+ * stay under that line: each value changes behaviour a person can
  * observe. Nothing here is a toggle for its own sake, and nothing is stored
  * that the app does not read.
  *
@@ -34,6 +34,10 @@ export type OfflineSyncMode = 'wifi' | 'any' | 'manual';
 /** Higher quality costs storage on a device that may be offline for days. */
 export type PhotoQuality = 'standard' | 'high';
 
+/** The two complete visual systems that ship with the app. */
+export type ColorTheme = 'navy' | 'white';
+export type InterfaceLanguage = 'en' | 'ne';
+
 /**
  * How much a place is asked to say when you arrive at it.
  *
@@ -49,6 +53,8 @@ export type PhotoQuality = 'standard' | 'high';
 export type WisdomTier = 'basic' | 'medium' | 'high' | 'custom';
 
 export type UserPreferences = {
+  colorTheme: ColorTheme;
+  interfaceLanguage: InterfaceLanguage;
   alignmentTolerance: AlignmentTolerance;
   hapticsEnabled: boolean;
   /** Release the shutter automatically once alignment holds. */
@@ -65,6 +71,10 @@ export type UserPreferences = {
 };
 
 export const DEFAULT_USER_PREFERENCES: UserPreferences = {
+  // Preserve this branch's instrument-like interface unless a person chooses
+  // main's whitewashed daylight palette.
+  colorTheme: 'navy',
+  interfaceLanguage: 'en',
   alignmentTolerance: 'standard',
   hapticsEnabled: true,
   // Off by default. An automatic shutter takes the decision away from the
@@ -102,6 +112,15 @@ export const ALIGNMENT_TOLERANCE_OPTIONS: {
   { value: 'strict', label: 'Strict', hint: 'Lock only on a close match to the vantage.' },
   { value: 'standard', label: 'Standard', hint: 'The balance most surveys are taken at.' },
   { value: 'forgiving', label: 'Forgiving', hint: 'Lock sooner when the exact spot is unreachable.' },
+];
+
+export const INTERFACE_LANGUAGE_OPTIONS: {
+  value: InterfaceLanguage;
+  label: string;
+  hint: string;
+}[] = [
+  { value: 'en', label: 'English', hint: 'Visitor controls and guidance in English.' },
+  { value: 'ne', label: 'नेपाली', hint: 'आगन्तुकका नियन्त्रण र निर्देशन नेपालीमा।' },
 ];
 
 export const SCRIPT_OPTIONS: { value: ScriptPreference; label: string; hint: string }[] = [
