@@ -101,7 +101,7 @@ export default function ResearchPage() {
             <strong>attention to the rare case</strong>, because the unusual
             condition — the one actually worth reporting — is exactly where
             non-expert accuracy is weakest, and therefore the one place a
-            custodian's confirmation is mandatory rather than optional.
+            custodian&apos;s confirmation is mandatory rather than optional.
           </p>
         </Prose>
       </Section>
@@ -186,7 +186,7 @@ export default function ResearchPage() {
           <p>
             There is no direct competitor. There are four well-populated adjacent
             categories, each of which owns one link in the chain that runs from a
-            visitor's attention, through positioned evidence, to institutional
+            visitor&apos;s attention, through positioned evidence, to institutional
             action — and each of which stops before the next.
           </p>
         </Prose>

@@ -84,12 +84,16 @@ export function MapExplorer() {
      Wrapped because a private window throws on access rather than returning
      null, and a thrown read here would blank the whole explorer. */
   useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(STORE_KEY);
-      if (raw) setVisited(JSON.parse(raw));
-    } catch {
-      /* no stored history; the explorer works without one */
-    }
+    const timer = window.setTimeout(() => {
+      try {
+        const raw = window.localStorage.getItem(STORE_KEY);
+        if (raw) setVisited(JSON.parse(raw));
+      } catch {
+        /* no stored history; the explorer works without one */
+      }
+    }, 0);
+
+    return () => window.clearTimeout(timer);
   }, []);
 
   const visit = useCallback((id: string) => {
@@ -112,6 +116,7 @@ export function MapExplorer() {
     let cancelled = false;
     let instance: import('maplibre-gl').Map | null = null;
     let overlayTimer: ReturnType<typeof setTimeout> | undefined;
+    const markerRegistry = markers.current;
 
     (async () => {
       try {
@@ -178,8 +183,8 @@ export function MapExplorer() {
     return () => {
       cancelled = true;
       clearTimeout(overlayTimer);
-      markers.current.forEach((m) => m.remove());
-      markers.current.clear();
+      markerRegistry.forEach((m) => m.remove());
+      markerRegistry.clear();
       instance?.remove();
       map.current = null;
     };

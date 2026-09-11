@@ -24,7 +24,7 @@ const features = [
   {
     Icon: MapPinned,
     title: 'Every open report, by site and status',
-    body: 'Acknowledge a report, mark it in progress, or resolve it with a note — from the web dashboard or from the equivalent screen in the app under Settings. The visitor who filed it sees that it was received.',
+    body: 'Acknowledge a report, mark it in progress, resolve it with a note, or explicitly reopen it with an explanation. Every action is appended to the history in the authenticated web portal; the visitor app has no privileged custodian controls.',
   },
   {
     Icon: Download,
@@ -40,20 +40,20 @@ const onboarding = [
       <>
         A vantage is a stored position, bearing and tilt. Survey-grade
         coordinates from the responsible authority are what turn the app from a
-        photo collection into a monitoring instrument, and replacing our
-        approximate points with real ones is the single highest-value thing an
-        institution can contribute.
+        photo collection into a monitoring instrument. The catalogue now records
+        a checkable source for every coordinate; partner custodians still verify
+        each fixed point on the ground before treating it as operational.
       </>
     ),
   },
   {
-    title: 'Name a custodian',
+    title: 'Invite the responsible custodians',
     body: (
       <>
-        Someone who reads the reports. There is deliberately no login — a
-        remembered name attached to what a device acknowledges, not an account —
-        because a heritage office should not need an IT project to start
-        receiving evidence.
+        Accounts are invited manually and sign in by email magic link. Each
+        membership names the sites that person can see, and every action is
+        attributed from the authenticated session rather than a name typed into
+        the browser.
       </>
     ),
   },
@@ -103,12 +103,11 @@ export default function ForCustodiansPage() {
       <Section tone="deep" kicker="Getting started" title="What a deployment actually needs">
         <Steps steps={onboarding} />
 
-        <Callout title="Why there is no login">
-          The dashboard has no accounts and no password reset, and that is a
-          decision rather than an omission. An acknowledgement carries a
-          remembered custodian name, not an identity system. The barrier to a
-          heritage office trying this should be opening a page, and the moment it
-          becomes a procurement exercise most of them will never start.
+        <Callout title="Why access is invite-only">
+          There is no public custodian registration. A magic link keeps the pilot
+          lightweight while still giving each institution site-scoped access and
+          a durable audit trail. Database policies enforce the same boundary even
+          if a browser request is modified.
         </Callout>
       </Section>
 
