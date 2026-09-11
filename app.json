@@ -2,7 +2,7 @@
   "expo": {
     "name": "Sākṣī",
     "slug": "sakshi",
-    "owner": "siddantasodari-2",
+    "owner": "shakshi1",
     "scheme": "sakshi",
     "version": "0.1.0",
     "runtimeVersion": "0.1.0",
@@ -93,11 +93,8 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "b41eee97-484c-4afd-b664-fa65fca50e66"
+        "projectId": "bac26113-f180-47d8-b550-a1e8661fd4e8"
       }
-    },
-    "updates": {
-      "url": "https://u.expo.dev/b41eee97-484c-4afd-b664-fa65fca50e66"
     }
   }
 }
