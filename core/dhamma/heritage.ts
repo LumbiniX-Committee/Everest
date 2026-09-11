@@ -465,6 +465,22 @@ export const HERITAGE_CHUNKS: BilaraChunk[] = [
     source_id: 'slusser-1982',
   },
   {
+    chunk_id: 'ashokan-pillar:mukherji-1899-survey',
+    uid: 'mukherji-1901',
+    collection: 'archaeology',
+    segments: ['ashokan-pillar:mukherji-1899-survey'],
+    corpus: 'heritage',
+    pali: '',
+    english:
+      'P. C. Mukherji surveyed the Rummindei pillar and the adjoining Maya Devi Temple ruins in December 1899, commissioned after Alois Führer\'s earlier reporting on the Nepal Tarai antiquities was found to include fabricated material. Mukherji\'s 1901 report, "A Report on a Tour of Exploration of the Antiquities in the Tarai, Nepal", introduced by Vincent A. Smith, published measured plans and photographic plates of the site, including a cross-section of the pillar and temple ruins as they stood in 1901 — the earliest reliable documentary record of the site at rediscovery.',
+    translator: 'P. C. Mukherji (1901)',
+    title_pi: '',
+    title_en: 'Rummindei — Mukherji\'s 1899 survey and 1901 report',
+    license: 'Reference use — see caveat in the source registry',
+    source_id: 'mukherji-1901',
+    source_url: 'https://archive.org/details/bub_gb_5iYXAAAAYAAJ',
+  },
+  {
     chunk_id: 'doa-nepal:role',
     uid: 'doa-nepal',
     collection: 'record',
@@ -478,5 +494,77 @@ export const HERITAGE_CHUNKS: BilaraChunk[] = [
     title_en: 'Department of Archaeology, Nepal — role and post-2015 reconstruction',
     license: 'Reference use — see caveat in the source registry',
     source_id: 'doa-nepal',
+  },
+
+  // ── Hindu and Newar tradition — Vaishnava, Malla-era Newar architecture,
+  // Taleju and Kumari. See 15-POST-HACKATHON-STRATEGY §5: the shipped sites
+  // (Changu Narayan, Patan Durbar Square, Kathmandu Durbar Square and its 40
+  // named monuments) are predominantly Hindu and Newar, not Buddhist, and a
+  // visitor asking about Vishnu iconography, a torana, Taleju or the Kumari
+  // was refused at the domain gate before this block existed. Slusser (1982)
+  // is reused rather than a new bibliography entry per topic, since Nepal
+  // Mandala is the standard cultural-historical survey covering all three —
+  // the same discipline `dhunge-dhara:origin` above already follows for the
+  // water-spout system. Legendary material (how Taleju came to be worshipped
+  // as a young girl) is reported as tradition, not as verified history.
+  {
+    chunk_id: 'changu-narayan:vaishnava-iconography',
+    uid: 'slusser-1982',
+    collection: 'archaeology',
+    segments: ['changu-narayan:vaishnava-iconography'],
+    corpus: 'heritage',
+    pali: '',
+    english:
+      'Changu Narayan is a Vishnu (Narayan) temple, and its courtyard holds one of the Kathmandu Valley\'s densest concentrations of dated Vaishnava stone sculpture. A kneeling Garuda, Vishnu\'s mount, faces the temple\'s west door and is dated on stylistic grounds to the 5th century, among the oldest Vaishnava images in the valley. Later Licchavi-period reliefs depict Vishnu Vishvarupa (the cosmic form Krishna reveals to Arjuna in the Bhagavad Gita), Vishnu Vikrantha or Trivikrama (the dwarf Vamana who grows to span the universe in three strides, from the Bali legend), and Vaikuntha Vishnu seated on a six-armed Garuda with Lakshmi. The temple\'s two-tiered pagoda roof is carried on carved wooden struts depicting the ten avatars (dashavatara) of Vishnu.',
+    translator: 'Mary Shepherd Slusser',
+    title_pi: '',
+    title_en: 'Changu Narayan — Vaishnava stone sculpture and strut iconography',
+    license: 'Reference use — see caveat in the source registry',
+    source_id: 'slusser-1982',
+  },
+  {
+    chunk_id: 'newar-architecture:torana-struts',
+    uid: 'slusser-1982',
+    collection: 'archaeology',
+    segments: ['newar-architecture:torana-struts'],
+    corpus: 'heritage',
+    pali: '',
+    english:
+      'A Newar pagoda temple carries its roof in tiers, three or five and occasionally more, each smaller than the one below, on wooden struts (tundal) angled out from the wall beneath the eaves. The struts are carved, most often with a deity and consort, a guardian figure, or a mythical animal; some carry erotic imagery, popularly explained as a ward against the virgin goddess of lightning, though that explanation is folk etymology rather than an attested doctrinal reason. Above the main doorway sits the torana, a repoussé metal or carved-wood tympanum centred on the temple\'s presiding deity and framed with guardian figures and coiling nagas. Patan and Kathmandu Durbar Squares carry the valley\'s densest surviving concentration of Malla-period (12th-18th century) examples of both.',
+    translator: 'Mary Shepherd Slusser',
+    title_pi: '',
+    title_en: 'Newar pagoda architecture — torana and strut carving',
+    license: 'Reference use — see caveat in the source registry',
+    source_id: 'slusser-1982',
+  },
+  {
+    chunk_id: 'taleju-bhawani:malla-patronage',
+    uid: 'slusser-1982',
+    collection: 'archaeology',
+    segments: ['taleju-bhawani:malla-patronage'],
+    corpus: 'heritage',
+    pali: '',
+    english:
+      'Malla-era chronicles hold that Taleju Bhawani came to the Kathmandu Valley with Harisimha Deva of the Karnata dynasty of Mithila in the 14th century and became the Malla dynasty\'s clan and tutelary goddess, the source of the royal śakti (power) that legitimised the king\'s rule. Each Malla capital, Kathmandu, Patan and Bhaktapur, built her a Taleju temple within its royal palace complex. The Kathmandu example, in Kathmandu Durbar Square, was built in 1564 under King Mahendra Malla on a stepped, twelve-stage plinth; its sanctum opens to the public on only one day a year, the ninth day of Dashain (Mahanavami).',
+    translator: 'Mary Shepherd Slusser',
+    title_pi: '',
+    title_en: 'Taleju Bhawani — the Malla dynasty\'s tutelary goddess',
+    license: 'Reference use — see caveat in the source registry',
+    source_id: 'slusser-1982',
+  },
+  {
+    chunk_id: 'kumari:living-goddess-tradition',
+    uid: 'allen-1975',
+    collection: 'record',
+    segments: ['kumari:living-goddess-tradition'],
+    corpus: 'heritage',
+    pali: '',
+    english:
+      'The Kumari is a pre-pubescent girl, traditionally chosen from the Newar Shakya (in Kathmandu) or Bajracharya lineage through a set of physical and astrological criteria, worshipped as the living embodiment of Taleju Bhawani until she reaches puberty, at which point a new Kumari is selected. Newar tradition traces the practice to a broken relationship between Taleju and a Malla king, most often told as King Jayaprakash Malla, after which the goddess declared she would appear only in the form of a young girl; this origin is transmitted as legend, not as a documented historical event. Kathmandu, Patan and Bhaktapur each maintain their own Kumari, with distinct residences and selection details, and the tradition draws worship from both Hindu and Newar Buddhist communities.',
+    translator: 'Michael R. Allen',
+    title_pi: '',
+    title_en: 'Kumari — the living goddess tradition',
+    license: 'Reference use — see caveat in the source registry',
+    source_id: 'allen-1975',
   },
 ];

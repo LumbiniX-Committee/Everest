@@ -44,10 +44,25 @@ function tokenize(text: string): string[] {
     .filter((t) => t.length > 2 && !STOPWORDS.has(t));
 }
 
+/**
+ * Folds Pali/Sanskrit macrons and other combining diacritics to their plain
+ * ASCII base letter — "Kālāmas" and "Kalamas" both become "kalamas". A person
+ * typing on a phone keyboard writes plain ASCII without hunting for the
+ * diacritic marks (a demo script literally reads "the Kalamas"),
+ * while the corpus text carries the diacritics `bilara.ts` was translated
+ * with. Without this fold a plain-ASCII query for a person, term or sutta
+ * name whose romanisation only appears with diacritics in the corpus (the
+ * Kālāma Sutta corpus text, for instance) scores zero on that token even
+ * though it is exactly the right passage.
+ */
+function foldDiacritics(text: string): string {
+  return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
 /** Simple BM25 scoring calculation over English & Pali text */
 function scoreBM25(queryTokens: string[], chunk: BilaraChunk): number {
   if (queryTokens.length === 0) return 0;
-  const targetText = (chunk.english + ' ' + chunk.title_en + ' ' + chunk.pali + ' ' + chunk.title_pi).toLowerCase();
+  const targetText = foldDiacritics((chunk.english + ' ' + chunk.title_en + ' ' + chunk.pali + ' ' + chunk.title_pi).toLowerCase());
 
   let matches = 0;
   for (const token of queryTokens) {
@@ -61,7 +76,7 @@ function scoreBM25(queryTokens: string[], chunk: BilaraChunk): number {
 /** Semantic vector similarity mock using term overlap and tf-idf cosine proxy */
 function scoreVectorSimilarity(queryTokens: string[], chunk: BilaraChunk): number {
   if (queryTokens.length === 0) return 0;
-  const content = (chunk.english + ' ' + chunk.title_en).toLowerCase();
+  const content = foldDiacritics((chunk.english + ' ' + chunk.title_en).toLowerCase());
   let hits = 0;
   for (const token of queryTokens) {
     const reg = new RegExp(`\\b${token}`, 'g');
@@ -389,6 +404,49 @@ const INTENT_ROUTES: Array<{ triggers: RegExp[]; preferred: string }> = [
       /\bdepartment of archaeology\b/i,
       /\bwho (monitors|protects|manages) (heritage|monuments)\b.*\bnepal\b/i,
       /\bancient monument preservation\b/i,
+    ],
+  },
+
+  // Hindu / Newar tradition — Vaishnava iconography, Newar architecture,
+  // Taleju, Kumari. Checked in this order because "strut"/"torana" appear in
+  // both the Changu Narayan chunk and the general Newar-architecture chunk;
+  // the site-named or Vishnu-specific trigger has to win first, same
+  // technique as the dhunge-dhara decline/origin pair above.
+  {
+    preferred: 'changu-narayan:vaishnava-iconography',
+    triggers: [
+      /\bchangu narayan\b.*\b(vishnu|garuda|strut|iconograph)/i,
+      /\bgaruda\b/i,
+      /\bvish[vw]arupa\b/i,
+      /\bvikrantha\b/i,
+      /\btrivikrama\b/i,
+      /\bvaikuntha\b/i,
+      /\bdashavatara\b/i,
+    ],
+  },
+  {
+    preferred: 'newar-architecture:torana-struts',
+    triggers: [
+      /\btorana\b/i,
+      /\btundal\b/i,
+      /\b(wooden )?struts?\b.*\b(mean|depict|carv|newar|pagoda)/i,
+      /\bnewar (pagoda|temple) architecture\b/i,
+    ],
+  },
+  {
+    preferred: 'taleju-bhawani:malla-patronage',
+    triggers: [
+      /\btaleju\b/i,
+      /\bbhawani\b/i,
+      /\bmahanavami\b/i,
+      /\bmalla.*(clan|tutelary) goddess\b/i,
+    ],
+  },
+  {
+    preferred: 'kumari:living-goddess-tradition',
+    triggers: [
+      /\bkumari\b/i,
+      /\bliving goddess\b/i,
     ],
   },
 ];

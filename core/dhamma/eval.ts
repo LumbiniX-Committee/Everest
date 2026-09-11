@@ -182,6 +182,14 @@ export const EVAL_QUESTIONS: EvalQuestion[] = [
     target_segment: 'an5.177:1.1',
     rationale: 'AN 5.177 Sīla Sutta — five advantages arising from virtue',
   },
+  {
+    id: 'a19',
+    category: 'answerable',
+    question: 'What were the last words of the Buddha?',
+    expect_refuse: false,
+    target_segment: 'dn16:6.7',
+    rationale: 'Exact match (case/punctuation aside) to a DEMO_CACHE key in engine.ts, distinct from a01\'s "final words" phrasing which hits live retrieval instead — exercises the cached, offline-resilient demo path directly, so tools/dhamma-eval.mjs\'s faithfulness step actually evaluates this entry against its cited text',
+  },
 
   // ─────────────────────────────────────────────────────────────────────────
   // B) ADJACENT (10) — Buddhism-adjacent; should surface related passages,
@@ -577,6 +585,56 @@ export const EVAL_QUESTIONS: EvalQuestion[] = [
     question: 'What is the best sealant for waterproofing a historic building roof?',
     expect_refuse: true,
     rationale: 'Contains domain vocabulary ("historic") but is a practical building-trades question no source in the corpus addresses',
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // h20-h24: Hindu / Newar tradition (15-POST-HACKATHON-STRATEGY §5) — Vaishnava
+  // iconography, Newar temple architecture, Taleju and Kumari. The widened
+  // vocabulary these rely on is the real regression risk (a domain-gate word
+  // list is only as safe as its most generic entry), so h24 exists to prove
+  // that risk was checked, not assumed: 'avatar'/'avatars' was in the first
+  // draft of this vocabulary and passed "What avatar does Elon Musk use on
+  // Twitter?" straight through the gate to an irrelevant cited answer before
+  // being removed for exactly that reason.
+  // ─────────────────────────────────────────────────────────────────────────
+  {
+    id: 'h20',
+    category: 'heritage',
+    question: 'What does the Garuda statue at Changu Narayan depict?',
+    expect_refuse: false,
+    target_segment: 'changu-narayan:vaishnava-iconography',
+    rationale: 'Hindu/Newar: Vaishnava stone sculpture at a shipped, non-Buddhist site',
+  },
+  {
+    id: 'h21',
+    category: 'heritage',
+    question: 'What is a torana on a Newar pagoda temple?',
+    expect_refuse: false,
+    target_segment: 'newar-architecture:torana-struts',
+    rationale: 'Hindu/Newar: temple architecture shared by Patan and Kathmandu Durbar Squares',
+  },
+  {
+    id: 'h22',
+    category: 'heritage',
+    question: 'Who is Taleju Bhawani and why does Kathmandu Durbar Square have a temple to her?',
+    expect_refuse: false,
+    target_segment: 'taleju-bhawani:malla-patronage',
+    rationale: 'Hindu/Newar: the Malla dynasty\'s tutelary goddess',
+  },
+  {
+    id: 'h23',
+    category: 'heritage',
+    question: 'What is the Kumari living goddess tradition in the Kathmandu Valley?',
+    expect_refuse: false,
+    target_segment: 'kumari:living-goddess-tradition',
+    rationale: 'Hindu/Newar: the living-goddess tradition, drawing worship from both Hindu and Newar Buddhist communities',
+  },
+  {
+    id: 'h24',
+    category: 'heritage',
+    question: 'What avatar does Elon Musk use on Twitter?',
+    expect_refuse: true,
+    rationale: 'Regression guard for the Hindu/Newar vocabulary widening above: a generic English word ("avatar") must not admit an unrelated modern question just because "dashavatara" needed covering',
   },
 ];
 
