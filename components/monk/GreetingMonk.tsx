@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { AccessibilityInfo, Image, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
+
 /**
  * The greeting figure, animated by swapping frames.
  *
@@ -69,6 +71,7 @@ export type GreetingMonkProps = {
 };
 
 export function GreetingMonk({ height = 260, style }: GreetingMonkProps) {
+  const ui = useVisitorLiteralCopy();
   const [animate, setAnimate] = useState(false);
   const [tick, setTick] = useState(0);
 
@@ -112,7 +115,7 @@ export function GreetingMonk({ height = 260, style }: GreetingMonkProps) {
   const width = height * ASPECT;
 
   return (
-    <View style={[{ width, height }, style]} accessibilityRole="image" accessibilityLabel="A monk greeting you">
+    <View style={[{ width, height }, style]} accessibilityRole="image" accessibilityLabel={ui('A monk greeting you')}>
       {/* Every frame is mounted and switched by opacity rather than by swapping
           one image's source. A source swap decodes on the fly, and the first
           pass through the loop shows a blank beat at each new frame; mounting

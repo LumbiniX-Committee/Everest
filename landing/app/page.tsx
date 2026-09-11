@@ -239,6 +239,30 @@ export default async function Home() {
         </div>
       </section>
 
+      <section className="mx-auto max-w-4xl px-6 py-20">
+        <h2 className="font-[family-name:var(--font-display)] text-3xl font-semibold text-ink">
+          Follow the public record
+        </h2>
+        <p className="mt-3 max-w-2xl text-ink-soft">
+          See survey coverage and custodian-acknowledged condition history without exposing visitor identities,
+          field notes, exact capture coordinates or unpublished photographs.
+        </p>
+        <div className="mt-6 flex flex-wrap gap-3 text-sm">
+          <Link href="/sites/patan-durbar-square/condition" className="rounded-xl border border-line bg-surface px-4 py-2.5 font-semibold text-ink">
+            Patan Durbar Square
+          </Link>
+          <Link href="/sites/changu-narayan/condition" className="rounded-xl border border-line bg-surface px-4 py-2.5 font-semibold text-ink">
+            Changu Narayan
+          </Link>
+          <Link href="/sites/manga-hiti/condition" className="rounded-xl border border-line bg-surface px-4 py-2.5 font-semibold text-ink">
+            Manga Hiti
+          </Link>
+          <Link href="/adopt" className="rounded-xl bg-ink px-4 py-2.5 font-semibold text-white">
+            Adopt a vantage
+          </Link>
+        </div>
+      </section>
+
       <footer className="mx-auto max-w-6xl px-6 py-12 text-center">
         <p className="font-[family-name:var(--font-display)] text-lg text-ink">Sākṣī</p>
         <p className="mt-2 text-sm text-ink-muted">

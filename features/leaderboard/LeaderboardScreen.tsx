@@ -3,6 +3,9 @@ import { RefreshControl, ScrollView, StyleSheet, TextInput, View } from 'react-n
 
 import { EmptyState, ErrorState, LoadingState, ScreenHeader } from '@/components/common';
 import { Button, Card, Screen, Text } from '@/components/ui';
+import { useInterfaceLanguage } from '@/i18n/context';
+import { visitorLiteralCopy } from '@/i18n/literals';
+import { formatVisitorCopy, visitorCopy } from '@/i18n/visitor';
 import { leaderboard } from '@/services';
 import { colors, radii, spacing } from '@/theme';
 import type { LeaderboardEntry, LeaderboardRange } from '@/services/leaderboard';
@@ -29,6 +32,7 @@ import type { LeaderboardEntry, LeaderboardRange } from '@/services/leaderboard'
  *     standing to defend.
  */
 export function LeaderboardScreen() {
+  const language = useInterfaceLanguage();
   const [range, setRange] = useState<LeaderboardRange>('all');
   const [entries, setEntries] = useState<LeaderboardEntry[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -129,11 +133,13 @@ export function LeaderboardScreen() {
 
               <View style={styles.who}>
                 <Text variant="body">
-                  {entry.handle}
+                  <Text translate={false}>{entry.handle}</Text>
                   {entry.isYou ? '  (you)' : ''}
                 </Text>
                 <Text variant="caption" tone="muted">
-                  {entry.activeDays === 1 ? '1 day active' : `${entry.activeDays} days active`}
+                  {entry.activeDays === 1
+                    ? visitorCopy(language, 'leaderboard.dayOne')
+                    : formatVisitorCopy(language, 'leaderboard.days', { count: entry.activeDays })}
                 </Text>
               </View>
 
@@ -150,19 +156,24 @@ export function LeaderboardScreen() {
           <Text variant="heading">Your name here</Text>
           <Text variant="body" tone="secondary">
             {you
-              ? `You are ${yourRank === 1 ? 'first' : `in position ${yourRank}`} with ${
-                  range === 'week' ? you.pointsWeek : you.points
-                } points.`
+              ? yourRank === 1
+                ? formatVisitorCopy(language, 'leaderboard.youFirst', {
+                    points: range === 'week' ? you.pointsWeek : you.points,
+                  })
+                : formatVisitorCopy(language, 'leaderboard.youPosition', {
+                    position: yourRank ?? 0,
+                    points: range === 'week' ? you.pointsWeek : you.points,
+                  })
               : 'You have not contributed yet, so you are not on the board.'}
           </Text>
           <TextInput
             value={handle}
             onChangeText={setHandleValue}
-            placeholder="Choose a name"
+            placeholder={visitorLiteralCopy(language, 'Choose a name')}
             placeholderTextColor={colors.textMuted}
             maxLength={32}
             style={styles.input}
-            accessibilityLabel="Your name on the leaderboard"
+            accessibilityLabel={visitorLiteralCopy(language, 'Your name on the leaderboard')}
           />
           {handleError ? (
             <Text variant="caption" tone="open">

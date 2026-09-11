@@ -15,6 +15,7 @@ import {
   nowImageForSite,
 } from '@/data';
 import { useAlignment } from '@/hooks';
+import { formatVisitorCopy, visitorCopy, type VisitorCopyKey } from '@/i18n/visitor';
 import { camera as cameraService, database } from '@/services';
 import { usePermission, usePreferences, useQuests } from '@/store';
 import { colors, layers, radii, spacing } from '@/theme';
@@ -60,6 +61,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
   const site = vantage ? findSite(vantage.siteId) : undefined;
   const { state: cameraPermission, request: requestCamera, openSettings } = usePermission('camera');
   const { preferences } = usePreferences();
+  const t = (key: VisitorCopyKey) => visitorCopy(preferences.interfaceLanguage, key);
   const { creditVantageObservation } = useQuests();
   const [nudgeDeg, setNudgeDeg] = useState(0);
   const [draft, setDraft] = useState<CaptureDraft | null>(null);
@@ -98,9 +100,9 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
     return (
       <Screen>
         <EmptyState
-          title="No such vantage"
-          body="This viewpoint is not in the catalogue."
-          actionLabel="Back"
+          title={t('capture.noVantageTitle')}
+          body={t('capture.noVantageBody')}
+          actionLabel={t('capture.back')}
           onAction={() => router.back()}
         />
       </Screen>
@@ -113,18 +115,17 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
         <View style={styles.gate}>
           <Reticle size={140} phase="unavailable" />
           <Text variant="title" center>
-            The camera is the instrument
+            {t('capture.cameraTitle')}
           </Text>
           <Text variant="body" tone="secondary" center>
-            An observation is a photograph taken from a known point. Without the camera there is
-            nothing to record, though you can still read the series others have built.
+            {t('capture.cameraBody')}
           </Text>
           {cameraPermission.status === 'blocked' ? (
-            <Button label="Open settings" onPress={openSettings} />
+            <Button label={t('capture.openSettings')} onPress={openSettings} />
           ) : (
-            <Button label="Allow camera" onPress={requestCamera} />
+            <Button label={t('capture.allowCamera')} onPress={requestCamera} />
           )}
-          <Button label="Back" variant="quiet" onPress={() => router.back()} />
+          <Button label={t('capture.back')} variant="quiet" onPress={() => router.back()} />
         </View>
       </Screen>
     );
@@ -138,7 +139,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
     try {
       const captureOptions = cameraService.getCaptureOptions(preferences.photoQuality);
       const photo = await cameraRef.current?.takePictureAsync(captureOptions);
-      if (!photo?.uri) throw new Error('The camera returned no image.');
+      if (!photo?.uri) throw new Error(t('capture.cameraNoImage'));
 
       // Freeze the record at the shutter. The live sensors keep moving while a
       // person reviews the frame, so reading them again at submit time would
@@ -180,7 +181,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
 
       setDraft({ observation, sourceUri: photo.uri });
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : 'The capture failed.');
+      setError(caught instanceof Error ? caught.message : t('capture.failed'));
     } finally {
       setSaving(false);
     }
@@ -211,7 +212,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
         params: { observationId: observation.id },
       });
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : 'The observation could not be submitted.');
+      setError(caught instanceof Error ? caught.message : t('capture.submitFailed'));
     } finally {
       setSaving(false);
     }
@@ -224,14 +225,17 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
         <View style={styles.gate}>
           <Reticle size={140} phase="unavailable" />
           <Text variant="title" center>
-            Photography is {site.photography} here
+            {formatVisitorCopy(preferences.interfaceLanguage, 'capture.photographyTitle', {
+              status: site.photography,
+            })}
           </Text>
           <Text variant="body" tone="secondary" center>
-            {site.name} is a protected space where photography is {site.photography}. The witness
-            tool is disabled at this site. Please respect the restriction and confirm with site
-            staff. You can still read its record and history.
+            {formatVisitorCopy(preferences.interfaceLanguage, 'capture.photographyBody', {
+              site: site.name,
+              status: site.photography,
+            })}
           </Text>
-          <Button label="Back" onPress={() => router.back()} />
+          <Button label={t('capture.back')} onPress={() => router.back()} />
         </View>
       </Screen>
     );
@@ -249,8 +253,10 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
     const reference = referenceObservation
       ? {
           image: referenceObservation.photoUri,
-          date: 'Previous',
-          note: `Previous submitted frame from this fixed viewpoint, recorded ${formatTimestamp(referenceObservation.capturedAt)}.`,
+          date: t('capture.previous'),
+          note: formatVisitorCopy(preferences.interfaceLanguage, 'capture.previousNote', {
+            date: formatTimestamp(referenceObservation.capturedAt),
+          }),
         }
       : historical
         ? {
@@ -258,26 +264,26 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
             date: historical.date,
             tier: historical.evidenceTier,
             note: historical.viewpointConfirmed
-              ? 'Historical frame matched to this fixed viewpoint.'
-              : 'Historical reference. Its viewpoint is approximate, so use it for visual context rather than measured alignment.',
+              ? t('capture.historicalMatched')
+              : t('capture.historicalApprox'),
           }
         : {
             image: bundledReference,
-            date: 'Site reference',
+            date: t('capture.siteReference'),
             note: bundledReference
-              ? 'Site reference only. The attached readings are the evidence of where this new frame was made.'
-              : 'No earlier image is available for this viewpoint yet. Review the new frame and its attached readings before submitting.',
+              ? t('capture.siteReferenceNote')
+              : t('capture.noReference'),
           };
 
     return (
       <Screen scroll>
         <View style={styles.reviewHead}>
           <Text variant="label" tone="muted" uppercase>
-            Compare and submit
+            {t('capture.compare')}
           </Text>
-          <Text variant="title">Review today&apos;s frame</Text>
+          <Text variant="title">{t('capture.reviewTitle')}</Text>
           <Text variant="body" tone="secondary">
-            Drag the divider to compare the framing. Nothing joins the record until you submit.
+            {t('capture.reviewBody')}
           </Text>
         </View>
 
@@ -288,7 +294,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
             placeholderNote: reference.note,
             tier: 'tier' in reference ? reference.tier : undefined,
           }}
-          now={{ image: draft.sourceUri, date: 'Captured now' }}
+          now={{ image: draft.sourceUri, date: t('capture.capturedNow') }}
           aspectRatio={3 / 4}
         />
 
@@ -299,36 +305,36 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
         <Divider />
 
         <View style={styles.submission}>
-          <Text variant="heading">Submission data</Text>
+          <Text variant="heading">{t('capture.submissionData')}</Text>
           <Text variant="body" tone="secondary">
-            The photo and these readings will be saved on this phone first, then queued for sync.
+            {t('capture.queued')}
           </Text>
           <View style={styles.telemetry}>
-            <MetaRow label="Captured" value={formatTimestamp(draft.observation.capturedAt)} />
+            <MetaRow label={t('capture.captured')} value={formatTimestamp(draft.observation.capturedAt)} />
             <MetaRow
-              label="Mode"
-              value={draft.observation.gateMode === 'aligned' ? 'Measured alignment' : 'Framed by eye'}
+              label={t('capture.mode')}
+              value={draft.observation.gateMode === 'aligned' ? t('capture.measuredAlignment') : t('capture.framedByEye')}
               mono={false}
               tone={draft.observation.gateMode === 'aligned' ? 'locked' : 'seeking'}
             />
-            <MetaRow label="Position" value={formatCoordinate(draft.observation.coordinate)} />
+            <MetaRow label={t('capture.position')} value={formatCoordinate(draft.observation.coordinate)} />
             <MetaRow
-              label="GPS accuracy"
+              label={t('capture.gpsAccuracy')}
               value={formatDistance(draft.observation.gpsAccuracyM ?? null)}
             />
-            <MetaRow label="Bearing" value={formatBearing(draft.observation.bearing)} />
-            <MetaRow label="Pitch" value={formatDelta(draft.observation.pitch)} />
+            <MetaRow label={t('capture.bearing')} value={formatBearing(draft.observation.bearing)} />
+            <MetaRow label={t('capture.pitch')} value={formatDelta(draft.observation.pitch)} />
             <MetaRow
-              label="Position error"
+              label={t('capture.positionError')}
               value={formatDistance(draft.observation.positionErrorM)}
             />
             <MetaRow
-              label="Bearing error"
+              label={t('capture.bearingError')}
               value={formatDelta(draft.observation.bearingErrorDeg)}
             />
             <MetaRow
-              label="Alignment score"
-              value={draft.observation.alignScore?.toFixed(2) ?? 'not measured'}
+              label={t('capture.alignmentScore')}
+              value={draft.observation.alignScore?.toFixed(2) ?? t('capture.notMeasured')}
             />
           </View>
 
@@ -340,7 +346,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
 
           <View style={styles.reviewActions}>
             <Button
-              label="Retake"
+              label={t('capture.retake')}
               variant="secondary"
               disabled={saving}
               onPress={() => {
@@ -349,10 +355,10 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
               }}
             />
             <Button
-              label="Submit observation"
+              label={t('capture.submit')}
               loading={saving}
               onPress={submitDraft}
-              accessibilityHint="Saves this photo and its capture readings on this device"
+              accessibilityHint={t('capture.submitHint')}
             />
           </View>
         </View>
@@ -368,7 +374,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
         {/* Top Floating Mobile Status Bar */}
         <View style={styles.topHud}>
           <Pressable style={styles.backBtn} onPress={() => router.back()}>
-            <Text variant="body">‹ Back</Text>
+            <Text variant="body">‹ {t('capture.back')}</Text>
           </Pressable>
         </View>
 
@@ -395,15 +401,17 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
         {/* Manual Compass Heading Nudge */}
         <View style={styles.nudgeRow}>
           <Button
-            label="Nudge -5°"
+            label={t('capture.nudgeMinus')}
             variant="quiet"
             onPress={() => setNudgeDeg((prev) => prev - 5)}
           />
           <Text variant="mono" tone="secondary">
-            {nudgeDeg === 0 ? 'Compass 0°' : `${nudgeDeg > 0 ? '+' : ''}${nudgeDeg}°`}
+            {nudgeDeg === 0
+              ? `${t('capture.compass')} 0°`
+              : `${nudgeDeg > 0 ? '+' : ''}${nudgeDeg}°`}
           </Text>
           <Button
-            label="Nudge +5°"
+            label={t('capture.nudgePlus')}
             variant="quiet"
             onPress={() => setNudgeDeg((prev) => prev + 5)}
           />
@@ -427,12 +435,12 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
         <View style={styles.buttonGroup}>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={locked ? 'Record aligned observation' : 'Record by eye'}
+            accessibilityLabel={locked ? t('capture.recordAligned') : t('capture.recordByEye')}
             accessibilityState={{ busy: saving }}
             accessibilityHint={
               locked
-                ? 'Records a measured observation from this vantage'
-                : 'Records a photograph without a measured lock: position and bearing error are left blank'
+                ? t('capture.alignedHint')
+                : t('capture.byEyeHint')
             }
             disabled={saving}
             onPress={() => onCapture(locked ? 'aligned' : 'manual', false)}
@@ -447,23 +455,23 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
 
           {locked ? (
             <Button
-              label="Nothing has changed"
+              label={t('capture.nothingChanged')}
               variant="quiet"
               disabled={saving}
               onPress={() => onCapture('aligned', true)}
-              accessibilityHint="Record a stable observation"
+              accessibilityHint={t('capture.stableHint')}
             />
           ) : null}
         </View>
 
         <Text variant="caption" tone={locked ? 'locked' : 'seeking'} center>
           {locked
-            ? 'Aligned: the shutter records position and bearing error.'
-            : 'By eye: the photograph is kept, the measurements are left blank.'}
+            ? t('capture.alignedStatus')
+            : t('capture.byEyeStatus')}
         </Text>
         {!locked ? (
           <Text variant="caption" tone="muted" center>
-            Move, or nudge the compass, until the reticle locks for a measured record.
+            {t('capture.moveHint')}
           </Text>
         ) : null}
       </View>

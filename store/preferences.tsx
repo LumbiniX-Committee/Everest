@@ -9,6 +9,7 @@ import {
 } from 'react';
 
 import { storage } from '@/services';
+import { InterfaceLanguageProvider } from '@/i18n/context';
 import { DEFAULT_USER_PREFERENCES, type UserPreferences } from '@/types';
 
 /**
@@ -74,7 +75,11 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     [hydrated, preferences, update, reset],
   );
 
-  return <PreferencesContext.Provider value={value}>{children}</PreferencesContext.Provider>;
+  return (
+    <InterfaceLanguageProvider language={preferences.interfaceLanguage}>
+      <PreferencesContext.Provider value={value}>{children}</PreferencesContext.Provider>
+    </InterfaceLanguageProvider>
+  );
 }
 
 export function usePreferences(): PreferencesContextValue {

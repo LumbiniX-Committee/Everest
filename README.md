@@ -32,7 +32,7 @@ not just tabs. There is no Home, Explore, Profile, or Rewards.
 | Part | Name means | What you do there |
 | --- | --- | --- |
 | **Tīrtha** | a sacred place | Explore Lumbini and the Kathmandu Valley sites on a map, read about each place, and fade between an old photo and a new one to see what changed. Quests point at whatever vantage or spout has gone longest without a resurvey, not at what is popular. |
-| **Sākṣī** | witness | The main loop: pick a viewpoint, line up your phone, take the photo, and note the condition of the site. A custodian (web dashboard in `landing/custodian`, or in-app under Settings) reads the reports and acknowledges them. |
+| **Sākṣī** | witness | The main loop: pick a viewpoint, line up your phone, take the photo, and note the condition of the site. An assigned custodian uses the authenticated web portal in `landing/custodian` to review and act on reports. |
 | **Dhamma** | the teaching | Ask about Buddhist texts or heritage conservation — UNESCO records, the ICOMOS Venice and Burra Charters, Kathmandu Valley archaeology — and get answers backed by real, cited sources, or an honest "I cannot answer that." |
 
 ## What the app promises
@@ -156,16 +156,20 @@ then it may only rephrase real passages, never invent facts.
 ### The custodian dashboard: closing the loop
 
 A condition report a visitor files is only useful if someone responsible for
-the site actually sees it. The custodian surface — a web dashboard at
-`landing/custodian`, and an equivalent in-app screen under Settings →
-Institutional — shows coverage, median time to acknowledgement, and every open
-report by site and status, with CSV and GeoJSON export for a real GIS
-workflow. A custodian can acknowledge, mark in-progress, or resolve a report
-with a note, from either surface. There is deliberately no login: a
-remembered name attached to what a device acknowledges, not an account,
-because "no complex auth" is a stated design choice, not an oversight. The
-ethics policy at `landing/app/ethics/page.tsx` states plainly what funds this:
-no money from any commercial entity operating inside a site the app monitors.
+the site actually sees it. The responsive web portal at `landing/custodian`
+uses invite-only Supabase magic-link authentication and site-scoped
+memberships. It shows 30/90/365-day coverage, alignment and response metrics,
+condition and coverage trends, private signed photographs, and CSV/GeoJSON
+exports. Status changes are append-only actions: acknowledge, in progress,
+resolve, or reopen with a required explanation. The visitor app links to this
+portal instead of duplicating privileged authentication on the phone.
+
+Public condition pages expose only coverage, last-survey dates, and
+custodian-acknowledged categories and status history. They never expose visitor
+identity, notes, exact coordinates, private photographs, or unacknowledged
+free-text claims. The ethics policy at `landing/app/ethics/page.tsx` states
+plainly what funds this: no money from any commercial entity operating inside a
+site the app monitors.
 
 ## How the code is laid out
 
@@ -185,7 +189,7 @@ tools/        Build and check scripts.
 theme/        Colours, fonts, spacing.
 assets/       Images, fonts, audio, and the AI model file.
 supabase/     Cloud database setup.
-mock-api/     A tiny fake backend for demos.
+mock-api/     A local-only, unauthenticated fixture; never a production backend.
 docs/         Longer guides. Start with docs/PROJECT-GUIDE.md.
 ```
 
@@ -211,6 +215,7 @@ a phone.
 
 ## Where to read more
 
+- **Current production-pilot state and rollout:** `docs/PRODUCTION-PILOT.md`
 - **The full plain-language tour:** `docs/PROJECT-GUIDE.md`
 - **The data rules:** `docs/DATA-ARCHITECTURE.md`
 - **Rebuild or improve the damage model:** `docs/DAMAGE-MODEL.md`
@@ -219,12 +224,19 @@ a phone.
 
 ## Status
 
-This is a hackathon build. Site and viewpoint coordinates are real but not all
-survey-grade, and a few are marked as approximate until field data replaces them.
-The damage detector, the camera loop, and the keyboard behaviour are best judged
-on a real phone build, not in a simulator. Patan Durbar Square, Changu Narayan,
-and Manga Hiti ship with real, sourced facts, timeline, narration, and vantages,
-but no reconstruction plate: producing one needs a harvested or generated image
-this session did not have the tokens to fetch. Nine of the twelve Lumbini sites
-already ship the same way, and the site detail screen says so honestly rather
-than showing a placeholder.
+The repository is now a production-pilot candidate, not an award-deadline demo.
+Its verified catalogue contains 15 sites, 12 fixed vantages, 13 quests, and 13
+evidence-labelled plates. The three Kathmandu Valley pilot sites each have a
+clearly labelled artistic impression; none is presented as a photograph or
+measured reconstruction. `npm run verify` includes app and core TypeScript,
+132 domain tests, 16 native React/service integration tests, seed and vocabulary
+checks, 274 typed EN/NE semantic keys plus 601 registered legacy interface
+phrases, the 68-case Dhamma evaluation, and lint. The landing portal has its own
+clean-install build and test gate (27 landing tests at this baseline).
+
+Deployment is not complete merely because the code builds. Migration `0009`
+must be tested and applied to staging, the 15-site/12-vantage catalogue must be
+synchronised, invite-only memberships must be provisioned, and three-phone
+field testing must pass before an institutional pilot. The downloaded
+`POST-PIVOT-STATUS.md` is preserved as a historical 27 August 2026 snapshot;
+the current operational truth is `docs/PRODUCTION-PILOT.md` and the source.

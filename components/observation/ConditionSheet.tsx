@@ -2,14 +2,19 @@ import { useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 
 import { BottomSheet, Button, Chip, Text } from '@/components/ui';
+import {
+  conditionCategoryCopy,
+  conditionCategoryHint,
+  conditionSeverityCopy,
+  conditionSeverityHint,
+  conditionSubtypeCopy,
+} from '@/i18n/condition';
+import { visitorCopy, type VisitorCopyKey } from '@/i18n/visitor';
+import { usePreferences } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 import {
   CONDITION_CATEGORIES,
-  CONDITION_CATEGORY_HINTS,
-  CONDITION_CATEGORY_LABELS,
   CONDITION_SUBTYPES,
-  SEVERITY_HINTS,
-  SEVERITY_LABELS,
   type ConditionCategory,
   type ConditionSeverity,
 } from '@/types';
@@ -38,6 +43,20 @@ type Step = 'category' | 'subtype' | 'severity' | 'note';
 
 const STEPS: Step[] = ['category', 'subtype', 'severity', 'note'];
 
+const TITLE_KEYS = {
+  category: 'condition.title.category',
+  subtype: 'condition.title.subtype',
+  severity: 'condition.title.severity',
+  note: 'condition.title.note',
+} as const satisfies Record<Step, VisitorCopyKey>;
+
+const SUBTITLE_KEYS = {
+  category: 'condition.subtitle.category',
+  subtype: 'condition.subtitle.subtype',
+  severity: 'condition.subtitle.severity',
+  note: 'condition.subtitle.note',
+} as const satisfies Record<Step, VisitorCopyKey>;
+
 /**
  * Condition reporting, start to finish, in one sheet.
  *
@@ -50,6 +69,9 @@ const STEPS: Step[] = ['category', 'subtype', 'severity', 'note'];
  * selection and asking for confirmation of a tap is a step that earns nothing.
  */
 export function ConditionSheet({ visible, onClose, onSubmit, submitting = false, initialDraft }: ConditionSheetProps) {
+  const { preferences } = usePreferences();
+  const language = preferences.interfaceLanguage;
+  const t = (key: VisitorCopyKey) => visitorCopy(language, key);
   // Open at the first thing the draft has not answered. A manual report starts at
   // 'category'; an AI pre-fill (category and kind supplied, severity left out on
   // purpose) opens straight at 'severity', so the person judges urgency — the one
@@ -129,15 +151,14 @@ export function ConditionSheet({ visible, onClose, onSubmit, submitting = false,
     <BottomSheet
       visible={visible}
       onClose={close}
-      title={titles[step]}
-      subtitle={subtitles[step]}
+      title={t(TITLE_KEYS[step])}
+      subtitle={t(SUBTITLE_KEYS[step])}
       scroll
     >
       {initialDraft?.aiAssisted ? (
         <View style={styles.aiBanner}>
           <Text variant="caption" tone="secondary">
-            Filled from a model candidate. You’re confirming it. Change anything that is wrong, and
-            you decide how urgent it is.
+            {t('condition.aiBanner')}
           </Text>
         </View>
       ) : null}
@@ -147,7 +168,7 @@ export function ConditionSheet({ visible, onClose, onSubmit, submitting = false,
           {CONDITION_CATEGORIES.map((option) => (
             <Chip
               key={option}
-              label={CONDITION_CATEGORY_LABELS[option]}
+              label={conditionCategoryCopy(language, option)}
               selected={category === option}
               onPress={() => {
                 setCategory(option);
@@ -164,12 +185,12 @@ export function ConditionSheet({ visible, onClose, onSubmit, submitting = false,
       {step === 'subtype' && category ? (
         <View style={styles.stack}>
           <Text variant="caption" tone="muted">
-            {CONDITION_CATEGORY_HINTS[category]}
+            {conditionCategoryHint(language, category)}
           </Text>
           {CONDITION_SUBTYPES[category].map((option) => (
             <Chip
               key={option}
-              label={option}
+              label={conditionSubtypeCopy(language, option)}
               selected={subtype === option}
               onPress={() => {
                 setSubtype(option);
@@ -186,7 +207,7 @@ export function ConditionSheet({ visible, onClose, onSubmit, submitting = false,
           {(['noted', 'concerning', 'urgent'] as ConditionSeverity[]).map((option) => (
             <View key={option} style={styles.severityRow}>
               <Chip
-                label={SEVERITY_LABELS[option]}
+                label={conditionSeverityCopy(language, option)}
                 selected={severity === option}
                 onPress={() => {
                   setSeverity(option);
@@ -195,7 +216,7 @@ export function ConditionSheet({ visible, onClose, onSubmit, submitting = false,
                 style={styles.wide}
               />
               <Text variant="caption" tone="muted">
-                {SEVERITY_HINTS[option]}
+                {conditionSeverityHint(language, option)}
               </Text>
             </View>
           ))}
@@ -210,13 +231,13 @@ export function ConditionSheet({ visible, onClose, onSubmit, submitting = false,
             multiline
             numberOfLines={4}
             style={styles.input}
-            placeholder="What did you see? Leave blank if the choices above say it."
+            placeholder={t('condition.notePlaceholder')}
             placeholderTextColor={colors.textMuted}
             editable={!submitting}
-            accessibilityLabel="Optional note"
+            accessibilityLabel={t('condition.optionalNote')}
           />
           <Button
-            label="Record what you saw"
+            label={t('condition.record')}
             block
             loading={submitting}
             onPress={submit}
@@ -225,7 +246,7 @@ export function ConditionSheet({ visible, onClose, onSubmit, submitting = false,
       ) : null}
 
       <Button
-        label={step === 'category' ? 'Cancel' : 'Back'}
+        label={step === 'category' ? t('condition.cancel') : t('condition.back')}
         variant="quiet"
         disabled={submitting}
         onPress={back}
@@ -233,20 +254,6 @@ export function ConditionSheet({ visible, onClose, onSubmit, submitting = false,
     </BottomSheet>
   );
 }
-
-const titles: Record<Step, string> = {
-  category: 'What did you notice?',
-  subtype: 'What kind?',
-  severity: 'How does it seem?',
-  note: 'Anything to add?',
-};
-
-const subtitles: Record<Step, string> = {
-  category: 'Choose the closest. Nothing here needs to be exact.',
-  subtype: 'Still approximate. A conservator will look properly.',
-  severity: 'Your sense of how urgently someone should see it.',
-  note: 'Optional, and genuinely so.',
-};
 
 const styles = StyleSheet.create({
   aiBanner: {

@@ -23,6 +23,9 @@ export const plateImages = {
   'maya-devi-temple.mukherji-1899-plan': require('../assets/plates/maya-devi-temple.mukherji-1899-plan.webp'),
   'lumbini.mukherji-1899-general-plan': require('../assets/plates/lumbini.mukherji-1899-general-plan.webp'),
   'puskarini.earthen-pond-pre1930s': require('../assets/plates/puskarini.earthen-pond-pre1930s.webp'),
+  'patan-durbar-square.artistic-impression': require('../assets/plates/patan-durbar-square.artistic-impression.webp'),
+  'changu-narayan.artistic-impression': require('../assets/plates/changu-narayan.artistic-impression.webp'),
+  'manga-hiti.artistic-impression': require('../assets/plates/manga-hiti.artistic-impression.webp'),
 } as const;
 
 export type PlateId = keyof typeof plateImages;
@@ -80,6 +83,21 @@ export const plateMeta: Record<PlateId, PlateMeta> = {
     caption: 'Before the 1930s: the Puskarini as a natural earthen oval pond.',
     attribution: 'Sākṣī reconstruction, conditioned on a modern CC BY-SA photograph',
   },
+  'patan-durbar-square.artistic-impression': {
+    evidenceTier: 'artistic_impression',
+    caption: 'Artistic impression of Patan Durbar Square—not a photograph or measured reconstruction.',
+    attribution: 'Sākṣī generated illustration, informed by cited UNESCO documentation',
+  },
+  'changu-narayan.artistic-impression': {
+    evidenceTier: 'artistic_impression',
+    caption: 'Artistic impression of Changu Narayan—not a photograph or measured reconstruction.',
+    attribution: 'Sākṣī generated illustration, informed by cited UNESCO and KVPT documentation',
+  },
+  'manga-hiti.artistic-impression': {
+    evidenceTier: 'artistic_impression',
+    caption: 'Artistic impression of Manga Hiti—not a photograph or measured reconstruction.',
+    attribution: 'Sākṣī generated illustration, informed by cited heritage documentation',
+  },
 };
 
 /** The modern reference photograph for a site, if one is bundled. */
@@ -96,9 +114,8 @@ export function nowImageForSite(siteId: string): number | undefined {
  * measured survey drawing of the ground is still a picture of the place, and it
  * is the kind of picture this app is actually about.
  *
- * Returns undefined rather than a placeholder. Three of the twelve sites have
- * imagery; a grey box on the other nine would be worse than a card that is
- * honestly text.
+ * Returns undefined rather than a placeholder. A grey box would be worse than
+ * a card that is honestly text when no evidence-labelled image is bundled.
  */
 export function heroImageForSite(siteId: string): { source: number; historical: boolean } | undefined {
   const now = nowImages[siteId];

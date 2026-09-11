@@ -12,6 +12,7 @@ import {
 import { SpeechCloud, speechCloudStyles, useTypingText } from '@/components/monk';
 import { buildStory, standingFor, WISDOM_LEVELS, type StoryBeat } from '@/core';
 import { findSite } from '@/data';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { arrival, voice } from '@/services';
 import { usePractice, usePreferences } from '@/store';
 import { colors, radii, spacing } from '@/theme';
@@ -78,6 +79,7 @@ type UnlockPopupProps = {
 };
 
 function UnlockPopup({ visible, siteName, onClose, onQuests, confettiOn }: UnlockPopupProps) {
+  const ui = useVisitorLiteralCopy();
   const particles = useConfetti(confettiOn);
   const scale = useRef(new Animated.Value(0.65)).current;
   const opacity = useRef(new Animated.Value(0)).current;
@@ -130,12 +132,12 @@ function UnlockPopup({ visible, siteName, onClose, onQuests, confettiOn }: Unloc
 
         <Animated.View style={[popup.card, { opacity, transform: [{ scale }] }]}>
           {/* X close */}
-          <Pressable style={popup.closeBtn} onPress={onClose} hitSlop={14} accessibilityRole="button" accessibilityLabel="Close">
+          <Pressable style={popup.closeBtn} onPress={onClose} hitSlop={14} accessibilityRole="button" accessibilityLabel={ui('Close')}>
             <RNText style={popup.closeTxt}>✕</RNText>
           </Pressable>
 
           <RNText style={popup.star}>✦</RNText>
-          <RNText style={popup.label}>STORY READ</RNText>
+          <RNText style={popup.label}>{ui('STORY READ')}</RNText>
 
           {/* The standing this person now holds, named rather than numbered. */}
           <RNText style={popup.level}>{standing.title}</RNText>
@@ -151,15 +153,13 @@ function UnlockPopup({ visible, siteName, onClose, onQuests, confettiOn }: Unloc
           <View style={popup.divider} />
 
           <RNText style={popup.siteName}>{siteName}</RNText>
-          <RNText style={popup.caption}>
-            You stood here, listened, and unlocked sacred knowledge.
-          </RNText>
+          <RNText style={popup.caption}>{ui('You stood here, listened, and unlocked sacred knowledge.')}</RNText>
 
           {/* Level Progress Indicator */}
           <View style={popup.progressBox}>
             <View style={popup.progressHead}>
-              <RNText style={popup.progressLabel}>Standing</RNText>
-              <RNText style={popup.progressPts}>{standing.wisdom} puṇya</RNText>
+              <RNText style={popup.progressLabel}>{ui('Standing')}</RNText>
+              <RNText style={popup.progressPts}>{standing.wisdom} {ui('puṇya')}</RNText>
             </View>
             <View style={popup.track}>
               <View style={[popup.fill, { width: `${Math.round(standing.progress * 100)}%` }]} />
@@ -169,13 +169,13 @@ function UnlockPopup({ visible, siteName, onClose, onQuests, confettiOn }: Unloc
                   pilgrimage in a way "for Level 3" never will. */}
               {standing.toNextLevel > 0
                 ? `${standing.toNextLevel} puṇya until ${nextTitleAfter(standing.title)}`
-                : 'The furthest standing this record keeps'}
+                : ui('The furthest standing this record keeps')}
             </RNText>
           </View>
 
           {onQuests ? (
             <Pressable style={popup.questBtn} onPress={onQuests} accessibilityRole="button">
-              <RNText style={popup.questBtnTxt}>⚑  View Location Quests</RNText>
+              <RNText style={popup.questBtnTxt}>{ui('⚑ View Location Quests')}</RNText>
             </Pressable>
           ) : null}
         </Animated.View>
@@ -224,8 +224,9 @@ function DiscoveryBeat({ siteName }: { siteName: string }) {
 // ─── Progress pips ────────────────────────────────────────────────────────────
 
 function Pips({ count, at }: { count: number; at: number }) {
+  const ui = useVisitorLiteralCopy();
   return (
-    <View style={styles.pips} accessibilityLabel={`Step ${at + 1} of ${count}`}>
+    <View style={styles.pips} accessibilityLabel={`${ui('Step')} ${at + 1} ${ui('of')} ${count}`}>
       {Array.from({ length: count }, (_, i) => (
         <View
           key={i}
@@ -253,6 +254,7 @@ export type StorySequenceProps = {
 };
 
 export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQuests }: StorySequenceProps) {
+  const ui = useVisitorLiteralCopy();
   const { preferences } = usePreferences();
   const [index, setIndex] = useState(0);
   const [showUnlock, setShowUnlock] = useState(false);
@@ -366,17 +368,17 @@ export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQu
   return (
     <>
       <SpeechCloud
-        eyebrow={isDiscovery ? '✦  WISDOM UNLOCKED' : beat.eyebrow.toUpperCase()}
+        eyebrow={isDiscovery ? ui('✦ WISDOM UNLOCKED') : beat.eyebrow.toUpperCase()}
         eyebrowAccessory={
           <Pressable
             onPress={toggleVoice}
             hitSlop={12}
             accessibilityRole="button"
-            accessibilityLabel={speaking ? 'Pause voice' : 'Play voice'}
+            accessibilityLabel={ui(speaking ? 'Pause voice' : 'Play voice')}
             style={[styles.voicePill, speaking && styles.voicePillPlaying]}
           >
             <RNText style={[styles.voiceTxt, speaking && styles.voiceTxtPlaying]}>
-              {speaking ? '🔊 Voice' : '🔈 Voice'}
+              {ui(speaking ? '🔊 Voice' : '🔈 Voice')}
             </RNText>
           </Pressable>
         }
@@ -392,7 +394,7 @@ export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQu
                 hitSlop={10}
                 style={[styles.navBtn, index === 0 && styles.navBtnOff]}
                 accessibilityRole="button"
-                accessibilityLabel="Previous"
+                accessibilityLabel={ui('Previous')}
               >
                 <RNText style={[styles.navBtnTxt, index === 0 && styles.navBtnTxtMuted]}>‹</RNText>
               </Pressable>
@@ -403,9 +405,9 @@ export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQu
               style={[styles.nextBtn, isLast && styles.nextBtnClaim]}
               onPress={next}
               accessibilityRole="button"
-              accessibilityLabel={isLast ? 'Claim wisdom' : 'Next'}
+              accessibilityLabel={ui(isLast ? 'Claim wisdom' : 'Next')}
             >
-              <RNText style={styles.nextBtnTxt}>{isLast ? '✦  Claim' : 'Next  →'}</RNText>
+              <RNText style={styles.nextBtnTxt}>{ui(isLast ? '✦ Claim' : 'Next →')}</RNText>
             </Pressable>
           </View>
         }

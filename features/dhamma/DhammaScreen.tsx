@@ -8,6 +8,8 @@ import { Icon, Screen, Text, type IconName } from '@/components/ui';
 import { SettingsButton } from '@/components/common';
 import { demoDhammaEntries, findSource, type DhammaEntry } from '@/data';
 import { useHaptics } from '@/hooks';
+import { useInterfaceLanguage } from '@/i18n/context';
+import { visitorLiteralCopy } from '@/i18n/literals';
 import { colors, font, radii, spacing } from '@/theme';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -70,6 +72,7 @@ function DhammaEntryCard({
 }
 
 export function DhammaScreen() {
+  const language = useInterfaceLanguage();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { selection } = useHaptics();
@@ -124,16 +127,16 @@ export function DhammaScreen() {
             value={question}
             onChangeText={setQuestion}
             style={[styles.searchInput, font('body')]}
-            placeholder="Ask something about Lumbini or the early record"
+            placeholder={visitorLiteralCopy(language, 'Ask something about Lumbini or the early record')}
             placeholderTextColor={colors.textMuted}
             multiline
             returnKeyType="send"
             onSubmitEditing={askTyped}
-            accessibilityLabel="Your question"
+            accessibilityLabel={visitorLiteralCopy(language, 'Your question')}
           />
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Ask"
+            accessibilityLabel={visitorLiteralCopy(language, 'Ask')}
             accessibilityState={{ disabled: !canAsk }}
             disabled={!canAsk}
             onPress={askTyped}
@@ -185,7 +188,7 @@ export function DhammaScreen() {
           </View>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Begin a reflection"
+            accessibilityLabel={visitorLiteralCopy(language, 'Begin a reflection')}
             onPress={() => {
               selection();
               router.push('/(main)/dhamma/reflect' as never);

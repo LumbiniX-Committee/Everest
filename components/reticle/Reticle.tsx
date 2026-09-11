@@ -12,6 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { colors, radii } from '@/theme';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import type { AlignmentPhase } from '@/types';
 
 export type ReticleProps = {
@@ -44,6 +45,7 @@ export function Reticle({
   phase = 'idle',
   idleAnimation = false,
 }: ReticleProps) {
+  const ui = useVisitorLiteralCopy();
   const locked = phase === 'locked';
   // `manual` is the by-eye escape hatch: show it as inert (static, muted) rather
   // than seeking or locked — the instrument is not tracking, the user has taken over.
@@ -120,7 +122,7 @@ export function Reticle({
     <View
       accessible
       accessibilityRole="image"
-      accessibilityLabel={reticleLabel(phase)}
+      accessibilityLabel={ui(reticleLabel(phase))}
       style={[styles.frame, { width: size, height: size }]}
     >
       <Animated.View style={[styles.ring, StyleSheet.absoluteFill, outerStyle]} />

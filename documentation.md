@@ -1,3 +1,6 @@
+> **Historical pre-pivot reference.** Do not use this file for current scope,
+> counts, security, or deployment. See `docs/PRODUCTION-PILOT.md`.
+
 # Sākṣī: Full Product Documentation
 
 *Everything there is to know about the product, written in plain language, from

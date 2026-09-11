@@ -1,11 +1,12 @@
 /**
- * mock-api/server.mjs — a zero-dependency stand-in for the FastAPI backend.
+ * mock-api/server.mjs — LOCAL-ONLY, unauthenticated demo fixture.
  *
  * Node 22 ships everything this needs; there is no package.json and no
  * `npm install`, so it starts on venue wifi with nothing to break. It reads
  * seed/*.json at boot and serves the 04-ARCHITECTURE §3 contract verbatim, so
  * lanes A and B can build the whole offline-queue path before lane C's real
- * API exists. C deletes this the moment `c-phase1-schema` lands.
+ * API exists. Never expose this process to the internet or use it as a
+ * custodian backend; production custodian routes are in landing/app/api/.
  *
  * Run:   node mock-api/server.mjs
  * Env:   PORT (default 8000). Binds 0.0.0.0 so a phone on the LAN can reach it.
