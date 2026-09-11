@@ -8,7 +8,14 @@ app wiring lives in Lane B/A's `features/dhamma/` and is not touched here.
 |---|---|---|
 | `prompts.json` | Curated place-tied prompts, 3 per site (§13.4) | The prompt chips shown after darśana / capture — **kills the blank chat box** |
 | `dhamma-modes.json` | The four AN 4.42 answer modes + plain-language glosses (§13.1) | The Pali mode label on the answer card |
-| `reflections.json` | Site-specific four-truths reflection scaffolds (§13.6) | The stillness-gated reflection flow |
+
+The reflection scaffold that used to be drafted here as `reflections.json` now
+lives directly in `core/dhamma/reflection.ts` as `SITE_STAGES` /
+`SITE_STAGES_NE` (per-site question variation) and `DEFAULT_STAGES` /
+`DEFAULT_STAGES_NE` (the generic four-question arc), with tested code rather
+than an unwired draft. The Nepali stages there are a direct translation of the
+neutral "reflection on place" wording, not the four-truths framing this file
+originally described — see `15-POST-HACKATHON-STRATEGY (1).md` §5.
 
 ## prompts.json
 
@@ -30,19 +37,6 @@ The mode is **displayed on every answer card**, with `AN 4.42` cited for the
 taxonomy itself (§13.1). `ṭhapanīya` is a legitimate answer, not an error — the
 card for it cites `MN 63`, where the Buddha declines the ten undeclared
 questions. Use `gloss` for the small label and `explain` for the one-line tooltip.
-
-## reflections.json
-
-Unlocked by completing the stillness quest, never by opening a tab (§13.6). The
-scaffold **asks, never advises** — every stage is a question. Covers the five
-tier-1 sites plus Tilaurakot, whose *"what are you holding on to?"* is the
-canonical example in the spec.
-
-> **Safety, non-negotiable (§13.6):** distress detection halts the reflection
-> flow entirely — no verse, no reframe — and surfaces verified Nepali helplines.
-> This must be tested and live **before** the reflection mode is shown to anyone.
-> If it isn't finished, cut the whole reflection mode; `paṭipucchā` inside Dhamma
-> still gives the Socratic behaviour without the risk surface.
 
 ## Nepali
 
