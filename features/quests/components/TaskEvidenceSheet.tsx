@@ -4,6 +4,7 @@ import { ActivityIndicator, Image, StyleSheet, TextInput, View } from 'react-nat
 import * as FileSystem from 'expo-file-system/legacy';
 
 import { Button, Divider, Text } from '@/components/ui';
+import { visitorLiteralCopy } from '@/i18n/literals';
 import { database, questReview } from '@/services';
 import { usePreferences } from '@/store';
 import { colors, radii, spacing } from '@/theme';
@@ -78,6 +79,7 @@ export function TaskEvidenceSheet({
 }: TaskEvidenceSheetProps) {
   const router = useRouter();
   const { preferences } = usePreferences();
+  const language = preferences.interfaceLanguage;
   const [photoUri, setPhotoUri] = useState<string | undefined>(existing?.photoUri);
   const [count, setCount] = useState(existing?.count?.toString() ?? '');
   const [note, setNote] = useState(existing?.note ?? '');
@@ -158,7 +160,7 @@ export function TaskEvidenceSheet({
     <View style={styles.sheet}>
       {/* The sheet chrome already carries the task title, so this states the
           ask rather than repeating the name. */}
-      <Text variant="body" tone="secondary">
+      <Text variant="body" tone="secondary" translate={false}>
         {task.expectation ?? task.description}
       </Text>
 
@@ -168,12 +170,12 @@ export function TaskEvidenceSheet({
             {task.photoMode.replaceAll('-', ' ')} challenge
           </Text>
           {task.safetyNote ? (
-            <Text variant="caption" tone="secondary">{task.safetyNote}</Text>
+            <Text variant="caption" tone="secondary" translate={false}>{task.safetyNote}</Text>
           ) : null}
         </View>
       ) : task.safetyNote ? (
         <View style={styles.guidance}>
-          <Text variant="caption" tone="secondary">{task.safetyNote}</Text>
+          <Text variant="caption" tone="secondary" translate={false}>{task.safetyNote}</Text>
         </View>
       ) : null}
 
@@ -227,7 +229,7 @@ export function TaskEvidenceSheet({
               <Text variant="body" tone={VERDICT_TONE[review.verdict]}>
                 {VERDICT_LABEL[review.verdict]}
               </Text>
-              <Text variant="body" tone="secondary">
+              <Text variant="body" tone="secondary" translate={false}>
                 {review.comment}
               </Text>
               {/* Named, because an opinion without an author is just an
@@ -254,7 +256,7 @@ export function TaskEvidenceSheet({
             placeholder="0"
             placeholderTextColor={colors.textMuted}
             style={styles.input}
-            accessibilityLabel="Count"
+            accessibilityLabel={visitorLiteralCopy(language, 'Count')}
           />
         </View>
       ) : null}
@@ -268,10 +270,10 @@ export function TaskEvidenceSheet({
             value={note}
             onChangeText={setNote}
             multiline
-            placeholder="Optional"
+            placeholder={visitorLiteralCopy(language, 'Optional')}
             placeholderTextColor={colors.textMuted}
             style={[styles.input, styles.multiline]}
-            accessibilityLabel="Note"
+            accessibilityLabel={visitorLiteralCopy(language, 'Note')}
           />
         </View>
       ) : null}

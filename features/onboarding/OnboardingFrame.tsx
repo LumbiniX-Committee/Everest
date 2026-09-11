@@ -4,6 +4,7 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 
 import { Screen, Text } from '@/components/ui';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { colors, radii, spacing } from '@/theme';
 
 import { TOTAL_STEPS, stepIndex } from './steps';
@@ -42,6 +43,7 @@ export function OnboardingFrame({
   scrollBody?: boolean;
 }) {
   const router = useRouter();
+  const ui = useVisitorLiteralCopy();
   const index = stepIndex(stepKey);
   // Onboarding is the one flow people most often want to step back through —
   // to re-read what a permission is for before granting it. There was no way
@@ -56,7 +58,7 @@ export function OnboardingFrame({
           style={styles.progress}
           accessibilityRole="progressbar"
           accessibilityValue={{ min: 1, max: TOTAL_STEPS, now: index + 1 }}
-          accessibilityLabel={`Step ${index + 1} of ${TOTAL_STEPS}`}
+          accessibilityLabel={`${ui('Step')} ${index + 1} ${ui('of')} ${TOTAL_STEPS}`}
         >
           {Array.from({ length: TOTAL_STEPS }, (_, i) => (
             <View
@@ -99,7 +101,7 @@ export function OnboardingFrame({
         {canGoBack ? (
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Back"
+            accessibilityLabel={ui('Back')}
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             onPress={() => router.back()}
             style={({ pressed }) => [styles.back, pressed && styles.backPressed]}

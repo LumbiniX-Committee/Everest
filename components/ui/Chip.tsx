@@ -9,6 +9,8 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useHaptics } from '@/hooks';
+import { useInterfaceLanguage } from '@/i18n/context';
+import { visitorLiteralCopy } from '@/i18n/literals';
 import { colors, radii, spacing } from '@/theme';
 
 import { Text } from './Text';
@@ -32,6 +34,8 @@ export type ChipProps = {
  */
 export function Chip({ label, selected = false, onPress, disabled = false, style }: ChipProps) {
   const { selection } = useHaptics();
+  const language = useInterfaceLanguage();
+  const displayLabel = visitorLiteralCopy(language, label);
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => ({
@@ -40,29 +44,29 @@ export function Chip({ label, selected = false, onPress, disabled = false, style
 
   useEffect(() => {
     if (selected) {
-      scale.value = withSequence(
+      scale.set(withSequence(
         withTiming(0.95, { duration: 80 }),
         withSpring(1, { damping: 12, stiffness: 300, mass: 0.6 }),
-      );
+      ));
     }
   }, [selected, scale]);
 
   const handlePressIn = useCallback(() => {
     if (disabled) return;
-    scale.value = withSpring(0.93, {
+    scale.set(withSpring(0.93, {
       damping: 14,
       stiffness: 380,
       mass: 0.7,
-    });
+    }));
   }, [disabled, scale]);
 
   const handlePressOut = useCallback(() => {
     if (disabled) return;
-    scale.value = withSpring(1, {
+    scale.set(withSpring(1, {
       damping: 12,
       stiffness: 300,
       mass: 0.7,
-    });
+    }));
   }, [disabled, scale]);
 
   const handlePress = useCallback(() => {
@@ -74,6 +78,7 @@ export function Chip({ label, selected = false, onPress, disabled = false, style
   return (
     <AnimatedPressable
       accessibilityRole="button"
+      accessibilityLabel={displayLabel}
       accessibilityState={{ selected, disabled }}
       disabled={disabled}
       onPress={handlePress}
@@ -88,7 +93,7 @@ export function Chip({ label, selected = false, onPress, disabled = false, style
       ]}
     >
       <Text variant="button" tone={selected ? 'inverse' : 'sandstone'}>
-        {label}
+        {displayLabel}
       </Text>
     </AnimatedPressable>
   );

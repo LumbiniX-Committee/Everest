@@ -15,6 +15,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import { SpeakButton } from '@/components/voice/SpeakButton';
 import { useKeyboardInset, useSceneBottomGap } from '@/hooks';
 import { dhamma } from '@/services';
+import { usePreferences } from '@/store';
 import type { CrisisHelpline, DhammaLanguage } from '@/services/dhamma';
 import { colors, radii, spacing } from '@/theme';
 
@@ -115,7 +116,8 @@ const T = {
 
 export function ReflectionScreen({ siteId }: { siteId?: string }) {
   const router = useRouter();
-  const [language, setLanguage] = useState<DhammaLanguage>('ne');
+  const { preferences } = usePreferences();
+  const [language, setLanguage] = useState<DhammaLanguage>(preferences.interfaceLanguage);
   const [phase, setPhase] = useState<Phase>('intro');
   const [messages, setMessages] = useState<Msg[]>([]);
   const [questions, setQuestions] = useState<string[]>([]);
@@ -409,7 +411,7 @@ function MessageBubble({
   if (msg.from === 'user') {
     return (
       <ChatBubble from="user">
-        <Text variant="body">{msg.text}</Text>
+        <Text variant="body" translate={false}>{msg.text}</Text>
       </ChatBubble>
     );
   }
@@ -485,7 +487,7 @@ function MessageBubble({
                 {t.offlineNote}
               </Text>
             ) : null}
-            <Text variant="caption" tone="muted">
+            <Text variant="caption" tone="muted" translate={false}>
               {msg.disclaimer}
             </Text>
           </Animated.View>

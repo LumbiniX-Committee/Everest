@@ -8,8 +8,16 @@
 
 const EAS_GRAPHQL = 'https://api.expo.dev/graphql';
 
-/** From app.json, extra.eas.projectId. */
-const PROJECT_ID = 'e8454679-10b7-42cc-8961-95a421426705';
+/**
+ * From app.json, extra.eas.projectId.
+ *
+ * Moved from the `siddantasodari` project (e8454679-…) to `siddantasodari-2`
+ * on 2026-08-10: the original account exhausted its free-plan Android builds
+ * for the month, so new APKs are built under a second account. This must stay
+ * in step with app.json — pointing at a project with no finished preview build
+ * silently serves the pinned fallback instead.
+ */
+const PROJECT_ID = 'b41eee97-484c-4afd-b664-fa65fca50e66';
 
 /**
  * Only the `preview` profile is eligible. `production` builds an app-bundle
@@ -37,10 +45,10 @@ export type LatestBuild = {
  */
 const FALLBACK: LatestBuild = {
   version: '0.1.0',
-  buildNumber: '2',
+  buildNumber: '1',
   apkUrl:
-    'https://expo.dev/artifacts/eas/8LnVlkGBWa9QJd2eEmTqlIWrL9gSjaRNvPqJkH_qTi4.apk',
-  completedAt: '2026-08-08T09:33:41.830Z',
+    'https://expo.dev/artifacts/eas/0DPfxsZpqdCXwTXJrO_JpUsT0AYp0yPMG-oGPFfHjKc.apk',
+  completedAt: '2026-08-09T19:53:01.715Z',
   isFallback: true,
 };
 

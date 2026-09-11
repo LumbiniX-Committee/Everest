@@ -1,5 +1,5 @@
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
-import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import { Button, Card, Icon, ProgressIndicator, Text } from '@/components/ui';
 import { usePractice } from '@/store/practice';

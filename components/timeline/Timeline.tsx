@@ -54,19 +54,19 @@ export function Timeline({ entries, order = 'asc' }: TimelineProps) {
             </View>
 
             <View style={[styles.body, last && styles.bodyLast]}>
-              <Text variant="mono" tone="muted">
+              <Text variant="mono" tone="muted" translate={false}>
                 {entry.date}
               </Text>
-              <Text variant="body" style={styles.title}>
+              <Text variant="body" style={styles.title} translate={false}>
                 {entry.title}
               </Text>
               {entry.detail ? (
-                <Text variant="caption" tone="secondary">
+                <Text variant="caption" tone="secondary" translate={false}>
                   {entry.detail}
                 </Text>
               ) : null}
               {entry.attribution ? (
-                <Text variant="caption" tone="muted" style={styles.attribution}>
+                <Text variant="caption" tone="muted" style={styles.attribution} translate={false}>
                   {entry.attribution}
                 </Text>
               ) : null}

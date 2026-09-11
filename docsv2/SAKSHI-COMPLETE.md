@@ -1,3 +1,6 @@
+> **Historical pre-pivot reference.** Do not use this file for current scope,
+> counts, security, or deployment. See `docs/PRODUCTION-PILOT.md`.
+
 # SĀKṢĪ — COMPLETE PROJECT DOCUMENTATION
 
 ### LumbiniX 2026 · "What If Buddha Were Born in 2026?"

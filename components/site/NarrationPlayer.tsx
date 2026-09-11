@@ -2,6 +2,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { Button, Text } from '@/components/ui';
 import { useNarration } from '@/hooks';
+import { useInterfaceLanguage } from '@/i18n/context';
 import { spacing } from '@/theme';
 
 export type NarrationPlayerProps = {
@@ -23,6 +24,7 @@ export type NarrationPlayerProps = {
  * one.
  */
 export function NarrationPlayer({ siteId, autoPlay = false, textless = false }: NarrationPlayerProps) {
+  const language = useInterfaceLanguage();
   const { hasAudio, narration, playing, positionSeconds, durationSeconds, toggle } = useNarration(
     siteId,
     { autoPlay },
@@ -35,8 +37,8 @@ export function NarrationPlayer({ siteId, autoPlay = false, textless = false }: 
       <Text variant="heading">Narration</Text>
 
       {narration && !textless ? (
-        <Text variant="body" tone="secondary" style={styles.narrationText}>
-          {narration.en}
+        <Text variant="body" tone="secondary" style={styles.narrationText} translate={false}>
+          {language === 'ne' ? narration.ne : narration.en}
         </Text>
       ) : null}
 

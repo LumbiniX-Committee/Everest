@@ -36,29 +36,29 @@ export function SourceCard({ source, citation, onPress, compact = false }: Sourc
           </Text>
         </View>
         {source.date ? (
-          <Text variant="mono" tone="muted">
+          <Text variant="mono" tone="muted" translate={false}>
             {source.date}
           </Text>
         ) : null}
       </View>
 
-      <Text variant="heading" style={styles.title}>
+      <Text variant="heading" style={styles.title} translate={false}>
         {source.title}
       </Text>
 
-      <Text variant="caption" tone="secondary">
+      <Text variant="caption" tone="secondary" translate={false}>
         {source.attribution}
       </Text>
 
       {!compact && reference ? (
-        <Text variant="mono" tone="muted" style={styles.reference}>
+        <Text variant="mono" tone="muted" style={styles.reference} translate={false}>
           {reference}
         </Text>
       ) : null}
 
       {!compact && source.caveat ? (
         <View style={styles.caveat}>
-          <Text variant="caption" tone="secondary">
+          <Text variant="caption" tone="secondary" translate={false}>
             {source.caveat}
           </Text>
         </View>

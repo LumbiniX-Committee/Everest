@@ -68,6 +68,9 @@ scratch/
 /ios
 /android
 
+# Supabase CLI runtime metadata (regenerated locally)
+/supabase/.temp/
+
 # Optional on-device language models are downloaded locally and are never
 # committed to the repository or included in the base APK.
 /models/*.gguf

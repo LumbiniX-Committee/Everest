@@ -15,9 +15,11 @@ import {
   vantagesForSite,
 } from '@/data';
 import { useCurrentPosition } from '@/hooks';
+import { visitorCopy, type VisitorCopyKey } from '@/i18n/visitor';
+import { visitorLiteralCopy } from '@/i18n/literals';
 import { database } from '@/services';
 import { onnxAvailable } from '@/services/ai/onnx';
-import { usePractice } from '@/store';
+import { usePractice, usePreferences } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 import { distanceMeters, formatDistance, formatTimestamp } from '@/utils';
 import type { Observation, ObservationAssessment } from '@/types';
@@ -43,13 +45,13 @@ type TabCounts = { siteVantages: unknown[]; observations: unknown[] };
 
 const TABS: ReadonlyArray<{
   key: TabMode;
-  label: string;
+  labelKey: VisitorCopyKey;
   /** Tabs that carry a number say how many; Then/Now opens a list and does not. */
   count?: (counts: TabCounts) => number;
 }> = [
-  { key: 'vantages', label: 'Vantages', count: (c) => c.siteVantages.length },
-  { key: 'thennow', label: 'Then / Now' },
-  { key: 'records', label: 'Records', count: (c) => c.observations.length },
+  { key: 'vantages', labelKey: 'sakshi.vantages', count: (c) => c.siteVantages.length },
+  { key: 'thennow', labelKey: 'sakshi.thenNow' },
+  { key: 'records', labelKey: 'sakshi.records', count: (c) => c.observations.length },
 ];
 
 const COMPARABLE_SITES = demoSites.filter((site) => historicalImagesForSite(site.id).length > 0);
@@ -67,6 +69,8 @@ export function SakshiScreen() {
   const [observations, setObservations] = useState<Observation[]>([]);
   const [activeTab, setActiveTab] = useState<TabMode>('vantages');
   const { summary, refresh: refreshPractice } = usePractice();
+  const { preferences } = usePreferences();
+  const t = (key: VisitorCopyKey) => visitorCopy(preferences.interfaceLanguage, key);
 
   // Re-read on focus: an observation may have been recorded since we last looked.
   useFocusEffect(
@@ -110,9 +114,9 @@ export function SakshiScreen() {
     <Screen scroll>
       <ScreenHeader
         canGoBack={false}
-        eyebrow="Sākṣī"
-        title="Witness"
-        subtitle="Return to a fixed viewpoint, align, and record what is there today."
+        eyebrow={t('sakshi.eyebrow')}
+        title={t('sakshi.title')}
+        subtitle={t('sakshi.subtitle')}
         rightAction={<SettingsButton />}
       />
 
@@ -132,10 +136,10 @@ export function SakshiScreen() {
         </View>
         <View style={styles.detectorCopy}>
           <Text variant="label" tone="sandstone" uppercase>
-            On-device damage detector
+            {t('sakshi.detector')}
           </Text>
           <Text variant="body" tone="secondary">
-            {onnxAvailable ? 'Ready in this build.' : 'Unavailable in this build.'}
+            {onnxAvailable ? t('sakshi.detectorReady') : t('sakshi.detectorUnavailable')}
           </Text>
         </View>
       </View>
@@ -154,7 +158,7 @@ export function SakshiScreen() {
           ) : null}
           <View style={styles.heroBody}>
             <View style={styles.heroHeader}>
-              <Chip label="NEAREST" />
+              <Chip label={t('sakshi.nearest').toUpperCase()} />
               {distanceToSite != null ? (
                 <Text variant="mono" tone="sandstone">
                   {formatDistance(distanceToSite)}
@@ -162,7 +166,7 @@ export function SakshiScreen() {
               ) : null}
             </View>
             <Text variant="heading">
-              {activeSite?.name ?? 'Sacred Site'}
+              {activeSite?.name ?? t('sakshi.sacredSite')}
             </Text>
             <Text variant="caption" tone="secondary">
               {primaryVantage.label}
@@ -174,7 +178,7 @@ export function SakshiScreen() {
               were a specification of a thing not yet being done.
             */}
             <Button
-              label="Take the photograph"
+              label={t('sakshi.takePhoto')}
               icon="camera-outline"
               style={styles.photoButton}
               onPress={() =>
@@ -197,7 +201,8 @@ export function SakshiScreen() {
       <View style={styles.tabBar} accessibilityRole="tablist">
         {TABS.map((tab) => {
           const selected = activeTab === tab.key;
-          const label = tab.count ? `${tab.label} (${tab.count({ siteVantages, observations })})` : tab.label;
+          const tabLabel = t(tab.labelKey);
+          const label = tab.count ? `${tabLabel} (${tab.count({ siteVantages, observations })})` : tabLabel;
           return (
             <Pressable
               key={tab.key}
@@ -220,7 +225,7 @@ export function SakshiScreen() {
         <View style={styles.section}>
           <View style={styles.listHeader}>
             <Icon name="bookmark-outline" size={18} color={colors.textMuted} />
-            <Text variant="heading">Saved viewpoints · {siteVantages.length}</Text>
+            <Text variant="heading">{t('sakshi.savedViewpoints')} · {siteVantages.length}</Text>
           </View>
           <View style={styles.list}>
             {siteVantages.map((vantage) => {
@@ -255,8 +260,8 @@ export function SakshiScreen() {
         <View style={styles.section}>
           {COMPARABLE_SITES.length === 0 ? (
             <EmptyState
-              title="No comparisons yet"
-              body="A comparison needs a dated archive photograph matched to a viewpoint. None are bundled yet."
+              title={t('sakshi.noComparisonsTitle')}
+              body={t('sakshi.noComparisonsBody')}
             />
           ) : (
             <View style={styles.list}>
@@ -272,14 +277,14 @@ export function SakshiScreen() {
                         params: { siteId: site.id },
                       })
                     }
-                    accessibilityLabel={`Compare ${site.name} across time`}
+                    accessibilityLabel={`${visitorLiteralCopy(preferences.interfaceLanguage, 'Compare')} ${site.name} ${visitorLiteralCopy(preferences.interfaceLanguage, 'across time')}`}
                   >
-                    <Text variant="heading">{site.name}</Text>
+                    <Text variant="heading" translate={false}>{site.name}</Text>
                     <Text variant="mono" tone="sandstone">
-                      {oldest.date} → today
+                      {oldest.date} → {t('sakshi.today')}
                     </Text>
                     <Text variant="caption" tone="muted">
-                      {images.length === 1 ? '1 archive image' : `${images.length} archive images`}
+                      {images.length} {t('sakshi.archiveImages')}
                     </Text>
                   </Card>
                 );
@@ -302,7 +307,7 @@ export function SakshiScreen() {
             <>
               <TimeSeriesScrubber
                 observations={siteObservations}
-                vantageLabel={activeSite?.name ?? 'This place'}
+                vantageLabel={activeSite?.name ?? t('sakshi.thisPlace')}
                 onSelectObservation={(obs) =>
                   router.push({
                     pathname: '/(main)/sakshi/observation',
@@ -316,8 +321,8 @@ export function SakshiScreen() {
 
           {observations.length === 0 ? (
             <EmptyState
-              title="Nothing recorded yet"
-              body="A series begins with one observation. Choose a vantage point and stand in it."
+              title={t('sakshi.nothingTitle')}
+              body={t('sakshi.nothingBody')}
             />
           ) : (
             <View style={styles.list}>
@@ -325,6 +330,7 @@ export function SakshiScreen() {
                 <ObservationRow
                   key={observation.id}
                   observation={observation}
+                  assessment={t(ASSESSMENT_KEYS[observation.assessment])}
                   onPress={() =>
                     router.push({
                       pathname: '/(main)/sakshi/observation',
@@ -338,12 +344,12 @@ export function SakshiScreen() {
 
           <PracticeSummaryCard summary={summary} />
           <Button
-            label="Open complete site register"
+            label={t('sakshi.openRegister')}
             variant="secondary"
             onPress={() => router.push('/(main)/sakshi/register' as any)}
           />
           <Button
-            label="Who is contributing"
+            label={t('sakshi.contributors')}
             variant="quiet"
             onPress={() => router.push('/(main)/sakshi/guardians' as any)}
           />
@@ -355,9 +361,11 @@ export function SakshiScreen() {
 
 function ObservationRow({
   observation,
+  assessment,
   onPress,
 }: {
   observation: Observation;
+  assessment: string;
   onPress: () => void;
 }) {
   const site = findSite(observation.siteId);
@@ -375,7 +383,7 @@ function ObservationRow({
           </Text>
         </View>
         <Chip
-          label={assessmentLabel[observation.assessment]}
+          label={assessment}
           selected={observation.assessment !== 'unreviewed'}
         />
       </View>
@@ -383,10 +391,10 @@ function ObservationRow({
   );
 }
 
-const assessmentLabel: Record<ObservationAssessment, string> = {
-  unreviewed: 'Needs review',
-  'no-change': 'No change',
-  reported: 'Reported',
+const ASSESSMENT_KEYS: Record<ObservationAssessment, VisitorCopyKey> = {
+  unreviewed: 'sakshi.needsReview',
+  'no-change': 'sakshi.noChange',
+  reported: 'sakshi.reported',
 };
 
 const styles = StyleSheet.create({

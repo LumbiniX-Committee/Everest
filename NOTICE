@@ -1,0 +1,26 @@
+Sākṣī
+Copyright 2026 The Sākṣī contributors (LumbiniX-Committee)
+
+This product includes software developed by the Sākṣī contributors for the
+LumbiniX 2026 hackathon and afterwards.
+
+The source code in this repository is licensed under the Apache License,
+Version 2.0. See LICENSE.
+
+Content and data are NOT covered by that licence. Site descriptions, facts,
+timelines, narration, quests and the coordinate register in seed/ and
+data/generated/, and the exports built from them, are licensed under
+Creative Commons Attribution 4.0 International. See LICENSE-CONTENT.
+
+Coordinates recorded with coords_source "osm" derive from OpenStreetMap and
+carry OpenStreetMap's own terms in addition. OpenStreetMap data is
+© OpenStreetMap contributors, available under the Open Database Licence.
+
+Third-party media shipped with the application — photographs, audio, fonts
+and the damage-detection model — remain under the licences of their
+respective rights holders. Every asset is itemised, with its source and its
+licence, in LICENCES.md.
+
+The name "Sākṣī", the Sākṣī wordmark, and the reticle mark are not licensed
+for use by this licence. See Section 6 of the Apache License, and the
+Trademark section of docs/LICENSING.md.

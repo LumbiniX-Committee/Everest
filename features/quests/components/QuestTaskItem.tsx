@@ -10,6 +10,7 @@ import Animated, {
 
 import { Button, Text } from '@/components/ui';
 import { useHaptics } from '@/hooks';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { colors, radii, spacing } from '@/theme';
 import type {
   ConditionSeverity,
@@ -63,6 +64,7 @@ export function QuestTaskItem({
   submission,
   onWitness,
 }: QuestTaskItemProps) {
+  const ui = useVisitorLiteralCopy();
   const { selection, notification } = useHaptics();
   const scale = useSharedValue(1);
   const checkScale = useSharedValue(completed ? 1 : 0);
@@ -165,7 +167,7 @@ export function QuestTaskItem({
                 source={{ uri: submission.photoUri }}
                 style={styles.thumb}
                 resizeMode="cover"
-                accessibilityLabel="The photograph you recorded for this task"
+                accessibilityLabel={ui('The photograph you recorded for this task')}
               />
             ) : null}
 

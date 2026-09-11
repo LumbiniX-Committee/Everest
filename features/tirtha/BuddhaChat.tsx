@@ -14,6 +14,9 @@ import {
 import { SpeechCloud, speechCloudStyles, useTypingText } from '@/components/monk';
 import { Icon } from '@/components/ui';
 import { useKeyboardInset } from '@/hooks';
+import { useInterfaceLanguage } from '@/i18n/context';
+import { visitorLiteralCopy } from '@/i18n/literals';
+import { formatVisitorCopy, visitorCopy } from '@/i18n/visitor';
 import { guide as guideService, voice } from '@/services';
 import { colors, font, radii, spacing } from '@/theme';
 
@@ -31,6 +34,7 @@ export type BuddhaChatProps = {
 };
 
 export function BuddhaChat({ visible, onClose, siteId, siteName }: BuddhaChatProps) {
+  const language = useInterfaceLanguage();
   const keyboardInset = useKeyboardInset();
   const [keyboardOpen, setKeyboardOpen] = useState(false);
 
@@ -73,7 +77,7 @@ export function BuddhaChat({ visible, onClose, siteId, siteName }: BuddhaChatPro
     // `askGuide` resolves whatever happens: provider, then the site's own
     // description, then a general line. There is no failure branch to render,
     // which is why there is no error state on this screen.
-    const reply = await guideService.askGuide({ question, siteId, siteName, language: 'en' });
+    const reply = await guideService.askGuide({ question, siteId, siteName, language });
 
     setExchanges((prev) => {
       const next = [...prev, { question, answer: reply.text }];
@@ -86,11 +90,11 @@ export function BuddhaChat({ visible, onClose, siteId, siteName }: BuddhaChatPro
     // Outside the request on purpose. `voice.speakText` throws on a device with
     // no speech engine, and a nicety must not be able to discard the answer.
     try {
-      voice.speakText(reply.text, 'en');
+      voice.speakText(reply.text, language);
     } catch {
       // Spoken delivery is optional. The text is already on screen.
     }
-  }, [draft, siteId, siteName]);
+  }, [draft, language, siteId, siteName]);
 
   const handleClose = useCallback(() => {
     voice.stopSpeaking();
@@ -101,8 +105,10 @@ export function BuddhaChat({ visible, onClose, siteId, siteName }: BuddhaChatPro
   if (!visible) return null;
 
   const current = exchanges[at];
-  const opening = guideService.opening(siteName);
-  const body = busy ? 'Let me think about that.' : (current?.answer ?? opening);
+  const opening = siteName
+    ? formatVisitorCopy(language, 'guide.openingSite', { site: siteName })
+    : visitorCopy(language, 'guide.openingGeneral');
+  const body = busy ? visitorCopy(language, 'guide.thinking') : (current?.answer ?? opening);
 
   const isTypingActive = keyboardOpen || keyboardInset > 0;
   // On iOS, window does not automatically resize, so we use measured inset.
@@ -120,7 +126,7 @@ export function BuddhaChat({ visible, onClose, siteId, siteName }: BuddhaChatPro
       statusBarTranslucent
     >
       <SpeechCloud
-        eyebrow={siteName ? siteName.toUpperCase() : 'YOUR GUIDE'}
+        eyebrow={siteName ? siteName.toUpperCase() : visitorCopy(language, 'guide.eyebrow').toUpperCase()}
         onClose={handleClose}
         animationKey={busy ? 'thinking' : `${at}:${exchanges.length}`}
         bottomInset={effectiveBottomInset}
@@ -149,7 +155,7 @@ export function BuddhaChat({ visible, onClose, siteId, siteName }: BuddhaChatPro
                   hitSlop={10}
                   style={[s.navBtn, at === 0 && s.navBtnOff]}
                   accessibilityRole="button"
-                  accessibilityLabel="Previous answer"
+                  accessibilityLabel={visitorLiteralCopy(language, 'Previous answer')}
                 >
                   <RNText style={s.navTxt}>‹</RNText>
                 </Pressable>
@@ -162,7 +168,7 @@ export function BuddhaChat({ visible, onClose, siteId, siteName }: BuddhaChatPro
                   hitSlop={10}
                   style={[s.navBtn, at >= exchanges.length - 1 && s.navBtnOff]}
                   accessibilityRole="button"
-                  accessibilityLabel="Next answer"
+                  accessibilityLabel={visitorLiteralCopy(language, 'Next answer')}
                 >
                   <RNText style={s.navTxt}>›</RNText>
                 </Pressable>
@@ -174,20 +180,20 @@ export function BuddhaChat({ visible, onClose, siteId, siteName }: BuddhaChatPro
                 value={draft}
                 onChangeText={setDraft}
                 multiline={!isTypingActive}
-                placeholder="Ask about this place"
+                placeholder={visitorLiteralCopy(language, 'Ask about this place')}
                 placeholderTextColor={colors.textMuted}
                 // `font()` resolves at call time; a StyleSheet is built once at
                 // module scope, before the real families have loaded.
                 style={[s.input, font('body'), isTypingActive && s.inputKeyboard]}
                 editable={!busy}
-                accessibilityLabel="Ask about this place"
+                accessibilityLabel={visitorLiteralCopy(language, 'Ask about this place')}
                 onSubmitEditing={() => void ask()}
               />
               <Pressable
                 onPress={() => void ask()}
                 disabled={busy || draft.trim().length === 0}
                 accessibilityRole="button"
-                accessibilityLabel="Ask"
+                accessibilityLabel={visitorLiteralCopy(language, 'Ask')}
                 style={({ pressed }) => [
                   s.send,
                   isTypingActive && s.sendKeyboard,
@@ -201,7 +207,7 @@ export function BuddhaChat({ visible, onClose, siteId, siteName }: BuddhaChatPro
           </View>
         }
       >
-        <CloudBody text={body} typing={!busy && current != null} isKeyboardOpen={isTypingActive} />
+        <CloudBody text={body} typing={!busy && current != null} isKeyboardOpen={isTypingActive} language={language} />
       </SpeechCloud>
     </Modal>
   );
@@ -220,10 +226,12 @@ function CloudBody({
   text,
   typing,
   isKeyboardOpen,
+  language,
 }: {
   text: string;
   typing: boolean;
   isKeyboardOpen: boolean;
+  language: 'en' | 'ne';
 }) {
   const { displayed, done, skip } = useTypingText(typing ? text : '', 16, 2);
   const shown = typing ? displayed : text;
@@ -233,7 +241,7 @@ function CloudBody({
       onPress={skip}
       disabled={!typing || done}
       accessibilityRole={typing && !done ? 'button' : undefined}
-      accessibilityLabel={typing && !done ? 'Show the whole answer' : undefined}
+      accessibilityLabel={typing && !done ? visitorLiteralCopy(language, 'Show the whole answer') : undefined}
     >
       <ScrollView
         style={[s.scroll, isKeyboardOpen && s.scrollKeyboard]}

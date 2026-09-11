@@ -1,0 +1,84 @@
+Sākṣī — content and data licence
+================================
+
+Copyright 2026 The Sākṣī contributors (LumbiniX-Committee)
+
+The content and data in this repository are licensed under the
+
+    Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Full text:  https://creativecommons.org/licenses/by/4.0/legalcode
+Summary:    https://creativecommons.org/licenses/by/4.0/
+SPDX:       CC-BY-4.0
+
+This is a different licence from the one covering the source code, which is
+Apache-2.0. See LICENSE and docs/LICENSING.md.
+
+
+WHAT THIS COVERS
+----------------
+
+  seed/*.json                     Site descriptions, facts, timelines,
+                                  narration, quests, reflections, needs,
+                                  and the coordinate and vantage register
+  data/generated/                 The same content, built for the app
+  landing/public/data/            The published GeoJSON, CSV and manifest
+  landing/lib/generated/          The map explorer dataset
+  docs/                           Written documentation and reports
+
+WHAT THIS DOES NOT COVER
+------------------------
+
+  Source code                     Apache-2.0. See LICENSE.
+  Third-party media               Photographs, audio, fonts, and the
+                                  damage-detection model remain under their
+                                  own licences. Every asset is itemised with
+                                  its source and licence in LICENCES.md.
+  The name and marks              "Sākṣī", the wordmark, and the reticle mark
+                                  are not licensed here.
+
+
+HOW TO ATTRIBUTE
+----------------
+
+CC BY 4.0 requires attribution. A reasonable form is:
+
+    Heritage site register from Sākṣī (LumbiniX-Committee), CC BY 4.0,
+    https://github.com/LumbiniX-Committee/Everest
+
+If you modify the data, say so. That is a licence condition, and it is also
+the point: a record whose changes are untracked is not evidence.
+
+
+OPENSTREETMAP-DERIVED COORDINATES
+---------------------------------
+
+This one carries an obligation beyond CC BY, and it is not optional.
+
+Ten of the fifteen sites in the register carry a coordinate recorded with
+`coords_source: "osm"`. Those positions were checked against, and in places
+taken from, OpenStreetMap. OpenStreetMap data is:
+
+    © OpenStreetMap contributors, licensed under the Open Database Licence
+    (ODbL 1.0) — https://www.openstreetmap.org/copyright
+
+Our CC BY 4.0 grant applies to our own compilation, description and
+structure. It cannot and does not relicense OpenStreetMap's data. If you
+extract the OSM-derived coordinates and build a database from them, ODbL's
+attribution and share-alike terms apply to you regardless of anything in
+this file.
+
+Sites recorded with `coords_source: "doc"` are read from published documents
+and are not OSM-derived. They are also not survey-grade, and they are
+published as `surveyed: false` for exactly that reason.
+
+
+A NOTE ON THE FACTS THEMSELVES
+------------------------------
+
+Facts are not copyrightable, and we are not claiming otherwise. What is
+licensed here is the expression: the summaries, the selection, the
+arrangement, and the compilation. If you want a date or a coordinate, take
+it. The licence exists so that the sourced, checked, written record travels
+with its attribution intact — which is the same reason the application
+refuses to state anything it cannot cite.

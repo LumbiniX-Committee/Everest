@@ -1,7 +1,9 @@
 import { StyleSheet, View } from 'react-native';
 
 import { Button, Text } from '@/components/ui';
+import { formatVisitorCopy, visitorCopy, type VisitorCopyKey } from '@/i18n/visitor';
 import type { YoloScanResult } from '@/services/ai/yoloEngine';
+import { usePreferences } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 
 export type PathologySummaryCardProps = {
@@ -21,15 +23,18 @@ export type PathologySummaryCardProps = {
  */
 export function PathologySummaryCard({ result, onApplyAiSuggestion }: PathologySummaryCardProps) {
   const { detections, inferenceMs, model, status } = result;
+  const { preferences } = usePreferences();
+  const language = preferences.interfaceLanguage;
+  const t = (key: VisitorCopyKey) => visitorCopy(language, key);
 
   if (status === 'error') {
     return (
       <View style={styles.card}>
         <Text variant="label" tone="sandstone" uppercase>
-          Damage scan
+          {t('pathology.scan')}
         </Text>
         <Text variant="body" tone="secondary">
-          {result.error ?? 'The scan could not run. You can still report by hand.'}
+          {language === 'en' && result.error ? result.error : t('pathology.scanFailed')}
         </Text>
       </View>
     );
@@ -47,19 +52,18 @@ export function PathologySummaryCard({ result, onApplyAiSuggestion }: PathologyS
     <View style={styles.card}>
       <View style={styles.headerRow}>
         <Text variant="label" tone="sandstone" uppercase>
-          {model?.name ?? 'Damage scan'}
+          {model?.name ?? t('pathology.scan')}
         </Text>
         {inferenceMs != null ? (
           <Text variant="mono" tone="secondary" style={styles.timing}>
-            {inferenceMs} ms · on-device
+            {inferenceMs} ms · {t('pathology.onDevice')}
           </Text>
         ) : null}
       </View>
 
       {detections.length === 0 ? (
         <Text variant="body" tone="secondary">
-          Nothing found in this photograph. That is a result, not a clean bill of health. Look at
-          it yourself and record anything the model missed.
+          {t('pathology.nothingFound')}
         </Text>
       ) : (
         <>
@@ -69,7 +73,7 @@ export function PathologySummaryCard({ result, onApplyAiSuggestion }: PathologyS
                 {detections.length}
               </Text>
               <Text variant="caption" tone="secondary">
-                {detections.length === 1 ? 'Candidate' : 'Candidates'}
+                {detections.length === 1 ? t('pathology.candidate') : t('pathology.candidates')}
               </Text>
             </View>
           </View>
@@ -86,17 +90,18 @@ export function PathologySummaryCard({ result, onApplyAiSuggestion }: PathologyS
           </View>
 
           <Text variant="caption" tone="muted">
-            Candidates for you to confirm, not a conservator’s assessment. Filing opens the report
-            at the one thing the model cannot judge, which is how urgent it is.
+            {t('pathology.disclosure')}{' '}
             {model?.mAP50 != null
-              ? ` Model accuracy on its own test set: ${model.mAP50.toFixed(2)}.`
-              : ' This model has not reported its accuracy.'}
+              ? formatVisitorCopy(language, 'pathology.accuracy', {
+                  score: model.mAP50.toFixed(2),
+                })
+              : t('pathology.noAccuracy')}
           </Text>
 
           {onApplyAiSuggestion ? (
             <View style={styles.btnWrap}>
               <Button
-                label="File this as a report"
+                label={t('pathology.fileReport')}
                 onPress={() => onApplyAiSuggestion(result)}
                 block
               />

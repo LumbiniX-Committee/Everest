@@ -19,6 +19,7 @@ import {
   useStoryProgress,
 } from '@/hooks';
 import { arrival, location as locationService } from '@/services';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { usePractice, usePreferences, useQuests } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 
@@ -48,6 +49,7 @@ const HUD_ROW_H = 72;
  * has no 3D model support, so the native map cannot draw it at any quality.
  */
 export function LiveMapScreen() {
+  const ui = useVisitorLiteralCopy();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { coordinate, demoMode } = useCurrentPosition({ watch: true });
@@ -355,8 +357,8 @@ export function LiveMapScreen() {
         <View style={styles.topLeft} pointerEvents="box-none">
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Tīrtha"
-            accessibilityHint="Everything else at Lumbini: the sites, the quests, then and now"
+            accessibilityLabel={ui('Tīrtha')}
+            accessibilityHint={ui('Everything else at Lumbini: the sites, the quests, then and now')}
             onPress={() => {
               pulse();
               if (router.canGoBack()) {
@@ -374,7 +376,7 @@ export function LiveMapScreen() {
         <View style={styles.topRight} pointerEvents="box-none">
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Go to a place"
+            accessibilityLabel={ui('Go to a place')}
             onPress={() => {
               pulse();
               setShowPlaces(true);
@@ -386,7 +388,7 @@ export function LiveMapScreen() {
 
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={follow ? 'Stop following your position' : 'Follow your position'}
+            accessibilityLabel={ui(follow ? 'Stop following your position' : 'Follow your position')}
             accessibilityState={{ selected: follow }}
             onPress={() => {
               pulse();
@@ -403,8 +405,8 @@ export function LiveMapScreen() {
 
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={demoMode ? 'Stop the demo walk' : 'Start the demo walk'}
-            accessibilityHint="Choose a heritage precinct and walk it using synthetic positions"
+            accessibilityLabel={ui(demoMode ? 'Stop the demo walk' : 'Start the demo walk')}
+            accessibilityHint={ui('Choose a heritage precinct and walk it using synthetic positions')}
             accessibilityState={{ selected: demoMode }}
             onPress={() => {
               pulse();
@@ -443,7 +445,7 @@ export function LiveMapScreen() {
                 : 'Hear this place'
               : 'Ask about Lumbini'
           }
-          accessibilityHint="Opens Buddha guide to listen to site stories or ask questions"
+          accessibilityHint={ui('Opens Buddha guide to listen to site stories or ask questions')}
           onPress={() => {
             pulse();
             if (atSiteId && !story.hasRead(atSiteId)) {
@@ -461,8 +463,8 @@ export function LiveMapScreen() {
         {atSiteId ? (
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Witness this place"
-            accessibilityHint="Opens Sākṣī to record what you can see here"
+            accessibilityLabel={ui('Witness this place')}
+            accessibilityHint={ui('Opens Sākṣī to record what you can see here')}
             onPress={() => {
               pulse();
               openSakshi(atSiteId);
@@ -499,6 +501,7 @@ export function LiveMapScreen() {
         visible={showWisdomModal}
         onClose={() => setShowWisdomModal(false)}
         title={near ? near.site.name : 'Lumbini'}
+        translateTitle={!near}
         subtitle={
           atSiteId
             ? 'You are here'

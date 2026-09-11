@@ -1,0 +1,779 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sākṣī — Research Foundations, Competitive Landscape and Market</title>
+<style>
+  @page {
+    size: A4;
+    margin: 18mm 30mm 16mm 20mm;
+  }
+
+  :root {
+    --ink:        #1B1B19;
+    --ink-2:      #4A4A46;
+    --ink-3:      #7A786F;
+    --lock:       #2F5F8C;
+    --lock-tint:  #EDF2F7;
+    --earth:      #8A6A3D;
+    --earth-tint: #F8F3EA;
+    --ok:         #2C6647;
+    --warn:       #8A5E14;
+    --gap:        #97322A;
+    --rule:       #D6D2C8;
+    --rule-soft:  #E8E5DE;
+
+    --display: "EB Garamond", "Gentium Book Plus", Georgia, serif;
+    --body:    "Charis SIL", "Gentium Plus", "Bitstream Charter", Georgia, serif;
+    --sans:    "Clear Sans", "DejaVu Sans Condensed", "DejaVu Sans", sans-serif;
+    --mono:    "DejaVu Sans Mono", monospace;
+    --deva:    "Annapurna SIL", "Noto Sans Devanagari", "Lohit Devanagari", serif;
+  }
+
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  html { font-size: 10.5pt; }
+
+  body {
+    margin: 0;
+    font-family: var(--body);
+    color: var(--ink);
+    line-height: 1.52;
+    text-rendering: optimizeLegibility;
+    hyphens: auto;
+  }
+
+  /* ══ Page architecture: a narrow rail for numbers and marginal notes ══ */
+  .page { break-after: page; }
+  .page:last-child { break-after: auto; }
+
+  .band {
+    display: grid;
+    grid-template-columns: 26mm 1fr;
+    column-gap: 8mm;
+    align-items: start;
+  }
+
+  .rail {
+    font-family: var(--sans);
+    font-size: 7.4pt;
+    line-height: 1.35;
+    color: var(--ink-3);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding-top: .18rem;
+  }
+  .rail .num {
+    font-family: var(--display);
+    font-size: 15pt;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--lock);
+    display: block;
+    line-height: 1;
+    margin-bottom: .3rem;
+  }
+  .rail .note {
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 7.6pt;
+    line-height: 1.42;
+    color: var(--ink-3);
+    margin-top: .9rem;
+    padding-top: .55rem;
+    border-top: .5pt solid var(--rule);
+  }
+
+  .col { min-width: 0; }
+
+  /* ══ Cover ══ */
+  .cover { min-height: 256mm; display: flex; flex-direction: column; }
+  .cover-top { border-bottom: 1.5pt solid var(--lock); padding-bottom: 1.1rem; }
+  .cover .kicker {
+    font-family: var(--sans);
+    font-size: 8pt;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 2.6rem;
+  }
+  .cover .deva {
+    font-family: var(--deva);
+    font-size: 30pt;
+    line-height: 1;
+    color: var(--earth);
+    margin: 0 0 .5rem;
+  }
+  .cover h1 {
+    font-family: var(--display);
+    font-size: 46pt;
+    font-weight: 500;
+    letter-spacing: -.015em;
+    line-height: .98;
+    margin: 0 0 .7rem;
+  }
+  .cover .gloss {
+    font-family: var(--body);
+    font-size: 12pt;
+    font-style: italic;
+    color: var(--ink-2);
+    margin: 0;
+  }
+  .cover-theme {
+    margin: 2.1rem 0 0;
+    padding: 1.1rem 1.3rem;
+    background: var(--earth-tint);
+    border-left: 2pt solid var(--earth);
+  }
+  .cover-theme .lbl {
+    font-family: var(--sans);
+    font-size: 7.4pt;
+    letter-spacing: .17em;
+    text-transform: uppercase;
+    color: var(--earth);
+    display: block;
+    margin-bottom: .35rem;
+  }
+  .cover-theme p {
+    margin: 0;
+    font-family: var(--display);
+    font-size: 13.5pt;
+    line-height: 1.3;
+    font-style: italic;
+  }
+
+  .cover-meta {
+    margin-top: auto;
+    padding-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.4rem 2.2rem;
+  }
+  .cover-meta .blk h4 {
+    font-family: var(--sans);
+    font-size: 7.4pt;
+    letter-spacing: .17em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 .4rem;
+    padding-bottom: .3rem;
+    border-bottom: .5pt solid var(--rule);
+    font-weight: 400;
+  }
+  .cover-meta .blk p { margin: 0 0 .18rem; font-size: 9.4pt; line-height: 1.4; }
+  .cover-meta .blk .role { color: var(--ink-3); font-size: 8.6pt; }
+  .cover-meta .blk a, .cover-meta .blk .lnk {
+    font-family: var(--mono);
+    font-size: 7.6pt;
+    color: var(--lock);
+    word-break: break-all;
+    text-decoration: none;
+  }
+
+  /* ══ Contents ══ */
+  .toc-h {
+    font-family: var(--display);
+    font-size: 24pt;
+    font-weight: 500;
+    margin: 0 0 1.6rem;
+    padding-bottom: .6rem;
+    border-bottom: 1pt solid var(--rule);
+  }
+  ol.toc { list-style: none; margin: 0; padding: 0; }
+  ol.toc > li {
+    display: grid;
+    grid-template-columns: 8mm 1fr;
+    gap: 4mm;
+    padding: .55rem 0;
+    border-bottom: .5pt solid var(--rule-soft);
+  }
+  ol.toc .n { font-family: var(--display); font-size: 12pt; color: var(--lock); }
+  ol.toc .t { font-family: var(--display); font-size: 12pt; }
+  ol.toc .d { font-family: var(--sans); font-size: 8.2pt; color: var(--ink-3); display: block; margin-top: .12rem; line-height: 1.4; }
+
+  /* ══ Section headings ══ */
+  h2.sec {
+    font-family: var(--display);
+    font-size: 22pt;
+    font-weight: 500;
+    letter-spacing: -.012em;
+    line-height: 1.1;
+    margin: 0 0 1.1rem;
+    padding-bottom: .55rem;
+    border-bottom: 1pt solid var(--lock);
+  }
+
+  h3 {
+    font-family: var(--display);
+    font-size: 13pt;
+    font-weight: 600;
+    margin: 1.5rem 0 .4rem;
+    break-after: avoid;
+  }
+  h3:first-of-type { margin-top: .4rem; }
+
+  h4 {
+    font-family: var(--sans);
+    font-size: 7.6pt;
+    font-weight: 600;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 1.2rem 0 .35rem;
+    break-after: avoid;
+  }
+
+  p { margin: 0 0 .62rem; text-align: justify; }
+  p.lede { font-size: 11.2pt; line-height: 1.48; color: var(--ink-2); margin-bottom: 1rem; }
+
+  strong { font-weight: 700; }
+  em { font-style: italic; }
+
+  ul, ol.body { margin: .3rem 0 .8rem; padding-left: 1.05rem; }
+  li { margin-bottom: .3rem; }
+  ul.plain { list-style: none; padding-left: 0; }
+
+  code, .m {
+    font-family: var(--mono);
+    font-size: .83em;
+    background: var(--lock-tint);
+    padding: .04em .25em;
+    border-radius: 1.5pt;
+  }
+
+  /* ══ Blocks ══ */
+  .callout {
+    margin: .9rem 0 1rem;
+    padding: .75rem .95rem;
+    background: var(--earth-tint);
+    border-left: 2pt solid var(--earth);
+    break-inside: avoid;
+  }
+  .callout.cool { background: var(--lock-tint); border-left-color: var(--lock); }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout h4 { margin-top: 0; color: var(--earth); }
+  .callout.cool h4 { color: var(--lock); }
+
+  /* ══ Module cards ══ */
+  .module {
+    border: .75pt solid var(--rule);
+    margin-bottom: .85rem;
+    break-inside: avoid;
+  }
+  .module .mh {
+    padding: .5rem .8rem;
+    background: var(--lock-tint);
+    border-bottom: .75pt solid var(--rule);
+    display: flex;
+    align-items: baseline;
+    gap: .6rem;
+  }
+  .module .mh .nm { font-family: var(--display); font-size: 13pt; font-weight: 600; }
+  .module .mh .gl {
+    font-family: var(--sans);
+    font-size: 7.4pt;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--lock);
+  }
+  .module .mb { padding: .65rem .8rem .35rem; }
+  .module .mb p { font-size: 9.8pt; }
+  .module .mb ul { font-size: 9.6pt; }
+
+  /* ══ Tables ══ */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: .7rem 0 1rem;
+    font-size: 8.9pt;
+    break-inside: avoid;
+  }
+  caption {
+    caption-side: top;
+    text-align: left;
+    font-family: var(--sans);
+    font-size: 7.6pt;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    padding-bottom: .35rem;
+  }
+  th, td { text-align: left; padding: .4rem .5rem; border-bottom: .5pt solid var(--rule-soft); vertical-align: top; }
+  thead th {
+    font-family: var(--sans);
+    font-size: 7.4pt;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 600;
+    border-bottom: .75pt solid var(--rule);
+    background: #FAF9F6;
+  }
+  td.num, th.num { font-family: var(--mono); font-size: 8.2pt; white-space: nowrap; }
+  tbody tr:last-child td { border-bottom: .75pt solid var(--rule); }
+
+  .tag {
+    font-family: var(--sans);
+    font-size: 7pt;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: .08rem .3rem;
+    border: .5pt solid currentColor;
+    border-radius: 1.5pt;
+    white-space: nowrap;
+  }
+  .t-ok { color: var(--ok); }
+  .t-warn { color: var(--warn); }
+  .t-gap { color: var(--gap); }
+
+  /* ══ Figures ══ */
+  figure {
+    margin: 1rem 0 1.1rem;
+    padding: .8rem .85rem .55rem;
+    border: .75pt solid var(--rule);
+    break-inside: avoid;
+  }
+  figure svg { display: block; width: 100%; height: auto; color: var(--ink-2); }
+  figcaption {
+    margin-top: .6rem;
+    padding-top: .45rem;
+    border-top: .5pt solid var(--rule-soft);
+    font-family: var(--sans);
+    font-size: 7.8pt;
+    line-height: 1.45;
+    color: var(--ink-3);
+  }
+  .sb { fill: #F7F6F2; stroke: var(--rule); stroke-width: .8; }
+  .sk { fill: var(--lock-tint); stroke: var(--lock); stroke-width: 1; }
+  .st { fill: var(--ink); font-family: "Clear Sans", "DejaVu Sans", sans-serif; font-size: 9px; }
+  .ss { fill: var(--ink-3); font-family: "DejaVu Sans Mono", monospace; font-size: 7px; }
+  .sc { fill: var(--lock); font-family: "DejaVu Sans Mono", monospace; font-size: 7px; }
+  .sx { fill: var(--gap); font-family: "DejaVu Sans Mono", monospace; font-size: 7px; }
+  .sl { fill: var(--ink-3); font-family: "DejaVu Sans Mono", monospace; font-size: 6.5px; letter-spacing: .03em; }
+  .scap { fill: var(--ink-3); font-family: "Clear Sans", "DejaVu Sans", sans-serif; font-size: 6.5px; letter-spacing: .12em; }
+  .ln { stroke: var(--ink-3); stroke-width: .9; fill: none; }
+  .lnk { stroke: var(--lock); stroke-width: 1.1; fill: none; }
+  .lnd { stroke: var(--ink-3); stroke-width: .9; fill: none; stroke-dasharray: 3 3; }
+  .lnx { stroke: var(--gap); stroke-width: 1; fill: none; }
+  .rl { stroke: var(--rule); stroke-width: .8; stroke-dasharray: 2.5 3.5; }
+
+  /* ══ Team ══ */
+  .team { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; margin: .8rem 0 1rem; }
+  .member { border: .75pt solid var(--rule); border-top: 2pt solid var(--lock); padding: .65rem .8rem .7rem; break-inside: avoid; }
+  .member .nm { font-family: var(--display); font-size: 12.5pt; font-weight: 600; display: block; }
+  .member .rl2 {
+    font-family: var(--sans);
+    font-size: 7.4pt;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--lock);
+    display: block;
+    margin: .12rem 0 .45rem;
+  }
+  .member p { font-size: 9.2pt; margin: 0; text-align: left; }
+
+  /* ══ Links block ══ */
+  .link-row {
+    display: grid;
+    grid-template-columns: 34mm 1fr;
+    gap: .6rem;
+    padding: .6rem 0;
+    border-bottom: .5pt solid var(--rule-soft);
+    align-items: baseline;
+  }
+  .link-row .k {
+    font-family: var(--sans);
+    font-size: 7.6pt;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .link-row .v { font-family: var(--mono); font-size: 8pt; color: var(--lock); word-break: break-all; }
+  .link-row .v .sub { font-family: var(--body); font-size: 8.6pt; color: var(--ink-3); display: block; margin-top: .15rem; word-break: normal; }
+
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border: .75pt solid var(--rule);
+    margin: .9rem 0 1.1rem;
+    break-inside: avoid;
+  }
+  .stat-strip > div { padding: .45rem .4rem .55rem; border-right: .5pt solid var(--rule-soft); min-width: 0; overflow-wrap: break-word; }
+  .stat-strip > div:last-child { border-right: 0; }
+  .stat-strip .v { font-family: var(--mono); font-size: 9.4pt; color: var(--lock); display: block; line-height: 1.1; }
+  .stat-strip .k {
+    font-family: var(--sans);
+    font-size: 6.2pt;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    display: block;
+    margin-top: .18rem;
+    line-height: 1.3;
+  }
+</style>
+<style>
+  /* ══ Report grid: denser than the submission document ══ */
+  @page { size: A4; margin: 12mm 14mm 11mm 14mm; }
+  html { font-size: 8.8pt; }
+  body { line-height: 1.36; }
+  p { margin: 0 0 .45rem; }
+  h2.sec { font-size: 17pt; margin-bottom: .7rem; padding-bottom: .35rem; }
+  h3 { font-size: 11pt; margin: .9rem 0 .28rem; }
+  h4 { margin: .8rem 0 .28rem; }
+  table { font-size: 7.9pt; margin: .5rem 0 .75rem; }
+  th, td { padding: .3rem .4rem; }
+  .band { grid-template-columns: 21mm 1fr; column-gap: 6mm; }
+  ul, ol.body { margin: .22rem 0 .55rem; }
+  li { margin-bottom: .2rem; }
+  p.lede { font-size: 10pt; margin-bottom: .65rem; }
+
+  /* The rail note is a span carrying a top border, and an inline box that wraps
+     draws that border on every line fragment, striking the note through. */
+  .rail .note { display: block; }
+
+  /* Flow rather than paginating by section; long tables may split. */
+  .page { break-after: auto; }
+  table.long { break-inside: auto; }
+  table.long thead { display: table-header-group; }
+  table.long tr { break-inside: avoid; }
+
+  /* ══ Numbered reference marks and the reference list ══ */
+  sup.r {
+    font-family: var(--sans);
+    font-size: 6.4pt;
+    color: var(--lock);
+    vertical-align: super;
+    line-height: 0;
+    padding-left: .05em;
+  }
+  ol.refs { list-style: none; margin: .3rem 0 0; padding: 0; column-count: 2; column-gap: 6mm; font-size: 7.3pt; line-height: 1.34; }
+  ol.refs li {
+    display: grid;
+    grid-template-columns: 5mm 1fr;
+    gap: 1.5mm;
+    margin-bottom: .28rem;
+    break-inside: avoid;
+    text-align: left;
+  }
+  ol.refs .n { font-family: var(--sans); color: var(--lock); font-size: 6.6pt; padding-top: .08rem; }
+  ol.refs .src { color: var(--ink-3); font-style: italic; }
+
+  /* ══ Segment cards for the landscape ══ */
+  .seg {
+    border: .75pt solid var(--rule);
+    border-top: 2pt solid var(--lock);
+    padding: .45rem .6rem .5rem;
+    margin-bottom: .55rem;
+    break-inside: avoid;
+  }
+  .seg .sh {
+    font-family: var(--display);
+    font-size: 11pt;
+    font-weight: 600;
+    display: block;
+    margin-bottom: .1rem;
+  }
+  .seg .who { font-family: var(--sans); font-size: 7.2pt; color: var(--ink-3); display: block; margin-bottom: .3rem; line-height: 1.4; }
+  .seg p { font-size: 8.5pt; margin: 0 0 .25rem; }
+  .seg p:last-child { margin-bottom: 0; }
+  .seg .gapline { color: var(--gap); font-family: var(--sans); font-size: 7.4pt; text-transform: uppercase; letter-spacing: .08em; }
+
+  .figs { display: grid; grid-template-columns: repeat(4, 1fr); border: .75pt solid var(--rule); margin: .55rem 0 .7rem; break-inside: avoid; }
+  .figs > div { padding: .4rem .45rem .5rem; border-right: .5pt solid var(--rule-soft); min-width: 0; }
+  .figs > div:last-child { border-right: 0; }
+  .figs .v { font-family: var(--display); font-size: 15pt; color: var(--lock); display: block; line-height: 1; }
+  .figs .k { font-family: var(--sans); font-size: 6.4pt; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-3); display: block; margin-top: .25rem; line-height: 1.35; }
+
+  .cols2 { column-count: 2; column-gap: 6mm; column-rule: .5pt solid var(--rule-soft); }
+  .cols2 > * { break-inside: avoid; }
+  .cols2 h4 { margin: .5rem 0 .2rem; }
+  .cols2 h4:first-child { margin-top: 0; }
+  .cols2 p { font-size: 8.5pt; text-align: left; }
+</style>
+</head>
+<body>
+
+<section class="page">
+  <div class="cover-top" style="padding-bottom:.4rem;margin-bottom:.65rem">
+    <p class="kicker" style="margin-bottom:.35rem">Sākṣī &nbsp;·&nbsp; साक्षी &nbsp;·&nbsp; Research Report 02 &nbsp;·&nbsp; September 2026</p>
+    <h1 style="font-family:var(--display);font-size:18pt;font-weight:500;letter-spacing:-.015em;line-height:1.06;margin:0 0 .2rem">
+      Research Foundations, Competitive Landscape, and Market
+    </h1>
+    <p class="gloss" style="font-size:9.4pt;margin:0">What the literature already establishes, who else is in the field, and how large the opportunity actually is.</p>
+  </div>
+
+  <div class="band">
+    <div class="rail">
+      <span class="num">1</span>
+      The claim
+      <span class="note">Every figure in this report is attributed. Where sources disagree, the range is shown rather than the flattering end of it.</span>
+    </div>
+    <div class="col">
+      <h2 class="sec">The claim this report has to support</h2>
+
+      <p class="lede">Sākṣī asserts that <strong>ordinary visitors to a heritage site, given a fixed viewpoint and an honest instrument, can produce a monitoring record a conservator will actually use</strong> — and that pilgrimage is a large enough and reliable enough flow of people to keep that record current at national scale. That is four separable claims, and the literature speaks to each.</p>
+
+      <table>
+        <caption>The claim, decomposed, and where the evidence sits</caption>
+        <thead><tr><th style="width:29%">Sub-claim</th><th style="width:33%">What must be true</th><th>Status in the literature</th></tr></thead>
+        <tbody>
+          <tr><td>Repeat photography is a valid monitoring method</td><td>Fixed-viewpoint image series detect real change over years</td><td><span class="tag t-ok">established</span> &nbsp;A method with a century of use and an active heritage-specific literature.<sup class="r">1,2,3</sup></td></tr>
+          <tr><td>Non-experts can produce usable data</td><td>Volunteer-collected records survive expert scrutiny</td><td><span class="tag t-ok">established</span> &nbsp;Quantified repeatedly, with known failure modes and known remedies.<sup class="r">4,5,6</sup></td></tr>
+          <tr><td>Machine assistance can triage damage without deciding it</td><td>Segmentation on heritage surfaces is accurate enough to propose, cheap enough to run on a phone</td><td><span class="tag t-warn">active</span> &nbsp;A fast-moving 2023–2026 literature; accuracy is good, generalisation across materials is the open problem.<sup class="r">7,8,9,10</sup></td></tr>
+          <tr><td>A language model can answer without inventing</td><td>Grounded generation can be measured, not merely asserted</td><td><span class="tag t-warn">active</span> &nbsp;Span-level faithfulness is now a benchmarked quantity rather than a claim.<sup class="r">14,15,16</sup></td></tr>
+        </tbody>
+      </table>
+
+      <p>The pattern is worth stating plainly: <strong>the two halves of the product rest on very different ground.</strong> The witness loop stands on settled method, and its risk is operational — recruitment, retention, siting. The AI stands on a literature two to three years old, and its risk is technical, which is why every AI output in the product is designed to be a proposal that a person disposes of.</p>
+    </div>
+  </div>
+
+  <div class="band" style="margin-top:.85rem">
+    <div class="rail">
+      <span class="num">2</span>
+      Foundations
+      <span class="note">The method is old. What is new is putting it in the hands of a million visitors a year rather than a field team of six.</span>
+    </div>
+    <div class="col">
+      <h2 class="sec">Repeat photography and citizen science</h2>
+
+      <p><strong>Repeat photography is not an innovation of this project; it is an inheritance.</strong> Landscape and heritage science have used fixed-viewpoint image pairs for well over a century, and the heritage-specific review literature now covers the whole chain — image registration technique, archival organisation and retrieval, presentation of the comparison, and the conservation of rephotographic collections as heritage in their own right.<sup class="r">2</sup> The <em>rePhotoSA</em> project in southern Africa is the closest working model for the distribution half of the idea: an open, internet-based citizen science programme built on historical landscape photographs, which reports that repeat imagery is unusually effective at communicating landscape change to a lay public — a finding that matters as much to the product's growth as to its science.<sup class="r">1</sup></p>
+
+      <p>The data-quality question is the one every institutional buyer asks first, and it has been answered quantitatively. The <em>Snapshot Serengeti</em> analysis remains the reference result: aggregated volunteer classifications agreed with expert-verified data on <strong>98% of images</strong>, and bootstrapping showed <strong>90% of images were correctly classified with just five volunteers each</strong> — while accuracy varied systematically with how common the subject was, rare cases carrying higher false-positive and false-negative rates.<sup class="r">6</sup> The remedy is structural rather than exhortative: redundancy plus aggregation, with user-weighted consensus that dilutes inconsistent classifiers without banning them.<sup class="r">5,6</sup> Zooniverse operates this at scale across more than 120 projects and over two million registered volunteers, taking roughly 100,000 classifications a day.<sup class="r">5</sup></p>
+
+      <p>The heritage-specific participation study — <em>Snap Decisions</em>, on a park photo-monitoring programme — is the closest analogue to the Sākṣī loop and the most useful corrective: it asks not only whether the data is good but whether people keep showing up, the variable that decides whether a series exists in year five.<sup class="r">3</sup></p>
+
+      <div class="callout cool">
+        <h4>What the literature tells us to build</h4>
+        <p>Three design consequences follow, and all three are already in the product: <strong>redundancy at the vantage</strong>, because a series with several observers per viewpoint is measurably more trustworthy than one with a single expert; <strong>uncertainty carried on the record</strong>, because volunteer data is reliable in aggregate and must be able to say when it is not; and <strong>a rare-case bias to watch</strong>, because the unusual condition — the one worth reporting — is where non-expert accuracy is weakest, and so the one place a custodian's confirmation must be mandatory.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <div class="band">
+    <div class="rail">
+      <span class="num">3</span>
+      Recent work
+      <span class="note">2023–2026. This is where the product's technical risk lives, and where it is moving fastest.</span>
+    </div>
+    <div class="col">
+      <h2 class="sec">Recent research bearing directly on the build</h2>
+
+      <h3 style="margin-top:.2rem">3.1 &nbsp;Damage detection on heritage surfaces</h3>
+      <p>Crack detection has moved from a research curiosity to a reviewable field in about three years. A 2026 systematic review of deep learning for crack detection in cultural heritage analysed 26 papers published between 2020 and 2025.<sup class="r">7</sup> The architectural picture is clear: attention-augmented U-Net variants such as BSEResU-Net for segmentation, and the YOLO family — v8 through v11 — for detection, including field deployments such as St.&nbsp;Theodore Church in Cappadocia.<sup class="r">7,9</sup> A 2025 two-stage framework pairing classification with semantic segmentation is positioned as a lightweight option for large-scale heritage inspection,<sup class="r">10</sup> and 2026 work reports YOLOv8n-Ghost variants for <em>on-device</em> damage segmentation at Italian historical sites — the same bet this product makes.<sup class="r">9</sup></p>
+      <p><strong>The honest caveat is generalisation.</strong> A 2025 review of learning paradigms, generalisability and datasets for crack detection is largely a catalogue of how poorly models transfer across materials, lighting and capture geometry.<sup class="r">8</sup> Brick, coursed stone, lime plaster and eroded sandstone do not share a crack morphology, and a model trained on concrete infrastructure will underperform on a Malla-era brick façade. This is the strongest argument in the literature for the product's own rule that <strong>the detector proposes and a person disposes</strong>, and for treating confirmed reports as the training set that closes the loop.</p>
+
+      <h3>3.2 &nbsp;Digital twins, HBIM, and where a photograph fits</h3>
+      <p>A scoping review of 204 peer-reviewed studies from 2020–2025 finds the digital-twin heritage stack settling on terrestrial laser scanning, UAV photogrammetry, BIM and IoT sensor networks, with structure-from-motion photogrammetry established as the cost-effective alternative to laser scanning in confined or complex settings.<sup class="r">11,12</sup></p>
+      <p>This is the most important competitive reading in the report, and it cuts in our favour. <strong>The digital-twin literature is capital-intensive by construction</strong> — it assumes a scanning campaign, a specialist crew, and a periodic budget. It produces exquisite geometry at intervals of years. Sākṣī produces coarser evidence continuously, at effectively zero marginal cost, from people who were going to visit anyway. Photogrammetry-driven digital twinning of time-varying change<sup class="r">12</sup> is precisely the workflow a dense corpus of fixed-viewpoint, pose-tagged visitor photographs feeds. The two are complements, and the honest positioning is that <strong>Sākṣī is the sampling layer beneath the twin, not a competitor to it.</strong></p>
+
+      <h3>3.3 &nbsp;Grounded generation, measured rather than asserted</h3>
+      <p>Between 2024 and 2026 the faithfulness of retrieval-augmented answers became a measurable engineering property. RAGTruth supplies nearly 18,000 annotated examples with both response-level and span-level hallucination labels;<sup class="r">15</sup> evolving public leaderboards track hallucination rates across models using dedicated detection models;<sup class="r">14</sup> empirical work on groundedness in long-form generation<sup class="r">16</sup> and survey work on trustworthiness in RAG systems<sup class="r">17</sup> have established the vocabulary, and 2025 work such as ReDeEP approaches detection through mechanistic interpretability rather than output comparison alone.<sup class="r">18</sup> The finding that matters most to this product is the least comfortable one: <strong>models still introduce unsupported statements even when the correct context is in front of them.</strong> An architecture that merely retrieves is not an architecture that is grounded, which is why the verify-then-refuse step is not optional here.</p>
+
+      <h3>3.4 &nbsp;Running models on the phone</h3>
+      <p>The on-device inference literature has converged on the conclusion the product reached in practice. ExecuTorch reached 1.0 in October 2025 as a unified PyTorch on-device solution with a small runtime and broad vendor-backend coverage;<sup class="r">19</sup> systematic reviews compare llama.cpp, MLC LLM, ExecuTorch and ONNX Runtime Mobile on portability, throughput and deployment complexity;<sup class="r">21</sup> and work on NPU-targeted inference and on-device GPU scaling maps the performance ceiling on current handsets.<sup class="r">20,22</sup> Models in the 1–4&nbsp;billion parameter range are now credible for constrained tasks — exactly the task Sākṣī assigns them: rephrasing a retrieved passage, never asserting a fact.</p>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <div class="band">
+    <div class="rail">
+      <span class="num">4</span>
+      The field
+      <span class="note">Four adjacent markets. None of them closes the loop this product closes, and that gap is the thesis.</span>
+    </div>
+    <div class="col">
+      <h2 class="sec">Competitive landscape</h2>
+
+      <p class="lede">There is no direct competitor. There are four well-populated adjacent categories, each of which owns one segment of the chain that runs from a visitor's attention to a custodian's work order — and each of which stops before the next.</p>
+
+      <div class="seg">
+        <span class="sh">A. &nbsp;Photo-monitoring citizen science</span>
+        <span class="who">Chronolog · rePhotoSA · Zooniverse · iNaturalist</span>
+        <p>The closest analogue by mechanism. <strong>Chronolog</strong> is the benchmark: fixed photo stations in parks, nature centres, schools and museums, where a visitor takes a photograph and submits it by email to build a crowdsourced time-lapse. Since 2017 it has operated across 48 US states and 10 countries and gathered more than 100,000 submissions.<sup class="r">23</sup></p>
+        <p class="gapline">The gap:</p>
+        <p>Environmental, not heritage. A fixed bracket rather than a sensor-verified alignment, so there is no pose, no accuracy figure, no provenance a conservator could defend — and nothing downstream: the output is a time-lapse, not a report that reaches whoever is responsible for the site.</p>
+      </div>
+
+      <div class="seg">
+        <span class="sh">B. &nbsp;Heritage inventory and management platforms</span>
+        <span class="who">Arches (Getty Conservation Institute + World Monuments Fund) · CollectiveAccess · CollectionSpace · Omeka&nbsp;S · Dédalo</span>
+        <p>Where the institutional record actually lives. <strong>Arches</strong> is the standard for immovable heritage: an open-source platform for inventorying type, location, extent, period, materials and condition, and the relationships between resources.<sup class="r">24</sup> The others serve museum and archival collections rather than sites.</p>
+        <p class="gapline">The gap:</p>
+        <p>These are systems of record, and excellent ones, but they do not acquire. Arches waits for a professional survey to be entered into it; nothing turns a million annual visitors into dated, positioned condition observations. <strong>A partner, not a rival</strong> — the long-run posture is that Sākṣī feeds Arches.</p>
+      </div>
+
+      <div class="seg">
+        <span class="sh">C. &nbsp;Field data capture and mobile GIS</span>
+        <span class="who">Esri ArcGIS Field Maps &amp; Survey123 · Fulcrum · KoboToolbox · ODK · Mergin Maps</span>
+        <p>What a heritage office would otherwise buy. Generic, capable, and priced per seat — Esri's field apps come with ArcGIS Online from roughly US$125 per user per year, Fulcrum from about US$25 per user per month, while KoboToolbox and ODK are free and open source.<sup class="r">25</sup></p>
+        <p class="gapline">The gap:</p>
+        <p>Per-seat pricing presumes a small trained crew, which structurally forbids the public from contributing. These tools also have no concept of a vantage: they will record where you were, not whether you stood where the last photograph was taken from — and that single distinction is the difference between a photo archive and a time-series.</p>
+      </div>
+
+      <div class="seg">
+        <span class="sh">D. &nbsp;Visitor engagement and interpretation</span>
+        <span class="who">Smartify · Bloomberg Connects · Google Arts &amp; Culture · izi.TRAVEL · CyArk</span>
+        <p>Where the funded activity is. <strong>Smartify</strong> raised £1.5M in January 2025 led by Metavallon VC, reporting around 2 million users, partnerships with over 700 organisations, and 68% usage growth year on year.<sup class="r">26</sup> <strong>Bloomberg Connects</strong> carries digital guides for more than 1,250 institutions.<sup class="r">27</sup></p>
+        <p class="gapline">The gap:</p>
+        <p>Interpretation flows one way. These products deliver content <em>to</em> a visitor and take nothing back but analytics. The visitor is an audience, and the site gets no data about its own condition from having been visited.</p>
+      </div>
+
+      <h3>Where Sākṣī sits</h3>
+      <p>The chain is <strong>visitor attention → positioned evidence → institutional action</strong>. Category&nbsp;D owns the first link and stops. Category&nbsp;A bridges the first two for ecology, without survey-grade provenance. Category&nbsp;C serves the second link for professionals only, at a price that excludes the public. Category&nbsp;B owns the third and waits to be fed.</p>
+      <p><strong>No product in the survey spans all three</strong>, and the two capabilities that make spanning them possible — sensor-verified alignment to a stored vantage, and a custodian surface that acknowledges and closes a report — are the two the adjacent categories each lack. The defensible position is not a feature; it is the loop.</p>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <div class="band">
+    <div class="rail">
+      <span class="num">5</span>
+      The market
+      <span class="note">Sources disagree by roughly 2% on the base year. All three independent estimates are given rather than the most flattering.</span>
+    </div>
+    <div class="col">
+      <h2 class="sec">Market size, and what is actually addressable</h2>
+
+      <table class="long">
+        <caption>Category size, three independent estimates</caption>
+        <thead><tr><th style="width:20%">Market</th><th class="num" style="width:15%">Base year</th><th class="num" style="width:19%">Forecast</th><th class="num" style="width:9%">CAGR</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Heritage tourism</td><td class="num">US$624.6B (2025)</td><td class="num">US$937B by 2033</td><td class="num">5.4%</td><td>Grand View Research<sup class="r">28</sup></td></tr>
+          <tr><td>Heritage tourism</td><td class="num">US$638.9B (2025)</td><td class="num">US$954.1B by 2034</td><td class="num">4.6%</td><td>Fortune Business Insights<sup class="r">29</sup></td></tr>
+          <tr><td>Heritage tourism</td><td class="num">US$639.8B (2025)</td><td class="num">US$888.2B by 2031</td><td class="num">5.6%</td><td>Mordor Intelligence<sup class="r">30</sup></td></tr>
+          <tr><td>Cultural tourism <span style="color:var(--ink-3)">(broader)</span></td><td class="num">US$1.30T (2026)</td><td class="num">US$2.83T by 2036</td><td class="num">8.1%</td><td>Future Market Insights<sup class="r">31</sup></td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>These are the numbers a pitch quotes, and they are the wrong denominator.</strong> Sākṣī does not sell trips; it sells the ability to monitor the assets trips are sold against, and that money sits in conservation and public-heritage budgets, not tourist spend. The tourism figure matters for one reason, and it is the important one: it sizes the <em>distribution channel</em>. A market growing at five percent a year is a growing flow of people walking past monuments with phones in their hands, and that flow is the raw material.</p>
+
+      <h3>The urgency is measurable, and it is not ours to argue</h3>
+      <p>The demand side is no longer speculative. A 2025 assessment in <em>Communications Earth &amp; Environment</em> found <strong>80% of World Cultural Heritage sites under climate stress</strong>, with nearly one in five built substantially of threatened materials such as stone and wood, and reported that <strong>98% of sites have faced at least one climate-related extreme since 2000</strong>; exposure could triple with a further 1&nbsp;°C of warming by 2050, while a low-emission path would protect roughly 40% of threatened sites.<sup class="r">32,33</sup> A separate UNESCO assessment in July 2025 put <strong>close to three-quarters of World Heritage sites at high risk from water-related hazards</strong>, and UNESCO has since launched <em>Sites Navigator</em>, a live monitoring platform integrating more than 40 datasets with near-real-time alerts.<sup class="r">34</sup></p>
+      <p>That last development is the single most encouraging signal in this report. <strong>The institutions have built the dashboard and are short of the ground truth to fill it.</strong> Satellite and climate-model data can say a site is exposed; only someone standing in front of the wall can say whether the wall has moved.</p>
+
+      <h3>The channel, at the pilot site</h3>
+      <div class="figs">
+        <div><span class="v">1.17M</span><span class="k">Visitors to Lumbini, 2024 <span style="color:var(--ok)">+17.4%</span> on 2023<sup class="r">35</sup></span></div>
+        <div><span class="v">140,969</span><span class="k">Third-country tourists, 2025, from 106 nations <span style="color:var(--ok)">+26%</span><sup class="r">36</sup></span></div>
+        <div><span class="v">#9</span><span class="k">Lumbini's rank in the New York Times 52 Places for 2025<sup class="r">37</sup></span></div>
+        <div><span class="v">4</span><span class="k">Sites live today: Lumbini, Patan Durbar Square, Changu Narayan, Manga Hiti</span></div>
+      </div>
+      <p>Composition matters more than the total. Of the 1,172,304 visitors Lumbini recorded in 2024, <strong>759,990 were Nepali and 300,889 Indian</strong><sup class="r">35</sup> — a channel that is overwhelmingly domestic and regional, on Android, and returning. That is a better foundation for a longitudinal record than a long-haul audience, because a time-series needs people who come back.</p>
+
+      <h3>Addressable, in the only terms that survive scrutiny</h3>
+      <table>
+        <thead><tr><th style="width:12%">Layer</th><th style="width:30%">Definition</th><th>Basis</th></tr></thead>
+        <tbody>
+          <tr><td><strong>TAM</strong></td><td>Condition monitoring and inventory for the world's designated heritage sites</td><td>Institutional conservation budgets, not tourist spend. Bounded by roughly 1,250 World Heritage properties plus national registers an order of magnitude larger.</td></tr>
+          <tr><td><strong>SAM</strong></td><td>Sites with high visitor throughput, an identified custodian, and Android-first smartphone penetration</td><td>South and Southeast Asian heritage in the first instance, where the visitor flow is large, domestic, and currently generating no conservation data at all.</td></tr>
+          <tr><td><strong>SOM</strong></td><td>Nepal: Lumbini and the Kathmandu Valley monument zones</td><td>The pilot. Four sites live, a custodian workflow in place, and a visitor flow already above a million a year at the first site alone.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>What funds it, and what does not</h3>
+      <p>There is no consumer subscription here, and pretending otherwise would misread every number above. The surfaces that fit are institutional licensing of the custodian platform to site trusts and heritage departments; grant and multilateral funding attached to climate-resilience and World Heritage monitoring, which is where the 2025 assessments have moved money; and paid integration into systems of record such as Arches. The ethics policy forecloses one alternative deliberately: <strong>no money from any commercial entity operating inside a site the app monitors</strong>, because a monitoring record whose funder has an interest in the finding is not a record.</p>
+
+      <h3>Risks worth stating</h3>
+      <div class="cols2">
+        <h4>Participation decay</h4>
+        <p>The literature's clearest warning.<sup class="r">3</sup> A series needs returning observers, and novelty does not return. Mitigation is siting quests at the vantages that have gone longest without a resurvey, rather than at the popular ones.</p>
+
+        <h4>Model generalisation</h4>
+        <p>Crack detectors transfer poorly across materials.<sup class="r">8</sup> Mitigated structurally: the detector never sets severity, and confirmed reports become the training set.</p>
+
+        <h4>Custodian capacity</h4>
+        <p>Evidence a custodian cannot act on becomes evidence they stop reading. The acknowledgement workflow, and the median-time-to-acknowledgement metric on the dashboard, exist to make that visible early.</p>
+
+        <h4>Institutional procurement</h4>
+        <p>Heritage bodies buy slowly. The open-source and no-login posture lowers the barrier to a first deployment, but the sales cycle is measured in budget years.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <div class="band">
+    <div class="rail">
+      <span class="num">6</span>
+      Sources
+      <span class="note">Accessed September 2026. Market figures are vendor estimates and are reported as such.</span>
+    </div>
+    <div class="col">
+      <h2 class="sec">References</h2>
+
+      <h4>Repeat photography and citizen science</h4>
+      <ol class="refs">
+        <li><span class="n">1</span><span>Documenting changing landscapes with rePhotoSA: a repeat photography and citizen science project in southern Africa. <span class="src">Ecological Informatics</span>, 2021.</span></li>
+        <li><span class="n">2</span><span>Heritage and Repeat Photography: Techniques, Management, Applications, and Publications. <span class="src">Heritage</span> 5(4), MDPI, 2022.</span></li>
+        <li><span class="n">3</span><span>Snap Decisions: Assessing Participation and Data Quality in a Citizen Science Program Using Repeat Photography. <span class="src">Citizen Science: Theory and Practice</span>, 10.5334/cstp.558.</span></li>
+        <li><span class="n">4</span><span>Repetition and Remembrance: The Rephotographic Survey Project. <span class="src">Visual Studies.</span></span></li>
+        <li><span class="n">5</span><span>Establishing Trust in Crowdsourced Data. <span class="src">arXiv:2511.03016</span>, 2025. Zooniverse platform figures: 120+ projects, 2M+ registered volunteers, ~100k classifications/day.</span></li>
+        <li><span class="n">6</span><span>A generalized approach for producing, quantifying, and validating citizen science data from wildlife images (Snapshot Serengeti). <span class="src">Conservation Biology</span>, 2016.</span></li>
+      </ol>
+
+      <h4>Damage detection on heritage surfaces</h4>
+      <ol class="refs">
+        <li><span class="n">7</span><span>Deep learning for crack detection in cultural heritage sites: a systematic literature review (26 papers, 2020–2025). <span class="src">Elsevier</span>, 2026.</span></li>
+        <li><span class="n">8</span><span>Deep Learning for Crack Detection: A Review of Learning Paradigms, Generalizability, and Datasets. <span class="src">arXiv:2508.10256</span>, 2025.</span></li>
+        <li><span class="n">9</span><span>Deep Learning-Based Crack Detection on Cultural Heritage Surfaces. <span class="src">Applied Sciences</span> 15(14):7898, 2025.</span></li>
+        <li><span class="n">10</span><span>Deep Learning-Based Automated Detection of Cracks in Historical Masonry Structures. <span class="src">Buildings</span> 13(12):3113, 2023.</span></li>
+      </ol>
+
+      <h4>Digital twins, HBIM and photogrammetry</h4>
+      <ol class="refs">
+        <li><span class="n">11</span><span>Digital Twin in Heritage Buildings: a scoping review of 204 studies, 2020–2025. <span class="src">ISPRS Annals</span> XI-4/2026.</span></li>
+        <li><span class="n">12</span><span>Monitoring Time-Varying Changes of Historic Structures Through Photogrammetry-Driven Digital Twinning. <span class="src">arXiv:2407.18925</span>.</span></li>
+        <li><span class="n">13</span><span>The State of HBIM in Digital Heritage, 2015–2025. <span class="src">Applied Sciences</span> 16(2):906. Also: Digital Twins for Cultural Heritage: A Systematic Analysis, <span class="src">ACM Computing Surveys</span> 10.1145/3793541.</span></li>
+      </ol>
+
+      <h4>Grounded generation and faithfulness</h4>
+      <ol class="refs">
+        <li><span class="n">14</span><span>Benchmarking LLM Faithfulness in RAG with Evolving Leaderboards. <span class="src">arXiv:2505.04847</span>, 2025.</span></li>
+        <li><span class="n">15</span><span>RAGTruth: a hallucination corpus of ~18,000 annotated examples with response- and span-level labels.</span></li>
+        <li><span class="n">16</span><span>Groundedness in Retrieval-augmented Long-form Generation: An Empirical Study. <span class="src">arXiv:2404.07060</span>.</span></li>
+        <li><span class="n">17</span><span>Trustworthiness in Retrieval-Augmented Generation Systems: A Survey. <span class="src">arXiv:2409.10102</span>.</span></li>
+        <li><span class="n">18</span><span>ReDeEP: detecting hallucination in RAG via mechanistic interpretability, 2025.</span></li>
+      </ol>
+
+      <h4>On-device inference</h4>
+      <ol class="refs">
+        <li><span class="n">19</span><span>ExecuTorch: A Unified PyTorch Solution to Run AI Models On-Device. <span class="src">arXiv:2605.08195</span>. 1.0 GA October 2025.</span></li>
+        <li><span class="n">20</span><span>Fast On-device LLM Inference with NPUs. <span class="src">arXiv:2407.05858</span>.</span></li>
+        <li><span class="n">21</span><span>On-Device Large Language Models for Mobile Applications: A Systematic Review.</span></li>
+        <li><span class="n">22</span><span>Scaling On-Device GPU Inference for Large Generative Models. <span class="src">arXiv:2505.00232</span>.</span></li>
+      </ol>
+
+      <h4>Competitive landscape</h4>
+      <ol class="refs">
+        <li><span class="n">23</span><span>Chronolog: photo-monitoring stations across 48 US states and 10 countries; 100,000+ submissions since 2017.</span></li>
+        <li><span class="n">24</span><span>Arches: an open-source platform for the inventory and management of immovable cultural heritage. Getty Conservation Institute and World Monuments Fund. <span class="src">archesproject.org</span></span></li>
+        <li><span class="n">25</span><span>Published list pricing, 2026: Esri Field Maps and Survey123 with ArcGIS Online from ~US$125/user/yr; Fulcrum from ~US$25/user/mo; KoboToolbox and ODK free and open source.</span></li>
+        <li><span class="n">26</span><span>Smartify secures £1.5M, led by Metavallon VC, January 2025; ~2M users, 700+ partner organisations, 68% year-on-year usage growth. <span class="src">Tech.eu / PhocusWire</span></span></li>
+        <li><span class="n">27</span><span>Bloomberg Connects: digital guides for 1,250+ cultural institutions.</span></li>
+      </ol>
+
+      <h4>Market and risk</h4>
+      <ol class="refs">
+        <li><span class="n">28</span><span>Heritage Tourism Market Size and Share Report, 2026–2033. <span class="src">Grand View Research.</span></span></li>
+        <li><span class="n">29</span><span>Heritage Tourism Market Size, Share &amp; Statistics, to 2034. <span class="src">Fortune Business Insights.</span></span></li>
+        <li><span class="n">30</span><span>Heritage Tourism Market Size, Share &amp; 2031 Trends Report. <span class="src">Mordor Intelligence.</span></span></li>
+        <li><span class="n">31</span><span>Global Cultural Tourism Market. <span class="src">Future Market Insights.</span></span></li>
+        <li><span class="n">32</span><span>World Cultural Heritage sites are under climate stress and no site is immune. <span class="src">Communications Earth &amp; Environment</span>, 2025, s43247-025-02603-8.</span></li>
+        <li><span class="n">33</span><span>First assessment of UNESCO sites finds widespread climate impacts. <span class="src">Mongabay</span>, October 2025.</span></li>
+        <li><span class="n">34</span><span>UNESCO World Heritage Centre, Climate Change and World Heritage; water-hazard assessment, July 2025; <em>Sites Navigator</em> monitoring platform.</span></li>
+        <li><span class="n">35</span><span>Lumbini Records Tourist Arrival of 1.17 Million in 2024. <span class="src">Lumbini Development Trust.</span></span></li>
+        <li><span class="n">36</span><span>Lumbini attracts 140,969 third-country tourists from 106 nations in 2025, up 26%. <span class="src">Kantipur</span>, January 2026.</span></li>
+        <li><span class="n">37</span><span>Lumbini ranked 9th, The New York Times 52 Places to Go in 2025.</span></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

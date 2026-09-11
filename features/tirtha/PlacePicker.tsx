@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { SiteVisual } from '@/components/site';
 import { BottomSheet, Text } from '@/components/ui';
 import { demoSites } from '@/data';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { colors, radii, spacing } from '@/theme';
 import type { Coordinate } from '@/types';
 import { distanceMeters, formatDistance } from '@/utils';
@@ -42,6 +43,7 @@ export function PlacePicker({
   canTravel,
   onSelect,
 }: PlacePickerProps) {
+  const ui = useVisitorLiteralCopy();
   // Nearest first. A list of places to walk to that is not ordered by how far
   // away they are is a list you have to read rather than scan.
   const places = [...demoSites]
@@ -68,7 +70,7 @@ export function PlacePicker({
               accessibilityRole="button"
               accessibilityLabel={site.name}
               accessibilityHint={
-                here ? 'You are already here' : canTravel ? 'Travel here' : 'Move the view here'
+                ui(here ? 'You are already here' : canTravel ? 'Travel here' : 'Move the view here')
               }
               onPress={() => onSelect(site.id)}
               style={({ pressed }) => [styles.row, here && styles.rowHere, pressed && styles.pressed]}
@@ -76,11 +78,11 @@ export function PlacePicker({
               <SiteVisual siteId={site.id} height={76} quiet style={styles.thumb} />
 
               <View style={styles.rowText}>
-                <Text variant="heading" numberOfLines={1} ellipsizeMode="tail">
+                <Text variant="heading" numberOfLines={1} ellipsizeMode="tail" translate={false}>
                   {site.name}
                 </Text>
                 {site.summary ? (
-                  <Text variant="caption" tone="secondary" numberOfLines={1} ellipsizeMode="tail">
+                  <Text variant="caption" tone="secondary" numberOfLines={1} ellipsizeMode="tail" translate={false}>
                     {site.summary}
                   </Text>
                 ) : null}

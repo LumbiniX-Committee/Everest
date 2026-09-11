@@ -12,6 +12,7 @@ import Animated, {
 
 import { Reticle } from '@/components/reticle';
 import { Text } from '@/components/ui';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { usePreferences } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 import type { AlignmentPhase } from '@/types';
@@ -46,6 +47,7 @@ export type AlignmentRehearsalProps = {
 };
 
 export function AlignmentRehearsal({ onLocked, size = 132 }: AlignmentRehearsalProps) {
+  const ui = useVisitorLiteralCopy();
   const { preferences } = usePreferences();
   const [phase, setPhase] = useState<AlignmentPhase>('idle');
   const [progress, setProgress] = useState(0);
@@ -133,8 +135,8 @@ export function AlignmentRehearsal({ onLocked, size = 132 }: AlignmentRehearsalP
           <Animated.View
             style={[styles.reticle, reticleStyle]}
             accessibilityRole="adjustable"
-            accessibilityLabel="Practice reticle"
-            accessibilityHint="Drag onto the mark to align"
+            accessibilityLabel={ui('Practice reticle')}
+            accessibilityHint={ui('Drag onto the mark to align')}
           >
             <Reticle size={size} phase={phase} progress={progress} />
           </Animated.View>
