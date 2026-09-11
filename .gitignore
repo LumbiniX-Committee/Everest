@@ -104,3 +104,6 @@ imagesupdate/
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Local ngrok binary for the live AI demo tunnel. Not part of the app.
+ngrok.exe
