@@ -6,6 +6,8 @@ import type { DemoStep } from '@/services/location/demoWalk';
 export type DemoWalkState = {
   /** True while fixes are coming from the scripted walk. */
   active: boolean;
+  /** The synthetic location is being held at its current position. */
+  paused: boolean;
   /** The walk's current fix, with what the pilgrim is doing at it. */
   step: DemoStep | null;
   /** The whole planned way, for the map to draw. Empty when not walking. */
@@ -33,6 +35,7 @@ const NO_ROUTE: readonly (readonly [number, number])[] = [];
  */
 export function useDemoWalk(): DemoWalkState {
   const [active, setActive] = useState(() => locationService.isDemoMode());
+  const [paused, setPaused] = useState(() => locationService.demo.isPaused());
   const [step, setStep] = useState<DemoStep | null>(() => locationService.demo.currentStep());
 
   useEffect(
@@ -42,34 +45,40 @@ export function useDemoWalk(): DemoWalkState {
 
   useEffect(() => {
     if (!active) {
-      setStep(null);
       return;
     }
-    return locationService.demo.subscribe(setStep);
+    return locationService.demo.subscribe((next) => {
+      setStep(next);
+      setPaused(locationService.demo.isPaused());
+    });
   }, [active]);
 
   // Built once and only while walking. It is a few hundred coordinates, and it
   // is passed to the map as injected JavaScript on every change of identity.
   const route = useMemo(
-    () => (active ? locationService.demo.demoRoute() : NO_ROUTE),
+    () => (active && step?.walkId ? locationService.demo.demoRoute() : NO_ROUTE),
     [active, step?.walkId],
   );
 
   const toggle = useCallback(() => {
     locationService.setDemoMode(!locationService.isDemoMode());
+    setPaused(false);
   }, []);
 
   const restart = useCallback(() => {
     locationService.demo.restart();
+    setPaused(false);
   }, []);
 
   const pauseWalk = useCallback(() => {
     locationService.demo.pause();
+    setPaused(true);
   }, []);
 
   const resumeWalk = useCallback(() => {
     locationService.demo.resume();
+    setPaused(false);
   }, []);
 
-  return { active, step, route, toggle, restart, pauseWalk, resumeWalk };
+  return { active, paused, step: active ? step : null, route, toggle, restart, pauseWalk, resumeWalk };
 }

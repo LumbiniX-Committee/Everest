@@ -503,6 +503,12 @@ export function currentStep(): DemoStep | null {
 let override: DemoStep[] | null = null;
 
 function tick(): void {
+  // cursor already points to the next fix. Holding current avoids one extra
+  // step (and a possible arrival transition) after the visitor presses Pause.
+  if (paused && current) {
+    listeners.forEach((listener) => listener(current as DemoStep));
+    return;
+  }
   if (override && override.length > 0) {
     // A site-page simulation is intentionally pinned until the visitor opens
     // and finishes its story. Re-emit the first dwell fix while paused instead
@@ -571,11 +577,13 @@ export function selectWalk(walkId: string): boolean {
  */
 export function pause(): void {
   paused = true;
+  if (current) listeners.forEach((listener) => listener(current as DemoStep));
 }
 
 /** Unfreeze. The walk continues from the step it stopped on. */
 export function resume(): void {
   paused = false;
+  if (current) listeners.forEach((listener) => listener(current as DemoStep));
 }
 
 export function isPaused(): boolean {
@@ -618,9 +626,11 @@ export function itinerarySiteIds(): string[] {
 export function goToSite(siteId: string): boolean {
   const target = siteCoordinate(siteId);
   if (!target) return false;
+  const wasPaused = paused;
 
   const matchingWalk = walkForSite(siteId);
   if (matchingWalk && matchingWalk.id !== activeWalkId) selectWalk(matchingWalk.id);
+  paused = wasPaused;
 
   const steps = track();
 
@@ -648,6 +658,7 @@ export function goToSite(siteId: string): boolean {
     cursor = nearestIndexTo(target);
   }
 
+  current = null;
   if (timer) tick();
   else current = override?.[0] ?? steps[cursor];
   return true;
