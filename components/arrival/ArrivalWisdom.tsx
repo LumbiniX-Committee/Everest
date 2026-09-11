@@ -73,15 +73,15 @@ export function ArrivalWisdom({ coordinate, notify = true, siteId }: ArrivalWisd
                 ? `Nearby site · ${Math.round(distanceM)} m`
                 : 'Heritage Site Wisdom'}
           </Text>
-          <Text variant="heading">{site.name}</Text>
+          <Text variant="heading" translate={false}>{site.name}</Text>
           {site.namePali || site.nameNepali ? (
-            <Text variant="caption" tone="muted">
+            <Text variant="caption" tone="muted" translate={false}>
               {site.namePali ?? site.nameNepali}
             </Text>
           ) : null}
         </View>
 
-        {narration ? <Text variant="body">{narration}</Text> : null}
+        {narration ? <Text variant="body" translate={false}>{narration}</Text> : null}
 
         {facts.length > 0 ? (
           <View style={styles.facts}>
@@ -90,7 +90,7 @@ export function ArrivalWisdom({ coordinate, notify = true, siteId }: ArrivalWisd
                 <Text variant="caption" tone="muted" uppercase>
                   {fact.label}
                 </Text>
-                <Text variant="body">{fact.value}</Text>
+                <Text variant="body" translate={false}>{fact.value}</Text>
               </View>
             ))}
           </View>
@@ -104,11 +104,11 @@ export function ArrivalWisdom({ coordinate, notify = true, siteId }: ArrivalWisd
                 From the canon
               </Text>
               {entry.original ? (
-                <Text variant="body" tone="sandstone" style={styles.original}>
+                <Text variant="body" tone="sandstone" style={styles.original} translate={false}>
                   {entry.original}
                 </Text>
               ) : null}
-              <Text variant="body">{entry.answer}</Text>
+              <Text variant="body" translate={false}>{entry.answer}</Text>
               {entry.citations.map((citation, index) => {
                 const source = findSource(citation.sourceId);
                 if (!source) return null;

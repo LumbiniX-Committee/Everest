@@ -2,6 +2,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { BottomSheet, Text } from '@/components/ui';
 import { demoPrecincts } from '@/data';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { location as locationService } from '@/services';
 import { colors, radii, spacing } from '@/theme';
 
@@ -13,6 +14,7 @@ export type DemoRoutePickerProps = {
 
 /** Selects a complete moving itinerary, not a one-point location spoof. */
 export function DemoRoutePicker({ visible, onClose, onSelect }: DemoRoutePickerProps) {
+  const ui = useVisitorLiteralCopy();
   const walks = locationService.demo.availableWalks();
 
   return (
@@ -31,13 +33,13 @@ export function DemoRoutePicker({ visible, onClose, onSelect }: DemoRoutePickerP
               key={walk.id}
               accessibilityRole="button"
               accessibilityLabel={walk.name}
-              accessibilityHint="Starts this complete simulated heritage walk"
+              accessibilityHint={ui('Starts this complete simulated heritage walk')}
               onPress={() => onSelect(walk.id)}
               style={({ pressed }) => [styles.row, pressed && styles.pressed]}
             >
               <View style={styles.text}>
-                <Text variant="heading">{walk.name}</Text>
-                <Text variant="caption" tone="muted">
+                <Text variant="heading" translate={false}>{walk.name}</Text>
+                <Text variant="caption" tone="muted" translate={Boolean(!precinct)}>
                   {precinct?.summary ?? 'A moving heritage-site simulation'}
                 </Text>
               </View>

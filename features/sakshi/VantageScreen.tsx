@@ -8,6 +8,7 @@ import { AlignmentReadout, Reticle } from '@/components/reticle';
 import { SpeakButton } from '@/components/voice/SpeakButton';
 import { findSite, findVantage } from '@/data';
 import { useAlignment, useHaptics } from '@/hooks';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { usePermission } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 import { formatCoordinate } from '@/utils';
@@ -20,6 +21,7 @@ import { alignmentHint } from '@/utils/alignmentHint';
  * numeric readout in floating mobile cards below, capture unlocked on alignment.
  */
 export function VantageScreen({ vantageId }: { vantageId: string }) {
+  const ui = useVisitorLiteralCopy();
   const router = useRouter();
   const vantage = findVantage(vantageId);
   const { state: locationPermission, request: requestLocation } = usePermission('location');
@@ -115,7 +117,7 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
           icon={locked ? 'camera-outline' : 'eye-outline'}
           block
           onPress={openCapture}
-          accessibilityHint="Opens the camera to record an observation"
+          accessibilityHint={ui('Opens the camera to record an observation')}
         />
 
         {!locked ? (

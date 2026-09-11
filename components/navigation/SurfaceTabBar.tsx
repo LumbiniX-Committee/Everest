@@ -12,8 +12,10 @@ import type { BottomTabBarProps } from 'expo-router/js-tabs';
 
 import { Icon, Text, type IconName } from '@/components/ui';
 import { colors, radii, spacing } from '@/theme';
-import { SURFACES, SURFACE_LABELS, SURFACE_ICONS, type Surface } from '@/constants';
+import { SURFACES, SURFACE_ICONS, type Surface } from '@/constants';
 import { useHaptics } from '@/hooks';
+import { visitorCopy } from '@/i18n/visitor';
+import { usePreferences } from '@/store';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -28,6 +30,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 export function SurfaceTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
   const { selection } = useHaptics();
+  const { preferences } = usePreferences();
 
   return (
     <View style={[styles.container, { paddingBottom: Math.max(insets.bottom, spacing.sm) }]}>
@@ -38,7 +41,7 @@ export function SurfaceTabBar({ state, descriptors, navigation }: BottomTabBarPr
           const focused = state.index === index;
           const { options } = descriptors[route.key];
           const surfaceKey = route.name as Surface;
-          const label = SURFACE_LABELS[surfaceKey] ?? route.name;
+          const label = visitorCopy(preferences.interfaceLanguage, `surface.${surfaceKey}`);
           const icon = (SURFACE_ICONS[surfaceKey] ?? 'circle-outline') as IconName;
 
           const onPress = () => {
@@ -91,13 +94,13 @@ function SurfaceTabItem({
 
   useEffect(() => {
     if (focused) {
-      iconPop.value = withSequence(
+      iconPop.set(withSequence(
         withTiming(1.18, { duration: 120 }),
         withSpring(1, { damping: 10, stiffness: 220, mass: 0.6 }),
-      );
-      markWidth.value = withSpring(28, { damping: 14, stiffness: 260 });
+      ));
+      markWidth.set(withSpring(28, { damping: 14, stiffness: 260 }));
     } else {
-      markWidth.value = withTiming(0, { duration: 160 });
+      markWidth.set(withTiming(0, { duration: 160 }));
     }
   }, [focused, iconPop, markWidth]);
 
@@ -115,19 +118,19 @@ function SurfaceTabItem({
   }));
 
   const handlePressIn = useCallback(() => {
-    scale.value = withSpring(0.92, {
+    scale.set(withSpring(0.92, {
       damping: 14,
       stiffness: 380,
       mass: 0.6,
-    });
+    }));
   }, [scale]);
 
   const handlePressOut = useCallback(() => {
-    scale.value = withSpring(1, {
+    scale.set(withSpring(1, {
       damping: 12,
       stiffness: 280,
       mass: 0.6,
-    });
+    }));
   }, [scale]);
 
   return (

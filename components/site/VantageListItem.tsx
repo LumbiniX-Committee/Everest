@@ -25,10 +25,10 @@ export function VantageListItem({
         <BearingCompass bearingDeg={vantage.bearing} size={48} />
 
         <View style={styles.body}>
-          <Text variant="heading">{vantage.label}</Text>
+          <Text variant="heading" translate={false}>{vantage.label}</Text>
 
           {vantage.note ? (
-            <Text variant="body" tone="secondary" numberOfLines={2} style={styles.note}>
+            <Text variant="body" tone="secondary" numberOfLines={2} style={styles.note} translate={false}>
               {vantage.note}
             </Text>
           ) : null}
@@ -55,7 +55,7 @@ function StatCell({ label, value }: { label: string; value: string }) {
       <Text variant="label" tone="muted" uppercase numberOfLines={2}>
         {label}
       </Text>
-      <Text variant="mono" tone="primary" numberOfLines={1}>
+      <Text variant="mono" tone="primary" numberOfLines={1} translate={false}>
         {value}
       </Text>
     </View>

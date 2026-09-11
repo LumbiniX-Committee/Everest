@@ -130,6 +130,20 @@ for (const p of plates) {
   const at = `plate '${p.id}'`;
   if (!siteIds.has(p.site_id)) err(`${at}: references missing site '${p.site_id}'`);
   if (!TIERS.has(p.evidence_tier)) err(`${at}: missing/invalid evidence_tier '${p.evidence_tier}'`);
+  if (!p.caption?.en || !p.caption?.ne) err(`${at}: missing caption.en or caption.ne`);
+  if (!p.image) err(`${at}: missing image path`);
+  if (!p.licence) err(`${at}: missing licence`);
+  if (!p.attribution) err(`${at}: missing attribution`);
+  if (!Array.isArray(p.sources) || !p.sources.length) err(`${at}: no cited sources`);
+  if (p.evidence_tier === 'conditioned_reconstruction' && !p.conditioned_on) {
+    err(`${at}: conditioned reconstruction must identify conditioned_on source`);
+  }
+  if (p.evidence_tier === 'artistic_impression' && p.conditioned_on) {
+    err(`${at}: artistic impression must not claim image conditioning`);
+  }
+  if (p.produced && p.image && !existsSync(join(root, 'assets', 'plates', p.image))) {
+    err(`${at}: produced asset is missing at assets/plates/${p.image}`);
+  }
 }
 // Plate ids referenced by sites that do not yet exist are a warning, not an error
 // (plates land in Block 6 / harvest).

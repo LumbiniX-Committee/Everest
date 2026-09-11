@@ -8,6 +8,8 @@ import Animated, {
 import * as Haptics from 'expo-haptics';
 
 import { useHaptics } from '@/hooks';
+import { useInterfaceLanguage } from '@/i18n/context';
+import { visitorLiteralCopy } from '@/i18n/literals';
 import { colors, radii, spacing } from '@/theme';
 
 import { Text } from './Text';
@@ -30,7 +32,6 @@ export type ButtonProps = {
   /** Optional leading icon, drawn by the app's single icon surface. */
   icon?: IconName;
 };
-
 export function Button({
   label,
   onPress,
@@ -43,6 +44,11 @@ export function Button({
   icon,
 }: ButtonProps) {
   const inert = disabled || loading;
+  const language = useInterfaceLanguage();
+  const displayLabel = visitorLiteralCopy(language, label);
+  const displayHint = accessibilityHint
+    ? visitorLiteralCopy(language, accessibilityHint)
+    : undefined;
   const { pulse } = useHaptics();
   const scale = useSharedValue(1);
 
@@ -52,20 +58,20 @@ export function Button({
 
   const handlePressIn = useCallback(() => {
     if (inert) return;
-    scale.value = withSpring(variant === 'quiet' ? 0.94 : 0.96, {
+    scale.set(withSpring(variant === 'quiet' ? 0.94 : 0.96, {
       damping: 14,
       stiffness: 350,
       mass: 0.8,
-    });
+    }));
   }, [inert, scale, variant]);
 
   const handlePressOut = useCallback(() => {
     if (inert) return;
-    scale.value = withSpring(1, {
+    scale.set(withSpring(1, {
       damping: 12,
       stiffness: 280,
       mass: 0.8,
-    });
+    }));
   }, [inert, scale]);
 
   const handlePress = useCallback(() => {
@@ -77,8 +83,9 @@ export function Button({
   return (
     <AnimatedPressable
       accessibilityRole="button"
+      accessibilityLabel={displayLabel}
       accessibilityState={{ disabled: inert, busy: loading }}
-      accessibilityHint={accessibilityHint}
+      accessibilityHint={displayHint}
       disabled={inert}
       onPress={handlePress}
       onPressIn={handlePressIn}
@@ -107,7 +114,7 @@ export function Button({
             />
           ) : null}
           <Text variant="button" tone={variant === 'primary' ? 'inverse' : 'sandstone'}>
-            {label}
+            {displayLabel}
           </Text>
         </View>
       )}
@@ -138,10 +145,4 @@ const variantStyles: Record<ButtonVariant, ViewStyle> = {
     borderColor: colors.borderStrong,
   },
   quiet: { backgroundColor: 'transparent', paddingHorizontal: spacing.sm },
-};
-
-const pressedStyles: Record<ButtonVariant, ViewStyle> = {
-  primary: { backgroundColor: colors.primaryPressed },
-  secondary: { backgroundColor: colors.surfaceSecondary },
-  quiet: { backgroundColor: colors.primarySoft },
 };

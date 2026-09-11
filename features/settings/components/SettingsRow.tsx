@@ -9,6 +9,8 @@ import * as Haptics from 'expo-haptics';
 
 import { Text } from '@/components/ui';
 import { useHaptics } from '@/hooks';
+import { useInterfaceLanguage } from '@/i18n/context';
+import { visitorLiteralCopy } from '@/i18n/literals';
 import { colors, radii, spacing } from '@/theme';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -31,6 +33,10 @@ export type SettingsRowProps = {
  */
 export function SettingsRow({ label, value, hint, onPress, danger = false }: SettingsRowProps) {
   const { pulse } = useHaptics();
+  const language = useInterfaceLanguage();
+  const displayLabel = visitorLiteralCopy(language, label);
+  const displayValue = value ? visitorLiteralCopy(language, value) : undefined;
+  const displayHint = hint ? visitorLiteralCopy(language, hint) : undefined;
   const scale = useSharedValue(1);
   const chevronX = useSharedValue(0);
 
@@ -60,8 +66,8 @@ export function SettingsRow({ label, value, hint, onPress, danger = false }: Set
   return (
     <AnimatedPressable
       accessibilityRole="button"
-      accessibilityLabel={value ? `${label}, ${value}` : label}
-      accessibilityHint={hint}
+      accessibilityLabel={displayValue ? `${displayLabel}, ${displayValue}` : displayLabel}
+      accessibilityHint={displayHint}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
@@ -69,17 +75,17 @@ export function SettingsRow({ label, value, hint, onPress, danger = false }: Set
     >
       <View style={styles.textColumn}>
         <Text variant="bodyStrong" tone={danger ? 'open' : 'primary'}>
-          {label}
+          {displayLabel}
         </Text>
         {hint ? (
           <Text variant="caption" tone="muted">
-            {hint}
+            {displayHint}
           </Text>
         ) : null}
       </View>
       {value ? (
         <Text variant="body" tone="secondary">
-          {value}
+          {displayValue}
         </Text>
       ) : null}
       <Animated.View style={chevronAnimStyle}>

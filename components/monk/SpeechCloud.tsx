@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { Animated, Easing, Pressable, StyleSheet, Text as RNText, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { colors, radii, spacing } from '@/theme';
 
 import { GreetingMonk } from './GreetingMonk';
@@ -26,26 +27,24 @@ export function useTypingText(
   speed = 22,
   charsPerTick = 1,
 ): { displayed: string; done: boolean; skip: () => void } {
-  const [displayed, setDisplayed] = useState('');
-  const textRef = useRef(text);
+  const [progress, setProgress] = useState({ text, length: 0 });
+  const displayedLength = progress.text === text ? progress.length : 0;
 
   useEffect(() => {
-    textRef.current = text;
-    setDisplayed('');
     if (!text) return;
     let i = 0;
     const id = setInterval(() => {
-      i = Math.min(textRef.current.length, i + charsPerTick);
-      setDisplayed(textRef.current.slice(0, i));
-      if (i >= textRef.current.length) clearInterval(id);
+      i = Math.min(text.length, i + charsPerTick);
+      setProgress({ text, length: i });
+      if (i >= text.length) clearInterval(id);
     }, speed);
     return () => clearInterval(id);
   }, [text, speed, charsPerTick]);
 
   return {
-    displayed,
-    done: displayed.length >= text.length,
-    skip: () => setDisplayed(textRef.current),
+    displayed: text.slice(0, displayedLength),
+    done: displayedLength >= text.length,
+    skip: () => setProgress({ text, length: text.length }),
   };
 }
 
@@ -84,13 +83,14 @@ export function SpeechCloud({
   aboveCloud,
   isKeyboardOpen = false,
 }: SpeechCloudProps) {
+  const ui = useVisitorLiteralCopy();
   const insets = useSafeAreaInsets();
   const isKeyboardActive = isKeyboardOpen || bottomInset > 0;
   const effectiveMonkHeight = isKeyboardActive ? 145 : monkHeight;
 
   // The monk slides in once, from the left.
-  const avatarSlide = useRef(new Animated.Value(0)).current;
-  const avatarOpacity = useRef(new Animated.Value(0)).current;
+  const [avatarSlide] = useState(() => new Animated.Value(0));
+  const [avatarOpacity] = useState(() => new Animated.Value(0));
 
   useEffect(() => {
     avatarSlide.setValue(0);
@@ -107,7 +107,7 @@ export function SpeechCloud({
   }, [avatarSlide, avatarOpacity]);
 
   // The cloud floats up again on every new thing said.
-  const cloudAnim = useRef(new Animated.Value(0)).current;
+  const [cloudAnim] = useState(() => new Animated.Value(0));
 
   useEffect(() => {
     cloudAnim.setValue(0);
@@ -126,7 +126,7 @@ export function SpeechCloud({
         style={styles.backdrop}
         onPress={onBackdropPress ?? onClose}
         accessibilityRole="button"
-        accessibilityLabel={onBackdropPress ? 'Continue' : 'Close'}
+        accessibilityLabel={ui(onBackdropPress ? 'Continue' : 'Close')}
       />
 
       <Animated.View
@@ -185,7 +185,7 @@ export function SpeechCloud({
               onPress={onClose}
               hitSlop={12}
               accessibilityRole="button"
-              accessibilityLabel="Close"
+              accessibilityLabel={ui('Close')}
               style={styles.closeBubble}
             >
               <RNText style={styles.closeBubbleTxt}>✕</RNText>

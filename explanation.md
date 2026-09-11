@@ -1,3 +1,6 @@
+> **Historical pre-pivot reference.** Do not use this file for current scope,
+> counts, security, or deployment. See `docs/PRODUCTION-PILOT.md`.
+
 # Sākṣī: Code Explanation, File by File
 
 *A comprehensive walkthrough of the code in this project. It is organized by

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { Button, Text } from '@/components/ui';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import {
   hasVoice,
   isSpeechSupported,
@@ -20,6 +21,7 @@ import { spacing } from '@/theme';
 type Availability = 'checking' | 'ready' | 'no-voice' | 'unsupported';
 
 export function SpeakButton({ text, language }: { text: string; language: VoiceLanguage }) {
+  const ui = useVisitorLiteralCopy();
   // Resolved during the first render rather than in an effect: the check is a
   // synchronous module lookup, so there is nothing to wait for, and setting it
   // from an effect would render a state the component already knew was wrong.
@@ -75,7 +77,7 @@ export function SpeakButton({ text, language }: { text: string; language: VoiceL
         label={speaking ? 'Stop speaking' : 'Listen'}
         variant="quiet"
         onPress={toggle}
-        accessibilityHint={speaking ? 'Stops speech' : 'Reads this aloud'}
+        accessibilityHint={ui(speaking ? 'Stops speech' : 'Reads this aloud')}
       />
     </View>
   );

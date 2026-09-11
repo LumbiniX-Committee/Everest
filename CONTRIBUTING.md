@@ -34,10 +34,12 @@ cd landing && npm install && npm run dev
 npm run verify
 ```
 
-That runs the type check, the unit tests, seed validation, the vocabulary
-linter, and the Dhamma answer evaluation. **All of them must pass.** The same
-five run in CI on every pull request, so running them locally only saves you a
-round trip — it does not change the outcome.
+That runs both TypeScript layers, the domain and native React/service tests,
+seed validation, the vocabulary and English/Nepali localization gates, the
+Dhamma answer evaluation, and lint. **All of them must pass.** The landing app
+has its own `npm run verify`, covering types, lint, API/UI tests, generated data,
+and a production build. CI runs both clean-install gates plus the pgTAP Supabase
+policy suite on every push and pull request.
 
 ## The rules the checks enforce
 

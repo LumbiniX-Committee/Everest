@@ -5,6 +5,8 @@ import { LoadingState, ScreenHeader } from '@/components/common';
 import { Button, Screen, Text } from '@/components/ui';
 import { dhammaForSite, findSite } from '@/data';
 import { arrival as arrivalService } from '@/services';
+import { useInterfaceLanguage } from '@/i18n/context';
+import { formatVisitorCopy, visitorCopy } from '@/i18n/visitor';
 import { useArrival } from '@/store';
 import { spacing } from '@/theme';
 
@@ -19,6 +21,7 @@ const STATUS_TEXT = {
 } as const;
 
 export function ArrivalsScreen() {
+  const language = useInterfaceLanguage();
   const { hydrated, status, problem, precincts, enable, disable, simulateArrival } = useArrival();
   const [busy, setBusy] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
@@ -31,8 +34,8 @@ export function ArrivalsScreen() {
     setBusy(null);
     setNote(
       announced
-        ? `Announced ${name}.`
-        : `${name} was announced recently, so it stayed quiet. Reset the history to announce it again.`,
+        ? formatVisitorCopy(language, 'arrivals.announced', { name })
+        : formatVisitorCopy(language, 'arrivals.recent', { name }),
     );
   };
 
@@ -77,8 +80,13 @@ export function ArrivalsScreen() {
                 value={`${p.radiusMetres} m`}
                 hint={
                   speakable.length > 0
-                    ? `${p.siteIds.length} sites · ${speakable.length} with a passage`
-                    : `${p.siteIds.length} sites · no passage yet`
+                    ? formatVisitorCopy(language, 'arrivals.precinctCoverage', {
+                        sites: p.siteIds.length,
+                        passages: speakable.length,
+                      })
+                    : formatVisitorCopy(language, 'arrivals.precinctNoPassage', {
+                        sites: p.siteIds.length,
+                      })
                 }
                 onPress={() => void run(p.id, p.name)}
               />
@@ -111,7 +119,11 @@ export function ArrivalsScreen() {
               <View key={siteId} style={styles.row}>
                 <Text variant="body">{site.name}</Text>
                 <Text variant="body" tone={count > 0 ? 'resolved' : 'muted'}>
-                  {count > 0 ? `${count} passage${count > 1 ? 's' : ''}` : 'none'}
+                  {count === 1
+                    ? visitorCopy(language, 'arrivals.onePassage')
+                    : count > 1
+                      ? formatVisitorCopy(language, 'arrivals.passages', { count })
+                      : 'none'}
                 </Text>
               </View>
             ) : null;
@@ -124,7 +136,7 @@ export function ArrivalsScreen() {
         block
         onPress={() => {
           void arrivalService.resetArrivalHistory();
-          setNote('Cleared. Every precinct will announce itself again.');
+          setNote(visitorCopy(language, 'arrivals.cleared'));
         }}
       />
     </Screen>

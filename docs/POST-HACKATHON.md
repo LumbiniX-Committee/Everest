@@ -1,5 +1,10 @@
 # After the hackathon
 
+> **Historical planning snapshot — 1 September 2026.** The states and counts
+> below describe the repository at that date and are intentionally preserved.
+> The authenticated production-pilot implementation that followed is documented
+> in [PRODUCTION-PILOT.md](PRODUCTION-PILOT.md) and the current [README](../README.md).
+
 *Fifteen strategies for turning a LumbiniX build into a project that outlives
 it, ranked by what actually stops the work — not by what is most fun to build.*
 

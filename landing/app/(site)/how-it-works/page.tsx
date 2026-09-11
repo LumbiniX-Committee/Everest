@@ -16,7 +16,7 @@ const captureSteps = [
     title: 'Pick a site, then a viewpoint',
     body: (
       <>
-        A <strong>vantage</strong> is not "somewhere near the stupa". It is a
+        A <strong>vantage</strong> is not &ldquo;somewhere near the stupa&rdquo;. It is a
         stored position, bearing and tilt — a spot on the ground and a direction
         to face. The app holds a set of them for each site, and a quest points at
         whichever one has gone longest without being revisited, rather than at
@@ -40,7 +40,7 @@ const captureSteps = [
     title: 'Take the photograph',
     body: (
       <>
-        The image is written to the phone's own storage and recorded in a
+        The image is written to the phone&apos;s own storage and recorded in a
         database on the device before anything is sent anywhere. A photograph
         taken at a viewpoint on a particular day cannot be retaken, so the phone
         is the record and the network is a copy of it.
@@ -62,7 +62,7 @@ const captureSteps = [
     title: 'It reaches whoever is responsible',
     body: (
       <>
-        The report appears on the custodian's dashboard alongside the site's
+        The report appears on the custodian&apos;s dashboard alongside the site&apos;s
         coverage and its median time to acknowledgement. A custodian can
         acknowledge it, mark it in progress, or resolve it with a note, and
         export the whole set as CSV or GeoJSON for a real GIS workflow.{' '}

@@ -1,5 +1,12 @@
 # Current Implementation Plan and Project Status
 
+> **Historical plan:** this file describes the 25 August 2026 audit and is no
+> longer the current implementation plan. Continue with
+> [docs/PRODUCTION-PILOT.md](../PRODUCTION-PILOT.md). Its former blockers—lint,
+> core typechecking, CI, warned coordinates, and production custodian design—are
+> addressed in the current worktree; hosted Supabase and physical-field gates
+> remain operational work.
+
 **Audited commit:** `dbe6d45e7297c5d889be9e69c3e2e190a578e6b1` (branch `main`)
 **Commit date:** 2026-08-10 · **Audited:** 2026-08-25
 

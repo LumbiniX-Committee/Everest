@@ -22,16 +22,17 @@ naming them.
   cannot be forged. Anything that lets a report claim a sensor-verified alignment
   it did not have, or that lets an existing observation be altered rather than
   superseded, is a serious defect even though nothing is "leaked".
-- **Custodian actions.** The dashboard deliberately has no login. That is a
-  documented product decision, not an oversight, and it means acknowledgements
-  are attributable to a remembered name rather than an authenticated account.
-  Report anything that goes further than that — for instance a way to read or
-  alter reports across institutions.
+- **Custodian actions.** The dashboard uses invite-only Supabase magic-link
+  authentication. Memberships are scoped by site, actor identity comes from the
+  server-managed session, and report actions are append-only. Report any way to
+  read or act on another institution's reports, replace evidence, bypass the
+  action history, or obtain a private photograph without membership.
 
 ## What is not a vulnerability
 
-- The absence of authentication on the custodian dashboard. See above.
 - `EXPO_PUBLIC_*` values appearing in the app bundle. They are publishable by
   design; row-level security is what protects the data.
-- Approximate coordinates on sites marked `coords_source: doc`. Those are
-  labelled as unsurveyed on purpose.
+- A public condition page omitting reporter identity, exact capture coordinates,
+  private notes, unpublished photographs, and unacknowledged free-text claims.
+  That redaction is intentional; public routes may expose only approved
+  aggregates returned by the narrow database functions.

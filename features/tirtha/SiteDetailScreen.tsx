@@ -13,6 +13,7 @@ import { usePreferences } from '@/store';
 import { SITE_VISIT_RADIUS_M } from '@/constants';
 import { spacing } from '@/theme';
 import { AskThisPlace } from './AskThisPlace';
+import { formatVisitorCopy } from '@/i18n/visitor';
 import { depthFor, scriptureForSite } from './wisdom';
 import type { Source } from '@/types';
 import { distanceMeters, formatCoordinate, formatDistance } from '@/utils';
@@ -91,9 +92,9 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
         <Text variant="label" tone="muted" uppercase>
           Tīrtha
         </Text>
-        <Text variant="title">{site.name}</Text>
+        <Text variant="title" translate={false}>{site.name}</Text>
         {site.nameNepali ? (
-          <Text variant="body" tone="secondary">
+          <Text variant="body" tone="secondary" translate={false}>
             {site.nameNepali}
           </Text>
         ) : null}
@@ -104,7 +105,7 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
         </View>
       </View>
 
-      <Text variant="body" style={styles.description}>
+      <Text variant="body" style={styles.description} translate={false}>
         {depth.prose === 'short' ? site.summary : site.description}
       </Text>
 
@@ -112,7 +113,9 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
         <>
           <Divider />
           <View style={styles.storyBlock}>
-            <Text variant="heading">{childMonuments.length} monuments in this complex</Text>
+            <Text variant="heading">
+              {formatVisitorCopy(preferences.interfaceLanguage, 'site.monuments', { count: childMonuments.length })}
+            </Text>
             <Text variant="body" tone="secondary">
               Open each monument for its own history, significance and simulation.
             </Text>
@@ -149,10 +152,10 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
             {site.story.map((chapter) => (
               <Card key={chapter.title} style={styles.storyCard}>
                 {chapter.eyebrow ? (
-                  <Text variant="label" tone="sandstone" uppercase>{chapter.eyebrow}</Text>
+                  <Text variant="label" tone="sandstone" uppercase translate={false}>{chapter.eyebrow}</Text>
                 ) : null}
-                <Text variant="heading">{chapter.title}</Text>
-                <Text variant="body" tone="secondary">{chapter.body}</Text>
+                <Text variant="heading" translate={false}>{chapter.title}</Text>
+                <Text variant="body" tone="secondary" translate={false}>{chapter.body}</Text>
               </Card>
             ))}
           </View>
@@ -167,7 +170,9 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
 
       {localQuests.length > 0 ? (
         <Button
-          label={localQuests.length === 1 ? 'Try this place’s unique quest' : `Explore ${localQuests.length} monument quests`}
+          label={localQuests.length === 1
+            ? 'Try this place’s unique quest'
+            : formatVisitorCopy(preferences.interfaceLanguage, 'site.questMany', { count: localQuests.length })}
           variant="secondary"
           onPress={() => localQuests.length === 1
             ? router.push(`/(main)/tirtha/quests/${localQuests[0].id}`)
@@ -216,7 +221,7 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
             <Text variant="body" tone="secondary">
               {historical.length === 1
                 ? 'One historical image has been matched to this site.'
-                : `${historical.length} historical images have been matched to this site.`}{' '}
+                : formatVisitorCopy(preferences.interfaceLanguage, 'site.historicalMany', { count: historical.length })}{' '}
               Compare them against the view today.
             </Text>
             <Button
@@ -264,16 +269,16 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
             <Text variant="body" tone="secondary">
               {scripture.length === 1
                 ? 'This place is named in one canonical text the app carries in full.'
-                : `This place is named in ${scripture.length} canonical texts the app carries in full.`}{' '}
+                : formatVisitorCopy(preferences.interfaceLanguage, 'site.canonicalMany', { count: scripture.length })}{' '}
               Ask about it on the Dhamma surface and the answer will cite them.
             </Text>
             {scripture.map((text) => (
               <View key={text.uid} style={styles.scripture}>
-                <Text variant="body">{text.titleEn}</Text>
-                <Text variant="body" tone="secondary">
+                <Text variant="body" translate={false}>{text.titleEn}</Text>
+                <Text variant="body" tone="secondary" translate={false}>
                   {text.titlePi}
                 </Text>
-                <Text variant="caption" tone="muted">
+                <Text variant="caption" tone="muted" translate={false}>
                   {text.collection} · {text.segmentCount} passages · tr. {text.translator} · {text.licence}
                 </Text>
               </View>

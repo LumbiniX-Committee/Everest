@@ -1,5 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { hasSupabaseConfiguration } from './configuration';
+
+export { hasSupabaseConfiguration } from './configuration';
 
 /**
  * Supabase client — the eventual sync destination for observations.
@@ -25,9 +28,7 @@ let client: SupabaseClient | null = null;
 
 /** True when the app is configured to talk to Supabase at all. */
 export function isConfigured(): boolean {
-  if (!url || !key) return false;
-  if (url.includes('your-project.supabase.co') || key.includes('your-publishable-key')) return false;
-  return true;
+  return hasSupabaseConfiguration(url, key);
 }
 
 /**

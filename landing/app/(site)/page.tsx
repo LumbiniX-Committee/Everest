@@ -389,9 +389,9 @@ export default async function Home() {
             acknowledgement, and every open report by site and status, with CSV
             and GeoJSON export for a real GIS workflow. A custodian can
             acknowledge a report, mark it in progress, or resolve it with a note
-            — from the web, or from the app. There is deliberately no login,
-            because a heritage office should not need an IT project to start
-            receiving evidence.
+            through the responsive web portal. Invited staff sign in by email
+            magic link and see only the sites assigned to them; the visitor app
+            links to that portal instead of carrying a second privileged login.
           </p>
           <div className="mt-9 flex flex-wrap gap-4">
             <Link
@@ -409,6 +409,51 @@ export default async function Home() {
             </Link>
           </div>
         </Reveal>
+      </section>
+
+      {/* Public transparency */}
+      <section className="border-t border-line bg-ground-deep">
+        <div className="mx-auto max-w-4xl px-6 py-16 sm:py-20">
+          <Reveal>
+            <p className="text-sm font-semibold tracking-widest text-sandstone-deep uppercase">
+              Public transparency
+            </p>
+            <h2 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight text-ink">
+              Follow the record without exposing the witness
+            </h2>
+            <p className="mt-5 max-w-2xl text-lg leading-relaxed text-ink-soft">
+              Review rolling survey coverage and custodian-acknowledged condition
+              history. Visitor identities, private notes, exact capture
+              coordinates and unpublished photographs remain private.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3 text-sm">
+              <Link
+                href="/sites/patan-durbar-square/condition"
+                className="rounded-xl border border-line bg-surface px-4 py-2.5 font-semibold text-ink"
+              >
+                Patan Durbar Square
+              </Link>
+              <Link
+                href="/sites/changu-narayan/condition"
+                className="rounded-xl border border-line bg-surface px-4 py-2.5 font-semibold text-ink"
+              >
+                Changu Narayan
+              </Link>
+              <Link
+                href="/sites/manga-hiti/condition"
+                className="rounded-xl border border-line bg-surface px-4 py-2.5 font-semibold text-ink"
+              >
+                Manga Hiti
+              </Link>
+              <Link
+                href="/adopt"
+                className="rounded-xl bg-ink px-4 py-2.5 font-semibold text-white"
+              >
+                Adopt a vantage
+              </Link>
+            </div>
+          </Reveal>
+        </div>
       </section>
 
       {/* Reports */}

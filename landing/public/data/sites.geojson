@@ -85,8 +85,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          83.2756,
-          27.4694
+          83.27560804,
+          27.46932846
         ]
       },
       "properties": {
@@ -96,8 +96,8 @@
         "region": "Lumbini",
         "zone": "sacred_garden",
         "tier": 1,
-        "surveyed": false,
-        "coords_source": "doc",
+        "surveyed": true,
+        "coords_source": "osm",
         "geofence_m": 25,
         "period_from": null,
         "period_to": null,
@@ -118,8 +118,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          83.275831,
-          27.469609
+          83.2758386,
+          27.469556
         ]
       },
       "properties": {
@@ -129,8 +129,8 @@
         "region": "Lumbini",
         "zone": "sacred_garden",
         "tier": 1,
-        "surveyed": false,
-        "coords_source": "doc",
+        "surveyed": true,
+        "coords_source": "osm",
         "geofence_m": 20,
         "period_from": null,
         "period_to": null,
@@ -149,8 +149,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          83.2762,
-          27.4699
+          83.2761188,
+          27.46914974
         ]
       },
       "properties": {
@@ -160,8 +160,8 @@
         "region": "Lumbini",
         "zone": "sacred_garden",
         "tier": 1,
-        "surveyed": false,
-        "coords_source": "doc",
+        "surveyed": true,
+        "coords_source": "osm",
         "geofence_m": 40,
         "period_from": -250,
         "period_to": 500,
@@ -337,8 +337,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          83.0536,
-          27.5747
+          83.0583333,
+          27.575
         ]
       },
       "properties": {
@@ -349,7 +349,7 @@
         "zone": "greater_lumbini",
         "tier": 3,
         "surveyed": false,
-        "coords_source": "doc",
+        "coords_source": "unesco",
         "geofence_m": 60,
         "period_from": -600,
         "period_to": null,
@@ -370,8 +370,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          83.687,
-          27.503
+          83.6811111,
+          27.4980556
         ]
       },
       "properties": {
@@ -382,7 +382,7 @@
         "zone": "greater_lumbini",
         "tier": 3,
         "surveyed": false,
-        "coords_source": "doc",
+        "coords_source": "unesco",
         "geofence_m": 60,
         "period_from": -500,
         "period_to": null,
