@@ -201,7 +201,7 @@ export function QuestTaskItem({
           <Button label="Open Sākṣī vantage" variant="secondary" onPress={onWitness} />
         ) : null}
 
-        {!completed && task.evidence === 'photo' ? (
+        {!completed && task.evidence === 'photo' && task.autoComplete !== 'vantage_capture' ? (
           <View style={styles.memoryAction}>
             <Text variant="caption" tone="muted">
               Capture a memory to add it to this quest and your Memories album.

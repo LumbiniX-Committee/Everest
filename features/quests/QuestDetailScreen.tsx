@@ -146,6 +146,10 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
     if (progress.completedTasks.includes(taskId)) return;
 
     const task = tasks.find((t) => t.id === taskId);
+    if (task?.evidence === 'photo' && task.autoComplete !== 'vantage_capture') {
+      router.push({ pathname: '/(main)/tirtha/quest-camera', params: { questId, taskId } });
+      return;
+    }
     const wantsEvidence = task && (task.evidence ?? 'none') !== 'none';
     if (wantsEvidence) {
       setOpenTask(task);
@@ -164,7 +168,7 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
           <Button
             label="Memories"
             variant="quiet"
-            onPress={() => router.push('../../memories')}
+            onPress={() => router.push('/(main)/tirtha/memories')}
           />
         }
       />

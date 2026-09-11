@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 
 import { EmptyState, ScreenHeader } from '@/components/common';
-import { Card, Screen, Text } from '@/components/ui';
-import { findSite } from '@/data';
+import { BottomSheet, Card, Screen, Text } from '@/components/ui';
+import { findSite, findVantage, areaForQuest } from '@/data';
 import { database } from '@/services';
 import { useQuests } from '@/store/quests';
 import { colors, spacing } from '@/theme';
@@ -21,6 +21,8 @@ export function MemoriesScreen() {
   const router = useRouter();
   const { quests } = useQuests();
   const [memories, setMemories] = useState<Memory[]>([]);
+  const [selected, setSelected] = useState<Memory | null>(null);
+  const [error, setError] = useState(false);
 
   const load = useCallback(async () => {
     const submissions = await database.listAllQuestSubmissions();
@@ -32,15 +34,16 @@ export function MemoriesScreen() {
         ...submission,
         questTitle: quest.title,
         taskTitle: task.title,
-        siteName: task.targetId ? findSite(task.targetId)?.name : undefined,
+        siteName: areaForQuest(quest)?.name ?? (task.targetId ? findSite(task.targetId)?.name ?? findSite(findVantage(task.targetId)?.siteId ?? '')?.name : undefined),
       }];
     });
     setMemories(rows);
+    setError(false);
   }, [quests]);
 
-  useEffect(() => {
-    void load().catch(() => undefined);
-  }, [load]);
+  useFocusEffect(useCallback(() => {
+    void load().catch(() => setError(true));
+  }, [load]));
 
   return (
     <Screen scroll>
@@ -50,7 +53,8 @@ export function MemoriesScreen() {
         subtitle="Photographs you captured while completing quests."
       />
 
-      {memories.length === 0 ? (
+      {error ? <Text tone="secondary">Your memories could not load. Reopen this album to retry.</Text> : null}
+      {memories.length === 0 && !error ? (
         <EmptyState
           title="No memories stored yet"
           body="Capture a photo for a quest and store it here with the task and place it belongs to."
@@ -64,7 +68,7 @@ export function MemoriesScreen() {
               key={`${memory.questId}-${memory.taskId}`}
               accessibilityRole="button"
               accessibilityLabel={`Open ${memory.taskTitle} in ${memory.questTitle}`}
-              onPress={() => router.push(`/(main)/tirtha/quests/${memory.questId}`)}
+              onPress={() => setSelected(memory)}
             >
               <Card style={styles.memory}>
                 <Image source={{ uri: memory.photoUri }} style={styles.photo} resizeMode="cover" />
@@ -83,11 +87,17 @@ export function MemoriesScreen() {
           ))}
         </View>
       )}
+      <BottomSheet visible={selected !== null} onClose={() => setSelected(null)} title={selected?.taskTitle ?? 'Memory'} subtitle={selected?.siteName} scroll>
+        {selected?.photoUri ? <Image source={{ uri: selected.photoUri }} style={styles.fullPhoto} resizeMode="contain" /> : null}
+        {selected ? <Text variant="caption" tone="muted">{new Date(selected.submittedAt).toLocaleString()}</Text> : null}
+        {selected?.note ? <Text>{selected.note}</Text> : null}
+      </BottomSheet>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
+  fullPhoto: { width: '100%', height: 320 },
   grid: { gap: spacing.md, marginTop: spacing.lg },
   memory: { padding: 0, overflow: 'hidden', backgroundColor: colors.surface },
   photo: { width: '100%', height: 210, backgroundColor: colors.surfaceSecondary },
