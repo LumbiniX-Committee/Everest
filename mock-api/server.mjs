@@ -75,7 +75,10 @@ loadGuide().catch(() => {});
 const readSeed = (f) => JSON.parse(readFileSync(join(SEED, f), 'utf8'));
 const sites = readSeed('sites.json');
 const vantages = readSeed('vantages.json');
-const quests = readSeed('quests.json');
+// seed/quests.json was retired — data/demo/quests.ts is the one file the app
+// itself seeds quests from (store/quests.tsx), so the mock now serves the
+// same derived list instead of a second, driftable copy.
+const { demoQuests: quests } = await import('../data/demo/quests.ts');
 const needs = readSeed('needs.json');
 const timeline = readSeed('timeline.json');
 let plates = [];
