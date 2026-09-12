@@ -2,6 +2,8 @@ import type { ReactNode } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useInterfaceLanguage } from '@/i18n/context';
+import { visitorLiteralCopy } from '@/i18n/literals';
 import { colors, radii, spacing } from '@/theme';
 
 import { Text } from './Text';
@@ -13,6 +15,9 @@ export type BottomSheetProps = {
   title: string;
   /** One line under the title, when the title alone is not enough. */
   subtitle?: string;
+  /** False when the title/subtitle is authored catalogue content, not interface copy. */
+  translateTitle?: boolean;
+  translateSubtitle?: boolean;
   children: ReactNode;
   /** Wraps content in a ScrollView. Off for short, fixed content. */
   scroll?: boolean;
@@ -35,10 +40,13 @@ export function BottomSheet({
   onClose,
   title,
   subtitle,
+  translateTitle = true,
+  translateSubtitle = true,
   children,
   scroll = false,
 }: BottomSheetProps) {
   const insets = useSafeAreaInsets();
+  const language = useInterfaceLanguage();
 
   return (
     <Modal
@@ -58,16 +66,16 @@ export function BottomSheet({
           style={styles.scrim}
           onPress={onClose}
           accessibilityRole="button"
-          accessibilityLabel="Close"
+          accessibilityLabel={visitorLiteralCopy(language, 'Close')}
         />
 
         <View style={[styles.sheet, { paddingBottom: insets.bottom + spacing.lg }]}>
           <View style={styles.grip} />
 
           <View style={styles.header}>
-            <Text variant="title">{title}</Text>
+            <Text variant="title" translate={translateTitle}>{title}</Text>
             {subtitle ? (
-              <Text variant="body" tone="secondary">
+              <Text variant="body" tone="secondary" translate={translateSubtitle}>
                 {subtitle}
               </Text>
             ) : null}
@@ -102,7 +110,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.overlay,
   },
   sheet: {
-    backgroundColor: colors.backgroundDeep,
+    backgroundColor: colors.surfaceRaised,
     borderTopLeftRadius: radii.xl,
     borderTopRightRadius: radii.xl,
     paddingHorizontal: spacing.gutter,

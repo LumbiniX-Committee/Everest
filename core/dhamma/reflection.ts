@@ -122,11 +122,16 @@ const DEFAULT_STAGES = [
   'What is one small step you could take next?',
 ];
 
+// Direct translation of the four stages above, not a doctrinal rendering: the
+// Nepali path used to run the four-noble-truths scaffold ("कुन चाहना, विरोध, वा
+// धारणा देखिन्छ?" — Pali taṇhā/dosa/diṭṭhi) after the English path was
+// neutralised, so Nepali speakers got framing English speakers did not. See
+// 15-POST-HACKATHON-STRATEGY §5.
 const DEFAULT_STAGES_NE = [
-  'आज तपाईंलाई सबैभन्दा भारी लागिरहेको कुरा के हो? त्यसलाई स्पष्ट रूपमा नाम दिनुहोस्।',
-  'त्यो भारीपनको आधारमा कुन चाहना, विरोध, वा धारणा देखिन्छ?',
-  'यदि यो समस्या केही समयका लागि नरहेको भए, त्यो अवस्था कस्तो देखिन्थ्यो?',
-  'तपाईंले रोज्न सक्ने एउटा सानो, ठोस अर्को कदम के हो?',
+  'आज तपाईंले बोकिरहनुभएको कुनचाहिँ कुरा गह्रौं लाग्छ?',
+  'त्यो गह्रौंपन कहाँबाट आएको जस्तो लाग्छ?',
+  'त्यसको अलिकति भए पनि बिसाएको कल्पना गर्न सक्नुहुन्छ?',
+  'अब तपाईंले गर्न सक्ने एउटा सानो कुरा के हो?',
 ];
 
 /** Site-specific opening prompts */
@@ -154,10 +159,85 @@ const SITE_PROMPTS_NE: Record<string, string> = {
   'manga-hiti': 'यो ढुङ्गे धाराबाट नजिकैका धेरै संरचना बन्नुअघिदेखि नै पानी बगेको छ। अहिले सबै त्यसरी बगिरहेको छैन।',
 };
 
+/**
+ * Per-site variations of the four-question arc, for sites where a tailored
+ * question reads better than the generic one. Sites not listed here (and
+ * `puskarini`, `patan-durbar-square`, `changu-narayan`, `manga-hiti`, whose
+ * drafted variants were identical to the generic scaffold) fall through to
+ * `DEFAULT_STAGES` / `DEFAULT_STAGES_NE`.
+ */
+const SITE_STAGES: Record<string, string[]> = {
+  'maya-devi-temple': [
+    'What made you want to come and see for yourself?',
+    'What were you hoping to find here?',
+    'Is the thing you were looking for something a place can give?',
+    'What will you take with you when you leave?',
+  ],
+  'ashokan-pillar': [
+    'What would you want to be remembered for?',
+    'What are you spending your days on instead?',
+    'Could those two things move closer together?',
+    'What is one change within reach this week?',
+  ],
+  'marker-stone': [
+    'What is one thing you believe without having checked it?',
+    'What keeps you from going and looking?',
+    'What would change if you saw it for yourself?',
+    'What is one thing you could check this week?',
+  ],
+  'vihara-remains': [
+    'What are you holding onto as if it will last?',
+    'What is it costing you to hold on?',
+    'What might loosening the grip feel like?',
+    'What is one thing you can hold more lightly?',
+  ],
+  tilaurakot: [
+    'What are you holding on to?',
+    'Why does it feel hard to let it go?',
+    'What would be left if you did?',
+    'What is one step you could take toward that?',
+  ],
+};
+
+const SITE_STAGES_NE: Record<string, string[]> = {
+  'maya-devi-temple': [
+    'आफैं आएर हेर्ने इच्छा तपाईंलाई किन जाग्यो?',
+    'यहाँ के भेट्न आशा गर्नुभएको थियो?',
+    'तपाईंले खोजेको कुरा कुनै स्थानले दिन सक्ने खालको हो?',
+    'जाँदा तपाईं आफूसँग के लैजानुहुनेछ?',
+  ],
+  'ashokan-pillar': [
+    'तपाईं केका लागि सम्झना गरिन चाहनुहुन्छ?',
+    'त्यसको सट्टा तपाईं आफ्ना दिनहरू केमा बिताइरहनुभएको छ?',
+    'ती दुई कुरा एकअर्कानजिक ल्याउन सकिन्छ?',
+    'यस हप्ता पुग्न सकिने एउटा परिवर्तन के हो?',
+  ],
+  'marker-stone': [
+    'तपाईंले जाँच नगरी विश्वास गर्नुभएको एउटा कुरा के हो?',
+    'गएर हेर्नबाट तपाईंलाई केले रोक्छ?',
+    'आफ्नै आँखाले देख्नुभयो भने के फरक पर्थ्यो?',
+    'यस हप्ता तपाईंले जाँच्न सक्ने एउटा कुरा के हो?',
+  ],
+  'vihara-remains': [
+    'टिकिरहन्छ भन्ने ठानेर तपाईं केमा अल्झिरहनुभएको छ?',
+    'अल्झिरहँदा तपाईंलाई के मूल्य चुकाउनु परिरहेको छ?',
+    'पकड खुकुलो पार्दा कस्तो अनुभव होला?',
+    'तपाईंले अझ हलुका गरी समात्न सक्ने एउटा कुरा के हो?',
+  ],
+  tilaurakot: [
+    'तपाईं केमा अल्झिनुभएको छ?',
+    'त्यो छाड्न किन गाह्रो लाग्छ?',
+    'छाड्नुभयो भने के बाँकी रहन्छ?',
+    'त्यसतर्फ तपाईंले चाल्न सक्ने एउटा पाइला के हो?',
+  ],
+};
+
 export function processReflection(req: ReflectionRequest): ReflectionResponse {
   const disclaimer = 'This is a reflective inquiry tool. It is not counselling, therapy, or mental health treatment.';
   const language = req.language ?? 'en';
-  const stages = language === 'ne' ? DEFAULT_STAGES_NE : DEFAULT_STAGES;
+  const defaultStages = language === 'ne' ? DEFAULT_STAGES_NE : DEFAULT_STAGES;
+  const siteStages = language === 'ne' ? SITE_STAGES_NE : SITE_STAGES;
+  const stages = (req.site_id && siteStages[req.site_id]) || defaultStages;
   const sitePrompts = language === 'ne' ? SITE_PROMPTS_NE : SITE_PROMPTS;
 
   // 1. Mandatory Safety & Distress Override Check
@@ -273,7 +353,8 @@ export async function generateReflectionQuestions(
 
   const sitePrompts = language === 'ne' ? SITE_PROMPTS_NE : SITE_PROMPTS;
   const opening = req.site_id ? sitePrompts[req.site_id] : undefined;
-  const fallbackQuestions = language === 'ne' ? DEFAULT_STAGES_NE : DEFAULT_STAGES;
+  const siteStages = language === 'ne' ? SITE_STAGES_NE : SITE_STAGES;
+  const fallbackQuestions = (req.site_id && siteStages[req.site_id]) || (language === 'ne' ? DEFAULT_STAGES_NE : DEFAULT_STAGES);
   const fallback: ReflectionQuestionsResponse = {
     opening,
     questions: [...fallbackQuestions],

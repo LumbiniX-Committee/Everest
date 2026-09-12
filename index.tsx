@@ -27,7 +27,7 @@ function ThemeBootstrap() {
     void (async () => {
       try {
         const stored = await AsyncStorage.getItem(StorageKeys.prefColorTheme).catch(() => null);
-        const colorTheme: ColorTheme = stored === 'white' ? 'white' : 'navy';
+        const colorTheme: ColorTheme = stored === 'navy' ? 'navy' : 'white';
 
         setInitialColorTheme(colorTheme);
         // React Native exposes this on native, but the web implementation in

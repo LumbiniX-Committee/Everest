@@ -1,4 +1,4 @@
-import { MIN_GEOFENCE_RADIUS_M, type Precinct } from '@/types';
+import { MIN_GEOFENCE_RADIUS_M, type Precinct } from '../../types/precinct.ts';
 
 /**
  * The geofenced areas of Lumbini.

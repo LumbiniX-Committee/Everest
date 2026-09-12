@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, View } from 'react-native';
 
 import { Button, ProgressRing, Screen, Text } from '@/components/ui';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { database } from '@/services';
 import { useQuests } from '@/store/quests';
 import { colors, radii, spacing } from '@/theme';
@@ -34,6 +35,7 @@ import type { QuestSubmission } from '@/types';
  * intention the quest was for — stated once, without being called a reward.
  */
 export function QuestCompletedScreen({ questId }: { questId: string }) {
+  const ui = useVisitorLiteralCopy();
   const router = useRouter();
   const { getQuestById } = useQuests();
   const quest = getQuestById(questId);
@@ -92,7 +94,7 @@ export function QuestCompletedScreen({ questId }: { questId: string }) {
                   source={{ uri: submission.photoUri }}
                   style={styles.thumb}
                   resizeMode="cover"
-                  accessibilityLabel="A photograph you recorded during this quest"
+                  accessibilityLabel={ui('A photograph you recorded during this quest')}
                 />
               ))}
             </View>

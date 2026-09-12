@@ -46,7 +46,6 @@ const inGreaterBbox = (c, region = 'lumbini') => within(c, REGION_BBOX[region].g
 
 const sites = read('sites.json');
 const vantages = read('vantages.json');
-const quests = read('quests.json');
 const needs = read('needs.json');
 const timeline = read('timeline.json');
 const storySections = read('story-sections.json');
@@ -130,20 +129,25 @@ for (const p of plates) {
   const at = `plate '${p.id}'`;
   if (!siteIds.has(p.site_id)) err(`${at}: references missing site '${p.site_id}'`);
   if (!TIERS.has(p.evidence_tier)) err(`${at}: missing/invalid evidence_tier '${p.evidence_tier}'`);
+  if (!p.caption?.en || !p.caption?.ne) err(`${at}: missing caption.en or caption.ne`);
+  if (!p.image) err(`${at}: missing image path`);
+  if (!p.licence) err(`${at}: missing licence`);
+  if (!p.attribution) err(`${at}: missing attribution`);
+  if (!Array.isArray(p.sources) || !p.sources.length) err(`${at}: no cited sources`);
+  if (p.evidence_tier === 'conditioned_reconstruction' && !p.conditioned_on) {
+    err(`${at}: conditioned reconstruction must identify conditioned_on source`);
+  }
+  if (p.evidence_tier === 'artistic_impression' && p.conditioned_on) {
+    err(`${at}: artistic impression must not claim image conditioning`);
+  }
+  if (p.produced && p.image && !existsSync(join(root, 'assets', 'plates', p.image))) {
+    err(`${at}: produced asset is missing at assets/plates/${p.image}`);
+  }
 }
 // Plate ids referenced by sites that do not yet exist are a warning, not an error
 // (plates land in Block 6 / harvest).
 const plateIds = new Set(plates.map((p) => p.id));
 for (const s of sites) for (const p of s.plates ?? []) if (!plateIds.has(p)) warn(`site '${s.id}': plate '${p}' not yet produced`);
-
-// --- quests -----------------------------------------------------------------
-for (const q of quests) {
-  const at = `quest '${q.id}'`;
-  if (q.site_id && !siteIds.has(q.site_id)) err(`${at}: references missing site '${q.site_id}'`);
-  if (q.vantage_id && !vantageIds.has(q.vantage_id)) err(`${at}: references missing vantage '${q.vantage_id}'`);
-  if (typeof q.merit !== 'number') err(`${at}: missing merit`);
-  if (q.riddle && (!Array.isArray(q.riddle.accept) || !q.riddle.accept.length)) err(`${at}: riddle has no accepted answers`);
-}
 
 // --- needs ------------------------------------------------------------------
 for (const n of needs) {
@@ -153,7 +157,7 @@ for (const n of needs) {
 }
 
 // --- report -----------------------------------------------------------------
-console.log(`seed: ${sites.length} sites, ${vantages.length} vantages, ${quests.length} quests, ${needs.length} needs, ${timeline.length} timeline, ${plates.length} plates`);
+console.log(`seed: ${sites.length} sites, ${vantages.length} vantages, ${needs.length} needs, ${timeline.length} timeline, ${plates.length} plates`);
 for (const w of warnings) console.log(`  WARN  ${w}`);
 if (errors.length) {
   for (const e of errors) console.error(`  ERROR ${e}`);

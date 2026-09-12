@@ -1,6 +1,6 @@
 import { StorageKeys } from '@/constants';
 
-import { getString, setString } from '../storage';
+import { getString, remove, setString } from '../storage';
 
 /**
  * A stable id for this installation.
@@ -84,4 +84,17 @@ export function getDeviceId(): Promise<string> {
  */
 export async function peekDeviceId(): Promise<string | null> {
   return getString(DEVICE_ID_KEY);
+}
+
+/**
+ * Drops the stored id, so the next call to `getDeviceId` generates a new one.
+ *
+ * This is the same thing a reinstall already does to this value — see the
+ * "not permanent" note above — made reachable from Settings instead of
+ * requiring someone to actually delete and reinstall the app. It does not
+ * touch anything already written under the old id; see services/privacy.
+ */
+export async function forgetDeviceId(): Promise<void> {
+  await remove(DEVICE_ID_KEY);
+  pending = null;
 }

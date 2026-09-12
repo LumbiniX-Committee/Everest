@@ -5,11 +5,13 @@ import { Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleShee
 import { EmptyState } from '@/components/common';
 import { Button, Icon, Screen, Text } from '@/components/ui';
 import { areaForQuest, isVantageTask } from '@/data';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { camera as cameraService, questMemories, location } from '@/services';
 import { usePermission, usePreferences, useQuests } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 
 export function QuestMemoryCameraScreen() {
+  const ui = useVisitorLiteralCopy();
   const router = useRouter();
   const { questId, taskId } = useLocalSearchParams<{ questId: string; taskId: string }>();
   const { hydrated, getQuestById, completeTask } = useQuests();
@@ -107,7 +109,7 @@ export function QuestMemoryCameraScreen() {
           <CameraView ref={cameraRef} style={styles.camera} facing={facing} onCameraReady={() => setReady(true)} onMountError={() => setError('Camera unavailable. Close other camera apps and retry.')} /> :
           <View style={styles.gate}><Icon name="camera-outline" size={48} /><Text center>Allow camera to capture your memory</Text><Button label={permission.status === 'blocked' ? 'Open settings' : 'Allow camera'} onPress={permission.status === 'blocked' ? openSettings : requestCamera} /><Button label="Choose existing photo" variant="secondary" onPress={() => void choose()} /></View>}
         <View style={styles.hud}>
-          <Pressable accessibilityRole="button" accessibilityLabel="Back to quests" onPress={() => { if (!busy) router.back(); }} style={styles.round}><Icon name="close" /></Pressable>
+          <Pressable accessibilityRole="button" accessibilityLabel={ui('Back to quests')} onPress={() => { if (!busy) router.back(); }} style={styles.round}><Icon name="close" /></Pressable>
           <View style={styles.title}><Text variant="caption" tone="sandstone">{areaForQuest(quest)?.name ?? 'Quest memory'}</Text><Text variant="heading" numberOfLines={2}>{task.title}</Text></View>
         </View>
         {countdown > 0 ? <View style={styles.countdown}><Text variant="title">{countdown}</Text></View> : null}
@@ -122,7 +124,7 @@ export function QuestMemoryCameraScreen() {
         </> : photoUri ? <>
           <View style={styles.grip} />
           <Text variant="heading">How was it?</Text>
-          <TextInput value={reflection} onChangeText={setReflection} placeholder="The taste, the feeling, your favourite detail…" placeholderTextColor={colors.textMuted} multiline maxLength={1000} editable={!busy} style={styles.reflection} accessibilityLabel="Your experience" />
+          <TextInput value={reflection} onChangeText={setReflection} placeholder={ui('The taste, the feeling, your favourite detail…')} placeholderTextColor={colors.textMuted} multiline maxLength={1000} editable={!busy} style={styles.reflection} accessibilityLabel={ui('Your experience')} />
           {error ? <Text tone="secondary">{error}</Text> : null}
           <Button label="Upload & save memory" loading={busy} disabled={busy || !reflection.trim()} onPress={() => void store()} />
           <Button label="Retake" variant="quiet" disabled={busy} onPress={() => { setPhotoUri(undefined); durablePhoto.current = undefined; setReady(false); }} />
@@ -131,9 +133,9 @@ export function QuestMemoryCameraScreen() {
           {task.safetyNote ? <Text variant="caption" tone="muted">{task.safetyNote}</Text> : null}
           {error ? <Text tone="secondary">{error}</Text> : null}
           <View style={styles.controls}>
-            <Pressable disabled={busy} accessibilityRole="button" accessibilityLabel="Choose existing photo" onPress={() => void choose()} style={styles.round}><Icon name="image-outline" /></Pressable>
-            <Pressable disabled={busy || !ready} accessibilityRole="button" accessibilityLabel="Take memory photo" onPress={() => void capture()} style={[styles.shutter, (!ready || busy) && styles.dim]}><View style={styles.shutterCore} /></Pressable>
-            <Pressable disabled={busy} accessibilityRole="button" accessibilityLabel="Switch front and back camera" onPress={() => { setReady(false); setFacing((value) => value === 'back' ? 'front' : 'back'); }} style={styles.round}><Icon name="camera-flip-outline" /></Pressable>
+            <Pressable disabled={busy} accessibilityRole="button" accessibilityLabel={ui('Choose existing photo')} onPress={() => void choose()} style={styles.round}><Icon name="image-outline" /></Pressable>
+            <Pressable disabled={busy || !ready} accessibilityRole="button" accessibilityLabel={ui('Take memory photograph')} onPress={() => void capture()} style={[styles.shutter, (!ready || busy) && styles.dim]}><View style={styles.shutterCore} /></Pressable>
+            <Pressable disabled={busy} accessibilityRole="button" accessibilityLabel={ui('Switch front and back camera')} onPress={() => { setReady(false); setFacing((value) => value === 'back' ? 'front' : 'back'); }} style={styles.round}><Icon name="camera-flip-outline" /></Pressable>
           </View>
           <Button label={timer ? '5-second timer on' : 'Turn on 5-second timer'} variant="quiet" disabled={busy} onPress={() => setTimer((value) => !value)} />
         </>}
@@ -147,7 +149,7 @@ const styles = StyleSheet.create({
   preview: { flex: 1, minHeight: 180 }, camera: { flex: 1, width: '100%' },
   gate: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.lg, gap: spacing.md, paddingTop: spacing.xxl },
   hud: { position: 'absolute', top: spacing.md, left: spacing.md, right: spacing.md, flexDirection: 'row', gap: spacing.sm, alignItems: 'center' },
-  title: { flex: 1, padding: spacing.sm, backgroundColor: colors.overlay, borderRadius: radii.md },
+  title: { flex: 1, padding: spacing.sm, backgroundColor: colors.surfaceRaised, borderRadius: radii.md },
   sheet: { flexGrow: 0, maxHeight: '52%', backgroundColor: colors.surface, borderTopLeftRadius: radii.xl, borderTopRightRadius: radii.xl },
   sheetContent: { padding: spacing.lg, gap: spacing.sm },
   grip: { width: 40, height: 4, borderRadius: radii.full, backgroundColor: colors.borderStrong, alignSelf: 'center' },

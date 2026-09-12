@@ -243,6 +243,32 @@ export function getDatabase(): Promise<SQLite.SQLiteDatabase> {
   return dbPromise;
 }
 
+/**
+ * Every write path in this module shares one native connection, and
+ * `withTransactionAsync` is not safe to call concurrently on it: if a second
+ * transaction's BEGIN fires while the first is still open, SQLite rejects it
+ * with "cannot start a transaction within a transaction" — and because that
+ * BEGIN never actually opened one, the library's own rollback-on-error cleanup
+ * then fails too, with "cannot rollback - no transaction is active". Two
+ * unrelated call sites racing is enough to trigger it: the quest catalogue
+ * refreshing while a report is being filed, or two quest actions fired in
+ * quick succession each ending in their own `refresh()`.
+ *
+ * Route every transaction through here instead of calling
+ * `db.withTransactionAsync` directly, so overlapping callers queue rather than
+ * collide. A failed transaction still rejects for its own caller; it is only
+ * swallowed here so it cannot wedge the queue for whoever is next.
+ */
+let transactionQueue: Promise<unknown> = Promise.resolve();
+function runInTransaction(db: SQLite.SQLiteDatabase, fn: () => Promise<void>): Promise<void> {
+  const run = transactionQueue.then(() => db.withTransactionAsync(fn));
+  transactionQueue = run.then(
+    () => undefined,
+    () => undefined,
+  );
+  return run;
+}
+
 type ObservationRow = {
   id: string;
   vantage_id: string;
@@ -420,7 +446,7 @@ function toConditionReport(row: ConditionReportRow): ConditionReport {
  */
 export async function insertConditionReport(report: ConditionReport): Promise<void> {
   const db = await getDatabase();
-  await db.withTransactionAsync(async () => {
+  await runInTransaction(db, async () => {
     await db.runAsync(
       `INSERT OR REPLACE INTO condition_reports
          (id, observation_id, site_id, category, subtype, severity, note, recorded_at, ai_assisted, synced)
@@ -717,60 +743,53 @@ export async function getQuest(id: string): Promise<QuestWithProgress | null> {
 
 export async function startQuest(questId: string): Promise<QuestProgress> {
   const db = await getDatabase();
-  const existing = await db.getFirstAsync<{
-    quest_id: string;
+  const now = Date.now();
+
+  // A SELECT-then-branch here leaves a window where two overlapping calls —
+  // a double tap, or the same quest credited from two screens at once — both
+  // see no row and both try to INSERT, and the second throws a primary-key
+  // violation that the caller never surfaces (see QuestDetailScreen's
+  // fire-and-forget `void startQuest(...)`), which looks like the button did
+  // nothing. INSERT OR IGNORE makes "create the row if absent" atomic with
+  // the check, and the UPDATE only touches a row still 'not_started', so a
+  // second, overlapping or later call is a harmless no-op rather than a
+  // silent failure.
+  await db.runAsync(
+    `INSERT OR IGNORE INTO quest_progress (quest_id, status, completed_tasks, started_at)
+     VALUES (?, 'in_progress', '[]', ?)`,
+    questId,
+    now
+  );
+
+  await db.runAsync(
+    `UPDATE quest_progress
+     SET status = 'in_progress', started_at = COALESCE(started_at, ?)
+     WHERE quest_id = ? AND status = 'not_started'`,
+    now,
+    questId
+  );
+
+  const row = await db.getFirstAsync<{
     status: string;
     completed_tasks: string;
     started_at: number | null;
     completed_at: number | null;
-  }>('SELECT * FROM quest_progress WHERE quest_id = ?', questId);
-
-  const now = Date.now();
-  if (!existing) {
-    await db.runAsync(
-      `INSERT INTO quest_progress (quest_id, status, completed_tasks, started_at)
-       VALUES (?, 'in_progress', '[]', ?)`,
-      questId,
-      now
-    );
-    return {
-      questId,
-      status: 'in_progress',
-      completedTasks: [],
-      startedAt: now,
-    };
-  }
-
-  if (existing.status === 'not_started') {
-    const startedAt = existing.started_at ?? now;
-    await db.runAsync(
-      `UPDATE quest_progress SET status = 'in_progress', started_at = ? WHERE quest_id = ?`,
-      startedAt,
-      questId
-    );
-    let completedTasks: string[] = [];
-    try {
-      completedTasks = JSON.parse(existing.completed_tasks);
-    } catch {}
-    return {
-      questId,
-      status: 'in_progress',
-      completedTasks,
-      startedAt,
-      completedAt: existing.completed_at ?? undefined,
-    };
-  }
+  }>(
+    'SELECT status, completed_tasks, started_at, completed_at FROM quest_progress WHERE quest_id = ?',
+    questId
+  );
 
   let completedTasks: string[] = [];
   try {
-    completedTasks = JSON.parse(existing.completed_tasks);
+    completedTasks = row ? JSON.parse(row.completed_tasks) : [];
   } catch {}
+
   return {
     questId,
-    status: existing.status as QuestStatus,
+    status: (row?.status as QuestStatus | undefined) ?? 'in_progress',
     completedTasks,
-    startedAt: existing.started_at ?? undefined,
-    completedAt: existing.completed_at ?? undefined,
+    startedAt: row?.started_at ?? now,
+    completedAt: row?.completed_at ?? undefined,
   };
 }
 
@@ -870,7 +889,7 @@ export async function resetQuestProgress(questId?: string): Promise<void> {
 
 export async function seedDefaultQuests(quests: Quest[]): Promise<void> {
   const db = await getDatabase();
-  await db.withTransactionAsync(async () => {
+  await runInTransaction(db, async () => {
     for (const quest of quests) {
       await db.runAsync(
         `INSERT OR IGNORE INTO quests
@@ -1084,4 +1103,55 @@ export async function markQuestSubmissionSynced(
     questId,
     taskId,
   );
+}
+
+/** Every quest submission regardless of site or photo, for a full export. */
+export async function listEveryQuestSubmission(): Promise<QuestSubmission[]> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<QuestSubmissionRow>('SELECT * FROM quest_submissions');
+  return rows.map(toQuestSubmission);
+}
+
+export type PersonalRecordPhotos = {
+  observationPhotoUris: string[];
+  questSubmissionPhotoUris: string[];
+};
+
+/**
+ * Deletes every personal-activity table this device holds — observations,
+ * condition reports, quest submissions, merit events, site visits and quest
+ * completions — and returns the local photo file URIs so the caller can
+ * remove those files too (this module does no file-system I/O).
+ *
+ * Quests and quest_progress are untouched: they are catalogue content and
+ * re-seedable derived progress, already separately resettable via
+ * `resetQuestProgress`, not personal-activity evidence.
+ *
+ * This clears only what this device is holding. Anything already synced to
+ * Supabase before this call remains there as anonymous conservation evidence
+ * — see "Deliberately not planned: Deleting observations" in
+ * docs/DATA-ARCHITECTURE.md, and services/privacy for the full picture of
+ * what "delete my records" actually does.
+ */
+export async function wipeAllPersonalRecords(): Promise<PersonalRecordPhotos> {
+  const db = await getDatabase();
+  const observationPhotoUris = (
+    await db.getAllAsync<{ photo_uri: string }>('SELECT photo_uri FROM observations')
+  ).map((row) => row.photo_uri);
+  const questSubmissionPhotoUris = (
+    await db.getAllAsync<{ photo_uri: string | null }>(
+      'SELECT photo_uri FROM quest_submissions WHERE photo_uri IS NOT NULL',
+    )
+  ).map((row) => row.photo_uri as string);
+
+  await runInTransaction(db, async () => {
+    await db.runAsync('DELETE FROM condition_reports');
+    await db.runAsync('DELETE FROM observations');
+    await db.runAsync('DELETE FROM quest_submissions');
+    await db.runAsync('DELETE FROM merit_events');
+    await db.runAsync('DELETE FROM site_visits');
+    await db.runAsync('DELETE FROM quest_completions');
+  });
+
+  return { observationPhotoUris, questSubmissionPhotoUris };
 }

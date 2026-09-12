@@ -1,6 +1,9 @@
 import type { Session } from '@supabase/supabase-js';
 
 import { getSupabase, isConfigured } from './index';
+import { resolveAnonymousSession } from './session';
+
+export { resolveAnonymousSession } from './session';
 
 /**
  * The session a sync pass writes under.
@@ -53,10 +56,7 @@ export async function ensureSession(): Promise<Session | null> {
 
       // Restored from AsyncStorage on a warm start, and refreshed by the client
       // itself when it has expired.
-      const { data: existing } = await supabase.auth.getSession();
-      if (existing.session) return existing.session;
-
-      const { data, error } = await supabase.auth.signInAnonymously();
+      const { session, error } = await resolveAnonymousSession(supabase.auth);
       if (error) {
         if (!reportedUnavailable) {
           reportedUnavailable = true;
@@ -69,7 +69,7 @@ export async function ensureSession(): Promise<Session | null> {
         return null;
       }
 
-      return data.session;
+      return session;
     })().catch((error) => {
       // Do not cache a rejected promise: a pass that failed on a dead network
       // must be free to succeed on the next one.
@@ -101,4 +101,24 @@ export async function getUserId(): Promise<string | null> {
 export function resetSessionCache(): void {
   pending = null;
   reportedUnavailable = false;
+}
+
+/**
+ * Ends the current anonymous session so the next sync signs in as a new one.
+ *
+ * This is the account half of "forget this device" (see services/privacy):
+ * the anonymous user existed only to own rows going forward, never to
+ * identify anyone, so ending it and starting fresh is a complete answer, not
+ * a partial one. Rows already written under the old id are unaffected — the
+ * id itself was never a name.
+ *
+ * Safe with no configured project or no active session: signOut on a signed-
+ * out client is a no-op, not an error.
+ */
+export async function forgetIdentity(): Promise<void> {
+  if (isConfigured()) {
+    const supabase = getSupabase();
+    await supabase.auth.signOut();
+  }
+  resetSessionCache();
 }

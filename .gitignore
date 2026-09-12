@@ -68,6 +68,9 @@ scratch/
 /ios
 /android
 
+# Supabase CLI runtime metadata (regenerated locally)
+/supabase/.temp/
+
 # Optional on-device language models are downloaded locally and are never
 # committed to the repository or included in the base APK.
 /models/*.gguf
@@ -104,3 +107,6 @@ imagesupdate/
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Local ngrok binary for the live AI demo tunnel. Not part of the app.
+ngrok.exe

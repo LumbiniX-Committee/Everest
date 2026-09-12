@@ -69,11 +69,33 @@ export type DhammaAskResponse = {
 
 /** Pre-cached responses for the 5 scripted demo questions (offline venue resilience) */
 const DEMO_CACHE: Record<string, DhammaAskResponse> = {
+  // The four-noble-truths entry used to cite only sn56.11:4.2 for all four
+  // truths, even though that segment states the content of the first
+  // (suffering) alone — a citation that resolves to a retrieved passage while
+  // asserting more than the passage supports. Fixed by narrowing each claim to
+  // a segment that actually supports it: dn16:2.2 names all four truths by
+  // name (it is the Buddha's own retrospective naming of them in his final
+  // sermon), and sn56.11:4.2 elaborates the first in full. Neither segment
+  // states the content of the origin, cessation or path truths individually
+  // within this sutta, so the answer no longer claims that content. See
+  // 15-POST-HACKATHON-STRATEGY §5 and tools/dhamma-eval.mjs's faithfulness
+  // check, which is what caught this.
   'what are the four noble truths': {
-    answer: 'The Buddha taught the four noble truths in the Dhammacakkappavattana Sutta [sn56.11:4.2]: the truth of suffering (dukkha), its origin (samudaya), its cessation (nirodha), and the path (magga) leading to cessation.',
+    answer: 'The Buddha taught the four noble truths: suffering, its origin, its cessation, and the practice that leads to the cessation of suffering [dn16:2.2]. The truth of suffering is stated in full at [sn56.11:4.2]: birth is suffering, aging is suffering, illness is suffering, death is suffering.',
     refused: false,
-    citations: [{ segment_id: 'sn56.11:4.2', sutta_uid: 'sn56.11', display: 'SN 56.11:4.2' }],
+    citations: [
+      { segment_id: 'dn16:2.2', sutta_uid: 'dn16', display: 'DN 16:2.2' },
+      { segment_id: 'sn56.11:4.2', sutta_uid: 'sn56.11', display: 'SN 56.11:4.2' },
+    ],
     passages: [
+      {
+        segment_id: 'dn16:2.2',
+        pali: 'Tatra kho bhagavā bhikkhū āmantesi: "Catunnaṁ, bhikkhave, ariyasaccānaṁ ananubodhā appaṭivedhā evamidaṁ dīghamaddhānaṁ sandhāvitaṁ saṁsaritaṁ mamañceva tumhākañca…"',
+        english: 'There he addressed the mendicants: "Mendicants, due to not understanding and not penetrating four noble truths, both you and I have wandered and transmigrated for such a very long time. What four? The noble truths of suffering, the origin of suffering, the cessation of suffering, and the practice that leads to the cessation of suffering…"',
+        translator: 'Bhikkhu Sujato',
+        collection: 'Dīgha Nikāya',
+        licence: 'CC0-1.0',
+      },
       {
         segment_id: 'sn56.11:4.2',
         pali: 'Idaṃ kho pana bhikkhave dukkhaṃ ariya-saccaṃ…',
@@ -201,10 +223,19 @@ const DOMAIN_VOCAB = new Set([
   'chaitya', 'newar', 'malla', 'licchavi', 'durbar', 'patan', 'lalitpur',
   'changu', 'narayan', 'mānadeva', 'manadeva', 'bhaktapur', 'swayambhu',
   'swayambhunath', 'boudhanath', 'pashupatinath', 'kathmandu', 'valley',
-  'torana', 'strut', 'struts', 'pagoda', 'inscription', 'inscriptions',
+  'torana', 'strut', 'struts', 'tundal', 'pagoda', 'inscription', 'inscriptions',
   'krishna', 'mandir', 'manga', 'department', 'earthquake',
+
+  // Hindu / Newar tradition vocabulary (core/dhamma/heritage.ts, added
+  // alongside the Changu Narayan, Patan and Kathmandu Durbar Square Vaishnava
+  // and Newar content). See 15-POST-HACKATHON-STRATEGY §5.
+  'vishnu', 'vaishnava', 'garuda', 'vishvarupa', 'vishwarupa', 'vikrantha',
+  'trivikrama', 'vamana', 'vaikuntha', 'lakshmi', 'dashavatara',
+  'taleju', 'bhawani', 'kumari', 'shakya', 'bajracharya',
+  'dashain', 'mahanavami',
   // Devanagari stems for the same vocabulary
   'सम्पदा', 'पुरातत्त्व', 'पाटन', 'भक्तपुर', 'च्याङ्गुनारायण', 'काठमाडौं',
+  'विष्णु', 'तलेजु', 'कुमारी', 'गरुड',
 ]);
 
 /** Returns true if the query contains at least one domain-relevant token */
@@ -215,14 +246,19 @@ function isDomainQuery(question: string): boolean {
 
 /** Grounding Gate & Citation Validator Engine execution */
 export function askDhamma(req: DhammaAskRequest): DhammaAskResponse {
-  const normQ = req.question.trim().toLowerCase();
+  // Trailing punctuation stripped before the cache lookup: DEMO_CACHE's keys
+  // are punctuation-free, so "What are the Four Noble Truths?" (a real
+  // question, typed the way anyone types a question) missed the cache
+  // entirely until now, which is exactly backwards for a cache that exists
+  // for offline venue resilience.
+  const normQ = req.question.trim().toLowerCase().replace(/[?!.]+$/, '').trim();
 
   // 0. Domain vocabulary pre-gate — refuse immediately if no Dhamma token found
   if (!isDomainQuery(req.question)) {
     return {
       answer: null,
       refused: true,
-      refusal_reason: 'This question is outside the scope of what this engine draws on: the Pali Tipiṭaka, and heritage-conservation sources (UNESCO World Heritage records, the ICOMOS Venice and Burra Charters, and Kathmandu Valley archaeology).',
+      refusal_reason: 'This question is outside the scope of what this engine draws on: the Pali Tipiṭaka, and heritage-conservation sources (UNESCO World Heritage records, the ICOMOS Venice and Burra Charters, Kathmandu Valley archaeology, and Hindu and Newar tradition texts on Vaishnava iconography, Newar temple architecture, and Taleju and Kumari).',
       citations: [],
       passages: [],
       tier: 'full_rag',

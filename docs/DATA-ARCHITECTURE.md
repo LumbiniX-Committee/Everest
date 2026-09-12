@@ -20,8 +20,10 @@ Two consequences run through everything here:
 - **The device is the source of truth; the server is the copy.** A phone in the
   Sacred Garden has no signal for hours. Writes land in SQLite first and sync
   later, always. The network is an optimisation.
-- **Nothing is deleted.** An observation is evidence. Corrections are additional
-  rows, never edits over the top of history.
+- **Nothing shared into the record is deleted.** An observation is evidence.
+  Corrections are additional rows, never edits over the top of history. A
+  person can still ask to be forgotten — see §5's "Deliberately not planned"
+  note on deletion for what that does and does not mean.
 
 ---
 
@@ -250,9 +252,22 @@ which makes retry idempotent.
 
   The reversal is real all the same: the app now ranks people, which the charter
   refused. What it ranks is contribution to the shared record, not merit.
-- **Deleting observations.** There is no delete path and should not be one. A
-  mistaken observation is corrected by a condition report or a later
-  observation, not by erasing evidence.
+- **Deleting an observation already in the record.** There is no path for this
+  and should not be one. A mistaken observation is corrected by a condition
+  report or a later observation, not by erasing evidence.
+
+  This is narrower than it sounds, and the app now has a real answer for the
+  question it does not cover: what happens when a person asks to be forgotten.
+  `services/privacy` (Settings → Privacy) wipes this device's own copy of
+  every personal-activity table, deletes the local photographs, and gives the
+  device a fresh, unlinked identity: a new device id and a new anonymous
+  Supabase session, the same thing a reinstall already produced by accident,
+  made reachable on purpose. What it does not do is remove a row already
+  synced into a site's conservation record; that row stays, exactly as
+  described above, because it was never the person's alone to take back once
+  shared. The distinction is deletion of the device's copy versus deletion of
+  the shared record, and only the first is offered. See docs/PRIVACY.md for
+  the retention period and lawful basis this mechanism exists to satisfy.
 
 ---
 

@@ -6,6 +6,7 @@ import { EmptyState, ScreenHeader } from '@/components/common';
 import { BottomSheet, Card, Screen, Text } from '@/components/ui';
 import { findSite, findVantage, areaForQuest } from '@/data';
 import { database } from '@/services';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { useQuests } from '@/store/quests';
 import { colors, spacing } from '@/theme';
 import type { QuestSubmission } from '@/types';
@@ -18,6 +19,7 @@ type Memory = QuestSubmission & {
 
 /** A personal album made from the photographs already stored as quest evidence. */
 export function MemoriesScreen() {
+  const ui = useVisitorLiteralCopy();
   const router = useRouter();
   const { quests } = useQuests();
   const [memories, setMemories] = useState<Memory[]>([]);
@@ -67,19 +69,19 @@ export function MemoriesScreen() {
             <Pressable
               key={`${memory.questId}-${memory.taskId}`}
               accessibilityRole="button"
-              accessibilityLabel={`Open ${memory.taskTitle} in ${memory.questTitle}`}
+              accessibilityLabel={`${ui('Open')} ${memory.taskTitle} ${ui('in')} ${memory.questTitle}`}
               onPress={() => setSelected(memory)}
             >
               <Card style={styles.memory}>
                 <Image source={{ uri: memory.photoUri }} style={styles.photo} resizeMode="cover" />
                 <View style={styles.copy}>
-                  <Text variant="label" uppercase tone="sandstone">{memory.questTitle}</Text>
-                  <Text variant="body">{memory.taskTitle}</Text>
-                  <Text variant="caption" tone="secondary">
+                  <Text variant="label" uppercase tone="sandstone" translate={false}>{memory.questTitle}</Text>
+                  <Text variant="body" translate={false}>{memory.taskTitle}</Text>
+                  <Text variant="caption" tone="secondary" translate={false}>
                     {memory.siteName ?? 'Quest memory'} · {new Date(memory.submittedAt).toLocaleDateString()}
                   </Text>
                   {memory.note ? (
-                    <Text variant="caption" tone="muted" numberOfLines={2}>{memory.note}</Text>
+                    <Text variant="caption" tone="muted" numberOfLines={2} translate={false}>{memory.note}</Text>
                   ) : null}
                 </View>
               </Card>
@@ -90,7 +92,7 @@ export function MemoriesScreen() {
       <BottomSheet visible={selected !== null} onClose={() => setSelected(null)} title={selected?.taskTitle ?? 'Memory'} subtitle={selected?.siteName} scroll>
         {selected?.photoUri ? <Image source={{ uri: selected.photoUri }} style={styles.fullPhoto} resizeMode="contain" /> : null}
         {selected ? <Text variant="caption" tone="muted">{new Date(selected.submittedAt).toLocaleString()}</Text> : null}
-        {selected?.note ? <Text>{selected.note}</Text> : null}
+        {selected?.note ? <Text translate={false}>{selected.note}</Text> : null}
       </BottomSheet>
     </Screen>
   );

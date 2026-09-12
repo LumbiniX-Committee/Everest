@@ -1,5 +1,12 @@
 # Sākṣī — AI Context Knowledge Base
 
+> **Current-state override (10 September 2026):** this knowledge base is an
+> architectural snapshot of commit `dbe6d45e`, not a current feature inventory.
+> Read [the production-pilot guide](../PRODUCTION-PILOT.md) first for the secure
+> custodian portal, public transparency, adoption, coverage ranking, bilingual
+> interface work, quality gates, and rollout status. Where counts or deployment
+> behavior differ, the production-pilot guide and source code win.
+
 **Documentation index and reading guide.**
 
 | | |
@@ -150,4 +157,7 @@ Where root documentation disagrees with this knowledge base, prefer this one (it
 
 ---
 
-*Scope: this knowledge base documents the Expo app in `Everest/`. It does not cover the standalone Next.js app in [landing/](../../landing/), which has its own `AGENTS.md` and `CLAUDE.md`.*
+*Historical scope: this snapshot primarily documents the Expo app. The current
+Next.js/Supabase production-pilot surface is documented in
+[docs/PRODUCTION-PILOT.md](../PRODUCTION-PILOT.md), while `landing/AGENTS.md`
+still governs changes inside that package.*

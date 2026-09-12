@@ -4,6 +4,7 @@
     "strict": true,
     "jsx": "react-native",
     "noEmit": true,
+    "types": ["jest", "node"],
     "paths": {
       "@/*": ["./*"]
     },

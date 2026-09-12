@@ -124,7 +124,14 @@ function walk(dir) {
 // `core/` and `services/` are out of scope on purpose. Their strings are test
 // rationales, provider prompts and developer warnings, and rewriting those to
 // satisfy a rule about reading outdoors would be busywork.
-const DASH_DIRS = ['seed', 'app', 'features', 'components'];
+const DASH_DIRS = [
+  'seed',
+  'app',
+  'features',
+  'components',
+  'landing/app',
+  'landing/components',
+];
 
 // Developer comments living inside a template literal, which no line-based
 // comment check can see into.

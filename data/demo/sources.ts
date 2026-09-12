@@ -151,6 +151,16 @@ export const demoSources: Source[] = [
       'The standard scholarly reference for Newar architecture and the valley’s dhunge dhara (stone spout) water system. Facts here are relayed from secondary summaries; direct page citations should be confirmed against the volume before this ships.',
   },
   {
+    id: 'allen-1975',
+    kind: 'archaeological',
+    title: 'The Cult of Kumari: Virgin Worship in Nepal',
+    attribution: 'Michael R. Allen',
+    date: '1975 (rev. ed. 1996)',
+    reference: 'Institute of Nepal and Asian Studies, Tribhuvan University',
+    caveat:
+      'The standard ethnographic study of the Kumari tradition. Facts here are relayed from secondary summaries; direct page citations should be confirmed against the volume before this ships. Selection details and ritual specifics vary between the Kathmandu, Patan and Bhaktapur Kumaris; this registry covers the tradition in general, not one city\'s practice.',
+  },
+  {
     id: 'doa-nepal',
     kind: 'record',
     title: 'Department of Archaeology, Government of Nepal',

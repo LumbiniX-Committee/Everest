@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -40,39 +40,41 @@ export function TypewriterText({
   style,
   ...rest
 }: TypewriterTextProps) {
-  const chars = Array.from(text || '');
-  const [displayedLength, setDisplayedLength] = useState(animated ? 0 : chars.length);
-  const textArrayRef = useRef<string[]>(chars);
+  const chars = useMemo(() => Array.from(text || ''), [text]);
+  const [progress, setProgress] = useState({ text, length: animated ? 0 : chars.length });
   const completedRef = useRef(!animated);
   const onCompleteRef = useRef(onComplete);
-  onCompleteRef.current = onComplete;
 
   const cursorOpacity = useSharedValue(1);
 
   useEffect(() => {
-    const currentChars = Array.from(text || '');
-    textArrayRef.current = currentChars;
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
 
-    if (!animated || currentChars.length === 0) {
-      setDisplayedLength(currentChars.length);
+  useEffect(() => {
+    completedRef.current = false;
+
+    if (!animated || chars.length === 0) {
       completedRef.current = true;
-      onCompleteRef.current?.();
+      queueMicrotask(() => onCompleteRef.current?.());
       return;
     }
 
-    setDisplayedLength(0);
-    completedRef.current = false;
     let currentLen = 0;
 
     // Adjust speed and charsPerTick for longer texts so typing remains engaging without feeling sluggish
-    const effectiveCharsPerTick = currentChars.length > 250 ? Math.max(charsPerTick, 2) : charsPerTick;
-    const effectiveSpeed = currentChars.length > 400 ? Math.max(12, speed - 6) : speed;
+    const effectiveCharsPerTick = chars.length > 250 ? Math.max(charsPerTick, 2) : charsPerTick;
+    const effectiveSpeed = chars.length > 400 ? Math.max(12, speed - 6) : speed;
 
     const interval = setInterval(() => {
-      currentLen = Math.min(currentChars.length, currentLen + effectiveCharsPerTick);
-      setDisplayedLength(currentLen);
+      if (completedRef.current) {
+        clearInterval(interval);
+        return;
+      }
+      currentLen = Math.min(chars.length, currentLen + effectiveCharsPerTick);
+      setProgress({ text, length: currentLen });
 
-      if (currentLen >= currentChars.length) {
+      if (currentLen >= chars.length) {
         clearInterval(interval);
         completedRef.current = true;
         onCompleteRef.current?.();
@@ -80,22 +82,26 @@ export function TypewriterText({
     }, effectiveSpeed);
 
     return () => clearInterval(interval);
-  }, [text, speed, charsPerTick, animated]);
+  }, [text, speed, charsPerTick, animated, chars]);
 
-  const isTyping = animated && displayedLength < textArrayRef.current.length;
+  const displayedLength = animated
+    ? progress.text === text ? progress.length : 0
+    : chars.length;
+
+  const isTyping = animated && displayedLength < chars.length;
 
   useEffect(() => {
     if (!isTyping) {
-      cursorOpacity.value = 0;
+      cursorOpacity.set(0);
     } else {
-      cursorOpacity.value = withRepeat(
+      cursorOpacity.set(withRepeat(
         withSequence(
           withTiming(0.15, { duration: 320 }),
           withTiming(1, { duration: 320 }),
         ),
         -1,
         true,
-      );
+      ));
     }
   }, [isTyping, cursorOpacity]);
 
@@ -105,13 +111,13 @@ export function TypewriterText({
 
   const handleSkip = () => {
     if (skipOnPress && isTyping) {
-      setDisplayedLength(textArrayRef.current.length);
+      setProgress({ text, length: chars.length });
       completedRef.current = true;
       onCompleteRef.current?.();
     }
   };
 
-  const visibleText = textArrayRef.current.slice(0, displayedLength).join('');
+  const visibleText = chars.slice(0, displayedLength).join('');
 
   return (
     <Pressable onPress={handleSkip} disabled={!skipOnPress || !isTyping}>

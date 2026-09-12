@@ -1,11 +1,12 @@
 /**
- * mock-api/server.mjs — a zero-dependency stand-in for the FastAPI backend.
+ * mock-api/server.mjs — LOCAL-ONLY, unauthenticated demo fixture.
  *
  * Node 22 ships everything this needs; there is no package.json and no
  * `npm install`, so it starts on venue wifi with nothing to break. It reads
  * seed/*.json at boot and serves the 04-ARCHITECTURE §3 contract verbatim, so
  * lanes A and B can build the whole offline-queue path before lane C's real
- * API exists. C deletes this the moment `c-phase1-schema` lands.
+ * API exists. Never expose this process to the internet or use it as a
+ * custodian backend; production custodian routes are in landing/app/api/.
  *
  * Run:   node mock-api/server.mjs
  * Env:   PORT (default 8000). Binds 0.0.0.0 so a phone on the LAN can reach it.
@@ -74,7 +75,10 @@ loadGuide().catch(() => {});
 const readSeed = (f) => JSON.parse(readFileSync(join(SEED, f), 'utf8'));
 const sites = readSeed('sites.json');
 const vantages = readSeed('vantages.json');
-const quests = readSeed('quests.json');
+// seed/quests.json was retired — data/demo/quests.ts is the one file the app
+// itself seeds quests from (store/quests.tsx), so the mock now serves the
+// same derived list instead of a second, driftable copy.
+const { demoQuests: quests } = await import('../data/demo/quests.ts');
 const needs = readSeed('needs.json');
 const timeline = readSeed('timeline.json');
 let plates = [];

@@ -208,14 +208,14 @@ export const SITES: ExplorerSite[] = [
     "region": "lumbini",
     "zone": "Sacred Garden",
     "tier": 1,
-    "lat": 27.4694,
-    "lon": 83.2756,
-    "surveyed": false,
+    "lat": 27.46932846,
+    "lon": 83.27560804,
+    "surveyed": true,
     "geofenceM": 25,
     "period": null,
     "photography": "allowed",
     "lede": "The Puskarini is the sacred pond set about twenty-five paces from the Marker Stone, within the Sacred Garden.",
-    "summary": "The Puskarini is the sacred pond set about twenty-five paces from the Marker Stone, within the Sacred Garden. Tradition holds that Queen Maya Devi bathed in its waters before giving birth, and that the newborn received his first bath here. The stepped, brick-lined tank visible today was cleared and consolidated during modern excavation and conservation of the garden. Its still water gives the clearest reflection of the Ashokan Pillar and the temple, and it is the setting for the stillness practice: sitting quietly at its edge is itself the point. Like the rest of the Sacred Garden, the pond depends on seasonal drainage; silt and monsoon inflow are recurring conservation concerns. Its exact position has not yet been confirmed against a survey coordinate, so the location shown here is approximate, pending verification on the ground.",
+    "summary": "The Puskarini is the sacred pond set about twenty-five paces from the Marker Stone, within the Sacred Garden. Tradition holds that Queen Maya Devi bathed in its waters before giving birth, and that the newborn received his first bath here. The stepped, brick-lined tank visible today was cleared and consolidated during modern excavation and conservation of the garden. Its still water gives the clearest reflection of the Ashokan Pillar and the temple, and it is the setting for the stillness practice: sitting quietly at its edge is itself the point. Like the rest of the Sacred Garden, the pond depends on seasonal drainage; silt and monsoon inflow are recurring conservation concerns.",
     "facts": [
       {
         "label": "Type",
@@ -231,7 +231,7 @@ export const SITES: ExplorerSite[] = [
       },
       {
         "label": "Coordinate",
-        "value": "Approximate, pending field survey"
+        "value": "Verified against the mapped pond outline"
       }
     ],
     "sources": [
@@ -271,9 +271,9 @@ export const SITES: ExplorerSite[] = [
     "region": "lumbini",
     "zone": "Sacred Garden",
     "tier": 1,
-    "lat": 27.469609,
-    "lon": 83.275831,
-    "surveyed": false,
+    "lat": 27.469556,
+    "lon": 83.2758386,
+    "surveyed": true,
     "geofenceM": 20,
     "period": null,
     "photography": "restricted",
@@ -320,9 +320,9 @@ export const SITES: ExplorerSite[] = [
     "region": "lumbini",
     "zone": "Sacred Garden",
     "tier": 1,
-    "lat": 27.4699,
-    "lon": 83.2762,
-    "surveyed": false,
+    "lat": 27.46914974,
+    "lon": 83.2761188,
+    "surveyed": true,
     "geofenceM": 40,
     "period": "250 BCE – 500 CE",
     "photography": "allowed",
@@ -557,8 +557,8 @@ export const SITES: ExplorerSite[] = [
     "region": "lumbini",
     "zone": "Greater Lumbini",
     "tier": 3,
-    "lat": 27.5747,
-    "lon": 83.0536,
+    "lat": 27.575,
+    "lon": 83.0583333,
     "surveyed": false,
     "geofenceM": 60,
     "period": "600 BCE to present",
@@ -576,7 +576,7 @@ export const SITES: ExplorerSite[] = [
       },
       {
         "label": "Coordinate",
-        "value": "Approximate, pending verification"
+        "value": "UNESCO Greater Lumbini reference coordinate"
       }
     ],
     "sources": [
@@ -610,8 +610,8 @@ export const SITES: ExplorerSite[] = [
     "region": "lumbini",
     "zone": "Greater Lumbini",
     "tier": 3,
-    "lat": 27.503,
-    "lon": 83.687,
+    "lat": 27.4980556,
+    "lon": 83.6811111,
     "surveyed": false,
     "geofenceM": 60,
     "period": "500 BCE to present",
@@ -629,7 +629,7 @@ export const SITES: ExplorerSite[] = [
       },
       {
         "label": "Coordinate",
-        "value": "Approximate, pending verification"
+        "value": "UNESCO Greater Lumbini reference coordinate"
       }
     ],
     "sources": [
@@ -807,8 +807,20 @@ export const SITES: ExplorerSite[] = [
     ],
     "sources": [
       {
+        "title": "UNESCO WHC: Kathmandu Valley (121)",
+        "url": "https://whc.unesco.org/en/list/121"
+      },
+      {
         "title": "Slusser 1982, Nepal Mandala: A Cultural Study of the Kathmandu Valley",
         "url": null
+      },
+      {
+        "title": "Department of Archaeology, Nepal",
+        "url": null
+      },
+      {
+        "title": "World Monuments Fund: Hitis (Water Fountains) of the Kathmandu Valley, 2022 World Monuments Watch",
+        "url": "https://www.wmf.org/projects/hitis-water-fountains-kathmandu-valley"
       }
     ],
     "passages": [],

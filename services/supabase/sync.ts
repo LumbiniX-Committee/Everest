@@ -11,6 +11,7 @@ import {
 import { getDeviceId } from '../device';
 import * as FileSystem from 'expo-file-system/legacy';
 import { decode } from 'base64-arraybuffer';
+import { createEvidenceObject } from './evidence-storage';
 
 export type SyncState = 'offline' | 'syncing' | 'failed' | 'synced';
 
@@ -29,12 +30,13 @@ async function uploadPhoto(bucket: string, path: string, uri: string): Promise<v
 
   const ext = uri.split('.').pop() || 'jpg';
   const supabase = getSupabase();
-  const { error } = await supabase.storage.from(bucket).upload(path, decode(base64File), {
-    contentType: `image/${ext === 'jpg' ? 'jpeg' : ext}`,
-    upsert: true,
-  });
-
-  if (error) throw error;
+  const storage = supabase.storage.from(bucket);
+  await createEvidenceObject(
+    (target, body, options) => storage.upload(target, body, options),
+    path,
+    decode(base64File),
+    `image/${ext === 'jpg' ? 'jpeg' : ext}`,
+  );
 }
 
 /**

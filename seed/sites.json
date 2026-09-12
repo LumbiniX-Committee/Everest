@@ -259,10 +259,11 @@
     "zone": "sacred_garden",
     "tier": 1,
     "coords": {
-      "lat": 27.4694,
-      "lon": 83.2756
+      "lat": 27.46932846,
+      "lon": 83.27560804
     },
-    "coords_source": "doc",
+    "coords_source": "osm",
+    "coords_source_url": "https://www.openstreetmap.org/way/655895296",
     "geofence_m": 25,
     "period": {
       "from": null,
@@ -270,8 +271,8 @@
     },
     "photography": "allowed",
     "summary": {
-      "en": "The Puskarini is the sacred pond set about twenty-five paces from the Marker Stone, within the Sacred Garden. Tradition holds that Queen Maya Devi bathed in its waters before giving birth, and that the newborn received his first bath here. The stepped, brick-lined tank visible today was cleared and consolidated during modern excavation and conservation of the garden. Its still water gives the clearest reflection of the Ashokan Pillar and the temple, and it is the setting for the stillness practice: sitting quietly at its edge is itself the point. Like the rest of the Sacred Garden, the pond depends on seasonal drainage; silt and monsoon inflow are recurring conservation concerns. Its exact position has not yet been confirmed against a survey coordinate, so the location shown here is approximate, pending verification on the ground.",
-      "ne": "पुष्करिणी चिन्ह ढुङ्गादेखि लगभग पच्चीस पाइला टाढा रहेको पवित्र पोखरी हो। परम्पराअनुसार माया देवीले जन्म दिनुअघि यसै पोखरीमा स्नान गर्नुभएको र नवजात शिशुले पहिलो स्नान यहीँ पाएको मानिन्छ। हाल देखिने इँटाले बनेको खुड्किलायुक्त पोखरी आधुनिक उत्खनन र संरक्षणका क्रममा सफा र सुदृढ गरिएको हो। यसको स्थिर पानीले अशोक स्तम्भ र मन्दिरको प्रतिबिम्ब देखाउँछ, र यो मौन-अभ्यासको स्थल हो। यसको ठ्याक्कै स्थान सर्वेक्षण-निर्देशांकसँग पुष्टि भइनसकेकाले यहाँ देखाइएको स्थान अनुमानित हो।"
+        "en": "The Puskarini is the sacred pond set about twenty-five paces from the Marker Stone, within the Sacred Garden. Tradition holds that Queen Maya Devi bathed in its waters before giving birth, and that the newborn received his first bath here. The stepped, brick-lined tank visible today was cleared and consolidated during modern excavation and conservation of the garden. Its still water gives the clearest reflection of the Ashokan Pillar and the temple, and it is the setting for the stillness practice: sitting quietly at its edge is itself the point. Like the rest of the Sacred Garden, the pond depends on seasonal drainage; silt and monsoon inflow are recurring conservation concerns.",
+        "ne": "पुष्करिणी चिन्ह ढुङ्गादेखि लगभग पच्चीस पाइला टाढा रहेको पवित्र पोखरी हो। परम्पराअनुसार माया देवीले जन्म दिनुअघि यसै पोखरीमा स्नान गर्नुभएको र नवजात शिशुले पहिलो स्नान यहीँ पाएको मानिन्छ। हाल देखिने इँटाले बनेको खुड्किलायुक्त पोखरी आधुनिक उत्खनन र संरक्षणका क्रममा सफा र सुदृढ गरिएको हो। यसको स्थिर पानीले अशोक स्तम्भ र मन्दिरको प्रतिबिम्ब देखाउँछ, र यो मौन-अभ्यासको स्थल हो।"
     },
     "ne_review": "pending",
     "facts": [
@@ -310,10 +311,10 @@
           "en": "Coordinate",
           "ne": "निर्देशांक"
         },
-        "value": {
-          "en": "Approximate, pending field survey",
-          "ne": "अनुमानित, क्षेत्र सर्वेक्षण बाँकी"
-        }
+          "value": {
+            "en": "Verified against the mapped pond outline",
+            "ne": "नक्साङ्कित पोखरीको सीमासँग पुष्टि गरिएको"
+          }
       }
     ],
     "timeline": [
@@ -351,10 +352,11 @@
     "zone": "sacred_garden",
     "tier": 1,
     "coords": {
-      "lat": 27.469609,
-      "lon": 83.275831
+      "lat": 27.469556,
+      "lon": 83.2758386
     },
-    "coords_source": "doc",
+    "coords_source": "osm",
+    "coords_source_url": "https://www.openstreetmap.org/node/9626385117",
     "geofence_m": 20,
     "period": {
       "from": null,
@@ -423,10 +425,11 @@
     "zone": "sacred_garden",
     "tier": 1,
     "coords": {
-      "lat": 27.4699,
-      "lon": 83.2762
+      "lat": 27.46914974,
+      "lon": 83.2761188
     },
-    "coords_source": "doc",
+    "coords_source": "osm",
+    "coords_source_url": "https://www.openstreetmap.org/way/1270584540",
     "geofence_m": 40,
     "period": {
       "from": -250,
@@ -785,10 +788,11 @@
     "zone": "greater_lumbini",
     "tier": 3,
     "coords": {
-      "lat": 27.5747,
-      "lon": 83.0536
+      "lat": 27.575,
+      "lon": 83.0583333
     },
-    "coords_source": "doc",
+    "coords_source": "unesco",
+    "coords_source_url": "https://whc.unesco.org/document/185683",
     "geofence_m": 60,
     "period": {
       "from": -600,
@@ -827,8 +831,8 @@
           "ne": "निर्देशांक"
         },
         "value": {
-          "en": "Approximate, pending verification",
-          "ne": "अनुमानित, पुष्टि बाँकी"
+            "en": "UNESCO Greater Lumbini reference coordinate",
+            "ne": "युनेस्को बृहत्तर लुम्बिनी सन्दर्भ निर्देशांक"
         }
       }
     ],
@@ -861,10 +865,11 @@
     "zone": "greater_lumbini",
     "tier": 3,
     "coords": {
-      "lat": 27.503,
-      "lon": 83.687
+      "lat": 27.4980556,
+      "lon": 83.6811111
     },
-    "coords_source": "doc",
+    "coords_source": "unesco",
+    "coords_source_url": "https://whc.unesco.org/document/185683",
     "geofence_m": 60,
     "period": {
       "from": -500,
@@ -903,8 +908,8 @@
           "ne": "निर्देशांक"
         },
         "value": {
-          "en": "Approximate, pending verification",
-          "ne": "अनुमानित, पुष्टि बाँकी"
+            "en": "UNESCO Greater Lumbini reference coordinate",
+            "ne": "युनेस्को बृहत्तर लुम्बिनी सन्दर्भ निर्देशांक"
         }
       }
     ],
@@ -1034,7 +1039,9 @@
       "patan-malla-construction",
       "patan-earthquake-2015"
     ],
-    "plates": [],
+    "plates": [
+      "patan-durbar-square.artistic-impression"
+    ],
     "vantages": [
       "patan-durbar-square.v1",
       "patan-durbar-square.v2"
@@ -1146,7 +1153,9 @@
       "changu-manadeva-inscription-464",
       "changu-earthquake-2015"
     ],
-    "plates": [],
+    "plates": [
+      "changu-narayan.artistic-impression"
+    ],
     "vantages": [
       "changu-narayan.v1",
       "changu-narayan.v2"
@@ -1232,11 +1241,30 @@
         }
       }
     ],
+    "story": [
+      {
+        "title": { "en": "The oldest spout still running" },
+        "eyebrow": { "en": "Built in 570 CE" },
+        "body": { "en": "Manga Hiti is a dhunge dhara: a carved stone water spout drawing on Licchavi-period hydraulic technology, roughly 400 to 750 CE. Built in 570 CE at Mangal Bazar, it is considered the oldest working dhunge dhara on record, still running at the southern corner of Patan Durbar Square." }
+      },
+      {
+        "title": { "en": "Water carried from the hills" },
+        "eyebrow": { "en": "A canal, not a well" },
+        "body": { "en": "A dhunge dhara is fed indirectly. Historic rajkulo canals carried water from rivers and springs in the surrounding hills into ponds that recharged the valley's shallow aquifer, which underground stone and terracotta conduits then delivered to the spout itself. The carved outlet is only the visible end of a much older engineered system." }
+      },
+      {
+        "title": { "en": "A widely used technology now falling behind" },
+        "eyebrow": { "en": "573 recorded, most no longer flowing" },
+        "body": { "en": "A 2019 valley-wide survey recorded 573 dhunge dharas; 94 had already been lost entirely, and only 224 of the remaining 479 still produced water. In March 2022 the World Monuments Fund placed the Kathmandu Valley's hitis on its World Monuments Watch. Manga Hiti still runs, but like the others its flow is not checked on any continuous schedule." }
+      }
+    ],
     "timeline": [
       "dhunge-dhara-origin-570",
       "dhunge-dhara-2019-survey"
     ],
-    "plates": [],
+    "plates": [
+      "manga-hiti.artistic-impression"
+    ],
     "vantages": [
       "manga-hiti.v1",
       "manga-hiti.v2"
@@ -1244,7 +1272,18 @@
     "dhamma_links": [],
     "sources": [
       {
+        "title": "UNESCO WHC: Kathmandu Valley (121)",
+        "url": "https://whc.unesco.org/en/list/121"
+      },
+      {
         "title": "Slusser 1982, Nepal Mandala: A Cultural Study of the Kathmandu Valley"
+      },
+      {
+        "title": "Department of Archaeology, Nepal"
+      },
+      {
+        "title": "World Monuments Fund: Hitis (Water Fountains) of the Kathmandu Valley, 2022 World Monuments Watch",
+        "url": "https://www.wmf.org/projects/hitis-water-fountains-kathmandu-valley"
       }
     ]
   }

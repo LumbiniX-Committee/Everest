@@ -1,6 +1,8 @@
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import { Text } from '@/components/ui';
+import { useInterfaceLanguage } from '@/i18n/context';
+import { visitorLiteralCopy } from '@/i18n/literals';
 import { colors, spacing } from '@/theme';
 
 export type LoadingStateProps = {
@@ -16,11 +18,12 @@ export type LoadingStateProps = {
 };
 
 export function LoadingState({ label, fill = true }: LoadingStateProps) {
+  const language = useInterfaceLanguage();
   return (
     <View
       style={[styles.wrap, fill && styles.fill]}
       accessibilityRole="progressbar"
-      accessibilityLabel={label ?? 'Loading'}
+      accessibilityLabel={visitorLiteralCopy(language, label ?? 'Loading')}
     >
       <ActivityIndicator color={colors.sandstoneDeep} />
       {label ? (

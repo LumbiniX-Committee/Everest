@@ -207,7 +207,7 @@ Nepali-language support is verified (4/4).
 
 ## 10. Reflection — Fully implemented
 
-[features/dhamma/ReflectionScreen.tsx](../../features/dhamma/ReflectionScreen.tsx) at `/(main)/dhamma/reflect?siteId=…` (siteId optional). Logic in [core/dhamma/reflection.ts](../../core/dhamma/reflection.ts) (**tested**); content in `seed/reflections.json`. Credits merit kind `reflection`.
+[features/dhamma/ReflectionScreen.tsx](../../features/dhamma/ReflectionScreen.tsx) at `/(main)/dhamma/reflect?siteId=…` (siteId optional). Logic and per-site stage content both in [core/dhamma/reflection.ts](../../core/dhamma/reflection.ts) (**tested**). Credits merit kind `reflection`.
 
 ---
 

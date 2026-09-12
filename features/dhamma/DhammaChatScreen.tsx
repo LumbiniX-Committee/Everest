@@ -17,7 +17,10 @@ import { SourceDetailSheet } from '@/components/source';
 import { SpeakButton } from '@/components/voice/SpeakButton';
 import { findDhammaEntry } from '@/data';
 import { useKeyboardInset, useSceneBottomGap } from '@/hooks';
+import { visitorLiteralCopy } from '@/i18n/literals';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { dhamma } from '@/services';
+import { usePreferences } from '@/store';
 import type { DhammaLanguage } from '@/services/dhamma';
 import { colors, radii, spacing } from '@/theme';
 import { isGrounded, type DhammaAnswer, type Source } from '@/types';
@@ -92,12 +95,13 @@ type Turn =
 
 export function DhammaChatScreen({ questionId, query }: { questionId?: string; query?: string }) {
   const router = useRouter();
+  const { preferences } = usePreferences();
   const [turns, setTurns] = useState<Turn[]>([]);
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [openSource, setOpenSource] = useState<Source | null>(null);
-  const [language, setLanguage] = useState<DhammaLanguage>('ne');
+  const [language, setLanguage] = useState<DhammaLanguage>(preferences.interfaceLanguage);
 
   const transcriptRef = useRef<ChatTranscriptHandle>(null);
   const idRef = useRef(0);
@@ -181,7 +185,7 @@ export function DhammaChatScreen({ questionId, query }: { questionId?: string; q
         <View style={styles.header}>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Back"
+            accessibilityLabel={visitorLiteralCopy(preferences.interfaceLanguage, 'Back')}
             onPress={() => router.back()}
             hitSlop={10}
             style={styles.back}
@@ -213,7 +217,7 @@ export function DhammaChatScreen({ questionId, query }: { questionId?: string; q
           {turns.map((turn, index) =>
             turn.from === 'user' ? (
               <ChatBubble key={turn.id} from="user">
-                <Text variant="body">{turn.text}</Text>
+                <Text variant="body" translate={false}>{turn.text}</Text>
               </ChatBubble>
             ) : (
               <AnswerTurn
@@ -310,7 +314,7 @@ function AnswerTurn({
                   {t.restsOn}
                 </Text>
                 {passages.map((item, index) => (
-                  <Text key={`${item.citation.sourceId}-${index}`} variant="mono" tone="sandstone">
+                  <Text key={`${item.citation.sourceId}-${index}`} variant="mono" tone="sandstone" translate={false}>
                     {item.passage}
                   </Text>
                 ))}
@@ -322,7 +326,7 @@ function AnswerTurn({
                 <Text variant="label" tone="seeking" uppercase>
                   {t.doesNotSettle}
                 </Text>
-                <Text variant="body" tone="secondary">
+                <Text variant="body" tone="secondary" translate={false}>
                   {answer.caveat}
                 </Text>
               </View>
@@ -411,11 +415,12 @@ function LanguagePill({
   disabled: boolean;
   onPress: () => void;
 }) {
+  const ui = useVisitorLiteralCopy();
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityState={{ selected, disabled }}
-      accessibilityLabel={`Reply in ${label}`}
+      accessibilityLabel={`${ui('Reply in')} ${ui(label)}`}
       disabled={disabled || selected}
       onPress={onPress}
       style={[styles.pill, selected && styles.pillSelected]}

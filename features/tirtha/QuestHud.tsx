@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { Animated, Easing, Pressable, StyleSheet, View } from 'react-native';
 
 import { Icon, Text } from '@/components/ui';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { colors, radii, spacing } from '@/theme';
 
 /**
@@ -28,6 +29,7 @@ export type QuestHudProps = {
 };
 
 export function QuestHud({ available, completed, total, pulse, onPress }: QuestHudProps) {
+  const ui = useVisitorLiteralCopy();
   const beat = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -77,11 +79,11 @@ export function QuestHud({ available, completed, total, pulse, onPress }: QuestH
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={
-          total === 0 ? 'Explore nearby quests' : done
-            ? `Quests here complete, ${completed} of ${total}`
-            : `${available} quest${available === 1 ? '' : 's'} available here, ${completed} of ${total} done`
+          total === 0 ? ui('Quests') : done
+            ? `${ui('Quests here complete,')} ${completed} ${ui('of')} ${total}`
+            : `${available} ${ui(available === 1 ? 'quest' : 'Quests')} ${ui('available here,')} ${completed} ${ui('of')} ${total} ${ui('done')}`
         }
-        accessibilityHint="Opens the quests for this place"
+        accessibilityHint={ui('Opens the quests for this place')}
         onPress={onPress}
         style={({ pressed }) => [styles.button, done && styles.buttonDone, pressed && styles.pressed]}
       >
@@ -113,7 +115,7 @@ const styles = StyleSheet.create({
     borderRadius: radii.full,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.backgroundDeep,
+    backgroundColor: colors.surfaceRaised,
     borderWidth: 1.5,
     borderColor: colors.borderStrong,
     elevation: 6,

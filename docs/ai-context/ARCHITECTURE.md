@@ -1,5 +1,13 @@
 # Architecture
 
+> **Production-pilot overlay (10 September 2026):** the Expo client remains the
+> offline-first visitor/evidence client. Privileged institutional work now lives
+> only in the authenticated Next.js portal under `landing/`, backed by Supabase
+> RLS and append-only actions from migration `0009`. Public condition and
+> coverage routes expose security-definer aggregates, never raw evidence. See
+> [the maintained architecture and rollout guide](../PRODUCTION-PILOT.md); the
+> rest of this commit-stamped file is historical where it conflicts.
+
 **Audited commit:** `dbe6d45e7297c5d889be9e69c3e2e190a578e6b1` (branch `main`)
 
 ---

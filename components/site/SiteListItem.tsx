@@ -4,6 +4,7 @@ import { Card, ConditionBadge, Text } from '@/components/ui';
 import type { SiteWithDistance } from '@/hooks';
 import { usePreferences } from '@/store';
 import { radii, spacing } from '@/theme';
+import { formatVisitorCopy, visitorCopy } from '@/i18n/visitor';
 import { formatDistance } from '@/utils';
 
 import { SiteVisual } from './SiteVisual';
@@ -36,11 +37,11 @@ export function SiteListItem({
         <View style={styles.body}>
           <View style={styles.headRow}>
             <View style={styles.names}>
-              <Text variant="heading" numberOfLines={1}>
+              <Text variant="heading" numberOfLines={1} translate={false}>
                 {site.name}
               </Text>
               {site.nameNepali ? (
-                <Text variant="caption" tone="muted" numberOfLines={1}>
+                <Text variant="caption" tone="muted" numberOfLines={1} translate={false}>
                   {site.nameNepali}
                 </Text>
               ) : null}
@@ -52,7 +53,7 @@ export function SiteListItem({
             ) : null}
           </View>
 
-          <Text variant="caption" tone="secondary" numberOfLines={1}>
+          <Text variant="caption" tone="secondary" numberOfLines={1} translate={false}>
             {site.summary}
           </Text>
 
@@ -60,7 +61,11 @@ export function SiteListItem({
             <ConditionBadge status={site.condition} />
             {site.vantageIds.length > 0 ? (
               <Text variant="label" tone="muted" uppercase>
-                {site.vantageIds.length} vantage{site.vantageIds.length === 1 ? '' : 's'}
+                {site.vantageIds.length === 1
+                  ? visitorCopy(preferences.interfaceLanguage, 'site.vantageOne')
+                  : formatVisitorCopy(preferences.interfaceLanguage, 'site.vantageMany', {
+                      count: site.vantageIds.length,
+                    })}
               </Text>
             ) : null}
           </View>

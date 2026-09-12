@@ -4,4 +4,3 @@
  * seed/vantages.json. `npm run verify` fails if this file is stale.
  */
 export * from './sites';
-export * from './quests';

@@ -1,10 +1,14 @@
 # mock-api
 
-A zero-dependency stand-in for the FastAPI backend, so lanes A and B can build
-the whole offline-queue path before lane C's real API exists.
+> **LOCAL DEMO FIXTURE ONLY.** This process has no authentication, persists
+> nothing, and must never be exposed to the internet or configured as a
+> production custodian backend.
 
-**Lane C:** delete this the moment `c-phase1-schema` lands. It is scaffolding,
-not a second implementation to keep in sync.
+A zero-dependency stand-in used to exercise offline and failure states on a
+developer network.
+
+The production custodian workflow lives in the authenticated Next.js route
+handlers under `landing/app/api/custodian/` and is protected by Supabase RLS.
 
 ## Run
 

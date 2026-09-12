@@ -1,4 +1,4 @@
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 
 import type { QuestReview, QuestReviewVerdict, QuestTask } from '@/types';
 
@@ -39,14 +39,21 @@ const ENDPOINT =
  * all, not of this file. It is acceptable only because the key is scoped to a
  * demo account and rotatable. A key that must stay secret belongs behind a
  * server the app calls, not in the client.
+ *
+ * Comma-separated, same as core/dhamma/llm.ts: a second key behind the first
+ * is tried only when the first comes back rate-limited (see `reviewPhoto`),
+ * not on any other kind of failure.
  */
-const API_KEY = process.env.EXPO_PUBLIC_LLM_API_KEY ?? '';
+const API_KEYS = (process.env.EXPO_PUBLIC_LLM_API_KEY ?? '')
+  .split(',')
+  .map((key) => key.trim())
+  .filter((key) => key.length > 0);
 
 /** Past this, a person waiting on a phone has already moved on. */
 const TIMEOUT_MS = 20_000;
 
 export function isConfigured(): boolean {
-  return API_KEY.length > 0;
+  return API_KEYS.length > 0;
 }
 
 function unavailable(comment: string): QuestReview {
@@ -109,46 +116,60 @@ export async function reviewPhoto(task: QuestTask, photoUri: string): Promise<Qu
     return unavailable('The photograph could not be read from this device.');
   }
 
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+  // A 429 moves on to the next configured key rather than giving up — the
+  // same reasoning as core/dhamma/llm.ts's callLlm. Any other failure
+  // returns straight away; another key would not fix a timeout or an outage.
+  for (const [index, key] of API_KEYS.entries()) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
-  try {
-    const res = await fetch(ENDPOINT, {
-      method: 'POST',
-      signal: controller.signal,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: VISION_MODEL,
-        max_tokens: 120,
-        messages: [
-          {
-            role: 'user',
-            content: [
-              { type: 'text', text: buildPrompt(task) },
-              { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${base64}` } },
-            ],
-          },
-        ],
-      }),
-    });
+    try {
+      const res = await fetch(ENDPOINT, {
+        method: 'POST',
+        signal: controller.signal,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${key}`,
+        },
+        body: JSON.stringify({
+          model: VISION_MODEL,
+          max_tokens: 120,
+          messages: [
+            {
+              role: 'user',
+              content: [
+                { type: 'text', text: buildPrompt(task) },
+                { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${base64}` } },
+              ],
+            },
+          ],
+        }),
+      });
 
-    if (!res.ok) return unavailable(`The reviewer could not be reached (${res.status}).`);
+      if (res.status === 429) {
+        if (index < API_KEYS.length - 1) continue;
+        return unavailable('The reviewer is rate-limited right now.');
+      }
+      if (!res.ok) return unavailable(`The reviewer could not be reached (${res.status}).`);
 
-    const json = await res.json();
-    const text: string | undefined = json?.choices?.[0]?.message?.content;
-    if (!text) return unavailable('The reviewer returned nothing.');
+      const json = await res.json();
+      const text: string | undefined = json?.choices?.[0]?.message?.content;
+      if (!text) return unavailable('The reviewer returned nothing.');
 
-    const { verdict, comment } = parseVerdict(text);
-    return { verdict, comment, model: VISION_MODEL, reviewedAt: new Date().toISOString() };
-  } catch (error) {
-    const aborted = error instanceof Error && error.name === 'AbortError';
-    return unavailable(
-      aborted ? 'The reviewer took too long to answer.' : 'No connection to the reviewer.',
-    );
-  } finally {
-    clearTimeout(timer);
+      const { verdict, comment } = parseVerdict(text);
+      return { verdict, comment, model: VISION_MODEL, reviewedAt: new Date().toISOString() };
+    } catch (error) {
+      const aborted = error instanceof Error && error.name === 'AbortError';
+      return unavailable(
+        aborted ? 'The reviewer took too long to answer.' : 'No connection to the reviewer.',
+      );
+    } finally {
+      clearTimeout(timer);
+    }
   }
+
+  // Unreachable in practice: isConfigured() already refused an empty key
+  // list, and every iteration above returns. Present only so the function's
+  // return type is provably satisfied on every path.
+  return unavailable('The reviewer is not available.');
 }

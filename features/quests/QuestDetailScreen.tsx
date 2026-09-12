@@ -33,6 +33,11 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
   // unconditionally on every render, and the loading and not-found branches
   // below both return before this point otherwise.
   const [openTask, setOpenTask] = useState<QuestTask | null>(null);
+  // Without this, "Begin Quest" gave no feedback while its database round
+  // trip was in flight — on a slow device that read as the button doing
+  // nothing, and nothing stopped a second tap from firing an overlapping
+  // start.
+  const [starting, setStarting] = useState(false);
 
   /**
    * Reports already filed, per site. Read once here rather than per task so a
@@ -142,6 +147,16 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
     }
   };
 
+  const handleBeginQuest = async () => {
+    if (starting) return;
+    setStarting(true);
+    try {
+      await startQuest(questId);
+    } finally {
+      setStarting(false);
+    }
+  };
+
   const handleTaskToggle = async (taskId: string) => {
     if (progress.completedTasks.includes(taskId)) return;
 
@@ -210,7 +225,9 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
             label="Begin Quest"
             variant="primary"
             block
-            onPress={() => void startQuest(questId)}
+            loading={starting}
+            disabled={starting}
+            onPress={() => void handleBeginQuest()}
           />
         </View>
       ) : (
@@ -287,6 +304,7 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
         visible={openTask !== null}
         onClose={() => setOpenTask(null)}
         title={openTask?.title ?? 'Record what you saw'}
+        translateTitle={!openTask}
         scroll
       >
         {openTask ? (

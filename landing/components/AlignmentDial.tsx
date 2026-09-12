@@ -107,12 +107,12 @@ export function AlignmentDial() {
               {locked ? (
                 <>
                   <Check className="size-4" aria-hidden />
-                  Locked — recorded as measured
+                  Locked: recorded as measured
                 </>
               ) : byEye ? (
                 <>
                   <TriangleAlert className="size-4" aria-hidden />
-                  By eye — the record will say so
+                  By eye: the record will say so
                 </>
               ) : (
                 'Not aligned'
@@ -162,7 +162,7 @@ export function AlignmentDial() {
               <span className="font-medium text-ink">GPS accuracy is good enough</span>
               <span className="mt-0.5 block text-ink-muted">
                 Turn this off with the frame perfectly aligned. The lock does not
-                come — it falls back to &ldquo;by eye&rdquo;, and the record keeps
+                come: it falls back to &ldquo;by eye&rdquo;, and the record keeps
                 that difference forever.
               </span>
             </span>

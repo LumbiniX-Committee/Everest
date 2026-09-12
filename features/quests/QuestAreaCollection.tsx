@@ -4,6 +4,7 @@ import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { Button, Icon, Text } from '@/components/ui';
 import { SiteVisual } from '@/components/site';
 import { nearbyQuestAreas, isVantageTask, type QuestArea } from '@/data';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { database } from '@/services';
 import { colors, radii, spacing } from '@/theme';
 import type { Coordinate, QuestSubmission, QuestWithProgress } from '@/types';
@@ -20,6 +21,7 @@ export type QuestAreaCollectionProps = {
 
 /** Area discovery stays separate from exact monument arrival. */
 export function QuestAreaCollection({ coordinate, quests, onCapture, onWitness, onGuide, onMemories }: QuestAreaCollectionProps) {
+  const ui = useVisitorLiteralCopy();
   const [expanded, setExpanded] = useState<string | null>(null);
   const [submissions, setSubmissions] = useState<QuestSubmission[]>([]);
   useFocusEffect(useCallback(() => {
@@ -39,7 +41,7 @@ export function QuestAreaCollection({ coordinate, quests, onCapture, onWitness, 
         .map((task) => ({ quest, task })));
       const completed = activities.filter(({ quest, task }) => quest.progress.completedTasks.includes(task.id)).length;
       return <View key={area.id} style={styles.area}>
-        <Pressable accessibilityRole="button" accessibilityState={{ expanded: open }} accessibilityLabel={`${area.name}, ${activities.length} activities`} onPress={() => setExpanded(open ? null : area.id)}>
+        <Pressable accessibilityRole="button" accessibilityState={{ expanded: open }} accessibilityLabel={`${area.name}, ${activities.length} ${ui('activities')}`} onPress={() => setExpanded(open ? null : area.id)}>
           {area.siteIds[0] ? <SiteVisual siteId={area.siteIds[0]} height={132} /> : <View style={styles.cover}><Icon name="city-variant-outline" size={56} /></View>}
           <View style={styles.row}>
             <View style={styles.copy}>
@@ -64,7 +66,7 @@ export function QuestAreaCollection({ coordinate, quests, onCapture, onWitness, 
                 <Text tone="secondary">{task.description}</Text>
                 {task.safetyNote ? <Text variant="caption" tone="muted">{task.safetyNote}</Text> : null}
               </>}
-              {memory?.note ? <Text tone="secondary">{memory.note}</Text> : null}
+              {memory?.note ? <Text tone="secondary" translate={false}>{memory.note}</Text> : null}
               {!done ? <Button label={vantage ? 'Capture vantage' : 'Capture memory'} icon={vantage ? 'crosshairs' : 'camera-outline'} onPress={() => vantage && task.targetId ? onWitness(task.targetId) : onCapture(quest.id, task.id)} /> : null}
             </View>;
           })}

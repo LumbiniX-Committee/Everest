@@ -9,6 +9,8 @@ import * as Haptics from 'expo-haptics';
 
 import { Icon, Text } from '@/components/ui';
 import { useHaptics } from '@/hooks';
+import { useInterfaceLanguage } from '@/i18n/context';
+import { visitorLiteralCopy } from '@/i18n/literals';
 import { colors, font, radii, spacing } from '@/theme';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -59,6 +61,9 @@ export function ChatComposer({
 }: ChatComposerProps) {
   const canSend = value.trim().length > 0 && !busy;
   const { pulse } = useHaptics();
+  const language = useInterfaceLanguage();
+  const displayPlaceholder = visitorLiteralCopy(language, placeholder);
+  const displaySendLabel = visitorLiteralCopy(language, sendLabel ?? 'Send');
   const sendScale = useSharedValue(1);
 
   const sendAnimStyle = useAnimatedStyle(() => ({
@@ -67,12 +72,12 @@ export function ChatComposer({
 
   const handlePressIn = useCallback(() => {
     if (!canSend) return;
-    sendScale.value = withSpring(0.88, { damping: 14, stiffness: 380, mass: 0.6 });
+    sendScale.set(withSpring(0.88, { damping: 14, stiffness: 380, mass: 0.6 }));
   }, [canSend, sendScale]);
 
   const handlePressOut = useCallback(() => {
     if (!canSend) return;
-    sendScale.value = withSpring(1, { damping: 12, stiffness: 280, mass: 0.6 });
+    sendScale.set(withSpring(1, { damping: 12, stiffness: 280, mass: 0.6 }));
   }, [canSend, sendScale]);
 
   const handleSend = useCallback(() => {
@@ -88,7 +93,7 @@ export function ChatComposer({
         onChangeText={onChangeText}
         multiline
         textAlignVertical="top"
-        placeholder={placeholder}
+        placeholder={displayPlaceholder}
         placeholderTextColor={colors.textMuted}
         /*
           The family is applied here rather than in the StyleSheet: `font()`
@@ -98,12 +103,12 @@ export function ChatComposer({
         */
         style={[styles.input, font('body')]}
         editable={!busy}
-        accessibilityLabel={placeholder}
+        accessibilityLabel={displayPlaceholder}
         onContentSizeChange={onGrow}
       />
       <AnimatedPressable
         accessibilityRole="button"
-        accessibilityLabel={sendLabel ?? 'Send'}
+        accessibilityLabel={displaySendLabel}
         accessibilityState={{ disabled: !canSend }}
         disabled={!canSend}
         onPress={handleSend}
@@ -119,7 +124,7 @@ export function ChatComposer({
         <Icon name="send" size={20} color={colors.surface} />
         {sendLabel ? (
           <Text variant="button" tone="inverse">
-            {sendLabel}
+            {displaySendLabel}
           </Text>
         ) : null}
       </AnimatedPressable>

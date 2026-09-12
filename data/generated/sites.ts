@@ -157,10 +157,10 @@ export const demoSites: HeritageSite[] = [
     "nameNepali": "पुष्करिणी",
     "namePali": "Pokkharaṇī",
     "summary": "The Puskarini is the sacred pond set about twenty-five paces from the Marker Stone, within the Sa…",
-    "description": "The Puskarini is the sacred pond set about twenty-five paces from the Marker Stone, within the Sacred Garden. Tradition holds that Queen Maya Devi bathed in its waters before giving birth, and that the newborn received his first bath here. The stepped, brick-lined tank visible today was cleared and consolidated during modern excavation and conservation of the garden. Its still water gives the clearest reflection of the Ashokan Pillar and the temple, and it is the setting for the stillness practice: sitting quietly at its edge is itself the point. Like the rest of the Sacred Garden, the pond depends on seasonal drainage; silt and monsoon inflow are recurring conservation concerns. Its exact position has not yet been confirmed against a survey coordinate, so the location shown here is approximate, pending verification on the ground.",
+    "description": "The Puskarini is the sacred pond set about twenty-five paces from the Marker Stone, within the Sacred Garden. Tradition holds that Queen Maya Devi bathed in its waters before giving birth, and that the newborn received his first bath here. The stepped, brick-lined tank visible today was cleared and consolidated during modern excavation and conservation of the garden. Its still water gives the clearest reflection of the Ashokan Pillar and the temple, and it is the setting for the stillness practice: sitting quietly at its edge is itself the point. Like the rest of the Sacred Garden, the pond depends on seasonal drainage; silt and monsoon inflow are recurring conservation concerns.",
     "coordinate": {
-      "latitude": 27.4694,
-      "longitude": 83.2756
+      "latitude": 27.46932846,
+      "longitude": 83.27560804
     },
     "zone": "sacred_garden",
     "region": "lumbini",
@@ -182,7 +182,7 @@ export const demoSites: HeritageSite[] = [
       },
       {
         "label": "Coordinate",
-        "value": "Approximate, pending field survey"
+        "value": "Verified against the mapped pond outline"
       }
     ],
     "story": [
@@ -225,8 +225,8 @@ export const demoSites: HeritageSite[] = [
     "summary": "The Marker Stone is a small slab of conglomerate, discovered in 1996, that archaeologists identif…",
     "description": "The Marker Stone is a small slab of conglomerate, discovered in 1996, that archaeologists identify as pinpointing the exact spot of the nativity. It lies within the Maya Devi Temple, protected beneath an enclosure directly below the worn Nativity Sculpture. Its discovery, during the 1992–1997 re-excavation, fixed the birthplace to within a stone’s width and helped secure Lumbini’s UNESCO inscription in 1997. Because it sits inside the temple, photography is restricted; confirm on arrival.",
     "coordinate": {
-      "latitude": 27.469609,
-      "longitude": 83.275831
+      "latitude": 27.469556,
+      "longitude": 83.2758386
     },
     "zone": "sacred_garden",
     "region": "lumbini",
@@ -283,8 +283,8 @@ export const demoSites: HeritageSite[] = [
     "summary": "Across the Sacred Garden stand the excavated brick foundations of Buddhist monasteries (vihāras) …",
     "description": "Across the Sacred Garden stand the excavated brick foundations of Buddhist monasteries (vihāras) and votive stupas, built and rebuilt between the 3rd century BCE and the 5th century CE. They are also the site’s clearest warning. Debala Mitra recorded sixteen small votive stupas on a 1957 visit that had, by her later account, been completely demolished, and several structures P. C. Mukherji exposed in 1899 could no longer be traced. It is a documented case of heritage vanishing between two expert visits: the reason a repeatable photographic record matters.",
     "coordinate": {
-      "latitude": 27.4699,
-      "longitude": 83.2762
+      "latitude": 27.46914974,
+      "longitude": 83.2761188
     },
     "zone": "sacred_garden",
     "region": "lumbini",
@@ -589,8 +589,8 @@ export const demoSites: HeritageSite[] = [
     "summary": "Tilaurakot, widely identified with ancient Kapilavastu, is the fortified town where Prince Siddha…",
     "description": "Tilaurakot, widely identified with ancient Kapilavastu, is the fortified town where Prince Siddhartha is said to have grown up and which he left to seek awakening. Its ramparts, gateways and structures were surveyed by P. C. Mukherji in 1899 and remain under excavation. It lies about 25 km west of the Sacred Garden and is shown here as a map pin rather than a demo site.",
     "coordinate": {
-      "latitude": 27.5747,
-      "longitude": 83.0536
+      "latitude": 27.575,
+      "longitude": 83.0583333
     },
     "zone": "greater_lumbini",
     "region": "lumbini",
@@ -608,7 +608,7 @@ export const demoSites: HeritageSite[] = [
       },
       {
         "label": "Coordinate",
-        "value": "Approximate, pending verification"
+        "value": "UNESCO Greater Lumbini reference coordinate"
       }
     ],
     "story": [
@@ -653,8 +653,8 @@ export const demoSites: HeritageSite[] = [
     "summary": "Ramagrama Stupa is held to be the only original relic stupa of the Buddha that remains undisturbe…",
     "description": "Ramagrama Stupa is held to be the only original relic stupa of the Buddha that remains undisturbed: the single one of the eight that was never opened to redistribute its relics. The earthen mound lies about 50 km east of Lumbini and is shown here as a map pin.",
     "coordinate": {
-      "latitude": 27.503,
-      "longitude": 83.687
+      "latitude": 27.4980556,
+      "longitude": 83.6811111
     },
     "zone": "greater_lumbini",
     "region": "lumbini",
@@ -672,7 +672,7 @@ export const demoSites: HeritageSite[] = [
       },
       {
         "label": "Coordinate",
-        "value": "Approximate, pending verification"
+        "value": "UNESCO Greater Lumbini reference coordinate"
       }
     ],
     "story": [
@@ -899,30 +899,27 @@ export const demoSites: HeritageSite[] = [
     ],
     "story": [
       {
-        "title": "The carved spouts",
-        "eyebrow": "Water emerges as sculpture",
-        "body": "Manga Hiti is entered by descending below street level toward carved stone outlets. The spouts turn an underground supply system into a public architectural place where water collection, ritual and everyday meeting share the same steps."
-      },
-      {
-        "title": "A Licchavi-period system",
+        "title": "The oldest spout still running",
         "eyebrow": "Built in 570 CE",
-        "body": "The hiti is dated to 570 CE and is regarded as the oldest working stone-spout system on record in the valley. Its importance lies not only in the carved face but in the infiltration chamber and conduits that allow gravity to deliver water."
+        "body": "Manga Hiti is a dhunge dhara: a carved stone water spout drawing on Licchavi-period hydraulic technology, roughly 400 to 750 CE. Built in 570 CE at Mangal Bazar, it is considered the oldest working dhunge dhara on record, still running at the southern corner of Patan Durbar Square."
       },
       {
-        "title": "One node in a valley network",
-        "eyebrow": "Infrastructure as heritage",
-        "body": "Stone spouts once formed a distributed water network across Kathmandu Valley towns. A 2019 survey recorded hundreds, but also many lost systems and many surviving spouts without flow. Manga Hiti must therefore be read as part of a vulnerable network, not an isolated ornament."
+        "title": "Water carried from the hills",
+        "eyebrow": "A canal, not a well",
+        "body": "A dhunge dhara is fed indirectly. Historic rajkulo canals carried water from rivers and springs in the surrounding hills into ponds that recharged the valley's shallow aquifer, which underground stone and terracotta conduits then delivered to the spout itself. The carved outlet is only the visible end of a much older engineered system."
       },
       {
-        "title": "Watch the waterline",
-        "eyebrow": "A condition story still unfolding",
-        "body": "The app has no continuous official flow record for Manga Hiti. A repeat photograph from the same step, paired with a dated note on whether each outlet is running, can build evidence without pretending that one visit describes the whole year."
+        "title": "A widely used technology now falling behind",
+        "eyebrow": "573 recorded, most no longer flowing",
+        "body": "A 2019 valley-wide survey recorded 573 dhunge dharas; 94 had already been lost entirely, and only 224 of the remaining 479 still produced water. In March 2022 the World Monuments Fund placed the Kathmandu Valley's hitis on its World Monuments Watch. Manga Hiti still runs, but like the others its flow is not checked on any continuous schedule."
       }
     ],
     "dhammaLinks": [],
     "sourceTier": "archaeological",
     "sourceIds": [
-      "slusser-1982"
+      "slusser-1982",
+      "unesco-kv-1979",
+      "doa-nepal"
     ],
     "condition": "open",
     "vantageIds": [

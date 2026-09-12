@@ -14,14 +14,18 @@ import {
 import { MeritAcknowledgement } from '@/components/practice';
 import { detectorMessage } from '@/core/vision/candidate';
 import { findSite, findVantage } from '@/data';
+import {
+  conditionCategoryCopy,
+  conditionSeverityCopy,
+  conditionSubtypeCopy,
+} from '@/i18n/condition';
+import { formatVisitorCopy, visitorCopy, type VisitorCopyKey } from '@/i18n/visitor';
 import { database } from '@/services';
 import { useDamageDetector, scanToSuggestion, type YoloScanResult } from '@/services/ai/yoloEngine';
-import { usePractice, useQuests } from '@/store';
+import { usePractice, usePreferences, useQuests } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 import { formatBearing, formatCoordinate, formatDelta, formatDistance, formatTimestamp } from '@/utils';
 import {
-  CONDITION_CATEGORY_LABELS,
-  SEVERITY_LABELS,
   type ConditionReport,
   type MeritEvent,
   type Observation,
@@ -51,13 +55,24 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
   const [yoloScanning, setYoloScanning] = useState(false);
   const [aiDraft, setAiDraft] = useState<Partial<ConditionDraft> | undefined>(undefined);
   const { recognise, summary } = usePractice();
+  const { preferences } = usePreferences();
+  const language = preferences.interfaceLanguage;
+  const t = (key: VisitorCopyKey) => visitorCopy(language, key);
   const { creditConditionReport } = useQuests();
   const detector = useDamageDetector();
   // The sentence shown when there is no scan is decided in
   // core/vision/candidate.ts, where the test harness covers it. It is null while
   // the detector can still work, and never empty when it cannot: silence was
   // what made a trained, bundled model look like a feature nobody had built.
-  const detectorNote = detectorMessage(detector.status, detector.reason);
+  const detectorNote = language === 'en'
+    ? detectorMessage(detector.status, detector.reason)
+    : detector.status === 'unsupported'
+      ? t('observation.detectorUnsupported')
+      : detector.status === 'no-model'
+        ? t('observation.detectorNoModel')
+        : detector.status === 'error'
+          ? t('observation.detectorError')
+          : null;
 
   useEffect(() => {
     let active = true;
@@ -116,7 +131,7 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
             detections: [],
             inferenceMs: null,
             model: detector.model,
-            error: 'The scan could not run on this photograph. You can still report by hand.',
+            error: t('observation.scanFailed'),
           });
         }
       })
@@ -137,7 +152,7 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
       setObservation({ ...observation, assessment: 'no-change' });
       await acknowledge(observation);
     } catch {
-      setSaveError('That could not be saved. Your photograph is safe on this device.');
+      setSaveError(t('observation.saveFailed'));
     } finally {
       setSubmitting(false);
     }
@@ -194,7 +209,7 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
 
       await acknowledge(observation);
     } catch {
-      setSaveError('That could not be saved. Your photograph is safe on this device.');
+      setSaveError(t('observation.saveFailed'));
     } finally {
       setSubmitting(false);
     }
@@ -203,7 +218,7 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
   if (status === 'loading') {
     return (
       <Screen>
-        <LoadingState label="Reading the record" />
+        <LoadingState label={t('observation.reading')} />
       </Screen>
     );
   }
@@ -212,9 +227,9 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
     return (
       <Screen>
         <EmptyState
-          title="Observation not found"
-          body="It is not in the local record. If it was recorded on another device, it will appear once syncing exists."
-          actionLabel="Back"
+          title={t('observation.missingTitle')}
+          body={t('observation.missingBody')}
+          actionLabel={t('capture.back')}
           onAction={() => router.back()}
         />
       </Screen>
@@ -238,9 +253,12 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
       <View style={styles.head}>
         <View style={styles.headRow}>
           <Text variant="label" tone="muted" uppercase>
-            Observation Record
+            {t('observation.record')}
           </Text>
-          <Chip label={withinTolerance ? 'ALIGNED' : 'BY EYE'} selected={withinTolerance} />
+          <Chip
+            label={(withinTolerance ? t('observation.aligned') : t('observation.byEye')).toUpperCase()}
+            selected={withinTolerance}
+          />
         </View>
         <Text variant="title">{site?.name ?? observation.siteId}</Text>
         <Text variant="body" tone="secondary">
@@ -250,7 +268,7 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
 
       <View style={styles.featureBar}>
         <Button
-          label="Compare then and now"
+          label={t('observation.compare')}
           variant="secondary"
           onPress={() => router.push('/(main)/sakshi')}
           style={styles.featureBtn}
@@ -263,7 +281,9 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
           source={{ uri: observation.photoUri }}
           style={styles.photo}
           resizeMode="cover"
-          accessibilityLabel={`Observation recorded ${formatTimestamp(observation.capturedAt)}`}
+          accessibilityLabel={formatVisitorCopy(language, 'observation.photoLabel', {
+            date: formatTimestamp(observation.capturedAt),
+          })}
         />
         {yoloResult && yoloResult.detections.length > 0 ? (
           <YoloVisionOverlay detections={yoloResult.detections} />
@@ -296,7 +316,7 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
       */}
       <View style={styles.aiRow}>
         {yoloScanning ? (
-          <LoadingState label="Looking at the photograph" fill={false} />
+          <LoadingState label={t('observation.scanning')} fill={false} />
         ) : yoloResult ? (
           <PathologySummaryCard
             result={yoloResult}
@@ -309,7 +329,7 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
           />
         ) : detectorNote ? (
           <Text variant="caption" tone="secondary">
-            {detectorNote} You can still record what you see by hand.
+            {detectorNote} {t('observation.manualFallback')}
           </Text>
         ) : null}
       </View>
@@ -319,7 +339,7 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
         <View style={styles.section}>
           <TimeSeriesScrubber
             observations={seriesObservations}
-            vantageLabel={vantage?.label ?? 'Vantage Series'}
+            vantageLabel={vantage?.label ?? t('observation.series')}
           />
         </View>
       ) : null}
@@ -328,35 +348,34 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
 
       <View style={styles.meta}>
         <Text variant="label" tone="muted" uppercase>
-          Accuracy at capture
+          {t('observation.accuracy')}
         </Text>
         {framedByEye ? (
           <>
-            <MetaRow label="Alignment" value="Framed by eye" tone="seeking" />
+            <MetaRow label={t('observation.alignment')} value={t('capture.framedByEye')} tone="seeking" />
             {observation.alignScore != null ? (
-              <MetaRow label="Align score" value={observation.alignScore.toFixed(2)} tone="seeking" />
+              <MetaRow label={t('observation.alignScore')} value={observation.alignScore.toFixed(2)} tone="seeking" />
             ) : null}
             <Text variant="caption" tone="secondary" style={styles.accuracyNote}>
-              Framed by eye, not measured within the vantage tolerance. It is part of the record,
-              but is not directly comparable frame-to-frame the way an aligned capture is.
+              {t('observation.byEyeNote')}
             </Text>
           </>
         ) : (
           <>
             <MetaRow
-              label="Position error"
+              label={t('capture.positionError')}
               value={formatDistance(observation.positionErrorM)}
               tone={withinTolerance ? 'locked' : 'seeking'}
             />
             <MetaRow
-              label="Bearing error"
+              label={t('capture.bearingError')}
               value={`${observation.bearingErrorDeg!.toFixed(1)}°`}
               tone={withinTolerance ? 'locked' : 'seeking'}
             />
             <Text variant="caption" tone="secondary" style={styles.accuracyNote}>
               {withinTolerance
-                ? 'Within the vantage tolerance. This frame is directly comparable with the rest of the series.'
-                : 'Outside the vantage tolerance. Still part of the record, but flag it when comparing.'}
+                ? t('observation.withinTolerance')
+                : t('observation.outsideTolerance')}
             </Text>
           </>
         )}
@@ -366,10 +385,9 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
 
       {observation.assessment === 'unreviewed' ? (
         <View style={styles.choice}>
-          <Text variant="heading">What did you notice?</Text>
+          <Text variant="heading">{t('observation.whatNotice')}</Text>
           <Text variant="body" tone="secondary">
-            Both answers are worth recording. A series of frames where nothing changed is how
-            stability gets established.
+            {t('observation.noticeBody')}
           </Text>
           {saveError ? (
             <Text variant="caption" tone="open">
@@ -378,13 +396,13 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
           ) : null}
           <View style={styles.choiceActions}>
             <Button
-              label="Nothing changed"
+              label={t('observation.nothingChanged')}
               variant="secondary"
               loading={submitting}
               onPress={recordNoChange}
             />
             <Button
-              label="Something changed"
+              label={t('observation.somethingChanged')}
               disabled={submitting}
               onPress={() => setSheetOpen(true)}
             />
@@ -393,21 +411,21 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
       ) : (
         <View style={styles.choice}>
           <Text variant="label" tone="muted" uppercase>
-            Your finding
+            {t('observation.finding')}
           </Text>
           {observation.assessment === 'no-change' ? (
             <Text variant="body">
-              Nothing had changed. Recorded as part of the series.
+              {t('observation.stableRecorded')}
             </Text>
           ) : (
             reports.map((report) => (
               <View key={report.id} style={styles.report}>
-                <Text variant="heading">{CONDITION_CATEGORY_LABELS[report.category]}</Text>
+                <Text variant="heading">{conditionCategoryCopy(language, report.category)}</Text>
                 <Text variant="body" tone="secondary">
-                  {report.subtype} · {SEVERITY_LABELS[report.severity]}
+                  {conditionSubtypeCopy(language, report.subtype)} · {conditionSeverityCopy(language, report.severity)}
                 </Text>
                 {report.note ? (
-                  <Text variant="body" tone="secondary" style={styles.reportNote}>
+                  <Text variant="body" tone="secondary" style={styles.reportNote} translate={false}>
                     “{report.note}”
                   </Text>
                 ) : null}
@@ -421,8 +439,8 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
 
       <View style={styles.meta}>
         <MetaRow
-          label="Status"
-          value={observation.synced ? 'Synced' : 'On this device only'}
+          label={t('observation.status')}
+          value={observation.synced ? t('observation.synced') : t('observation.localOnly')}
           mono={false}
           tone={observation.synced ? 'resolved' : 'seeking'}
         />
@@ -432,11 +450,12 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
       {observation.assessment !== 'unreviewed' ? (
         <View style={styles.complete}>
           <Text variant="title" center>
-            Witnessed
+            {t('observation.witnessed')}
           </Text>
           <Text variant="body" tone="secondary" center>
-            This frame joins the record for {site?.name ?? 'this site'}. Someone comparing it in ten
-            years will know exactly where you stood.
+            {formatVisitorCopy(language, 'observation.witnessedBody', {
+              site: site?.name ?? t('observation.thisSite'),
+            })}
           </Text>
 
           {merit ? <MeritAcknowledgement event={merit} /> : null}
@@ -444,10 +463,10 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
           {!merit && summary.dayComplete ? (
             <View style={styles.enough}>
               <Text variant="bodyLarge" center>
-                You’ve done enough today.
+                {t('observation.enoughToday')}
               </Text>
               <Text variant="caption" tone="secondary" center>
-                Your observation is recorded in full. Puṇya rests until tomorrow.
+                {t('observation.meritRests')}
               </Text>
             </View>
           ) : null}
@@ -457,7 +476,7 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
       <View style={styles.actions}>
         {observation.assessment !== 'unreviewed' ? (
           <Button
-            label="See this site's record"
+            label={t('observation.openSiteRecord')}
             variant="secondary"
             block
             onPress={() =>
@@ -468,7 +487,7 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
             }
           />
         ) : null}
-        <Button label="Done" block onPress={() => router.replace('/(main)/sakshi')} />
+        <Button label={t('observation.done')} block onPress={() => router.replace('/(main)/sakshi')} />
       </View>
 
       <ConditionSheet
