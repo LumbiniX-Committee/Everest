@@ -60,6 +60,15 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
   const t = (key: VisitorCopyKey) => visitorCopy(language, key);
   const { creditConditionReport } = useQuests();
   const detector = useDamageDetector();
+  // Read stable fields instead of depending on the detector wrapper object.
+  // The hook returns a fresh wrapper whenever its `scanning` state changes. If
+  // the scan effect depends on that wrapper, calling scan triggers a render,
+  // runs this effect's cleanup, and discards both the result and the final
+  // loading-state update. The UI then spins forever even though inference
+  // completed successfully.
+  const detectorStatus = detector.status;
+  const detectorScan = detector.scan;
+  const detectorModel = detector.model;
   // The sentence shown when there is no scan is decided in
   // core/vision/candidate.ts, where the test harness covers it. It is null while
   // the detector can still work, and never empty when it cannot: silence was
@@ -115,12 +124,11 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
    */
   const scanned = useRef(false);
   useEffect(() => {
-    if (scanned.current || detector.status !== 'ready' || !observation?.photoUri) return;
+    if (scanned.current || detectorStatus !== 'ready' || !observation?.photoUri) return;
     scanned.current = true;
     let active = true;
     setYoloScanning(true);
-    detector
-      .scan(observation.photoUri)
+    detectorScan(observation.photoUri)
       .then((result) => {
         if (active) setYoloResult(result);
       })
@@ -130,8 +138,8 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
             status: 'error',
             detections: [],
             inferenceMs: null,
-            model: detector.model,
-            error: t('observation.scanFailed'),
+            model: detectorModel,
+            error: visitorCopy(language, 'observation.scanFailed'),
           });
         }
       })
@@ -141,7 +149,7 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
     return () => {
       active = false;
     };
-  }, [detector, observation?.photoUri]);
+  }, [detectorModel, detectorScan, detectorStatus, language, observation?.photoUri]);
 
   const recordNoChange = async () => {
     if (!observation || submitting) return;
