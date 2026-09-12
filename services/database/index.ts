@@ -243,6 +243,32 @@ export function getDatabase(): Promise<SQLite.SQLiteDatabase> {
   return dbPromise;
 }
 
+/**
+ * Every write path in this module shares one native connection, and
+ * `withTransactionAsync` is not safe to call concurrently on it: if a second
+ * transaction's BEGIN fires while the first is still open, SQLite rejects it
+ * with "cannot start a transaction within a transaction" — and because that
+ * BEGIN never actually opened one, the library's own rollback-on-error cleanup
+ * then fails too, with "cannot rollback - no transaction is active". Two
+ * unrelated call sites racing is enough to trigger it: the quest catalogue
+ * refreshing while a report is being filed, or two quest actions fired in
+ * quick succession each ending in their own `refresh()`.
+ *
+ * Route every transaction through here instead of calling
+ * `db.withTransactionAsync` directly, so overlapping callers queue rather than
+ * collide. A failed transaction still rejects for its own caller; it is only
+ * swallowed here so it cannot wedge the queue for whoever is next.
+ */
+let transactionQueue: Promise<unknown> = Promise.resolve();
+function runInTransaction(db: SQLite.SQLiteDatabase, fn: () => Promise<void>): Promise<void> {
+  const run = transactionQueue.then(() => db.withTransactionAsync(fn));
+  transactionQueue = run.then(
+    () => undefined,
+    () => undefined,
+  );
+  return run;
+}
+
 type ObservationRow = {
   id: string;
   vantage_id: string;
@@ -420,7 +446,7 @@ function toConditionReport(row: ConditionReportRow): ConditionReport {
  */
 export async function insertConditionReport(report: ConditionReport): Promise<void> {
   const db = await getDatabase();
-  await db.withTransactionAsync(async () => {
+  await runInTransaction(db, async () => {
     await db.runAsync(
       `INSERT OR REPLACE INTO condition_reports
          (id, observation_id, site_id, category, subtype, severity, note, recorded_at, ai_assisted, synced)
@@ -870,7 +896,7 @@ export async function resetQuestProgress(questId?: string): Promise<void> {
 
 export async function seedDefaultQuests(quests: Quest[]): Promise<void> {
   const db = await getDatabase();
-  await db.withTransactionAsync(async () => {
+  await runInTransaction(db, async () => {
     for (const quest of quests) {
       await db.runAsync(
         `INSERT OR IGNORE INTO quests
@@ -1125,7 +1151,7 @@ export async function wipeAllPersonalRecords(): Promise<PersonalRecordPhotos> {
     )
   ).map((row) => row.photo_uri as string);
 
-  await db.withTransactionAsync(async () => {
+  await runInTransaction(db, async () => {
     await db.runAsync('DELETE FROM condition_reports');
     await db.runAsync('DELETE FROM observations');
     await db.runAsync('DELETE FROM quest_submissions');

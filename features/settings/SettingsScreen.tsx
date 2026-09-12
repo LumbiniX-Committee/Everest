@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useRouter } from 'expo-router';
 
 import { ScreenHeader } from '@/components/common';
@@ -21,6 +22,13 @@ export function SettingsScreen() {
   const { states } = usePermissions();
   const t = (key: VisitorCopyKey) => visitorCopy(preferences.interfaceLanguage, key);
 
+  // The switch below already saved the new theme the moment it is toggled —
+  // `reload` only decides whether that becomes visible immediately or waits
+  // for the person to reopen the app themselves. When it cannot reload
+  // automatically, say so here rather than leaving the switch looking like it
+  // did nothing.
+  const [needsManualRestart, setNeedsManualRestart] = useState(false);
+
   // Surfaced on the row itself rather than left behind a tap: a denied
   // permission is the most common reason the witness loop appears broken, and
   // someone hunting for that answer should see it without opening the screen.
@@ -37,7 +45,11 @@ export function SettingsScreen() {
 
       <SettingsSection
         title={t('settings.appearance')}
-        footnote={t('settings.appearanceFootnote')}
+        footnote={
+          needsManualRestart
+            ? t('settings.appearanceRestartNeeded')
+            : t('settings.appearanceFootnote')
+        }
       >
         <SettingsToggle
           label={t('settings.navyTheme')}
@@ -46,8 +58,11 @@ export function SettingsScreen() {
           onValueChange={(enabled) => {
             const next = enabled ? 'navy' : 'white';
             if (next === preferences.colorTheme) return;
+            setNeedsManualRestart(false);
             void update('colorTheme', next).then(() =>
-              application.reload(`Changed colour theme to ${next}`),
+              application
+                .reload(`Changed colour theme to ${next}`)
+                .catch(() => setNeedsManualRestart(true)),
             );
           }}
         />

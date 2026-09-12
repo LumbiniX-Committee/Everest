@@ -111,9 +111,13 @@ export function BuddhaChat({ visible, onClose, siteId, siteName }: BuddhaChatPro
   const body = busy ? visitorCopy(language, 'guide.thinking') : (current?.answer ?? opening);
 
   const isTypingActive = keyboardOpen || keyboardInset > 0;
-  // On iOS, window does not automatically resize, so we use measured inset.
-  // On Android, the Modal window already resizes/pans, so we avoid double-shifting.
-  const effectiveBottomInset = Platform.OS === 'ios' ? keyboardInset : 0;
+  // `useKeyboardInset` measures the keyboard rather than assuming a platform
+  // resizes for it — the same fix already applied on the Dhamma chat and
+  // reflection screens (see components/chat/ChatComposer.tsx). This Modal
+  // does not reliably resize on Android under edge-to-edge, so a hardcoded 0
+  // here left the composer sitting under the keyboard: the exact bug this
+  // hook exists to fix, just not yet wired up on this screen.
+  const effectiveBottomInset = keyboardInset;
 
   return (
     <Modal
