@@ -95,6 +95,9 @@
       "eas": {
         "projectId": "bac26113-f180-47d8-b550-a1e8661fd4e8"
       }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/bac26113-f180-47d8-b550-a1e8661fd4e8"
     }
   }
 }
