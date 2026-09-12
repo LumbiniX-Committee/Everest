@@ -126,13 +126,13 @@ const palettes: Record<ColorTheme, ColorPalette> = {
   white: whiteColors,
 };
 
-let initialColorTheme: ColorTheme = 'navy';
+let initialColorTheme: ColorTheme = 'white';
 
 /**
  * A stable object is intentional: the theme barrel and any early importer keep
  * the same reference while boot replaces its values before screens load.
  */
-export const colors: ColorPalette = { ...navyColors };
+export const colors: ColorPalette = { ...whiteColors };
 
 export function setInitialColorTheme(theme: ColorTheme): void {
   initialColorTheme = theme;

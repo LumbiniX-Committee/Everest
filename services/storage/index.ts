@@ -96,7 +96,10 @@ export async function getUserPreferences(): Promise<UserPreferences> {
   const raw = Object.fromEntries(entries) as Record<keyof UserPreferences, string | null>;
 
   return {
-    colorTheme: raw.colorTheme === 'white' ? 'white' : DEFAULT_USER_PREFERENCES.colorTheme,
+    colorTheme:
+      raw.colorTheme === 'navy' || raw.colorTheme === 'white'
+        ? raw.colorTheme
+        : DEFAULT_USER_PREFERENCES.colorTheme,
     interfaceLanguage: oneOf(raw.interfaceLanguage, INTERFACE_LANGUAGE_OPTIONS, 'interfaceLanguage'),
     alignmentTolerance: oneOf(raw.alignmentTolerance, ALIGNMENT_TOLERANCE_OPTIONS, 'alignmentTolerance'),
     hapticsEnabled: bool(raw.hapticsEnabled, 'hapticsEnabled'),

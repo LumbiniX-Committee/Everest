@@ -71,9 +71,9 @@ export type UserPreferences = {
 };
 
 export const DEFAULT_USER_PREFERENCES: UserPreferences = {
-  // Preserve this branch's instrument-like interface unless a person chooses
-  // main's whitewashed daylight palette.
-  colorTheme: 'navy',
+  // White is the default daylight palette; navy is available from Settings
+  // for a person who prefers it.
+  colorTheme: 'white',
   interfaceLanguage: 'en',
   alignmentTolerance: 'standard',
   hapticsEnabled: true,
