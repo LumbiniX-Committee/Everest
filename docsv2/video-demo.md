@@ -9,6 +9,13 @@ the custodian dashboard earned its own beat — that closed loop, shown live, is
 the moment that sells the institutional story. If you need a very short cut,
 use the 2-minute version at the end.*
 
+*Refreshed 2026-09-12. The custodian dashboard is now live at
+`https://project-saksi.vercel.app/custodian`, so the dashboard beat below can
+cut to a real deployed browser tab instead of a laptop running the app
+locally — that's a stronger cut, since it proves the product is a real,
+reachable thing rather than a demo-only mock. The local setup is kept below as
+the offline-safe fallback.*
+
 ---
 
 ## Before you record: setup checklist
@@ -23,20 +30,24 @@ Do all of this first. Most demo failures are setup failures.
    detector in this build" line, the build did not carry the runtime; rebuild.
 3. **Pre-seed one clean observation** so the then-and-now and time-series have
    something to show, if your demo data needs it.
-4. **Decide your network story.** Either run the mock API (`npm run api`) on the
-   same network for live guide and Dhamma answers, or accept the offline
-   fallbacks. Both are honest; just know which you are showing.
+4. **Decide your network story.** Either use your normal internet connection for
+   live guide and Dhamma answers (the app calls the cloud AI directly, no
+   laptop needed for this part any more), or accept the offline fallbacks.
+   Both are honest; just know which you are showing.
 5. **Charge the phone, set brightness high, turn on Do Not Disturb** so no
    notification pops mid-take.
 6. **Pick one site** to use throughout (the Sacred Garden or the Ashokan Pillar is
    ideal) so the story stays coherent.
 7. **Screen-record at high resolution.** On Android use the built-in recorder or a
    USB screen mirror. Record voiceover separately if the room is noisy.
-8. **If showing the custodian dashboard**, run `node mock-api/server.mjs` and
-   `npm run dev` in `landing/` on a laptop on the same network, with
-   `NEXT_PUBLIC_API_URL` pointed at the mock API. Have `localhost:3000/custodian`
-   already open in a browser tab before you start recording, so the cut from
-   phone to laptop is instant.
+8. **For the custodian dashboard beat, have a browser tab already open** on
+   `https://project-saksi.vercel.app/custodian`, signed in ahead of time, so
+   the cut from phone to browser is instant and you never show a sign-in
+   screen on camera. If you'd rather demo entirely offline (no internet at the
+   recording location), fall back to running `node mock-api/server.mjs` and
+   `npm run dev` in `landing/` on a laptop on the same network as the phone,
+   with `NEXT_PUBLIC_API_URL` pointed at the mock API, and have
+   `localhost:3000/custodian` open instead.
 9. **Have the six scripted Dhamma questions ready** (they are cached, so they
    answer instantly even with no wifi):
    - "What are the four noble truths?"
@@ -104,20 +115,23 @@ Do all of this first. Most demo failures are setup failures.
 - SAY: "The AI fills in what it found. The person always decides how urgent it is.
   And the saved report is flagged as AI-assisted, so a later reader knows."
 
-### 2:30 to 3:00 | The custodian dashboard: closing the loop
+### 2:30 to 3:00 | The custodian dashboard: closing the loop, live
 
-- SHOW: Cut to a laptop browser, already open on `localhost:3000/custodian`. The
-  report you just filed appears in the list. Filter to "Open", find it, type a
-  short note, and tap Acknowledge. The status updates live.
-- SAY: "That report doesn't just sit on the phone. It reaches a custodian
-  dashboard — the same view works in-app for a caretaker without a laptop —
-  showing every open report, and how long each one waited before someone
-  looked. This is the product a heritage authority actually pays for."
+- SHOW: Cut to a browser tab, already open and signed in on
+  `project-saksi.vercel.app/custodian`. The report you just filed appears in the
+  list. Filter to "Open", find it, type a short note, and tap Acknowledge. The
+  status updates live.
+- SAY: "That report doesn't just sit on the phone. It reaches a real, live
+  custodian dashboard — the same view works in-app for a caretaker without a
+  laptop — showing every open report, and how long each one waited before
+  someone looked. Access here is invite-only and scoped per site by the
+  database itself. This is the product a heritage authority actually pays
+  for, and it's live at this address today, not a mockup."
 - OPTIONAL SHOW: Tap the CSV or GeoJSON export link.
 - SAY (if shown): "Export opens straight in QGIS. This is a real GIS workflow,
   not a screenshot of one."
 
-### 3:00 to 3:40 | Dhamma: the grounded AI, now wider than the canon
+### 3:00 to 3:45 | Dhamma: the grounded AI, now wider than the canon
 
 - SHOW: Go to Dhamma. Ask "What are the four noble truths?" Show the answer with
   its citation and source card.
@@ -125,24 +139,29 @@ Do all of this first. Most demo failures are setup failures.
   canonical sources, always with a citation."
 - SHOW: Ask "What does the Burra Charter say about reconstruction?" Show the
   cited answer from the conservation corpus.
-- SAY: "Since the hackathon we widened the corpus. The same engine now answers
-  a conservation question — UNESCO records, the ICOMOS charters, Kathmandu
-  Valley archaeology — with the same discipline: cite a real source, or
-  refuse. Same behaviour, wider subject matter."
+- SAY: "Since the hackathon we widened the corpus twice: to international
+  conservation doctrine, and to Hindu and Newar heritage sources for the sites
+  we now cover. The same engine answers a conservation question — UNESCO
+  records, the ICOMOS charters, Kathmandu Valley archaeology, Newar temple
+  tradition — with the same discipline: cite a real source, or refuse. We also
+  made that discipline stricter: every cached answer is now checked sentence by
+  sentence against its own citation, not just checked that the citation exists."
 - SHOW: Ask "What does Buddhism say about cryptocurrency?" Show the honest refusal.
 - SAY: "And when the sources don't support an answer, it refuses. That refusal is
   the feature. A grounded AI that never makes things up is exactly what a sacred
   and historical context needs."
 
-### 3:40 to 4:15 | The honest close
+### 3:45 to 4:15 | The honest close
 
 - SHOW: The Guardians leaderboard, briefly. Then a quick cut to the Manga Hiti
-  site in the Kathmandu Valley, then return to the then-and-now fade.
+  site in the Kathmandu Valley, then a glimpse of the public website itself in
+  both languages, then return to the then-and-now fade.
 - SAY: "Contribution is recognised without gamifying truth. Merit can't be spent or
   ranked, and the leaderboard ranks real uploaded evidence, so you can't fake it."
-- SAY: "We piloted this at Lumbini and just generalised it to three Kathmandu
-  Valley sites on the same architecture. There are over 1,200 UNESCO
-  properties with the same gap."
+- SAY: "We piloted this at Lumbini and generalised it to three Kathmandu
+  Valley sites on the same architecture. The whole product is live today, in
+  English and Nepali, at project-saksi.vercel.app. There are over 1,200
+  UNESCO properties with the same gap."
 - SAY: "Sākṣī: a witness that guides, an AI that never lies, a custodian who
   can act, and a record worth trusting, built by the people already standing
   in front of the monument. Thank you."
@@ -158,8 +177,8 @@ If you only have two minutes, keep these beats and drop the rest:
 3. The witness loop: reticle locking, capture, and the by-eye honesty beat (0:35
    to 1:15).
 4. The crack detector: scan, dashed boxes, file the report (1:15 to 1:35).
-5. The custodian dashboard: cut to the browser, acknowledge the report you just
-   filed (1:35 to 1:50).
+5. The custodian dashboard: cut to the browser (live, if you have signal; the
+   local mock otherwise), acknowledge the report you just filed (1:35 to 1:50).
 6. Dhamma: one cited answer and one refusal (1:50 to 2:05).
 
 The three things you must never cut, because they are the whole pitch: the
@@ -179,14 +198,14 @@ acting on the report), and the **refusal** (an AI that says no).
 - **Show a real crack for the detector.** If you can point the camera at an actual
   cracked surface, do it; a real detection is far more convincing than a staged
   one.
-- **Cut cleanly between phone and laptop for the custodian beat.** Have the
-  dashboard tab already loaded and the report list already filtered, so the
-  cut lands on the acknowledgement itself, not on page-load spinners.
+- **Cut cleanly to the dashboard beat.** Have the browser tab already loaded,
+  already signed in, and the report list already filtered, so the cut lands on
+  the acknowledgement itself, not on a sign-in screen or a page-load spinner.
 - **Keep the voiceover calm.** The product's whole personality is honesty and
   restraint. Match that tone.
 - **Caption the honest bits.** Add on-screen text for "mAP50 0.8167", "framed by
-  eye, not measured", and "refused: not found in the canon", so a muted viewer
-  still gets them.
+  eye, not measured", "refused: not found in the canon", and "74/74, zero
+  fabricated citations", so a muted viewer still gets them.
 
 ---
 
@@ -199,15 +218,15 @@ acting on the report), and the **refusal** (an AI that says no).
 | By-eye honesty beat | The charter is real and enforced, not marketing. |
 | Crack detector with dashed boxes | Real on-device AI, honest accuracy, candidates not verdicts. |
 | AI-assisted flag on the report | Provenance is recorded end to end. |
-| Custodian dashboard, live acknowledgement | The loop actually closes. This is the product an institution pays for, not a mockup. |
+| Custodian dashboard, live acknowledgement | The loop actually closes, at a real public address, not a mockup. |
 | Cited Dhamma answer (canon) | Grounded, source-backed knowledge. |
-| Cited Dhamma answer (heritage corpus) | The refuse-or-cite discipline generalises past the Pali canon. |
+| Cited Dhamma answer (heritage corpus) | The refuse-or-cite discipline generalises past the Pali canon, to a second cultural tradition. |
 | Dhamma refusal | The AI will not make things up. The trust feature. |
 | Guardians leaderboard | Motivation without gaming the truth. |
 | Manga Hiti / Kathmandu Valley cut | One pilot generalises to a platform, not a one-off demo. |
+| Public site in two languages | Nepali is a first-class language here, not a translation layer bolted on. |
 
 ---
 
-*This script pairs with `slides.md` (the deck) and `documentation.md` (the full
-product and system details). Record the setup checklist first; it is where demos
-are won or lost.*
+*This script pairs with `slides.md` (the deck) in this same folder. Record the
+setup checklist first; it is where demos are won or lost.*

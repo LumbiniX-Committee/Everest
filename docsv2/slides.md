@@ -10,6 +10,12 @@ their own slides; cut the tech-stack slide first if you need to come back down.*
 talking points (keep them short on screen, expand out loud). The "SHOW" line tells
 you which image or screenshot to place on that slide.*
 
+*Refreshed 2026-09-12. The product is now live at
+`https://project-saksi.vercel.app` (English and Nepali), and the custodian
+dashboard runs there for real rather than only on a laptop — wherever a slide
+below says "screenshot the dashboard," prefer a live browser tab over a
+screenshot if you're presenting in person.*
+
 ---
 
 ## Slide 1: Title
@@ -19,7 +25,8 @@ A conservation-evidence network that uses pilgrimage as its distribution channel
 
 - SAY: Sākṣī means *witness*. It launched at Lumbini, the birthplace of the
   Buddha, and now covers Kathmandu Valley UNESCO sites alongside it.
-- SAY: Built for LumbiniX 2026 by the LumbiniX-Committee team.
+- SAY: Built for LumbiniX 2026 by the LumbiniX-Committee team. Now live at
+  project-saksi.vercel.app, in English and Nepali.
 - SHOW: The app icon on a clean background, with the Lumbini Sacred Garden or the
   Ashokan Pillar behind it. Use `assets/icon.png` over a wide site photo.
 
@@ -95,7 +102,7 @@ Explore Lumbini, read the history, compare then and now.
 
 One pilgrimage app, or a network that generalises to any monitored site.
 
-- SAY: We just added three Kathmandu Valley UNESCO monument-zone sites —
+- SAY: We added three Kathmandu Valley UNESCO monument-zone sites —
   Patan Durbar Square, Changu Narayan, and Manga Hiti — on the same
   architecture, same corpus discipline, same custodian loop, no rewrite.
 - SAY: Manga Hiti is the sharpest proof point: a 6th-century stone water
@@ -150,21 +157,25 @@ The AI suggests candidates. A human confirms.
 
 ---
 
-## Slide 9a: The custodian dashboard — closing the loop
+## Slide 9a: The custodian dashboard — closing the loop, live
 
-A report nobody reads is not evidence. This is where it goes.
+A report nobody reads is not evidence. This is where it goes, and it's a real
+address now, not a laptop demo.
 
 - SAY: Every condition report reaches a custodian dashboard — a web view for
   a heritage office, and the same thing in-app for a caretaker on their
   phone — showing coverage, median time to acknowledgement, and every open
   report by site and status.
+- SAY: It's live today at project-saksi.vercel.app/custodian. Access is
+  invite-only and scoped per site by the database itself, not by a front-end
+  check — a signed-in account with no site assigned sees nothing.
 - SAY: A custodian acknowledges, marks in-progress, or resolves a report with
   a note, right from either surface. CSV and GeoJSON export open directly in
   QGIS for a real GIS workflow.
 - SAY: This is the product an institution actually pays for. Everything else
   in the app exists to fill this dashboard with something worth reading.
-- SHOW: The web dashboard (`landing/custodian`) with real numbers, and the
-  in-app custodian screen (`app/(main)/settings/custodian`) side by side.
+- SHOW: The live web dashboard, in a browser tab if presenting in person, and
+  the in-app custodian screen (`app/(main)/settings/custodian`) side by side.
 
 ---
 
@@ -173,15 +184,22 @@ A report nobody reads is not evidence. This is where it goes.
 Cite or refuse. Never make things up.
 
 - SAY: Questions about Buddhist teaching *and* heritage conservation — UNESCO
-  records, the ICOMOS Venice and Burra Charters, Kathmandu Valley archaeology
-  — are answered only from real sources, with citations, and refused when the
-  sources do not support an answer.
-- SAY: It scores 68 out of 68 on our benchmark, resists impersonation and
-  prompt-injection, and is Nepali-first. It works offline too.
+  records, the ICOMOS Venice and Burra Charters, Kathmandu Valley archaeology,
+  and now Hindu and Newar heritage sources too — are answered only from real
+  sources, with citations, and refused when the sources do not support an
+  answer.
+- SAY: It scores 74 out of 74 on our benchmark — up from 68 at the hackathon
+  — resists impersonation and prompt-injection, and is Nepali-first. It works
+  offline too.
+- SAY: We didn't stop at "the citation is real." A second, stricter check now
+  verifies that every sentence of a cached answer is actually supported by
+  the passage it cites, not just that the citation ID resolves. That check
+  reads zero unsupported spans.
 - SAY: The same refuse-rather-than-fabricate mechanism that won this
   hackathon on the Pali canon now answers a conservation question about a
-  Malla-era temple with a real, checkable citation. Same behaviour, wider
-  subject matter.
+  Malla-era temple, or a question about Vaishnava iconography at Changu
+  Narayan, with a real, checkable citation. Same behaviour, wider subject
+  matter.
 - SHOW: Two screenshots: a cited answer (`DhammaChatScreen` with a source card)
   and an honest refusal. Show both so the refusal reads as a feature. If time
   allows, a third showing a heritage-corpus citation (e.g. asking about the
@@ -204,14 +222,17 @@ Puṇya, not points. A leaderboard you cannot fake.
 
 ## Slide 12: Architecture, at a glance
 
-Offline-first phone, a pure testable brain, a cloud copy.
+Offline-first phone, a pure testable brain, a cloud copy, a live web front door.
 
 - SAY: Every record is written to the phone first. The heavy AI runs on the phone.
-  The cloud (Supabase) is a copy. All the important logic is pure and unit-tested.
-- SAY: Honesty is enforced by an automated gate, `npm run verify`, so
+  The cloud (Supabase) is a copy, protected by row-level security scoped to who
+  is actually signed in. All the important logic is pure and unit-tested.
+- SAY: Honesty is enforced by an automated gate, `npm run verify`, across
+  both the mobile app and the web dashboard — 185 tests total — so
   trustworthiness is structural, not a claim.
-- SHOW: The architecture diagram from `documentation.md` section 6 (phone on top,
-  cloud below, mock API note). Redraw it cleanly as a slide graphic.
+- SHOW: The architecture diagram (phone on top, cloud below, the public
+  bilingual website and custodian dashboard as the front door). Redraw it
+  cleanly as a slide graphic.
 
 ---
 
@@ -219,7 +240,8 @@ Offline-first phone, a pure testable brain, a cloud copy.
 
 - SAY: React Native and Expo (SDK 57), TypeScript, SQLite on device.
 - SAY: onnxruntime for the crack detector, llama.rn for the offline LLM, MapLibre
-  for the map, Supabase for the cloud, Ollama Cloud for Dhamma synthesis.
+  for the map, Supabase for the cloud and custodian auth, Next.js for the
+  bilingual public website, Ollama Cloud for Dhamma synthesis.
 - SHOW: A simple grid of logos or labels. No screenshot. Keep it to one clean row
   of names.
 
@@ -231,17 +253,19 @@ Free for visitors. Paid for the people who need the data. Never paid by anyone
 with a stake in what the record says.
 
 - SAY: The visitor app stays free. Revenue comes from grants and a licensed
-  custodian dashboard for heritage authorities — the same dashboard just
+  custodian dashboard for heritage authorities — the same live dashboard just
   shown, not a hypothetical one.
-- SAY: We publish an ethics policy: no money, ever, from a commercial entity
-  operating inside a site we monitor, and no sponsored recommendations. A
-  government buyer has to trust the record, and that trust does not survive
-  a sponsor with a stake in what it says.
+- SAY: We publish an ethics policy and a privacy policy, both live on the
+  website: no money, ever, from a commercial entity operating inside a site
+  we monitor, no sponsored recommendations, and a plain statement of what
+  personal data the app collects and how to remove it. A government buyer
+  has to trust the record, and that trust does not survive a sponsor with a
+  stake in what it says.
 - SAY: The honesty model is also the moat: only trustworthy data is worth paying
   for, and our discipline is hard to copy.
 - SHOW: A simple diagram: visitors (free, contribute) -> evidence -> authorities
   (pay for the dashboard). Three boxes and two arrows. Optionally overlay the
-  ethics-policy URL (`landing/ethics`) in a corner.
+  ethics-policy URL (`project-saksi.vercel.app/en/ethics`) in a corner.
 
 ---
 
@@ -250,15 +274,17 @@ with a stake in what the record says.
 We say our limits out loud. It is the whole point.
 
 - SAY: Some coordinates are documentary approximations, not surveyed. The detector
-  finds cracks only, at 82%, offering candidates. Some sync paths are written
-  but not fully proven.
+  finds cracks only, at 82%, offering candidates.
 - SAY: The three Kathmandu Valley sites ship with real, sourced facts,
-  timeline, and vantages, but no reconstruction plate yet — that needs a
-  harvested or generated image we did not have the pipeline access to
-  produce this cycle. Nine of the twelve original Lumbini sites ship the
-  same way already; the site screen says so rather than faking a photo.
+  timeline, and vantages, but some do not yet carry a reconstruction plate —
+  that needs a harvested or generated image we did not have the pipeline
+  access to produce this cycle. The site screen says so rather than faking a
+  photo.
 - SAY: No institutional partner has signed on yet. Outreach is underway; a
   screenshot of one supportive reply would be the next proof point.
+- SAY: Play Store publication is prepared — production build pipeline done,
+  listing content written — but submission through our partner publisher
+  account is still in progress, not live yet.
 - SAY: Being precise about limits is part of the charter, not an apology.
 - SHOW: No screenshot. A clean bullet list, calm tone.
 
@@ -270,8 +296,9 @@ Sākṣī: a witness that guides, an AI that never lies, a custodian who can act
 and a record worth trusting.
 
 - SAY: Built by the people already standing in front of the monument. Piloted
-  at Lumbini, generalised to the Kathmandu Valley, and built to scale to any
-  of the world's 1,200-plus UNESCO sites nobody is watching continuously.
+  at Lumbini, generalised to the Kathmandu Valley, live today at
+  project-saksi.vercel.app in two languages, and built to scale to any of
+  the world's 1,200-plus UNESCO sites nobody is watching continuously.
 - SAY: Thank you. Questions welcome.
 - SHOW: The strongest single image again (the then-and-now fade), with the app
   name and the team name.
@@ -295,13 +322,15 @@ build the deck. File each under a `deck-shots/` folder named as noted.
 | 8 | Reticle by eye (dashed sand) | Sākṣī capture (manual) | 8 | `08a-reticle-eye.png` |
 | 9 | Observation honesty label | Sākṣī observation | 8 | `08b-honesty-label.png` |
 | 10 | Dashed crack boxes + summary | Sākṣī observation after scan | 9 | `09-detector.png` |
-| 11 | Custodian web dashboard | `landing/custodian` | 9a | `09a-dashboard-web.png` |
+| 11 | Live custodian dashboard (browser) | `project-saksi.vercel.app/custodian` | 9a | `09a-dashboard-web.png` |
 | 12 | Custodian in-app screen | Settings → Custodian | 9a | `09a-dashboard-app.png` |
 | 13 | Cited Dhamma answer | Dhamma chat | 10 | `10a-answer.png` |
 | 14 | Honest refusal | Dhamma chat | 10 | `10b-refusal.png` |
-| 15 | Heritage-corpus citation (e.g. Burra Charter, Manga Hiti) | Dhamma chat | 10 | `10c-heritage-citation.png` |
+| 15 | Heritage-corpus citation (e.g. Burra Charter, Manga Hiti, Changu Narayan) | Dhamma chat | 10 | `10c-heritage-citation.png` |
 | 16 | Guardians leaderboard | Sākṣī guardians | 11 | `11-guardians.png` |
+| 17 | Bilingual public site (EN/NE side by side) | `project-saksi.vercel.app` `/en` and `/ne` | 1, 16 | `17-bilingual-site.png` |
 
 Tips: use the same phone frame for all shots, hide the status-bar clutter, and
 prefer real Lumbini and Kathmandu Valley content over demo placeholders
-wherever the data allows.
+wherever the data allows. For the dashboard shot, a live browser screenshot
+beats a screen recording still — it's proof the address in slide 1 is real.
