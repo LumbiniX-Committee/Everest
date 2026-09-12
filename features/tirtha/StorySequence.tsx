@@ -435,12 +435,12 @@ export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQu
 
 const styles = StyleSheet.create({
   voicePill: {
-    backgroundColor: 'rgba(77, 198, 194, 0.12)',
+    backgroundColor: colors.primarySoft,
     borderRadius: radii.full,
     paddingHorizontal: spacing.sm + 2,
     paddingVertical: spacing.xxs + 1,
     borderWidth: 1,
-    borderColor: 'rgba(77, 198, 194, 0.35)',
+    borderColor: colors.borderStrong,
   },
 
   voicePillPlaying: {
@@ -480,7 +480,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: radii.full,
     borderWidth: 1,
-    borderColor: 'rgba(126, 169, 190, 0.35)',
+    borderColor: colors.border,
     backgroundColor: colors.surfaceSecondary,
   },
 
@@ -501,7 +501,7 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: radii.full,
-    backgroundColor: 'rgba(126, 169, 190, 0.3)',
+    backgroundColor: colors.border,
   },
 
   pipDone: {

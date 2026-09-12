@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
   },
 
   bubble: {
-    backgroundColor: 'rgba(12, 34, 52, 0.97)',
+    backgroundColor: colors.surfaceRaised,
     borderRadius: 22,
     padding: spacing.base + 2,
     gap: spacing.sm + 2,
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
     shadowRadius: 24,
     elevation: 16,
     borderWidth: 1.5,
-    borderColor: 'rgba(77, 198, 194, 0.35)',
+    borderColor: colors.borderStrong,
   },
 
   bubbleKeyboard: {
@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
     borderRightWidth: 14,
     borderTopColor: 'transparent',
     borderBottomColor: 'transparent',
-    borderRightColor: 'rgba(12, 34, 52, 0.97)',
+    borderRightColor: colors.surfaceRaised,
   },
 
   bubbleTailKeyboard: {
@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: radii.full,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: colors.surfaceSecondary,
     alignItems: 'center',
     justifyContent: 'center',
   },
