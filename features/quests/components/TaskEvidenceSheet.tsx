@@ -200,7 +200,7 @@ export function TaskEvidenceSheet({
               variant="secondary"
               block
               onPress={() => router.push({
-                pathname: '../../quest-camera',
+                pathname: '/(main)/tirtha/quest-camera',
                 params: { questId, taskId: task.id },
               })}
             />

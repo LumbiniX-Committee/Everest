@@ -743,60 +743,53 @@ export async function getQuest(id: string): Promise<QuestWithProgress | null> {
 
 export async function startQuest(questId: string): Promise<QuestProgress> {
   const db = await getDatabase();
-  const existing = await db.getFirstAsync<{
-    quest_id: string;
+  const now = Date.now();
+
+  // A SELECT-then-branch here leaves a window where two overlapping calls —
+  // a double tap, or the same quest credited from two screens at once — both
+  // see no row and both try to INSERT, and the second throws a primary-key
+  // violation that the caller never surfaces (see QuestDetailScreen's
+  // fire-and-forget `void startQuest(...)`), which looks like the button did
+  // nothing. INSERT OR IGNORE makes "create the row if absent" atomic with
+  // the check, and the UPDATE only touches a row still 'not_started', so a
+  // second, overlapping or later call is a harmless no-op rather than a
+  // silent failure.
+  await db.runAsync(
+    `INSERT OR IGNORE INTO quest_progress (quest_id, status, completed_tasks, started_at)
+     VALUES (?, 'in_progress', '[]', ?)`,
+    questId,
+    now
+  );
+
+  await db.runAsync(
+    `UPDATE quest_progress
+     SET status = 'in_progress', started_at = COALESCE(started_at, ?)
+     WHERE quest_id = ? AND status = 'not_started'`,
+    now,
+    questId
+  );
+
+  const row = await db.getFirstAsync<{
     status: string;
     completed_tasks: string;
     started_at: number | null;
     completed_at: number | null;
-  }>('SELECT * FROM quest_progress WHERE quest_id = ?', questId);
-
-  const now = Date.now();
-  if (!existing) {
-    await db.runAsync(
-      `INSERT INTO quest_progress (quest_id, status, completed_tasks, started_at)
-       VALUES (?, 'in_progress', '[]', ?)`,
-      questId,
-      now
-    );
-    return {
-      questId,
-      status: 'in_progress',
-      completedTasks: [],
-      startedAt: now,
-    };
-  }
-
-  if (existing.status === 'not_started') {
-    const startedAt = existing.started_at ?? now;
-    await db.runAsync(
-      `UPDATE quest_progress SET status = 'in_progress', started_at = ? WHERE quest_id = ?`,
-      startedAt,
-      questId
-    );
-    let completedTasks: string[] = [];
-    try {
-      completedTasks = JSON.parse(existing.completed_tasks);
-    } catch {}
-    return {
-      questId,
-      status: 'in_progress',
-      completedTasks,
-      startedAt,
-      completedAt: existing.completed_at ?? undefined,
-    };
-  }
+  }>(
+    'SELECT status, completed_tasks, started_at, completed_at FROM quest_progress WHERE quest_id = ?',
+    questId
+  );
 
   let completedTasks: string[] = [];
   try {
-    completedTasks = JSON.parse(existing.completed_tasks);
+    completedTasks = row ? JSON.parse(row.completed_tasks) : [];
   } catch {}
+
   return {
     questId,
-    status: existing.status as QuestStatus,
+    status: (row?.status as QuestStatus | undefined) ?? 'in_progress',
     completedTasks,
-    startedAt: existing.started_at ?? undefined,
-    completedAt: existing.completed_at ?? undefined,
+    startedAt: row?.started_at ?? now,
+    completedAt: row?.completed_at ?? undefined,
   };
 }
 

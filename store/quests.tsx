@@ -79,19 +79,13 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
   const [quests, setQuests] = useState<QuestWithProgress[]>([]);
   const { recognise } = usePractice();
 
-  const refresh = useCallback(async () => {
+  /**
+   * Re-query SQLite for the current quest list, without touching the
+   * catalogue. Cheap, so every quest action can call it after its own write
+   * without adding a noticeable delay.
+   */
+  const refreshList = useCallback(async () => {
     try {
-      // Synchronise authored catalogue rows on every load. The database uses
-      // insert-then-update, not REPLACE, so progress rows survive while newly
-      // shipped place journeys and objectives appear on existing installs.
-      try {
-        await database.seedDefaultQuests(demoQuests);
-      } catch (catalogueError) {
-        // Catalogue refresh and quest loading are separate operations. A
-        // device-specific SQL problem must not hide quests already stored on
-        // the phone; load those below and report only the update failure.
-        console.warn('Could not update the quest catalogue:', catalogueError);
-      }
       const list = await database.listQuests();
       setQuests(list);
     } catch (error) {
@@ -101,6 +95,30 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const refresh = useCallback(async () => {
+    // Synchronise authored catalogue rows. The database uses insert-then-
+    // update, not REPLACE, so progress rows survive while newly shipped
+    // place journeys and objectives appear on existing installs.
+    //
+    // This is the expensive half of a refresh — one INSERT, one UPDATE and
+    // one INSERT OR IGNORE per catalogue quest — so it only runs at boot and
+    // after an explicit progress reset. A per-quest action (starting a
+    // quest, ticking a task) calls `refreshList` instead: the catalogue
+    // cannot have changed mid-session, and re-seeding it on every single tap
+    // was adding dozens of sequential round trips to what should be an
+    // instant tick, which on a slower device read as the button doing
+    // nothing.
+    try {
+      await database.seedDefaultQuests(demoQuests);
+    } catch (catalogueError) {
+      // Catalogue refresh and quest loading are separate operations. A
+      // device-specific SQL problem must not hide quests already stored on
+      // the phone; load those below and report only the update failure.
+      console.warn('Could not update the quest catalogue:', catalogueError);
+    }
+    await refreshList();
+  }, [refreshList]);
+
   useEffect(() => {
     void refresh();
   }, [refresh]);
@@ -108,9 +126,9 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
   const startQuest = useCallback(
     async (questId: string) => {
       await database.startQuest(questId);
-      await refresh();
+      await refreshList();
     },
-    [refresh],
+    [refreshList],
   );
 
   const completeTask = useCallback(
@@ -132,22 +150,22 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
         rewardGranted = meritResult !== null;
       }
 
-      await refresh();
+      await refreshList();
       return {
         progress: updatedProgress,
         questCompleted,
         rewardGranted,
       };
     },
-    [quests, recognise, refresh],
+    [quests, recognise, refreshList],
   );
 
   const uncompleteTask = useCallback(
     async (questId: string, taskId: string) => {
       await database.uncompleteQuestTask(questId, taskId);
-      await refresh();
+      await refreshList();
     },
-    [refresh],
+    [refreshList],
   );
 
   /**
@@ -191,10 +209,10 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
         }
       }
 
-      if (links.length > 0) await refresh();
+      if (links.length > 0) await refreshList();
       return links.length;
     },
-    [quests, refresh],
+    [quests, refreshList],
   );
 
   const creditArrival = useCallback(
@@ -215,10 +233,10 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
         .map((task) => ({ questId: quest.id, taskId: task.id })));
 
       for (const match of matches) await database.completeQuestTask(match.questId, match.taskId);
-      if (matches.length > 0) await refresh();
+      if (matches.length > 0) await refreshList();
       return matches.length;
     },
-    [quests, refresh],
+    [quests, refreshList],
   );
 
   const creditVantageObservation = useCallback(
@@ -237,10 +255,10 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
         .map((task) => ({ questId: quest.id, taskId: task.id })));
 
       for (const match of matches) await database.completeQuestTask(match.questId, match.taskId);
-      if (matches.length > 0) await refresh();
+      if (matches.length > 0) await refreshList();
       return matches.length;
     },
-    [quests, refresh],
+    [quests, refreshList],
   );
 
   const resetQuests = useCallback(async () => {
