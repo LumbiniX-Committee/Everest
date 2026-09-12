@@ -46,7 +46,9 @@
  * common case is unaffected; this only matters once a free-tier key starts
  * returning 429s under real demo traffic.
  */
-export const LLM_API_KEYS = (process.env.OLLAMA_API_KEY ?? process.env.EXPO_PUBLIC_LLM_API_KEY ?? '')
+// Keep inference independent of Expo's locally generated environment types.
+const apiKeyList: string = process.env.OLLAMA_API_KEY ?? process.env.EXPO_PUBLIC_LLM_API_KEY ?? '';
+export const LLM_API_KEYS = apiKeyList
   .split(',')
   .map((key) => key.trim())
   .filter((key) => key.length > 0);

@@ -44,7 +44,9 @@ const ENDPOINT =
  * is tried only when the first comes back rate-limited (see `reviewPhoto`),
  * not on any other kind of failure.
  */
-const API_KEYS = (process.env.EXPO_PUBLIC_LLM_API_KEY ?? '')
+// Keep inference independent of Expo's locally generated environment types.
+const apiKeyList: string = process.env.EXPO_PUBLIC_LLM_API_KEY ?? '';
+const API_KEYS = apiKeyList
   .split(',')
   .map((key) => key.trim())
   .filter((key) => key.length > 0);
