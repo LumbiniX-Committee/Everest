@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
+import { localeHref, otherLocale, swapLocaleInPathname, t, type Locale } from '@/lib/i18n';
 import { NAV } from '@/lib/site';
 
 /**
@@ -15,15 +16,17 @@ import { NAV } from '@/lib/site';
  * Client component only for the mobile disclosure. The links themselves are
  * plain anchors, so navigation works before hydration.
  */
-export function SiteHeader() {
+export function SiteHeader({ locale }: { locale: Locale }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const next = otherLocale(locale);
+  const switchHref = swapLocaleInPathname(pathname, next);
 
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-ground/85 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center gap-6 px-6 py-3.5">
         <Link
-          href="/"
+          href={localeHref(locale, '/')}
           className="font-[family-name:var(--font-display)] text-2xl font-semibold tracking-tight text-ink"
           onClick={() => setOpen(false)}
         >
@@ -31,12 +34,13 @@ export function SiteHeader() {
         </Link>
 
         <nav aria-label="Primary" className="ml-auto hidden items-center gap-1 lg:flex">
-          {NAV.map(({ href, label }) => {
-            const active = pathname === href;
+          {NAV.map(({ href, labelKey }) => {
+            const fullHref = localeHref(locale, href);
+            const active = pathname === fullHref;
             return (
               <Link
                 key={href}
-                href={href}
+                href={fullHref}
                 aria-current={active ? 'page' : undefined}
                 className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
                   active
@@ -44,24 +48,31 @@ export function SiteHeader() {
                     : 'text-ink-soft hover:bg-surface/70 hover:text-ink'
                 }`}
               >
-                {label}
+                {t(locale, labelKey)}
               </Link>
             );
           })}
         </nav>
 
         <Link
-          href="/#download"
+          href={switchHref}
+          className="ml-auto hidden rounded-lg px-3 py-2 text-sm font-medium text-ink-soft transition hover:bg-surface/70 hover:text-ink lg:ml-0 lg:block"
+        >
+          {t(locale, 'nav.language')}
+        </Link>
+
+        <Link
+          href={`${localeHref(locale, '/')}#download`}
           className="ml-auto rounded-xl bg-earth px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sandstone-deep lg:ml-0"
         >
-          Get the app
+          {t(locale, 'nav.getTheApp')}
         </Link>
 
         <button
           type="button"
           aria-expanded={open}
           aria-controls="site-menu"
-          aria-label={open ? 'Close menu' : 'Open menu'}
+          aria-label={open ? t(locale, 'nav.closeMenu') : t(locale, 'nav.openMenu')}
           onClick={() => setOpen((v) => !v)}
           className="rounded-lg border border-line p-2 text-ink-soft transition hover:text-ink lg:hidden"
         >
@@ -75,16 +86,23 @@ export function SiteHeader() {
           aria-label="Primary"
           className="border-t border-line bg-ground px-6 pb-4 lg:hidden"
         >
-          {NAV.map(({ href, label }) => (
+          {NAV.map(({ href, labelKey }) => (
             <Link
               key={href}
-              href={href}
+              href={localeHref(locale, href)}
               onClick={() => setOpen(false)}
               className="block border-b border-line/60 py-3 text-ink-soft transition last:border-0 hover:text-ink"
             >
-              {label}
+              {t(locale, labelKey)}
             </Link>
           ))}
+          <Link
+            href={switchHref}
+            onClick={() => setOpen(false)}
+            className="block py-3 text-ink-soft transition hover:text-ink"
+          >
+            {t(locale, 'nav.language')}
+          </Link>
         </nav>
       ) : null}
     </header>

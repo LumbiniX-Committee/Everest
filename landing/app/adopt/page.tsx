@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 type Coverage = {
@@ -100,9 +101,12 @@ export default function AdoptVantagePage() {
       </p>
 
       {signedIn === false ? (
-        <a href="/login?next=/adopt" className="mt-8 inline-flex rounded-xl bg-ink px-4 py-3 font-semibold text-white">
+        <Link
+          href="/login?next=/adopt"
+          className="mt-8 inline-flex rounded-xl bg-ink px-4 py-3 font-semibold text-white"
+        >
           Sign in to adopt
-        </a>
+        </Link>
       ) : (
         <form onSubmit={adopt} className="mt-8 space-y-4 rounded-2xl border border-line bg-surface p-6">
           <label className="block text-sm font-medium text-ink">
