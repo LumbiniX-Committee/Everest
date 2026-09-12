@@ -1,15 +1,18 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const { signInMock, getUserMock, routerReplaceMock } = vi.hoisted(() => ({
+const { signInMock, verifyOtpMock, getUserMock, routerReplaceMock } = vi.hoisted(() => ({
   signInMock: vi.fn(),
+  verifyOtpMock: vi.fn(),
   getUserMock: vi.fn(),
   routerReplaceMock: vi.fn(),
 }));
 
 vi.mock('@/lib/supabase/config', () => ({ isSupabaseConfigured: () => true }));
 vi.mock('@/lib/supabase/client', () => ({
-  createClient: () => ({ auth: { signInWithOtp: signInMock, getUser: getUserMock } }),
+  createClient: () => ({
+    auth: { signInWithOtp: signInMock, verifyOtp: verifyOtpMock, getUser: getUserMock },
+  }),
 }));
 vi.mock('next/navigation', () => ({ useRouter: () => ({ replace: routerReplaceMock }) }));
 
@@ -17,6 +20,7 @@ import LoginPage from './page';
 
 beforeEach(() => {
   signInMock.mockReset();
+  verifyOtpMock.mockReset();
   routerReplaceMock.mockReset();
   // No session by default, so the form renders as it did before this check
   // existed. The one test for an already-signed-in visitor overrides this.
@@ -52,5 +56,39 @@ describe('magic-link login', () => {
     render(<LoginPage />);
     await waitFor(() => expect(routerReplaceMock).toHaveBeenCalledWith('/adopt'));
     expect(screen.queryByLabelText('Email address')).not.toBeInTheDocument();
+  });
+
+  it('signs in from the typed code, without depending on the link ever being opened', async () => {
+    signInMock.mockResolvedValue({ error: null });
+    verifyOtpMock.mockResolvedValue({ error: null });
+    render(<LoginPage />);
+    fireEvent.change(await screen.findByLabelText('Email address'), { target: { value: 'school@example.org' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Email me a sign-in link' }));
+    await screen.findByLabelText('Code from the email');
+
+    fireEvent.change(screen.getByLabelText('Code from the email'), { target: { value: '123456' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Verify code' }));
+
+    await waitFor(() => expect(verifyOtpMock).toHaveBeenCalledWith({
+      email: 'school@example.org',
+      token: '123456',
+      type: 'email',
+    }));
+    expect(routerReplaceMock).toHaveBeenCalledWith('/adopt');
+  });
+
+  it('shows the reason a wrong or expired code was rejected', async () => {
+    signInMock.mockResolvedValue({ error: null });
+    verifyOtpMock.mockResolvedValue({ error: { message: 'Token has expired or is invalid' } });
+    render(<LoginPage />);
+    fireEvent.change(await screen.findByLabelText('Email address'), { target: { value: 'school@example.org' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Email me a sign-in link' }));
+    await screen.findByLabelText('Code from the email');
+
+    fireEvent.change(screen.getByLabelText('Code from the email'), { target: { value: '000000' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Verify code' }));
+
+    await waitFor(() => expect(screen.getByText('Token has expired or is invalid')).toBeInTheDocument());
+    expect(routerReplaceMock).not.toHaveBeenCalledWith('/adopt');
   });
 });
