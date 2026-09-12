@@ -10,22 +10,14 @@ function safeNext(value: string | null): string {
   return value?.startsWith('/') && !value.startsWith('//') ? value : '/custodian';
 }
 
-type Mode = 'link' | 'password';
-
 export default function LoginPage() {
   const router = useRouter();
-  const [mode, setMode] = useState<Mode>('link');
   const [email, setEmail] = useState('');
-  const [code, setCode] = useState('');
   const [password, setPassword] = useState('');
-  const [sent, setSent] = useState(false);
-  const [verifying, setVerifying] = useState(false);
   const [signingIn, setSigningIn] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  // This form used to render unconditionally, even for a browser that already
-  // holds a valid session — landing back on /login (from a bookmark, or the
-  // public "for custodians" page after already signing in once) asked for a
-  // fresh email every time instead of noticing the person was already in.
+  // Landing back on /login (from a bookmark, or the public "for custodians"
+  // page) with an already-valid session used to show the form again anyway.
   // Checked once, client-side, before the form paints.
   const [checkingSession, setCheckingSession] = useState(() => isSupabaseConfigured());
 
@@ -51,63 +43,12 @@ export default function LoginPage() {
     };
   }, [router]);
 
+  /**
+   * A password only works for an account that has had one set on it,
+   * server-side (see tools/set-custodian-password.mjs) — nothing about who
+   * that is lives in this file.
+   */
   async function submit(event: React.FormEvent) {
-    event.preventDefault();
-    setError(null);
-    if (!isSupabaseConfigured()) {
-      setError('The portal has not been connected to Supabase yet.');
-      return;
-    }
-    const supabase = createClient();
-    const next = safeNext(new URLSearchParams(window.location.search).get('next'));
-    const callback = `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`;
-    const { error: signInError } = await supabase.auth.signInWithOtp({
-      email: email.trim(),
-      options: { emailRedirectTo: callback },
-    });
-    if (signInError) {
-      setError(signInError.message);
-      return;
-    }
-    setSent(true);
-  }
-
-  /**
-   * The clickable link is what most people use, but it has to survive a
-   * handoff — from this tab to an email app, sometimes to a security
-   * scanner that visits it before a human does, sometimes to that app's own
-   * in-app browser with its own separate cookies — and any break in that
-   * chain leaves someone stuck re-requesting the same link forever. The
-   * code sits in the same email and needs none of that: it is typed back
-   * into the tab that asked for it, so there is nothing to hand off.
-   */
-  async function verifyCode(event: React.FormEvent) {
-    event.preventDefault();
-    setError(null);
-    setVerifying(true);
-    const supabase = createClient();
-    const { error: verifyError } = await supabase.auth.verifyOtp({
-      email: email.trim(),
-      token: code.trim(),
-      type: 'email',
-    });
-    setVerifying(false);
-    if (verifyError) {
-      setError(verifyError.message);
-      return;
-    }
-    router.replace(safeNext(new URLSearchParams(window.location.search).get('next')));
-  }
-
-  /**
-   * A normal, parallel sign-in method Supabase already supports — not a
-   * special case for any one account. It only does anything for an account
-   * that has had a password set on it (Supabase Dashboard -> Authentication
-   * -> Users -> that account -> Reset password); everyone else still uses
-   * the link or code above. Nothing about who a password works for lives in
-   * this codebase.
-   */
-  async function submitPassword(event: React.FormEvent) {
     event.preventDefault();
     setError(null);
     if (!isSupabaseConfigured()) {
@@ -134,120 +75,44 @@ export default function LoginPage() {
     <main className="mx-auto max-w-md px-6 py-24">
       <p className="text-sm font-semibold tracking-wide text-sakshi uppercase">Sākṣī secure access</p>
       <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold text-ink">
-        Sign in by email
+        Sign in
       </h1>
       <p className="mt-4 text-ink-soft">
         Custodian permissions are assigned by site. Signing in does not grant access by itself.
       </p>
 
-      {mode === 'password' ? (
-        <form onSubmit={submitPassword} className="mt-8 space-y-4">
-          <label className="block">
-            <span className="text-sm font-medium text-ink">Email address</span>
-            <input
-              type="email"
-              required
-              autoComplete="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              className="mt-2 w-full rounded-xl border border-line bg-surface px-4 py-3 text-ink"
-            />
-          </label>
-          <label className="block">
-            <span className="text-sm font-medium text-ink">Password</span>
-            <input
-              type="password"
-              required
-              autoComplete="current-password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              className="mt-2 w-full rounded-xl border border-line bg-surface px-4 py-3 text-ink"
-            />
-          </label>
-          <button
-            type="submit"
-            disabled={signingIn}
-            className="w-full rounded-xl bg-ink px-4 py-3 font-semibold text-white disabled:opacity-60"
-          >
-            {signingIn ? 'Signing in…' : 'Sign in'}
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setMode('link');
-              setError(null);
-            }}
-            className="text-sm font-medium text-sakshi underline-offset-4 hover:underline"
-          >
-            Use a sign-in link or code instead
-          </button>
-          {error ? <p className="text-sm text-earth">{error}</p> : null}
-        </form>
-      ) : sent ? (
-        <div className="mt-8 space-y-4">
-          <div className="rounded-2xl border border-tirtha/30 bg-tirtha/5 p-5 text-ink">
-            Check your email. The fastest way in: type the 6-digit code from that email below, no
-            need to open a link or switch tabs.
-          </div>
-          <form onSubmit={verifyCode} className="space-y-4">
-            <label className="block">
-              <span className="text-sm font-medium text-ink">Code from the email</span>
-              <input
-                type="text"
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                required
-                value={code}
-                onChange={(event) => setCode(event.target.value)}
-                className="mt-2 w-full rounded-xl border border-line bg-surface px-4 py-3 tracking-widest text-ink"
-              />
-            </label>
-            <button
-              type="submit"
-              disabled={verifying}
-              className="w-full rounded-xl bg-ink px-4 py-3 font-semibold text-white disabled:opacity-60"
-            >
-              {verifying ? 'Verifying…' : 'Verify code'}
-            </button>
-          </form>
-          <p className="text-xs text-ink-muted">
-            Prefer the link instead? It is in the same email and works too, just come back to
-            this tab if it opens somewhere new.
-          </p>
-          {error ? <p className="text-sm text-earth">{error}</p> : null}
-        </div>
-      ) : (
-        <form onSubmit={submit} className="mt-8 space-y-4">
-          <label className="block">
-            <span className="text-sm font-medium text-ink">Email address</span>
-            <input
-              type="email"
-              required
-              autoComplete="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              className="mt-2 w-full rounded-xl border border-line bg-surface px-4 py-3 text-ink"
-            />
-          </label>
-          <button
-            type="submit"
-            className="w-full rounded-xl bg-ink px-4 py-3 font-semibold text-white"
-          >
-            Email me a sign-in link
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setMode('password');
-              setError(null);
-            }}
-            className="block text-sm font-medium text-sakshi underline-offset-4 hover:underline"
-          >
-            Have a password instead?
-          </button>
-          {error ? <p className="text-sm text-earth">{error}</p> : null}
-        </form>
-      )}
+      <form onSubmit={submit} className="mt-8 space-y-4">
+        <label className="block">
+          <span className="text-sm font-medium text-ink">Email address</span>
+          <input
+            type="email"
+            required
+            autoComplete="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            className="mt-2 w-full rounded-xl border border-line bg-surface px-4 py-3 text-ink"
+          />
+        </label>
+        <label className="block">
+          <span className="text-sm font-medium text-ink">Password</span>
+          <input
+            type="password"
+            required
+            autoComplete="current-password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            className="mt-2 w-full rounded-xl border border-line bg-surface px-4 py-3 text-ink"
+          />
+        </label>
+        <button
+          type="submit"
+          disabled={signingIn}
+          className="w-full rounded-xl bg-ink px-4 py-3 font-semibold text-white disabled:opacity-60"
+        >
+          {signingIn ? 'Signing in…' : 'Sign in'}
+        </button>
+        {error ? <p className="text-sm text-earth">{error}</p> : null}
+      </form>
     </main>
   );
 }
