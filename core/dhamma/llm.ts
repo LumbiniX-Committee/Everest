@@ -40,9 +40,19 @@
  * Absent by default, and absence is a supported state: every caller falls back
  * to deterministic retrieval, which is grounded and cited. A missing key
  * degrades the answer, it never fabricates one.
+ *
+ * Comma-separated so a second (third, ...) key can sit behind the first as a
+ * rate-limit fallback — see `callLlm`. Most builds carry exactly one, so the
+ * common case is unaffected; this only matters once a free-tier key starts
+ * returning 429s under real demo traffic.
  */
-export const LLM_API_KEY =
-  process.env.OLLAMA_API_KEY ?? process.env.EXPO_PUBLIC_LLM_API_KEY ?? '';
+export const LLM_API_KEYS = (process.env.OLLAMA_API_KEY ?? process.env.EXPO_PUBLIC_LLM_API_KEY ?? '')
+  .split(',')
+  .map((key) => key.trim())
+  .filter((key) => key.length > 0);
+
+/** The key `callLlm` tries first. Kept for callers that only care whether one exists. */
+export const LLM_API_KEY = LLM_API_KEYS[0] ?? '';
 
 export const LLM_ENDPOINT =
   process.env.OLLAMA_API_ENDPOINT ??
@@ -104,7 +114,7 @@ export function trimToCompleteSentence(text: string): string {
 
 /** True when a provider call is worth attempting at all. */
 export function hasProvider(): boolean {
-  return LLM_API_KEY.length > 0;
+  return LLM_API_KEYS.length > 0;
 }
 
 /**
@@ -120,41 +130,53 @@ export function hasProvider(): boolean {
  * Callers that need to trust the output (an answer, guidance) must still
  * validate it — this only guarantees the transport, never that the text is
  * grounded, and `truncated` never that it is complete.
+ *
+ * A 429 tries the next configured key rather than failing straight to the
+ * deterministic fallback — a free-tier key rate-limiting under real demo
+ * traffic is a capacity problem, not a "the provider is down" one, and a
+ * second key is a config change, not a redeploy. Any other failure (timeout,
+ * a genuine outage, a malformed body) still returns `null` on the first try:
+ * those are not what another key would fix, and cycling through every key on
+ * every kind of failure would just turn one slow request into several.
  */
 export async function callLlm(
   system: string,
   user: string,
   maxTokens = 320,
 ): Promise<LlmReply | null> {
-  if (!hasProvider()) return null;
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), LLM_TIMEOUT_MS);
-  try {
-    const response = await fetch(LLM_ENDPOINT, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${LLM_API_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: DHAMMA_MODEL,
-        messages: [
-          { role: 'system', content: system },
-          { role: 'user', content: user },
-        ],
-        stream: false,
-        max_tokens: maxTokens,
-      }),
-      signal: controller.signal,
-    });
-    if (!response.ok) return null;
-    const data = (await response.json()) as {
-      choices?: Array<{ message?: { content?: string }; finish_reason?: string }>;
-    };
-    const choice = data.choices?.[0];
-    const text = choice?.message?.content?.trim();
-    if (!text) return null;
-    return { text, truncated: choice?.finish_reason === 'length' };
-  } catch {
-    return null;
-  } finally {
-    clearTimeout(timeout);
+  for (const key of LLM_API_KEYS) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), LLM_TIMEOUT_MS);
+    try {
+      const response = await fetch(LLM_ENDPOINT, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: DHAMMA_MODEL,
+          messages: [
+            { role: 'system', content: system },
+            { role: 'user', content: user },
+          ],
+          stream: false,
+          max_tokens: maxTokens,
+        }),
+        signal: controller.signal,
+      });
+      if (response.status === 429) continue;
+      if (!response.ok) return null;
+      const data = (await response.json()) as {
+        choices?: Array<{ message?: { content?: string }; finish_reason?: string }>;
+      };
+      const choice = data.choices?.[0];
+      const text = choice?.message?.content?.trim();
+      if (!text) return null;
+      return { text, truncated: choice?.finish_reason === 'length' };
+    } catch {
+      return null;
+    } finally {
+      clearTimeout(timeout);
+    }
   }
+  // Every configured key came back rate-limited.
+  return null;
 }
