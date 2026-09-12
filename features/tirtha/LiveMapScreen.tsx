@@ -18,7 +18,7 @@ import {
   useSiteArrival,
   useStoryProgress,
 } from '@/hooks';
-import { arrival, location as locationService, navigation, questMemories } from '@/services';
+import { arrival, location as locationService, navigation } from '@/services';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { usePractice, usePreferences, useQuests } from '@/store';
 import { colors, radii, spacing } from '@/theme';
@@ -132,6 +132,7 @@ export function LiveMapScreen() {
   const guideTarget = guideTargetId ? questAreas.find((area) => area.id === guideTargetId) : undefined;
   const [walkingRoute, setWalkingRoute] = useState<navigation.WalkingRoute | null>(null);
   const [routeState, setRouteState] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
+  const [routeRetry, setRouteRetry] = useState(0);
   const lastRouteRequest = useRef<{ targetId: string; coordinate: { latitude: number; longitude: number } } | null>(null);
   const routeSequence = useRef(0);
   useFocusEffect(useCallback(() => {
@@ -163,7 +164,7 @@ export function LiveMapScreen() {
       setWalkingRoute(null);
       setRouteState('error');
     });
-  }, [coordinate, guideTarget]);
+  }, [coordinate, guideTarget, routeRetry]);
 
   /** Quests belong to the nearby cultural area, not an exact monument pin. */
   const questAreaSiteId = near && near.distanceM <= 5_000 ? near.site.id : null;
@@ -530,8 +531,14 @@ export function LiveMapScreen() {
           <Text variant="heading">{guideTarget.name}</Text>
           {routeState === 'loading' ? <Text variant="caption" tone="secondary">{walkingRoute ? 'Updating walking route…' : 'Finding walking route…'}</Text> : null}
           {routeState === 'ready' && walkingRoute ? <Text variant="caption" tone="secondary">{formatDistance(walkingRoute.distanceM)} · {Math.max(1, Math.round(walkingRoute.durationSeconds / 60))} min walk · updates as you move</Text> : null}
-          {routeState === 'error' ? <Text variant="caption" tone="secondary">Could not find an in-app walking route. You can continue in Google Maps.</Text> : null}
-          <Button label="Open in Google Maps" icon="directions" variant="secondary" onPress={() => { void questMemories.walkingDirections(guideTarget.coordinate).catch(() => setReward({ title: 'Could not open directions', detail: 'Please try again.' })); }} />
+          {routeState === 'error' ? <>
+            <Text variant="caption" tone="secondary">Could not find a walking route. Check your connection and try again.</Text>
+            <Button label="Retry route" icon="refresh" variant="secondary" onPress={() => {
+              lastRouteRequest.current = null;
+              setRouteState('loading');
+              setRouteRetry((value) => value + 1);
+            }} />
+          </> : null}
           <Button label="Stop guidance" variant="quiet" onPress={() => setGuideTargetId(null)} />
         </View> : null}
         <View style={styles.toastSlot} pointerEvents="none">

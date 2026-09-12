@@ -1,8 +1,7 @@
 import * as FileSystem from 'expo-file-system/legacy';
 import * as ImagePicker from 'expo-image-picker';
 import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
-import { Linking } from 'react-native';
-import type { Coordinate, QuestSubmission } from '@/types';
+import type { QuestSubmission } from '@/types';
 import { saveQuestSubmission } from './database';
 import { syncData } from './supabase/sync';
 
@@ -27,8 +26,4 @@ export async function save(submission: QuestSubmission): Promise<void> {
   await saveQuestSubmission(submission);
   // The durable local memory is available immediately, even without signal.
   void syncData().catch(() => undefined);
-}
-
-export function walkingDirections(destination: Coordinate): Promise<unknown> {
-  return Linking.openURL(`https://www.google.com/maps/dir/?api=1&destination=${destination.latitude},${destination.longitude}&travelmode=walking`);
 }

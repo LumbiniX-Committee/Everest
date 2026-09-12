@@ -33,7 +33,7 @@ const nearby = data.nearbyQuestAreas(patan.coordinate, quests);
 assert.equal(nearby[0].id, patan.id);
 assert.ok(nearby.every((area) => area.distanceM <= 5000));
 assert.ok(nearby[0].quests.some((quest) => quest.tasks.some((task) => task.targetId === 'manga-hiti')));
-assert.equal(data.nearbyQuestAreas({ latitude: 0, longitude: 0 }, quests).length, 1);
+assert.equal(data.nearbyQuestAreas({ latitude: 0, longitude: 0 }, quests).length, 0);
 assert.equal(data.nearbyQuestAreas(null, quests).length, 0);
 for (const quest of data.experienceQuests) {
   assert.ok(data.areaForQuest(quest), quest.id);

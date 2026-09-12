@@ -76,6 +76,5 @@ export function nearbyQuestAreas(coordinate: Coordinate | null, quests: QuestWit
     })),
     quests: quests.filter((q) => areaForQuest(q)?.id === area.id),
   })).sort((a, b) => a.distanceM - b.distanceM);
-  const nearby = ranked.filter((area) => area.distanceM <= 5_000);
-  return nearby.length ? nearby : ranked.slice(0, 1);
+  return ranked.filter((area) => area.distanceM <= 5_000);
 }

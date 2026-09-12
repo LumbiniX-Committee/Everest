@@ -33,8 +33,8 @@ export function QuestAreaCollection({ coordinate, quests, onCapture, onWitness, 
   return <View style={styles.body}>
     <Button label="My memories" icon="image-multiple-outline" variant="secondary" onPress={onMemories} />
     {!coordinate ? <Text tone="secondary">Allow location or start a demo walk to discover nearby activities.</Text> : null}
+    {coordinate && areas.length === 0 ? <Text tone="secondary">No bundled heritage activities within 5 km.</Text> : null}
     {areas.map((area, index) => {
-      const inRange = area.distanceM <= 5_000;
       const open = expanded === area.id;
       const activities = area.quests.flatMap((quest) => quest.tasks
         .filter((task) => task.evidence === 'photo' && task.type === 'observation')
@@ -47,13 +47,13 @@ export function QuestAreaCollection({ coordinate, quests, onCapture, onWitness, 
             <View style={styles.copy}>
               <Text variant="caption" tone="sandstone">{index === 0 ? 'NEAREST · ' : ''}{formatDistance(area.distanceM)}</Text>
               <Text variant="heading">{area.name}</Text>
-              <Text variant="caption" tone="secondary">{inRange ? `${completed}/${activities.length} done · ${open ? 'Tap to collapse' : 'Tap to explore'}` : 'Come within 5 km to explore these activities'}</Text>
+              <Text variant="caption" tone="secondary">{completed}/{activities.length} done · {open ? 'Tap to collapse' : 'Tap to explore'}</Text>
             </View>
             <Icon name={open ? 'chevron-up' : 'chevron-down'} />
           </View>
         </Pressable>
         <View style={styles.guide}><Button label="Guide me" icon="directions" variant="secondary" onPress={() => onGuide(area)} /></View>
-        {open && inRange ? <View style={styles.activities}>
+        {open ? <View style={styles.activities}>
           {activities.length === 0 ? <Text tone="secondary">Activities for this area are being prepared.</Text> : null}
           {activities.map(({ quest, task }) => {
             const done = quest.progress.completedTasks.includes(task.id);
