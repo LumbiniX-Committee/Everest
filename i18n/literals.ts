@@ -11,6 +11,12 @@ import type { InterfaceLanguage } from '@/types';
  * Text boundary and are never registered here.
  */
 export const NEPALI_UI_LITERALS = {
+  "Updating walking route…": "पैदल मार्ग अद्यावधिक हुँदै…",
+  "Finding walking route…": "पैदल मार्ग खोज्दै…",
+  "min walk · updates as you move": "मिनेट पैदल · तपाईं हिँड्दा अद्यावधिक हुन्छ",
+  "Could not find an in-app walking route. You can continue in Google Maps.": "एपभित्र पैदल मार्ग फेला परेन। तपाईं Google Maps मा जारी राख्न सक्नुहुन्छ।",
+  "Open in Google Maps": "Google Maps मा खोल्नुहोस्",
+  "Stop guidance": "मार्गदर्शन रोक्नुहोस्",
   "Your memories could not load. Reopen this album to retry.": "तपाईंका सम्झनाहरू लोड हुन सकेनन्। फेरि प्रयास गर्न यो एल्बम पुनः खोल्नुहोस्।",
   "My memories": "मेरा सम्झनाहरू",
   "Allow location or start a demo walk to discover nearby activities.": "नजिकका गतिविधिहरू पत्ता लगाउन स्थानको अनुमति दिनुहोस् वा नमुना यात्रा सुरु गर्नुहोस्।",

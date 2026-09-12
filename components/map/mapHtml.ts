@@ -362,8 +362,8 @@ const POSITION_MARKER = `
       map.addSource('me-trail', { type:'geojson', data: { type:'FeatureCollection', features: [] } });
       map.addSource('me-route', { type:'geojson', data: { type:'FeatureCollection', features: [] } });
 
-      // The planned way, under everything. Dashed, because it is an intention
-      // rather than a record of anything that happened.
+      // The planned way, under everything. Demo itineraries are dashed; live
+      // guidance switches this same layer to a strong solid route.
       map.addLayer({
         id:'route-line', type:'line', source:'me-route',
         layout:{ 'line-cap':'round', 'line-join':'round' },
@@ -526,11 +526,17 @@ const POSITION_MARKER = `
         if (color) map.setPaintProperty('route-line', 'line-color', color);
       };
 
+      window.sakshiSetRouteMode = function (guiding) {
+        map.setPaintProperty('route-line', 'line-width', guiding ? 5 : 2.5);
+        map.setPaintProperty('route-line', 'line-opacity', guiding ? 0.9 : 0.55);
+        map.setPaintProperty('route-line', 'line-dasharray', guiding ? null : [1.5, 1.5]);
+      };
+
       var guideMarker = null;
       window.sakshiSetGuide = function (destination) {
         if (guideMarker) { guideMarker.remove(); guideMarker = null; }
         if (!destination) return;
-        guideMarker = new maplibregl.Marker({ color: ${JSON.stringify(colors.warning)} })
+        guideMarker = new maplibregl.Marker({ color: ${JSON.stringify(colors.navigationRoute)} })
           .setLngLat([destination.longitude, destination.latitude])
           .setPopup(new maplibregl.Popup().setText(destination.name)).addTo(map);
         if (pose.has) map.fitBounds([[pose.lng, pose.lat], [destination.longitude, destination.latitude]], { padding: 100, maxZoom: 17, duration: 700 });

@@ -22,3 +22,4 @@ export * as application from './application';
 export * as leaderboard from './leaderboard'; // lint-vocab:allow — the ranking surface, exempted by team decision
 export * as coverage from './coverage';
 export * as privacy from './privacy';
+export * as navigation from './navigation';

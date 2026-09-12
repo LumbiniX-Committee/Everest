@@ -39,7 +39,7 @@ export type MapWebViewProps = {
    * there. Pass an empty array or omit it and no route is drawn.
    */
   route?: readonly (readonly [number, number])[];
-  /** Distinguishes a simulation itinerary from the visitor's yellow guide line. */
+  /** Distinguishes a simulation itinerary from the visitor's routed guide line. */
   routeColor?: string;
   guideDestination?: (Coordinate & { name: string }) | null;
   /**
@@ -153,7 +153,7 @@ export function MapWebView({
   const guideJson = JSON.stringify(guideDestination ?? null);
   useEffect(() => {
     if (!ready) return;
-    webRef.current?.injectJavaScript(`window.sakshiSetGuide && window.sakshiSetGuide(${guideJson}); true;`);
+    webRef.current?.injectJavaScript(`window.sakshiSetGuide && window.sakshiSetGuide(${guideJson}); window.sakshiSetRouteMode && window.sakshiSetRouteMode(${guideJson !== 'null'}); true;`);
   }, [ready, guideJson]);
   useEffect(() => {
     if (!ready || !cameraJson) return;

@@ -18,10 +18,11 @@ import {
   useSiteArrival,
   useStoryProgress,
 } from '@/hooks';
-import { arrival, location as locationService, questMemories } from '@/services';
+import { arrival, location as locationService, navigation, questMemories } from '@/services';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { usePractice, usePreferences, useQuests } from '@/store';
 import { colors, radii, spacing } from '@/theme';
+import { distanceMeters, formatDistance } from '@/utils';
 
 import { BuddhaChat } from './BuddhaChat';
 import { DemoWalkPanel } from './DemoWalkPanel';
@@ -129,15 +130,40 @@ export function LiveMapScreen() {
   }, []);
   const [guideTargetId, setGuideTargetId] = useState<string | null>(null);
   const guideTarget = guideTargetId ? questAreas.find((area) => area.id === guideTargetId) : undefined;
+  const [walkingRoute, setWalkingRoute] = useState<navigation.WalkingRoute | null>(null);
+  const [routeState, setRouteState] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
+  const lastRouteRequest = useRef<{ targetId: string; coordinate: { latitude: number; longitude: number } } | null>(null);
+  const routeSequence = useRef(0);
   useFocusEffect(useCallback(() => {
     if (guideArea && questAreas.some((area) => area.id === guideArea)) {
+      setWalkingRoute(null);
+      lastRouteRequest.current = null;
+      setRouteState('loading');
       setGuideTargetId(guideArea);
-      setFollow(false);
+      setFollow(true);
     }
   }, [guideArea]));
-  const guideRoute = coordinate && guideTarget
-    ? [[coordinate.longitude, coordinate.latitude], [guideTarget.coordinate.longitude, guideTarget.coordinate.latitude]] as const
-    : [];
+  useEffect(() => {
+    if (!coordinate || !guideTarget) {
+      lastRouteRequest.current = null;
+      return;
+    }
+
+    const previous = lastRouteRequest.current;
+    if (previous?.targetId === guideTarget.id && distanceMeters(previous.coordinate, coordinate) < 20) return;
+
+    lastRouteRequest.current = { targetId: guideTarget.id, coordinate };
+    const sequence = ++routeSequence.current;
+    void navigation.getWalkingRoute(coordinate, guideTarget.coordinate).then((route) => {
+      if (routeSequence.current !== sequence) return;
+      setWalkingRoute(route);
+      setRouteState('ready');
+    }).catch(() => {
+      if (routeSequence.current !== sequence) return;
+      setWalkingRoute(null);
+      setRouteState('error');
+    });
+  }, [coordinate, guideTarget]);
 
   /** Quests belong to the nearby cultural area, not an exact monument pin. */
   const questAreaSiteId = near && near.distanceM <= 5_000 ? near.site.id : null;
@@ -330,8 +356,11 @@ export function LiveMapScreen() {
   /** Guide the visitor without changing either their real or simulated location. */
   const guideToSite = (site: QuestArea) => {
     setShowQuests(false);
+    setWalkingRoute(null);
+    lastRouteRequest.current = null;
+    setRouteState('loading');
     setGuideTargetId(site.id);
-    setFollow(false);
+    setFollow(true);
     setCamera(null);
   };
 
@@ -352,8 +381,8 @@ export function LiveMapScreen() {
         coordinate={coordinate}
         heading={heading}
         follow={follow}
-        route={guideTarget ? guideRoute : demo.route}
-        routeColor={guideTarget ? colors.warning : colors.sandstoneDeep}
+        route={guideTarget ? (walkingRoute?.coordinates ?? []) : demo.route}
+        routeColor={guideTarget ? colors.navigationRoute : colors.sandstoneDeep}
         guideDestination={guideTarget ? { ...guideTarget.coordinate, name: guideTarget.name } : null}
         camera={camera}
         onSelectSite={(id) => router.push(`/(main)/tirtha/site/${id}`)}
@@ -499,9 +528,11 @@ export function LiveMapScreen() {
       <View style={styles.dock} pointerEvents="box-none">
         {guideTarget ? <View style={styles.guideCard}>
           <Text variant="heading">{guideTarget.name}</Text>
-          <Text variant="caption" tone="secondary">Yellow line shows the direction. Use walking directions for streets and paths.</Text>
-          <Button label="Walking directions" icon="directions" onPress={() => { void questMemories.walkingDirections(guideTarget.coordinate).catch(() => setReward({ title: 'Could not open directions', detail: 'Please try again.' })); }} />
-          <Button label="Clear destination" variant="quiet" onPress={() => setGuideTargetId(null)} />
+          {routeState === 'loading' ? <Text variant="caption" tone="secondary">{walkingRoute ? 'Updating walking route…' : 'Finding walking route…'}</Text> : null}
+          {routeState === 'ready' && walkingRoute ? <Text variant="caption" tone="secondary">{formatDistance(walkingRoute.distanceM)} · {Math.max(1, Math.round(walkingRoute.durationSeconds / 60))} min walk · updates as you move</Text> : null}
+          {routeState === 'error' ? <Text variant="caption" tone="secondary">Could not find an in-app walking route. You can continue in Google Maps.</Text> : null}
+          <Button label="Open in Google Maps" icon="directions" variant="secondary" onPress={() => { void questMemories.walkingDirections(guideTarget.coordinate).catch(() => setReward({ title: 'Could not open directions', detail: 'Please try again.' })); }} />
+          <Button label="Stop guidance" variant="quiet" onPress={() => setGuideTargetId(null)} />
         </View> : null}
         <View style={styles.toastSlot} pointerEvents="none">
           <RewardToast
@@ -656,7 +687,7 @@ export function LiveMapScreen() {
 }
 
 const styles = StyleSheet.create({
-  guideCard: { margin: spacing.md, padding: spacing.md, gap: spacing.xs, borderRadius: radii.lg, backgroundColor: colors.surface, borderColor: colors.warning, borderWidth: 1 },
+  guideCard: { margin: spacing.md, padding: spacing.md, gap: spacing.xs, borderRadius: radii.lg, backgroundColor: colors.surface, borderColor: colors.navigationRoute, borderWidth: 1 },
   root: { flex: 1, backgroundColor: colors.background },
   topBar: {
     position: 'absolute',

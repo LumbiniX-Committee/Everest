@@ -73,6 +73,14 @@ cp .env.example .env.local
 >
 > **Needs verification:** no confirmed importer of `EXPO_PUBLIC_API_URL` was found in app source during this audit.
 
+#### Pedestrian routing — optional override
+
+| Variable | Required | Purpose | Default |
+|---|---|---|---|
+| `EXPO_PUBLIC_ROUTING_URL` | Optional | Valhalla route endpoint used by in-app Guide me navigation | `https://valhalla1.openstreetmap.de/route` |
+
+The default public OpenStreetMap instance is best-effort. A production deployment can point this value at an institution-owned Valhalla service without changing the app.
+
 #### LLM — optional everywhere
 
 | Variable | Required | Purpose | Default in template |
@@ -188,6 +196,9 @@ EXPO_PUBLIC_SUPABASE_KEY=your-publishable-key
 EXPO_PUBLIC_API_URL=http://192.168.1.10:8000
 PORT=8000
 
+# --- Pedestrian routing (optional override) ---
+EXPO_PUBLIC_ROUTING_URL=https://valhalla1.openstreetmap.de/route
+
 # --- Harvest pipeline (optional, Python tooling only) ---
 MAPILLARY_TOKEN=
 FLICKR_API_KEY=
@@ -223,6 +234,7 @@ EXPO_PUBLIC_DHAMMA_MODEL=gpt-oss:120b-cloud
 | **Google Play** | Service account JSON for `production` submit; internal track |
 | **Railway** | Mock API hosting (optional) |
 | **Mapillary / Flickr** | Tokens for the harvest pipeline (optional) |
+| **Valhalla / OpenStreetMap** | Public pedestrian routing by default, or a deployment-owned route endpoint |
 | **LLM provider** | Endpoint + key (optional) |
 
 > **Anonymous sign-in must be enabled in Supabase** or `ensureSession()` returns `null` and warns once. That is survivable *until* migration 0007 is applied — after which anon writes are dropped and every write fails. See [BACKEND_AND_API.md](BACKEND_AND_API.md) §3.
