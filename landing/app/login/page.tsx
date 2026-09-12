@@ -10,12 +10,17 @@ function safeNext(value: string | null): string {
   return value?.startsWith('/') && !value.startsWith('//') ? value : '/custodian';
 }
 
+type Mode = 'link' | 'password';
+
 export default function LoginPage() {
   const router = useRouter();
+  const [mode, setMode] = useState<Mode>('link');
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
+  const [password, setPassword] = useState('');
   const [sent, setSent] = useState(false);
   const [verifying, setVerifying] = useState(false);
+  const [signingIn, setSigningIn] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // This form used to render unconditionally, even for a browser that already
   // holds a valid session — landing back on /login (from a bookmark, or the
@@ -94,6 +99,35 @@ export default function LoginPage() {
     router.replace(safeNext(new URLSearchParams(window.location.search).get('next')));
   }
 
+  /**
+   * A normal, parallel sign-in method Supabase already supports — not a
+   * special case for any one account. It only does anything for an account
+   * that has had a password set on it (Supabase Dashboard -> Authentication
+   * -> Users -> that account -> Reset password); everyone else still uses
+   * the link or code above. Nothing about who a password works for lives in
+   * this codebase.
+   */
+  async function submitPassword(event: React.FormEvent) {
+    event.preventDefault();
+    setError(null);
+    if (!isSupabaseConfigured()) {
+      setError('The portal has not been connected to Supabase yet.');
+      return;
+    }
+    setSigningIn(true);
+    const supabase = createClient();
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password,
+    });
+    setSigningIn(false);
+    if (signInError) {
+      setError(signInError.message);
+      return;
+    }
+    router.replace(safeNext(new URLSearchParams(window.location.search).get('next')));
+  }
+
   if (checkingSession) return null;
 
   return (
@@ -103,10 +137,53 @@ export default function LoginPage() {
         Sign in by email
       </h1>
       <p className="mt-4 text-ink-soft">
-        Custodian permissions are assigned by site. A sign-in link does not grant access by itself.
+        Custodian permissions are assigned by site. Signing in does not grant access by itself.
       </p>
 
-      {sent ? (
+      {mode === 'password' ? (
+        <form onSubmit={submitPassword} className="mt-8 space-y-4">
+          <label className="block">
+            <span className="text-sm font-medium text-ink">Email address</span>
+            <input
+              type="email"
+              required
+              autoComplete="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              className="mt-2 w-full rounded-xl border border-line bg-surface px-4 py-3 text-ink"
+            />
+          </label>
+          <label className="block">
+            <span className="text-sm font-medium text-ink">Password</span>
+            <input
+              type="password"
+              required
+              autoComplete="current-password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              className="mt-2 w-full rounded-xl border border-line bg-surface px-4 py-3 text-ink"
+            />
+          </label>
+          <button
+            type="submit"
+            disabled={signingIn}
+            className="w-full rounded-xl bg-ink px-4 py-3 font-semibold text-white disabled:opacity-60"
+          >
+            {signingIn ? 'Signing in…' : 'Sign in'}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setMode('link');
+              setError(null);
+            }}
+            className="text-sm font-medium text-sakshi underline-offset-4 hover:underline"
+          >
+            Use a sign-in link or code instead
+          </button>
+          {error ? <p className="text-sm text-earth">{error}</p> : null}
+        </form>
+      ) : sent ? (
         <div className="mt-8 space-y-4">
           <div className="rounded-2xl border border-tirtha/30 bg-tirtha/5 p-5 text-ink">
             Check your email. The fastest way in: type the 6-digit code from that email below, no
@@ -157,6 +234,16 @@ export default function LoginPage() {
             className="w-full rounded-xl bg-ink px-4 py-3 font-semibold text-white"
           >
             Email me a sign-in link
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setMode('password');
+              setError(null);
+            }}
+            className="block text-sm font-medium text-sakshi underline-offset-4 hover:underline"
+          >
+            Have a password instead?
           </button>
           {error ? <p className="text-sm text-earth">{error}</p> : null}
         </form>

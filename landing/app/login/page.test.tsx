@@ -1,9 +1,10 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const { signInMock, verifyOtpMock, getUserMock, routerReplaceMock } = vi.hoisted(() => ({
+const { signInMock, verifyOtpMock, signInWithPasswordMock, getUserMock, routerReplaceMock } = vi.hoisted(() => ({
   signInMock: vi.fn(),
   verifyOtpMock: vi.fn(),
+  signInWithPasswordMock: vi.fn(),
   getUserMock: vi.fn(),
   routerReplaceMock: vi.fn(),
 }));
@@ -11,7 +12,12 @@ const { signInMock, verifyOtpMock, getUserMock, routerReplaceMock } = vi.hoisted
 vi.mock('@/lib/supabase/config', () => ({ isSupabaseConfigured: () => true }));
 vi.mock('@/lib/supabase/client', () => ({
   createClient: () => ({
-    auth: { signInWithOtp: signInMock, verifyOtp: verifyOtpMock, getUser: getUserMock },
+    auth: {
+      signInWithOtp: signInMock,
+      verifyOtp: verifyOtpMock,
+      signInWithPassword: signInWithPasswordMock,
+      getUser: getUserMock,
+    },
   }),
 }));
 vi.mock('next/navigation', () => ({ useRouter: () => ({ replace: routerReplaceMock }) }));
@@ -21,6 +27,7 @@ import LoginPage from './page';
 beforeEach(() => {
   signInMock.mockReset();
   verifyOtpMock.mockReset();
+  signInWithPasswordMock.mockReset();
   routerReplaceMock.mockReset();
   // No session by default, so the form renders as it did before this check
   // existed. The one test for an already-signed-in visitor overrides this.
@@ -90,5 +97,46 @@ describe('magic-link login', () => {
 
     await waitFor(() => expect(screen.getByText('Token has expired or is invalid')).toBeInTheDocument());
     expect(routerReplaceMock).not.toHaveBeenCalledWith('/adopt');
+  });
+
+  it('signs in with a password for an account that has one set, no email involved', async () => {
+    signInWithPasswordMock.mockResolvedValue({ error: null });
+    render(<LoginPage />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Have a password instead?' }));
+
+    fireEvent.change(screen.getByLabelText('Email address'), { target: { value: 'admin@example.org' } });
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'correct horse battery staple' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Sign in' }));
+
+    await waitFor(() => expect(signInWithPasswordMock).toHaveBeenCalledWith({
+      email: 'admin@example.org',
+      password: 'correct horse battery staple',
+    }));
+    expect(routerReplaceMock).toHaveBeenCalledWith('/adopt');
+    expect(signInMock).not.toHaveBeenCalled();
+  });
+
+  it('shows the reason a password sign-in was rejected, without switching modes', async () => {
+    signInWithPasswordMock.mockResolvedValue({ error: { message: 'Invalid login credentials' } });
+    render(<LoginPage />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Have a password instead?' }));
+
+    fireEvent.change(screen.getByLabelText('Email address'), { target: { value: 'admin@example.org' } });
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'wrong' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Sign in' }));
+
+    await waitFor(() => expect(screen.getByText('Invalid login credentials')).toBeInTheDocument());
+    expect(routerReplaceMock).not.toHaveBeenCalledWith('/adopt');
+    expect(screen.getByLabelText('Password')).toBeInTheDocument();
+  });
+
+  it('returns to the link form from the password form', async () => {
+    render(<LoginPage />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Have a password instead?' }));
+    expect(screen.getByLabelText('Password')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Use a sign-in link or code instead' }));
+    expect(screen.queryByLabelText('Password')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Email me a sign-in link' })).toBeInTheDocument();
   });
 });
