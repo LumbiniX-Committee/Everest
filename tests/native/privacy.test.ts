@@ -1,4 +1,4 @@
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 
 import { countMyRecords, deleteMyRecords, exportMyRecords } from '@/services/privacy';
 import * as database from '@/services/database';
@@ -25,7 +25,7 @@ jest.mock('@/services/supabase/auth', () => ({
   forgetIdentity: jest.fn(),
 }));
 
-jest.mock('expo-file-system', () => ({
+jest.mock('expo-file-system/legacy', () => ({
   deleteAsync: jest.fn(() => Promise.resolve()),
 }));
 
