@@ -86,7 +86,7 @@ ${avatar ? '<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></s
     margin: 0 !important;
   }
   .maplibregl-ctrl-group {
-    background: ${colors.backgroundDeep} !important;
+    background: ${colors.surfaceRaised} !important;
     border: 1px solid ${colors.borderStrong} !important;
     border-radius: 24px !important;
     box-shadow: 0 4px 14px ${colors.overlay} !important;
@@ -96,7 +96,7 @@ ${avatar ? '<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></s
     width: 52px !important;
     height: 52px !important;
     border-bottom: 1px solid ${colors.border} !important;
-    background-color: ${colors.backgroundDeep} !important;
+    background-color: ${colors.surfaceRaised} !important;
   }
   .maplibregl-ctrl-group button:active {
     background-color: ${colors.primarySoft} !important;
@@ -119,7 +119,7 @@ ${avatar ? '<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></s
   }
   .maplibregl-ctrl-attrib {
     color: ${colors.textSecondary} !important;
-    background: ${colors.backgroundDeep} !important;
+    background: ${colors.surfaceRaised} !important;
     border: 1px solid ${colors.border} !important;
     border-radius: 999px !important;
     padding: 5px 12px !important;

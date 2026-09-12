@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
     minHeight: 82,
-    backgroundColor: colors.backgroundDeep,
+    backgroundColor: colors.surfaceRaised,
     borderRadius: radii.xl,
     borderWidth: 1,
     borderColor: colors.border,
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
   indexMark: {
     height: 3,
     borderRadius: radii.full,
-    backgroundColor: colors.backgroundDeep,
+    backgroundColor: colors.surfaceRaised,
   },
   indexMarkActive: {
     backgroundColor: colors.primary,
