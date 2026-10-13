@@ -11,18 +11,21 @@ dist_test/
 web-build/
 
 # Generated native folders (EAS runs clean prebuild in the cloud)
-android/
-ios/
+/android/
+/ios/
 
 # The APK download landing page. A standalone Next.js app that shares nothing
 # with the Expo project.
-landing/
+/landing/
 
-# Large on-device models (downloaded dynamically, never bundled in base APK: ~484MB)
-models/
+# Root-level large LLM weights (downloaded dynamically, never bundled: ~484MB).
+# NOTE: The root slash is critical so assets/models/crack-seg.onnx is NOT excluded.
+/models/
+!assets/models/
+!assets/models/**
 
 # Harvest pipeline working directories and raw crawl imagery (~604MB)
-harvest/
+/harvest/
 
 # Local binaries, virtual environments, and scratch files
 ngrok.exe
@@ -34,9 +37,9 @@ dhammaupdate/
 imagesupdate/
 
 # Documentation and presentations never needed for mobile builds
-docs/
-docsv2/
-ictawarddocs/
+/docs/
+/docsv2/
+/ictawarddocs/
 google-play-service-account.json
 
 # Local environment files (EAS uses its own remote environment secrets)
@@ -50,4 +53,3 @@ npm-debug.*
 yarn-debug.*
 yarn-error.*
 .DS_Store
-
