@@ -1,7 +1,7 @@
 import { findSite, findVantage, sitesForParent } from '../generated/sites.ts';
 import { precinctForSite } from './precincts.ts';
 import type { Quest } from '@/types';
-import { experienceQuests } from '../questExperiences';
+import { experienceQuests } from '../questExperiences.ts';
 
 const NO_CAMERA_MODES = new Set(['note', 'privacy', 'museum', 'seasonal']);
 const PHOTO_MODE = {

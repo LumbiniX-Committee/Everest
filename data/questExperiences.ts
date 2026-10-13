@@ -1,7 +1,10 @@
 import type { Coordinate, Quest, QuestWithProgress } from '@/types';
-import { distanceMeters } from '@/utils';
-import { demoPrecincts } from './demo/precincts';
-import { findSite, findVantage } from './generated/sites';
+import { haversine } from '../shared/geo.ts';
+import { demoPrecincts } from './demo/precincts.ts';
+import { findSite, findVantage } from './generated/sites.ts';
+
+const distanceMeters = (a: Coordinate, b: Coordinate) =>
+  haversine({ lat: a.latitude, lon: a.longitude }, { lat: b.latitude, lon: b.longitude });
 
 export type QuestArea = {
   id: string;
