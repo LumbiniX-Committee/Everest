@@ -230,7 +230,7 @@ EXPO_PUBLIC_DHAMMA_MODEL=gpt-oss:120b-cloud
 | Service | What must be configured there |
 |---|---|
 | **Supabase** | Project + 8 migrations applied; RLS on every table; **Authentication → Sign In / Providers → anonymous sign-in enabled** |
-| **Expo / EAS** | Project `e8454679-…`, owner `siddantasodari`; env vars per profile; build credentials |
+| **Expo / EAS** | Project `56cf1d5c-…`, owner `saksi-nepal`; env vars per profile; build credentials |
 | **Google Play** | Service account JSON for `production` submit; internal track |
 | **Railway** | Mock API hosting (optional) |
 | **Mapillary / Flickr** | Tokens for the harvest pipeline (optional) |

@@ -148,11 +148,11 @@ npx eas build --profile preview --platform android       # installable APK (demo
 npx eas build --profile production --platform android    # AAB for Play
 ```
 
-**Untested in this audit** — EAS builds require an authenticated Expo account and were not run. Project id `e8454679-10b7-42cc-8961-95a421426705`, owner `siddantasodari` (`app.json`).
+**Untested in this audit** — EAS builds require an authenticated Expo account and were not run. Project id `56cf1d5c-20d3-4379-83b9-bc40d194f5a2`, owner `saksi-nepal` (`app.json`).
 
 ### Updates (OTA)
 
-`expo-updates` is configured with `runtimeVersion: "0.1.0"` and URL `https://u.expo.dev/e8454679-10b7-42cc-8961-95a421426705`. A native rebuild is required when native parts change (adding/removing a plugin, or changing a native dependency).
+`expo-updates` is configured with `runtimeVersion: "0.1.0"` and URL `https://u.expo.dev/56cf1d5c-20d3-4379-83b9-bc40d194f5a2`. A native rebuild is required when native parts change (adding/removing a plugin, or changing a native dependency).
 
 ---
 

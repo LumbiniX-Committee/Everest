@@ -84,7 +84,7 @@ npm run build:development
 That is `eas build --profile development --platform android`. It builds on
 Expo's servers and gives you a QR code / URL to install the APK.
 
-- Account: `aadityabro1` · project `sakshi` (`e8454679-…`) · package
+- Account: `saksi-nepal` · project `saksi` (`56cf1d5c-…`) · package
   `org.lumbinix.sakshi`
 - Takes roughly 10–20 minutes depending on the queue. **Start it before you need
   it** — queue time, not code, is what makes people miss a deadline.

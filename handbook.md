@@ -1795,8 +1795,8 @@ answer, and the provider note is part of the response we check.
 | Android package | `org.lumbinix.sakshi` |
 | Version | 0.1.0 |
 | Runtime version | `0.1.0`, pinned explicitly |
-| EAS project id | `e8454679-10b7-42cc-8961-95a421426705` |
-| Update URL | `https://u.expo.dev/e8454679-...` |
+| EAS project id | `56cf1d5c-20d3-4379-83b9-bc40d194f5a2` |
+| Update URL | `https://u.expo.dev/56cf1d5c-...` |
 | Asset bundle patterns | `assets/**/*` |
 | Architecture | New Architecture, bridgeless (SDK 57 default) |
 
