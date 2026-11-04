@@ -15,3 +15,7 @@ landing/
 # Docs and store credentials never reach the native build.
 docs/
 google-play-service-account.json
+
+# Deploy tokens. .env.local is deliberately not listed: it carries the public
+# Supabase config, which EAS builds may read when no EAS env var is set.
+.env.tools.local

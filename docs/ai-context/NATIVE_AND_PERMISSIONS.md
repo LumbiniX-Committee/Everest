@@ -30,8 +30,8 @@ Native projects are generated at build time (`expo prebuild` / EAS Build). **Nev
 | Android package | `org.lumbinix.sakshi` |
 | Orientation | `portrait` |
 | UI style | `automatic` — selected from the persisted navy/white theme at boot |
-| EAS project id | `e8454679-10b7-42cc-8961-95a421426705` |
-| Updates URL | `https://u.expo.dev/e8454679-10b7-42cc-8961-95a421426705` |
+| EAS project id | `56cf1d5c-20d3-4379-83b9-bc40d194f5a2` |
+| Updates URL | `https://u.expo.dev/56cf1d5c-20d3-4379-83b9-bc40d194f5a2` |
 
 Android-specific: `predictiveBackGestureEnabled: false`. iOS: `supportsTablet: true`.
 

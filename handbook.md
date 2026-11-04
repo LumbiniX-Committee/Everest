@@ -2345,7 +2345,7 @@ the EAS build and update pipeline.
 
 | | |
 |---|---|
-| Repository | `github.com/LumbiniX-Committee/Everest` |
+| Repository | `github.com/siddantasodari4-eng/saksi` |
 | Live build | `application-a925ec89-66ca-48ae-a9c8-744067a46082.apk` |
 | Demo video | `drive.google.com/drive/folders/1by7PGKVBpTmufWhx-YoBqBDkdZ02BofS` |
 

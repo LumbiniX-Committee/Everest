@@ -117,7 +117,7 @@ export default async function PrivacyPage({
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-soft">
           {c.intro.before}{' '}
           <a
-            href="https://github.com/LumbiniX-Committee/Everest/blob/main/docs/PRIVACY.md"
+            href="https://github.com/siddantasodari4-eng/saksi/blob/main/docs/PRIVACY.md"
             className="font-semibold text-earth underline underline-offset-4"
           >
             {c.intro.linkLabel}

@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "Sākṣī",
-    "slug": "sakshi",
-    "owner": "shakshi1",
+    "slug": "saksi",
+    "owner": "saksi-nepal",
     "scheme": "sakshi",
     "version": "0.1.0",
     "runtimeVersion": "0.1.0",
@@ -93,11 +93,11 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "bac26113-f180-47d8-b550-a1e8661fd4e8"
+        "projectId": "56cf1d5c-20d3-4379-83b9-bc40d194f5a2"
       }
     },
     "updates": {
-      "url": "https://u.expo.dev/bac26113-f180-47d8-b550-a1e8661fd4e8"
+      "url": "https://u.expo.dev/56cf1d5c-20d3-4379-83b9-bc40d194f5a2"
     }
   }
 }
