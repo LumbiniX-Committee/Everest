@@ -65,7 +65,7 @@ Once the preview build feels right, build the real release artifact.
 - [ ] Anonymous Sign-ins are enabled on the Supabase project (Authentication
       → Sign In / Providers), or every sync will fail with the RLS error
       from before
-- [ ] Decide the real version number now. `app.json` still says `0.1.0`.
+- [x] Version set to `1.0.0` in `app.json` and `package.json` for production release.
       Play accepts that, but it's the number a user will see, and changing
       it later severs OTA update continuity for anyone already on the old
       one (see DEPLOYMENT.md's Runtime Version section). Pick the number

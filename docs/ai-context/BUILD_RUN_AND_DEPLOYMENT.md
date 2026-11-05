@@ -152,7 +152,7 @@ npx eas build --profile production --platform android    # AAB for Play
 
 ### Updates (OTA)
 
-`expo-updates` is configured with `runtimeVersion: "0.1.0"` and URL `https://u.expo.dev/e8454679-10b7-42cc-8961-95a421426705`. A native rebuild is required when native parts change (adding/removing a plugin, or changing a native dependency).
+`expo-updates` is configured with `runtimeVersion: "1.0.0"` and URL `https://u.expo.dev/e8454679-10b7-42cc-8961-95a421426705`. A native rebuild is required when native parts change (adding/removing a plugin, or changing a native dependency).
 
 ---
 
