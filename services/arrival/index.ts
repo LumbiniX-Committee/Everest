@@ -5,7 +5,7 @@ import type { Coordinate, HeritageSite, Precinct } from '@/types';
 
 import * as notifications from '../notifications';
 import * as storage from '../storage';
-import { depthFor } from '@/core';
+import { depthFor, type PresenceCandidate } from '@/core';
 import type { WisdomTier } from '@/types';
 
 /**
@@ -149,6 +149,23 @@ export function nearestSite(coordinate: Coordinate | null): SiteProximity | null
   return best;
 }
 
+/**
+ * Every monument with its distance from a fix and its reach, for the presence
+ * decision in core/map/presence. That decision needs the site you were already
+ * at as well as the nearest, so it cannot work from `nearestSite` alone.
+ */
+export function presenceCandidates(coordinate: Coordinate | null): PresenceCandidate[] {
+  if (!coordinate) return [];
+  const out: PresenceCandidate[] = [];
+  for (const precinct of demoPrecincts) {
+    for (const siteId of precinct.siteIds) {
+      const site = findSite(siteId);
+      if (!site) continue;
+      out.push({ id: site.id, distanceM: distanceMeters(coordinate, site.coordinate), reachM: reachOf(site) });
+    }
+  }
+  return out;
+}
 
 /**
  * What a place is, for someone standing on it.

@@ -28,6 +28,7 @@ export * from './merit/rules.ts';
 export * from './map/geofence.ts';
 export * from './map/pradakshina.ts';
 export * from './map/polyline.ts';
+export * from './map/presence.ts';
 
 // --- Quests: availability, stillness, observation riddles --------------------
 export * from './quests/registry.ts';

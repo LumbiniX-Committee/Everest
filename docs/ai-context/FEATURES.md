@@ -156,6 +156,8 @@ Map components: [components/map/SiteMap3D.tsx](../../components/map/SiteMap3D.ts
 
 Geo constants in [constants/geo.ts](../../constants/geo.ts): centre `27.4692, 83.2757` (Maya Devi Temple), bounds, `ON_SITE_RADIUS_M = 4000`, `SITE_VISIT_RADIUS_M = 80`.
 
+**Which monument you are at** is decided by [core/map/presence.ts](../../core/map/presence.ts) (**tested**), fed by `useSiteArrival`: entry at the site's own reach, exit only beyond `reach + max(10 m, 15 %)`, a neighbour wins once you are inside its reach and nearer to it, and a fix with accuracy worse than 50 m neither starts nor ends a visit (unknown accuracy is decisive). The map watches with high accuracy only while focused. An open story is pinned to the site it opened for (`storySiteId`), so walking a few metres while reading neither closes nor swaps it.
+
 The 80 m visit radius is deliberately generous — GPS under tree cover "is routinely out by twenty metres or more," and the errors are asymmetric: missing a real visit "quietly loses something from somebody's register," while a slightly early mark "costs nothing that matters."
 
 ---

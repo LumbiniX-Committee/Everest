@@ -58,15 +58,17 @@ function RootNavigator() {
    * read and then dropped you wherever the app happened to be — which is the
    * same as saying nothing. A site opens its page; a precinct, which names no
    * single monument, opens the map you would use to find one.
+   *
+   * Held until `ready`: a tap that launched the app is replayed as soon as we
+   * subscribe, and pushing a route before the Stack below exists throws.
    */
-  useEffect(
-    () =>
-      notifications.subscribeToArrivalTaps((target) => {
-        if (target.kind === 'site') router.push(`/(main)/tirtha/site/${target.id}`);
-        else router.push('/(main)/tirtha/map');
-      }),
-    [router],
-  );
+  useEffect(() => {
+    if (!ready) return;
+    return notifications.subscribeToArrivalTaps((target) => {
+      if (target.kind === 'site') router.push(`/(main)/tirtha/site/${target.id}`);
+      else router.push('/(main)/tirtha/map');
+    });
+  }, [router, ready]);
 
   // Rendering nothing here keeps the splash in place rather than showing a
   // half-styled frame; the effect above lifts it once all three are settled.

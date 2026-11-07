@@ -232,6 +232,8 @@ notifications.subscribeToArrivalTaps((target) => {
 });
 ```
 
+The subscription is attached only once the root navigator is `ready`, and it also looks up the response that **launched** the app (`getLastNotificationResponseAsync`), so tapping a geofence banner while the app was killed still opens the right page. Responses are de-duplicated by notification id, so a replayed launch tap cannot push the page twice.
+
 The source explains the placement and the behaviour it fixes: it is wired in the root layout because that is "the shallowest component with a router," and previously the banner "said a place had something to read and then dropped you wherever the app happened to be." A `site` target opens that site's page; a `precinct` target — which names no single monument — opens the map instead.
 
 **This is the only programmatic deep-link-style routing in the app.** If you change the `site` route path, update this callback too.
