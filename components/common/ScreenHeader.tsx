@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useRouter } from 'expo-router';
+import { usePathname } from 'expo-router';
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, {
@@ -10,12 +10,15 @@ import Animated, {
 import * as Haptics from 'expo-haptics';
 
 import { Text } from '@/components/ui';
-import { useHaptics } from '@/hooks';
+import { useHaptics, useSafeBack } from '@/hooks';
 import { useInterfaceLanguage } from '@/i18n/context';
 import { visitorLiteralCopy } from '@/i18n/literals';
 import { radii, spacing } from '@/theme';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+/** The tab homes. With history-based back they can go back, but show no control. */
+const SURFACE_ROOTS = new Set(['/tirtha', '/sakshi', '/dhamma']);
 
 /**
  * Screen title block. The eyebrow carries the surface name so a screen deep in
@@ -46,8 +49,8 @@ export function ScreenHeader({
   /**
    * Offer a back control when there is somewhere to go back to.
    *
-   * Defaults to true and is then checked against the navigator, so a surface
-   * root — Tīrtha, Sākṣī, Dhamma — shows nothing while a pushed screen does.
+   * Defaults to true, so a surface root — Tīrtha, Sākṣī, Dhamma — shows nothing
+   * while every other screen does, even when opened cold from a deep link.
    * Passing false suppresses it outright, for a screen that must not be left
    * by going backwards.
    */
@@ -55,10 +58,11 @@ export function ScreenHeader({
   /** Overrides the default pop, for a screen that must leave somewhere else. */
   onBack?: () => void;
 }) {
-  const router = useRouter();
+  const pathname = usePathname();
+  const safeBack = useSafeBack();
   const { pulse } = useHaptics();
   const language = useInterfaceLanguage();
-  const showBack = canGoBack && (onBack != null || router.canGoBack());
+  const showBack = canGoBack && (onBack != null || !SURFACE_ROOTS.has(pathname));
 
   const backOffset = useSharedValue(0);
   const backScale = useSharedValue(1);
@@ -80,8 +84,8 @@ export function ScreenHeader({
   const handleBackPress = useCallback(() => {
     pulse(Haptics.ImpactFeedbackStyle.Light);
     if (onBack) onBack();
-    else router.back();
-  }, [onBack, pulse, router]);
+    else safeBack();
+  }, [onBack, pulse, safeBack]);
 
   return (
     <View style={styles.wrap}>

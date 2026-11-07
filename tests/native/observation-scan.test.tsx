@@ -9,6 +9,10 @@ const mockScan = jest.fn(() => Promise.resolve({
 }));
 const mockModel = { name: 'Test YOLO' };
 
+jest.mock('@/hooks', () => ({
+  useSafeBack: () => jest.fn(),
+  useExitVisit: () => jest.fn(),
+}));
 jest.mock('expo-router', () => ({
   useRouter: () => ({ back: jest.fn(), push: jest.fn(), replace: jest.fn() }),
 }));
@@ -36,6 +40,8 @@ jest.mock('@/components/common', () => {
   const React = require('react');
   const { Text, View } = require('react-native');
   return {
+    BackBar: () => React.createElement(View),
+    NextStep: () => React.createElement(View),
     EmptyState: () => React.createElement(View),
     LoadingState: ({ label }: { label: string }) => React.createElement(Text, { testID: 'loading' }, label),
   };

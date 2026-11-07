@@ -29,10 +29,11 @@
     "validate": "node tools/validate-seed.mjs",
     "vocab": "node tools/lint-vocab.mjs",
     "i18n": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types tools/validate-i18n.mjs",
-    "verify": "npm run typecheck && npm run typecheck:core && npm run test && npm run test:react && npm run validate && npm run vocab && npm run i18n && npm run eval:dhamma && npm run lint",
+    "verify": "npm run typecheck && npm run typecheck:core && npm run test && npm run test:react && npm run validate && npm run vocab && npm run i18n && npm run routes && npm run eval:dhamma && npm run lint",
     "eval:dhamma": "node tools/dhamma-eval.mjs",
     "corpus:fetch": "node tools/fetch-bilara.mjs",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "routes": "node tools/validate-routes.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/baloo-2": "^0.4.2",
@@ -58,6 +59,7 @@
     "expo-image-picker": "~57.0.16",
     "expo-linking": "~57.0.9",
     "expo-location": "~57.0.16",
+    "expo-network": "~57.0.3",
     "expo-notifications": "~57.0.17",
     "expo-router": "~57.0.20",
     "expo-sensors": "~57.0.2",

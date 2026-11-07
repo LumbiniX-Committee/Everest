@@ -11,10 +11,12 @@ import { BottomSheet, Button, Card, Icon, Text } from '@/components/ui';
 import { reachedNewLevel, standingFor } from '@/core';
 import { findSite, findVantage, questsForPrecinct, vantagesForSite, questAreas, type QuestArea } from '@/data';
 import {
+  useArrivalCredit,
   useCurrentPosition,
   useDemoWalk,
   useHaptics,
   useHeading,
+  useSafeBack,
   useSiteArrival,
   useStoryProgress,
 } from '@/hooks';
@@ -52,7 +54,8 @@ const HUD_ROW_H = 72;
 export function LiveMapScreen() {
   const ui = useVisitorLiteralCopy();
   const router = useRouter();
-  const { guideArea } = useLocalSearchParams<{ guideArea?: string }>();
+  const { guideArea, focusSiteId } = useLocalSearchParams<{ guideArea?: string; focusSiteId?: string }>();
+  const goBack = useSafeBack();
   const returnToQuests = useRef(false);
   const insets = useSafeAreaInsets();
   /**
@@ -86,7 +89,7 @@ export function LiveMapScreen() {
 
   const { preferences } = usePreferences();
   const { summary, recognise } = usePractice();
-  const { quests, creditArrival } = useQuests();
+  const { quests } = useQuests();
   const story = useStoryProgress();
   // Mirror story into a ref so imperative code can always read the latest
   // value without being in a stale closure.
@@ -120,17 +123,12 @@ export function LiveMapScreen() {
   // the arrival story. Reaching a child monument also settles the parent
   // complex's arrival objective, so entering Hanuman Dhoka immediately changes
   // “Reach Kathmandu Durbar Square” to completed without asking for a tap.
-  useEffect(() => {
-    if (!atSiteId) return;
-    void creditArrival(atSiteId).then((count) => {
-      if (count > 0) {
-        setReward({
-          title: count === 1 ? '✓ Place reached' : `✓ ${count} visit objectives complete`,
-          detail: findSite(atSiteId)?.name,
-        });
-      }
+  useArrivalCredit(atSiteId, (count, siteId) => {
+    setReward({
+      title: count === 1 ? '✓ Place reached' : `✓ ${count} visit objectives complete`,
+      detail: findSite(siteId)?.name,
     });
-  }, [atSiteId, creditArrival]);
+  });
   /**
    * A commanded camera move.
    *
@@ -150,6 +148,14 @@ export function LiveMapScreen() {
     cameraNonce.current += 1;
     setCamera({ longitude, latitude, distance, nonce: cameraNonce.current });
   }, []);
+  // Arriving from a site page: show that place, and stop following the visitor
+  // so the next location fix does not pull the camera straight back off it.
+  useEffect(() => {
+    const site = focusSiteId ? findSite(focusSiteId) : undefined;
+    if (!site) return;
+    setFollow(false);
+    flyTo(site.coordinate.longitude, site.coordinate.latitude, 'close');
+  }, [focusSiteId, flyTo]);
   const [guideTargetId, setGuideTargetId] = useState<string | null>(null);
   const guideTarget = guideTargetId ? questAreas.find((area) => area.id === guideTargetId) : undefined;
   const [walkingRoute, setWalkingRoute] = useState<navigation.WalkingRoute | null>(null);
@@ -342,27 +348,27 @@ export function LiveMapScreen() {
    * perfectly good screen with no camera anywhere on it. Witnessing appeared to
    * do nothing because it went somewhere else.
    *
-   * Only three of the twelve sites carry vantages, so the honest answer at the
-   * other nine is to say so rather than navigate into a dead end.
+   * Not every site has a vantage, so the honest answer at the others is to say so
+   * rather than navigate into a dead end.
    */
   const openSakshi = (targetId: string) => {
     setShowQuests(false);
 
     if (findVantage(targetId)) {
-      router.push({ pathname: '/(main)/sakshi/vantage', params: { vantageId: targetId } });
+      router.push({ pathname: '/visit/vantage', params: { vantageId: targetId } });
       return;
     }
 
     const vantages = vantagesForSite(targetId);
     if (vantages.length > 0) {
-      router.push({ pathname: '/(main)/sakshi/vantage', params: { vantageId: vantages[0].id } });
+      router.push({ pathname: '/visit/vantage', params: { vantageId: vantages[0].id } });
       return;
     }
 
     const site = findSite(targetId);
     setReward({
       title: 'No vantage here yet',
-      detail: `${site?.name ?? 'This place'} has no surveyed viewpoint to photograph from`,
+      detail: `${site?.name ?? 'This place'} has no viewpoint to photograph from yet`,
     });
   };
 
@@ -420,11 +426,7 @@ export function LiveMapScreen() {
             accessibilityHint={ui('Everything else at Lumbini: the sites, the quests, then and now')}
             onPress={() => {
               pulse();
-              if (router.canGoBack()) {
-                router.back();
-              } else {
-                router.replace('/(main)/tirtha');
-              }
+              goBack();
             }}
             style={({ pressed }) => [styles.homeButton, pressed && styles.buttonPressed]}
           >

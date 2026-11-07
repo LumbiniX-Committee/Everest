@@ -1,12 +1,12 @@
 {
   "name": "Sākṣī heritage site register",
   "description": "Heritage sites and established photographic vantages for Lumbini and three Kathmandu Valley monument-zone sites, as shipped in the Sākṣī application.",
-  "version": "e9f8b78b0eb8",
+  "version": "5e54dbd8bb51",
   "source": "https://github.com/siddantasodari4-eng/saksi — seed/sites.json, seed/vantages.json",
   "crs": "EPSG:4326 (WGS 84), longitude before latitude",
   "counts": {
     "sites": 15,
-    "sites_with_checked_coordinates": 13,
+    "sites_with_checked_coordinates": 0,
     "established_vantages": 12
   },
   "licence": "CC-BY-4.0",

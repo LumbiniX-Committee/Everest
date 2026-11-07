@@ -7,6 +7,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import { usePathname } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { BottomTabBarProps } from 'expo-router/js-tabs';
 
@@ -31,6 +32,11 @@ export function SurfaceTabBar({ state, descriptors, navigation }: BottomTabBarPr
   const insets = useSafeAreaInsets();
   const { selection } = useHaptics();
   const { preferences } = usePreferences();
+  const pathname = usePathname();
+
+  // A full-screen camera needs all of the screen, and leaving it mid-capture by
+  // a stray tab tap would discard the photograph.
+  if (pathname.endsWith('/quest-camera')) return null;
 
   return (
     <View style={[styles.container, { paddingBottom: Math.max(insets.bottom, spacing.sm) }]}>

@@ -122,13 +122,13 @@ export function QuestCompletedScreen({ questId }: { questId: string }) {
           <Button
             label="Back to quests"
             block
-            onPress={() => router.replace('/(main)/tirtha/quests')}
+            onPress={() => router.dismissTo('/(main)/tirtha/quests')}
           />
           <Button
             label="Return to Tīrtha"
             variant="quiet"
             block
-            onPress={() => router.replace('/(main)/tirtha')}
+            onPress={() => router.dismissTo('/(main)/tirtha')}
           />
         </View>
       </ScrollView>

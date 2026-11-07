@@ -174,8 +174,8 @@ All read via `useLocalSearchParams<T>()` in `app/`. **URL params are always `str
 |---|---|
 | `tirtha/site/[siteId]`, `tirtha/then-now/[siteId]`, `sakshi/then-now/[siteId]`, `sakshi/register/[siteId]` | `{ siteId: string }` |
 | `tirtha/quests/[questId]`, `tirtha/quests/completed/[questId]` | `{ questId: string }` — defaulted `?? ''` |
-| `sakshi/vantage`, `sakshi/capture` | `{ vantageId: string }` |
-| `sakshi/observation` | `{ observationId: string }` |
+| `visit/vantage`, `visit/capture` | `{ vantageId: string }` |
+| `visit/observation` | `{ observationId: string }` |
 | `dhamma/question` | `{ questionId?: string; q?: string }` — **both optional**; `q` maps to prop `query` |
 | `dhamma/reflect` | `{ siteId?: string }` — **optional** |
 

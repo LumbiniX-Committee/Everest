@@ -36,9 +36,9 @@ Validation: `node tools/check-quest-experiences.cjs` covers area grouping/range,
 | # | Feature | Status | Entry route | Data source |
 |---|---|---|---|---|
 | 1 | Onboarding | **Fully implemented** | `/onboarding` | Local |
-| 2 | Fixed-viewpoint capture | **Fully implemented** | `/(main)/sakshi/capture` | SQLite + files |
+| 2 | Fixed-viewpoint capture | **Fully implemented** | `/visit/capture` | SQLite + files |
 | 3 | Alignment gate | **Fully implemented** | within capture | Sensors + `core/alignment` |
-| 4 | Condition reporting | **Fully implemented** | `/(main)/sakshi/observation` | SQLite |
+| 4 | Condition reporting | **Fully implemented** | `/visit/observation` | SQLite |
 | 5 | On-device damage detection | **Fully implemented** | within capture/observation | ONNX + `core/vision` |
 | 6 | Map exploration | **Fully implemented** (needs dev build) | `/(main)/tirtha/map` | `@/data` + MapLibre |
 | 7 | Site detail + narration | **Fully implemented** (bundled content) | `/(main)/tirtha/site/[siteId]` | `@/data` + `.opus` |
@@ -79,7 +79,7 @@ The sequence is **data-driven** from [features/onboarding/steps.ts](../../featur
 
 **The app's core loop.** Verified wired end to end.
 
-**Entry:** `/(main)/sakshi` → vantage list → `/(main)/sakshi/vantage?vantageId=…` → `/(main)/sakshi/capture?vantageId=…`
+**Entry:** `/(main)/sakshi` → vantage list → `/visit/vantage?vantageId=…` → `/visit/capture?vantageId=…`
 
 **Traced path** in [features/sakshi/CaptureScreen.tsx](../../features/sakshi/CaptureScreen.tsx):
 
@@ -124,7 +124,7 @@ Tolerance is user-configurable (`alignmentTolerance`). A user may capture out of
 
 ## 4. Condition reporting — Fully implemented
 
-**Entry:** `/(main)/sakshi/observation?observationId=…`
+**Entry:** `/visit/observation?observationId=…`
 
 Files: [features/sakshi/ObservationScreen.tsx](../../features/sakshi/ObservationScreen.tsx), [components/observation/ConditionSheet.tsx](../../components/observation/ConditionSheet.tsx), [PathologySummaryCard.tsx](../../components/observation/PathologySummaryCard.tsx). Types in [types/condition.ts](../../types/condition.ts). Persists to `condition_reports` (local + remote, FK cascade from `observations`).
 

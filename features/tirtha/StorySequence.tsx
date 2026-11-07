@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  BackHandler,
   Animated,
   Easing,
   Modal,
@@ -261,6 +262,17 @@ export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQu
   const [confetti, setConfetti] = useState(false);
   const [voiceMuted, setVoiceMuted] = useState(false);
   const [speaking, setSpeaking] = useState(false);
+
+  // The story is an overlay rather than a Modal, so Android's back button would
+  // otherwise leave the whole map behind it instead of closing it.
+  useEffect(() => {
+    if (!visible) return;
+    const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+      onDismiss();
+      return true;
+    });
+    return () => subscription.remove();
+  }, [visible, onDismiss]);
 
   const beats = useMemo(() => {
     const significance = arrival.significanceOf(siteId, preferences.wisdomTier);

@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
 
-import { alignmentScore } from '@/core/alignment/score';
+import { alignmentScore, TOLERANCE_FACTORS } from '@/core/alignment/score';
+import { location as locationService } from '@/services';
+import { usePreferences } from '@/store';
 import { bearingDelta, bearingDegrees, distanceMeters } from '@/utils';
 import type { AlignmentState, Coordinate, Vantage } from '@/types';
 
@@ -34,6 +36,8 @@ export type AlignmentTelemetry = AlignmentState & {
   heading: number | null;
   /** The same device attitude used to calculate pitch error. */
   pitch: number | null;
+  /** True when the position is the demo walk's rather than this phone's. */
+  isDemo: boolean;
 };
 
 export function useAlignment({
@@ -44,6 +48,8 @@ export function useAlignment({
   const { coordinate, accuracyM } = useCurrentPosition({ watch: active, highAccuracy: true });
   const heading = useHeading(active, nudgeDeg);
   const pitch = usePitch(active);
+  const { preferences } = usePreferences();
+  const toleranceFactor = TOLERANCE_FACTORS[preferences.alignmentTolerance];
 
   return useMemo(
     () => ({
@@ -54,12 +60,14 @@ export function useAlignment({
         heading,
         pitch,
         active,
+        toleranceFactor,
       }),
       coordinate,
       heading,
       pitch,
+      isDemo: locationService.isDemoMode(),
     }),
-    [vantage, coordinate, accuracyM, heading, pitch, active],
+    [vantage, coordinate, accuracyM, heading, pitch, active, toleranceFactor],
   );
 }
 
@@ -74,8 +82,9 @@ export function computeAlignment(input: {
   heading: number | null;
   pitch: number | null;
   active?: boolean;
+  toleranceFactor?: number;
 }): AlignmentState {
-  const { vantage, coordinate, gpsAccuracyM, heading, pitch, active = true } = input;
+  const { vantage, coordinate, gpsAccuracyM, heading, pitch, active = true, toleranceFactor = 1 } = input;
 
   if (!active || !vantage) {
     return {
@@ -116,8 +125,8 @@ export function computeAlignment(input: {
     distanceM,
     headingDeltaDeg: bearingDeltaDeg,
     pitchDeltaDeg,
-    tolPosM: vantage.positionToleranceM,
-    tolHeadingDeg: vantage.bearingToleranceDeg,
+    tolPosM: vantage.positionToleranceM * toleranceFactor,
+    tolHeadingDeg: vantage.bearingToleranceDeg * toleranceFactor,
     gpsAccuracyM,
   });
 

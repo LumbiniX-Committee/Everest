@@ -60,7 +60,7 @@ export function PermissionsScreen() {
 
   const onEnter = async () => {
     await completeOnboarding();
-    router.replace('/(main)/tirtha/map');
+    router.replace('/(main)/tirtha');
   };
 
   return (

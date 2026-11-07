@@ -14,7 +14,8 @@ import {
   historicalImagesForSite,
   nowImageForSite,
 } from '@/data';
-import { useAlignment } from '@/hooks';
+import { useAlignment, useConfirmLeave, useSafeBack } from '@/hooks';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { formatVisitorCopy, visitorCopy, type VisitorCopyKey } from '@/i18n/visitor';
 import { camera as cameraService, database } from '@/services';
 import { usePermission, usePreferences, useQuests } from '@/store';
@@ -55,8 +56,14 @@ type ReferenceResult = {
  * model runs on a real, saved image the surveyor can inspect — not on a jittering
  * live frame. See ObservationScreen.
  */
+/** A correction for compass drift, not a way to reach any bearing. */
+const MAX_NUDGE_DEG = 15;
+const AUTO_CAPTURE_HOLD_MS = 1500;
+
 export function CaptureScreen({ vantageId }: { vantageId: string }) {
   const router = useRouter();
+  const goBack = useSafeBack();
+  const ui = useVisitorLiteralCopy();
   const vantage = findVantage(vantageId);
   const site = vantage ? findSite(vantage.siteId) : undefined;
   const { state: cameraPermission, request: requestCamera, openSettings } = usePermission('camera');
@@ -71,6 +78,8 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
   const cameraRef = useRef<CameraView>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // A taken photograph is only on screen until it is saved.
+  useConfirmLeave(draft != null && !saving);
 
   useEffect(() => {
     let active = true;
@@ -96,6 +105,15 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
     };
   }, [vantage]);
 
+  // Auto-capture: a lock must hold for a moment, so passing through one does not fire.
+  const autoCaptureRef = useRef<(() => void) | null>(null);
+  const isLocked = alignment.phase === 'locked';
+  useEffect(() => {
+    if (!preferences.autoCapture || !isLocked || draft != null) return;
+    const timer = setTimeout(() => autoCaptureRef.current?.(), AUTO_CAPTURE_HOLD_MS);
+    return () => clearTimeout(timer);
+  }, [preferences.autoCapture, isLocked, draft]);
+
   if (!vantage) {
     return (
       <Screen>
@@ -103,7 +121,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
           title={t('capture.noVantageTitle')}
           body={t('capture.noVantageBody')}
           actionLabel={t('capture.back')}
-          onAction={() => router.back()}
+          onAction={goBack}
         />
       </Screen>
     );
@@ -125,7 +143,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
           ) : (
             <Button label={t('capture.allowCamera')} onPress={requestCamera} />
           )}
-          <Button label={t('capture.back')} variant="quiet" onPress={() => router.back()} />
+          <Button label={t('capture.back')} variant="quiet" onPress={goBack} />
         </View>
       </Screen>
     );
@@ -145,7 +163,14 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
       // person reviews the frame, so reading them again at submit time would
       // attach a later position and orientation to an earlier photograph.
       const id = `obs-${Date.now()}`;
-      const aligned = mode === 'aligned';
+      // Decided from the live state at the shutter, not from how this screen was
+      // opened. A corrected compass or a demo position cannot claim a measured lock.
+      const aligned =
+        mode === 'aligned' && alignment.phase === 'locked' && nudgeDeg === 0 && !alignment.isDemo;
+      const unmeasured: NonNullable<Observation['unmeasured']> = [];
+      if (alignment.coordinate == null) unmeasured.push('coordinate');
+      if (alignment.heading == null) unmeasured.push('bearing');
+      if (alignment.pitch == null) unmeasured.push('pitch');
       const observation: Observation = {
         id,
         vantageId: vantage.id,
@@ -153,9 +178,9 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
         capturedAt: new Date().toISOString(),
         // This camera-cache URI remains a draft until explicit submission.
         photoUri: photo.uri,
-        // The observer's real fix, not the catalogued vantage. Falls back to the
-        // vantage only when there is no fix at all — and then accuracy/error are
-        // null, so the record never claims to have been taken on the survey point.
+        // The observer's real fix, not the catalogued vantage. With no reading the
+        // field holds the vantage's value only to satisfy the local column, and
+        // `unmeasured` says so everywhere it is shown or sent.
         coordinate: alignment.coordinate ?? vantage.coordinate,
         // Use the exact readings that fed the reticle. Reconstructing orientation
         // from a delta is wrong while the person is still walking to the mark,
@@ -173,7 +198,10 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
             ? alignment.alignScore
             : null,
         gpsAccuracyM: alignment.gpsAccuracyM,
-        gateMode: mode,
+        gateMode: aligned ? 'aligned' : 'manual',
+        unmeasured,
+        isDemo: alignment.isDemo,
+        headingNudgeDeg: nudgeDeg,
         note: isNoChange ? 'Nothing has changed: verified stability.' : undefined,
         assessment: 'unreviewed',
         synced: false,
@@ -206,9 +234,10 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
 
       const observation = { ...draft.observation, photoUri: dest };
       await database.insertObservation(observation);
-      await creditVantageObservation(vantage.id);
+      // A demo capture is practice, so it advances nothing real.
+      if (!observation.isDemo) await creditVantageObservation(vantage.id);
       router.replace({
-        pathname: '/(main)/sakshi/observation',
+        pathname: '/visit/observation',
         params: { observationId: observation.id },
       });
     } catch (caught) {
@@ -235,7 +264,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
               status: site.photography,
             })}
           </Text>
-          <Button label={t('capture.back')} onPress={() => router.back()} />
+          <Button label={t('capture.back')} onPress={goBack} />
         </View>
       </Screen>
     );
@@ -317,13 +346,13 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
               mono={false}
               tone={draft.observation.gateMode === 'aligned' ? 'locked' : 'seeking'}
             />
-            <MetaRow label={t('capture.position')} value={formatCoordinate(draft.observation.coordinate)} />
+            <MetaRow label={t('capture.position')} value={draft.observation.unmeasured?.includes('coordinate') ? ui('Not measured') : formatCoordinate(draft.observation.coordinate)} />
             <MetaRow
               label={t('capture.gpsAccuracy')}
               value={formatDistance(draft.observation.gpsAccuracyM ?? null)}
             />
-            <MetaRow label={t('capture.bearing')} value={formatBearing(draft.observation.bearing)} />
-            <MetaRow label={t('capture.pitch')} value={formatDelta(draft.observation.pitch)} />
+            <MetaRow label={t('capture.bearing')} value={draft.observation.unmeasured?.includes('bearing') ? ui('Not measured') : formatBearing(draft.observation.bearing)} />
+            <MetaRow label={t('capture.pitch')} value={draft.observation.unmeasured?.includes('pitch') ? ui('Not measured') : formatDelta(draft.observation.pitch)} />
             <MetaRow
               label={t('capture.positionError')}
               value={formatDistance(draft.observation.positionErrorM)}
@@ -366,6 +395,9 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
     );
   }
 
+  // Armed only here, past the permission and photography checks above.
+  autoCaptureRef.current = () => void onCapture('aligned');
+
   return (
     <Screen bleed edges={['top', 'bottom']} contentStyle={styles.frame}>
       <View style={styles.viewfinder}>
@@ -373,7 +405,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
 
         {/* Top Floating Mobile Status Bar */}
         <View style={styles.topHud}>
-          <Pressable style={styles.backBtn} onPress={() => router.back()}>
+          <Pressable style={styles.backBtn} onPress={goBack}>
             <Text variant="body">‹ {t('capture.back')}</Text>
           </Pressable>
         </View>
@@ -399,11 +431,16 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
         </View>
 
         {/* Manual Compass Heading Nudge */}
+        {nudgeDeg !== 0 ? (
+          <Text variant="caption" tone="seeking" center>
+            With a corrected compass, this photograph is saved as framed by eye.
+          </Text>
+        ) : null}
         <View style={styles.nudgeRow}>
           <Button
             label={t('capture.nudgeMinus')}
             variant="quiet"
-            onPress={() => setNudgeDeg((prev) => prev - 5)}
+            onPress={() => setNudgeDeg((prev) => Math.max(prev - 5, -MAX_NUDGE_DEG))}
           />
           <Text variant="mono" tone="secondary">
             {nudgeDeg === 0
@@ -413,7 +450,7 @@ export function CaptureScreen({ vantageId }: { vantageId: string }) {
           <Button
             label={t('capture.nudgePlus')}
             variant="quiet"
-            onPress={() => setNudgeDeg((prev) => prev + 5)}
+            onPress={() => setNudgeDeg((prev) => Math.min(prev + 5, MAX_NUDGE_DEG))}
           />
         </View>
 

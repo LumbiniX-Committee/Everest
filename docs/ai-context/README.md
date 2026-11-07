@@ -59,7 +59,7 @@ Every substantive claim cites a file path and symbol name. Uncertain findings ar
 |---|---|
 | [REPOSITORY_MAP.md](REPOSITORY_MAP.md) | Where does X live? What is this directory for? |
 | [FEATURES.md](FEATURES.md) | What actually works? 21 features with honest status |
-| [SCREENS_AND_NAVIGATION.md](SCREENS_AND_NAVIGATION.md) | All 33 routes, navigation model, provider order |
+| [SCREENS_AND_NAVIGATION.md](SCREENS_AND_NAVIGATION.md) | All routes, navigation model, provider order |
 | [COMPONENTS.md](COMPONENTS.md) | The 12 design-system primitives + feature components |
 | [STATE_AND_DATA_FLOW.md](STATE_AND_DATA_FLOW.md) | The 6 stores, persistence, storage keys |
 | [BACKEND_AND_API.md](BACKEND_AND_API.md) | Supabase schema, RLS, auth, sync |

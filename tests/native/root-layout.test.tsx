@@ -7,6 +7,8 @@ jest.mock('expo-router', () => {
   const Stack = ({ children }: { children: React.ReactNode }) =>
     React.createElement(View, { testID: 'root-stack' }, children);
   Stack.Screen = ({ name }: { name: string }) => React.createElement(Text, null, name);
+  Stack.Protected = ({ guard, children }: { guard: boolean; children: React.ReactNode }) =>
+    guard ? React.createElement(React.Fragment, null, children) : null;
   return { Stack, useRouter: () => ({ push: jest.fn() }) };
 });
 jest.mock('expo-status-bar', () => {
@@ -36,7 +38,7 @@ jest.mock('@/store', () => {
   return {
     AppProviders: ({ children }: { children: React.ReactNode }) =>
       React.createElement(View, { testID: 'app-providers' }, children),
-    useAppState: () => ({ hydrated: true }),
+    useAppState: () => ({ hydrated: true, onboardingComplete: true }),
     usePreferences: () => ({
       hydrated: true,
       preferences: { colorTheme: 'white' },

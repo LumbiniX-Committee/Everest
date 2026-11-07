@@ -5,6 +5,7 @@ import { Button, Icon, Text } from '@/components/ui';
 import { SiteVisual } from '@/components/site';
 import { nearbyQuestAreas, isVantageTask, type QuestArea } from '@/data';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
+import { usePermission } from '@/store';
 import { database } from '@/services';
 import { colors, radii, spacing } from '@/theme';
 import type { Coordinate, QuestSubmission, QuestWithProgress } from '@/types';
@@ -21,6 +22,7 @@ export type QuestAreaCollectionProps = {
 
 /** Area discovery stays separate from exact monument arrival. */
 export function QuestAreaCollection({ coordinate, quests, onCapture, onWitness, onGuide, onMemories }: QuestAreaCollectionProps) {
+  const location = usePermission('location');
   const ui = useVisitorLiteralCopy();
   const [expanded, setExpanded] = useState<string | null>(null);
   const [submissions, setSubmissions] = useState<QuestSubmission[]>([]);
@@ -30,9 +32,11 @@ export function QuestAreaCollection({ coordinate, quests, onCapture, onWitness, 
     return () => { live = false; };
   }, []));
   const areas = nearbyQuestAreas(coordinate, quests);
+  const canAsk = location.state.status === 'undetermined' || location.state.status === 'denied';
   return <View style={styles.body}>
     <Button label="My memories" icon="image-multiple-outline" variant="secondary" onPress={onMemories} />
     {!coordinate ? <Text tone="secondary">Allow location or start a demo walk to discover nearby activities.</Text> : null}
+    {!coordinate && canAsk ? <Button label="Allow location" variant="secondary" onPress={() => void location.request()} /> : null}
     {coordinate && areas.length === 0 ? <Text tone="secondary">No bundled heritage activities within 5 km.</Text> : null}
     {areas.map((area, index) => {
       const open = expanded === area.id;

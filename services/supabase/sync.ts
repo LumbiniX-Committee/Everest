@@ -12,6 +12,17 @@ import { getDeviceId } from '../device';
 import * as FileSystem from 'expo-file-system/legacy';
 import { decode } from 'base64-arraybuffer';
 import { createEvidenceObject } from './evidence-storage';
+import { getUserPreferences } from '../storage';
+import { mayUpload, type ConnectionKind } from '@/core';
+import * as Network from 'expo-network';
+
+async function connectionKind(): Promise<ConnectionKind> {
+  const state = await Network.getNetworkStateAsync().catch(() => null);
+  if (!state || state.isConnected === false) return state ? 'none' : 'other';
+  if (state.type === Network.NetworkStateType.WIFI) return 'wifi';
+  if (state.type === Network.NetworkStateType.CELLULAR) return 'cellular';
+  return 'other';
+}
 
 export type SyncState = 'offline' | 'syncing' | 'failed' | 'synced';
 
@@ -55,8 +66,13 @@ async function uploadPhoto(bucket: string, path: string, uri: string): Promise<v
  * per record and reported together at the end, so one poisoned row costs one
  * row.
  */
-export async function syncData(): Promise<void> {
+export async function syncData({ requestedByUser = false }: { requestedByUser?: boolean } = {}): Promise<void> {
   if (!isConfigured()) return;
+
+  // The visitor's own upload setting. Reading it here covers every caller, so no
+  // path can send records in a mode that promises they stay on the phone.
+  const [preferences, connection] = await Promise.all([getUserPreferences(), connectionKind()]);
+  if (!mayUpload(preferences.offlineSyncMode, connection, requestedByUser)) return;
 
   const supabase = getSupabase();
 
@@ -91,10 +107,13 @@ export async function syncData(): Promise<void> {
         site_id: obs.siteId,
         captured_at: obs.capturedAt,
         photo_path: filePath,
-        latitude: obs.coordinate.latitude,
-        longitude: obs.coordinate.longitude,
-        bearing: obs.bearing,
-        pitch: obs.pitch,
+        // Null when the phone had no reading. The local value is only a catalogue
+        // placeholder, and sending it would claim a measurement nobody made.
+        latitude: obs.unmeasured?.includes('coordinate') ? null : obs.coordinate.latitude,
+        longitude: obs.unmeasured?.includes('coordinate') ? null : obs.coordinate.longitude,
+        bearing: obs.unmeasured?.includes('bearing') ? null : obs.bearing,
+        pitch: obs.unmeasured?.includes('pitch') ? null : obs.pitch,
+        heading_nudge_deg: obs.headingNudgeDeg ?? 0,
         // Null on a by-eye capture, and sent as null. A zero here would read as
         // a perfect measurement, which is a false record rather than a thin one.
         position_error_m: obs.positionErrorM,

@@ -3,6 +3,7 @@ import { RefreshControl, ScrollView, StyleSheet, TextInput, View } from 'react-n
 
 import { EmptyState, ErrorState, LoadingState, ScreenHeader } from '@/components/common';
 import { Button, Card, Screen, Text } from '@/components/ui';
+import { useOpenInTabs } from '@/hooks';
 import { useInterfaceLanguage } from '@/i18n/context';
 import { visitorLiteralCopy } from '@/i18n/literals';
 import { formatVisitorCopy, visitorCopy } from '@/i18n/visitor';
@@ -33,6 +34,7 @@ import type { LeaderboardEntry, LeaderboardRange } from '@/services/leaderboard'
  */
 export function LeaderboardScreen() {
   const language = useInterfaceLanguage();
+  const openInTabs = useOpenInTabs();
   const [range, setRange] = useState<LeaderboardRange>('all');
   const [entries, setEntries] = useState<LeaderboardEntry[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -105,6 +107,8 @@ export function LeaderboardScreen() {
       ) : entries.length === 0 ? (
         <EmptyState
           title="Nobody has contributed yet"
+          actionLabel="Explore the map"
+          onAction={() => openInTabs('/(main)/tirtha/map')}
           body="File an observation or a condition report and you will be the first name here."
         />
       ) : (

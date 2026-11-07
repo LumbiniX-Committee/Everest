@@ -209,6 +209,12 @@ const migrations: string[] = [
   // existed — they were made entirely by hand — and backfilling them as assisted
   // would credit a machine with findings a person made unaided.
   `ALTER TABLE condition_reports ADD COLUMN ai_assisted INTEGER NOT NULL DEFAULT 0;`,
+
+  // What a capture could really claim. Older rows read as measured and live,
+  // which is what they were recorded as.
+  `ALTER TABLE observations ADD COLUMN unmeasured TEXT;
+   ALTER TABLE observations ADD COLUMN is_demo INTEGER NOT NULL DEFAULT 0;
+   ALTER TABLE observations ADD COLUMN heading_nudge_deg REAL NOT NULL DEFAULT 0;`,
 ];
 
 async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
@@ -286,6 +292,9 @@ type ObservationRow = {
   align_score: number | null;
   gps_acc_m: number | null;
   gate_mode: string | null;
+  unmeasured: string | null;
+  is_demo: number;
+  heading_nudge_deg: number;
   synced: number;
 };
 
@@ -311,6 +320,9 @@ function toObservation(row: ObservationRow): Observation {
     // state this one does not know; treating it as unreviewed is the reading
     // that cannot invent a finding.
     assessment: isAssessment(row.assessment) ? row.assessment : 'unreviewed',
+    unmeasured: row.unmeasured ? (row.unmeasured.split(',') as Observation['unmeasured']) : [],
+    isDemo: row.is_demo === 1,
+    headingNudgeDeg: row.heading_nudge_deg,
     synced: row.synced === 1,
   };
 }
@@ -325,8 +337,8 @@ export async function insertObservation(observation: Observation): Promise<void>
     `INSERT OR REPLACE INTO observations
        (id, vantage_id, site_id, captured_at, photo_uri, latitude, longitude,
         bearing, pitch, position_error_m, bearing_error_deg, note, assessment,
-        align_score, gps_acc_m, gate_mode, synced)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        align_score, gps_acc_m, gate_mode, unmeasured, is_demo, heading_nudge_deg, synced)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     observation.id,
     observation.vantageId,
     observation.siteId,
@@ -345,6 +357,9 @@ export async function insertObservation(observation: Observation): Promise<void>
     observation.alignScore ?? null,
     observation.gpsAccuracyM ?? null,
     observation.gateMode ?? null,
+    observation.unmeasured?.length ? observation.unmeasured.join(',') : null,
+    observation.isDemo ? 1 : 0,
+    observation.headingNudgeDeg ?? 0,
     observation.synced ? 1 : 0,
   );
 }
@@ -374,11 +389,11 @@ export async function listObservations(vantageId?: string): Promise<Observation[
   const db = await getDatabase();
   const rows = vantageId
     ? await db.getAllAsync<ObservationRow>(
-        'SELECT * FROM observations WHERE vantage_id = ? ORDER BY captured_at DESC',
+        'SELECT * FROM observations WHERE vantage_id = ? AND is_demo = 0 ORDER BY captured_at DESC',
         vantageId,
       )
     : await db.getAllAsync<ObservationRow>(
-        'SELECT * FROM observations ORDER BY captured_at DESC',
+        'SELECT * FROM observations WHERE is_demo = 0 ORDER BY captured_at DESC',
       );
   return rows.map(toObservation);
 }
@@ -395,7 +410,7 @@ export async function getObservation(id: string): Promise<Observation | null> {
 export async function getUnsyncedObservations(): Promise<Observation[]> {
   const db = await getDatabase();
   const rows = await db.getAllAsync<ObservationRow>(
-    'SELECT * FROM observations WHERE synced = 0 ORDER BY captured_at ASC'
+    'SELECT * FROM observations WHERE synced = 0 AND is_demo = 0 ORDER BY captured_at ASC'
   );
   return rows.map(toObservation);
 }
@@ -591,7 +606,7 @@ export async function countMeritEvents(since?: string): Promise<number> {
 export async function countSitesWitnessed(): Promise<number> {
   const db = await getDatabase();
   const row = await db.getFirstAsync<{ n: number }>(
-    'SELECT COUNT(DISTINCT site_id) AS n FROM observations',
+    'SELECT COUNT(DISTINCT site_id) AS n FROM observations WHERE is_demo = 0',
   );
   return row?.n ?? 0;
 }
@@ -619,6 +634,17 @@ export type SiteVisit = {
  * how many. Keeping one row per site also means a phone left sitting at a
  * vantage cannot inflate the record into a log of hundreds of arrivals.
  */
+/** Whether this kind of act was ever recognised at this site. */
+export async function hasMeritEventForSite(kind: string, siteId: string): Promise<boolean> {
+  const db = await getDatabase();
+  const row = await db.getFirstAsync<{ n: number }>(
+    'SELECT COUNT(*) AS n FROM merit_events WHERE kind = ? AND site_id = ?',
+    kind,
+    siteId,
+  );
+  return (row?.n ?? 0) > 0;
+}
+
 export async function recordSiteVisit(siteId: string, at = new Date().toISOString()): Promise<void> {
   const db = await getDatabase();
   await db.runAsync(

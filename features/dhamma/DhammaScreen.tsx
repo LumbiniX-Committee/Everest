@@ -191,7 +191,7 @@ export function DhammaScreen() {
             accessibilityLabel={visitorLiteralCopy(language, 'Begin a reflection')}
             onPress={() => {
               selection();
-              router.push('/(main)/dhamma/reflect' as never);
+              router.push('/(main)/dhamma/reflect');
             }}
             style={({ pressed }) => [styles.reflectButton, pressed && styles.pressed]}
           >

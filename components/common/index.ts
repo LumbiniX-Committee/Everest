@@ -4,3 +4,5 @@ export { SettingsButton } from './SettingsButton';
 export { LoadingState, type LoadingStateProps } from './LoadingState';
 export { ErrorState, type ErrorStateProps } from './ErrorState';
 export { OfflineBanner, type OfflineBannerProps, type SyncState } from './OfflineBanner';
+export { BackBar } from './BackBar';
+export { NextStep } from './NextStep';

@@ -6,11 +6,12 @@ import {
   useMemo,
   useState,
   type ReactNode,
+  useRef,
 } from 'react';
 
 import { demoQuests, findSite, findVantage } from '@/data';
 import { tasksSatisfiedByReport, type ReportableTask } from '@/core';
-import { database } from '@/services';
+import { database, location } from '@/services';
 import { usePractice } from '@/store/practice';
 import type { MeritKind, QuestProgress, QuestWithProgress } from '@/types';
 
@@ -74,10 +75,14 @@ function getMeritKindForCategory(category: string): MeritKind {
   }
 }
 
+/** Longer than it takes to look at one monument, shorter than a return later in the day. */
+const VISIT_MARK_WINDOW_MS = 20 * 60 * 1000;
+
 export function QuestsProvider({ children }: { children: ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
   const [quests, setQuests] = useState<QuestWithProgress[]>([]);
   const { recognise } = usePractice();
+  const visitMarks = useRef(new Map<string, number>());
 
   /**
    * Re-query SQLite for the current quest list, without touching the
@@ -131,24 +136,33 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
     [refreshList],
   );
 
-  const completeTask = useCallback(
-    async (questId: string, taskId: string): Promise<TaskCompletionResult> => {
+  /**
+   * Completes one task and, if that finishes its quest, recognises it. Every way
+   * a task can complete comes through here, so no quest finishes without merit.
+   */
+  const settleTask = useCallback(
+    async (questId: string, taskId: string) => {
       const updatedProgress = await database.completeQuestTask(questId, taskId);
       const quest = quests.find((q) => q.id === questId);
-
       const questCompleted = updatedProgress.status === 'completed';
       let rewardGranted = false;
 
-      // Award Puṇya merit if quest is newly completed
       if (questCompleted && quest) {
-        const meritKind = getMeritKindForCategory(quest.category);
-        const targetSiteId = quest.tasks.find((t) => t.targetId)?.targetId;
         const meritResult = await recognise({
-          kind: meritKind,
-          siteId: targetSiteId,
+          kind: getMeritKindForCategory(quest.category),
+          siteId: quest.tasks.find((t) => t.targetId)?.targetId,
         });
         rewardGranted = meritResult !== null;
       }
+
+      return { updatedProgress, questCompleted, rewardGranted };
+    },
+    [quests, recognise],
+  );
+
+  const completeTask = useCallback(
+    async (questId: string, taskId: string): Promise<TaskCompletionResult> => {
+      const { updatedProgress, questCompleted, rewardGranted } = await settleTask(questId, taskId);
 
       await refreshList();
       return {
@@ -157,7 +171,7 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
         rewardGranted,
       };
     },
-    [quests, recognise, refreshList],
+    [refreshList, settleTask],
   );
 
   const uncompleteTask = useCallback(
@@ -203,7 +217,7 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
 
       for (const link of links) {
         try {
-          await database.completeQuestTask(link.questId, link.taskId);
+          await settleTask(link.questId, link.taskId);
         } catch {
           // Keep going: one quest failing to update must not strand the others.
         }
@@ -212,7 +226,7 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
       if (links.length > 0) await refreshList();
       return links.length;
     },
-    [quests, refreshList],
+    [quests, refreshList, settleTask],
   );
 
   const creditArrival = useCallback(
@@ -220,8 +234,17 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
       const reached = findSite(siteId);
       if (!reached) return 0;
 
-      await database.recordSiteVisit(reached.id).catch(() => undefined);
-      if (reached.parentSiteId) await database.recordSiteVisit(reached.parentSiteId).catch(() => undefined);
+      // A demo walk is not a visit, and advances nothing.
+      if (location.isDemoMode()) return 0;
+
+      // One arrival, one visit: this also re-runs when quests change or when
+      // another surface reports the same arrival, and neither is a second visit.
+      const lastMarked = visitMarks.current.get(reached.id) ?? 0;
+      if (Date.now() - lastMarked >= VISIT_MARK_WINDOW_MS) {
+        visitMarks.current.set(reached.id, Date.now());
+        await database.recordSiteVisit(reached.id).catch(() => undefined);
+        if (reached.parentSiteId) await database.recordSiteVisit(reached.parentSiteId).catch(() => undefined);
+      }
 
       const matches = quests.flatMap((quest) => quest.tasks
         .filter((task) => {
@@ -232,11 +255,11 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
         })
         .map((task) => ({ questId: quest.id, taskId: task.id })));
 
-      for (const match of matches) await database.completeQuestTask(match.questId, match.taskId);
+      for (const match of matches) await settleTask(match.questId, match.taskId);
       if (matches.length > 0) await refreshList();
       return matches.length;
     },
-    [quests, refreshList],
+    [quests, refreshList, settleTask],
   );
 
   const creditVantageObservation = useCallback(
@@ -254,11 +277,11 @@ export function QuestsProvider({ children }: { children: ReactNode }) {
         })
         .map((task) => ({ questId: quest.id, taskId: task.id })));
 
-      for (const match of matches) await database.completeQuestTask(match.questId, match.taskId);
+      for (const match of matches) await settleTask(match.questId, match.taskId);
       if (matches.length > 0) await refreshList();
       return matches.length;
     },
-    [quests, refreshList],
+    [quests, refreshList, settleTask],
   );
 
   const resetQuests = useCallback(async () => {

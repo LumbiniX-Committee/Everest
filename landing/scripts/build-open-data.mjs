@@ -48,9 +48,9 @@ const siteFeatures = sites.map((s) => ({
     region: REGION[s.zone] ?? null,
     zone: s.zone,
     tier: s.tier ?? null,
-    /* False means the coordinate came off a document and has never been
-       checked. Exported rather than hidden, so nobody mistakes it for survey. */
-    surveyed: s.coords_source === 'osm',
+    /* True only for a coordinate someone measured on site. OSM and UNESCO values
+       are useful, but neither is a field survey, and coords_source says which. */
+    surveyed: s.coords_source === 'field',
     coords_source: s.coords_source ?? null,
     geofence_m: s.geofence_m ?? null,
     period_from: s.period?.from ?? null,

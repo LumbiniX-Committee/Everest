@@ -190,6 +190,16 @@ export type Observation = {
   note?: string;
   /** What the observer said about what they saw. */
   assessment: ObservationAssessment;
+  /**
+   * Readings the phone could not provide at capture. Their fields hold the
+   * vantage's catalogued values only because the local columns require a value;
+   * they must be shown as not measured, and leave the phone as null.
+   */
+  unmeasured?: ('coordinate' | 'bearing' | 'pitch')[];
+  /** Made during a demo walk. Stays on this phone and is never a real record. */
+  isDemo?: boolean;
+  /** Degrees the observer corrected the compass by. Nonzero is never `aligned`. */
+  headingNudgeDeg?: number;
   /** False until the observation has left the device. */
   synced: boolean;
 };

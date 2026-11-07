@@ -29,7 +29,7 @@ export default function RootLayout() {
 
 function RootNavigator() {
   const { ready: fontsReady } = useAppFonts();
-  const { hydrated } = useAppState();
+  const { hydrated, onboardingComplete } = useAppState();
   const { hydrated: preferencesHydrated, preferences } = usePreferences();
   const router = useRouter();
 
@@ -86,8 +86,14 @@ function RootNavigator() {
         }}
       >
         <Stack.Screen name="index" />
-        <Stack.Screen name="onboarding" options={{ animation: 'fade', animationDuration: 280 }} />
-        <Stack.Screen name="(main)" options={{ animation: 'fade', animationDuration: 280 }} />
+        {/* A deep link cannot skip the introduction, or reach it once it is done. */}
+        <Stack.Protected guard={!onboardingComplete}>
+          <Stack.Screen name="onboarding" options={{ animation: 'fade', animationDuration: 280 }} />
+        </Stack.Protected>
+        <Stack.Protected guard={onboardingComplete}>
+          <Stack.Screen name="(main)" options={{ animation: 'fade', animationDuration: 280 }} />
+          <Stack.Screen name="visit" options={{ animation: 'slide_from_right', animationDuration: 280 }} />
+        </Stack.Protected>
       </Stack>
     </>
   );

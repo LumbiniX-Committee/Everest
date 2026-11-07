@@ -1,12 +1,12 @@
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { ErrorState, LoadingState, ScreenHeader } from '@/components/common';
 import { BottomSheet, Button, Card, Screen, Text } from '@/components/ui';
 import { SitePlan } from '@/components/map';
-import { findSite, findVantage, vantagesForSite } from '@/data';
-import { useCurrentPosition } from '@/hooks';
+import { findSite, findVantage, vantagesForSite, areaForQuest } from '@/data';
+import { useCurrentPosition, useSafeBack } from '@/hooks';
 import { database } from '@/services';
 import { usePreferences } from '@/store';
 import { useQuests } from '@/store/quests';
@@ -23,6 +23,7 @@ const SEVERITY_ORDER: ConditionSeverity[] = ['noted', 'concerning', 'urgent'];
 
 export function QuestDetailScreen({ questId }: { questId: string }) {
   const router = useRouter();
+  const goBack = useSafeBack('/(main)/tirtha/quests');
   const { hydrated, getQuestById, startQuest, completeTask } = useQuests();
   // Watched, not sampled once: a task row that says how far away you are has to
   // keep saying it while you walk.
@@ -59,9 +60,12 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
     }
   }, [questId]);
 
-  useEffect(() => {
-    void loadSubmissions();
-  }, [loadSubmissions]);
+  // On focus, not mount: returning from the camera must show what was just saved.
+  useFocusEffect(
+    useCallback(() => {
+      void loadSubmissions();
+    }, [loadSubmissions]),
+  );
 
   useEffect(() => {
     let active = true;
@@ -101,11 +105,13 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
         <ErrorState
           title="Quest Not Found"
           body="The requested quest could not be found."
-          onRetry={() => router.back()}
+          onRetry={goBack}
         />
       </Screen>
     );
   }
+
+  const area = areaForQuest(quest);
 
   const { progress, tasks, title, subtitle, description, intention, category, difficulty, estimatedMinutes } = quest;
   const isNotStarted = progress.status === 'not_started';
@@ -287,12 +293,17 @@ export function QuestDetailScreen({ questId }: { questId: string }) {
                   ? reportsBySite[findSite(task.targetId)?.id ?? task.targetId]?.severities ?? []
                   : []
               }
+              onGuide={
+                area && !progress.completedTasks.includes(task.id) && task.autoComplete === 'arrival'
+                  ? () => router.push({ pathname: '/(main)/tirtha/map', params: { guideArea: area.id } })
+                  : undefined
+              }
               onWitness={task.autoComplete === 'vantage_capture' && task.targetId
                 ? () => {
                     const direct = findVantage(task.targetId!);
                     const siteTarget = findSite(task.targetId!);
                     const vantage = direct ?? (siteTarget ? vantagesForSite(siteTarget.id)[0] : undefined);
-                    if (vantage) router.push({ pathname: '/(main)/sakshi/vantage', params: { vantageId: vantage.id } });
+                    if (vantage) router.push({ pathname: '/visit/vantage', params: { vantageId: vantage.id } });
                   }
                 : undefined}
             />

@@ -29,6 +29,8 @@ export * from './map/geofence.ts';
 export * from './map/pradakshina.ts';
 export * from './map/polyline.ts';
 export * from './map/presence.ts';
+export * from './alignment/attitude.ts';
+export * from './sync/policy.ts';
 
 // --- Quests: availability, stillness, observation riddles --------------------
 export * from './quests/registry.ts';

@@ -3,11 +3,11 @@ import { useRouter } from 'expo-router';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { Button, Chip, Divider, MetaRow, Screen, Text } from '@/components/ui';
-import { EmptyState, SettingsButton } from '@/components/common';
+import { BackBar, EmptyState } from '@/components/common';
 import { AlignmentReadout, Reticle } from '@/components/reticle';
 import { SpeakButton } from '@/components/voice/SpeakButton';
 import { findSite, findVantage } from '@/data';
-import { useAlignment, useHaptics } from '@/hooks';
+import { useAlignment, useHaptics, useSafeBack } from '@/hooks';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { usePermission } from '@/store';
 import { colors, radii, spacing } from '@/theme';
@@ -23,12 +23,20 @@ import { alignmentHint } from '@/utils/alignmentHint';
 export function VantageScreen({ vantageId }: { vantageId: string }) {
   const ui = useVisitorLiteralCopy();
   const router = useRouter();
+  const goBack = useSafeBack();
   const vantage = findVantage(vantageId);
   const { state: locationPermission, request: requestLocation } = usePermission('location');
   const { pulse } = useHaptics();
   const { width } = useWindowDimensions();
 
   const alignment = useAlignment({ vantage });
+  const locked = alignment.phase === 'locked';
+
+  useEffect(() => {
+    if (locked) {
+      pulse();
+    }
+  }, [locked, pulse]);
 
   if (!vantage) {
     return (
@@ -37,38 +45,31 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
           title="No such vantage"
           body="This viewpoint is not in the catalogue."
           actionLabel="Back"
-          onAction={() => router.back()}
+          onAction={goBack}
         />
       </Screen>
     );
   }
 
   const site = findSite(vantage.siteId);
-  const locked = alignment.phase === 'locked';
   const needsLocation = locationPermission.status !== 'granted';
   const spokenHint = alignmentHint(alignment);
   const reticleSize = Math.min(280, width - spacing.gutter * 2);
 
-  useEffect(() => {
-    if (locked) {
-      pulse();
-    }
-  }, [locked, pulse]);
-
   const openCapture = () => {
     router.push({
-      pathname: '/(main)/sakshi/capture',
+      pathname: '/visit/capture',
       params: { vantageId: vantage.id, mode: locked ? 'aligned' : 'manual' },
     });
   };
 
   return (
     <Screen scroll>
+      <BackBar />
       <View style={styles.head}>
         <View style={styles.instrumentHeader}>
           <Chip label={site?.name ?? 'VANTAGE'} style={styles.siteChip} />
           <Chip label={phaseLabel(alignment.phase)} selected={locked} />
-          <SettingsButton />
         </View>
         <Text variant="title">{vantage.label}</Text>
       </View>

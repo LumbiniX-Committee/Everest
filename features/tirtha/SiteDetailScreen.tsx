@@ -1,16 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import { Button, Card, ConditionBadge, Divider, MetaRow, Screen, SourceBadge, Text } from '@/components/ui';
-import { EmptyState } from '@/components/common';
+import { BackBar, EmptyState } from '@/components/common';
 import { NarrationPlayer, SiteListItem, VantageListItem } from '@/components/site';
 import { SourceCard, SourceDetailSheet } from '@/components/source';
 import { audioForSite, findSite, historicalImagesForSite, narrationForSite, questsForSite, resolveSources, sitesForParent, vantagesForSite } from '@/data';
-import { useCurrentPosition } from '@/hooks';
-import { database, location as locationService } from '@/services';
+import { useCurrentPosition, useOpenInTabs, useSafeBack } from '@/hooks';
+import { location as locationService } from '@/services';
 import { usePreferences } from '@/store';
-import { SITE_VISIT_RADIUS_M } from '@/constants';
 import { spacing } from '@/theme';
 import { AskThisPlace } from './AskThisPlace';
 import { formatVisitorCopy } from '@/i18n/visitor';
@@ -27,27 +26,13 @@ import { distanceMeters, formatCoordinate, formatDistance } from '@/utils';
  */
 export function SiteDetailScreen({ siteId }: { siteId: string }) {
   const router = useRouter();
+  const goBack = useSafeBack();
+  const openInTabs = useOpenInTabs();
   const site = findSite(siteId);
   const { coordinate } = useCurrentPosition();
   const { preferences } = usePreferences();
   const [openSource, setOpenSource] = useState<Source | null>(null);
 
-  /**
-   * Marks the register when the reader is actually standing here.
-   *
-   * Gated on distance rather than on opening the screen: "visited" has to mean
-   * you were there. Reading about a site on the bus is not a visit, and a
-   * register that says otherwise is worthless in an app built on first-hand
-   * evidence.
-   *
-   * Failure is ignored. Missing a register mark is a small loss; an error
-   * banner over a site's history for it would be a larger one.
-   */
-  useEffect(() => {
-    if (!site || !coordinate) return;
-    if (distanceMeters(coordinate, site.coordinate) > SITE_VISIT_RADIUS_M) return;
-    void database.recordSiteVisit(site.id).catch(() => undefined);
-  }, [site, coordinate]);
 
   if (!site) {
     return (
@@ -56,7 +41,7 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
           title="No such site"
           body="This site is not in the catalogue. It may have been removed, or the link may be stale."
           actionLabel="Back to Tīrtha"
-          onAction={() => router.back()}
+          onAction={goBack}
         />
       </Screen>
     );
@@ -78,7 +63,7 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
     // Public-catalog sites do not have an invented walking route. Place the
     // demo walker at the recorded coordinate so location-driven UI is testable.
     locationService.demo.goToSite(site.id);
-    router.push('/(main)/tirtha/map');
+    router.dismissTo('/(main)/tirtha/map');
   };
 
   // One policy, shared with the arrival notification, so a person who asked for
@@ -88,6 +73,7 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
 
   return (
     <Screen scroll>
+      <BackBar />
       <View style={styles.head}>
         <Text variant="label" tone="muted" uppercase>
           Tīrtha
@@ -168,6 +154,14 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
         onPress={simulateHere}
       />
 
+      <Button
+        label="See on the map"
+        icon="map-marker-outline"
+        onPress={() =>
+          router.dismissTo({ pathname: '/(main)/tirtha/map', params: { focusSiteId: site.id } })
+        }
+      />
+
       {localQuests.length > 0 ? (
         <Button
           label={localQuests.length === 1
@@ -184,10 +178,10 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
         label="Reflect from this place"
         variant="secondary"
         onPress={() =>
-          router.push({
+          openInTabs({
             pathname: '/(main)/dhamma/reflect',
             params: { siteId: site.id },
-          } as never)
+          })
         }
       />
 
@@ -312,7 +306,7 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
                 distanceM={coordinate ? distanceMeters(coordinate, vantage.coordinate) : null}
                 onPress={() =>
                   router.push({
-                    pathname: '/(main)/sakshi/vantage',
+                    pathname: '/visit/vantage',
                     params: { vantageId: vantage.id },
                   })
                 }

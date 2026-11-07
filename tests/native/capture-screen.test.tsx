@@ -5,6 +5,7 @@ const mockTakePicture = jest.fn(() => Promise.resolve({ uri: 'cache://capture.jp
 const mockInsertObservation = jest.fn((_observation: unknown) => Promise.resolve());
 const mockCreditObservation = jest.fn(() => Promise.resolve());
 const mockReplace = jest.fn();
+const mockIsDemo = { current: false };
 const mockEvents: string[] = [];
 let mockInterfaceLanguage: 'en' | 'ne' = 'en';
 
@@ -49,7 +50,10 @@ jest.mock('@/data', () => ({
   nowImageForSite: () => undefined,
 }));
 jest.mock('@/hooks', () => ({
+  useSafeBack: () => jest.fn(),
+  useConfirmLeave: () => undefined,
   useAlignment: () => ({
+    isDemo: mockIsDemo.current,
     phase: 'locked',
     progress: 1,
     coordinate: { latitude: 27.6701, longitude: 85.3201 },
@@ -155,6 +159,22 @@ describe('CaptureScreen', () => {
         gateMode: 'aligned',
       }),
     );
+  });
+
+  it('keeps a demo-walk capture out of the real record, even at a lock', async () => {
+    mockIsDemo.current = true;
+    const screen = await render(<CaptureScreen vantageId="vantage-a" />);
+
+    await fireEvent.press(screen.getByLabelText('Record aligned observation'));
+    await screen.findByText("Review today's frame");
+    await fireEvent.press(screen.getByLabelText('Submit observation'));
+    await waitFor(() => expect(mockReplace).toHaveBeenCalledTimes(1));
+    mockIsDemo.current = false;
+
+    expect(mockInsertObservation).toHaveBeenCalledWith(
+      expect.objectContaining({ gateMode: 'manual', isDemo: true, positionErrorM: null }),
+    );
+    expect(mockEvents).not.toContain('quest-credit');
   });
 
   it('renders and submits the same review journey in Nepali', async () => {

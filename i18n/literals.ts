@@ -11,6 +11,19 @@ import type { InterfaceLanguage } from '@/types';
  * Text boundary and are never registered here.
  */
 export const NEPALI_UI_LITERALS = {
+  "Not measured": "मापन गरिएको छैन",
+  "With a corrected compass, this photograph is saved as framed by eye.": "सच्याइएको कम्पाससँग यो फोटो आँखाले मिलाएको रूपमा सुरक्षित हुन्छ।",
+  "Demo walk: this photograph stays on this phone and is not part of the record.": "डेमो हिँडाइ: यो फोटो यही फोनमा रहन्छ र अभिलेखको भाग होइन।",
+  "See viewpoints": "दृश्यबिन्दुहरू हेर्नुहोस्",
+  "Discard this?": "यो हटाउने?",
+  "What you have not saved will be lost.": "सुरक्षित नगरिएको कुरा हराउनेछ।",
+  "Stay": "यहीँ रहनुहोस्",
+  "Discard": "हटाउनुहोस्",
+  "See on the map": "नक्सामा हेर्नुहोस्",
+  "Explore the map": "नक्सा हेर्नुहोस्",
+  "Your record is saved": "तपाईंको अभिलेख सुरक्षित भयो",
+  "It stays on this phone. What would you like to do next?": "यो यही फोनमा रहन्छ। अब के गर्न चाहनुहुन्छ?",
+  "See what you completed": "तपाईंले पूरा गरेको हेर्नुहोस्",
   "Updating walking route…": "पैदल मार्ग अद्यावधिक हुँदै…",
   "Finding walking route…": "पैदल मार्ग खोज्दै…",
   "min walk · updates as you move": "मिनेट पैदल · तपाईं हिँड्दा अद्यावधिक हुन्छ",

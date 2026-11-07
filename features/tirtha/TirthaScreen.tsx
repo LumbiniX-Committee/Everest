@@ -94,7 +94,7 @@ export function TirthaScreen() {
           </View>
           <QuestCard
             quest={featuredQuest}
-            onPress={() => router.push('/(main)/tirtha/quests')}
+            onPress={() => router.push(`/(main)/tirtha/quests/${featuredQuest.id}`)}
           />
         </View>
       ) : null}
