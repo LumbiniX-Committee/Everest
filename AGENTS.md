@@ -10,9 +10,9 @@ Instructions for AI coding agents working in this repository.
 
 1. **[docs/APP_GUIDE.md](docs/APP_GUIDE.md)** — what the app is, plans, data, map, running, testing and releasing
 2. **[docs/WORK_LOG.md](docs/WORK_LOG.md)** — what changed recently, and what has and hasn't been verified
-2. The relevant documents under **[docs/ai-context/](docs/ai-context/README.md)** — start with its [README](docs/ai-context/README.md), which routes you by task
-3. **[docs/ai-context/CHANGE_IMPACT_PLAYBOOK.md](docs/ai-context/CHANGE_IMPACT_PLAYBOOK.md)** before making any change
-4. **[docs/ai-context/CODEX_WORKING_GUIDE.md](docs/ai-context/CODEX_WORKING_GUIDE.md)** for conventions
+3. The relevant documents under **[docs/ai-context/](docs/ai-context/README.md)** — start with its [README](docs/ai-context/README.md), which routes you by task
+4. **[docs/ai-context/CHANGE_IMPACT_PLAYBOOK.md](docs/ai-context/CHANGE_IMPACT_PLAYBOOK.md)** before making any change
+5. **[docs/ai-context/CODEX_WORKING_GUIDE.md](docs/ai-context/CODEX_WORKING_GUIDE.md)** for conventions
 
 ---
 
