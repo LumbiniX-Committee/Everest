@@ -132,6 +132,7 @@ export function computeAlignment(input: {
 
   return {
     phase: score.canLock ? 'locked' : 'seeking',
+    blockedBy: score.blockedBy,
     progress: score.align,
     alignScore: score.align,
     gpsAccuracyM,

@@ -266,6 +266,7 @@ for (const [index, site] of kathmanduSites.entries()) {
     positionToleranceM: 12,
     bearingToleranceDeg: 18,
     hfovDeg: 60,
+    estimated: true,
     note: 'Guided exterior vantage derived from the official monument map. Use it for exploration and demo capture; a field survey must verify the exact point before it becomes a conservation baseline.',
   });
   site.vantageIds = [...site.vantageIds, vantageId];

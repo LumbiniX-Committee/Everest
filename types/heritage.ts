@@ -129,6 +129,8 @@ export type Vantage = {
   hfovDeg?: number;
   /** Why this viewpoint was chosen. Shown before capture. */
   note?: string;
+  /** Placed from a map, not measured on site. Shown as "Estimated" until surveyed. */
+  estimated?: boolean;
   /** Timestamp of the earliest observation in the series, if any. */
   seriesBegan?: string;
   /** Historical/reference image URI for dissolve slider and ghost overlay. */
@@ -290,4 +292,6 @@ export type AlignmentState = {
   /** Metres to the vantage. */
   distanceM: number | null;
   pitchDeltaDeg: number | null;
+  /** What is holding the lock back, so the screen can say what to fix. Null when locked or idle. */
+  blockedBy?: 'position' | 'heading' | 'pitch' | 'gps' | null;
 };

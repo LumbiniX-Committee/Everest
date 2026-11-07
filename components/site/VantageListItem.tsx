@@ -26,6 +26,11 @@ export function VantageListItem({
 
         <View style={styles.body}>
           <Text variant="heading" translate={false}>{vantage.label}</Text>
+          {vantage.estimated ? (
+            <Text variant="label" tone="seeking" uppercase>
+              Estimated
+            </Text>
+          ) : null}
 
           {vantage.note ? (
             <Text variant="body" tone="secondary" numberOfLines={2} style={styles.note} translate={false}>

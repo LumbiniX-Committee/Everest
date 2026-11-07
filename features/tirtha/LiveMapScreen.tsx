@@ -106,7 +106,7 @@ export function LiveMapScreen() {
 
   // notify:false — Tīrtha's card already announces, and two banners for one
   // arrival is the app talking over itself.
-  const { atSiteId, nearest: near } = useSiteArrival(coordinate, { notify: false, accuracyM });
+  const { atSiteId, nearest: near, ambiguous } = useSiteArrival(coordinate, { notify: false, accuracyM });
 
   const activeSiteId = atSiteId ?? near?.site.id;
   const activeSignificance = activeSiteId ? arrival.significanceOf(activeSiteId) : null;
@@ -399,8 +399,14 @@ export function LiveMapScreen() {
     }
 
     const vantages = vantagesForSite(targetId);
-    if (vantages.length > 0) {
+    if (vantages.length === 1) {
       router.push({ pathname: '/visit/vantage', params: { vantageId: vantages[0].id } });
+      return;
+    }
+    // More than one viewpoint: the site page lists them with distances, so the
+    // visitor chooses rather than being sent to whichever is first in the data.
+    if (vantages.length > 1) {
+      router.push(`/(main)/tirtha/site/${targetId}`);
       return;
     }
 
@@ -607,6 +613,22 @@ export function LiveMapScreen() {
       </View>
 
       <View style={styles.dock} pointerEvents="box-none">
+        {ambiguous.length > 1 && !guideTarget ? (
+          <View style={styles.guideCard}>
+            <Text variant="heading">Which monument are you at?</Text>
+            <Text variant="caption" tone="secondary">
+              Your location is not precise enough to tell these apart.
+            </Text>
+            {ambiguous.slice(0, 3).map((id) => (
+              <Button
+                key={id}
+                label={findSite(id)?.name ?? id}
+                variant="secondary"
+                onPress={() => router.push(`/(main)/tirtha/site/${id}`)}
+              />
+            ))}
+          </View>
+        ) : null}
         {guideTarget ? <View style={styles.guideCard}>
           <Text variant="heading" translate={false}>{guideTarget.name}</Text>
           {routeState === 'ready' && upcoming ? (

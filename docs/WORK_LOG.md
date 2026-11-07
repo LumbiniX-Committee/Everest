@@ -2,6 +2,33 @@
 
 What changed in each milestone, what was verified, and what was not. Newest first. The plan lives in the delivery plan; this records what actually happened.
 
+## Milestone 5: close-up guided visit
+
+### Changed
+- **Step tracker:** the viewpoint screen shows five steps: get there, stand on the mark, face the view, hold level, take the photograph.
+  - The current step comes from live readings, with one written instruction. The voice hint is no longer the only way to hear it, and it now uses the visitor's language.
+  - A direction arrow, live location accuracy, and the reason the lock is waiting: GPS, compass, tilt or position. `blockedBy` is now passed through instead of being dropped.
+  - This is the "close-up guidance" Pro feature. Capture by eye stays free.
+- **Compass calibration:** the prompt existed but was never shown. It is now offered when the compass is what's blocking the lock.
+- **Photography restriction:** shown on the viewpoint screen before the camera, and the capture button is disabled there.
+- **Estimated viewpoints:** the 41 generated viewpoints are flagged `estimated` and labelled as placed from a map, not surveyed, on the viewpoint screen and in site lists.
+- **Arrival needs a fine enough fix:** a fix looser than max(20 m, 1.5 × the site's reach) can no longer mark arrival.
+- **Crowded sites:** where the fix can't separate neighbouring monuments, the map asks "Which monument are you at?" instead of guessing (`core/map/presence.ts`, tested).
+- **Choosing a viewpoint:** "Witness" on the map opens the site's viewpoint list when there's more than one, instead of always the first.
+- **Copy fix:** removed text promising a "ghost overlay", which does not exist.
+
+### Verified
+- Presence and ambiguity unit tests.
+- Viewpoint screen in the browser: the restriction notice, and the no-location path.
+
+### Not verified
+- Every step that depends on a live sensor, which needs a phone on site.
+
+### Decisions for the site authority
+- Maya Devi Temple and the Marker Stone are recorded as `photography: restricted` at site level, so exterior viewpoints are blocked too.
+- Photography is usually allowed outside and forbidden inside, but the data doesn't record that, and the charter rule is a hard block. The rule was left as it is, and the decision belongs to the site authority.
+- If exteriors are confirmed, add an interior or exterior field to vantages.
+
 ## Milestone 4: real data
 
 ### Changed
