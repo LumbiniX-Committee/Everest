@@ -7,6 +7,9 @@ import { spacing } from '@/theme';
 import type { EntryFee } from '@/types';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 
+/** Rupees, written the way the gate signs write them. */
+const rupees = (amount: number) => `NPR ${amount.toLocaleString('en-US')}`;
+
 const WHEELCHAIR: Record<string, string> = {
   yes: 'Step-free access',
   limited: 'Partly step-free',
@@ -32,13 +35,17 @@ export function VisitInfo({ fee, hours, wheelchair }: { fee?: EntryFee; hours?: 
           fee
             ? feeAmount(fee, visitor) === 0
               ? ui('Free')
-              : `NPR ${feeAmount(fee, visitor).toLocaleString('en-US')}`
+              : rupees(feeAmount(fee, visitor))
             : ui('Not known')
         }
       />
       {fee && visitor !== 'nepali' ? (
         <Text variant="caption" tone="secondary">
-          {`${ui('Foreign visitor rate.')} ${ui('SAARC')}: NPR ${fee.saarc.toLocaleString('en-US')}. ${ui('Nepali visitors')}: ${fee.nepali === 0 ? ui('Free') : `NPR ${fee.nepali}`}.`}
+          {[
+            ui('Foreign visitor rate.'),
+            `${ui('SAARC')} ${rupees(fee.saarc)}`,
+            `${ui('Nepali visitors')} ${fee.nepali === 0 ? ui('Free') : rupees(fee.nepali)}`,
+          ].join(' · ')}.`}
         </Text>
       ) : null}
       {fee?.note ? (
