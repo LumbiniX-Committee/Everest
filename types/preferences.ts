@@ -76,6 +76,8 @@ export type UserPreferences = {
   autoNarration: boolean;
   visitorType: VisitorType;
   homeHub: HomeHub;
+  /** Off unless the visitor turns it on. */
+  shareCrashReports: boolean;
 };
 
 export const DEFAULT_USER_PREFERENCES: UserPreferences = {
@@ -108,6 +110,7 @@ export const DEFAULT_USER_PREFERENCES: UserPreferences = {
   autoNarration: true,
   visitorType: 'unset',
   homeHub: 'unset',
+  shareCrashReports: false,
 };
 
 /**

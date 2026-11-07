@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { AppState } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -6,7 +6,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';
 
-import { notifications } from '@/services';
+import { AppErrorBoundary } from '@/components/common';
+import { diagnostics, notifications } from '@/services';
 import { syncPendingObservations } from '@/services/sync';
 import { AppProviders, useAppState, usePreferences } from '@/store';
 import { colors, useAppFonts } from '@/theme';
@@ -14,14 +15,17 @@ import { colors, useAppFonts } from '@/theme';
 // Held until we know both the fonts and the first-launch answer. Without this
 // the app would flash onboarding at returning users for a frame.
 void SplashScreen.preventAutoHideAsync();
+diagnostics.installGlobalHandler();
 
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.background }}>
       <SafeAreaProvider>
-        <AppProviders>
-          <RootNavigator />
-        </AppProviders>
+        <AppErrorBoundary>
+          <AppProviders>
+            <RootNavigator />
+          </AppProviders>
+        </AppErrorBoundary>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
@@ -34,6 +38,11 @@ function RootNavigator() {
   const router = useRouter();
 
   const ready = fontsReady && hydrated && preferencesHydrated;
+  // Read inside the app-state listener, which is set up once.
+  const preferencesRef = useRef(preferences);
+  useEffect(() => {
+    preferencesRef.current = preferences;
+  }, [preferences]);
 
   useEffect(() => {
     if (ready) {
@@ -45,6 +54,7 @@ function RootNavigator() {
     const subscription = AppState.addEventListener('change', (nextState) => {
       if (nextState === 'active') {
         void syncPendingObservations().catch(() => undefined);
+        void diagnostics.sendCrashReports(preferencesRef.current.shareCrashReports);
       }
     });
     return () => subscription.remove();

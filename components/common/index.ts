@@ -7,3 +7,4 @@ export { OfflineBanner, type OfflineBannerProps, type SyncState } from './Offlin
 export { BackBar } from './BackBar';
 export { NextStep } from './NextStep';
 export { ProGate } from './ProGate';
+export { AppErrorBoundary } from './AppErrorBoundary';

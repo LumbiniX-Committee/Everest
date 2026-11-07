@@ -1,0 +1,15 @@
+# The stuck-user bugs from the navigation audit. Each step must leave a way back.
+appId: com.saksinepal.saksi
+---
+- launchApp
+- tapOn: "Maya Devi Temple"
+- assertVisible: "Back"
+- tapOn: "Reflect from this place"
+- tapOn: "Dhamma"
+# The Dhamma home must be reachable after a first visit from another tab.
+- assertVisible: "Questions"
+- tapOn: "Tīrtha"
+- tapOn: "South approach, facing north"
+- assertVisible: "Back"
+- tapOn: "Back"
+- assertVisible: "Maya Devi Temple"

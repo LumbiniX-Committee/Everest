@@ -1,0 +1,13 @@
+# Plans and code redemption. A wrong code is refused with a clear message.
+appId: com.saksinepal.saksi
+---
+- launchApp
+- tapOn:
+    id: "settings-button"
+    optional: true
+- tapOn: "Your plan"
+- assertVisible: "Free"
+- tapOn: "SAKSI-XXXX-XXXX-XXXX"
+- inputText: "SAKSI-WRONG-CODE-0000"
+- tapOn: "Redeem code"
+- assertVisible: "That code was not recognised. Check it and try again."

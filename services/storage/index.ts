@@ -115,6 +115,7 @@ export async function getUserPreferences(): Promise<UserPreferences> {
     autoNarration: bool(raw.autoNarration, 'autoNarration'),
     visitorType: oneOf(raw.visitorType, VISITOR_TYPE_OPTIONS, 'visitorType'),
     homeHub: oneOf(raw.homeHub, HOME_HUB_OPTIONS, 'homeHub'),
+    shareCrashReports: bool(raw.shareCrashReports, 'shareCrashReports'),
   };
 }
 

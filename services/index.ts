@@ -25,3 +25,4 @@ export * as privacy from './privacy';
 export * as navigation from './navigation';
 export * as plans from './plans';
 export * as models from './models';
+export * as diagnostics from './diagnostics';

@@ -11,6 +11,12 @@ import type { InterfaceLanguage } from '@/types';
  * Text boundary and are never registered here.
  */
 export const NEPALI_UI_LITERALS = {
+  "Something went wrong": "केही गडबड भयो",
+  "Your records are safe on this phone. Try again to go back into the app.": "तपाईंका अभिलेख यो फोनमा सुरक्षित छन्। एपमा फर्कन फेरि प्रयास गर्नुहोस्।",
+  "Crash reports": "क्र्यास रिपोर्ट",
+  "A report holds the error and the screen it happened on. It never includes your location, photographs, records or name.": "रिपोर्टमा त्रुटि र त्यो भएको स्क्रिन मात्र हुन्छ। यसमा तपाईंको स्थान, फोटो, अभिलेख वा नाम कहिल्यै हुँदैन।",
+  "Share crash reports": "क्र्यास रिपोर्ट साझा गर्नुहोस्",
+  "Off unless you turn it on. Reports are kept on this phone until then.": "तपाईंले नखोलेसम्म बन्द रहन्छ। त्यतिन्जेल रिपोर्ट यही फोनमा रहन्छन्।",
   "View in 3D": "थ्रीडीमा हेर्नुहोस्",
   "No such model": "यस्तो मोडेल छैन",
   "There is no 3D view for this place.": "यस ठाउँको थ्रीडी दृश्य छैन।",

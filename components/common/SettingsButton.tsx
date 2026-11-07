@@ -54,6 +54,7 @@ export function SettingsButton() {
 
   return (
     <AnimatedPressable
+      testID="settings-button"
       accessibilityRole="button"
       accessibilityLabel={visitorLiteralCopy(language, 'Settings')}
       accessibilityHint={visitorLiteralCopy(language, 'Preferences, permissions, sync and storage')}

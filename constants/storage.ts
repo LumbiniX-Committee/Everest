@@ -31,6 +31,9 @@ export const StorageKeys = {
   planEntitlement: `${PREFIX}.plan.entitlement`,
   /** The Home screen's getting-started guide has been dismissed. */
   homeGuideDismissed: `${PREFIX}.home.guideDismissed`,
+  /** Crash reports kept on this phone until sent, or forever if sharing is off. */
+  crashReports: `${PREFIX}.diagnostics.crashReports`,
+  prefShareCrashReports: `${PREFIX}.preferences.shareCrashReports`,
 
   /**
    * Which sites have had their story sequence read through to the end, as a
@@ -81,6 +84,7 @@ export const PreferenceKeys = {
   autoNarration: StorageKeys.prefAutoNarration,
   visitorType: StorageKeys.prefVisitorType,
   homeHub: StorageKeys.prefHomeHub,
+  shareCrashReports: StorageKeys.prefShareCrashReports,
 } as const;
 
 export const DATABASE_NAME = 'sakshi.db';

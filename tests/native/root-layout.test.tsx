@@ -45,7 +45,11 @@ jest.mock('@/store', () => {
     }),
   };
 });
+jest.mock('@/components/common', () => ({
+  AppErrorBoundary: ({ children }: { children: React.ReactNode }) => children,
+}));
 jest.mock('../../services/index', () => ({
+  diagnostics: { installGlobalHandler: jest.fn(), sendCrashReports: jest.fn(() => Promise.resolve(0)) },
   __esModule: true,
   notifications: { subscribeToArrivalTaps: jest.fn(() => jest.fn()) },
 }));
