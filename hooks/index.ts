@@ -1,4 +1,4 @@
-export { useHeading, usePitch } from './useHeading';
+export { useHeading, useHeadingReading, usePitch } from './useHeading';
 export { useCurrentPosition, type PositionState } from './useCurrentPosition';
 export {
   useAlignment,

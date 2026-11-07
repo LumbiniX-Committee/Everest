@@ -11,6 +11,8 @@ import type { InterfaceLanguage } from '@/types';
  * Text boundary and are never registered here.
  */
 export const NEPALI_UI_LITERALS = {
+  "Coming soon": "छिट्टै आउँदै",
+  "The compass is unreliable right now, so a lock is not possible. Calibrate it below.": "अहिले कम्पास भरपर्दो छैन, त्यसैले मिलान सम्भव छैन। तल यसलाई मिलाउनुहोस्।",
   "Something went wrong": "केही गडबड भयो",
   "Your records are safe on this phone. Try again to go back into the app.": "तपाईंका अभिलेख यो फोनमा सुरक्षित छन्। एपमा फर्कन फेरि प्रयास गर्नुहोस्।",
   "Crash reports": "क्र्यास रिपोर्ट",

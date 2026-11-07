@@ -25,7 +25,7 @@ const DIRECTIONS_RANGE_M = 60;
 export function currentStep(alignment: AlignmentState, vantage: Vantage): StepKey {
   if (alignment.phase === 'locked') return 'capture';
   if (alignment.distanceM == null || alignment.distanceM > DIRECTIONS_RANGE_M) return 'arrive';
-  if (alignment.distanceM > vantage.positionToleranceM || alignment.blockedBy === 'position' || alignment.blockedBy === 'gps') {
+  if (alignment.distanceM > (alignment.tolPosM ?? vantage.positionToleranceM) || alignment.blockedBy === 'position' || alignment.blockedBy === 'gps') {
     return 'stand';
   }
   if (alignment.blockedBy === 'heading') return 'face';
@@ -78,6 +78,11 @@ export function GuidanceSteps({ alignment, vantage }: { alignment: AlignmentStat
           {alignment.blockedBy && BLOCKED[alignment.blockedBy] && step !== 'arrive' ? (
             <Text variant="caption" tone="secondary">
               {BLOCKED[alignment.blockedBy]}
+            </Text>
+          ) : null}
+          {alignment.headingQuality === 'poor' ? (
+            <Text variant="caption" tone="seeking">
+              The compass is unreliable right now, so a lock is not possible. Calibrate it below.
             </Text>
           ) : null}
           <Text variant="caption" tone="muted">

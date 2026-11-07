@@ -40,9 +40,9 @@ It lands on Home with a "Start here" guide. Permissions are asked when first nee
 | Map, search, walking directions | ✓ | ✓ |
 | Site basics, entry fees, hours | ✓ | ✓ |
 | Photographs and your own record | ✓ | ✓ |
-| Offline maps and guides | | ✓ (planned) |
+| Offline maps and guides | | Coming soon (not built; shown as such in the app) |
 | 3D monument views | Swayambhunath only | ✓ |
-| Satellite and hybrid map | | ✓ (needs a MapTiler key) |
+| Satellite and hybrid map | | Coming soon until a MapTiler key is set, then ✓ |
 | Step-by-step close-up guidance | | ✓ |
 | Audio narration | | ✓ |
 | Reflection companion | | ✓ |

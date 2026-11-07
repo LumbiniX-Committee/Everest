@@ -1,17 +1,21 @@
 import { StyleSheet, View } from 'react-native';
 
 import { Card, Icon, Text } from '@/components/ui';
+import { SATELLITE_KEY } from '@/components/map';
 import { priceFor, type VisitorType } from '@/core';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { colors, spacing } from '@/theme';
 
 const FREE = ['Map, search and walking directions', 'Site basics, fees and hours', 'Take photographs and keep your own record'];
-const PRO = [
-  'Offline maps and guides',
-  '3D monument views',
-  'Satellite map',
-  'Step-by-step close-up guidance',
-  'Audio narration',
-  'Reflection companion',
+const PRO = ['3D monument views', 'Step-by-step close-up guidance', 'Audio narration', 'Reflection companion'];
+
+/**
+ * Promised for Pro but not yet working. Listed apart, so nobody pays for them
+ * believing they exist. Satellite needs a MapTiler key before it can appear.
+ */
+const COMING = [
+  { label: 'Offline maps and guides', ready: false },
+  { label: 'Satellite map', ready: Boolean(SATELLITE_KEY) },
 ];
 
 function Row({ label, icon }: { label: string; icon: 'check' | 'star-four-points-outline' }) {
@@ -27,6 +31,7 @@ function Row({ label, icon }: { label: string; icon: 'check' | 'star-four-points
 
 /** The same comparison in onboarding and Settings, so the two can't disagree. */
 export function PlanComparison({ visitor }: { visitor: VisitorType }) {
+  const ui = useVisitorLiteralCopy();
   const price = priceFor(visitor);
   const priceText = price.currency === 'NPR' ? 'NPR 1,000 a month' : 'USD 20 a month';
 
@@ -51,6 +56,14 @@ export function PlanComparison({ visitor }: { visitor: VisitorType }) {
         {PRO.map((label) => (
           <Row key={label} label={label} icon="star-four-points-outline" />
         ))}
+        {COMING.filter((item) => item.ready).map((item) => (
+          <Row key={item.label} label={item.label} icon="star-four-points-outline" />
+        ))}
+        {COMING.some((item) => !item.ready) ? (
+          <Text variant="caption" tone="muted">
+            {`${ui('Coming soon')}: ${COMING.filter((item) => !item.ready).map((item) => ui(item.label)).join(', ')}`}
+          </Text>
+        ) : null}
       </Card>
     </View>
   );

@@ -294,4 +294,8 @@ export type AlignmentState = {
   pitchDeltaDeg: number | null;
   /** What is holding the lock back, so the screen can say what to fix. Null when locked or idle. */
   blockedBy?: 'position' | 'heading' | 'pitch' | 'gps' | null;
+  /** The position tolerance actually used for the lock, after the visitor's setting. */
+  tolPosM?: number;
+  /** How far the phone trusts its compass. A poor compass can never lock. */
+  headingQuality?: 'good' | 'fair' | 'poor' | null;
 };

@@ -129,7 +129,7 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
         </ProGate>
       ) : null}
 
-      {alignment.blockedBy === 'heading' ? (
+      {alignment.blockedBy === 'heading' || alignment.headingQuality === 'poor' ? (
         <Button label="Calibrate compass" icon="compass-outline" variant="quiet" onPress={() => setCalibrating(true)} />
       ) : null}
 

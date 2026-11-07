@@ -31,6 +31,7 @@ export * from './map/polyline.ts';
 export * from './map/presence.ts';
 export * from './map/route.ts';
 export * from './alignment/attitude.ts';
+export * from './alignment/precision.ts';
 export * from './sync/policy.ts';
 export * from './plans/index.ts';
 

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import { smoothFix, type PositionEstimate } from '@/core';
 import { location as locationService } from '@/services';
 import { usePermission } from '@/store';
 import type { Coordinate } from '@/types';
@@ -31,9 +32,9 @@ export type PositionState = {
  * meant demo mode tested the return statement below and nothing else.
  */
 export function useCurrentPosition(
-  options: { watch?: boolean; highAccuracy?: boolean } = {},
+  options: { watch?: boolean; highAccuracy?: boolean; smooth?: boolean } = {},
 ): PositionState {
-  const { watch = false, highAccuracy = false } = options;
+  const { watch = false, highAccuracy = false, smooth = false } = options;
   const { state } = usePermission('location');
   const granted = state.status === 'granted';
 
@@ -69,9 +70,22 @@ export function useCurrentPosition(
     setPosition((prev) => ({ ...prev, acquiring: true, unavailable: false }));
 
     if (watch) {
+      // Close-up guidance asks for a steadied position: each fix is blended into
+      // a running estimate weighted by its own accuracy, so one wild reading
+      // cannot throw the visitor off the mark. The map takes fixes as they come.
+      let estimate: PositionEstimate | null = null;
       const stop = locationService.watchPosition(
-        (fix) => {
+        (raw) => {
           if (cancelled) return;
+          let fix = raw;
+          if (smooth) {
+            estimate = smoothFix(estimate, { ...raw.coordinate, accuracyM: raw.accuracyM, timestamp: raw.timestamp });
+            fix = {
+              ...raw,
+              coordinate: { latitude: estimate.latitude, longitude: estimate.longitude },
+              accuracyM: raw.accuracyM == null ? null : estimate.accuracyM,
+            };
+          }
           setPosition({
             coordinate: fix.coordinate,
             accuracyM: fix.accuracyM,
@@ -100,7 +114,7 @@ export function useCurrentPosition(
     return () => {
       cancelled = true;
     };
-  }, [granted, demoMode, watch, highAccuracy]);
+  }, [granted, demoMode, watch, highAccuracy, smooth]);
 
   const setDemoMode = useCallback((active: boolean) => {
     locationService.setDemoMode(active);
