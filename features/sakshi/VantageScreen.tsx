@@ -7,7 +7,7 @@ import { BackBar, EmptyState } from '@/components/common';
 import { AlignmentReadout, Reticle } from '@/components/reticle';
 import { SpeakButton } from '@/components/voice/SpeakButton';
 import { findSite, findVantage } from '@/data';
-import { useAlignment, useHaptics, useSafeBack } from '@/hooks';
+import { useAlignment, useHaptics, useOpenInTabs, useSafeBack } from '@/hooks';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { usePermission } from '@/store';
 import { colors, radii, spacing } from '@/theme';
@@ -24,6 +24,7 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
   const ui = useVisitorLiteralCopy();
   const router = useRouter();
   const goBack = useSafeBack();
+  const openInTabs = useOpenInTabs();
   const vantage = findVantage(vantageId);
   const { state: locationPermission, request: requestLocation } = usePermission('location');
   const { pulse } = useHaptics();
@@ -74,6 +75,12 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
         <Text variant="title">{vantage.label}</Text>
       </View>
 
+      <Button
+        label="Directions to this viewpoint"
+        icon="directions"
+        variant="secondary"
+        onPress={() => openInTabs({ pathname: '/(main)/tirtha/map', params: { guideTo: vantage.id } })}
+      />
       <Button
         label="Try the alignment first"
         variant="quiet"

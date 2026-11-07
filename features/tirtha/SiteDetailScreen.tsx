@@ -154,13 +154,21 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
         onPress={simulateHere}
       />
 
-      <Button
-        label="See on the map"
-        icon="map-marker-outline"
-        onPress={() =>
-          router.dismissTo({ pathname: '/(main)/tirtha/map', params: { focusSiteId: site.id } })
-        }
-      />
+      <View style={styles.mapActions}>
+        <Button
+          label="Directions"
+          icon="directions"
+          onPress={() => router.dismissTo({ pathname: '/(main)/tirtha/map', params: { guideTo: site.id } })}
+        />
+        <Button
+          label="See on the map"
+          icon="map-marker-outline"
+          variant="secondary"
+          onPress={() =>
+            router.dismissTo({ pathname: '/(main)/tirtha/map', params: { focusSiteId: site.id } })
+          }
+        />
+      </View>
 
       {localQuests.length > 0 ? (
         <Button
@@ -328,6 +336,7 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
 }
 
 const styles = StyleSheet.create({
+  mapActions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   head: { paddingTop: spacing.lg, paddingBottom: spacing.lg, gap: spacing.sm },
   badges: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginTop: spacing.xs },
   description: { paddingBottom: spacing.lg },

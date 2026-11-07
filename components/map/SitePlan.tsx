@@ -20,6 +20,21 @@ import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
  * When a real basemap is justified, it slots in behind this component's props
  * without any caller changing.
  */
+/** A frame that contains every site given, so none is clamped to an edge. */
+function planBounds(sites: readonly HeritageSite[]) {
+  if (sites.length === 0) return LUMBINI_BOUNDS;
+  if (sites.every((site) => regionOf(site) === regionOf(sites[0]))) return REGIONS[regionOf(sites[0])].bounds;
+  const lats = sites.map((site) => site.coordinate.latitude);
+  const lngs = sites.map((site) => site.coordinate.longitude);
+  const pad = 0.002;
+  return {
+    north: Math.max(...lats) + pad,
+    south: Math.min(...lats) - pad,
+    east: Math.max(...lngs) + pad,
+    west: Math.min(...lngs) - pad,
+  };
+}
+
 export function SitePlan({
   sites,
   observer,
@@ -52,16 +67,11 @@ export function SitePlan({
   /**
    * The frame this plan draws within.
    *
-   * When every site passed shares one region, that region's own bounds are
-   * used — this is what makes a Kathmandu Valley quest plan legible instead of
-   * pinning every site to the same corner of a Lumbini-shaped box. A mixed or
-   * empty set (the explore surface's all-sites fallback) keeps the original
-   * Lumbini framing, since that is still the home region and the common case.
+   * One region's own bounds when every site shares it. A mixed set used to be
+   * drawn in Lumbini's frame and clamped, piling every Kathmandu site into one
+   * corner; it is now framed around the places actually given.
    */
-  const bounds =
-    sites.length > 0 && sites.every((site) => regionOf(site) === regionOf(sites[0]))
-      ? REGIONS[regionOf(sites[0])].bounds
-      : LUMBINI_BOUNDS;
+  const bounds = planBounds(sites);
 
   // Normalise a coordinate into the plan's pixel box. North is up.
   const project = (coordinate: Coordinate) => {

@@ -2,6 +2,34 @@
 
 What changed in each milestone, what was verified, and what was not. Newest first. The plan lives in the delivery plan; this records what actually happened.
 
+## Milestone 3: a clear map
+
+### Changed
+- MapLibre GL JS 4.7.1 and three.js are bundled into the app (`tools/vendor-map.mjs`, `npm run vendor:map`), so the map opens with no network and no CDN dependency.
+- **Map modes:** Standard (flat, north up, the new default), 3D (tilted, buildings, schematic monument massing), and Terrain (relief from the open AWS elevation tiles). Satellite and Hybrid appear only when `EXPO_PUBLIC_MAPTILER_KEY` is set, and are Pro.
+- **Invented structure removed:** precinct walls generated from geofence circles are gone from both maps.
+- **Places:** clustered when zoomed out, with larger tap targets, and sorted by importance when labels collide.
+- **Your position:** an accuracy circle sized in real metres. Panning stops follow mode, and the recenter button brings it back.
+- **Search:** the "Go to" list searches by name, ignoring diacritics and case.
+- **Directions:**
+  - Walking directions to any site or viewpoint, from the site page ("Directions") and the viewpoint screen.
+  - Turn-by-turn instructions from Valhalla.
+  - A new route only when the walker leaves the line, judged against GPS accuracy (`core/map/route.ts`, tested).
+  - A 12-second timeout.
+- **Reliability:** a tile error after load no longer swaps the whole map for the schematic plan.
+- **Opening view:** the map opens on the starting area chosen in onboarding.
+- **Schematic plan:** no longer clamps Kathmandu sites into a corner of Lumbini's frame.
+
+### Verified
+- The generated map page, rendered in Chrome: standard, clustered, 3D and terrain views. All layers present, no page errors, satellite falling back to standard without a key.
+- Route geometry unit tests.
+
+### Not verified
+- The map inside the phone's WebView, GPS accuracy display, and turn-by-turn on a real walk.
+- Valhalla's instruction language is English.
+- **Offline map packs are not built yet.** The map's own code works offline, but tiles still need a connection.
+- **Basemap labels use English names,** because MapLibre GL JS does not shape Devanagari correctly. Nepali labels need a native renderer or a pre-shaped font.
+
 ## Milestone 2: onboarding and plans
 
 ### Changed

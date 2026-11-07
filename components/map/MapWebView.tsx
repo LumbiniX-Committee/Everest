@@ -7,7 +7,7 @@ import { demoSites } from '@/data';
 import { colors, radii, spacing } from '@/theme';
 import type { Coordinate } from '@/types';
 
-import { buildMapHtml } from './mapHtml';
+import { buildMapHtml, type MapMode } from './mapHtml';
 import { SitePlan } from './SitePlan';
 
 export type MapWebViewProps = {
@@ -51,7 +51,18 @@ export type MapWebViewProps = {
    * camera on every frame. Bump `nonce` to repeat the same move deliberately.
    */
   camera?: { longitude: number; latitude: number; distance: 'world' | 'close'; nonce?: number } | null;
+  /** How the map is drawn. Changing it keeps the camera and the loaded tiles. */
+  mode?: MapMode;
+  /** The fix's accuracy radius in metres, drawn as a circle around you. */
+  accuracyM?: number | null;
+  /** Where the map opens, as [longitude, latitude]. Read once. */
+  initialCenter?: readonly [number, number];
+  /** The visitor dragged the map: they want to look around, not be followed. */
+  onUserPan?: () => void;
 };
+
+/** Set in EAS environment variables. Without it, satellite and hybrid stay hidden. */
+export const SATELLITE_KEY = process.env.EXPO_PUBLIC_MAPTILER_KEY?.trim() || undefined;
 
 /**
  * The map, drawn by MapLibre GL JS inside a WebView.
@@ -77,6 +88,10 @@ export function MapWebView({
   routeColor = colors.sandstoneDeep,
   guideDestination,
   camera,
+  mode = 'standard',
+  accuracyM = null,
+  initialCenter,
+  onUserPan,
 }: MapWebViewProps) {
   const [failed, setFailed] = useState(false);
   const [ready, setReady] = useState(false);
@@ -100,10 +115,25 @@ export function MapWebView({
   //
   // Depends only on props that do not change while the screen is open, so the
   // document is built once and never rebuilt underneath a running map.
+  // The opening centre is read once: moving it later is the camera's job.
+  const [openingCenter] = useState(initialCenter);
   const html = useMemo(
-    () => buildMapHtml({ avatar: showFigure, fullscreen: fill, interactive: fill, topInset }),
-    [showFigure, fill, topInset],
+    () =>
+      buildMapHtml({
+        avatar: showFigure,
+        fullscreen: fill,
+        interactive: fill,
+        topInset,
+        center: openingCenter,
+        satelliteKey: SATELLITE_KEY,
+      }),
+    [showFigure, fill, topInset, openingCenter],
   );
+
+  useEffect(() => {
+    if (!ready || !fill) return;
+    webRef.current?.injectJavaScript(`window.sakshiSetMapMode && window.sakshiSetMapMode(${JSON.stringify(mode)}); true;`);
+  }, [ready, fill, mode]);
 
   /**
    * Position is pushed in rather than re-rendering the document.
@@ -116,9 +146,11 @@ export function MapWebView({
     if (!ready || !coordinate) return;
     const { latitude, longitude } = coordinate;
     webRef.current?.injectJavaScript(
-      `window.sakshiSetPose && window.sakshiSetPose(${longitude}, ${latitude}, ${heading ?? 0}, ${follow}); true;`,
+      // A missing heading is sent as null, so the figure keeps its last direction
+      // instead of snapping to face north.
+      `window.sakshiSetPose && window.sakshiSetPose(${longitude}, ${latitude}, ${heading ?? 'null'}, ${follow}, ${accuracyM ?? 'null'}); true;`,
     );
-  }, [ready, coordinate, heading, follow]);
+  }, [ready, coordinate, heading, follow, accuracyM]);
 
   /**
    * The planned route, pushed in the same way and for the same reason.
@@ -207,13 +239,15 @@ export function MapWebView({
         javaScriptEnabled
         domStorageEnabled
         onError={() => setFailed(true)}
-        onHttpError={() => setFailed(true)}
         onMessage={(event) => {
           try {
             const msg = JSON.parse(event.nativeEvent.data);
             if (msg.type === 'ready') setReady(true);
             if (msg.type === 'site' && typeof msg.id === 'string') onSelectSite?.(msg.id);
-            if (msg.type === 'error') setFailed(true);
+            // Only a failure before the map loaded. A missing tile later posts
+            // 'tile-error', which is not a reason to give up the whole map.
+            if (msg.type === 'error' && !ready) setFailed(true);
+            if (msg.type === 'user-pan') onUserPan?.();
           } catch {
             // A malformed message from the page is not worth reacting to.
           }

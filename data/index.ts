@@ -9,3 +9,4 @@ export * from './plates';
 export * from './audio';
 export * from './questExperiences';
 
+export { HUB_CENTRES, hubCentre } from './hubs';

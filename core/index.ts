@@ -29,6 +29,7 @@ export * from './map/geofence.ts';
 export * from './map/pradakshina.ts';
 export * from './map/polyline.ts';
 export * from './map/presence.ts';
+export * from './map/route.ts';
 export * from './alignment/attitude.ts';
 export * from './sync/policy.ts';
 export * from './plans/index.ts';

@@ -11,6 +11,20 @@ import type { InterfaceLanguage } from '@/types';
  * Text boundary and are never registered here.
  */
 export const NEPALI_UI_LITERALS = {
+  "Search places": "ठाउँ खोज्नुहोस्",
+  "No place matches that name.": "त्यो नाम मिल्ने ठाउँ छैन।",
+  "Map type": "नक्साको प्रकार",
+  "Streets and paths, flat and north up": "सडक र बाटा, समतल र उत्तर माथि",
+  "3D": "थ्रीडी",
+  "Tilted, with buildings": "ढल्किएको, भवनसहित",
+  "Terrain": "भू-भाग",
+  "Hills and valleys in relief": "पहाड र उपत्यका उभारमा",
+  "Satellite": "स्याटेलाइट",
+  "Aerial imagery": "हवाई तस्बिर",
+  "Hybrid": "हाइब्रिड",
+  "Aerial imagery with streets and names": "सडक र नामसहित हवाई तस्बिर",
+  "Directions": "मार्ग",
+  "Directions to this viewpoint": "यो दृश्यबिन्दुसम्मको मार्ग",
   "days left": "दिन बाँकी",
   "SAKSI-XXXX-XXXX-XXXX": "SAKSI-XXXX-XXXX-XXXX",
   "See Pro": "प्रो हेर्नुहोस्",

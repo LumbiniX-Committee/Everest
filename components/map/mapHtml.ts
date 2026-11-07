@@ -9,6 +9,8 @@ import {
 } from '@/data';
 import { colors, sakshiMapStyle } from '@/theme';
 
+import { MAPLIBRE_CSS, MAPLIBRE_JS, THREE_JS } from './vendor.generated';
+
 export type MapHtmlOptions = {
   /**
    * Draw a figure at the reported position and keep the camera with it.
@@ -32,7 +34,14 @@ export type MapHtmlOptions = {
   interactive?: boolean;
   /** Safe area inset top (in pixels) for floating map control offset. */
   topInset?: number;
+  /** Where the map opens, as [longitude, latitude]. Defaults to Lumbini. */
+  center?: readonly [number, number];
+  /** A MapTiler key enables the satellite and hybrid modes. Without one they are hidden. */
+  satelliteKey?: string;
 };
+
+/** The ways the map can be drawn. Satellite and hybrid need a MapTiler key. */
+export type MapMode = 'standard' | '3d' | 'terrain' | 'satellite' | 'hybrid';
 
 /**
  * The MapLibre GL JS document rendered inside the WebView.
@@ -56,12 +65,17 @@ export function buildMapHtml({
   fullscreen = false,
   interactive = fullscreen,
   topInset = 0,
+  center = MAP_HOME.centre,
+  satelliteKey,
 }: MapHtmlOptions = {}): string {
   // Named camera rather than an offset from MAP_HOME — see MAP_CAMERA for why
   // the old `+ 1.5` opened the world about three times too close to play in.
   const camera = fullscreen ? MAP_CAMERA.world : MAP_CAMERA.overview;
   const zoom = camera.zoom;
-  const pitch = camera.pitch;
+  // Flat, north-up by default, as people expect from a street map. Tilt is a
+  // mode they choose, not the first thing they have to make sense of.
+  const pitch = fullscreen ? 0 : camera.pitch;
+  const bearing = fullscreen ? 0 : MAP_HOME.bearing;
   // Clear of the standing pill in the top-left of the app's HUD, which is
   // 60pt tall including its own top padding.
   const controlTopOffset = fullscreen ? (topInset > 0 ? topInset + 132 : 156) : 10;
@@ -73,9 +87,11 @@ export function buildMapHtml({
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
 <!-- user-scalable=no disables *page* zoom only; MapLibre handles map zoom itself,
      and leaving page zoom on makes a pinch ambiguous between the two. -->
-<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
-<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-${avatar ? '<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>' : ''}
+<!-- Bundled with the app rather than fetched from a CDN, so the map opens with
+     no network and can't be blanked by an outage elsewhere. -->
+<style>${MAPLIBRE_CSS}</style>
+<script>${MAPLIBRE_JS}</script>
+${avatar ? `<script>${THREE_JS}</script>` : ''}
 <style>
   html,body,#map{margin:0;padding:0;height:100%;width:100%;background:${colors.mapBase}}
   .maplibregl-ctrl-attrib{font-size:10px}
@@ -141,15 +157,14 @@ ${avatar ? '<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></s
     var map = new maplibregl.Map({
       container: 'map',
       style: ${JSON.stringify(sakshiMapStyle)},
-      center: ${JSON.stringify(MAP_HOME.centre)},
+      center: ${JSON.stringify(center)},
       zoom: ${zoom},
       pitch: ${pitch},
-      bearing: ${MAP_HOME.bearing},
+      bearing: ${bearing},
       attributionControl: { compact: false },
       interactive: ${interactive},
-      // Lumbini is a few square kilometres; there is no reason to allow a
-      // whole-planet zoom-out that loses the place entirely.
-      minZoom: 12,
+      // Wide enough to see the whole of Nepal, not so wide the place is lost.
+      minZoom: 6,
       maxZoom: 19,
       // A pinch that also rotates makes a small map feel unsteady. Zoom is the
       // gesture people actually want here; rotation stays on the compass.
@@ -157,9 +172,21 @@ ${avatar ? '<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></s
       dragRotate: ${interactive}
     });
 ${interactive ? INTERACTIVE_CONTROLS : ''}
-    map.on('error', function(e){ post({ type:'error', message: String((e && e.error && e.error.message) || 'map error') }); });
+    // Only a failure before the map has loaded is fatal. After that, a missing
+    // tile is just a missing tile: the map stays, instead of being swapped for
+    // the schematic plan for the rest of the visit.
+    var loaded = false;
+    map.on('error', function(e){
+      var message = String((e && e.error && e.error.message) || 'map error');
+      post({ type: loaded ? 'tile-error' : 'error', message: message });
+    });
+
+    // Panning means "let me look around", so stop dragging the camera back.
+    map.on('dragstart', function(e){ if (e && e.originalEvent) post({ type:'user-pan' }); });
 
     map.on('load', function(){
+      loaded = true;
+${MAP_MODES(satelliteKey)}
       // The enclosed ground, flat. Nothing stands between the camera and the
       // monuments; this is only what says you are inside something.
       //
@@ -179,35 +206,9 @@ ${interactive ? INTERACTIVE_CONTROLS : ''}
         }
       }, 'road-major-casing');
 
-      map.addSource('precinct-walls', { type:'geojson', data: ${JSON.stringify(precinctWallGeoJSON)} });
-
-      // The wall. A band with a gateway rather than an extruded disc — see
-      // wallBand() in data/demo/geo.ts for why the disc was both wrong and
-      // expensive.
-      map.addLayer({
-        id:'precinct-wall', type:'fill-extrusion', source:'precinct-walls',
-        paint:{
-          'fill-extrusion-color': ${JSON.stringify(colors.sandstoneDeep)},
-          'fill-extrusion-height': ['get','height'],
-          'fill-extrusion-base': 0,
-          'fill-extrusion-opacity': 0.9,
-          'fill-extrusion-vertical-gradient': true
-        }
-      });
-
-      // The capping course, a shade lighter and slightly proud of the wall.
-      // minzoom 15: below it the whole precinct is a few hundred pixels across
-      // and a 45 cm band is subpixel — geometry that can only cost fill rate.
-      map.addLayer({
-        id:'precinct-coping', type:'fill-extrusion', source:'precinct-walls',
-        minzoom: 15,
-        paint:{
-          'fill-extrusion-color': ${JSON.stringify(colors.sandstone)},
-          'fill-extrusion-height': ['get','copingHeight'],
-          'fill-extrusion-base': ['get','copingBase'],
-          'fill-extrusion-opacity': 0.95
-        }
-      });
+      // No precinct walls are drawn. They were generated from geofence circles,
+      // so they put a wall on the map wherever one was assumed, not where one
+      // stands. A map must not show structure that isn't there.
       map.addSource('site-water', { type:'geojson', data: ${JSON.stringify(waterGeoJSON)} });
       map.addLayer({
         id:'site-water-fill', type:'fill', source:'site-water',
@@ -219,6 +220,8 @@ ${interactive ? INTERACTIVE_CONTROLS : ''}
       map.addSource('monuments', { type:'geojson', data: ${JSON.stringify(monumentGeoJSON)} });
       map.addLayer({
         id:'monument-massing', type:'fill-extrusion', source:'monuments',
+        // Schematic volumes, so only in 3D mode, where a tilted view asks for them.
+        layout:{ visibility:'none' },
         paint:{
           'fill-extrusion-color': ${JSON.stringify(colors.mapBuildingRoof)},
           'fill-extrusion-height': ['get','height'],
@@ -230,25 +233,50 @@ ${interactive ? INTERACTIVE_CONTROLS : ''}
         }
       });
 
-      map.addSource('sites', { type:'geojson', data: ${JSON.stringify(siteGeoJSON)} });
+      // Clustered, so 70 places in one valley read as a few countable groups
+      // rather than a smear of overlapping dots.
+      map.addSource('sites', {
+        type:'geojson', data: ${JSON.stringify(siteGeoJSON)},
+        cluster: true, clusterRadius: 44, clusterMaxZoom: 15
+      });
       map.addLayer({
-        id:'site-dot', type:'circle', source:'sites',
+        id:'site-cluster', type:'circle', source:'sites', filter:['has','point_count'],
         paint:{
-          'circle-radius': 6,
-          'circle-color': ${JSON.stringify(colors.earth)},
-          'circle-stroke-width': 2,
+          'circle-color': ${JSON.stringify(colors.accent)},
+          'circle-radius': ['step', ['get','point_count'], 16, 10, 20, 30, 26],
+          'circle-stroke-width': 3,
           'circle-stroke-color': ${JSON.stringify(colors.surface)}
         }
       });
       map.addLayer({
-        id:'site-label', type:'symbol', source:'sites',
+        id:'site-cluster-count', type:'symbol', source:'sites', filter:['has','point_count'],
+        layout:{ 'text-field':['get','point_count_abbreviated'], 'text-font':['Noto Sans Bold'], 'text-size':13, 'text-allow-overlap':true },
+        paint:{ 'text-color': ${JSON.stringify(colors.onAccent)} }
+      });
+      map.addLayer({
+        id:'site-dot', type:'circle', source:'sites', filter:['!',['has','point_count']],
+        paint:{
+          'circle-radius': 8,
+          'circle-color': ${JSON.stringify(colors.primary)},
+          'circle-stroke-width': 3,
+          'circle-stroke-color': ${JSON.stringify(colors.surface)}
+        }
+      });
+      // An invisible ring around each dot, so a thumb can hit it.
+      map.addLayer({
+        id:'site-hit', type:'circle', source:'sites', filter:['!',['has','point_count']],
+        paint:{ 'circle-radius': 22, 'circle-color': '#000000', 'circle-opacity': 0 }
+      });
+      map.addLayer({
+        id:'site-label', type:'symbol', source:'sites', filter:['!',['has','point_count']],
         layout:{
           'text-field':['get','name'],
           'text-font':['Noto Sans Regular'],
-          'text-size':12,
-          'text-offset':[0,-1.4],
+          'text-size':13,
+          'text-offset':[0,-1.5],
           'text-anchor':'bottom',
-          'text-allow-overlap':false
+          'text-allow-overlap':false,
+          'symbol-sort-key':['get','rank']
         },
         paint:{
           'text-color': ${JSON.stringify(colors.textPrimary)},
@@ -256,9 +284,16 @@ ${interactive ? INTERACTIVE_CONTROLS : ''}
           'text-halo-width': 1.6
         }
       });
-      map.on('click','site-dot', function(e){
+      map.on('click','site-hit', function(e){
         var f = e.features && e.features[0];
         if (f && f.properties && f.properties.id) post({ type:'site', id: f.properties.id });
+      });
+      map.on('click','site-cluster', function(e){
+        var f = e.features && e.features[0];
+        if (!f) return;
+        map.getSource('sites').getClusterExpansionZoom(f.properties.cluster_id).then(function (z) {
+          map.easeTo({ center: f.geometry.coordinates, zoom: z + 0.5 });
+        }).catch(function () {});
       });
       map.getCanvas().style.cursor = 'default';
 ${avatar ? POSITION_MARKER : ''}
@@ -292,6 +327,70 @@ ${avatar ? AVATAR_LAYER : ''}
  * notice a rotation, a split screen, or a container that grew, so the canvas
  * and the viewport drift apart and the map renders letterboxed or clipped.
  */
+/**
+ * Map modes, switched in the running page so tiles and camera survive the change.
+ *
+ * Terrain uses the open AWS elevation tiles (Mapzen Terrarium). Satellite and
+ * hybrid use MapTiler, and exist only when a key is configured: the free
+ * imagery checked so far is either non-commercial or too coarse for close-up use.
+ */
+function MAP_MODES(satelliteKey: string | undefined): string {
+  return `
+      var baseLayers = map.getStyle().layers.map(function (l) { return { id: l.id, type: l.type }; });
+      var satelliteAvailable = ${JSON.stringify(Boolean(satelliteKey))};
+      map.addSource('dem', {
+        type: 'raster-dem', encoding: 'terrarium', tileSize: 256, maxzoom: 15,
+        tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
+        attribution: 'Elevation: Mapzen Terrain Tiles, AWS Open Data'
+      });
+      map.addLayer({ id:'hillshade', type:'hillshade', source:'dem', layout:{ visibility:'none' },
+        paint:{ 'hillshade-shadow-color': ${JSON.stringify(colors.mapLabel)}, 'hillshade-highlight-color': ${JSON.stringify(colors.mapBase)}, 'hillshade-exaggeration': 0.3 } },
+        baseLayers.length > 1 ? baseLayers[1].id : undefined);
+      if (satelliteAvailable) {
+        map.addSource('satellite', {
+          type:'raster', tileSize: 512, maxzoom: 20,
+          tiles: ['https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${satelliteKey ?? ''}'],
+          attribution: '<a href="https://www.maptiler.com/copyright/">MapTiler</a>'
+        });
+        map.addLayer({ id:'satellite', type:'raster', source:'satellite', layout:{ visibility:'none' } },
+          baseLayers.length > 1 ? baseLayers[1].id : undefined);
+      }
+
+      function show(id, visible) {
+        if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', visible ? 'visible' : 'none');
+      }
+      var isRoadOrLabel = function (l) { return l.type === 'symbol' || /road|path|bridge|tunnel/.test(l.id); };
+
+      window.sakshiSetMapMode = function (mode) {
+        if ((mode === 'satellite' || mode === 'hybrid') && !satelliteAvailable) mode = 'standard';
+        var imagery = mode === 'satellite' || mode === 'hybrid';
+        baseLayers.forEach(function (l) {
+          if (l.type === 'background') return show(l.id, !imagery);
+          if (mode === 'satellite') return show(l.id, false);
+          if (mode === 'hybrid') return show(l.id, isRoadOrLabel(l));
+          show(l.id, true);
+        });
+        show('satellite', imagery);
+        show('hillshade', mode === 'terrain');
+        show('monument-massing', mode === '3d');
+        map.setTerrain(mode === 'terrain' ? { source: 'dem', exaggeration: 1.4 } : null);
+        var tilted = mode === '3d' || mode === 'terrain';
+        map.easeTo({ pitch: tilted ? 58 : 0, bearing: tilted ? map.getBearing() : 0, duration: 700 });
+        post({ type:'mode', mode: mode });
+      };
+
+      // Label every place in a script we can be sure renders. MapLibre GL JS does
+      // not shape Devanagari, so a Nepali name could draw with its letters in the
+      // wrong order; English names fall back to the local name where none exists.
+      baseLayers.forEach(function (l) {
+        if (l.type !== 'symbol') return;
+        var field = map.getLayoutProperty(l.id, 'text-field');
+        if (!field) return;
+        map.setLayoutProperty(l.id, 'text-field', ['coalesce', ['get','name:en'], ['get','name_en'], ['get','name']]);
+      });
+`;
+}
+
 const INTERACTIVE_CONTROLS = `
       // Left, not right. The right-hand column belongs to the app's own HUD —
       // the quest marker and the two place controls — and MapLibre's stack was
@@ -359,6 +458,7 @@ const POSITION_MARKER = `
       var TRAIL_MAX = 400;
 
       map.addSource('me', { type:'geojson', data: { type:'FeatureCollection', features: [] } });
+      map.addSource('me-accuracy', { type:'geojson', data: { type:'FeatureCollection', features: [] } });
       map.addSource('me-trail', { type:'geojson', data: { type:'FeatureCollection', features: [] } });
       map.addSource('me-route', { type:'geojson', data: { type:'FeatureCollection', features: [] } });
 
@@ -384,6 +484,23 @@ const POSITION_MARKER = `
           'line-color': ${JSON.stringify(colors.earth)},
           'line-width': 4,
           'line-opacity': 0.7
+        }
+      });
+
+      // How sure the phone is about where you are. A real distance on the
+      // ground, so it grows as you zoom in, which a fixed-size dot can't show.
+      map.addLayer({
+        id:'me-accuracy', type:'circle', source:'me-accuracy',
+        paint:{
+          'circle-radius': ['interpolate', ['exponential', 2], ['zoom'],
+            0, ['/', ['get','acc'], ['get','mpp0']],
+            22, ['/', ['*', ['get','acc'], 4194304], ['get','mpp0']]],
+          'circle-color': ${JSON.stringify(colors.navigationRoute)},
+          'circle-opacity': 0.12,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': ${JSON.stringify(colors.navigationRoute)},
+          'circle-stroke-opacity': 0.4,
+          'circle-pitch-alignment': 'map'
         }
       });
 
@@ -478,7 +595,15 @@ const POSITION_MARKER = `
        * Records the target; the smoothing towards it happens per frame, in the
        * character's render loop, or here when there is no character to run it.
        */
-      window.sakshiSetPose = function (lng, lat, heading, follow) {
+      window.sakshiSetPose = function (lng, lat, heading, follow, accuracy) {
+        map.getSource('me-accuracy').setData({
+          type:'FeatureCollection',
+          features: (typeof accuracy === 'number' && accuracy > 0) ? [{
+            type:'Feature', geometry:{ type:'Point', coordinates:[lng, lat] },
+            // Metres per pixel at zoom 0 at this latitude, for the radius expression.
+            properties:{ acc: accuracy, mpp0: 156543.03 * Math.cos(lat * Math.PI / 180) }
+          }] : []
+        });
         var now = Date.now();
         if (pose.has && pose.lastAt) {
           var dt = Math.max(0.001, (now - pose.lastAt) / 1000);

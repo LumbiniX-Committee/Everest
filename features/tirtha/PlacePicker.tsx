@@ -1,10 +1,11 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import { SiteVisual } from '@/components/site';
 import { BottomSheet, Text } from '@/components/ui';
 import { demoSites } from '@/data';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
-import { colors, radii, spacing } from '@/theme';
+import { colors, font, radii, spacing } from '@/theme';
 import type { Coordinate } from '@/types';
 import { distanceMeters, formatDistance } from '@/utils';
 
@@ -44,6 +45,8 @@ export function PlacePicker({
   onSelect,
 }: PlacePickerProps) {
   const ui = useVisitorLiteralCopy();
+  const [query, setQuery] = useState('');
+  const needle = normalise(query);
   // Nearest first. A list of places to walk to that is not ordered by how far
   // away they are is a list you have to read rather than scan.
   const places = [...demoSites]
@@ -51,6 +54,7 @@ export function PlacePicker({
       site,
       distanceM: coordinate ? distanceMeters(coordinate, site.coordinate) : null,
     }))
+    .filter(({ site }) => !needle || [site.name, site.nameNepali ?? ''].some((name) => normalise(name).includes(needle)))
     .sort((a, b) => (a.distanceM ?? Infinity) - (b.distanceM ?? Infinity));
 
   return (
@@ -61,6 +65,20 @@ export function PlacePicker({
       subtitle={canTravel ? 'Takes you there' : 'Moves the view; your position is your own'}
       scroll
     >
+      <TextInput
+        value={query}
+        onChangeText={setQuery}
+        placeholder={ui('Search places')}
+        placeholderTextColor={colors.textMuted}
+        accessibilityLabel={ui('Search places')}
+        autoCorrect={false}
+        style={styles.search}
+      />
+      {places.length === 0 ? (
+        <Text variant="body" tone="secondary">
+          No place matches that name.
+        </Text>
+      ) : null}
       <View style={styles.list}>
         {places.map(({ site, distanceM }) => {
           const here = site.id === atSiteId;
@@ -98,7 +116,23 @@ export function PlacePicker({
   );
 }
 
+/** Matches "Sakshi" to "Sākṣī", so nobody needs to type diacritics. */
+function normalise(value: string): string {
+  return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+}
+
 const styles = StyleSheet.create({
+  search: {
+    ...font('body'),
+    minHeight: 48,
+    marginBottom: spacing.sm,
+    paddingHorizontal: spacing.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radii.md,
+    backgroundColor: colors.surface,
+    color: colors.textPrimary,
+  },
   list: { gap: spacing.sm, paddingBottom: spacing.base },
   row: {
     flexDirection: 'row',
