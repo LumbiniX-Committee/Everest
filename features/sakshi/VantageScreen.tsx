@@ -74,6 +74,12 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
         <Text variant="title">{vantage.label}</Text>
       </View>
 
+      <Button
+        label="Try the alignment first"
+        variant="quiet"
+        onPress={() => router.push('/visit/practice')}
+      />
+
       <View style={styles.reticleBlock}>
         <Reticle size={reticleSize} progress={alignment.progress} phase={alignment.phase} />
       </View>

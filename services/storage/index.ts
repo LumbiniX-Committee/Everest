@@ -2,7 +2,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { PreferenceKeys } from '@/constants';
 import {
-  ALIGNMENT_TOLERANCE_OPTIONS,
+  VISITOR_TYPE_OPTIONS,
+  HOME_HUB_OPTIONS,
+ALIGNMENT_TOLERANCE_OPTIONS,
   DEFAULT_USER_PREFERENCES,
   DISTANCE_UNIT_OPTIONS,
   OFFLINE_SYNC_OPTIONS,
@@ -111,6 +113,8 @@ export async function getUserPreferences(): Promise<UserPreferences> {
     wisdomTier: oneOf(raw.wisdomTier, WISDOM_TIER_OPTIONS, 'wisdomTier'),
     autoWisdom: bool(raw.autoWisdom, 'autoWisdom'),
     autoNarration: bool(raw.autoNarration, 'autoNarration'),
+    visitorType: oneOf(raw.visitorType, VISITOR_TYPE_OPTIONS, 'visitorType'),
+    homeHub: oneOf(raw.homeHub, HOME_HUB_OPTIONS, 'homeHub'),
   };
 }
 

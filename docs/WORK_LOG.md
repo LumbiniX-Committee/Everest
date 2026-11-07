@@ -2,6 +2,42 @@
 
 What changed in each milestone, what was verified, and what was not. Newest first. The plan lives in the delivery plan; this records what actually happened.
 
+## Milestone 2: onboarding and plans
+
+### Changed
+
+**Onboarding**
+- New first-run flow:
+  1. Language, preselected from the phone.
+  2. Who is visiting: self-declared, with no documents.
+  3. What the app does.
+  4. Where to start.
+  5. Free compared with Pro, with "Continue free" as the main action.
+- Steps after the second can be skipped.
+- Permissions are no longer asked up front; each is asked when first needed.
+- The alignment rehearsal moved to `/visit/practice`, offered from the viewpoint screen.
+- Home has a "Start here" guide with three real actions, and asks visitor type once for people who installed before this existed.
+- Settings has "Your trip": plan, visitor type, and Replay introduction.
+
+**Plans**
+- `core/plans` holds the Pro feature list, prices (NPR 1,000 or USD 20 a month), the 3-day offline grace, and code normalising, with tests.
+- `supabase/migrations/0011_plans.sql`:
+  - Only hashes of activation codes are stored.
+  - Single-user entitlements, readable only by their owner.
+  - Redemption through a function that rate-limits failed guesses and allows one reinstall without granting extra time.
+- `tools/issue-codes.mjs` creates codes using the service role. No payment happens in the app.
+- `ProGate` gates narration and the reflection companion. Directions, records and safety information can never be gated.
+- **Gating is on in development and preview builds only** (`EXPO_PUBLIC_PRO_GATING` in `eas.json`). Store builds keep everything open until the stores' rules on selling digital features outside their billing have been checked.
+
+### Verified
+- `npm run verify` green, with 156 core tests, including 8 new plan tests.
+- Browser walkthrough: language, visitor, discover, start, plan, then Home, Settings and plans, with no page errors.
+- `supabase/tests/plans.test.sql` (12 checks) runs in CI against a local database.
+
+### Not verified
+- Redeeming a real code on a phone.
+- The Nepali text in this milestone needs review by a native speaker.
+
 ## Milestone 1: navigation and record truth
 
 ### Changed

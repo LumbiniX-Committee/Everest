@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Button, Screen, Text } from '@/components/ui';
 import { ScreenHeader, SettingsButton } from '@/components/common';
-import { ArrivalWisdom } from '@/components/arrival';
+import { ArrivalWisdom, StartGuide, VisitorPrompt } from '@/components/arrival';
 import { SiteMap3D } from '@/components/map';
 import { SiteListItem } from '@/components/site';
 import { demoSites } from '@/data';
@@ -37,15 +37,17 @@ export function TirthaScreen() {
       <ScreenHeader
         canGoBack={false}
         eyebrow="Tīrtha"
-        title="Explore Lumbini"
+        title="Explore Nepal"
         subtitle={
           coordinate
             ? 'Sites near you, nearest first.'
-            : 'The sacred garden and the monastic zone.'
+            : 'Heritage, nature and culture, wherever you are.'
         }
         rightAction={<SettingsButton />}
       />
 
+      <VisitorPrompt />
+      <StartGuide />
       <ArrivalWisdom coordinate={coordinate} />
 
       {/* Wrapping the map is safe again: inline it is built inert, so it

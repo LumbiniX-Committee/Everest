@@ -1,9 +1,11 @@
+import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import { Button, Text } from '@/components/ui';
 import { GreetingMonk } from '@/components/monk';
-import { APP_EPIGRAPH, APP_NAME, APP_SUBTITLE } from '@/constants';
+import { APP_NAME, APP_SUBTITLE } from '@/constants';
+import { usePreferences } from '@/store';
 import { colors, prayerFlags, radii, spacing } from '@/theme';
 
 import { OnboardingFrame } from './OnboardingFrame';
@@ -28,6 +30,15 @@ import { nextRoute } from './steps';
 export function WelcomeScreen() {
   const router = useRouter();
   const next = nextRoute('welcome');
+  const { preferences, update } = usePreferences();
+
+  // Start in the phone's own language when we have it. The choice stays one tap away.
+  useEffect(() => {
+    const locale = Intl.DateTimeFormat().resolvedOptions().locale ?? '';
+    if (locale.toLowerCase().startsWith('ne')) void update('interfaceLanguage', 'ne');
+    // Runs once, on arrival: it must not undo a choice made here.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <OnboardingFrame
@@ -63,9 +74,18 @@ export function WelcomeScreen() {
           </View>
         </View>
 
-        <Text variant="mono" tone="muted" center style={styles.epigraph}>
-          {APP_EPIGRAPH}
-        </Text>
+        <View style={styles.languages} accessibilityRole="radiogroup">
+          <Button
+            label="English"
+            variant={preferences.interfaceLanguage === 'en' ? 'primary' : 'secondary'}
+            onPress={() => void update('interfaceLanguage', 'en')}
+          />
+          <Button
+            label="नेपाली"
+            variant={preferences.interfaceLanguage === 'ne' ? 'primary' : 'secondary'}
+            onPress={() => void update('interfaceLanguage', 'ne')}
+          />
+        </View>
       </View>
     </OnboardingFrame>
   );
@@ -95,5 +115,5 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   flag: { width: 20, height: 4 },
-  epigraph: { letterSpacing: 1 },
+  languages: { flexDirection: 'row', gap: spacing.sm },
 });

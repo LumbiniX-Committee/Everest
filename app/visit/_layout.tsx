@@ -21,6 +21,7 @@ export default function VisitLayout() {
       }}
     >
       <Stack.Screen name="vantage" />
+      <Stack.Screen name="practice" />
       <Stack.Screen name="capture" options={{ animation: 'fade_from_bottom', animationDuration: 260 }} />
       <Stack.Screen name="observation" />
       <Stack.Screen name="then-now/[siteId]" />

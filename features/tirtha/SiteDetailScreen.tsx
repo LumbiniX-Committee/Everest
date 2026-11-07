@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import { Button, Card, ConditionBadge, Divider, MetaRow, Screen, SourceBadge, Text } from '@/components/ui';
-import { BackBar, EmptyState } from '@/components/common';
+import { BackBar, EmptyState, ProGate } from '@/components/common';
 import { NarrationPlayer, SiteListItem, VantageListItem } from '@/components/site';
 import { SourceCard, SourceDetailSheet } from '@/components/source';
 import { audioForSite, findSite, historicalImagesForSite, narrationForSite, questsForSite, resolveSources, sitesForParent, vantagesForSite } from '@/data';
@@ -191,7 +191,13 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
       {narration || audioSource ? (
         <>
           <Divider />
-          <NarrationPlayer siteId={site.id} />
+          <ProGate
+            feature="narration"
+            title="Audio narration"
+            body="Pro adds a recorded guide you can listen to as you walk."
+          >
+            <NarrationPlayer siteId={site.id} />
+          </ProGate>
         </>
       ) : null}
 

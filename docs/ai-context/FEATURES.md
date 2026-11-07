@@ -63,7 +63,7 @@ Validation: `node tools/check-quest-experiences.cjs` covers area grouping/range,
 
 **Purpose:** First-run introduction, ending with permission priming.
 
-**Flow:** `/onboarding` redirects to `onboardingSteps[0]`, then welcome → purpose → how-it-works → align → permissions → `completeOnboarding()` → `/(main)/tirtha/map`.
+**Flow:** `/onboarding` redirects to `onboardingSteps[0]`, then welcome (language) → visitor (self-declared visitor type) → discover → start (home hub) → plan (Free or Pro, with code redemption). Skippable from step 3. Ends on Tīrtha Home, which shows a dismissible "Start here" guide. Permissions are asked in context, not here. Replay it from Settings → Your trip.
 
 The sequence is **data-driven** from [features/onboarding/steps.ts](../../features/onboarding/steps.ts) (`onboardingSteps`, `nextRoute()`, `TOTAL_STEPS`) — declared as data "so the flow can be reordered or extended in one place and the progress indicator stays honest."
 

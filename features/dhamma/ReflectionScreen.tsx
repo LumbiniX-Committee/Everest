@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
-import { BackBar, LoadingState } from '@/components/common';
+import { BackBar, LoadingState, ProGate } from '@/components/common';
 import {
   ChatBubble,
   ChatComposer,
@@ -15,7 +15,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import { SpeakButton } from '@/components/voice/SpeakButton';
 import { useConfirmLeave, useKeyboardInset, useOpenInTabs, useSafeBack, useSceneBottomGap } from '@/hooks';
 import { dhamma } from '@/services';
-import { usePreferences } from '@/store';
+import { usePlan, usePreferences } from '@/store';
 import type { CrisisHelpline, DhammaLanguage } from '@/services/dhamma';
 import { colors, radii, spacing } from '@/theme';
 
@@ -114,7 +114,7 @@ const T = {
   },
 } as const;
 
-export function ReflectionScreen({ siteId }: { siteId?: string }) {
+function ReflectionSession({ siteId }: { siteId?: string }) {
   const router = useRouter();
   const goBack = useSafeBack('/(main)/dhamma');
   const openInTabs = useOpenInTabs();
@@ -552,3 +552,21 @@ const styles = StyleSheet.create({
     borderTopColor: colors.border,
   },
 });
+
+/** The reflection companion is Pro. Asking a sourced question in Dhamma stays free. */
+export function ReflectionScreen({ siteId }: { siteId?: string }) {
+  const { canUse } = usePlan();
+  if (canUse('ai-companion')) return <ReflectionSession siteId={siteId} />;
+  return (
+    <Screen scroll>
+      <BackBar fallback="/(main)/dhamma" />
+      <ProGate
+        feature="ai-companion"
+        title="Reflection companion"
+        body="Pro adds a guided reflection on what you saw, in your own words."
+      >
+        {null}
+      </ProGate>
+    </Screen>
+  );
+}

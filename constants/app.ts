@@ -1,6 +1,6 @@
 /** Identity strings. Kept out of components so they are never retyped wrong. */
 export const APP_NAME = 'Sākṣī';
-export const APP_SUBTITLE = 'the witness';
+export const APP_SUBTITLE = 'Your real-time guide to Nepal';
 /** Dhammapada 20.21 — "strive on with diligence". The app's standing instruction. */
 export const APP_EPIGRAPH = 'appamādena sampādetha';
 

@@ -7,7 +7,8 @@ import { Screen, Text } from '@/components/ui';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { colors, radii, spacing } from '@/theme';
 
-import { TOTAL_STEPS, stepIndex } from './steps';
+import { FIRST_SKIPPABLE_STEP, stepIndex, TOTAL_STEPS } from './steps';
+import { useFinishOnboarding } from './useFinishOnboarding';
 
 /**
  * Shared frame for every onboarding screen.
@@ -49,6 +50,9 @@ export function OnboardingFrame({
   // to re-read what a permission is for before granting it. There was no way
   // back at all, and the step marks implied a sequence you could not reverse.
   const canGoBack = index > 0 && router.canGoBack();
+  const finish = useFinishOnboarding();
+  // The last step's own action already finishes, so it doesn't need a second one.
+  const canSkip = index >= FIRST_SKIPPABLE_STEP && index < TOTAL_STEPS - 1;
 
   return (
     <Screen edges={['top', 'bottom']} contentStyle={styles.content}>
@@ -74,6 +78,19 @@ export function OnboardingFrame({
       ) : (
         <View style={styles.progressSpacer} />
       )}
+
+      {canSkip ? (
+        <Pressable
+          accessibilityRole="button"
+          hitSlop={12}
+          onPress={() => void finish()}
+          style={styles.skip}
+        >
+          <Text variant="body" tone="secondary">
+            Skip
+          </Text>
+        </Pressable>
+      ) : null}
 
       {/* The body rises as it fades, and the footer follows a beat later, so a
           screen composes itself rather than appearing all at once. Short
@@ -122,6 +139,7 @@ export function OnboardingFrame({
 }
 
 const styles = StyleSheet.create({
+  skip: { alignSelf: 'flex-end', minHeight: 44, justifyContent: 'center', paddingHorizontal: spacing.sm },
   back: {
     width: 52,
     height: 52,

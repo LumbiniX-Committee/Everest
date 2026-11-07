@@ -31,6 +31,7 @@ export * from './map/polyline.ts';
 export * from './map/presence.ts';
 export * from './alignment/attitude.ts';
 export * from './sync/policy.ts';
+export * from './plans/index.ts';
 
 // --- Quests: availability, stillness, observation riddles --------------------
 export * from './quests/registry.ts';

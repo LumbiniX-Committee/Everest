@@ -23,3 +23,4 @@ export * as leaderboard from './leaderboard'; // lint-vocab:allow — the rankin
 export * as coverage from './coverage';
 export * as privacy from './privacy';
 export * as navigation from './navigation';
+export * as plans from './plans';
