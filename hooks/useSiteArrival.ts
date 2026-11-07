@@ -1,5 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { resolvePresence } from '@/core';
+import { findSite } from '@/data';
 import { arrival, notifications } from '@/services';
 import { usePreferences } from '@/store';
 import type { Coordinate } from '@/types';
@@ -14,18 +16,10 @@ import type { Coordinate } from '@/types';
  * question is answered here, from a live foreground fix, against each site's
  * own radius: 20 m for the Marker Stone, 60 m for Tilaurakot.
  *
- * Entry is announced once. Standing still would otherwise re-announce on every
- * fix, and pacing a boundary would announce on every crossing.
+ * The decision itself — with its exit band, neighbour hand-over and refusal to
+ * act on a coarse fix — is core/map/presence. This hook remembers the last
+ * answer, feeds it each new fix, and announces an entry once.
  */
-
-/**
- * How far you must leave before the same site can announce itself again.
- *
- * A margin on top of the site's own radius, not a second threshold: without it,
- * GPS jitter of a few metres either side of the boundary reads as leaving and
- * arriving repeatedly while the person has not moved.
- */
-const RE_ARM_MARGIN_M = 25;
 
 /**
  * Which sites have already spoken, and when.
@@ -40,10 +34,10 @@ const announcedAt = new Map<string, number>();
 
 /**
  * A floor under how often one site may announce itself, whatever the geometry
- * says. The re-arm margin above handles walking away and back; this handles the
- * rest — a fix that jitters across the margin, a screen reopened, an app
- * resumed. Twenty minutes is longer than it takes to look at one monument and
- * shorter than a second visit later in the day.
+ * says. The presence exit band handles walking away and back; this handles the
+ * rest — a screen reopened, an app resumed, a second lap of the same garden.
+ * Twenty minutes is longer than it takes to look at one monument and shorter
+ * than a second visit later in the day.
  */
 const MIN_RE_ANNOUNCE_MS = 20 * 60 * 1000;
 
@@ -61,69 +55,78 @@ export function resetSiteAnnouncements(): void {
 
 export function useSiteArrival(
   coordinate: Coordinate | null,
-  { notify = true }: { notify?: boolean } = {},
+  {
+    notify = true,
+    accuracyM = null,
+  }: {
+    notify?: boolean;
+    /** The fix's accuracy radius. A coarse fix cannot start or end a visit. */
+    accuracyM?: number | null;
+  } = {},
 ): SiteArrivalState {
   const { preferences } = usePreferences();
   const wisdomTier = preferences.wisdomTier;
   const [atSiteId, setAtSiteId] = useState<string | null>(null);
-  // Memoised on the coordinate's *values*, not its identity. nearestSite
-  // builds a new object on every call, so an unmemoised result changed identity
-  // on every render and re-ran the effect below continuously — several times a
-  // second while a watched position is updating.
+  // Read inside the effect rather than listed as a dependency: the previous
+  // answer is an input to the next one, not a reason to recompute it.
+  const atSiteRef = useRef<string | null>(null);
+
+  // Memoised on the coordinate's *values*, not its identity. These build new
+  // objects on every call, so unmemoised they changed identity on every render
+  // and re-ran the effect below continuously while a watched position updates.
   const nearest = useMemo(
     () => arrival.nearestSite(coordinate),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [coordinate?.latitude, coordinate?.longitude],
   );
+  const candidates = useMemo(
+    () => arrival.presenceCandidates(coordinate),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [coordinate?.latitude, coordinate?.longitude],
+  );
 
   useEffect(() => {
-    if (!nearest) {
-      setAtSiteId(null);
-      return;
-    }
-
-    const site = nearest.site;
-    const reach = arrival.reachOf(site);
-    const inside = nearest.distanceM <= reach;
-    const wellOutside = nearest.distanceM > reach + RE_ARM_MARGIN_M;
+    const previous = atSiteRef.current;
+    const next = coordinate ? resolvePresence(previous, candidates, accuracyM) : null;
     const now = Date.now();
 
-    if (wellOutside) {
-      // Left properly. Let this site speak again on a genuine return — but only
-      // once the floor above has also passed, so pacing the boundary cannot
-      // turn one visit into a stream of banners.
-      const last = announcedAt.get(site.id);
-      if (last === undefined || now - last >= MIN_RE_ANNOUNCE_MS) announcedAt.delete(site.id);
+    // Away from a site long enough: let it speak again on a genuine return.
+    for (const [id, last] of announcedAt) {
+      if (id !== next && now - last >= MIN_RE_ANNOUNCE_MS) announcedAt.delete(id);
     }
 
-    setAtSiteId(inside ? site.id : null);
+    atSiteRef.current = next;
+    setAtSiteId(next);
 
-    if (!inside || announcedAt.has(site.id)) return;
+    if (!next || next === previous || announcedAt.has(next)) return;
 
     // Nothing to say is a reason to stay quiet, not to announce an empty
     // banner — the same refusal the Dhamma surface applies to a weak match.
     // Judged at the reader's chosen depth: at `basic` a site whose only
     // material is a facts table has nothing to say, and staying quiet is the
     // correct outcome rather than a bug.
-    if (!arrival.hasSomethingToSay(site.id, wisdomTier)) return;
+    if (!arrival.hasSomethingToSay(next, wisdomTier)) return;
 
     // Recorded whether or not this caller notifies. The mark means "this
     // arrival has been handled", and the screen showing the passage handles it
     // just as much as a banner does — otherwise the map, which passes
     // notify:false, would leave the arrival un-marked for Tīrtha to announce
     // the moment you switched tabs.
-    announcedAt.set(site.id, now);
+    announcedAt.set(next, now);
 
     if (notify) {
+      const site = findSite(next);
       void notifications.presentArrival({
-        siteId: site.id,
-        title: `You are at ${site.name}`,
+        siteId: next,
+        title: `You are at ${site?.name ?? 'a heritage site'}`,
         // Names the place and points at the app rather than quoting: a banner
         // truncates and strips the citation, and the citation is the point.
-        body: site.summary ?? 'Open Sākṣī to read what this place holds.',
+        body: site?.summary ?? 'Open Sākṣī to read what this place holds.',
       });
     }
-  }, [nearest, notify, wisdomTier]);
+    // `coordinate` is represented by `candidates`, which already tracks its values.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [candidates, accuracyM, notify, wisdomTier]);
 
   return { atSiteId, nearest };
 }

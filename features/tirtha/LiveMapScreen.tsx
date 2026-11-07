@@ -55,7 +55,21 @@ export function LiveMapScreen() {
   const { guideArea } = useLocalSearchParams<{ guideArea?: string }>();
   const returnToQuests = useRef(false);
   const insets = useSafeAreaInsets();
-  const { coordinate, demoMode } = useCurrentPosition({ watch: true });
+  /**
+   * Fine GPS only while the map is in front of someone.
+   *
+   * Monument reach runs down to 20 m, and the balanced fix is a network
+   * estimate that is often wider than that — too coarse to say which stone you
+   * are at. The screen stays mounted under a pushed site page, though, and
+   * holding the GPS radio at full power behind it would be paying for a map no
+   * one is looking at.
+   */
+  const [focused, setFocused] = useState(true);
+  useFocusEffect(useCallback(() => {
+    setFocused(true);
+    return () => setFocused(false);
+  }, []));
+  const { coordinate, accuracyM, demoMode } = useCurrentPosition({ watch: true, highAccuracy: focused });
   const deviceHeading = useHeading();
   const demo = useDemoWalk();
   const { pulse } = useHaptics();
@@ -65,7 +79,7 @@ export function LiveMapScreen() {
 
   // notify:false — Tīrtha's card already announces, and two banners for one
   // arrival is the app talking over itself.
-  const { atSiteId, nearest: near } = useSiteArrival(coordinate, { notify: false });
+  const { atSiteId, nearest: near } = useSiteArrival(coordinate, { notify: false, accuracyM });
 
   const activeSiteId = atSiteId ?? near?.site.id;
   const activeSignificance = activeSiteId ? arrival.significanceOf(activeSiteId) : null;
@@ -79,7 +93,15 @@ export function LiveMapScreen() {
   const storyRef = useRef(story);
   useEffect(() => { storyRef.current = story; }, [story]);
 
-  const [showStory, setShowStory] = useState(false);
+  /**
+   * The site whose story is open, captured when it opened.
+   *
+   * Not read from the live `atSiteId`: a story is something you are reading,
+   * and stepping a few metres while reading it — out of reach, or onto the
+   * neighbouring monument — must neither close it nor swap its content.
+   */
+  const [storySiteId, setStorySiteId] = useState<string | null>(null);
+  const showStory = storySiteId !== null;
   const manualPause = useRef(false);
   const pauseManually = () => { manualPause.current = true; pauseWalk(); };
   const resumeManually = () => { manualPause.current = false; if (!showStory) resumeWalk(); };
@@ -224,7 +246,7 @@ export function LiveMapScreen() {
       // finish the current render before we set state.
       const capturedId = atSiteId;
       const timer = setTimeout(() => {
-        setShowStory(true);
+        setStorySiteId(capturedId);
         if (demoModeRef.current) pauseWalk();
         const site = findSite(capturedId);
         if (site) flyTo(site.coordinate.longitude, site.coordinate.latitude, 'close');
@@ -269,7 +291,7 @@ export function LiveMapScreen() {
    * shows is this balance. See core/progression.
    */
   const onStoryComplete = async (siteId: string) => {
-    setShowStory(false);
+    setStorySiteId(null);
     setCamera(null);
     // Resume the demo walker — story is done, character can move to next site.
     resumeAfterStory();
@@ -499,7 +521,7 @@ export function LiveMapScreen() {
           onPress={() => {
             pulse();
             if (atSiteId && !story.hasRead(atSiteId)) {
-              setShowStory(true);
+              setStorySiteId(atSiteId);
               if (demoMode) pauseWalk();
             } else {
               setShowChat(true);
@@ -663,19 +685,19 @@ export function LiveMapScreen() {
         both. It is the only thing on this screen that takes the whole surface,
         and it does so without covering the map — see StorySequence.
       */}
-      {atSiteId && showStory ? (
+      {storySiteId ? (
         <StorySequence
-          siteId={atSiteId}
-          visible={showStory}
+          siteId={storySiteId}
+          visible
           onComplete={(siteId) => void onStoryComplete(siteId)}
           onDismiss={() => {
-            setShowStory(false);
+            setStorySiteId(null);
             setCamera(null);
             // Dismissed without completing — still unfreeze so demo can continue.
             resumeAfterStory();
           }}
           onOpenQuests={() => {
-            setShowStory(false);
+            setStorySiteId(null);
             setCamera(null);
             resumeAfterStory();
             setShowQuests(true);
