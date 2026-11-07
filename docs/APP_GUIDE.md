@@ -119,7 +119,7 @@ npx expo start        # development
 npm run verify        # types, tests, data, i18n, routes, Dhamma benchmark, lint
 ```
 
-Keys live in `.env.tools.local`, which is gitignored and not uploaded to EAS: `GITHUB_TOKEN`, `VERCEL_TOKEN`, `EXPO_TOKEN`, `SUPABASE_ACCESS_TOKEN`. The app's public Supabase values live in `.env.local` locally, and in EAS environment variables for builds.
+Keys live in `.env.tools.local`, which is gitignored and not uploaded to EAS: `GITHUB_TOKEN`, `VERCEL_TOKEN`, `EXPO_TOKEN`, `SUPABASE_ACCESS_TOKEN`. The app's public Supabase values live in `.env.local` locally. For builds, they live in EAS environment variables (`EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_KEY`, `EXPO_PUBLIC_PORTAL_URL`). A production build fails its pre-install check if any is missing.
 
 ## Testing
 
@@ -137,7 +137,7 @@ Keys live in `.env.tools.local`, which is gitignored and not uploaded to EAS: `G
 2. **Database changes:** apply new migrations in `supabase/migrations/` to production after CI passes.
 3. **App build:**
    - Preview APK: `npx eas-cli build --platform android --profile preview`. The website's download button picks it up automatically.
-   - Store: `--profile production` builds an app bundle.
+   - Store: `--profile production` builds an app bundle. The last one was 170.9 MB, about 108 MB to download on a 64-bit phone once Play removes the debug symbols.
    - Submitting needs `google-play-service-account.json` for Play and an Apple Developer account for iOS.
 
 ## Accounts
