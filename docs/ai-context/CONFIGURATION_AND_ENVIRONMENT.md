@@ -251,3 +251,20 @@ EXPO_PUBLIC_DHAMMA_MODEL=gpt-oss:120b-cloud
 ---
 
 *Part of the [docs/ai-context](README.md) knowledge base. Snapshot of commit `dbe6d45e`; verify against current source before relying on details.*
+
+---
+
+## Deploy keys and account separation
+
+This repository (`siddantasodari4-eng/saksi`) is kept apart from the older `LumbiniX-Committee/Everest` checkout. Each uses its own accounts, and neither folder holds the other's keys.
+
+| Service | Saksi |
+|---|---|
+| GitHub | `siddantasodari4-eng/saksi` |
+| Expo | `@saksi-nepal/saksi` |
+| Vercel | project `saksi`, root `landing/`, connected to `main` |
+| Supabase | `xvahqoivcmfiasffuufr` |
+
+- Deploy keys live in `.env.tools.local`, which is gitignored and listed in `.easignore`. They do not go in `.env.local`, because Expo CLI auto-loads that file and EAS uploads it.
+- Commits here must use the email on the `siddantasodari4-eng` account. Vercel blocks deployments whose commit author has no access to the project, and reports them as `BLOCKED`.
+- Run `tools/seed-history-supabase.mjs` only against staging. It writes synthetic history, so it must never touch this production project.
