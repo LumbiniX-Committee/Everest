@@ -25,7 +25,7 @@ Native projects are generated at build time (`expo prebuild` / EAS Build). **Nev
 | Slug | `sakshi` |
 | Owner | `siddantasodari` |
 | Scheme (deep links) | `sakshi` |
-| Version / runtimeVersion | `0.1.0` / `0.1.0` |
+| Version / runtimeVersion | `1.0.0` / `1.0.0` |
 | iOS bundle identifier | `org.lumbinix.sakshi` |
 | Android package | `org.lumbinix.sakshi` |
 | Orientation | `portrait` |

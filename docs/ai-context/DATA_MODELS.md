@@ -118,7 +118,7 @@ Rendered by [components/thennow/EvidenceTierLabel.tsx](../../components/thennow/
 | `wisdomTier` | `'basic' \| 'medium' \| 'high' \| 'custom'` | `'medium'` |
 | `autoWisdom` | `boolean` | `true` |
 | `autoNarration` | `boolean` | `true` |
-| `colorTheme` | `'navy' \| 'white'` | `'navy'` |
+| `colorTheme` | `'navy' \| 'white'` | `'white'` |
 
 `DEFAULT_USER_PREFERENCES` is the fallback for every unset key. `ALIGNMENT_TOLERANCE_OPTIONS` (and siblings) drive the settings UI.
 

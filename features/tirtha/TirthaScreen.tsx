@@ -88,7 +88,7 @@ export function TirthaScreen() {
           <View style={styles.sectionHeader}>
             <Text variant="heading">Things to try</Text>
             <View style={styles.sectionActions}>
-              <Button label="Memories" variant="quiet" onPress={() => router.push('./memories')} />
+              <Button label="Memories" variant="quiet" onPress={() => router.push('/(main)/tirtha/memories')} />
               <Button label="All Quests" variant="quiet" onPress={() => router.push('/(main)/tirtha/quests')} />
             </View>
           </View>

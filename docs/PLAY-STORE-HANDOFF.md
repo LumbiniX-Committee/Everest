@@ -65,7 +65,7 @@ Once the preview build feels right, build the real release artifact.
 - [ ] Anonymous Sign-ins are enabled on the Supabase project (Authentication
       → Sign In / Providers), or every sync will fail with the RLS error
       from before
-- [ ] Decide the real version number now. `app.json` still says `0.1.0`.
+- [x] Version set to `1.0.0` in `app.json` and `package.json` for production release.
       Play accepts that, but it's the number a user will see, and changing
       it later severs OTA update continuity for anyone already on the old
       one (see DEPLOYMENT.md's Runtime Version section). Pick the number
@@ -221,9 +221,8 @@ Primary: **Travel & Local**
 
 - App icon: 512×512 PNG (bundled in the build; `assets/icon.png` if he
   wants the source file)
-- Feature graphic: 1024×500 PNG or JPG — a simple banner is enough for a
-  first release; this can be a plain background with the app name if there
-  isn't a designed one ready
+- Feature graphic: 1024×500 PNG or JPG — already made, at
+  `docs/store-assets/feature-graphic.png`. Upload it as is.
 - Phone screenshots: minimum 2, Play recommends 4 to 8. Take these from a
   real device running the preview build — Tīrtha's map, a Sākṣī capture in
   progress, and a Dhamma answer are the three that show what the app
