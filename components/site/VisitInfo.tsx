@@ -45,7 +45,7 @@ export function VisitInfo({ fee, hours, wheelchair }: { fee?: EntryFee; hours?: 
             ui('Foreign visitor rate.'),
             `${ui('SAARC')} ${rupees(fee.saarc)}`,
             `${ui('Nepali visitors')} ${fee.nepali === 0 ? ui('Free') : rupees(fee.nepali)}`,
-          ].join(' · ')}.`}
+          ].join(' · ')}
         </Text>
       ) : null}
       {fee?.note ? (
