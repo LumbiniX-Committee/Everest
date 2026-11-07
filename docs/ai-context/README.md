@@ -1,5 +1,7 @@
 # Sākṣī — AI Context Knowledge Base
 
+> Start with [../APP_GUIDE.md](../APP_GUIDE.md) for the current product, and [../WORK_LOG.md](../WORK_LOG.md) for what changed since this knowledge base was audited.
+
 > **Current-state override (10 September 2026):** this knowledge base is an
 > architectural snapshot of commit `dbe6d45e`, not a current feature inventory.
 > Read [the production-pilot guide](../PRODUCTION-PILOT.md) first for the secure
