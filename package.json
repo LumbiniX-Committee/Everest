@@ -35,7 +35,8 @@
     "postinstall": "patch-package",
     "routes": "node tools/validate-routes.mjs",
     "vendor:map": "node tools/vendor-map.mjs",
-    "data:places": "node tools/data/build-places.mjs && node tools/data/gen-places.mjs"
+    "data:places": "node tools/data/build-places.mjs && node tools/data/gen-places.mjs",
+    "models": "node tools/models/build-models.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/baloo-2": "^0.4.2",

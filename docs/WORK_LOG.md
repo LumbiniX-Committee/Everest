@@ -2,6 +2,29 @@
 
 What changed in each milestone, what was verified, and what was not. Newest first. The plan lives in the delivery plan; this records what actually happened.
 
+## Milestone 6: 3D monuments
+
+### Changed
+- **`tools/models/build-models.mjs`:** generates schematic glTF models for nine monuments from architectural shapes such as stepped plinths, domes, harmikas, tiered spires, pagoda roofs and shikhara towers.
+  - The nine: Swayambhunath, Boudhanath, the World Peace Pagodas in Lumbini and Pokhara, Nyatapola, Pashupatinath, Changu Narayan, Patan Krishna Mandir, and the Ashokan Pillar.
+  - Each model has features to point out, and a Wikipedia source link. Text is never copied.
+- **Viewer:** `@google/model-viewer` 4.4.0, bundled into `components/models/vendor.generated.ts` so 3D works offline.
+  - It isn't an npm dependency, because it declares a newer three.js than the map uses as a peer. Installing it with `--legacy-peer-deps` silently removed the Jest preset, which this milestone caught and reverted.
+- **Delivery:** models are served from the website (`landing/public/models`, 34–237 KB each), downloaded the first time they're opened, and saved on the phone. The download is written to a temporary file and moved into place only when complete.
+- **Screen:** `/(main)/tirtha/model/[modelId]`.
+  - Every model carries the label "Schematic model: shapes and proportions are approximate… Nothing here is measured."
+  - Tapping a feature turns the camera to it.
+  - "View in 3D" appears on site and place pages that have a model.
+- **Pro:** 3D views are Pro. Swayambhunath is the free sample.
+
+### Verified
+- The real viewer page rendered in Chrome for four models: each loads, posts ready, has no errors, and is recognisable.
+
+### Not verified, and decisions
+- WebView performance on a mid-range Android phone.
+- **Maya Devi Temple was left out on purpose:** there were no reliable proportions for the 2003 structure.
+- A site expert should review the models for respectful representation before they are promoted.
+
 ## Milestone 5: close-up guided visit
 
 ### Changed

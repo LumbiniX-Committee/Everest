@@ -6,7 +6,7 @@ import { Button, Card, ConditionBadge, Divider, MetaRow, Screen, SourceBadge, Te
 import { BackBar, EmptyState, ProGate } from '@/components/common';
 import { NarrationPlayer, SiteListItem, VantageListItem, VisitInfo } from '@/components/site';
 import { SourceCard, SourceDetailSheet } from '@/components/source';
-import { audioForSite, findSite, historicalImagesForSite, narrationForSite, questsForSite, resolveSources, sitesForParent, vantagesForSite, feeForSite } from '@/data';
+import { audioForSite, findSite, historicalImagesForSite, narrationForSite, questsForSite, resolveSources, sitesForParent, vantagesForSite, feeForSite, modelFor } from '@/data';
 import { useCurrentPosition, useOpenInTabs, useSafeBack } from '@/hooks';
 import { location as locationService } from '@/services';
 import { usePreferences } from '@/store';
@@ -168,6 +168,14 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
             router.dismissTo({ pathname: '/(main)/tirtha/map', params: { focusSiteId: site.id } })
           }
         />
+        {modelFor(site.id) ? (
+          <Button
+            label="View in 3D"
+            icon="cube-outline"
+            variant="secondary"
+            onPress={() => router.push(`/(main)/tirtha/model/${modelFor(site.id)!.id}`)}
+          />
+        ) : null}
       </View>
 
       {localQuests.length > 0 ? (

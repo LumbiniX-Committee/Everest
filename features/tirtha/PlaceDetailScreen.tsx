@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 import { BackBar, EmptyState } from '@/components/common';
 import { VisitInfo } from '@/components/site';
 import { Button, Divider, MetaRow, Screen, Text } from '@/components/ui';
-import { commonsThumb, feeForPlace, findPlace } from '@/data';
+import { commonsThumb, feeForPlace, findPlace, modelFor } from '@/data';
 import { useCurrentPosition, useSafeBack } from '@/hooks';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { application } from '@/services';
@@ -91,6 +91,14 @@ export function PlaceDetailScreen({ placeId }: { placeId: string }) {
           variant="secondary"
           onPress={() => router.dismissTo({ pathname: '/(main)/tirtha/map', params: { focusSiteId: place.id } })}
         />
+        {modelFor(place.id) ? (
+          <Button
+            label="View in 3D"
+            icon="cube-outline"
+            variant="secondary"
+            onPress={() => router.push(`/(main)/tirtha/model/${modelFor(place.id)!.id}`)}
+          />
+        ) : null}
       </View>
 
       <Divider />

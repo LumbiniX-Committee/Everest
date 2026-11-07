@@ -11,3 +11,5 @@ export * from './questExperiences';
 
 export { HUB_CENTRES, hubCentre } from './hubs';
 export { commonsThumb, feeAmount, feeForPlace, feeForSite, findPlace, placesForHub, placesNear, PLACES, FEES_SOURCE } from './places';
+export { MODELS } from './generated/models';
+export { modelFor, findModel } from './models';

@@ -11,6 +11,17 @@ import type { InterfaceLanguage } from '@/types';
  * Text boundary and are never registered here.
  */
 export const NEPALI_UI_LITERALS = {
+  "View in 3D": "थ्रीडीमा हेर्नुहोस्",
+  "No such model": "यस्तो मोडेल छैन",
+  "There is no 3D view for this place.": "यस ठाउँको थ्रीडी दृश्य छैन।",
+  "The 3D view needs a connection the first time. After that it stays on this phone.": "थ्रीडी दृश्यलाई पहिलो पटक इन्टरनेट चाहिन्छ। त्यसपछि यो यही फोनमा रहन्छ।",
+  "Try again": "फेरि प्रयास गर्नुहोस्",
+  "Preparing the 3D view…": "थ्रीडी दृश्य तयार हुँदै…",
+  "Schematic model: shapes and proportions are approximate, built from photographs and published descriptions. Nothing here is measured.": "योजनाबद्ध मोडेल: आकार र अनुपात अनुमानित हुन्, फोटो र प्रकाशित विवरणबाट बनाइएका। यहाँ केही पनि मापन गरिएको छैन।",
+  "Pro opens 3D views of monuments across Nepal. Swayambhunath is free to try.": "प्रोले नेपालभरका स्मारकका थ्रीडी दृश्य खोल्छ। स्वयम्भूनाथ निःशुल्क हेर्न सकिन्छ।",
+  "What to look for": "के हेर्ने",
+  "This 3D view could not open on this phone.": "यो थ्रीडी दृश्य यस फोनमा खुल्न सकेन।",
+  "The 3D view opens in the Android and iOS app.": "थ्रीडी दृश्य एन्ड्रोइड र आईओएस एपमा खुल्छ।",
   "Alignment needs your location. Without it, you can still frame the shot by eye.": "मिलाउन तपाईंको स्थान चाहिन्छ। यो बिना पनि तपाईं आँखाले फ्रेम मिलाउन सक्नुहुन्छ।",
   "No position fix. Frame the shot by eye.": "स्थान भेटिएन। आँखाले फ्रेम मिलाउनुहोस्।",
   "Get there": "त्यहाँ पुग्नुहोस्",
