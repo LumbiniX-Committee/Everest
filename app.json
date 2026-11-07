@@ -3,7 +3,7 @@
     "name": "Sākṣī",
     "slug": "saksi",
     "owner": "saksi-nepal",
-    "scheme": "sakshi",
+    "scheme": "saksi",
     "version": "1.0.0",
     "runtimeVersion": "1.0.0",
     "orientation": "portrait",
@@ -14,10 +14,10 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "org.lumbinix.sakshi"
+      "bundleIdentifier": "com.saksinepal.saksi"
     },
     "android": {
-      "package": "org.lumbinix.sakshi",
+      "package": "com.saksinepal.saksi",
       "adaptiveIcon": {
         "backgroundColor": "#F3E4CB",
         "foregroundImage": "./assets/android-icon-foreground.png",

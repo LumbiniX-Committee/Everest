@@ -30,7 +30,7 @@ From [constants/app.ts](../../constants/app.ts):
 | `APP_SUBTITLE` | the witness |
 | `APP_EPIGRAPH` | *appamādena sampādetha* — Dhammapada 20.21, "strive on with diligence" |
 
-Package name / bundle id: `org.lumbinix.sakshi`. Expo slug: `saksi` (owner `saksi-nepal`). Scheme: `sakshi`.
+Package name / bundle id: `com.saksinepal.saksi`. Expo slug: `saksi` (owner `saksi-nepal`). Scheme: `saksi`.
 
 ---
 

@@ -265,6 +265,8 @@ This repository (`siddantasodari4-eng/saksi`) is kept apart from the older `Lumb
 | Vercel | project `saksi`, root `landing/`, connected to `main` |
 | Supabase | `xvahqoivcmfiasffuufr` |
 
-- Deploy keys live in `.env.tools.local`, which is gitignored and listed in `.easignore`. They do not go in `.env.local`, because Expo CLI auto-loads that file and EAS uploads it.
+- Deploy keys live in `.env.tools.local`, which is gitignored. They do not go in `.env.local`, because Expo CLI auto-loads that file.
+- `.easignore` excludes every `.env.*` file, so EAS builds read `EXPO_PUBLIC_*` values from the project's EAS environment variables. Local values do not reach a build.
+- The app ID is `com.saksinepal.saksi` and the scheme is `saksi`. Everest is published as `org.lumbinix.sakshi`, and the two must not share an ID or scheme.
 - Commits here must use the email on the `siddantasodari4-eng` account. Vercel blocks deployments whose commit author has no access to the project, and reports them as `BLOCKED`.
 - Run `tools/seed-history-supabase.mjs` only against staging. It writes synthetic history, so it must never touch this production project.

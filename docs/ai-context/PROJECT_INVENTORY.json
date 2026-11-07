@@ -45,9 +45,9 @@
   },
 
   "identity": {
-    "androidPackage": "org.lumbinix.sakshi",
-    "iosBundleIdentifier": "org.lumbinix.sakshi",
-    "scheme": "sakshi",
+    "androidPackage": "com.saksinepal.saksi",
+    "iosBundleIdentifier": "com.saksinepal.saksi",
+    "scheme": "saksi",
     "expoOwner": "saksi-nepal",
     "easProjectId": "56cf1d5c-20d3-4379-83b9-bc40d194f5a2",
     "updatesUrl": "https://u.expo.dev/56cf1d5c-20d3-4379-83b9-bc40d194f5a2",

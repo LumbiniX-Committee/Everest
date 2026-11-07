@@ -92,7 +92,7 @@ shared folder, a message, whatever's easiest):
 1. **The `.aab` file itself** — the download link EAS gives you at the end
    of the build, or run `eas build:list --platform android --limit 1` to
    get it again later.
-2. **Package name**: `org.lumbinix.sakshi` — he'll need to type this
+2. **Package name**: `com.saksinepal.saksi` — he'll need to type this
    exactly when creating the app listing. It cannot be changed after the
    first upload, so double-check it matches before he creates anything.
 3. **Privacy policy URL**: `https://project-saksi.vercel.app/privacy` (also
@@ -120,7 +120,7 @@ to automate this later.
      if he wants the listing itself localized later
    - App or game: **App**
    - Free or paid: **Free**
-   - Package name: `org.lumbinix.sakshi` (must match exactly, see above)
+   - Package name: `com.saksinepal.saksi` (must match exactly, see above)
 
 2. **Set up the store listing** using the content in Part 5: short
    description, full description, screenshots, category, contact details.

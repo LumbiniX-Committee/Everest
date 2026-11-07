@@ -1792,7 +1792,7 @@ answer, and the provider note is part of the response we check.
 | Field | Value |
 |---|---|
 | Name / slug | Sākṣī / `sakshi` |
-| Android package | `org.lumbinix.sakshi` |
+| Android package | `com.saksinepal.saksi` |
 | Version | 0.1.0 |
 | Runtime version | `0.1.0`, pinned explicitly |
 | EAS project id | `56cf1d5c-20d3-4379-83b9-bc40d194f5a2` |

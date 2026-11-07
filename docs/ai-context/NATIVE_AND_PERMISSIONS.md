@@ -22,12 +22,12 @@ Native projects are generated at build time (`expo prebuild` / EAS Build). **Nev
 | Setting | Value |
 |---|---|
 | Display name | `Sākṣī` |
-| Slug | `sakshi` |
+| Slug | `saksi` |
 | Owner | `siddantasodari` |
-| Scheme (deep links) | `sakshi` |
+| Scheme (deep links) | `saksi` |
 | Version / runtimeVersion | `1.0.0` / `1.0.0` |
-| iOS bundle identifier | `org.lumbinix.sakshi` |
-| Android package | `org.lumbinix.sakshi` |
+| iOS bundle identifier | `com.saksinepal.saksi` |
+| Android package | `com.saksinepal.saksi` |
 | Orientation | `portrait` |
 | UI style | `automatic` — selected from the persisted navy/white theme at boot |
 | EAS project id | `56cf1d5c-20d3-4379-83b9-bc40d194f5a2` |
