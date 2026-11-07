@@ -121,7 +121,7 @@ export function ChatComposer({
           sendAnimStyle,
         ]}
       >
-        <Icon name="send" size={20} color={colors.surface} />
+        <Icon name="send" size={20} color={colors.onPrimary} />
         {sendLabel ? (
           <Text variant="button" tone="inverse">
             {displaySendLabel}

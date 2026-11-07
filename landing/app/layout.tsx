@@ -1,8 +1,24 @@
 import type { Metadata, Viewport } from 'next';
+import { Baloo_2, Mukta } from 'next/font/google';
 
 import './globals.css';
 
+// Both hold Latin, IAST diacritics and Devanagari, so names never fall back mid-word.
+const baloo = Baloo_2({
+  subsets: ['latin', 'latin-ext', 'devanagari'],
+  weight: ['500', '600', '700'],
+  variable: '--font-baloo',
+  display: 'swap',
+});
+const mukta = Mukta({
+  subsets: ['latin', 'latin-ext', 'devanagari'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-mukta',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
+  metadataBase: new URL('https://saksi-beta.vercel.app'),
   /*
    * A template rather than a title, because the site is no longer one page.
    * Each page sets its own full title and this only fills the gap.
@@ -18,6 +34,7 @@ export const metadata: Metadata = {
     description:
       'A real-time map explorer for heritage sites. Places speak as you reach them, at the depth you chose, from sources you can check, and every visit can leave a measurement behind.',
     type: 'website',
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Sākṣī: a lotus cradling the rising sun' }],
   },
   alternates: {
     languages: { en: '/en', ne: '/ne' },
@@ -25,12 +42,12 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#f4f1e8',
+  themeColor: '#0e6e62',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${baloo.variable} ${mukta.variable}`}>
       <body>{children}</body>
     </html>
   );

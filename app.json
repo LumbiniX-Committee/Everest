@@ -19,7 +19,7 @@
     "android": {
       "package": "com.saksinepal.saksi",
       "adaptiveIcon": {
-        "backgroundColor": "#F3E4CB",
+        "backgroundColor": "#0E6E62",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
@@ -50,7 +50,11 @@
           "image": "./assets/splash-icon.png",
           "imageWidth": 180,
           "resizeMode": "contain",
-          "backgroundColor": "#F5F3EE"
+          "backgroundColor": "#F5F8F3",
+          "dark": {
+            "backgroundColor": "#0B2024",
+            "image": "./assets/splash-icon-dark.png"
+          }
         }
       ],
       [
@@ -63,7 +67,7 @@
         "expo-notifications",
         {
           "icon": "./assets/android-icon-monochrome.png",
-          "color": "#8E7657"
+          "color": "#0E6E62"
         }
       ],
       [
@@ -84,7 +88,19 @@
       "onnxruntime-react-native",
       "./plugins/withOnnxAutolink",
       "expo-asset",
-      "llama.rn"
+      "llama.rn",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "buildArchs": [
+              "arm64-v8a",
+              "armeabi-v7a"
+            ],
+            "useLegacyPackaging": true
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

@@ -157,7 +157,7 @@ From `app.json` → `expo.plugins`, in order:
 | `expo-router` | File-based routing, deep-link wiring |
 | `expo-font` | Font loading |
 | `expo-sqlite` | SQLite native module |
-| `expo-splash-screen` | Splash: `./assets/splash-icon.png`, width 180, `contain`, bg `#F5F3EE` |
+| `expo-splash-screen` | Splash: `./assets/splash-icon.png`, width 180, `contain`, bg `#F5F8F3`, dusk variant on `#0B2024` |
 | `expo-location` | Location modules + usage description |
 | `expo-notifications` | Notification icon `./assets/android-icon-monochrome.png`, colour `#8E7657` |
 | `expo-camera` | Camera + usage description, `recordAudioAndroid: false` |
@@ -168,8 +168,9 @@ From `app.json` → `expo.plugins`, in order:
 | **`./plugins/withOnnxAutolink`** | **Custom — see below** |
 | `expo-asset` | Asset bundling |
 | `llama.rn` | On-device LLM native module |
+| `expo-build-properties` | Ships only `arm64-v8a` and `armeabi-v7a`, and compresses native libraries, to cut the APK size. x86 builds are for emulators; add those architectures back locally if you need one. |
 
-Adaptive icon: background `#F3E4CB`, foreground/background/monochrome PNGs in `assets/`.
+Adaptive icon: background `#0E6E62`, foreground/background/monochrome PNGs in `assets/`.
 
 ---
 

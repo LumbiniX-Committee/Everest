@@ -5,6 +5,7 @@ import { radii } from './radii';
 export {
   colors,
   navyColors,
+  prayerFlags,
   whiteColors,
   getInitialColorTheme,
   setInitialColorTheme,

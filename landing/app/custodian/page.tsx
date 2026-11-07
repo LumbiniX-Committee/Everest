@@ -44,7 +44,7 @@ const STATUS_LABEL: Record<ReportStatus, string> = {
 };
 
 const STATUS_TONE: Record<ReportStatus, string> = {
-  open: 'bg-earth/10 text-earth',
+  open: 'bg-robe/10 text-robe',
   acknowledged: 'bg-sakshi/15 text-sakshi',
   in_progress: 'bg-sakshi/15 text-sakshi',
   resolved: 'bg-tirtha/15 text-tirtha',
@@ -70,7 +70,7 @@ function Trend({ points }: { points: DashboardStats['trend'] }) {
       {points.map((point) => (
         <div key={point.at} className="flex h-20 flex-col justify-end gap-1" title={`${point.coverage_pct}% coverage; ${point.open_reports} open`}>
           <div
-            className="min-h-0.5 rounded-sm bg-earth/70"
+            className="min-h-0.5 rounded-sm bg-robe/70"
             style={{ height: `${Math.min(100, point.open_reports * 12)}%` }}
             aria-hidden
           />
@@ -192,7 +192,7 @@ function ReportRow({
                 Resolved
               </button> : null}
             </div>
-            {error ? <p className="text-xs text-earth">{error}</p> : null}
+            {error ? <p className="text-xs text-robe">{error}</p> : null}
           </div>
         ) : (
           <div className="flex flex-col gap-2">
@@ -211,11 +211,11 @@ function ReportRow({
               type="button"
               onClick={() => act('open')}
               disabled={busy !== null || note.trim().length === 0}
-              className="rounded-lg bg-earth/10 px-2.5 py-1 text-xs font-semibold text-earth disabled:opacity-50"
+              className="rounded-lg bg-robe/10 px-2.5 py-1 text-xs font-semibold text-robe disabled:opacity-50"
             >
               Reopen
             </button>
-            {error ? <p className="text-xs text-earth">{error}</p> : null}
+            {error ? <p className="text-xs text-robe">{error}</p> : null}
           </div>
         )}
       </td>
@@ -326,13 +326,13 @@ export default function CustodianDashboard() {
       </header>
 
       {error ? (
-        <div className="mt-8 flex items-center gap-3 rounded-2xl border border-earth/30 bg-earth/5 px-5 py-4 text-earth">
+        <div className="mt-8 flex items-center gap-3 rounded-2xl border border-robe/30 bg-robe/5 px-5 py-4 text-robe">
           <AlertTriangle className="size-5 shrink-0" aria-hidden />
           <p className="text-sm">{error}</p>
           <button
             type="button"
             onClick={load}
-            className="ml-auto inline-flex items-center gap-1.5 rounded-lg bg-earth/10 px-3 py-1.5 text-xs font-semibold text-earth hover:bg-earth/20"
+            className="ml-auto inline-flex items-center gap-1.5 rounded-lg bg-robe/10 px-3 py-1.5 text-xs font-semibold text-robe hover:bg-robe/20"
           >
             <RefreshCw className="size-3.5" aria-hidden />
             Retry
@@ -362,7 +362,7 @@ export default function CustodianDashboard() {
         <section className="mt-8 rounded-2xl border border-line bg-surface p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="font-[family-name:var(--font-display)] text-xl font-semibold text-ink">Selected-window trend</h2>
-            <p className="text-xs text-ink-muted"><span className="text-tirtha">■</span> cumulative coverage · <span className="text-earth">■</span> open reports</p>
+            <p className="text-xs text-ink-muted"><span className="text-tirtha">■</span> cumulative coverage · <span className="text-robe">■</span> open reports</p>
           </div>
           <Trend points={stats.trend} />
         </section>
@@ -376,7 +376,7 @@ export default function CustodianDashboard() {
               <div key={commitment.id} className="rounded-2xl border border-line bg-surface p-4">
                 <div className="flex items-start justify-between gap-3">
                   <p className="font-semibold text-ink">{commitment.vantage_id}</p>
-                  <span className={`rounded-full px-2 py-1 text-xs font-semibold ${commitment.due_state === 'overdue' ? 'bg-earth/10 text-earth' : 'bg-tirtha/10 text-tirtha'}`}>
+                  <span className={`rounded-full px-2 py-1 text-xs font-semibold ${commitment.due_state === 'overdue' ? 'bg-robe/10 text-robe' : 'bg-tirtha/10 text-tirtha'}`}>
                     {commitment.due_state.replace('_', ' ')}
                   </span>
                 </div>
@@ -404,7 +404,7 @@ export default function CustodianDashboard() {
                   type="button"
                   onClick={() => void changeUrgency(vantage.id, !vantage.urgent)}
                   disabled={priorityBusy === vantage.id}
-                  className={`rounded-lg px-3 py-2 text-xs font-semibold disabled:opacity-50 ${vantage.urgent ? 'bg-earth/10 text-earth' : 'bg-ground-deep text-ink-soft'}`}
+                  className={`rounded-lg px-3 py-2 text-xs font-semibold disabled:opacity-50 ${vantage.urgent ? 'bg-robe/10 text-robe' : 'bg-ground-deep text-ink-soft'}`}
                 >
                   {priorityBusy === vantage.id ? 'Saving…' : vantage.urgent ? 'Clear urgent' : 'Mark urgent'}
                 </button>

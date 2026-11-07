@@ -101,7 +101,7 @@ export function Button({
     >
       {loading ? (
         <ActivityIndicator
-          color={variant === 'primary' ? colors.backgroundDeep : colors.primary}
+          color={variant === 'primary' ? colors.onPrimary : colors.primary}
           size="small"
         />
       ) : (
@@ -110,7 +110,7 @@ export function Button({
             <Icon
               name={icon}
               size={22}
-              color={variant === 'primary' ? colors.backgroundDeep : colors.primary}
+              color={variant === 'primary' ? colors.onPrimary : colors.primary}
             />
           ) : null}
           <Text variant="button" tone={variant === 'primary' ? 'inverse' : 'sandstone'}>

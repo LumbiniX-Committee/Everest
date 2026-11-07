@@ -20,11 +20,11 @@ import { usePreferences } from '@/store';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 /**
- * The bottom navigator: one floating navy instrument for the three surfaces.
+ * The bottom navigator: one floating instrument for the three surfaces.
  *
  * Compass for Tīrtha, eye for Sākṣī, lotus for Dhamma — drawn icons, so the
- * selected one can take the teal tint the label and the top mark share.
- * The active surface carries a teal rule above it, a quiet panel behind it,
+ * selected one can take the primary tint the label and the top mark share.
+ * The active surface carries a marigold rule above it, a quiet panel behind it,
  * and a heavier label. There is no fourth entry; see `constants/app.ts`.
  */
 export function SurfaceTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceRaised,
   },
   indexMarkActive: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.accent,
   },
   iconContainer: {
     height: 32,

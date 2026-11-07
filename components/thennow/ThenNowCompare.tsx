@@ -168,7 +168,7 @@ function Panel({
       ) : null}
 
       <View style={[styles.tag, tagStyle]}>
-        <Text variant="mono" tone="inverse">
+        <Text variant="mono" tone="onScrim">
           {panel.date}
         </Text>
       </View>
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xxs,
     borderRadius: radii.sm,
-    backgroundColor: 'rgba(37, 42, 39, 0.72)',
+    backgroundColor: colors.scrim,
   },
   tagLeft: { left: spacing.sm },
   tagRight: { right: spacing.sm },

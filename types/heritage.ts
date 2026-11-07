@@ -55,7 +55,7 @@ export type HeritageSite = {
   parentOrder?: number;
   /** Latin-script name used throughout the UI. */
   name: string;
-  /** Devanagari name, rendered in Anek where present. */
+  /** Devanagari name, rendered in the display face where present. */
   nameNepali?: string;
   /** One line. Shown under the name in lists. */
   /** Pali name, where one exists (e.g. "Māyādevī"). */

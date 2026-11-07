@@ -135,7 +135,7 @@ function SiteSchematic({ siteId, height }: { siteId: string; height: number }) {
 function Tag({ label }: { label: string }) {
   return (
     <View style={styles.tag}>
-      <Text variant="caption" tone="inverse" style={styles.tagText}>
+      <Text variant="caption" tone="onScrim" style={styles.tagText}>
         {label}
       </Text>
     </View>

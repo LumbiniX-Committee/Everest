@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="Sākṣī">
-  <path d="M 54 108 C 84 58 172 58 202 108 C 172 158 84 158 54 108 Z" fill="none" stroke="#B79B72" stroke-width="11" stroke-linejoin="round"/>
-  <circle cx="128" cy="108" r="30" fill="none" stroke="#F5F3EE" stroke-width="11"/>
-  <circle cx="128" cy="108" r="12" fill="#F5F3EE"/>
-  <path d="M 128 26 L 128 48" stroke="#B79B72" stroke-width="11" stroke-linecap="round"/>
-  <path d="M 128 168 L 128 190" stroke="#B79B72" stroke-width="11" stroke-linecap="round"/>
-  <path d="M 18 108 L 40 108" stroke="#B79B72" stroke-width="11" stroke-linecap="round"/>
-  <path d="M 216 108 L 238 108" stroke="#B79B72" stroke-width="11" stroke-linecap="round"/>
-</svg>

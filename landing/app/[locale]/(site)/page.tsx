@@ -380,7 +380,7 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
               <div className="mt-9 flex flex-wrap items-center justify-center gap-4 lg:justify-start">
                 <a
                   href="#explore"
-                  className="inline-flex items-center gap-3 rounded-2xl bg-earth px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-earth/25 transition hover:-translate-y-0.5 hover:bg-sandstone-deep hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-earth"
+                  className="inline-flex items-center gap-3 rounded-2xl bg-marigold px-8 py-4 text-lg font-semibold text-on-marigold shadow-lg shadow-earth/25 transition hover:-translate-y-0.5 hover:brightness-95 hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-earth"
                 >
                   <Compass className="size-6" aria-hidden />
                   {c.hero.exploreCta}
@@ -628,7 +628,7 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
           <div className="mt-9 flex flex-wrap gap-4">
             <Link
               href={localeHref(locale, '/for-custodians')}
-              className="inline-flex items-center gap-2 rounded-2xl bg-earth px-6 py-3.5 font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-sandstone-deep"
+              className="inline-flex items-center gap-2 rounded-2xl bg-marigold px-6 py-3.5 font-semibold text-on-marigold shadow-sm transition hover:-translate-y-0.5 hover:brightness-95"
             >
               {c.custodiansCta1}
               <ArrowRight className="size-4" aria-hidden />
@@ -733,7 +733,7 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
 
             <a
               href={build.apkUrl}
-              className="mt-8 inline-flex items-center gap-3 rounded-2xl bg-earth px-8 py-4 font-semibold text-white shadow-lg shadow-earth/25 transition hover:-translate-y-0.5 hover:bg-sandstone-deep"
+              className="mt-8 inline-flex items-center gap-3 rounded-2xl bg-marigold px-8 py-4 font-semibold text-on-marigold shadow-lg shadow-earth/25 transition hover:-translate-y-0.5 hover:brightness-95"
             >
               <Download className="size-5" aria-hidden />
               {c.install.cta}

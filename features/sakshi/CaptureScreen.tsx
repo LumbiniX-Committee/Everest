@@ -498,9 +498,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs,
     borderRadius: radii.full,
-    backgroundColor: 'rgba(14, 21, 18, 0.85)',
+    backgroundColor: colors.scrim,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
+    borderColor: colors.onScrimBorder,
   },
   controls: {
     paddingHorizontal: spacing.gutter,

@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   badge: {
-    backgroundColor: 'rgba(14, 21, 18, 0.85)',
+    backgroundColor: colors.scrim,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xxs,
     borderRadius: radii.sm,

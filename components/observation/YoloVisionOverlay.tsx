@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { Text } from '@/components/ui';
 import type { YoloDetection } from '@/services/ai/yoloEngine';
-import { radii, spacing } from '@/theme';
+import { colors, radii, spacing } from '@/theme';
 
 export type YoloVisionOverlayProps = {
   detections: YoloDetection[];
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderStyle: 'dashed',
     borderRadius: radii.sm,
-    backgroundColor: 'rgba(0,0,0,0.12)',
+    backgroundColor: colors.scrimSoft,
     zIndex: 40,
   },
   tag: {
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     borderRadius: radii.sm,
   },
-  tagText: { color: '#fff', fontWeight: '700', fontSize: 10 },
+  tagText: { color: colors.onScrim, fontWeight: '700', fontSize: 10 },
   corner: { position: 'absolute', width: CORNER, height: CORNER },
   tl: { top: -2, left: -2, borderTopWidth: 3, borderLeftWidth: 3 },
   tr: { top: -2, right: -2, borderTopWidth: 3, borderRightWidth: 3 },

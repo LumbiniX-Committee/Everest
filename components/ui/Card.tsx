@@ -22,7 +22,7 @@ export type CardProps = {
 };
 
 /**
- * A raised navy surface with one quiet blue-gray outline.
+ * A raised surface with one quiet outline.
  */
 export function Card({ children, onPress, style, accessibilityLabel }: CardProps) {
   const { pulse } = useHaptics();

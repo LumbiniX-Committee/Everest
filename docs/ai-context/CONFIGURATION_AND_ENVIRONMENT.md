@@ -178,7 +178,7 @@ Fonts are Google Fonts packages loaded via `useAppFonts()` ([theme/fonts.ts](../
 - `@expo-google-fonts/ibm-plex-sans` — UI text
 - `@expo-google-fonts/ibm-plex-mono` — monospace
 
-Native colour values also appear in `app.json` (adaptive icon `#F3E4CB`, splash `#F5F3EE`, notification `#8E7657`). **These are separate from `theme/colors.ts` and must be changed together when rebranding.**
+Native colour values also appear in `app.json` (adaptive icon `#0E6E62`, splash `#F5F8F3` with dusk `#0B2024`, notification `#0E6E62`). **These are separate from `theme/colors.ts` and must be changed together when rebranding.**
 
 ---
 
@@ -266,6 +266,7 @@ This repository (`siddantasodari4-eng/saksi`) is kept apart from the older `Lumb
 | Supabase | `xvahqoivcmfiasffuufr` |
 
 - Deploy keys live in `.env.tools.local`, which is gitignored. They do not go in `.env.local`, because Expo CLI auto-loads that file.
+- Metro's `blockList` also refuses `.env*` files, so the bundler can never read these keys.
 - `.easignore` excludes every `.env.*` file, so EAS builds read `EXPO_PUBLIC_*` values from the project's EAS environment variables. Local values do not reach a build.
 - The app ID is `com.saksinepal.saksi` and the scheme is `saksi`. Everest is published as `org.lumbinix.sakshi`, and the two must not share an ID or scheme.
 - Commits here must use the email on the `siddantasodari4-eng` account. Vercel blocks deployments whose commit author has no access to the project, and reports them as `BLOCKED`.

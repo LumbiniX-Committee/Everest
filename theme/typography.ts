@@ -4,8 +4,8 @@ import { Platform, type TextStyle } from 'react-native';
  * Typography abstraction.
  *
  * Three families carry the whole app:
- *   display — Anek. Headings, heritage site names, Nepali/Devanagari text.
- *   body    — IBM Plex Sans. UI, navigation, descriptions, buttons.
+ *   display — Baloo 2. Headings and heritage site names, Latin and Devanagari.
+ *   body    — Mukta. UI, navigation, descriptions, buttons, Latin and Devanagari.
  *   mono    — IBM Plex Mono. Coordinates, distances, timestamps, alignment values.
  *
  * The files are bundled — see `theme/fonts.ts`. Until `useAppFonts` reports them
@@ -23,14 +23,14 @@ export type FontWeightName = 'regular' | 'medium' | 'semibold';
 /** Family names as registered with `useFonts`. See `theme/fonts.ts`. */
 export const fontFamilies: Record<FontRole, Record<FontWeightName, string>> = {
   display: {
-    regular: 'Anek-Regular',
-    medium: 'Anek-Medium',
-    semibold: 'Anek-SemiBold',
+    regular: 'Baloo-Regular',
+    medium: 'Baloo-Medium',
+    semibold: 'Baloo-SemiBold',
   },
   body: {
-    regular: 'IBMPlexSans-Regular',
-    medium: 'IBMPlexSans-Medium',
-    semibold: 'IBMPlexSans-SemiBold',
+    regular: 'Mukta-Regular',
+    medium: 'Mukta-Medium',
+    semibold: 'Mukta-SemiBold',
   },
   mono: {
     regular: 'IBMPlexMono-Regular',
@@ -95,21 +95,21 @@ type ScaleEntry = {
 
 /** Named text roles. Components reach for these, never for raw sizes. */
 const scale = {
-  /** The wordmark and first-run titles. Wide tracking, quiet weight. */
-  display: { role: 'display', weight: 'semibold', fontSize: 38, lineHeight: 46, letterSpacing: 0.2 },
+  /** The wordmark and first-run titles. Line heights leave room for Devanagari matras. */
+  display: { role: 'display', weight: 'semibold', fontSize: 38, lineHeight: 50, letterSpacing: -0.2 },
   /** Screen titles and heritage site names. */
-  title: { role: 'display', weight: 'semibold', fontSize: 34, lineHeight: 41, letterSpacing: 0.2 },
+  title: { role: 'display', weight: 'semibold', fontSize: 32, lineHeight: 44, letterSpacing: -0.1 },
   /** Section heads inside a screen. */
-  heading: { role: 'body', weight: 'semibold', fontSize: 20, lineHeight: 27 },
-  body: { role: 'body', weight: 'regular', fontSize: 16, lineHeight: 25 },
+  heading: { role: 'body', weight: 'semibold', fontSize: 20, lineHeight: 29 },
+  body: { role: 'body', weight: 'regular', fontSize: 16, lineHeight: 26 },
   /** Same size as `body`, medium weight — an interactive row's own label. */
-  bodyStrong: { role: 'body', weight: 'medium', fontSize: 16, lineHeight: 25 },
+  bodyStrong: { role: 'body', weight: 'medium', fontSize: 16, lineHeight: 26 },
   /** Onboarding prose — large type, large whitespace. */
-  bodyLarge: { role: 'body', weight: 'regular', fontSize: 20, lineHeight: 31 },
-  caption: { role: 'body', weight: 'regular', fontSize: 14, lineHeight: 20 },
+  bodyLarge: { role: 'body', weight: 'regular', fontSize: 20, lineHeight: 32 },
+  caption: { role: 'body', weight: 'regular', fontSize: 14, lineHeight: 21 },
   button: { role: 'body', weight: 'medium', fontSize: 16, letterSpacing: 0.3 },
   /** Field labels and nav labels. Set uppercase at the call site. */
-  label: { role: 'body', weight: 'semibold', fontSize: 12, lineHeight: 16, letterSpacing: 1.6 },
+  label: { role: 'body', weight: 'semibold', fontSize: 12, lineHeight: 18, letterSpacing: 1.2 },
   /** Coordinates, bearings, distances, timestamps. Never prose. */
   mono: { role: 'mono', weight: 'regular', fontSize: 15, lineHeight: 21, letterSpacing: 0.2 },
   monoLarge: { role: 'mono', weight: 'medium', fontSize: 20, lineHeight: 27, letterSpacing: 0.4 },

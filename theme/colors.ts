@@ -1,127 +1,170 @@
 import type { ColorTheme } from '@/types';
 
 /**
- * Saksi colour tokens.
+ * Saksi colour tokens: "Lumbini at first light".
+ *
+ * Every hue comes from the place. Jade is the Puskarini pond, marigold is the
+ * sayapatri garland, maroon is a monk's robe, and the dusk ground is the
+ * Himalayan sky after sunset.
  *
  * Both palettes expose the same semantic roles. Components name the role they
- * need, while the boot entry selects navy or white before route modules create
+ * need, while the boot entry selects a palette before route modules create
  * their static StyleSheets. That ordering keeps the switch consistent across
  * native and web without duplicating component styles.
+ *
+ * Text on a filled surface must use its paired `on*` role. `primary` is dark in
+ * the morning palette and bright at dusk, so no fixed text colour can sit on it
+ * in both. tests/native/theme-contrast.test.ts holds these pairs to WCAG AA.
+ *
+ * The persisted theme keys stay `navy` and `white` so existing preferences keep
+ * working. Visitors see them as Himalayan dusk and Lumbini morning.
  */
+
+/** Colours that mean the same thing in both palettes. */
+const shared = {
+  /** Sayapatri marigold. A fill, never text on a light ground. */
+  accent: '#F7A823',
+  accentSoft: 'rgba(247, 168, 35, 0.22)',
+  onAccent: '#241703',
+  /** Dark in both palettes, for captions and controls laid over photographs. */
+  scrim: 'rgba(8, 31, 28, 0.84)',
+  scrimStrong: 'rgba(6, 24, 22, 0.9)',
+  scrimSoft: 'rgba(6, 24, 22, 0.14)',
+  onScrim: '#FFFFFF',
+  onScrimBorder: 'rgba(255, 255, 255, 0.26)',
+} as const;
+
 export const navyColors = {
-  backgroundDeep: '#051521',
-  surfaceRaised: '#102B3D',
-  surfaceSelected: 'rgba(77, 198, 194, 0.10)',
-  primary: '#4DC6C2',
-  primaryPressed: '#38AAA8',
-  primarySoft: 'rgba(77, 198, 194, 0.16)',
-  borderStrong: 'rgba(77, 198, 194, 0.55)',
-  warning: '#F0B23B',
-  navigationRoute: '#4285F4',
-  error: '#E16F6F',
-  overlay: 'rgba(3, 14, 23, 0.66)',
-  shadow: '#020B12',
-  heritageGold: '#C6A66A',
+  ...shared,
+  onPrimary: '#241703',
+  /** Laid over the Dhamma illustration so white text stays readable on it. */
+  heroVeil: 'rgba(7, 22, 25, 0.72)',
 
-  ground: '#071A2A',
-  ground2: '#0C2234',
-  ground3: '#102B3D',
-  sand: '#4DC6C2',
-  sand_dim: '#38AAA8',
-  sand_faint: '#7890A2',
-  brick: '#9A6D4E',
-  lock: '#4DC6C2',
-  seek: '#F0B23B',
-  change: '#E16F6F',
-  white: '#F4F7FA',
+  backgroundDeep: '#071619',
+  surfaceRaised: '#183D42',
+  surfaceSelected: 'rgba(247, 168, 35, 0.12)',
+  primary: '#F7B32B',
+  primaryPressed: '#DE9A17',
+  primarySoft: 'rgba(247, 179, 43, 0.17)',
+  borderStrong: 'rgba(247, 179, 43, 0.58)',
+  warning: '#F7B32B',
+  navigationRoute: '#5AA9F8',
+  error: '#F49384',
+  overlay: 'rgba(4, 16, 18, 0.68)',
+  shadow: '#030E10',
+  heritageGold: '#F7B32B',
 
-  mapBase: '#071B2B',
-  mapWater: '#0A4050',
-  mapVegetation: '#103A3B',
-  mapPark: '#164541',
-  mapLanduse: '#102B38',
-  mapRoad: '#3A5267',
-  mapRoadCasing: '#1D3549',
-  mapPath: '#3F7775',
-  mapBuilding: '#193447',
-  mapBuildingRoof: '#27465A',
-  mapLabel: '#DCE6ED',
-  mapLabelHalo: '#071A2A',
+  ground: '#0B2024',
+  ground2: '#102B30',
+  ground3: '#183D42',
+  sand: '#F7B32B',
+  sand_dim: '#DE9A17',
+  sand_faint: '#93ACA5',
+  brick: '#D0916C',
+  lock: '#62D3B4',
+  seek: '#F7B32B',
+  change: '#F49384',
+  white: '#F5F8F3',
 
-  background: '#071A2A',
-  surface: '#0C2234',
-  surfaceSecondary: '#102B3D',
-  border: 'rgba(126, 169, 190, 0.28)',
-  sandstone: '#4DC6C2',
-  sandstoneDeep: '#38AAA8',
-  earth: '#9A6D4E',
-  textPrimary: '#F4F7FA',
-  textSecondary: '#A7B8C5',
-  textMuted: '#7890A2',
-  alignmentSeeking: '#4DC6C2',
-  alignmentLocked: '#4DC6C2',
-  openCondition: '#E16F6F',
-  resolved: '#64A67B',
+  mapBase: '#0C2226',
+  mapWater: '#0F4C5A',
+  mapVegetation: '#134036',
+  mapPark: '#185240',
+  mapLanduse: '#113130',
+  mapRoad: '#3D5C60',
+  mapRoadCasing: '#1D3B3F',
+  mapPath: '#DBA743',
+  mapBuilding: '#1C3B40',
+  mapBuildingRoof: '#2B5054',
+  mapLabel: '#E4EFEA',
+  mapLabelHalo: '#0B2024',
+
+  background: '#0B2024',
+  surface: '#102B30',
+  surfaceSecondary: '#183D42',
+  border: 'rgba(172, 208, 198, 0.25)',
+  sandstone: '#F7B32B',
+  sandstoneDeep: '#F7B32B',
+  earth: '#D0916C',
+  textPrimary: '#F5F8F3',
+  textSecondary: '#BACDC7',
+  textMuted: '#93ACA5',
+  alignmentSeeking: '#F7B32B',
+  alignmentLocked: '#62D3B4',
+  openCondition: '#F49384',
+  resolved: '#73D29B',
 } as const;
 
 export type ColorPalette = { [K in keyof typeof navyColors]: string };
 
-/** Main's daylight palette, extended with the roles used by the navy UI. */
+/** The default palette: bright, cool morning light over the Sacred Garden. */
 export const whiteColors = {
-  backgroundDeep: '#252A27',
-  surfaceRaised: '#FFFFFF',
-  surfaceSelected: 'rgba(183, 155, 114, 0.14)',
-  primary: '#B79B72',
-  primaryPressed: '#8E7657',
-  primarySoft: 'rgba(183, 155, 114, 0.18)',
-  borderStrong: '#B79B72',
-  warning: '#A9761D',
-  navigationRoute: '#4285F4',
-  error: '#A8443A',
-  overlay: 'rgba(37, 42, 39, 0.58)',
-  shadow: '#252A27',
-  heritageGold: '#A9761D',
+  ...shared,
+  onPrimary: '#FFFFFF',
+  /** Lifts the Dhamma illustration behind dark text, rather than muddying it. */
+  heroVeil: 'rgba(245, 248, 243, 0.42)',
 
-  ground: '#F5F3EE',
+  backgroundDeep: '#0D2B27',
+  surfaceRaised: '#FFFFFF',
+  surfaceSelected: 'rgba(14, 110, 98, 0.1)',
+  primary: '#0E6E62',
+  primaryPressed: '#0A564C',
+  primarySoft: 'rgba(14, 110, 98, 0.14)',
+  borderStrong: '#0E6E62',
+  warning: '#945900',
+  navigationRoute: '#1F6FD6',
+  error: '#B3261E',
+  overlay: 'rgba(13, 43, 39, 0.56)',
+  shadow: '#0D2B27',
+  heritageGold: '#945900',
+
+  ground: '#F5F8F3',
   ground2: '#FFFFFF',
-  ground3: '#E8E5DD',
-  sand: '#B79B72',
-  sand_dim: '#8E7657',
-  sand_faint: '#6E7069',
-  brick: '#8A5A45',
-  lock: '#3E7CC4',
-  seek: '#A9761D',
-  change: '#A8443A',
+  ground3: '#E6EFE8',
+  sand: '#0E6E62',
+  sand_dim: '#0A564C',
+  sand_faint: '#55706A',
+  brick: '#8C3B3F',
+  lock: '#0E6E62',
+  seek: '#945900',
+  change: '#B3261E',
   white: '#FFFFFF',
 
-  mapBase: '#F2EFE7',
-  mapWater: '#8FBBD9',
-  mapVegetation: '#A9C99A',
-  mapPark: '#BBD6A8',
-  mapLanduse: '#E7DFCC',
+  mapBase: '#EEF3EA',
+  mapWater: '#8CCFD6',
+  mapVegetation: '#B9DDAE',
+  mapPark: '#C8E6B8',
+  mapLanduse: '#E6E9D8',
   mapRoad: '#FFFFFF',
-  mapRoadCasing: '#D8CBB2',
-  mapPath: '#C08A4E',
-  mapBuilding: '#DDCFB6',
-  mapBuildingRoof: '#CBB99A',
-  mapLabel: '#4A4438',
-  mapLabelHalo: '#F7F4EC',
+  mapRoadCasing: '#D6D9C8',
+  mapPath: '#E29A1F',
+  mapBuilding: '#E5DFCB',
+  mapBuildingRoof: '#D3CBB2',
+  mapLabel: '#24423C',
+  mapLabelHalo: '#F5F8F3',
 
-  background: '#F5F3EE',
+  background: '#F5F8F3',
   surface: '#FFFFFF',
-  surfaceSecondary: '#E8E5DD',
-  border: '#D6D1C6',
-  sandstone: '#B79B72',
-  sandstoneDeep: '#8E7657',
-  earth: '#8A5A45',
-  textPrimary: '#252A27',
-  textSecondary: '#5A5C56',
-  textMuted: '#6E7069',
-  alignmentSeeking: '#A9761D',
-  alignmentLocked: '#3E7CC4',
-  openCondition: '#A8443A',
-  resolved: '#477052',
+  surfaceSecondary: '#E6EFE8',
+  border: '#CFDBD3',
+  sandstone: '#0E6E62',
+  sandstoneDeep: '#0A564C',
+  earth: '#8C3B3F',
+  textPrimary: '#12302B',
+  textSecondary: '#3B5851',
+  textMuted: '#55706A',
+  alignmentSeeking: '#945900',
+  alignmentLocked: '#0E6E62',
+  openCondition: '#B3261E',
+  resolved: '#1B7246',
 } satisfies ColorPalette;
+
+/**
+ * The five colours of a Himalayan prayer flag, in their traditional order: sky,
+ * air, fire, water, earth. Celebration uses these instead of an arbitrary
+ * rainbow. They are decoration only and never carry text.
+ */
+export const prayerFlags = ['#2F6FD0', '#FFFFFF', '#D8412F', '#1F9D6B', '#F7C325'] as const;
 
 const palettes: Record<ColorTheme, ColorPalette> = {
   navy: navyColors,

@@ -146,7 +146,7 @@ export function DhammaScreen() {
               pressed && canAsk && styles.pressed,
             ]}
           >
-            <Icon name="send" size={21} color={colors.backgroundDeep} />
+            <Icon name="send" size={21} color={colors.onPrimary} />
           </Pressable>
         </View>
 
@@ -265,8 +265,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: colors.overlay,
-    opacity: 0.48,
+    backgroundColor: colors.heroVeil,
   },
   heroFade: {
     position: 'absolute',

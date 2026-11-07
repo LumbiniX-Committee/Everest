@@ -24,13 +24,15 @@ export function SiteHeader({ locale }: { locale: Locale }) {
 
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-ground/85 backdrop-blur">
+      <div className="flag-band" aria-hidden />
       <div className="mx-auto flex max-w-6xl items-center gap-6 px-6 py-3.5">
         <Link
           href={localeHref(locale, '/')}
-          className="font-[family-name:var(--font-display)] text-2xl font-semibold tracking-tight text-ink"
+          className="shrink-0"
           onClick={() => setOpen(false)}
         >
-          Sākṣī
+          {/* Outlines rather than live text, so the mark and name never depend on a font load. */}
+          <img src="/saksi-lockup.svg" alt="Sākṣī" width={106} height={44} className="h-11 w-auto" />
         </Link>
 
         <nav aria-label="Primary" className="ml-auto hidden items-center gap-1 lg:flex">

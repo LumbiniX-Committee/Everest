@@ -484,7 +484,7 @@ domain layer speaks `lat` and `lon`. `core/adapters/coords.ts` is that seam.
 | `react-native-worklets` 0.10.1 | Reanimated's worklet runtime |
 | `react-native-gesture-handler` ~2.32 | The alignment rehearsal pan, the scrubber |
 | `react-native-safe-area-context`, `react-native-screens` | Navigation primitives |
-| `@expo-google-fonts/*` | Anek Devanagari for Nepali, IBM Plex Sans and Mono |
+| `@expo-google-fonts/*` | Baloo 2 and Mukta, both covering Nepali, and IBM Plex Mono |
 | `@expo/vector-icons` | Icons |
 
 ### Data and sync
@@ -566,7 +566,7 @@ so.
 | Offline language model | Qwen3 0.6B Q4_K_M GGUF | Hugging Face (bartowski) | Apache-2.0 |
 | Map tiles | Vector basemap | OpenFreeMap (OpenStreetMap data) | Open, no key |
 | Map fonts (glyphs) | Label rendering | OpenFreeMap font stacks | Open |
-| UI fonts | Anek Devanagari, IBM Plex Sans, IBM Plex Mono | Google Fonts | OFL |
+| UI fonts | Baloo 2, Mukta, IBM Plex Mono | Google Fonts | OFL |
 | Crisis helplines | 3 verified Nepali numbers | Public helpline directories | Public |
 
 Everything below expands one row.
@@ -674,7 +674,7 @@ cannot silently ship as verified.
 - **Map tiles:** **OpenFreeMap** (`tiles.openfreemap.org`), OpenStreetMap data on
   the OpenMapTiles schema, no API key and no per-view billing, which is why it
   suits a public trust. The map style itself (`theme/mapStyle.ts`) is ours.
-- **Fonts:** Anek Devanagari (for Nepali), IBM Plex Sans and IBM Plex Mono, all
+- **Fonts:** Baloo 2 and Mukta (both covering Nepali) and IBM Plex Mono, all
   from Google Fonts under the Open Font License. Devanagari is a first class
   citizen, not a fallback glyph.
 - **Crisis helplines:** three verified Nepali numbers in
@@ -2671,8 +2671,8 @@ built. We keep that list in the document so nothing overstates the position."
 *Design, ease of use, accessibility, user journey, practicality*
 
 **Design system.** Colour, typography, and spacing live in `theme/` and
-`constants/`, never in individual screens. Typography is Anek Devanagari for
-Nepali alongside IBM Plex Sans and Mono, so Devanagari is a first-class citizen
+`constants/`, never in individual screens. Typography is Baloo 2 and Mukta, which both
+cover Nepali, alongside IBM Plex Mono, so Devanagari is a first-class citizen
 rather than a fallback glyph.
 
 **Accessibility, measured.** 173 accessibility props across the app:

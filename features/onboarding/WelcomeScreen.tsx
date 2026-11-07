@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { Button, Text } from '@/components/ui';
 import { GreetingMonk } from '@/components/monk';
 import { APP_EPIGRAPH, APP_NAME, APP_SUBTITLE } from '@/constants';
-import { spacing } from '@/theme';
+import { colors, prayerFlags, radii, spacing } from '@/theme';
 
 import { OnboardingFrame } from './OnboardingFrame';
 import { nextRoute } from './steps';
@@ -43,7 +43,10 @@ export function WelcomeScreen() {
       }
     >
       <View style={styles.body}>
-        <GreetingMonk height={240} />
+        <View style={styles.greeting}>
+          <View style={styles.sun} />
+          <GreetingMonk height={240} />
+        </View>
 
         <View style={styles.wordmark}>
           <Text variant="display" center>
@@ -52,6 +55,12 @@ export function WelcomeScreen() {
           <Text variant="body" tone="secondary" center>
             {APP_SUBTITLE}
           </Text>
+          {/* A prayer flag in miniature. Decorative, so hidden from assistive tech. */}
+          <View style={styles.flags} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+            {prayerFlags.map((flag) => (
+              <View key={flag} style={[styles.flag, { backgroundColor: flag }]} />
+            ))}
+          </View>
         </View>
 
         <Text variant="mono" tone="muted" center style={styles.epigraph}>
@@ -66,6 +75,25 @@ const styles = StyleSheet.create({
   // Tighter under the figure than between the text blocks: the monk and the
   // wordmark are one greeting, not two things stacked.
   body: { alignItems: 'center', gap: spacing.xl },
+  greeting: { alignItems: 'center', justifyContent: 'center' },
+  // The rising sun from the mark, soft enough that the monk's robe stays distinct.
+  sun: {
+    position: 'absolute',
+    width: 224,
+    height: 224,
+    borderRadius: radii.full,
+    backgroundColor: colors.accentSoft,
+  },
   wordmark: { alignItems: 'center', gap: spacing.sm },
+  // The hairline keeps the flag's white panel visible on the morning ground.
+  flags: {
+    flexDirection: 'row',
+    marginTop: spacing.xs,
+    borderRadius: radii.full,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.border,
+    overflow: 'hidden',
+  },
+  flag: { width: 20, height: 4 },
   epigraph: { letterSpacing: 1 },
 });

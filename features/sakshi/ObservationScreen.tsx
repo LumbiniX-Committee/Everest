@@ -300,13 +300,13 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
         {/* Floating Telemetry HUD */}
         <View style={styles.hudOverlay}>
           <View style={styles.hudBadge}>
-            <Icon name="crosshairs-gps" size={13} color={colors.surface} />
+            <Icon name="crosshairs-gps" size={13} color={colors.onScrim} />
             <Text variant="mono" style={styles.hudText}>
               {formatDistance(observation.positionErrorM)}
             </Text>
           </View>
           <View style={styles.hudBadge}>
-            <Icon name="compass-outline" size={13} color={colors.surface} />
+            <Icon name="compass-outline" size={13} color={colors.onScrim} />
             <Text variant="mono" style={styles.hudText}>
               {formatBearing(observation.bearing)}
             </Text>
@@ -547,15 +547,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.xxs,
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    backgroundColor: colors.scrim,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xxs,
     borderRadius: radii.sm,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: colors.onScrimBorder,
   },
   hudText: {
-    color: '#ffffff',
+    color: colors.onScrim,
     fontSize: 12,
     fontWeight: 'bold',
   },

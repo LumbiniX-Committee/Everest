@@ -35,9 +35,9 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "@expo-google-fonts/anek-devanagari": "^0.4.1",
+    "@expo-google-fonts/baloo-2": "^0.4.2",
     "@expo-google-fonts/ibm-plex-mono": "^0.4.1",
-    "@expo-google-fonts/ibm-plex-sans": "^0.4.1",
+    "@expo-google-fonts/mukta": "^0.4.1",
     "@expo/metro-runtime": "~57.0.8",
     "@expo/vector-icons": "^15.0.2",
     "@maplibre/maplibre-react-native": "^11.3.6",
@@ -47,6 +47,7 @@
     "expo": "~57.0.21",
     "expo-asset": "~57.0.9",
     "expo-audio": "~57.0.4",
+    "expo-build-properties": "~57.0.23",
     "expo-camera": "~57.0.4",
     "expo-constants": "~57.0.9",
     "expo-dev-client": "~57.0.18",
