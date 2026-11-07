@@ -92,7 +92,7 @@ An anonymous session lives in this app's storage, so **a reinstall is a new acco
 
 ## 4. Database schema
 
-Source of truth: [supabase/migrations/](../../supabase/migrations/) — 8 migrations. This is **not inferred**; it is read directly from DDL.
+Source of truth: [supabase/migrations/](../../supabase/migrations/) — 9 migrations. This is **not inferred**; it is read directly from DDL.
 
 ### `public.observations` — [0001](../../supabase/migrations/0001_observation_sync.sql), extended by [0002](../../supabase/migrations/0002_capture_integrity.sql), [0003](../../supabase/migrations/0003_by_eye_captures.sql), [0004](../../supabase/migrations/0004_device_identity.sql), [0006](../../supabase/migrations/0006_author_identity.sql)
 
