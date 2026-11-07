@@ -5,6 +5,11 @@
 
 107 assets across 9 licence(s).
 
+## Open data listings
+
+- `seed/places.json` and `data/generated/places.ts`: contains information from OpenStreetMap, © OpenStreetMap contributors, available under the Open Database License (ODbL). Records from Wikidata are CC0.
+- Entry fees in `seed/fees.json` are facts recorded from the Nepal Tourism Board, cited with the date checked.
+
 ## CC BY 2.0 (11)
 
 - **File:Ashoka Pillar, Lumbini.jpg** — Charlie Phillips from London, UK · wikimedia · <https://upload.wikimedia.org/wikipedia/commons/b/bb/Ashoka_Pillar%2C_Lumbini.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original>

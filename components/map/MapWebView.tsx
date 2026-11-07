@@ -15,6 +15,8 @@ export type MapWebViewProps = {
   /** Fills its parent instead of sitting at a fixed height. */
   fill?: boolean;
   onSelectSite?: (siteId: string) => void;
+  /** A listed place was tapped. Only the full-screen map shows places. */
+  onSelectPlace?: (placeId: string) => void;
   /** Live position, pushed into the running page. */
   coordinate?: Coordinate | null;
   /**
@@ -79,6 +81,7 @@ export function MapWebView({
   height = 320,
   fill = false,
   onSelectSite,
+  onSelectPlace,
   coordinate,
   heading,
   follow = true,
@@ -244,6 +247,7 @@ export function MapWebView({
             const msg = JSON.parse(event.nativeEvent.data);
             if (msg.type === 'ready') setReady(true);
             if (msg.type === 'site' && typeof msg.id === 'string') onSelectSite?.(msg.id);
+            if (msg.type === 'place' && typeof msg.id === 'string') onSelectPlace?.(msg.id);
             // Only a failure before the map loaded. A missing tile later posts
             // 'tile-error', which is not a reason to give up the whole map.
             if (msg.type === 'error' && !ready) setFailed(true);

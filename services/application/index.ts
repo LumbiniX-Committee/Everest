@@ -43,3 +43,17 @@ export async function openCustodianPortal(): Promise<void> {
   }
   await Linking.openURL(`${base}/custodian`);
 }
+
+/**
+ * Opens a web page in the phone's browser. Only http and https: a listing's
+ * website field comes from open data, and must never launch some other scheme.
+ */
+export async function openExternal(url: string): Promise<boolean> {
+  if (!/^https?:\/\//i.test(url)) return false;
+  try {
+    await Linking.openURL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}

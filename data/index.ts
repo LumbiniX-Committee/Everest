@@ -10,3 +10,4 @@ export * from './audio';
 export * from './questExperiences';
 
 export { HUB_CENTRES, hubCentre } from './hubs';
+export { commonsThumb, feeAmount, feeForPlace, feeForSite, findPlace, placesForHub, placesNear, PLACES, FEES_SOURCE } from './places';

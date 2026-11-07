@@ -19,6 +19,7 @@ export default function TirthaLayout() {
     >
       <Stack.Screen name="index" />
       <Stack.Screen name="map" options={{ animation: 'fade_from_bottom', animationDuration: 280 }} />
+      <Stack.Screen name="place/[placeId]" options={{ animation: 'slide_from_right', animationDuration: 280 }} />
       <Stack.Screen name="site/[siteId]" options={{ animation: 'slide_from_right', animationDuration: 280 }} />
       <Stack.Screen name="quests/index" options={{ animation: 'slide_from_right', animationDuration: 280 }} />
       <Stack.Screen name="quests/[questId]" options={{ animation: 'slide_from_right', animationDuration: 280 }} />

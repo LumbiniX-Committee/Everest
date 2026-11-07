@@ -4,9 +4,9 @@ import { StyleSheet, View } from 'react-native';
 
 import { Button, Card, ConditionBadge, Divider, MetaRow, Screen, SourceBadge, Text } from '@/components/ui';
 import { BackBar, EmptyState, ProGate } from '@/components/common';
-import { NarrationPlayer, SiteListItem, VantageListItem } from '@/components/site';
+import { NarrationPlayer, SiteListItem, VantageListItem, VisitInfo } from '@/components/site';
 import { SourceCard, SourceDetailSheet } from '@/components/source';
-import { audioForSite, findSite, historicalImagesForSite, narrationForSite, questsForSite, resolveSources, sitesForParent, vantagesForSite } from '@/data';
+import { audioForSite, findSite, historicalImagesForSite, narrationForSite, questsForSite, resolveSources, sitesForParent, vantagesForSite, feeForSite } from '@/data';
 import { useCurrentPosition, useOpenInTabs, useSafeBack } from '@/hooks';
 import { location as locationService } from '@/services';
 import { usePreferences } from '@/store';
@@ -208,6 +208,9 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
           </ProGate>
         </>
       ) : null}
+
+      <Divider />
+      <VisitInfo fee={feeForSite(site)} />
 
       <Divider />
 

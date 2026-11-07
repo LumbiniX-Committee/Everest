@@ -1,16 +1,16 @@
 import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { Button, Screen, Text } from '@/components/ui';
+import { Button, Card, Screen, Text } from '@/components/ui';
 import { ScreenHeader, SettingsButton } from '@/components/common';
 import { ArrivalWisdom, StartGuide, VisitorPrompt } from '@/components/arrival';
 import { SiteMap3D } from '@/components/map';
 import { SiteListItem } from '@/components/site';
-import { demoSites } from '@/data';
+import { demoSites, placesForHub, placesNear } from '@/data';
 import { QuestCard } from '@/features/quests';
 import { useCurrentPosition, useNearbySites } from '@/hooks';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
-import { usePermission, useQuests } from '@/store';
+import { usePermission, usePreferences, useQuests } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 
 /**
@@ -31,6 +31,9 @@ export function TirthaScreen() {
 
   const showLocationOffer = state.status === 'undetermined' || state.status === 'denied';
   const featuredQuest = inProgressQuests[0] ?? availableQuests[0];
+  const { preferences } = usePreferences();
+  // Near you when the phone knows where you are; otherwise the area you chose to start in.
+  const explore = coordinate ? placesNear(coordinate, 8_000, 6) : placesForHub(preferences.homeHub, 6);
 
   return (
     <Screen scroll>
@@ -98,6 +101,22 @@ export function TirthaScreen() {
             quest={featuredQuest}
             onPress={() => router.push(`/(main)/tirtha/quests/${featuredQuest.id}`)}
           />
+        </View>
+      ) : null}
+
+      {explore.length > 0 ? (
+        <View style={styles.questSection}>
+          <Text variant="heading">{coordinate ? 'More places near you' : 'More places to explore'}</Text>
+          {explore.map((place) => (
+            <Card key={place.id} onPress={() => router.push(`/(main)/tirtha/place/${place.id}`)} accessibilityLabel={place.name}>
+              <Text variant="bodyStrong" translate={false}>{place.name}</Text>
+              {place.description ? (
+                <Text variant="caption" tone="secondary" numberOfLines={2} translate={false}>
+                  {place.description}
+                </Text>
+              ) : null}
+            </Card>
+          ))}
         </View>
       ) : null}
 

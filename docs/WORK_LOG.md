@@ -2,6 +2,36 @@
 
 What changed in each milestone, what was verified, and what was not. Newest first. The plan lives in the delivery plan; this records what actually happened.
 
+## Milestone 4: real data
+
+### Changed
+- **`tools/data/build-places.mjs`:** fetches tourist places from OpenStreetMap (Overpass) for the four hubs and notable places nationwide from Wikidata, then merges, de-duplicates and filters them.
+  - Each record keeps its source.
+  - Places that duplicate a curated heritage site are dropped.
+  - Nothing is filled in.
+  - Raw responses are cached in `harvest/places-cache/`, which isn't uploaded to EAS.
+- **Result: 434 places.** By hub: Lumbini 19, Kathmandu Valley 228, Pokhara 56, Chitwan 6. Another 125 are elsewhere in Nepal.
+  - 187 have Nepali names, 204 descriptions, 143 Commons photos, and 181 Wikipedia links.
+- **`seed/fees.json`:** official entry fees for 10 sites, recorded as facts from the Nepal Tourism Board with a last-checked date (2026-11-07). They are attached to curated sites by ID and to listed places by exact name.
+- **New screens:**
+  - **Place page:** photo, names, description, directions, fee for the visitor's type, opening hours, step-free access, and source attribution ("not yet checked on site").
+  - **"Plan your visit" on site pages:** fees, hours and access, showing "Not known" when unknown.
+  - **Elsewhere:** places appear on the map from zoom 13, on Home (near you, or in your starting area), and in map search.
+- **Validation:** `validate-seed` now checks places and fees. It also warns once fees go unchecked for six months, and fails if the generated module is stale.
+
+### Licences
+- OpenStreetMap data is ODbL and kept as a separate file (`seed/places.json`), with "© OpenStreetMap contributors" shown wherever it appears.
+- Wikidata is CC0.
+- Photos load from Wikimedia Commons and are credited on the place page.
+- Wikipedia text is never copied; only links are kept.
+
+### Not verified, and known gaps
+- These listings have not been checked on site, and say so.
+- **Chitwan has only 6 places,** because OpenStreetMap has little there. It needs local data.
+- **Bhaktapur Durbar Square isn't in the listing,** so its fee isn't attached.
+- Opening hours exist for only 22 places, so most show "Not known". That is honest, but thin.
+- Wikidata descriptions are shown as written, which sometimes means awkward phrasing.
+
 ## Milestone 3: a clear map
 
 ### Changed

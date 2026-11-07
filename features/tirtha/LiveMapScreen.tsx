@@ -9,7 +9,7 @@ import { GreetingMonk } from '@/components/monk';
 import { NarrationPlayer } from '@/components/site';
 import { BottomSheet, Button, Card, Icon, Text } from '@/components/ui';
 import { closestIndex, distanceFromRoute, isOffRoute, nextManeuver, reachedNewLevel, standingFor } from '@/core';
-import { hubCentre, findSite, findVantage, questsForPrecinct, vantagesForSite, questAreas, type QuestArea } from '@/data';
+import { hubCentre, findPlace, findSite, findVantage, questsForPrecinct, vantagesForSite, questAreas, type QuestArea } from '@/data';
 import {
   useArrivalCredit,
   useCurrentPosition,
@@ -68,6 +68,8 @@ function resolveGuideTarget(id: string | null | undefined): { id: string; name: 
   if (site) return { id, name: site.name, coordinate: site.coordinate };
   const vantage = findVantage(id);
   if (vantage) return { id, name: vantage.label, coordinate: vantage.coordinate };
+  const place = findPlace(id);
+  if (place) return { id, name: place.name, coordinate: place.coordinate };
   return undefined;
 }
 
@@ -176,7 +178,7 @@ export function LiveMapScreen() {
   // Arriving from a site page: show that place, and stop following the visitor
   // so the next location fix does not pull the camera straight back off it.
   useEffect(() => {
-    const site = focusSiteId ? findSite(focusSiteId) : undefined;
+    const site = focusSiteId ? (findSite(focusSiteId) ?? findPlace(focusSiteId)) : undefined;
     if (!site) return;
     setFollow(false);
     flyTo(site.coordinate.longitude, site.coordinate.latitude, 'close');
@@ -452,6 +454,7 @@ export function LiveMapScreen() {
         guideDestination={guideTarget ? { ...guideTarget.coordinate, name: guideTarget.name } : null}
         camera={camera}
         onSelectSite={(id) => router.push(`/(main)/tirtha/site/${id}`)}
+        onSelectPlace={(id) => router.push(`/(main)/tirtha/place/${id}`)}
         topInset={insets.top}
         mode={mapMode}
         accuracyM={demoMode ? null : accuracyM}
@@ -757,6 +760,10 @@ export function LiveMapScreen() {
         coordinate={coordinate}
         atSiteId={atSiteId}
         canTravel={demo.active}
+        onSelectPlace={(placeId) => {
+          setShowPlaces(false);
+          router.push(`/(main)/tirtha/place/${placeId}`);
+        }}
         onSelect={goToSite}
       />
 

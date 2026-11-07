@@ -7,3 +7,4 @@ export * from './dhamma';
 export * from './quests';
 export * from './preferences';
 export * from './precinct';
+export * from './places';

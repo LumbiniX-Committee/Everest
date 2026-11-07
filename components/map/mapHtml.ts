@@ -1,4 +1,5 @@
 import {
+  PLACES,
   MAP_CAMERA,
   MAP_HOME,
   monumentGeoJSON,
@@ -60,6 +61,17 @@ export type MapMode = 'standard' | '3d' | 'terrain' | 'satellite' | 'hybrid';
  * possible through GL JS and a custom layer. That is a capability difference,
  * not a preference.
  */
+function placesGeoJSON() {
+  return {
+    type: 'FeatureCollection',
+    features: PLACES.map((place) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [place.coordinate.longitude, place.coordinate.latitude] },
+      properties: { id: place.id, name: place.name },
+    })),
+  };
+}
+
 export function buildMapHtml({
   avatar = false,
   fullscreen = false,
@@ -232,6 +244,32 @@ ${MAP_MODES(satelliteKey)}
           'fill-extrusion-vertical-gradient': true
         }
       });
+
+      // Listed places from open data, drawn quieter than the curated sites and only
+      // once zoomed in, so they add detail without crowding the map.
+      ${fullscreen ? `map.addSource('places', { type:'geojson', data: ${JSON.stringify(placesGeoJSON())} });
+      map.addLayer({
+        id:'place-dot', type:'circle', source:'places', minzoom: 13,
+        paint:{
+          'circle-radius': 6,
+          'circle-color': ${JSON.stringify(colors.surface)},
+          'circle-stroke-width': 2.5,
+          'circle-stroke-color': ${JSON.stringify(colors.primary)}
+        }
+      });
+      map.addLayer({
+        id:'place-hit', type:'circle', source:'places', minzoom: 13,
+        paint:{ 'circle-radius': 18, 'circle-color': '#000000', 'circle-opacity': 0 }
+      });
+      map.addLayer({
+        id:'place-label', type:'symbol', source:'places', minzoom: 14.5,
+        layout:{ 'text-field':['get','name'], 'text-font':['Noto Sans Regular'], 'text-size':12, 'text-offset':[0,-1.3], 'text-anchor':'bottom', 'text-optional': true },
+        paint:{ 'text-color': ${JSON.stringify(colors.textSecondary)}, 'text-halo-color': ${JSON.stringify(colors.background)}, 'text-halo-width': 1.4 }
+      });
+      map.on('click','place-hit', function(e){
+        var f = e.features && e.features[0];
+        if (f && f.properties && f.properties.id) post({ type:'place', id: f.properties.id });
+      });` : ''}
 
       // Clustered, so 70 places in one valley read as a few countable groups
       // rather than a smear of overlapping dots.

@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import { SiteVisual } from '@/components/site';
 import { BottomSheet, Text } from '@/components/ui';
-import { demoSites } from '@/data';
+import { demoSites, PLACES } from '@/data';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { colors, font, radii, spacing } from '@/theme';
 import type { Coordinate } from '@/types';
@@ -34,6 +34,8 @@ export type PlacePickerProps = {
   /** True when the walk can actually carry the player there. */
   canTravel: boolean;
   onSelect: (siteId: string) => void;
+  /** A listed place from open data, chosen from search. */
+  onSelectPlace?: (placeId: string) => void;
 };
 
 export function PlacePicker({
@@ -43,6 +45,7 @@ export function PlacePicker({
   atSiteId,
   canTravel,
   onSelect,
+  onSelectPlace,
 }: PlacePickerProps) {
   const ui = useVisitorLiteralCopy();
   const [query, setQuery] = useState('');
@@ -74,7 +77,27 @@ export function PlacePicker({
         autoCorrect={false}
         style={styles.search}
       />
-      {places.length === 0 ? (
+      {needle && onSelectPlace ? (
+        <View style={styles.list}>
+          {PLACES.filter((place) => [place.name, place.nameNepali ?? ''].some((name) => normalise(name).includes(needle)))
+            .slice(0, 15)
+            .map((place) => (
+              <Pressable
+                key={place.id}
+                accessibilityRole="button"
+                accessibilityLabel={place.name}
+                onPress={() => onSelectPlace(place.id)}
+                style={({ pressed }) => [styles.placeRow, pressed && styles.pressed]}
+              >
+                <Text variant="bodyStrong" translate={false}>{place.name}</Text>
+                {place.description ? (
+                  <Text variant="caption" tone="secondary" numberOfLines={1} translate={false}>{place.description}</Text>
+                ) : null}
+              </Pressable>
+            ))}
+        </View>
+      ) : null}
+      {places.length === 0 && !(needle && onSelectPlace) ? (
         <Text variant="body" tone="secondary">
           No place matches that name.
         </Text>
@@ -134,6 +157,7 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
   },
   list: { gap: spacing.sm, paddingBottom: spacing.base },
+  placeRow: { gap: spacing.xxs, minHeight: 56, justifyContent: 'center', paddingHorizontal: spacing.md, borderRadius: radii.md, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
