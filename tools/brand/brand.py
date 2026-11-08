@@ -220,7 +220,7 @@ def main():
     for old in OUT.iterdir():
         if old.suffix in {".svg", ".png"}:
             old.unlink()
-    tagline = "Witness Lumbini at first light"
+    tagline = "Your real-time guide to Nepal"
     vectors = {
         "saksi-mark": svg(256, 256, mark(*COLOR)),
         "saksi-mark-dark": svg(256, 256, mark(*DARK)),

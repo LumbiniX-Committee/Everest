@@ -11,6 +11,10 @@ import type { InterfaceLanguage } from '@/types';
  * Text boundary and are never registered here.
  */
 export const NEPALI_UI_LITERALS = {
+  "Every listing names its own source and licence where it is shown.": "हरेक सूचीले देखाइएको ठाउँमै आफ्नो स्रोत र इजाजतपत्र देखाउँछ।",
+  "Map and data credits": "नक्सा र डाटाको श्रेय",
+  "Offline maps, 3D views, close-up guidance, audio and the reflection companion are all included.": "अफलाइन नक्सा, थ्रीडी दृश्य, नजिकबाट मार्गदर्शन, अडियो र चिन्तन साथी सबै समावेश छन्।",
+  "Read the privacy policy": "गोपनीयता नीति पढ्नुहोस्",
   "Call": "फोन गर्नुहोस्",
   "Eat": "खाना",
   "Essentials": "आवश्यक सेवा",

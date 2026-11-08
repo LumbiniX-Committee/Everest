@@ -46,15 +46,16 @@ that configuration change; Expo web/development bundles pick it up directly.
 
 ## 3. Declared Android permissions
 
-From `app.json` → `expo.android.permissions` — **only three**:
+From `app.json` → `expo.android.permissions`:
 
 ```json
 "android.permission.ACCESS_COARSE_LOCATION",
 "android.permission.ACCESS_FINE_LOCATION",
-"android.permission.CAMERA"
+"android.permission.CAMERA",
+"android.permission.MODIFY_AUDIO_SETTINGS"
 ```
 
-> Config plugins add further permissions to the generated manifest (e.g. `expo-notifications`, `expo-audio`). The final merged manifest is only visible after `expo prebuild`. **Needs verification** against a generated build if the exact manifest matters.
+`expo.android.blockedPermissions` strips what config plugins would otherwise add but the app never uses, because each one draws a Play Console declaration: `RECORD_AUDIO` (speech input was removed), `FOREGROUND_SERVICE` and `FOREGROUND_SERVICE_MEDIA_PLAYBACK` (narration does not play in the background), `ACCESS_BACKGROUND_LOCATION`, and `SYSTEM_ALERT_WINDOW`. Notifications still add `POST_NOTIFICATIONS`. If a feature later needs one of these, remove it from the block list and file the Play declaration.
 
 **Notably absent:** no background-location permission (`ACCESS_BACKGROUND_LOCATION`). Geofencing via `expo-task-manager` + `expo-location` is therefore foreground-scoped. Whether the arrival feature needs background location to work as intended is **Needs verification**.
 

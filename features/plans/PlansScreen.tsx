@@ -16,7 +16,7 @@ export function PlansScreen() {
 
   return (
     <Screen scroll>
-      <ScreenHeader title="Your plan" subtitle="Free covers the essentials. Pro adds depth for your whole trip." />
+      <ScreenHeader title="Your plan" subtitle={gatingOn ? 'Free covers the essentials. Pro adds depth for your whole trip.' : undefined} />
       <View style={styles.body}>
         {!gatingOn ? (
           <Card>
@@ -32,11 +32,21 @@ export function PlansScreen() {
             ) : null}
           </Card>
         ) : null}
-        <PlanComparison visitor={preferences.visitorType} />
-        <RedeemCode />
-        <Text variant="caption" tone="muted">
-          Payment in the app is not available yet. Your records and saved photographs stay yours on any plan.
-        </Text>
+        {gatingOn ? (
+          <>
+            <PlanComparison visitor={preferences.visitorType} />
+            <RedeemCode />
+            <Text variant="caption" tone="muted">
+              Payment in the app is not available yet. Your records and saved photographs stay yours on any plan.
+            </Text>
+          </>
+        ) : (
+          // Store builds: no prices and no code box, which would read as
+          // selling digital features outside the store's billing.
+          <Text variant="body" tone="secondary">
+            Offline maps, 3D views, close-up guidance, audio and the reflection companion are all included.
+          </Text>
+        )}
       </View>
     </Screen>
   );

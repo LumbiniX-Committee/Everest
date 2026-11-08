@@ -50,6 +50,7 @@ It lands on Home with a "Start here" guide. Permissions are asked when first nee
 - **Prices:** NPR 1,000 a month for Nepali visitors, USD 20 a month for everyone else.
 - **No payment in the app.** Pro is unlocked with an activation code.
 - **Gating:** enforced in development and preview builds only, through `EXPO_PUBLIC_PRO_GATING` in `eas.json`. Store builds keep everything open until the stores' rules on selling digital features outside their billing have been checked for your markets.
+- **Store builds show no prices and no code box:** the onboarding plan step is skipped, and Settings → Your plan says everything is included. `tools/check-release-config.mjs` fails a production build if gating is on. The full Play release kit is [PLAY-STORE-HANDOFF.md](PLAY-STORE-HANDOFF.md).
 
 ### Issuing codes
 

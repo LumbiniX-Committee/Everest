@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Clock, Download, Eye, MapPin } from 'lucide-react';
+import { Clock, Download, Eye, Globe, KeyRound, MapPin } from 'lucide-react';
 
 import { localeHref, type Locale } from '@/lib/i18n';
 
@@ -8,6 +8,8 @@ const ICONS = {
   position: MapPin,
   visibility: Eye,
   retention: Clock,
+  services: Globe,
+  plans: KeyRound,
   control: Download,
 } as const;
 
@@ -19,9 +21,9 @@ const EN = {
   title: 'What we collect, and why',
   intro: {
     before:
-      'Sākṣī records where a visitor stood at places of worship and historical significance, which supports inferences about religious belief. That deserves to be stated plainly, not left to a generic privacy notice. This is a product position, not legal advice. See the full detail and its limits in',
-    linkLabel: 'PRIVACY.md',
-    after: '.',
+      'Sākṣī records where a visitor stood at places of worship and historical significance, which supports inferences about religious belief. That deserves to be stated plainly, not left to a generic privacy notice. This is a product position, not legal advice.',
+    linkLabel: '',
+    after: '',
   },
   commitments: {
     position: {
@@ -35,6 +37,14 @@ const EN = {
     retention: {
       title: 'Kept as long as it serves the record',
       body: "An observation already shared into a site's conservation record is kept indefinitely, the way an archive keeps a catalogued record rather than expiring it. The whole point of the app is a photographic baseline compared years later. What is not permanent is the link between a device and its contributions: that can be severed at any time, after which nothing recorded goes on to look like it came from the same place.",
+    },
+    services: {
+      title: 'Services the app talks to',
+      body: "To draw the map, the app downloads map tiles and fonts from OpenFreeMap and terrain from Amazon's open elevation data; those servers see your device's internet address and which area you are viewing, not who you are. When you ask for walking directions, your current position and the destination are sent to the OpenStreetMap routing server run by FOSSGIS, which answers with the route. When satellite view is available it is drawn by Google's Map Tiles service, which sees the area on screen. Photographs of listed places load from Wikimedia Commons. Reports you choose to share, plan activations and opt-in crash reports go to our own database, hosted by Supabase. Offline map packs, trek routes and the essentials listings are stored on the phone and need no account.",
+    },
+    plans: {
+      title: 'Plans and crash reports',
+      body: "Redeeming an activation code links it to the device's anonymous account, so the plan survives a reinstall; the code itself is stored only as a one-way hash. Crash reports are off unless you turn them on in Settings. When on, a report holds the error message, the screen it happened on and the time, with personal details scrubbed, and nothing else.",
     },
     control: {
       title: 'Get a copy, or start fresh',
@@ -54,9 +64,9 @@ const NE: typeof EN = {
   title: 'हामी के सङ्कलन गर्छौं, र किन',
   intro: {
     before:
-      'साक्षीले आगन्तुक पूजा स्थल र ऐतिहासिक महत्त्वका ठाउँहरूमा कहाँ उभिए भन्ने दर्ता गर्छ, जसले धार्मिक विश्वासका बारेमा अनुमान लगाउन सघाउँछ। यो कुरा सामान्य गोपनीयता सूचनामा भन्दा स्पष्ट रूपमा भनिनुपर्छ। यो एउटा उत्पादन धारणा हो, कानुनी सल्लाह होइन। पूरा विवरण र यसका सीमाहरू',
-    linkLabel: 'PRIVACY.md',
-    after: ' मा हेर्नुहोस्।',
+      'साक्षीले आगन्तुक पूजा स्थल र ऐतिहासिक महत्त्वका ठाउँहरूमा कहाँ उभिए भन्ने दर्ता गर्छ, जसले धार्मिक विश्वासका बारेमा अनुमान लगाउन सघाउँछ। यो कुरा सामान्य गोपनीयता सूचनामा भन्दा स्पष्ट रूपमा भनिनुपर्छ। यो एउटा उत्पादन धारणा हो, कानुनी सल्लाह होइन।',
+    linkLabel: '',
+    after: '',
   },
   commitments: {
     position: {
@@ -70,6 +80,14 @@ const NE: typeof EN = {
     retention: {
       title: 'जबसम्म यसले अभिलेखलाई सेवा गर्छ, त्यबसम्म राखिन्छ',
       body: 'कुनै ठाउँको संरक्षण अभिलेखमा पहिले नै साझा गरिएको अवलोकन अनिश्चित कालसम्म राखिन्छ, जसरी एउटा अभिलेखालयले सूचीकृत अभिलेख म्याद नसकाई राख्छ। एपको सम्पूर्ण उद्देश्य नै वर्षौंपछि तुलना गरिने तस्बिर आधाररेखा हो। स्थायी नरहने कुरा डिभाइस र त्यसको योगदानबीचको सम्बन्ध हो: त्यसलाई जुनसुकै बेला काट्न सकिन्छ, जसपछि दर्ता भइसकेको कुनै पनि कुरा सोही ठाउँबाट आएको जस्तो देखिँदैन।',
+    },
+    services: {
+      title: 'एपले सम्पर्क गर्ने सेवाहरू',
+      body: 'नक्सा देखाउन एपले OpenFreeMap बाट नक्साका टाइल र अक्षर, र Amazon को खुला उचाइ डाटाबाट भू-आकृति डाउनलोड गर्छ; ती सर्भरले तपाईंको डिभाइसको इन्टरनेट ठेगाना र तपाईंले हेरिरहेको क्षेत्र मात्र देख्छन्, तपाईं को हो भन्ने होइन। हिँड्ने बाटो माग्दा तपाईंको हालको स्थान र गन्तव्य FOSSGIS ले चलाउने OpenStreetMap को बाटो सर्भरमा पठाइन्छ। स्याटेलाइट दृश्य उपलब्ध हुँदा Google को Map Tiles सेवाले देखाउँछ, जसले स्क्रिनमा भएको क्षेत्र देख्छ। सूचीकृत ठाउँका तस्बिर Wikimedia Commons बाट आउँछन्। तपाईंले बाँड्न रोजेका रिपोर्ट, योजना सक्रियता र आफैँ खोलेका क्र्यास रिपोर्ट Supabase मा राखिएको हाम्रो आफ्नै डाटाबेसमा जान्छन्। अफलाइन नक्सा, ट्रेक मार्ग र आवश्यक सेवाका सूची फोनमै रहन्छन् र खाता चाहिँदैन।',
+    },
+    plans: {
+      title: 'योजना र क्र्यास रिपोर्ट',
+      body: 'सक्रियता कोड प्रयोग गर्दा त्यो डिभाइसको बेनामी खातासँग जोडिन्छ, जसले गर्दा फेरि इन्स्टल गर्दा पनि योजना रहन्छ; कोड आफैँ एकतर्फी ह्यासका रूपमा मात्र राखिन्छ। क्र्यास रिपोर्ट सेटिङमा तपाईंले नखोलेसम्म बन्द रहन्छ। खोलिएपछि रिपोर्टमा त्रुटि सन्देश, त्रुटि भएको स्क्रिन र समय मात्र हुन्छ, व्यक्तिगत विवरण हटाएर।',
     },
     control: {
       title: 'प्रतिलिपि लिनुहोस्, वा नयाँबाट सुरु गर्नुहोस्',
@@ -115,13 +133,15 @@ export default async function PrivacyPage({
         </h1>
 
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-soft">
-          {c.intro.before}{' '}
-          <a
-            href="https://github.com/siddantasodari4-eng/saksi/blob/main/docs/PRIVACY.md"
-            className="font-semibold text-earth underline underline-offset-4"
-          >
-            {c.intro.linkLabel}
-          </a>
+          {c.intro.before}
+          {c.intro.linkLabel ? (
+            <>
+              {' '}
+              <a href="https://github.com/siddantasodari4-eng/saksi/blob/main/docs/PRIVACY.md" className="font-semibold text-earth underline underline-offset-4">
+                {c.intro.linkLabel}
+              </a>
+            </>
+          ) : null}
           {c.intro.after}
         </p>
 
@@ -132,6 +152,8 @@ export default async function PrivacyPage({
             return (
               <article
                 key={id}
+                // Stable anchors: the store listing links #delete as the data-deletion page.
+                id={id === 'control' ? 'delete' : id}
                 className="flex gap-5 rounded-2xl border border-line bg-surface p-6 shadow-sm sm:p-8"
               >
                 <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-surface-secondary text-sandstone-deep">

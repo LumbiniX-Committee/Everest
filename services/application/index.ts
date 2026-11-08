@@ -35,6 +35,13 @@ export async function reload(reason: string): Promise<void> {
   throw new Error('This build cannot reload itself automatically.');
 }
 
+/** The public privacy policy, in the visitor's language. Also the store's data-deletion page (#delete). */
+export async function openPrivacyPolicy(language: 'en' | 'ne'): Promise<boolean> {
+  const base = (process.env.EXPO_PUBLIC_PORTAL_URL ?? '').trim().replace(/\/$/, '');
+  if (!base) return false;
+  return openExternal(`${base}/${language}/privacy`);
+}
+
 /** Opens the authenticated web portal without putting its URL in a screen. */
 export async function openCustodianPortal(): Promise<void> {
   const base = (process.env.EXPO_PUBLIC_PORTAL_URL ?? '').trim().replace(/\/$/, '');

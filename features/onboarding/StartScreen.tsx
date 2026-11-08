@@ -9,6 +9,7 @@ import { HOME_HUB_OPTIONS } from '@/types';
 import { ChoiceCard } from './ChoiceCard';
 import { OnboardingFrame } from './OnboardingFrame';
 import { nextRoute } from './steps';
+import { useFinishOnboarding } from './useFinishOnboarding';
 
 const ICONS = {
   'near-me': 'crosshairs-gps',
@@ -21,12 +22,13 @@ const ICONS = {
 export function StartScreen() {
   const router = useRouter();
   const next = nextRoute('start');
+  const finish = useFinishOnboarding();
   const { preferences, update } = usePreferences();
 
   return (
     <OnboardingFrame
       stepKey="start"
-      footer={<Button label="Continue" block onPress={() => next && router.push(next)} />}
+      footer={<Button label="Continue" block onPress={() => (next ? router.push(next) : void finish())} />}
     >
       <View style={styles.wrap}>
         <Text variant="title">Where would you like to start?</Text>

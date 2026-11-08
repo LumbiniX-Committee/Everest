@@ -1,5 +1,7 @@
 import type { Href } from 'expo-router';
 
+import { PRO_GATING_ON } from '@/store';
+
 /**
  * The first-run sequence.
  *
@@ -20,7 +22,9 @@ export const onboardingSteps: OnboardingStep[] = [
   { key: 'visitor', route: '/onboarding/visitor' },
   { key: 'discover', route: '/onboarding/discover' },
   { key: 'start', route: '/onboarding/start' },
-  { key: 'plan', route: '/onboarding/plan' },
+  // Only where Pro is enforced. Store builds open every feature, and showing
+  // prices and a code box there would read as selling outside store billing.
+  ...(PRO_GATING_ON ? [{ key: 'plan', route: '/onboarding/plan' as Href }] : []),
 ];
 
 export function stepIndex(key: string): number {
