@@ -31,6 +31,9 @@ const TEXT_PAIRS: [keyof ColorPalette, keyof ColorPalette][] = [
   ['onPrimary', 'primary'],
   ['onPrimary', 'primaryPressed'],
   ['onAccent', 'accent'],
+  // The Explore hero: white and marigold type on the deep jade card.
+  ['onScrim', 'backgroundDeep'],
+  ['accent', 'backgroundDeep'],
   ['sandstoneDeep', 'background'],
   ['sandstoneDeep', 'surface'],
   ['primary', 'surface'],

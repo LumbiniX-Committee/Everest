@@ -49,6 +49,11 @@ The full report, with sources, is `reports/Sākṣī redesign design direction.m
 6. **Restraint over ornament.** Hairlines and spacing before cards; cards only for things you can tap. No identical three-card rows, no gradient blobs, no uniform fade-ins.
 7. **Real, credited photographs** of the place, never stock or generated images.
 
+**Premium layer (2026-11-08):**
+- **Website:** the name set huge in Devanagari; italic serif promises; a floating frosted nav; a bento grid with one dark anchor card; a "full circle" ring diagram; a dark closing panel; a lokta-paper grain and a giant साक्षी watermark.
+- **App:** Explore opens on a deep-jade Guide card with a marigold glow, live depth pills and one marigold call to action, with Ask and Report beside it. Every place page opens on its photograph, historical plate or labelled schematic, with the photo's credit.
+- **Motion:** slow and once-only (float, orbit, fade-up). It always stops under reduced motion, which Reanimated respects by default in the app.
+
 **Open question for the owner:** the monk character (`components/monk`, the website's former hero) has the curled hair of Buddha images. The research recommends against sacred figures as mascots. It has been removed from the website hero; its use in the app needs a decision.
 
 ## Shape and motion

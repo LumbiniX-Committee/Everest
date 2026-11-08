@@ -1,26 +1,26 @@
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { Button, Card, ConditionBadge, Divider, MetaRow, Screen, SegmentedControl, SourceBadge, Text } from '@/components/ui';
 import { BackBar, EmptyState, ProGate } from '@/components/common';
-import { NarrationPlayer, SiteListItem, VantageListItem, VisitInfo } from '@/components/site';
+import { NarrationPlayer, SiteListItem, SiteVisual, VantageListItem, VisitInfo } from '@/components/site';
 import { SourceCard, SourceDetailSheet } from '@/components/source';
-import { audioForSite, findSite, historicalImagesForSite, narrationForSite, questsForSite, resolveSources, sitesForParent, vantagesForSite, feeForSite, modelFor } from '@/data';
+import { audioForSite, findSite, nowImageCredits, historicalImagesForSite, narrationForSite, questsForSite, resolveSources, sitesForParent, vantagesForSite, feeForSite, modelFor } from '@/data';
 import { useCurrentPosition, useOpenInTabs, useSafeBack } from '@/hooks';
 import { location as locationService } from '@/services';
 import { usePreferences } from '@/store';
-import { spacing } from '@/theme';
+import { radii, spacing } from '@/theme';
 import { AskThisPlace } from './AskThisPlace';
 import { formatVisitorCopy } from '@/i18n/visitor';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
-import { WISDOM_TIER_OPTIONS, type WisdomTier } from '@/types';
 import { depthFor, scriptureForSite } from './wisdom';
-import type { Source } from '@/types';
+import { WISDOM_TIER_OPTIONS, type Source, type WisdomTier } from '@/types';
+import { distanceMeters, formatCoordinate, formatDistance } from '@/utils';
 
 /** The three depths, in reading order. 'custom' stays a Settings choice. */
 const DEPTH_OPTIONS = WISDOM_TIER_OPTIONS.filter((option): option is typeof option & { value: Exclude<WisdomTier, 'custom'> } => option.value !== 'custom');
-import { distanceMeters, formatCoordinate, formatDistance } from '@/utils';
 
 /**
  * A single heritage site.
@@ -80,6 +80,15 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
   return (
     <Screen scroll>
       <BackBar />
+      {/* The place first: its photograph, or an honestly labelled plate or schematic. */}
+      <Animated.View entering={FadeIn.duration(380)}>
+        <SiteVisual siteId={site.id} height={240} radius={radii.xl} style={styles.hero} />
+        {nowImageCredits[site.id] ? (
+          <Text variant="caption" tone="muted" style={styles.credit} translate={false}>
+            {nowImageCredits[site.id]}
+          </Text>
+        ) : null}
+      </Animated.View>
       <View style={styles.head}>
         <Text variant="label" tone="muted" uppercase>
           Tīrtha
@@ -372,6 +381,8 @@ const styles = StyleSheet.create({
   badges: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginTop: spacing.xs },
   description: { paddingBottom: spacing.lg },
   depth: { gap: spacing.xs, marginBottom: spacing.lg },
+  hero: { marginBottom: spacing.xs },
+  credit: { textAlign: 'right', marginBottom: spacing.md },
   facts: { paddingBottom: spacing.lg },
   scripture: {
     gap: spacing.xs,

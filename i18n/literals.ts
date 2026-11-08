@@ -11,6 +11,9 @@ import type { InterfaceLanguage } from '@/types';
  * Text boundary and are never registered here.
  */
 export const NEPALI_UI_LITERALS = {
+  "as deeply as you want.": "जति गहिरो चाहनुहुन्छ त्यति।",
+  "Know where you are,": "तपाईं कहाँ हुनुहुन्छ जान्नुहोस्,",
+  "Open the guide map": "मार्गदर्शक नक्सा खोल्नुहोस्",
   "Know where you are, as deeply as you want.": "तपाईं कहाँ हुनुहुन्छ, जति गहिरो चाहनुहुन्छ त्यति जान्नुहोस्।",
   "Plan your trip": "यात्राको योजना",
   "Guide": "मार्गदर्शन",

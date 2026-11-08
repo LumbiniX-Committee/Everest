@@ -1,64 +1,183 @@
 import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 
 import { Icon, Text } from '@/components/ui';
 import { useHaptics } from '@/hooks';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
+import { usePreferences } from '@/store';
 import { colors, radii, spacing } from '@/theme';
+import { WISDOM_TIER_OPTIONS, type WisdomTier } from '@/types';
 
-/**
- * The app in three verbs, on the first screen.
- *
- * Guide opens the map that knows where you are; Ask opens questions answered
- * from sources; Report opens the record, where a problem is flagged and then
- * followed. One bar divided by hairlines rather than three look-alike cards:
- * these are three doors, not three products.
- */
-const VERBS = [
-  { key: 'guide', label: 'Guide', hint: 'Where you are, explained', icon: 'compass-outline', href: '/(main)/tirtha/map' },
+const DEPTHS = WISDOM_TIER_OPTIONS.filter((option) => option.value !== 'custom');
+
+const DOORS = [
   { key: 'ask', label: 'Ask', hint: 'Answers with sources', icon: 'comment-question-outline', href: '/(main)/dhamma' },
   { key: 'report', label: 'Report', hint: 'Flag it, follow it', icon: 'flag-outline', href: '/(main)/sakshi' },
 ] as const;
 
+/**
+ * The first thing on Explore: the promise, the depth you hear things at, and
+ * the three doors into the app.
+ *
+ * Guide is the dark anchor card, as on the website; Ask and Report sit beside
+ * each other underneath. The depth pills set the same remembered preference as
+ * every place page, so a visitor can choose how much to hear before arriving.
+ * Entrances fade up once and stop under the system's reduced-motion setting.
+ */
 export function VerbBar() {
   const router = useRouter();
   const ui = useVisitorLiteralCopy();
   const { selection } = useHaptics();
+  const { preferences, update } = usePreferences();
+  const current: WisdomTier = preferences.wisdomTier === 'custom' ? 'medium' : preferences.wisdomTier;
+
   return (
-    <View style={styles.bar}>
-      {VERBS.map((verb, index) => (
+    <View style={styles.wrap}>
+      <Animated.View entering={FadeInDown.duration(420)} style={styles.hero}>
+        <View pointerEvents="none" style={styles.glow} />
+        <Text variant="label" tone="accent" uppercase>
+          Guide
+        </Text>
+        <Text variant="title" tone="onScrim" style={styles.heroTitle}>
+          Know where you are,
+        </Text>
+        <Text variant="title" tone="accent" style={styles.heroTitleAccent}>
+          as deeply as you want.
+        </Text>
+
+        <View accessibilityRole="radiogroup" accessibilityLabel={ui('How much to tell')} style={styles.depths}>
+          {DEPTHS.map((option) => {
+            const selected = option.value === current;
+            return (
+              <Pressable
+                key={option.value}
+                accessibilityRole="radio"
+                accessibilityState={{ selected }}
+                onPress={() => {
+                  selection();
+                  void update('wisdomTier', option.value);
+                }}
+                style={[styles.depth, selected && styles.depthSelected]}
+              >
+                <Text variant={selected ? 'bodyStrong' : 'body'} style={selected ? styles.depthTextSelected : styles.depthText}>
+                  {ui(option.label)}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+
         <Pressable
-          key={verb.key}
           accessibilityRole="button"
-          accessibilityLabel={`${ui(verb.label)}: ${ui(verb.hint)}`}
+          accessibilityLabel={ui('Open the guide map')}
           onPress={() => {
             selection();
-            router.push(verb.href);
+            router.push('/(main)/tirtha/map');
           }}
-          style={({ pressed }) => [styles.door, index > 0 && styles.divided, pressed && styles.pressed]}
+          style={({ pressed }) => [styles.cta, pressed && styles.ctaPressed]}
         >
-          <Icon name={verb.icon} size={24} color={colors.primary} />
-          <Text variant="bodyStrong">{ui(verb.label)}</Text>
-          <Text variant="caption" tone="secondary" center numberOfLines={2}>
-            {ui(verb.hint)}
+          <Icon name="compass-outline" size={20} color={colors.onAccent} />
+          <Text variant="bodyStrong" style={styles.ctaText}>
+            Open the guide map
           </Text>
         </Pressable>
-      ))}
+      </Animated.View>
+
+      <View style={styles.row}>
+        {DOORS.map((door, index) => (
+          <Animated.View key={door.key} entering={FadeInDown.duration(420).delay(90 * (index + 1))} style={styles.half}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={`${ui(door.label)}: ${ui(door.hint)}`}
+              onPress={() => {
+                selection();
+                router.push(door.href);
+              }}
+              style={({ pressed }) => [styles.door, pressed && styles.doorPressed]}
+            >
+              <View style={styles.doorIcon}>
+                <Icon name={door.icon} size={22} color={colors.primary} />
+              </View>
+              <Text variant="bodyStrong">{ui(door.label)}</Text>
+              <Text variant="caption" tone="secondary">
+                {ui(door.hint)}
+              </Text>
+            </Pressable>
+          </Animated.View>
+        ))}
+      </View>
     </View>
   );
 }
 
+const GLOW = 220;
 const styles = StyleSheet.create({
-  bar: {
+  wrap: { gap: spacing.md, marginBottom: spacing.lg },
+  hero: {
+    overflow: 'hidden',
+    borderRadius: radii.xl,
+    backgroundColor: colors.backgroundDeep,
+    padding: spacing.lg,
+    gap: spacing.xs,
+  },
+  glow: {
+    position: 'absolute',
+    width: GLOW,
+    height: GLOW,
+    borderRadius: GLOW / 2,
+    right: -GLOW / 3,
+    top: -GLOW / 3,
+    backgroundColor: colors.accentSoft,
+  },
+  heroTitle: { marginTop: spacing.sm },
+  heroTitleAccent: { marginTop: -spacing.xs },
+  depths: {
     flexDirection: 'row',
+    gap: spacing.xxs,
+    padding: spacing.xxs,
+    marginTop: spacing.base,
+    borderRadius: radii.md,
+    backgroundColor: colors.scrimSoft,
+    borderWidth: 1,
+    borderColor: colors.onScrimBorder,
+  },
+  depth: { flex: 1, minHeight: 44, alignItems: 'center', justifyContent: 'center', borderRadius: radii.sm },
+  depthSelected: { backgroundColor: colors.onScrim },
+  depthText: { color: colors.onScrim, opacity: 0.8 },
+  depthTextSelected: { color: colors.backgroundDeep },
+  cta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: spacing.sm,
+    minHeight: 52,
+    marginTop: spacing.base,
+    borderRadius: radii.full,
+    backgroundColor: colors.accent,
+  },
+  ctaPressed: { opacity: 0.85 },
+  ctaText: { color: colors.onAccent },
+  row: { flexDirection: 'row', gap: spacing.md },
+  half: { flex: 1 },
+  door: {
+    flex: 1,
+    gap: spacing.xxs,
+    padding: spacing.base,
+    minHeight: 132,
     borderRadius: radii.lg,
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.surface,
-    overflow: 'hidden',
-    marginBottom: spacing.lg,
   },
-  door: { flex: 1, alignItems: 'center', gap: spacing.xxs, paddingVertical: spacing.base, paddingHorizontal: spacing.xs, minHeight: 96 },
-  divided: { borderLeftWidth: 1, borderLeftColor: colors.border },
-  pressed: { backgroundColor: colors.surfaceSelected },
+  doorPressed: { backgroundColor: colors.surfaceSelected },
+  doorIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: radii.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.primarySoft,
+    marginBottom: spacing.sm,
+  },
 });
