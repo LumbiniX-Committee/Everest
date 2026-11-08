@@ -2,6 +2,75 @@
 
 What changed in each milestone, what was verified, and what was not. Newest first. The plan lives in the delivery plan; this records what actually happened.
 
+## Release readiness for 1.0 (2026-11-08)
+
+**Store-policy fixes**
+- **Store builds no longer show prices or a code box.** With gating off, the Plans screen and the onboarding plan step still showed NPR 1,000 / USD 20 and "Redeem code", which review reads as selling digital features outside Play billing. Now the plan step is skipped, the Plans screen says everything is included, and `tools/check-release-config.mjs` fails a production build with gating on.
+- **Permissions:** the app asks for foreground location and camera only. Blocked: `RECORD_AUDIO`, `FOREGROUND_SERVICE` and `FOREGROUND_SERVICE_MEDIA_PLAYBACK` (all unused, each a Play declaration), background location and the overlay permission.
+- **Privacy policy:** it linked `PRIVACY.md` in the private repo, which the public got as a 404. The link is gone. The policy now names every outside service, covers plans and crash reports, in English and Nepali, and has a `#delete` anchor for Play's deletion URL.
+- **In-app:** Settings → About has map and data credits (OSM, OpenFreeMap, Copernicus DEM, Overture with Foursquare's notice) and a link to the privacy policy.
+
+**Store assets and security**
+- **Store kit:** `docs/PLAY-STORE-HANDOFF.md` is rewritten. It has the listing in English and Nepali, the Data safety answers (declaring that walking directions share location with the routing server), the content rating, app access, a screenshot shot list and a pre-launch checklist.
+- **Feature graphic:** regenerated with "Your real-time guide to Nepal".
+- **Security:** no secrets in tracked files; `.easignore` excludes env files, the service account and `.envrc`.
+- **Production bundle:** EAS build `df541c44`, version 1.0.0 (version code 4), from `e08d04d`: https://expo.dev/artifacts/eas/t0ZGWBvfYG9gRz0cIfKos3v_YQJuAISYK79evNOVzOk.aab. CI green; the live privacy page has the services section and the `#delete` anchor.
+- **Not done here:** screenshots (no emulator on this machine), testing on a real phone, the Play account and listing.
+
+## Visitor essentials from Overture Maps (2026-11-08)
+
+- **Source check:**
+  - Overture Places (2026-10-21.0) holds 95,227 places in Nepal: about 93,300 from Meta and 1,061 from Microsoft (CDLA-Permissive-2.0), about 1,200 from Uberall, 142 from AllThePlaces (CC0) and 119 from Foursquare (Apache-2.0).
+  - Foursquare's own Open Source Places is now gated behind sign-up, and Overture carries its records with their licence, so one import covers both.
+  - Overture has no opening hours.
+- **Imported:** 1,086 essentials at confidence ≥ 0.8:
+  - **Kathmandu:** 385
+  - **Pokhara:** 337
+  - **Chitwan:** 165
+  - **Lumbini:** 68
+  - **Along the treks:** 85 (Everest Base Camp), 38 (Poon Hill) and 9 (Langtang), each tagged with its nearest stop.
+  - 999 have a phone number and 751 a website.
+  - Built by `tools/data/build_overture.py`.
+- **Found while testing:** one record's phone was an empty string, which would have given a Call button that dials nothing; blank phones and websites are now null. Animal hospitals are filed as "hospital" by Overture; they are now excluded from Health.
+- **Not checked:** listings are open data and not verified on site.
+
+## Offline maps and loose ends (2026-11-08)
+
+- **Offline map packs (Pro):** save a hub from Settings → Storage, or a trek from its page.
+  - **Saved:** the basemap to zoom 14, terrain to zoom 12, and label fonts, including Devanagari.
+  - **How it works:** the map loads them through a `saksi://` protocol that tries the network first, so online behaviour is unchanged.
+  - **Checked:** headless Chrome with the tile hosts blocked drew the same 278 features and 34 labels as online.
+  - **Not checked:** a real phone in flight mode.
+- **Found and fixed:** listed-place names never showed on the full-screen map. Their layer reused the basemap's `place-label` id, and MapLibre rejected it.
+- **Tilt honesty:** an aligned record from a phone without a motion sensor now says tilt was not measured; the record already stored it as null.
+- **Checked:** migration `0010` is applied in production.
+
+## Trekking routes and Google imagery (2026-11-08)
+
+- **Treks:** Ghorepani–Poon Hill (5 days, 47.9 km, 2,617 m of climb), Langtang Valley (6 days, 66.8 km, 3,102 m) and Everest Base Camp (11 days, 111.8 km, 4,510 m).
+  - **Data:** words from `seed/treks.json`; stops matched in OpenStreetMap; days routed with Valhalla; altitudes from the Copernicus DEM via Open-Meteo, smoothed over about 600 m. Built with `npm run data:treks`.
+  - **Checked against known heights:** Kyanjin Ri was first matched wrongly (4,079 m) because OSM spells it "Kyāṅjiṅ Ri"; fixed (4,541 m against a mapped 4,604 m).
+  - **Walking times:** raw elevation data doubled the climb and inflated times; now within about 40 minutes of commonly quoted stage times on average.
+  - **Trail map:** places the visitor along the day's trail and measures the distance and climb to the next stop (`core/treks/progress.ts`).
+  - **Map fix:** the map page only built its route, position and stop layers when the 3D figure was on; that code is now always included.
+- **Google imagery:** `services/imagery` uses `EXPO_PUBLIC_GOOGLE_MAPS_KEY` for Map Tiles sessions, with MapTiler as fallback. The key currently answers "enable billing" (Google requires a prepayment on this account), so satellite stays hidden and listed as coming soon until a session succeeds.
+
+## Precision pass and Pro verification (2026-11-07)
+
+- **Close-up precision:**
+  - GPS fixes are blended by their accuracy (`smoothFix`).
+  - A lock must hold 0.8 s, and survives a wobble under 0.5 s.
+  - A compass the phone calls unreliable can never lock.
+  - Hints never quote a distance finer than GPS error.
+  - The step list and the lock share one tolerance.
+- **Pro, tested end to end against production:**
+  - Wrong code refused.
+  - Real code redeems (case and spacing insensitive) and survives a reload.
+  - A reinstall gets the same end date.
+  - A third phone is refused.
+  - The unbuilt features were moved to "Coming soon".
+- **Left on the server:** one internal test code and two test entitlements.
+
 ## Milestone 6: 3D monuments
 
 ### Changed
