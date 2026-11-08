@@ -7,7 +7,7 @@ import { Button, Card, ConditionBadge, Divider, MetaRow, Screen, SegmentedContro
 import { BackBar, EmptyState, ProGate } from '@/components/common';
 import { NarrationPlayer, SiteListItem, SiteVisual, VantageListItem, VisitInfo } from '@/components/site';
 import { SourceCard, SourceDetailSheet } from '@/components/source';
-import { audioForSite, findSite, nowImageCredits, historicalImagesForSite, narrationForSite, questsForSite, resolveSources, sitesForParent, vantagesForSite, feeForSite, modelFor } from '@/data';
+import { audioForSite, findSite, historicalImagesForSite, narrationForSite, questsForSite, resolveSources, sitesForParent, vantagesForSite, feeForSite, modelFor } from '@/data';
 import { useCurrentPosition, useOpenInTabs, useSafeBack } from '@/hooks';
 import { location as locationService } from '@/services';
 import { usePreferences } from '@/store';
@@ -82,12 +82,7 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
       <BackBar />
       {/* The place first: its photograph, or an honestly labelled plate or schematic. */}
       <Animated.View entering={FadeIn.duration(380)}>
-        <SiteVisual siteId={site.id} height={240} radius={radii.xl} style={styles.hero} />
-        {nowImageCredits[site.id] ? (
-          <Text variant="caption" tone="muted" style={styles.credit} translate={false}>
-            {nowImageCredits[site.id]}
-          </Text>
-        ) : null}
+        <SiteVisual siteId={site.id} height={240} radius={radii.xl} style={styles.hero} credited />
       </Animated.View>
       <View style={styles.head}>
         <Text variant="label" tone="muted" uppercase>
@@ -381,8 +376,7 @@ const styles = StyleSheet.create({
   badges: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginTop: spacing.xs },
   description: { paddingBottom: spacing.lg },
   depth: { gap: spacing.xs, marginBottom: spacing.lg },
-  hero: { marginBottom: spacing.xs },
-  credit: { textAlign: 'right', marginBottom: spacing.md },
+  hero: { marginBottom: spacing.md },
   facts: { paddingBottom: spacing.lg },
   scripture: {
     gap: spacing.xs,

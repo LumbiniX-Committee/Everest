@@ -99,7 +99,7 @@ export async function getUserPreferences(): Promise<UserPreferences> {
 
   return {
     colorTheme:
-      raw.colorTheme === 'navy' || raw.colorTheme === 'white'
+      raw.colorTheme === 'navy' || raw.colorTheme === 'white' || raw.colorTheme === 'outdoor'
         ? raw.colorTheme
         : DEFAULT_USER_PREFERENCES.colorTheme,
     interfaceLanguage: oneOf(raw.interfaceLanguage, INTERFACE_LANGUAGE_OPTIONS, 'interfaceLanguage'),

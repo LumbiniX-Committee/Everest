@@ -54,6 +54,13 @@ The full report, with sources, is `reports/Sākṣī redesign design direction.m
 - **App:** Explore opens on a deep-jade Guide card with a marigold glow, live depth pills and one marigold call to action, with Ask and Report beside it. Every place page opens on its photograph, historical plate or labelled schematic, with the photo's credit.
 - **Motion:** slow and once-only (float, orbit, fade-up). It always stops under reduced motion, which Reanimated respects by default in the app.
 
+**Sunlight theme (2026-11-08):** Settings → Appearance → "High contrast for sunlight". It is the morning palette with near-black text, darker secondary text and borders, and deeper accents. `theme-contrast.test.ts` holds its primary and secondary text to 7:1 on every ground.
+
+**Photographs:**
+- **Places:** 10 sites gained a credited Commons photo (`tools/data/build-site-photos.mjs`). Matches need both a Wikidata name match and coordinates within 600 m, and each image was checked by eye; Basantapur Durbar was rejected because its match showed a neighbouring temple.
+- **Treks:** each has a hand-checked photo (`data/trekPhotos.ts`).
+- **Credit and offline:** the credit sits on the image itself, so when a photo cannot load offline its credit disappears with it, and the place falls back to its plate or schematic.
+
 **Open question for the owner:** the monk character (`components/monk`, the website's former hero) has the curled hair of Buddha images. The research recommends against sacred figures as mascots. It has been removed from the website hero; its use in the app needs a decision.
 
 ## Shape and motion

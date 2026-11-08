@@ -7,6 +7,7 @@ import { application } from '@/services';
 import { useAppState, usePermissions, usePlan, usePreferences } from '@/store';
 import { VISITOR_TYPE_OPTIONS } from '@/types';
 import { visitorCopy, type VisitorCopyKey } from '@/i18n/visitor';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 
 import { SettingsChoice, SettingsRow, SettingsSection, SettingsToggle } from './components';
 
@@ -18,6 +19,7 @@ const TOLERANCE_LABEL_KEYS: Record<'strict' | 'standard' | 'forgiving', VisitorC
 
 /** The Settings index and the one app-wide visual switch. */
 export function SettingsScreen() {
+  const ui = useVisitorLiteralCopy();
   const { resetOnboarding } = useAppState();
   const { gatingOn, isPro } = usePlan();
   const planLabel = !gatingOn ? 'Early release' : isPro ? 'Pro' : 'Free';
@@ -83,6 +85,21 @@ export function SettingsScreen() {
           value={preferences.colorTheme === 'navy'}
           onValueChange={(enabled) => {
             const next = enabled ? 'navy' : 'white';
+            if (next === preferences.colorTheme) return;
+            setNeedsManualRestart(false);
+            void update('colorTheme', next).then(() =>
+              application
+                .reload(`Changed colour theme to ${next}`)
+                .catch(() => setNeedsManualRestart(true)),
+            );
+          }}
+        />
+        <SettingsToggle
+          label={ui('High contrast for sunlight')}
+          hint={ui('Darker text and stronger lines, easier to read outdoors in bright sun.')}
+          value={preferences.colorTheme === 'outdoor'}
+          onValueChange={(enabled) => {
+            const next = enabled ? 'outdoor' : 'white';
             if (next === preferences.colorTheme) return;
             setNeedsManualRestart(false);
             void update('colorTheme', next).then(() =>

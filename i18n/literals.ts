@@ -11,6 +11,8 @@ import type { InterfaceLanguage } from '@/types';
  * Text boundary and are never registered here.
  */
 export const NEPALI_UI_LITERALS = {
+  "High contrast for sunlight": "घामका लागि उच्च कन्ट्रास्ट",
+  "Darker text and stronger lines, easier to read outdoors in bright sun.": "गाढा अक्षर र बलियो रेखा, चर्को घाममा बाहिर पढ्न सजिलो।",
   "as deeply as you want.": "जति गहिरो चाहनुहुन्छ त्यति।",
   "Know where you are,": "तपाईं कहाँ हुनुहुन्छ जान्नुहोस्,",
   "Open the guide map": "मार्गदर्शक नक्सा खोल्नुहोस्",

@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import { Image, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { Text } from '@/components/ui';
-import { findSite, heroImageForSite, massingFor } from '@/data';
+import { findSite, heroImageForSite, massingFor, photoCreditForSite, remotePhotoForSite } from '@/data';
 import { colors, radii, spacing } from '@/theme';
 
 /**
@@ -36,6 +37,8 @@ export type SiteVisualProps = {
   radius?: number;
   /** Hides the provenance tag where the caller has its own caption. */
   quiet?: boolean;
+  /** Shows the photographer's credit over a photograph. Only where there is room. */
+  credited?: boolean;
   style?: StyleProp<ViewStyle>;
 };
 
@@ -44,9 +47,29 @@ export function SiteVisual({
   height = 120,
   radius = radii.md,
   quiet = false,
+  credited = false,
   style,
 }: SiteVisualProps) {
   const hero = heroImageForSite(siteId);
+  // A modern Commons photograph, when a bundled one is missing. Offline or on
+  // any load error it falls back to the plate or schematic below, never a gap.
+  const remote = hero && !hero.historical ? null : remotePhotoForSite(siteId);
+  const [remoteFailed, setRemoteFailed] = useState(false);
+
+  if (remote && !remoteFailed) {
+    return (
+      <View style={[styles.frame, { height, borderRadius: radius }, style]}>
+        <Image
+          source={{ uri: remote.uri }}
+          style={styles.photo}
+          resizeMode="cover"
+          accessibilityIgnoresInvertColors
+          onError={() => setRemoteFailed(true)}
+        />
+        {credited ? <Tag label={remote.credit} right /> : null}
+      </View>
+    );
+  }
 
   if (hero) {
     return (
@@ -58,6 +81,7 @@ export function SiteVisual({
           accessibilityIgnoresInvertColors
         />
         {hero.historical && !quiet ? <Tag label="Historical plate" /> : null}
+        {!hero.historical && credited && photoCreditForSite(siteId) ? <Tag label={photoCreditForSite(siteId)!} right /> : null}
       </View>
     );
   }
@@ -132,9 +156,9 @@ function SiteSchematic({ siteId, height }: { siteId: string; height: number }) {
   );
 }
 
-function Tag({ label }: { label: string }) {
+function Tag({ label, right = false }: { label: string; right?: boolean }) {
   return (
-    <View style={styles.tag}>
+    <View style={[styles.tag, right && styles.tagRight]}>
       <Text variant="caption" tone="onScrim" style={styles.tagText}>
         {label}
       </Text>
@@ -228,4 +252,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.overlay,
   },
   tagText: { fontSize: 10 },
+  // A credit sits bottom-right, clear of the provenance tag, and may wrap.
+  tagRight: { left: undefined, right: spacing.xs, maxWidth: '78%' },
 });

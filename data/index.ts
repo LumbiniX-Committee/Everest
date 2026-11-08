@@ -15,3 +15,5 @@ export { MODELS } from './generated/models';
 export { modelFor, findModel } from './models';
 export { TREKS, dayStops, findTrek, trekLine, trekStop } from './treks';
 export { ESSENTIALS, essentialsFor, essentialsNear, findEssential } from './essentials';
+export { photoCreditForSite, remotePhotoForSite } from './sitePhotos';
+export { trekPhoto } from './trekPhotos';

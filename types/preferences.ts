@@ -35,7 +35,8 @@ export type OfflineSyncMode = 'wifi' | 'any' | 'manual';
 export type PhotoQuality = 'standard' | 'high';
 
 /** The two complete visual systems that ship with the app. */
-export type ColorTheme = 'navy' | 'white';
+/** 'outdoor' is the morning palette at sunlight contrast. */
+export type ColorTheme = 'navy' | 'white' | 'outdoor';
 export type InterfaceLanguage = 'en' | 'ne';
 
 /** Self-declared, and never checked against any document. Sets prices and entry fees shown. */

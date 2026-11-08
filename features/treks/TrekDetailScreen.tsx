@@ -5,7 +5,8 @@ import { BackBar, EmptyState } from '@/components/common';
 import { MapWebView } from '@/components/map';
 import { boundsOfLine } from '@/core';
 import { Button, Card, Divider, Screen, Text } from '@/components/ui';
-import { essentialsFor, findTrek, trekLine, trekStop } from '@/data';
+import { essentialsFor, findTrek, trekLine, trekPhoto, trekStop } from '@/data';
+import { PhotoHero } from '@/components/site';
 import { useSafeBack } from '@/hooks';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { application } from '@/services';
@@ -46,6 +47,7 @@ export function TrekDetailScreen({ trekId }: { trekId: string }) {
   return (
     <Screen scroll>
       <BackBar />
+      {trekPhoto(trek.id) ? <PhotoHero uri={trekPhoto(trek.id)!.uri} credit={trekPhoto(trek.id)!.credit} height={240} style={styles.photo} /> : null}
       <View style={styles.head}>
         <Text variant="label" tone="muted" uppercase>
           {ui(DIFFICULTY_LABEL[trek.difficulty])}
@@ -256,6 +258,7 @@ function Fact({ label, value }: { label: string; value: string }) {
 
 const styles = StyleSheet.create({
   head: { gap: spacing.xs, marginBottom: spacing.md },
+  photo: { marginBottom: spacing.md },
   stats: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.lg, marginVertical: spacing.md },
   dayStats: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.base, marginVertical: spacing.xs },
   section: { gap: spacing.sm, marginTop: spacing.lg },

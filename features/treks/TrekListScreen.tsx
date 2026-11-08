@@ -3,10 +3,11 @@ import { StyleSheet, View } from 'react-native';
 
 import { ScreenHeader } from '@/components/common';
 import { Card, Screen, Text } from '@/components/ui';
-import { TREKS, trekStop } from '@/data';
+import { PhotoHero } from '@/components/site';
+import { TREKS, trekPhoto, trekStop } from '@/data';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { usePreferences } from '@/store';
-import { spacing } from '@/theme';
+import { radii, spacing } from '@/theme';
 import { formatDistance } from '@/utils';
 
 import { formatAltitude } from './format';
@@ -35,6 +36,9 @@ export function TrekListScreen() {
           const highest = trekStop(trek, trek.totals.highest?.stopId);
           return (
             <Card key={trek.id} onPress={() => router.push(`/(main)/tirtha/treks/${trek.id}`)} accessibilityLabel={trek.name}>
+              {trekPhoto(trek.id, 700) ? (
+                <PhotoHero uri={trekPhoto(trek.id, 700)!.uri} credit={trekPhoto(trek.id, 700)!.credit} height={150} radius={radii.md} style={styles.photo} />
+              ) : null}
               <Text variant="label" tone="muted" uppercase>
                 {ui(DIFFICULTY_LABEL[trek.difficulty])}
               </Text>
@@ -80,6 +84,7 @@ export function Stat({ label, value }: { label: string; value: string }) {
 
 const styles = StyleSheet.create({
   list: { gap: spacing.md },
+  photo: { marginBottom: spacing.md },
   stats: { flexDirection: 'row', gap: spacing.lg, marginTop: spacing.sm, marginBottom: spacing.xs },
   stat: { gap: spacing.xxs },
   note: { marginTop: spacing.lg, marginBottom: spacing.xl },

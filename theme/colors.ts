@@ -160,6 +160,46 @@ export const whiteColors = {
 } satisfies ColorPalette;
 
 /**
+ * Sunlight: the morning palette pushed for reading outdoors.
+ *
+ * A phone screen in midday sun loses most of its contrast to reflection, so
+ * primary text here is near black on white (well over 7:1, the target from
+ * the design research, against WCAG AA's 4.5:1 floor), secondary text and
+ * borders are darker, and accents deepen so they still read as colour.
+ */
+export const outdoorColors = {
+  ...whiteColors,
+  primary: '#0A564C',
+  primaryPressed: '#06423A',
+  borderStrong: '#06423A',
+  warning: '#7A4800',
+  error: '#9A1F18',
+  heritageGold: '#7A4800',
+  ground: '#FFFFFF',
+  ground3: '#E3EBE5',
+  sand: '#0A564C',
+  sand_dim: '#06423A',
+  sand_faint: '#33473F',
+  lock: '#0A564C',
+  seek: '#7A4800',
+  change: '#9A1F18',
+  mapLabel: '#0E1F1B',
+  mapLabelHalo: '#FFFFFF',
+  background: '#FFFFFF',
+  surfaceSecondary: '#E3EBE5',
+  border: '#8FA39A',
+  sandstone: '#0A564C',
+  sandstoneDeep: '#06423A',
+  textPrimary: '#05110E',
+  textSecondary: '#1E322D',
+  textMuted: '#33473F',
+  alignmentSeeking: '#7A4800',
+  alignmentLocked: '#0A564C',
+  openCondition: '#9A1F18',
+  resolved: '#145A36',
+} satisfies ColorPalette;
+
+/**
  * The five colours of a Himalayan prayer flag, in their traditional order: sky,
  * air, fire, water, earth. Celebration uses these instead of an arbitrary
  * rainbow. They are decoration only and never carry text.
@@ -169,6 +209,7 @@ export const prayerFlags = ['#2F6FD0', '#FFFFFF', '#D8412F', '#1F9D6B', '#F7C325
 const palettes: Record<ColorTheme, ColorPalette> = {
   navy: navyColors,
   white: whiteColors,
+  outdoor: outdoorColors,
 };
 
 let initialColorTheme: ColorTheme = 'white';

@@ -1,4 +1,4 @@
-import { navyColors, prayerFlags, whiteColors, type ColorPalette } from '@/theme/colors';
+import { navyColors, outdoorColors, prayerFlags, whiteColors, type ColorPalette } from '@/theme/colors';
 
 /** WCAG relative luminance for a #RRGGBB colour. */
 function luminance(hex: string): number {
@@ -48,6 +48,7 @@ const TEXT_PAIRS: [keyof ColorPalette, keyof ColorPalette][] = [
 describe.each([
   ['Lumbini morning', whiteColors],
   ['Himalayan dusk', navyColors],
+  ['Sunlight', outdoorColors],
 ] as const)('%s palette', (_name, palette: ColorPalette) => {
   it.each(TEXT_PAIRS)('%s on %s reaches AA for text', (foreground, background) => {
     expect(contrast(palette[foreground], palette[background])).toBeGreaterThanOrEqual(4.5);
@@ -65,4 +66,11 @@ describe.each([
 
 it('carries all five prayer flag colours', () => {
   expect(new Set(prayerFlags).size).toBe(5);
+});
+
+it('the Sunlight palette holds reading text to 7:1, for use in direct sun', () => {
+  for (const ground of ['background', 'surface', 'surfaceSecondary'] as const) {
+    expect(contrast(outdoorColors.textPrimary, outdoorColors[ground])).toBeGreaterThanOrEqual(7);
+    expect(contrast(outdoorColors.textSecondary, outdoorColors[ground])).toBeGreaterThanOrEqual(7);
+  }
 });
