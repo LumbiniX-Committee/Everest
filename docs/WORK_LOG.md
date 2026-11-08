@@ -192,5 +192,5 @@ What changed in each milestone, what was verified, and what was not. Newest firs
 `supabase/migrations/0010_observation_integrity.sql` must be applied to production. Sync sends `heading_nudge_deg`, so uploads will fail until that column exists.
 
 ### Known and left for later
-- A phone with no motion sensor still scores pitch as satisfied. The record marks pitch as unmeasured, but the score can still lock. Revisit in Milestone 5.
+- A phone with no motion sensor still scores pitch as level, so the reticle can lock. **Resolved 2026-11-08:** the record already sends pitch as null and lists it unmeasured; the record screen now also says tilt was not measured.
 - Nepali strings added in this milestone are mine and need review by a native speaker.

@@ -40,7 +40,7 @@ It lands on Home with a "Start here" guide. Permissions are asked when first nee
 | Map, search, walking directions | ✓ | ✓ |
 | Site basics, entry fees, hours | ✓ | ✓ |
 | Photographs and your own record | ✓ | ✓ |
-| Offline maps and guides | | Coming soon (not built; shown as such in the app) |
+| Offline maps (hubs and treks) | | ✓ (guides are bundled and always work offline) |
 | 3D monument views | Swayambhunath only | ✓ |
 | Satellite and hybrid map | | Coming soon until an imagery provider answers (Google needs billing on), then ✓ |
 | Step-by-step close-up guidance | | ✓ |
@@ -93,6 +93,13 @@ The map is MapLibre GL JS 4.7.1 in a WebView, bundled with the app (`components/
 - **Key safety:** an `EXPO_PUBLIC_` key ships inside the app. In Google Cloud, restrict it to the Map Tiles API only. An Android-app restriction does not help here, because the WebView's requests carry no app signature.
 - **Routes:** walking directions come from Valhalla at `valhalla1.openstreetmap.de`, or `EXPO_PUBLIC_ROUTING_URL`. Self-host it for production if its terms don't allow your use.
 - **Labels:** the basemap uses English names, because the renderer doesn't shape Devanagari.
+
+## Offline maps
+
+- **Saving:** Pro visitors save a hub from Settings → Storage → Offline maps, or a trek from its page. A pack holds the basemap to zoom 14, terrain to zoom 12, and label fonts. A trek corridor is a few hundred tiles.
+- **How it works:** the map loads everything through a `saksi://` protocol. Online it fetches from the servers as before; only a failed fetch asks the app for a saved file (`services/offlineMaps`). Checked in headless Chrome with the network blocked: identical features and labels drawn.
+- **Not saved:** satellite imagery (provider terms) and walking directions (Valhalla needs a connection).
+- **Size and courtesy:** OpenFreeMap asks people not to bulk-download, so packs are one area each and tiles shared between packs are stored once.
 
 ## Trekking routes
 

@@ -8,9 +8,102 @@ import {
   siteGeoJSON,
   waterGeoJSON,
 } from '@/data';
-import { colors, sakshiMapStyle } from '@/theme';
+import { colors, MAP_GLYPHS_URL, MAP_TILES_URL, sakshiMapStyle } from '@/theme';
 
 import { MAPLIBRE_CSS, MAPLIBRE_JS, THREE_JS } from './vendor.generated';
+
+/**
+ * The basemap, terrain and fonts all load through the page's own \`saksi://\`
+ * protocol (see OFFLINE_PROTOCOL), so a saved copy on the phone can stand in
+ * when the network cannot.
+ */
+const OFFLINE_STYLE = {
+  ...sakshiMapStyle,
+  glyphs: 'saksi://glyphs/{fontstack}/{range}',
+  sources: {
+    ...sakshiMapStyle.sources,
+    openmaptiles: {
+      type: 'vector' as const,
+      tiles: ['saksi://ofm/{z}/{x}/{y}'],
+      minzoom: 0,
+      maxzoom: 14,
+      attribution:
+        '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> <a href="https://www.openmaptiles.org/" target="_blank">&copy; OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
+    },
+  },
+};
+
+/**
+ * Network first, saved copy second.
+ *
+ * Online, every request goes straight to its server, as it always did. Only a
+ * failed fetch asks the app for a tile saved in an offline pack; the app
+ * answers through window.sakshiTileReply. No saved copy means the tile stays
+ * blank, exactly as an offline map without packs always behaved.
+ */
+const OFFLINE_PROTOCOL = `
+  (function () {
+    var waiting = {};
+    var nextId = 1;
+    var template = null;
+    function basemapTemplate() {
+      if (!template) {
+        template = fetch(${JSON.stringify(MAP_TILES_URL)})
+          .then(function (r) { if (!r.ok) throw new Error('tilejson ' + r.status); return r.json(); })
+          .then(function (j) { return j.tiles[0]; })
+          .catch(function (e) { template = null; throw e; });
+      }
+      return template;
+    }
+    function networkUrl(kind, parts) {
+      if (kind === 'ofm') return basemapTemplate().then(function (t) {
+        return t.replace('{z}', parts[0]).replace('{x}', parts[1]).replace('{y}', parts[2]);
+      });
+      if (kind === 'dem') return Promise.resolve('https://s3.amazonaws.com/elevation-tiles-prod/terrarium/' + parts.join('/') + '.png');
+      if (kind === 'glyphs') return Promise.resolve(${JSON.stringify(MAP_GLYPHS_URL)}
+        .replace('{fontstack}', encodeURIComponent(parts[0])).replace('{range}', parts[1]));
+      return Promise.reject(new Error('unknown ' + kind));
+    }
+    function fromPhone(key) {
+      return new Promise(function (resolve) {
+        var id = nextId++;
+        waiting[id] = resolve;
+        post({ type: 'tile-request', id: id, key: key });
+        setTimeout(function () { if (waiting[id]) { delete waiting[id]; resolve(null); } }, 8000);
+      });
+    }
+    window.sakshiTileReply = function (id, base64) {
+      var resolve = waiting[id];
+      if (!resolve) return;
+      delete waiting[id];
+      if (!base64) return resolve(null);
+      var bin = atob(base64);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      resolve(bytes.buffer);
+    };
+    maplibregl.addProtocol('saksi', function (params, abort) {
+      var parts = params.url.slice('saksi://'.length).split('/').map(decodeURIComponent);
+      var kind = parts.shift();
+      var key = kind + '/' + parts.join('/');
+      return networkUrl(kind, parts)
+        .then(function (url) { return fetch(url, { signal: abort.signal }); })
+        .then(function (r) {
+          // An empty tile is an answer, not a failure: open ground has no data.
+          if (r.status === 204 || r.status === 404) return { data: new ArrayBuffer(0) };
+          if (!r.ok) throw new Error(String(r.status));
+          return r.arrayBuffer().then(function (data) { return { data: data }; });
+        })
+        .catch(function (error) {
+          if (abort.signal.aborted) throw error;
+          return fromPhone(key).then(function (data) {
+            if (!data) throw error;
+            return { data: data };
+          });
+        });
+    });
+  })();
+`;
 
 export type MapHtmlOptions = {
   /**
@@ -162,10 +255,11 @@ ${avatar ? `<script>${THREE_JS}</script>` : ''}
 <div id="map"></div>
 <script>
   function post(msg){ window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify(msg)); }
+${OFFLINE_PROTOCOL}
   try {
     var map = new maplibregl.Map({
       container: 'map',
-      style: ${JSON.stringify(sakshiMapStyle)},
+      style: ${JSON.stringify(OFFLINE_STYLE)},
       center: ${JSON.stringify(center)},
       zoom: ${zoom},
       pitch: ${pitch},
@@ -259,7 +353,7 @@ ${MAP_MODES()}
         paint:{ 'circle-radius': 18, 'circle-color': '#000000', 'circle-opacity': 0 }
       });
       map.addLayer({
-        id:'place-label', type:'symbol', source:'places', minzoom: 14.5,
+        id:'listed-place-label', type:'symbol', source:'places', minzoom: 14.5,
         layout:{ 'text-field':['get','name'], 'text-font':['Noto Sans Regular'], 'text-size':12, 'text-offset':[0,-1.3], 'text-anchor':'bottom', 'text-optional': true },
         paint:{ 'text-color': ${JSON.stringify(colors.textSecondary)}, 'text-halo-color': ${JSON.stringify(colors.background)}, 'text-halo-width': 1.4 }
       });
@@ -378,7 +472,7 @@ function MAP_MODES(): string {
       var currentMode = 'standard';
       map.addSource('dem', {
         type: 'raster-dem', encoding: 'terrarium', tileSize: 256, maxzoom: 15,
-        tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
+        tiles: ['saksi://dem/{z}/{x}/{y}'],
         attribution: 'Elevation: Mapzen Terrain Tiles, AWS Open Data'
       });
       map.addLayer({ id:'hillshade', type:'hillshade', source:'dem', layout:{ visibility:'none' },

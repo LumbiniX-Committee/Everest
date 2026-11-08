@@ -7,14 +7,14 @@ import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { colors, spacing } from '@/theme';
 
 const FREE = ['Map, search and walking directions', 'Site basics, fees and hours', 'Take photographs and keep your own record'];
-const PRO = ['3D monument views', 'Step-by-step close-up guidance', 'Audio narration', 'Reflection companion'];
+const PRO = ['Offline maps for hubs and treks', '3D monument views', 'Step-by-step close-up guidance', 'Audio narration', 'Reflection companion'];
 
 /**
  * Promised for Pro but not yet working. Listed apart, so nobody pays for them
  * believing they exist. Satellite joins the Pro list only once an imagery
  * provider has actually answered, not merely because a key is set.
  */
-const COMING_LABELS = ['Offline maps and guides', 'Satellite map'] as const;
+const COMING_LABELS = ['Satellite map'] as const;
 
 function Row({ label, icon }: { label: string; icon: 'check' | 'star-four-points-outline' }) {
   return (

@@ -18,3 +18,4 @@ export { useSceneBottomGap } from './useSceneBottomGap';
 export { useArrivalCredit } from './useArrivalCredit';
 export { useConfirmLeave, useExitVisit, useOpenInTabs, useSafeBack } from './useNavigationFlow';
 export { useImagery } from './useImagery';
+export { useOfflinePacks } from './useOfflinePacks';

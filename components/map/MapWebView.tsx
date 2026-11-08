@@ -5,6 +5,7 @@ import { WebView } from 'react-native-webview';
 import { Text } from '@/components/ui';
 import { demoSites } from '@/data';
 import { useImagery } from '@/hooks';
+import { offlineMaps } from '@/services';
 import { colors, radii, spacing } from '@/theme';
 import type { Coordinate } from '@/types';
 
@@ -277,6 +278,14 @@ export function MapWebView({
             if (msg.type === 'site' && typeof msg.id === 'string') onSelectSite?.(msg.id);
             if (msg.type === 'place' && typeof msg.id === 'string') onSelectPlace?.(msg.id);
             if (msg.type === 'waypoint' && typeof msg.id === 'string') onSelectWaypoint?.(msg.id);
+            if (msg.type === 'tile-request' && typeof msg.id === 'number' && typeof msg.key === 'string') {
+              const requestId = msg.id;
+              void offlineMaps.readTile(msg.key).then((data) => {
+                webRef.current?.injectJavaScript(
+                  `window.sakshiTileReply && window.sakshiTileReply(${requestId}, ${data ? JSON.stringify(data) : 'null'}); true;`,
+                );
+              });
+            }
             // Only a failure before the map loaded. A missing tile later posts
             // 'tile-error', which is not a reason to give up the whole map.
             if (msg.type === 'error' && !ready) setFailed(true);

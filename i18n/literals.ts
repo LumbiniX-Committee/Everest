@@ -11,6 +11,21 @@ import type { InterfaceLanguage } from '@/types';
  * Text boundary and are never registered here.
  */
 export const NEPALI_UI_LITERALS = {
+  "Offline maps": "अफलाइन नक्सा",
+  "· Remove": "· हटाउनुहोस्",
+  "Remove every saved map from this phone? Your records are not affected.": "यो फोनबाट सबै सुरक्षित नक्सा हटाउने? तपाईंका अभिलेखमा असर पर्दैन।",
+  "Remove saved maps": "सुरक्षित नक्सा हटाउनुहोस्",
+  "saved ·": "सुरक्षित ·",
+  "Saved on this phone": "यो फोनमा सुरक्षित",
+  "Save map for offline": "अफलाइनका लागि नक्सा सुरक्षित गर्नुहोस्",
+  "Save map for offline · Pro": "अफलाइनका लागि नक्सा सुरक्षित गर्नुहोस् · प्रो",
+  "Saves the map, terrain and labels for this area, for use with no signal. Satellite is not saved.": "सिग्नल नभएको बेला प्रयोगका लागि यस क्षेत्रको नक्सा, भू-आकृति र नामहरू सुरक्षित गर्छ। स्याटेलाइट सुरक्षित हुँदैन।",
+  "Saving": "सुरक्षित गर्दै",
+  "tiles could not be fetched; update to retry": "टाइल ल्याउन सकिएन; फेरि प्रयास गर्न अद्यावधिक गर्नुहोस्",
+  "Treks can be saved from their own page. Satellite imagery is never saved.": "ट्रेकहरू तिनकै पृष्ठबाट सुरक्षित गर्न सकिन्छ। स्याटेलाइट तस्बिर कहिल्यै सुरक्षित हुँदैन।",
+  "Update offline map": "अफलाइन नक्सा अद्यावधिक गर्नुहोस्",
+  "Offline maps for hubs and treks": "मुख्य क्षेत्र र ट्रेकका लागि अफलाइन नक्सा",
+  "Tilt was not measured: this phone reported no motion sensor.": "झुकाव नापिएन: यो फोनले कुनै गति सेन्सर देखाएन।",
   "about": "करिब",
   "along the trail": "पदमार्गमा",
   "Altitudes come from a 90 m elevation model and can be out by tens of metres. Walking times are estimates without breaks.": "उचाइ ९० मिटरको उचाइ मोडेलबाट लिइएको हो, त्यसैले केही दर्जन मिटर फरक पर्न सक्छ। हिँडाइको समय विश्रामबिनाको अनुमान हो।",

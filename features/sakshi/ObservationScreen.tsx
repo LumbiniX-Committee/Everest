@@ -398,6 +398,13 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
                 ? t('observation.withinTolerance')
                 : t('observation.outsideTolerance')}
             </Text>
+            {observation.unmeasured?.includes('pitch') ? (
+              // Aligned on position and bearing only. The scorer assumes level
+              // when there is no motion sensor, so the record must say tilt is unknown.
+              <Text variant="caption" tone="muted" style={styles.accuracyNote}>
+                Tilt was not measured: this phone reported no motion sensor.
+              </Text>
+            ) : null}
           </>
         )}
       </View>

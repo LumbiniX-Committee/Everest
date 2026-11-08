@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { BackBar, EmptyState } from '@/components/common';
 import { MapWebView } from '@/components/map';
+import { boundsOfLine } from '@/core';
 import { Button, Card, Divider, Screen, Text } from '@/components/ui';
 import { findTrek, trekLine, trekStop } from '@/data';
 import { useSafeBack } from '@/hooks';
@@ -14,6 +15,7 @@ import type { Trek, TrekDay } from '@/types';
 import { formatDistance } from '@/utils';
 
 import { ElevationProfile } from './ElevationProfile';
+import { SaveOfflineMap } from './SaveOfflineMap';
 import { formatAltitude, formatHours } from './format';
 import { DIFFICULTY_LABEL, Stat } from './TrekListScreen';
 
@@ -65,6 +67,7 @@ export function TrekDetailScreen({ trekId }: { trekId: string }) {
         <MapWebView height={240} route={line} waypoints={waypoints} fitRoute solidRoute initialCenter={line[0]} />
       </Pressable>
       <Button label="Open the trail map" icon="map-marker-path" variant="secondary" onPress={() => openMap()} />
+      <SaveOfflineMap id={`trek-${trek.id}`} label={trek.name} bounds={boundsOfLine(line)} />
 
       <View style={styles.stats}>
         <Stat label={ui('Days')} value={String(trek.totals.days)} />
