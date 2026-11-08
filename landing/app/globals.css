@@ -241,3 +241,63 @@ body {
     transform: none;
   }
 }
+
+/* ── Premium layer ─────────────────────────────────────────────────────────
+   Paper grain, the giant script watermark, and slow motion. Every animation
+   stops under prefers-reduced-motion. */
+
+/* A faint fibre grain, after lokta paper, laid over the page ground. */
+.paper {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.07 0 0 0 0 0.19 0 0 0 0 0.17 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Huge script set behind a section, barely there. Decorative, so hidden from
+   assistive technology where it is used. */
+.watermark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  font-family: var(--font-mukta), sans-serif;
+  font-weight: 700;
+  font-size: clamp(9rem, 26vw, 24rem);
+  line-height: 1;
+  color: var(--color-ink);
+  opacity: 0.035;
+  white-space: nowrap;
+}
+
+/* The morning wash behind the hero: jade mist with a marigold sunrise. */
+.hero-wash {
+  background:
+    radial-gradient(60rem 30rem at 8% -10%, rgb(247 168 35 / 0.22), transparent 60%),
+    radial-gradient(50rem 30rem at 95% 0%, rgb(14 110 98 / 0.14), transparent 60%),
+    var(--color-ground);
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.float-slow { animation: float-y 6s ease-in-out infinite; }
+.float-slower { animation: float-y 8s ease-in-out infinite; animation-delay: -2s; }
+
+@keyframes orbit {
+  to { transform: rotate(360deg); }
+}
+.orbit-spin { animation: orbit 18s linear infinite; }
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgb(14 110 98 / 0.35); }
+  100% { box-shadow: 0 0 0 18px rgb(14 110 98 / 0); }
+}
+.pulse-ring { animation: pulse-ring 2.4s ease-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .float-slow, .float-slower, .orbit-spin, .pulse-ring { animation: none; }
+}

@@ -9,6 +9,7 @@ import './globals.css';
 const newsreader = Newsreader({
   subsets: ['latin', 'latin-ext'],
   weight: ['500', '600'],
+  style: ['normal', 'italic'],
   variable: '--font-newsreader',
   display: 'swap',
 });

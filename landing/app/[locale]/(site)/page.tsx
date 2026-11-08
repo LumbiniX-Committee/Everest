@@ -2,18 +2,16 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
   ArrowRight,
-  BedDouble,
   Check,
   Compass,
   Download,
-  Mountain,
   Settings,
-  ShieldCheck,
   Smartphone,
-  WifiOff,
 } from 'lucide-react';
 
-import { HeroPlace } from '@/components/HeroPlace';
+import { Bento } from '@/components/Bento';
+import { PhoneHero } from '@/components/PhoneHero';
+import { VisitCircle } from '@/components/VisitCircle';
 import { Provenance } from '@/components/Provenance';
 import { ThreeVerbs } from '@/components/ThreeVerbs';
 import { MapExplorer } from '@/components/MapExplorer';
@@ -39,34 +37,20 @@ const sourceTotal = SITES.reduce((n, s) => n + s.sources.length, 0);
 
 const INSTALL_ICONS = [Download, Settings, Check] as const;
 
-/** What a visitor gets, beyond the map: shown right under the hero. */
-const FEATURES = {
-  en: [
-    { icon: Mountain, title: 'Three treks, day by day', body: 'Poon Hill, Langtang and Everest Base Camp: distance, climb, walking time, where you sleep and how high, with a warning on days that climb too fast and a trail map that shows how far along you are.' },
-    { icon: WifiOff, title: 'Maps that work offline', body: 'Save a city or a trek to your phone and the map, terrain and names still draw with no signal. Trek guides and site histories are always on the phone.' },
-    { icon: BedDouble, title: 'Essentials nearby', body: 'Places to stay, eat, get medical help or money, from open map data, each with a number to call ahead and walking directions.' },
-  ],
-  ne: [
-    { icon: Mountain, title: 'तीन ट्रेक, दिनदिनै', body: 'पुनहिल, लाङटाङ र सगरमाथा आधार शिविर: दूरी, उकालो, हिँडाइको समय, बास र उचाइ, धेरै छिटो उक्लिने दिनको चेतावनी र तपाईं कति पुग्नुभयो देखाउने पदमार्ग नक्सासहित।' },
-    { icon: WifiOff, title: 'अफलाइन चल्ने नक्सा', body: 'सहर वा ट्रेकलाई फोनमा सुरक्षित गर्नुहोस्, सिग्नल नहुँदा पनि नक्सा, भू-आकृति र नाम देखिन्छन्। ट्रेक र सम्पदाको इतिहास सधैं फोनमै हुन्छ।' },
-    { icon: BedDouble, title: 'नजिकका आवश्यक सेवा', body: 'बस्ने, खाने, स्वास्थ्य र पैसाका ठाउँ, खुला नक्सा डाटाबाट, पहिले फोन गर्ने नम्बर र हिँड्ने बाटोसहित।' },
-  ],
-};
-
 const EN = {
   metaTitle: 'Sākṣī: a real-time guide to Nepal',
   metaDescription:
     'Heritage sites, treks and offline maps for visitors to Nepal: Lumbini, the Kathmandu Valley, Pokhara and Chitwan, Poon Hill, Langtang and Everest Base Camp. Every place speaks from sources you can check, and works when the signal does not.',
   hero: {
-    badge: 'Lumbini · Kathmandu Valley · Pokhara · Chitwan · three treks',
+    badge: 'Built in Nepal · Lumbini to Everest',
     title: (
       <>
-        Know where you are, as deeply as you want
+        Know where you are, <span className="text-sandstone">as deeply as you want.</span>
       </>
     ),
     lede: 'A guide to Nepal’s heritage sites and treks that explains each place when you reach it, from a glance to the full history, and shows where every fact comes from. It keeps working when the signal doesn’t.',
     exploreCta: 'See it at Maya Devi',
-    getAppCta: 'Get the app',
+    getAppCta: 'Get the app free',
     android: 'Android 7.0 and above',
     version: 'Version',
     build: (n: string) => `(build ${n})`,
@@ -200,10 +184,10 @@ const NE: typeof EN = {
   metaDescription:
     'नेपाल घुम्नेहरूका लागि सम्पदा स्थल, ट्रेक र अफलाइन नक्सा: लुम्बिनी, काठमाडौं उपत्यका, पोखरा र चितवन, पुनहिल, लाङटाङ र सगरमाथा आधार शिविर। हरेक ठाउँले जाँच्न सकिने स्रोतबाट बोल्छ, र सिग्नल नहुँदा पनि काम गर्छ।',
   hero: {
-    badge: 'लुम्बिनी · काठमाडौं उपत्यका · पोखरा · चितवन · तीन ट्रेक',
+    badge: 'नेपालमा निर्मित · लुम्बिनीदेखि सगरमाथासम्म',
     title: (
       <>
-        तपाईं कहाँ हुनुहुन्छ, जति गहिरो चाहनुहुन्छ त्यति जान्नुहोस्
+        तपाईं कहाँ हुनुहुन्छ, <span className="text-sandstone">जति गहिरो चाहनुहुन्छ त्यति जान्नुहोस्।</span>
       </>
     ),
     lede: 'साक्षीले ठाउँ कहाँ छ देखाउँछ, त्यहाँसम्म हिँडाएर पुर्‍याउँछ, र पुगेपछि जाँच्न सकिने स्रोतबाट त्यसको बारेमा बताउँछ। यसले तपाईंका ट्रेक दिनदिनै बोक्छ, सिग्नल नहुँदाका लागि नक्सा सुरक्षित राख्छ, र हरेक भ्रमणलाई ठाउँ कसरी बदलिँदैछ भन्ने अभिलेखमा थप्छ।',
@@ -359,43 +343,50 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
 
   return (
     <main>
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-14 sm:pt-20">
-          <div className="grid items-center gap-y-14 lg:grid-cols-[1.05fr_1fr] lg:gap-x-16">
+      {/* Hero: the name in its own script, the promise, and the app in hand */}
+      <section className="hero-wash paper relative -mt-20 overflow-hidden pt-20">
+        <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-20 sm:pt-24 sm:pb-28">
+          <div className="grid items-center gap-y-16 lg:grid-cols-[1.15fr_1fr] lg:gap-x-12">
             <div className="text-center lg:text-left">
-              <span className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 px-4 py-1.5 text-sm font-medium text-ink-soft shadow-sm">
-                <span className="size-1.5 rounded-full bg-sandstone" />
-                {c.hero.badge}
-              </span>
+              <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+                <span className="hidden h-px w-10 bg-marigold sm:block" aria-hidden />
+                <span className="text-xs font-semibold tracking-[0.2em] text-ink-soft uppercase">{c.hero.badge}</span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-sandstone/30 bg-surface px-3 py-1 text-[11px] font-bold tracking-widest text-sandstone-deep uppercase">
+                  <span className="size-1.5 rounded-full bg-sandstone" aria-hidden />
+                  {locale === 'ne' ? 'अहिले उपलब्ध' : 'Now live'}
+                </span>
+              </div>
 
-              <h1 className="mt-8 font-[family-name:var(--font-display)] text-5xl leading-[1.05] font-semibold tracking-tight text-balance text-ink sm:text-6xl xl:text-7xl">
+              <p lang="ne" aria-hidden className="mt-8 font-[family-name:var(--font-mukta)] text-[5.5rem] leading-[0.95] font-bold tracking-tight text-ink sm:text-[8.5rem]">
+                साक्<span className="text-sandstone">षी</span><span className="text-marigold">.</span>
+              </p>
+
+              <h1 className="mx-auto mt-6 max-w-xl font-[family-name:var(--font-display)] text-3xl leading-[1.15] font-medium text-balance text-ink italic sm:text-[2.6rem] lg:mx-0">
                 {c.hero.title}
               </h1>
 
-              <p className="mx-auto mt-7 max-w-2xl text-xl leading-relaxed text-ink-soft lg:mx-0">
-                {c.hero.lede}
-              </p>
+              <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-ink-soft lg:mx-0">{c.hero.lede}</p>
 
-              <div className="mt-9 flex flex-wrap items-center justify-center gap-4 lg:justify-start">
-                <a
-                  href="#three-verbs"
-                  className="inline-flex items-center gap-3 rounded-2xl bg-marigold px-8 py-4 text-lg font-semibold text-on-marigold shadow-lg shadow-earth/25 transition hover:-translate-y-0.5 hover:brightness-95 hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-earth"
-                >
-                  <Compass className="size-6" aria-hidden />
-                  {c.hero.exploreCta}
-                </a>
-
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
                 <a
                   href={build.apkUrl}
-                  className="inline-flex items-center gap-2 rounded-2xl border border-line bg-surface px-7 py-4 text-lg font-semibold text-ink shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                  className="group inline-flex items-center gap-3 rounded-full bg-ink py-4 pr-5 pl-7 text-base font-semibold text-ground shadow-xl shadow-ink/20 transition hover:-translate-y-0.5 hover:bg-sandstone-deep focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sandstone"
                 >
-                  <Download className="size-5" aria-hidden />
                   {c.hero.getAppCta}
+                  <span className="flex size-8 items-center justify-center rounded-full bg-marigold text-on-marigold transition group-hover:translate-x-0.5">
+                    <ArrowRight className="size-4" aria-hidden />
+                  </span>
+                </a>
+                <a
+                  href="#three-verbs"
+                  className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 px-6 py-4 text-base font-semibold text-ink backdrop-blur transition hover:-translate-y-0.5 hover:border-sandstone"
+                >
+                  <Compass className="size-5 text-sandstone" aria-hidden />
+                  {c.hero.exploreCta}
                 </a>
               </div>
 
-              <p className="mt-5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm text-ink-muted lg:justify-start">
+              <p className="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm text-ink-muted lg:justify-start">
                 <Smartphone className="size-4" aria-hidden />
                 <span>{c.hero.android}</span>
                 <span aria-hidden>·</span>
@@ -412,12 +403,16 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
               </p>
             </div>
 
-            <HeroPlace site={MAYA} locale={locale === 'ne' ? 'ne' : 'en'} />
+            <PhoneHero site={MAYA} locale={locale === 'ne' ? 'ne' : 'en'} />
           </div>
         </div>
       </section>
 
+      <Bento locale={locale === 'ne' ? 'ne' : 'en'} />
+
       <ThreeVerbs maya={MAYA} pillar={PILLAR} locale={locale === 'ne' ? 'ne' : 'en'} />
+
+      <VisitCircle locale={locale === 'ne' ? 'ne' : 'en'} />
 
       {/* The explorer, the centrepiece */}
       <section id="explore" className="scroll-mt-20 border-y border-line bg-ground-deep">
@@ -463,36 +458,6 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
         </div>
       </section>
 
-      {/* Beyond the temple: treks, offline, essentials, as a list rather than look-alike cards */}
-      <section className="mx-auto max-w-6xl px-6 py-16 sm:py-24" aria-labelledby="beyond">
-        <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
-          <div>
-            <p className="text-sm font-semibold tracking-widest text-sandstone-deep uppercase">{locale === 'ne' ? 'मन्दिरभन्दा पर' : 'Beyond the temple'}</p>
-            <h2 id="beyond" className="mt-3 font-[family-name:var(--font-display)] text-4xl leading-tight font-semibold text-ink sm:text-5xl">
-              {locale === 'ne' ? 'लुम्बिनी, काठमाडौं, पोखरा, चितवन, र तीन ट्रेक' : 'Lumbini, Kathmandu, Pokhara, Chitwan, and three treks'}
-            </h2>
-            <p className="mt-5 text-lg leading-relaxed text-ink-soft">
-              {locale === 'ne'
-                ? 'यी ठाउँमा गहिरो जानकारी छ। बाँकी नेपालमा आधारभूत सूची, जसले थाहा नभएको कुरा थाहा छैन भन्छ।'
-                : 'Deep where it has the records, basic everywhere else, and honest about which is which.'}
-            </p>
-          </div>
-          <ul className="divide-y divide-line border-y border-line">
-            {FEATURES[locale === 'ne' ? 'ne' : 'en'].map(({ icon: Icon, title, body }) => (
-              <li key={title} className="flex gap-5 py-6">
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-surface-secondary text-sandstone-deep">
-                  <Icon className="size-5" aria-hidden />
-                </span>
-                <div>
-                  <h3 className="font-semibold text-ink">{title}</h3>
-                  <p className="mt-1 leading-relaxed text-ink-soft">{body}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
       <Provenance locale={locale === 'ne' ? 'ne' : 'en'} />
 
       {/* For institutions: the monitoring case, compressed to one band that links to its own pages */}
@@ -527,52 +492,62 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
       </section>
 
       {/* Install */}
-      <section id="download" className="scroll-mt-20 border-t border-line">
-        <div className="mx-auto max-w-4xl px-6 py-20">
-          <div className="text-center">
-            <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-sandstone/15 text-sandstone-deep">
-              <ShieldCheck className="size-6" aria-hidden />
-            </span>
-            <h2 className="mt-6 font-[family-name:var(--font-display)] text-4xl font-semibold text-ink">
-              {c.install.title}
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl leading-relaxed text-ink-soft">
-              {c.install.lede}
-            </p>
+      {/* Get the app: a dark closing panel, the way the page signs off */}
+      <section id="download" className="scroll-mt-24 px-4 py-16 sm:px-6 sm:py-24">
+        <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-ink via-ink to-sandstone-deep px-6 py-16 text-ground shadow-2xl sm:px-14 sm:py-20">
+          <div className="watermark !text-ground !opacity-[0.06]" aria-hidden>साक्षी</div>
+          <span aria-hidden className="pointer-events-none absolute -top-32 -right-24 size-96 rounded-full bg-marigold/25 blur-3xl" />
 
-            <a
-              href={build.apkUrl}
-              className="mt-8 inline-flex items-center gap-3 rounded-2xl bg-marigold px-8 py-4 font-semibold text-on-marigold shadow-lg shadow-earth/25 transition hover:-translate-y-0.5 hover:brightness-95"
-            >
-              <Download className="size-5" aria-hidden />
-              {c.install.cta}
-            </a>
-          </div>
+          <div className="relative grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:items-center">
+            <div>
+              <p className="text-sm font-semibold tracking-widest text-marigold uppercase">{c.install.title}</p>
+              <h2 className="mt-4 font-[family-name:var(--font-display)] text-4xl leading-tight font-semibold sm:text-5xl">
+                {locale === 'ne' ? 'नेपालको सबैभन्दा इमानदार मार्गदर्शक साथमा लैजानुहोस्।' : 'Take an honest guide to Nepal with you.'}
+              </h2>
+              <p className="mt-5 max-w-lg text-lg leading-relaxed text-ground/75">{c.install.lede}</p>
 
-          <ol className="mt-12 space-y-4">
-            {c.installSteps.map(({ title, body }, i) => {
-              const Icon = INSTALL_ICONS[i];
-              return (
-                <li
-                  key={title}
-                  className="flex gap-5 rounded-2xl border border-line bg-surface p-6 shadow-sm"
+              <div className="mt-9 flex flex-wrap gap-3">
+                <a
+                  href={build.apkUrl}
+                  className="inline-flex items-center gap-3 rounded-2xl bg-ground px-5 py-3 text-ink shadow-lg transition hover:-translate-y-0.5"
                 >
-                  <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-surface-secondary text-sandstone-deep">
-                    <Icon className="size-5" aria-hidden />
+                  <Download className="size-6 text-sandstone" aria-hidden />
+                  <span className="text-left leading-tight">
+                    <span className="block text-[11px] font-semibold tracking-widest text-ink-muted uppercase">Android</span>
+                    <span className="block font-semibold">{c.install.cta}</span>
                   </span>
-                  <div>
-                    <h3 className="font-semibold text-ink">
-                      <span className="mr-2 text-ink-muted tabular-nums">{i + 1}.</span>
-                      {title}
-                    </h3>
-                    <p className="mt-1.5 leading-relaxed text-ink-soft">{body}</p>
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
+                </a>
+                <span className="inline-flex items-center gap-3 rounded-2xl border border-ground/20 px-5 py-3 text-ground/70">
+                  <Smartphone className="size-6" aria-hidden />
+                  <span className="text-left leading-tight">
+                    <span className="block text-[11px] font-semibold tracking-widest uppercase">iPhone</span>
+                    <span className="block font-semibold">{locale === 'ne' ? 'छिट्टै आउँदै' : 'Coming soon'}</span>
+                  </span>
+                </span>
+              </div>
+              <p className="mt-6 max-w-lg text-sm text-ground/55">{c.install.footnote}</p>
+            </div>
 
-          <p className="mt-8 text-center text-sm text-ink-muted">{c.install.footnote}</p>
+            <ol className="grid gap-3">
+              {c.installSteps.map(({ title, body }, i) => {
+                const Icon = INSTALL_ICONS[i];
+                return (
+                  <li key={title} className="flex gap-4 rounded-2xl border border-ground/10 bg-ground/5 p-5 backdrop-blur-sm">
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-ground/10 text-marigold">
+                      <Icon className="size-5" aria-hidden />
+                    </span>
+                    <div>
+                      <h3 className="font-semibold">
+                        <span className="mr-2 text-ground/50 tabular-nums">{i + 1}.</span>
+                        {title}
+                      </h3>
+                      <p className="mt-1 text-sm leading-relaxed text-ground/70">{body}</p>
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
         </div>
       </section>
     </main>
