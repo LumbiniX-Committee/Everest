@@ -72,3 +72,4 @@ export {
   type ReportableTask,
   type ReportLink,
 } from './quests/reports.ts';
+export * from './treks/progress.ts';

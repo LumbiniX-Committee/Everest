@@ -55,6 +55,8 @@ cp .env.example .env.local
 |---|---|---|---|
 | `EXPO_PUBLIC_SUPABASE_URL` | For sync | Supabase project URL | [services/supabase/index.ts](../../services/supabase/index.ts) |
 | `EXPO_PUBLIC_SUPABASE_KEY` | For sync | **Publishable (anon) key** — designed to ship in client code | [services/supabase/index.ts](../../services/supabase/index.ts) |
+| `EXPO_PUBLIC_GOOGLE_MAPS_KEY` | Optional | Google Map Tiles API key for satellite and hybrid. Needs billing and the Map Tiles API enabled; restrict it to that API. Set in EAS (preview, production, development) as sensitive | [services/imagery/index.ts](../../services/imagery/index.ts) |
+| `EXPO_PUBLIC_MAPTILER_KEY` | Optional | MapTiler satellite fallback when no Google session can be made | [services/imagery/index.ts](../../services/imagery/index.ts) |
 
 > The app **runs without these**. `isConfigured()` returns false and sync is skipped; nothing crashes. Verified during this audit — the app started and bundled with placeholder values.
 >

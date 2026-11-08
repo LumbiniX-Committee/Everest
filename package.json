@@ -36,6 +36,7 @@
     "routes": "node tools/validate-routes.mjs",
     "vendor:map": "node tools/vendor-map.mjs",
     "data:places": "node tools/data/build-places.mjs && node tools/data/gen-places.mjs",
+    "data:treks": "node tools/data/build-treks.mjs",
     "models": "node tools/models/build-models.mjs"
   },
   "dependencies": {

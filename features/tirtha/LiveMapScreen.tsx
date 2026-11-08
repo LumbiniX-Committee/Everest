@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ArrivalWisdom } from '@/components/arrival';
-import { MapWebView, SATELLITE_KEY, type MapMode } from '@/components/map';
+import { MapWebView, type MapMode } from '@/components/map';
 import { GreetingMonk } from '@/components/monk';
 import { NarrationPlayer } from '@/components/site';
 import { BottomSheet, Button, Card, Icon, Text } from '@/components/ui';
@@ -16,6 +16,7 @@ import {
   useDemoWalk,
   useHaptics,
   useHeading,
+  useImagery,
   useSafeBack,
   useSiteArrival,
   useStoryProgress,
@@ -82,6 +83,8 @@ export function LiveMapScreen() {
   const goBack = useSafeBack();
   const returnToQuests = useRef(false);
   const insets = useSafeAreaInsets();
+  // Satellite and hybrid are offered only once a provider has actually answered.
+  const imagery = useImagery();
   /**
    * Fine GPS only while the map is in front of someone.
    *
@@ -748,7 +751,7 @@ export function LiveMapScreen() {
       />
 
       <BottomSheet visible={showModes} onClose={() => setShowModes(false)} title="Map type">
-        {MAP_MODES.filter((option) => option.needsKey ? SATELLITE_KEY != null : true).map((option) => {
+        {MAP_MODES.filter((option) => option.needsKey ? imagery != null : true).map((option) => {
           const locked = option.pro && !canUse('satellite-map');
           return (
             <Pressable

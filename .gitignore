@@ -80,6 +80,7 @@ scratch/
 harvest/_raw/
 harvest/_images/
 harvest/places-cache/
+harvest/treks-cache/
 *.pyc
 __pycache__/
 .venv/

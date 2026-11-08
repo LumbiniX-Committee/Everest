@@ -346,6 +346,15 @@ Simulates a pilgrim's walk: south gate → pond → temple → clockwise circuit
 
 ---
 
+## 20a. Trekking routes — Fully implemented (needs field checks)
+
+Three treks: Ghorepani–Poon Hill, Langtang Valley, Everest Base Camp. Entry: the "Trekking routes" card on Tīrtha Home.
+
+- **Data:** words in `seed/treks.json`; `npm run data:treks` (`tools/data/build-treks.mjs`) snaps stops to OSM, routes each day over OSM trails with Valhalla, reads altitudes from Open-Meteo's DEM (Copernicus 90 m), and writes `data/generated/treks.ts`. Responses cache in `harvest/treks-cache/` (gitignored). A leg the router cannot find leaves the day's distance `null`.
+- **Detail:** totals, a whole-route altitude profile, each day with distance, up, down, estimated hours, the bed's altitude and a warning when you sleep more than 500 m higher above 3,000 m; seasons, access, permits (agency-published fees, dated), the guide rule and safety.
+- **Trail map:** full screen, terrain mode, per-day line, stops tappable, your position placed along the day's trail by `trailProgress` (`core/treks/progress.ts`), with the distance and climb to the next stop measured along the trail. Off the trail (150 m plus GPS accuracy) it says so rather than snapping. Demo positions show no progress.
+- **Not done:** offline tiles for the trail (no signal on much of these routes), Nepali text for the authored passages.
+
 ## 21. `features/practice/` — Unused / dead code
 
 Contains **only** `index.ts`, no screen. Merit functionality lives in [store/practice.tsx](../../store/practice.tsx) and [components/practice/](../../components/practice/). No route renders anything from this directory.

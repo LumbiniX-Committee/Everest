@@ -1,8 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 
 import { Card, Icon, Text } from '@/components/ui';
-import { SATELLITE_KEY } from '@/components/map';
 import { priceFor, type VisitorType } from '@/core';
+import { useImagery } from '@/hooks';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { colors, spacing } from '@/theme';
 
@@ -11,12 +11,10 @@ const PRO = ['3D monument views', 'Step-by-step close-up guidance', 'Audio narra
 
 /**
  * Promised for Pro but not yet working. Listed apart, so nobody pays for them
- * believing they exist. Satellite needs a MapTiler key before it can appear.
+ * believing they exist. Satellite joins the Pro list only once an imagery
+ * provider has actually answered, not merely because a key is set.
  */
-const COMING = [
-  { label: 'Offline maps and guides', ready: false },
-  { label: 'Satellite map', ready: Boolean(SATELLITE_KEY) },
-];
+const COMING_LABELS = ['Offline maps and guides', 'Satellite map'] as const;
 
 function Row({ label, icon }: { label: string; icon: 'check' | 'star-four-points-outline' }) {
   return (
@@ -32,6 +30,8 @@ function Row({ label, icon }: { label: string; icon: 'check' | 'star-four-points
 /** The same comparison in onboarding and Settings, so the two can't disagree. */
 export function PlanComparison({ visitor }: { visitor: VisitorType }) {
   const ui = useVisitorLiteralCopy();
+  const imagery = useImagery();
+  const COMING = COMING_LABELS.map((label) => ({ label, ready: label === 'Satellite map' && imagery != null }));
   const price = priceFor(visitor);
   const priceText = price.currency === 'NPR' ? 'NPR 1,000 a month' : 'USD 20 a month';
 

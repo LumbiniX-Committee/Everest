@@ -37,11 +37,9 @@ export type MapHtmlOptions = {
   topInset?: number;
   /** Where the map opens, as [longitude, latitude]. Defaults to Lumbini. */
   center?: readonly [number, number];
-  /** A MapTiler key enables the satellite and hybrid modes. Without one they are hidden. */
-  satelliteKey?: string;
 };
 
-/** The ways the map can be drawn. Satellite and hybrid need a MapTiler key. */
+/** The ways the map can be drawn. Satellite and hybrid need a working imagery provider. */
 export type MapMode = 'standard' | '3d' | 'terrain' | 'satellite' | 'hybrid';
 
 /**
@@ -78,7 +76,6 @@ export function buildMapHtml({
   interactive = fullscreen,
   topInset = 0,
   center = MAP_HOME.centre,
-  satelliteKey,
 }: MapHtmlOptions = {}): string {
   // Named camera rather than an offset from MAP_HOME — see MAP_CAMERA for why
   // the old `+ 1.5` opened the world about three times too close to play in.
@@ -198,7 +195,7 @@ ${interactive ? INTERACTIVE_CONTROLS : ''}
 
     map.on('load', function(){
       loaded = true;
-${MAP_MODES(satelliteKey)}
+${MAP_MODES()}
       // The enclosed ground, flat. Nothing stands between the camera and the
       // monuments; this is only what says you are inside something.
       //
@@ -334,7 +331,9 @@ ${MAP_MODES(satelliteKey)}
         }).catch(function () {});
       });
       map.getCanvas().style.cursor = 'default';
-${avatar ? POSITION_MARKER : ''}
+      // Position, route and waypoints never needed the figure: a trek map draws
+      // all three with no character at all.
+${POSITION_MARKER}
       // Ready is posted *before* the character. The figure needs three.js from
       // a CDN, and when that request fails — a cold start on site signal, an
       // offline device — the throw used to escape this handler before the ready
@@ -372,10 +371,11 @@ ${avatar ? AVATAR_LAYER : ''}
  * hybrid use MapTiler, and exist only when a key is configured: the free
  * imagery checked so far is either non-commercial or too coarse for close-up use.
  */
-function MAP_MODES(satelliteKey: string | undefined): string {
+function MAP_MODES(): string {
   return `
       var baseLayers = map.getStyle().layers.map(function (l) { return { id: l.id, type: l.type }; });
-      var satelliteAvailable = ${JSON.stringify(Boolean(satelliteKey))};
+      var imagery = null;
+      var currentMode = 'standard';
       map.addSource('dem', {
         type: 'raster-dem', encoding: 'terrarium', tileSize: 256, maxzoom: 15,
         tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
@@ -384,15 +384,37 @@ function MAP_MODES(satelliteKey: string | undefined): string {
       map.addLayer({ id:'hillshade', type:'hillshade', source:'dem', layout:{ visibility:'none' },
         paint:{ 'hillshade-shadow-color': ${JSON.stringify(colors.mapLabel)}, 'hillshade-highlight-color': ${JSON.stringify(colors.mapBase)}, 'hillshade-exaggeration': 0.3 } },
         baseLayers.length > 1 ? baseLayers[1].id : undefined);
-      if (satelliteAvailable) {
-        map.addSource('satellite', {
-          type:'raster', tileSize: 512, maxzoom: 20,
-          tiles: ['https://api.maptiler.com/tiles/satellite-v2/{z}/{x}/{y}.jpg?key=${satelliteKey ?? ''}'],
-          attribution: '<a href="https://www.maptiler.com/copyright/">MapTiler</a>'
-        });
-        map.addLayer({ id:'satellite', type:'raster', source:'satellite', layout:{ visibility:'none' } },
-          baseLayers.length > 1 ? baseLayers[1].id : undefined);
+
+      // Google asks for the copyright of what is on screen, shown with its name.
+      var credit = document.createElement('div');
+      credit.style.cssText = 'position:absolute;left:8px;bottom:8px;z-index:5;font:600 11px sans-serif;color:#fff;text-shadow:0 0 3px #000;pointer-events:none;display:none';
+      document.body.appendChild(credit);
+      function refreshCredit() {
+        var showing = imagery && (currentMode === 'satellite' || currentMode === 'hybrid');
+        credit.style.display = showing ? 'block' : 'none';
+        if (!showing || !imagery.viewportUrl) { credit.textContent = imagery ? 'Imagery: ' + imagery.provider : ''; return; }
+        var b = map.getBounds();
+        fetch(imagery.viewportUrl + '&zoom=' + Math.round(map.getZoom()) + '&north=' + b.getNorth() + '&south=' + b.getSouth() + '&east=' + b.getEast() + '&west=' + b.getWest())
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (v) { credit.textContent = 'Google' + (v && v.copyright ? ' · ' + v.copyright : ''); })
+          .catch(function () { credit.textContent = 'Google'; });
       }
+      map.on('moveend', refreshCredit);
+
+      /** Imagery arrives after load: its provider may need a session first. */
+      window.sakshiSetImagery = function (value) {
+        if (!value || imagery) return;
+        imagery = value;
+        var below = baseLayers.length > 1 ? baseLayers[1].id : undefined;
+        map.addSource('satellite', { type:'raster', tileSize: value.tileSize, maxzoom: 20, tiles: [value.satellite],
+          attribution: value.provider === 'google' ? '' : value.attribution });
+        map.addLayer({ id:'satellite', type:'raster', source:'satellite', layout:{ visibility:'none' } }, below);
+        if (value.hybrid) {
+          map.addSource('hybrid', { type:'raster', tileSize: value.tileSize, maxzoom: 20, tiles: [value.hybrid] });
+          map.addLayer({ id:'hybrid', type:'raster', source:'hybrid', layout:{ visibility:'none' } }, below);
+        }
+        window.sakshiSetMapMode(currentMode);
+      };
 
       function show(id, visible) {
         if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', visible ? 'visible' : 'none');
@@ -400,15 +422,21 @@ function MAP_MODES(satelliteKey: string | undefined): string {
       var isRoadOrLabel = function (l) { return l.type === 'symbol' || /road|path|bridge|tunnel/.test(l.id); };
 
       window.sakshiSetMapMode = function (mode) {
-        if ((mode === 'satellite' || mode === 'hybrid') && !satelliteAvailable) mode = 'standard';
-        var imagery = mode === 'satellite' || mode === 'hybrid';
+        if ((mode === 'satellite' || mode === 'hybrid') && !imagery) mode = 'standard';
+        currentMode = mode;
+        var useImagery = mode === 'satellite' || mode === 'hybrid';
+        // The provider's own hybrid tiles replace the basemap entirely; without
+        // them, our roads and labels are laid over plain imagery.
+        var ownHybrid = mode === 'hybrid' && imagery && imagery.hybrid;
         baseLayers.forEach(function (l) {
-          if (l.type === 'background') return show(l.id, !imagery);
-          if (mode === 'satellite') return show(l.id, false);
+          if (l.type === 'background') return show(l.id, !useImagery);
+          if (mode === 'satellite' || ownHybrid) return show(l.id, false);
           if (mode === 'hybrid') return show(l.id, isRoadOrLabel(l));
           show(l.id, true);
         });
-        show('satellite', imagery);
+        show('satellite', mode === 'satellite' || (mode === 'hybrid' && !ownHybrid));
+        show('hybrid', Boolean(ownHybrid));
+        refreshCredit();
         show('hillshade', mode === 'terrain');
         show('monument-massing', mode === '3d');
         map.setTerrain(mode === 'terrain' ? { source: 'dem', exaggeration: 1.4 } : null);
@@ -499,6 +527,7 @@ const POSITION_MARKER = `
       map.addSource('me-accuracy', { type:'geojson', data: { type:'FeatureCollection', features: [] } });
       map.addSource('me-trail', { type:'geojson', data: { type:'FeatureCollection', features: [] } });
       map.addSource('me-route', { type:'geojson', data: { type:'FeatureCollection', features: [] } });
+      map.addSource('waypoints', { type:'geojson', data: { type:'FeatureCollection', features: [] } });
 
       // The planned way, under everything. Demo itineraries are dashed; live
       // guidance switches this same layer to a strong solid route.
@@ -683,6 +712,47 @@ const POSITION_MARKER = `
             ? [{ type:'Feature', geometry:{ type:'LineString', coordinates: coords }, properties:{} }]
             : []
         });
+      };
+
+      /**
+       * Named stops along a route, such as a trek's villages. Labels always
+       * show, because on a trek the stop names are the point of the map.
+       */
+      window.sakshiSetWaypoints = function (points) {
+        if (!map.getLayer('waypoint-dot')) {
+          map.addLayer({
+            id:'waypoint-dot', type:'circle', source:'waypoints',
+            paint:{
+              'circle-radius': 5,
+              'circle-color': ${JSON.stringify(colors.surface)},
+              'circle-stroke-width': 2.5,
+              'circle-stroke-color': ${JSON.stringify(colors.primary)}
+            }
+          });
+          map.addLayer({
+            id:'waypoint-label', type:'symbol', source:'waypoints',
+            layout:{ 'text-field':['get','name'], 'text-font':['Noto Sans Regular'], 'text-size':12, 'text-offset':[0,-1.1], 'text-anchor':'bottom', 'text-optional': true },
+            paint:{ 'text-color': ${JSON.stringify(colors.textPrimary)}, 'text-halo-color': ${JSON.stringify(colors.background)}, 'text-halo-width': 1.4 }
+          });
+          map.on('click','waypoint-dot', function(e){
+            var f = e.features && e.features[0];
+            if (f && f.properties && f.properties.id) post({ type:'waypoint', id: f.properties.id });
+          });
+        }
+        map.getSource('waypoints').setData({
+          type:'FeatureCollection',
+          features: (points || []).map(function (p) {
+            return { type:'Feature', geometry:{ type:'Point', coordinates:[p.longitude, p.latitude] }, properties:{ id: p.id, name: p.name } };
+          })
+        });
+      };
+
+      /** Frame a line so all of it is on screen. */
+      window.sakshiFitLine = function (coords) {
+        if (!coords || coords.length < 2) return;
+        var b = new maplibregl.LngLatBounds(coords[0], coords[0]);
+        coords.forEach(function (c) { b.extend(c); });
+        map.fitBounds(b, { padding: 40, maxZoom: 15, duration: 600 });
       };
 
       window.sakshiSetRouteColor = function (color) {

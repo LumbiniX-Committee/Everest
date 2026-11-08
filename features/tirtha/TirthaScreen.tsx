@@ -79,6 +79,16 @@ export function TirthaScreen() {
       </Pressable>
 
 
+      <Card onPress={() => router.push('/(main)/tirtha/treks')} accessibilityLabel={ui('Trekking routes')} style={styles.trekCard}>
+        <Text variant="label" tone="muted" uppercase>
+          Trekking
+        </Text>
+        <Text variant="bodyStrong">Trekking routes</Text>
+        <Text variant="caption" tone="secondary">
+          Poon Hill, Langtang Valley and Everest Base Camp, day by day, with altitude, permits and your position on the trail.
+        </Text>
+      </Card>
+
       {showLocationOffer ? (
         <View style={styles.offer}>
           <Text variant="caption" tone="secondary" style={styles.offerText}>
@@ -157,4 +167,5 @@ const styles = StyleSheet.create({
   },
   sectionActions: { flexDirection: 'row', alignItems: 'center' },
   list: { marginTop: spacing.lg, gap: spacing.md },
+  trekCard: { marginTop: spacing.lg },
 });

@@ -143,6 +143,7 @@ One key per preference is deliberate — a later addition "reads as absent and f
 | [types/source.ts](../../types/source.ts) | Citation/source records |
 | [types/permissions.ts](../../types/permissions.ts) | `PermissionKind`, `PermissionState`, `PermissionMap` |
 | [types/precinct.ts](../../types/precinct.ts) | `Precinct` — geofenced areas (distinct from sites) |
+| [types/treks.ts](../../types/treks.ts) | `Trek`, `TrekDay`, `TrekStop`, `TrekPermit`. Measured fields (distance, climb, hours, altitude) are `null` when unmeasured; `TrekStop.mapped` is false for a position OSM does not have |
 | [types/declarations.d.ts](../../types/declarations.d.ts) | Ambient module declarations |
 
 **Known shapes** (from usage):

@@ -26,3 +26,4 @@ export * as navigation from './navigation';
 export * as plans from './plans';
 export * as models from './models';
 export * as diagnostics from './diagnostics';
+export * as imagery from './imagery';

@@ -42,7 +42,7 @@ It lands on Home with a "Start here" guide. Permissions are asked when first nee
 | Photographs and your own record | ✓ | ✓ |
 | Offline maps and guides | | Coming soon (not built; shown as such in the app) |
 | 3D monument views | Swayambhunath only | ✓ |
-| Satellite and hybrid map | | Coming soon until a MapTiler key is set, then ✓ |
+| Satellite and hybrid map | | Coming soon until an imagery provider answers (Google needs billing on), then ✓ |
 | Step-by-step close-up guidance | | ✓ |
 | Audio narration | | ✓ |
 | Reflection companion | | ✓ |
@@ -88,9 +88,21 @@ node tools/issue-codes.mjs --count 10 --days 30 --note "Kathmandu agents, May"
 The map is MapLibre GL JS 4.7.1 in a WebView, bundled with the app (`components/map/vendor.generated.ts`, refreshed with `npm run vendor:map`).
 
 - **Basemap:** OpenFreeMap vector tiles.
-- **Modes:** Standard (default, flat), 3D, Terrain (AWS open elevation tiles), and Satellite or Hybrid with `EXPO_PUBLIC_MAPTILER_KEY`.
+- **Modes:** Standard (default, flat), 3D, Terrain (AWS open elevation tiles), and Satellite and Hybrid (Pro).
+- **Imagery:** Google Map Tiles API with `EXPO_PUBLIC_GOOGLE_MAPS_KEY` (`services/imagery`), falling back to MapTiler with `EXPO_PUBLIC_MAPTILER_KEY`. Google needs **billing enabled and the Map Tiles API turned on** in its Cloud project; until a session is actually created, Satellite and Hybrid stay hidden and the Pro list says "Coming soon". Google hybrid uses Google's own road layer, so Google imagery is never mixed with OSM map data, and the on-screen credit shows Google's copyright for the current view.
+- **Key safety:** an `EXPO_PUBLIC_` key ships inside the app. In Google Cloud, restrict it to the Map Tiles API only. An Android-app restriction does not help here, because the WebView's requests carry no app signature.
 - **Routes:** walking directions come from Valhalla at `valhalla1.openstreetmap.de`, or `EXPO_PUBLIC_ROUTING_URL`. Self-host it for production if its terms don't allow your use.
 - **Labels:** the basemap uses English names, because the renderer doesn't shape Devanagari.
+
+## Trekking routes
+
+Ghorepani–Poon Hill (5 days), Langtang Valley (6 days) and Everest Base Camp (11 days), from the "Trekking routes" card on Explore.
+
+- **Each trek:** totals, an altitude profile, every day with distance, climb, descent, estimated walking hours, where you sleep and how high, plus seasons, access, permits, the guide rule and safety.
+- **Altitude warning:** a day is flagged when you sleep above 3,000 m and more than 500 m higher than the night before.
+- **Trail map:** the day's line on terrain, stops you can tap, and your position measured along the trail: what's done, what's left, and the distance and climb to the next stop. More than 150 m (plus GPS error) from the trail, it says so instead of guessing.
+- **Data:** `npm run data:treks` rebuilds from `seed/treks.json`, OSM, Valhalla and the Open-Meteo elevation model. Fees are agency-published and dated; confirm with NTB.
+- **Field checks still needed:** walk a day of each trek with the trail map; confirm stops marked approximate.
 
 ## The guided visit
 

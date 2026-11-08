@@ -66,6 +66,8 @@ export const StorageKeys = {
 
   /** Last public, redacted vantage-priority response for offline quest order. */
   coveragePriority: `${PREFIX}.tirtha.coveragePriority`,
+  /** Google Map Tiles sessions, reused until they expire (about two weeks). */
+  googleTileSessions: `${PREFIX}.map.googleTileSessions`,
 } as const;
 
 /** Preference field → storage key. The settings screen iterates this. */

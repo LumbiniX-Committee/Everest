@@ -4,6 +4,7 @@ import { WebView } from 'react-native-webview';
 
 import { Text } from '@/components/ui';
 import { demoSites } from '@/data';
+import { useImagery } from '@/hooks';
 import { colors, radii, spacing } from '@/theme';
 import type { Coordinate } from '@/types';
 
@@ -61,10 +62,16 @@ export type MapWebViewProps = {
   initialCenter?: readonly [number, number];
   /** The visitor dragged the map: they want to look around, not be followed. */
   onUserPan?: () => void;
+  /** Named stops drawn with labels, such as a trek's villages. */
+  waypoints?: readonly { id: string; name: string; latitude: number; longitude: number }[];
+  /** A waypoint was tapped. */
+  onSelectWaypoint?: (id: string) => void;
+  /** Frame the whole route whenever it changes, instead of following a position. */
+  fitRoute?: boolean;
+  /** Draw the route as a strong solid line even without a guide destination. */
+  solidRoute?: boolean;
 };
 
-/** Set in EAS environment variables. Without it, satellite and hybrid stay hidden. */
-export const SATELLITE_KEY = process.env.EXPO_PUBLIC_MAPTILER_KEY?.trim() || undefined;
 
 /**
  * The map, drawn by MapLibre GL JS inside a WebView.
@@ -95,6 +102,10 @@ export function MapWebView({
   accuracyM = null,
   initialCenter,
   onUserPan,
+  waypoints,
+  onSelectWaypoint,
+  fitRoute = false,
+  solidRoute = false,
 }: MapWebViewProps) {
   const [failed, setFailed] = useState(false);
   const [ready, setReady] = useState(false);
@@ -128,10 +139,16 @@ export function MapWebView({
         interactive: fill,
         topInset,
         center: openingCenter,
-        satelliteKey: SATELLITE_KEY,
       }),
     [showFigure, fill, topInset, openingCenter],
   );
+
+  // Imagery is offered only to the full-screen map, where the mode switcher is.
+  const imagery = useImagery();
+  useEffect(() => {
+    if (!ready || !fill || !imagery) return;
+    webRef.current?.injectJavaScript(`window.sakshiSetImagery && window.sakshiSetImagery(${JSON.stringify(imagery)}); true;`);
+  }, [ready, fill, imagery]);
 
   useEffect(() => {
     if (!ready || !fill) return;
@@ -170,6 +187,17 @@ export function MapWebView({
     );
   }, [ready, routeJson]);
 
+  const waypointsJson = useMemo(() => JSON.stringify(waypoints ?? []), [waypoints]);
+  useEffect(() => {
+    if (!ready) return;
+    webRef.current?.injectJavaScript(`window.sakshiSetWaypoints && window.sakshiSetWaypoints(${waypointsJson}); true;`);
+  }, [ready, waypointsJson]);
+
+  useEffect(() => {
+    if (!ready || !fitRoute) return;
+    webRef.current?.injectJavaScript(`window.sakshiFitLine && window.sakshiFitLine(${routeJson}); true;`);
+  }, [ready, fitRoute, routeJson]);
+
   useEffect(() => {
     if (!ready) return;
     webRef.current?.injectJavaScript(
@@ -188,8 +216,8 @@ export function MapWebView({
   const guideJson = JSON.stringify(guideDestination ?? null);
   useEffect(() => {
     if (!ready) return;
-    webRef.current?.injectJavaScript(`window.sakshiSetGuide && window.sakshiSetGuide(${guideJson}); window.sakshiSetRouteMode && window.sakshiSetRouteMode(${guideJson !== 'null'}); true;`);
-  }, [ready, guideJson]);
+    webRef.current?.injectJavaScript(`window.sakshiSetGuide && window.sakshiSetGuide(${guideJson}); window.sakshiSetRouteMode && window.sakshiSetRouteMode(${solidRoute || guideJson !== 'null'}); true;`);
+  }, [ready, guideJson, solidRoute]);
   useEffect(() => {
     if (!ready || !cameraJson) return;
     const target = JSON.parse(cameraJson) as NonNullable<MapWebViewProps['camera']>;
@@ -248,6 +276,7 @@ export function MapWebView({
             if (msg.type === 'ready') setReady(true);
             if (msg.type === 'site' && typeof msg.id === 'string') onSelectSite?.(msg.id);
             if (msg.type === 'place' && typeof msg.id === 'string') onSelectPlace?.(msg.id);
+            if (msg.type === 'waypoint' && typeof msg.id === 'string') onSelectWaypoint?.(msg.id);
             // Only a failure before the map loaded. A missing tile later posts
             // 'tile-error', which is not a reason to give up the whole map.
             if (msg.type === 'error' && !ready) setFailed(true);
