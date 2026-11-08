@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
-import { Button, Card, ConditionBadge, Divider, MetaRow, Screen, SourceBadge, Text } from '@/components/ui';
+import { Button, Card, ConditionBadge, Divider, MetaRow, Screen, SegmentedControl, SourceBadge, Text } from '@/components/ui';
 import { BackBar, EmptyState, ProGate } from '@/components/common';
 import { NarrationPlayer, SiteListItem, VantageListItem, VisitInfo } from '@/components/site';
 import { SourceCard, SourceDetailSheet } from '@/components/source';
@@ -13,8 +13,13 @@ import { usePreferences } from '@/store';
 import { spacing } from '@/theme';
 import { AskThisPlace } from './AskThisPlace';
 import { formatVisitorCopy } from '@/i18n/visitor';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
+import { WISDOM_TIER_OPTIONS, type WisdomTier } from '@/types';
 import { depthFor, scriptureForSite } from './wisdom';
 import type { Source } from '@/types';
+
+/** The three depths, in reading order. 'custom' stays a Settings choice. */
+const DEPTH_OPTIONS = WISDOM_TIER_OPTIONS.filter((option): option is typeof option & { value: Exclude<WisdomTier, 'custom'> } => option.value !== 'custom');
 import { distanceMeters, formatCoordinate, formatDistance } from '@/utils';
 
 /**
@@ -30,7 +35,8 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
   const openInTabs = useOpenInTabs();
   const site = findSite(siteId);
   const { coordinate } = useCurrentPosition();
-  const { preferences } = usePreferences();
+  const { preferences, update } = usePreferences();
+  const ui = useVisitorLiteralCopy();
   const [openSource, setOpenSource] = useState<Source | null>(null);
 
 
@@ -89,6 +95,20 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
           <ConditionBadge status={site.condition} />
           <SourceBadge tier={site.sourceTier} />
         </View>
+      </View>
+
+      {/* One remembered setting, changed where the reading happens. 'custom'
+          (ask your own) is a Settings choice; here it reads as Story. */}
+      <View style={styles.depth}>
+        <SegmentedControl
+          accessibilityLabel={ui('How much to tell')}
+          options={DEPTH_OPTIONS.map((option) => ({ value: option.value, label: ui(option.label) }))}
+          value={preferences.wisdomTier === 'custom' ? 'medium' : preferences.wisdomTier}
+          onChange={(value) => void update('wisdomTier', value)}
+        />
+        <Text variant="caption" tone="muted" center>
+          {ui(DEPTH_OPTIONS.find((option) => option.value === (preferences.wisdomTier === 'custom' ? 'medium' : preferences.wisdomTier))!.hint)}
+        </Text>
       </View>
 
       <Text variant="body" style={styles.description} translate={false}>
@@ -351,6 +371,7 @@ const styles = StyleSheet.create({
   head: { paddingTop: spacing.lg, paddingBottom: spacing.lg, gap: spacing.sm },
   badges: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginTop: spacing.xs },
   description: { paddingBottom: spacing.lg },
+  depth: { gap: spacing.xs, marginBottom: spacing.lg },
   facts: { paddingBottom: spacing.lg },
   scripture: {
     gap: spacing.xs,

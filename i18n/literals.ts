@@ -11,6 +11,20 @@ import type { InterfaceLanguage } from '@/types';
  * Text boundary and are never registered here.
  */
 export const NEPALI_UI_LITERALS = {
+  "About 30 seconds: what this place is and one thing worth knowing.": "करिब ३० सेकेन्ड: यो ठाउँ के हो र जान्नुपर्ने एउटा कुरा।",
+  "Acknowledged by the site": "स्थलले स्वीकार गर्‍यो",
+  "A few minutes: the history, the key facts, and what happened when.": "केही मिनेट: इतिहास, मुख्य तथ्य, र कहिले के भयो।",
+  "Being worked on": "काम भइरहेको छ",
+  "Glance": "झलक",
+  "How much to tell": "कति बताउने",
+  "Last checked": "अन्तिम पटक जाँचिएको",
+  "Not checked yet: connect to see updates.": "अझै जाँचिएको छैन: अद्यावधिक हेर्न इन्टरनेट जोड्नुहोस्।",
+  "Received": "प्राप्त भयो",
+  "Resolved": "समाधान भयो",
+  "Scholar": "विद्वत्",
+  "Story": "कथा",
+  "Waiting to send": "पठाउन पर्खँदै",
+  "What has happened to this report": "यो रिपोर्टमा के भयो",
   "Every listing names its own source and licence where it is shown.": "हरेक सूचीले देखाइएको ठाउँमै आफ्नो स्रोत र इजाजतपत्र देखाउँछ।",
   "Map and data credits": "नक्सा र डाटाको श्रेय",
   "Offline maps, 3D views, close-up guidance, audio and the reflection companion are all included.": "अफलाइन नक्सा, थ्रीडी दृश्य, नजिकबाट मार्गदर्शन, अडियो र चिन्तन साथी सबै समावेश छन्।",

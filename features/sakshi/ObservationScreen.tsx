@@ -21,7 +21,9 @@ import {
   conditionSubtypeCopy,
 } from '@/i18n/condition';
 import { formatVisitorCopy, visitorCopy, type VisitorCopyKey } from '@/i18n/visitor';
-import { database } from '@/services';
+import { database, reportStatus } from '@/services';
+import { ReportTimeline } from '@/components/report';
+import { reportTimeline } from '@/core';
 import { useDamageDetector, scanToSuggestion, type YoloScanResult } from '@/services/ai/yoloEngine';
 import { usePractice, usePreferences, useQuests } from '@/store';
 import { colors, radii, spacing } from '@/theme';
@@ -46,6 +48,21 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
   const exitVisit = useExitVisit();
   const [observation, setObservation] = useState<Observation | null>(null);
   const [reports, setReports] = useState<ConditionReport[]>([]);
+  // The custodian steps on this visitor's reports: last known copy first, then
+  // a refresh. Offline, the cached copy stays, dated, rather than going blank.
+  const [timelines, setTimelines] = useState<reportStatus.ReportTimelines>({ fetchedAt: null, byReport: {} });
+  useEffect(() => {
+    let live = true;
+    void reportStatus.cachedTimelines().then((cached) => {
+      if (live) setTimelines(cached);
+      return reportStatus.refreshTimelines();
+    }).then((fresh) => {
+      if (live && fresh) setTimelines(fresh);
+    });
+    return () => {
+      live = false;
+    };
+  }, []);
   const [status, setStatus] = useState<LoadState>('loading');
   const [sheetOpen, setSheetOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -457,6 +474,14 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
                     “{report.note}”
                   </Text>
                 ) : null}
+                <ReportTimeline
+                  steps={reportTimeline({
+                    recordedAt: report.recordedAt,
+                    synced: report.synced,
+                    actions: timelines.byReport[report.id] ?? [],
+                  })}
+                  fetchedAt={timelines.fetchedAt}
+                />
               </View>
             ))
           )}

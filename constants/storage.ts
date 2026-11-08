@@ -70,6 +70,8 @@ export const StorageKeys = {
   googleTileSessions: `${PREFIX}.map.googleTileSessions`,
   /** Offline map packs saved on the phone: which areas, how many tiles, when. */
   offlineMapPacks: `${PREFIX}.map.offlinePacks`,
+  /** Last known custodian steps on the visitor's own reports, for offline viewing. */
+  reportTimelines: `${PREFIX}.reports.timelines`,
 } as const;
 
 /** Preference field → storage key. The settings screen iterates this. */

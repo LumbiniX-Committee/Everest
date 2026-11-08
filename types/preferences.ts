@@ -158,9 +158,9 @@ export const PHOTO_QUALITY_OPTIONS: { value: PhotoQuality; label: string; hint: 
 ];
 
 export const WISDOM_TIER_OPTIONS: { value: WisdomTier; label: string; hint: string }[] = [
-  { value: 'basic', label: 'Basic', hint: 'What this place is, and one thing worth knowing.' },
-  { value: 'medium', label: 'Medium', hint: 'The history, the facts table, and what happened when.' },
-  { value: 'high', label: 'In depth', hint: 'Everything, with the scholarly sources and the canonical passages.' },
+  { value: 'basic', label: 'Glance', hint: 'About 30 seconds: what this place is and one thing worth knowing.' },
+  { value: 'medium', label: 'Story', hint: 'A few minutes: the history, the key facts, and what happened when.' },
+  { value: 'high', label: 'Scholar', hint: 'Everything, with the scholarly sources and the canonical passages.' },
   { value: 'custom', label: 'Ask your own', hint: 'Put your question to the canon, about the place you are standing in.' },
 ];
 

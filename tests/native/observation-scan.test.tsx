@@ -76,6 +76,10 @@ jest.mock('@/i18n/visitor', () => ({
   formatVisitorCopy: (_language: string, key: string) => key,
 }));
 jest.mock('@/services', () => ({
+  reportStatus: {
+    cachedTimelines: () => Promise.resolve({ fetchedAt: null, byReport: {} }),
+    refreshTimelines: () => Promise.resolve({ fetchedAt: null, byReport: {} }),
+  },
   database: {
     getObservation: () => Promise.resolve({
       id: 'observation-a',

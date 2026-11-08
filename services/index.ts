@@ -28,3 +28,4 @@ export * as models from './models';
 export * as diagnostics from './diagnostics';
 export * as imagery from './imagery';
 export * as offlineMaps from './offlineMaps';
+export * as reportStatus from './reportStatus';
