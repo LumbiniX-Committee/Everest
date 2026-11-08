@@ -2,12 +2,14 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
   ArrowRight,
+  BedDouble,
   Check,
   Compass,
   Cpu,
   Download,
   FileText,
   Landmark,
+  Mountain,
   Navigation,
   Settings,
   ShieldCheck,
@@ -48,18 +50,32 @@ const ICONS = {
 
 const INSTALL_ICONS = [Download, Settings, Check] as const;
 
+/** What a visitor gets, beyond the map: shown right under the hero. */
+const FEATURES = {
+  en: [
+    { icon: Mountain, title: 'Three treks, day by day', body: 'Poon Hill, Langtang and Everest Base Camp: distance, climb, walking time, where you sleep and how high, with a warning on days that climb too fast and a trail map that shows how far along you are.' },
+    { icon: WifiOff, title: 'Maps that work offline', body: 'Save a city or a trek to your phone and the map, terrain and names still draw with no signal. Trek guides and site histories are always on the phone.' },
+    { icon: BedDouble, title: 'Essentials nearby', body: 'Places to stay, eat, get medical help or money, from open map data, each with a number to call ahead and walking directions.' },
+  ],
+  ne: [
+    { icon: Mountain, title: 'तीन ट्रेक, दिनदिनै', body: 'पुनहिल, लाङटाङ र सगरमाथा आधार शिविर: दूरी, उकालो, हिँडाइको समय, बास र उचाइ, धेरै छिटो उक्लिने दिनको चेतावनी र तपाईं कति पुग्नुभयो देखाउने पदमार्ग नक्सासहित।' },
+    { icon: WifiOff, title: 'अफलाइन चल्ने नक्सा', body: 'सहर वा ट्रेकलाई फोनमा सुरक्षित गर्नुहोस्, सिग्नल नहुँदा पनि नक्सा, भू-आकृति र नाम देखिन्छन्। ट्रेक र सम्पदाको इतिहास सधैं फोनमै हुन्छ।' },
+    { icon: BedDouble, title: 'नजिकका आवश्यक सेवा', body: 'बस्ने, खाने, स्वास्थ्य र पैसाका ठाउँ, खुला नक्सा डाटाबाट, पहिले फोन गर्ने नम्बर र हिँड्ने बाटोसहित।' },
+  ],
+};
+
 const EN = {
-  metaTitle: 'Sākṣī: A living map of a sacred landscape',
+  metaTitle: 'Sākṣī: a real-time guide to Nepal',
   metaDescription:
-    'A real-time map explorer for the heritage sites of Lumbini and the Kathmandu Valley. Walk, and the places you reach speak, as deeply as you asked, from sources you can check. Everything else the app does exists so that walking through a place also leaves a record of it behind.',
+    'Heritage sites, treks and offline maps for visitors to Nepal: Lumbini, the Kathmandu Valley, Pokhara and Chitwan, Poon Hill, Langtang and Everest Base Camp. Every place speaks from sources you can check, and works when the signal does not.',
   hero: {
-    badge: 'Live across Lumbini and the Kathmandu Valley',
+    badge: 'Lumbini · Kathmandu Valley · Pokhara · Chitwan · three treks',
     title: (
       <>
-        A living map of a<br className="hidden sm:block" /> sacred landscape
+        A real-time guide<br className="hidden sm:block" /> to Nepal
       </>
     ),
-    lede: 'Sākṣī is a real-time map explorer for heritage sites. Walk, and the places you reach speak, as deeply as you asked them to, from sources you can check. Everything else the app does exists so that walking through a place also leaves a record of it behind.',
+    lede: 'Sākṣī shows you where things are, walks you there, and explains them when you arrive, from sources you can check. It carries your treks day by day, saves its maps for when the signal goes, and lets every visit add to the record of how a place is changing.',
     exploreCta: 'Explore the map',
     getAppCta: 'Get the app',
     android: 'Android 7.0 and above',
@@ -191,17 +207,17 @@ const EN = {
 };
 
 const NE: typeof EN = {
-  metaTitle: 'साक्षी: एउटा पवित्र भू-दृश्यको जीवन्त नक्सा',
+  metaTitle: 'साक्षी: नेपालका लागि वास्तविक-समयको मार्गदर्शक',
   metaDescription:
-    'लुम्बिनी र काठमाडौं उपत्यकाका सम्पदा स्थलहरूका लागि एउटा प्रत्यक्ष-समय नक्सा अन्वेषक। हिँड्नुहोस्, र तपाईं पुगेका ठाउँहरू बोल्छन्, तपाईंले मागेको गहिराइमा, तपाईंले जाँच्न सक्ने स्रोतहरूबाट। एपले गर्ने अरू सबै कुरा यसैका लागि अस्तित्वमा छन्: कुनै ठाउँबाट हिँड्नुले पनि त्यसको अभिलेख छोडोस्।',
+    'नेपाल घुम्नेहरूका लागि सम्पदा स्थल, ट्रेक र अफलाइन नक्सा: लुम्बिनी, काठमाडौं उपत्यका, पोखरा र चितवन, पुनहिल, लाङटाङ र सगरमाथा आधार शिविर। हरेक ठाउँले जाँच्न सकिने स्रोतबाट बोल्छ, र सिग्नल नहुँदा पनि काम गर्छ।',
   hero: {
-    badge: 'लुम्बिनी र काठमाडौं उपत्यकाभर सक्रिय',
+    badge: 'लुम्बिनी · काठमाडौं उपत्यका · पोखरा · चितवन · तीन ट्रेक',
     title: (
       <>
-        एउटा पवित्र भू-दृश्यको<br className="hidden sm:block" /> जीवन्त नक्सा
+        नेपालका लागि<br className="hidden sm:block" /> वास्तविक-समयको मार्गदर्शक
       </>
     ),
-    lede: 'साक्षी सम्पदा स्थलहरूका लागि एउटा प्रत्यक्ष-समय नक्सा अन्वेषक हो। हिँड्नुहोस्, र तपाईं पुगेका ठाउँहरू बोल्छन्, तपाईंले मागेको गहिराइमा, तपाईंले जाँच्न सक्ने स्रोतहरूबाट। एपले गर्ने अरू सबै कुरा यसैका लागि अस्तित्वमा छन्: कुनै ठाउँबाट हिँड्नुले पनि त्यसको अभिलेख छोडोस्।',
+    lede: 'साक्षीले ठाउँ कहाँ छ देखाउँछ, त्यहाँसम्म हिँडाएर पुर्‍याउँछ, र पुगेपछि जाँच्न सकिने स्रोतबाट त्यसको बारेमा बताउँछ। यसले तपाईंका ट्रेक दिनदिनै बोक्छ, सिग्नल नहुँदाका लागि नक्सा सुरक्षित राख्छ, र हरेक भ्रमणलाई ठाउँ कसरी बदलिँदैछ भन्ने अभिलेखमा थप्छ।',
     exploreCta: 'नक्सा अन्वेषण गर्नुहोस्',
     getAppCta: 'एप प्राप्त गर्नुहोस्',
     android: 'Android 7.0 र माथि',
@@ -418,6 +434,22 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
       </section>
 
       {/* The explorer, the centrepiece */}
+      <section className="mx-auto max-w-6xl px-6 py-14">
+        <div className="grid gap-6 md:grid-cols-3">
+          {FEATURES[locale === 'ne' ? 'ne' : 'en'].map(({ icon: Icon, title, body }, i) => (
+            <Reveal key={title} delay={i * 70}>
+              <article className="h-full rounded-3xl border border-line bg-surface p-7 shadow-sm">
+                <span className="flex size-11 items-center justify-center rounded-xl bg-surface-secondary text-sandstone-deep">
+                  <Icon className="size-5" aria-hidden />
+                </span>
+                <h2 className="mt-4 font-semibold text-ink">{title}</h2>
+                <p className="mt-2 leading-relaxed text-ink-soft">{body}</p>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
       <section id="explore" className="scroll-mt-20 border-y border-line bg-ground-deep">
         <div className="mx-auto max-w-6xl px-6 py-16 sm:py-20">
           <Reveal>

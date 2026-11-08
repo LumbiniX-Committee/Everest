@@ -17,6 +17,7 @@
     "typecheck": "tsc --noEmit",
     "typecheck:core": "tsc --noEmit -p tools/test/tsconfig.json",
     "lint": "expo lint",
+    "lint:all": "eslint app features components hooks services store core shared utils data theme i18n constants types tools",
     "gen": "node tools/gen-data.mjs",
     "catalog:plan": "node tools/sync-catalog.mjs",
     "catalog:apply": "node tools/sync-catalog.mjs --apply",

@@ -7,7 +7,7 @@ For each common change: what to edit, what else breaks, how to validate, and wha
 **Universal validation** (run after *any* change):
 ```bash
 npm run typecheck && npm test && npm run validate && npm run vocab && npm run eval:dhamma
-npm run lint     # expect exactly 16 pre-existing errors in SpeechCloud.tsx — no more
+npm run lint     # clean; npm run lint:all: 70 known errors, no more
 ```
 
 ---
@@ -146,7 +146,7 @@ The file's own rule: **"Schema changes go through `migrations` below. Never edit
 grep -rn "ComponentName" app features components
 ```
 
-**Validate:** typecheck; lint (expect exactly the 16 known errors); then **manually** open at least one screen per surface. **There are no component tests.**
+**Validate:** typecheck; lint (`npm run lint` clean, `npm run lint:all` at most the 70 known errors); then **manually** open at least one screen per surface. **There are no component tests.**
 
 **Mistakes**
 - ❌ Hardcoding a colour or size instead of a `theme/` token

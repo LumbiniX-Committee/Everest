@@ -6,7 +6,7 @@ import { ScreenHeader, SettingsButton } from '@/components/common';
 import { ArrivalWisdom, StartGuide, VisitorPrompt } from '@/components/arrival';
 import { SiteMap3D } from '@/components/map';
 import { SiteListItem } from '@/components/site';
-import { demoSites, placesForHub, placesNear } from '@/data';
+import { placesForHub, placesNear } from '@/data';
 import { QuestCard } from '@/features/quests';
 import { useCurrentPosition, useNearbySites } from '@/hooks';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';

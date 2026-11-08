@@ -4,7 +4,6 @@ import {
   MAP_HOME,
   monumentGeoJSON,
   precinctGroundGeoJSON,
-  precinctWallGeoJSON,
   siteGeoJSON,
   waterGeoJSON,
 } from '@/data';

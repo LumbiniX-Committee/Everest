@@ -46,6 +46,7 @@ Do not rely on documentation alone for anything you are changing. Read the file,
 
 ```bash
 npm run verify    # types, core and React tests, data, i18n, routes, Dhamma benchmark, lint
+npm run lint:all  # every source folder; 70 known errors, add none (npm run lint skips features/)
 ```
 
 Needs Node 22 (`.nvmrc`). A green `verify` says nothing about the camera, GPS or compass, which only run on a real phone. Record what you could not test in `docs/WORK_LOG.md`.
