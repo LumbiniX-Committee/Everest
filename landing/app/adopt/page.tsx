@@ -91,7 +91,7 @@ export default function AdoptVantagePage() {
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-16">
-      <p className="text-sm font-semibold tracking-wide text-sakshi uppercase">Adopt a vantage</p>
+      <p className="text-sm font-semibold tracking-wide text-sandstone-deep uppercase">Adopt a vantage</p>
       <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold text-ink">
         Return to one viewpoint every quarter
       </h1>

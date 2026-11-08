@@ -49,7 +49,7 @@ export default function PublicConditionPage() {
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-16">
-      <p className="text-sm font-semibold tracking-wide text-sakshi uppercase">Public condition record</p>
+      <p className="text-sm font-semibold tracking-wide text-sandstone-deep uppercase">Public condition record</p>
       <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold text-ink">
         {summary?.name.en ?? 'Heritage site'}
       </h1>
@@ -106,7 +106,7 @@ export default function PublicConditionPage() {
                     <p className="font-semibold text-ink">
                       {condition.category}{condition.subtype ? ` · ${condition.subtype}` : ''}
                     </p>
-                    <span className="rounded-full bg-sakshi/10 px-3 py-1 text-xs font-semibold text-sakshi">
+                    <span className="rounded-full bg-surface-secondary px-3 py-1 text-xs font-semibold text-sandstone-deep">
                       {condition.status.replace('_', ' ')}
                     </span>
                   </div>

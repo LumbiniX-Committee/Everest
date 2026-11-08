@@ -26,6 +26,6 @@ export function VisitorPrompt() {
 }
 
 const styles = StyleSheet.create({
-  card: { gap: spacing.sm },
+  card: { gap: spacing.sm, marginBottom: spacing.lg },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
 });

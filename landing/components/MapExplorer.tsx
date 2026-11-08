@@ -25,6 +25,8 @@ const WORKER_FILE = 'maplibre-gl-worker.mjs';
  */
 
 const TIERS = ['basic', 'medium', 'high'] as const;
+/** The names the app uses for the same three depths. */
+const TIER_LABEL = { basic: 'Glance', medium: 'Story', high: 'Scholar' } as const;
 type Tier = (typeof TIERS)[number];
 
 /** Mirrors DEPTHS in core/wisdom/index.ts. Depth over sourced material only. */
@@ -284,8 +286,8 @@ export function MapExplorer() {
 
         <div className="flex items-center gap-2">
           <ScrollText className="size-4 text-ink-muted" aria-hidden />
-          <span className="text-sm text-ink-muted">Wisdom</span>
-          <div role="group" aria-label="Wisdom depth" className="flex rounded-lg bg-surface-secondary p-0.5">
+          <span className="text-sm text-ink-muted">Depth</span>
+          <div role="group" aria-label="Depth" className="flex rounded-lg bg-surface-secondary p-0.5">
             {TIERS.map((t) => (
               <button
                 key={t}
@@ -296,7 +298,7 @@ export function MapExplorer() {
                   tier === t ? 'bg-surface text-ink shadow-sm' : 'text-ink-muted hover:text-ink'
                 }`}
               >
-                {t}
+                {TIER_LABEL[t]}
               </button>
             ))}
           </div>
@@ -304,7 +306,7 @@ export function MapExplorer() {
 
         <div className="ml-auto flex items-center gap-3">
           <div className="text-right">
-            <p className="font-[family-name:var(--font-display)] text-xl leading-none font-semibold text-sakshi tabular-nums">
+            <p className="font-[family-name:var(--font-display)] text-xl leading-none font-semibold text-sandstone-deep tabular-nums">
               {gained}
               <span className="text-ink-muted">/{SITES.length}</span>
             </p>
@@ -319,7 +321,7 @@ export function MapExplorer() {
             aria-label="Places reached"
           >
             <div
-              className="h-full rounded-full bg-sakshi transition-[width] duration-700 ease-out"
+              className="h-full rounded-full bg-sandstone transition-[width] duration-700 ease-out"
               style={{ width: `${pct}%` }}
             />
           </div>
@@ -367,7 +369,7 @@ export function MapExplorer() {
               {selected.zone}
             </span>
             {selected.surveyed ? (
-              <span className="rounded-full bg-sakshi/10 px-2.5 py-0.5 text-xs font-semibold tracking-wide text-sakshi uppercase">
+              <span className="rounded-full bg-surface-secondary px-2.5 py-0.5 text-xs font-semibold tracking-wide text-sandstone-deep uppercase">
                 Coordinates checked
               </span>
             ) : (
@@ -509,10 +511,10 @@ export function MapExplorer() {
                 aria-pressed={s.id === selectedId}
                 className={`rounded-lg border px-3 py-1.5 text-sm transition ${
                   s.id === selectedId
-                    ? 'border-sakshi bg-sakshi text-white'
+                    ? 'border-sandstone bg-sandstone text-white'
                     : visited.includes(s.id)
-                      ? 'border-sakshi/40 bg-surface text-ink'
-                      : 'border-line bg-surface text-ink-soft hover:border-sakshi/40 hover:text-ink'
+                      ? 'border-sandstone/40 bg-surface text-ink'
+                      : 'border-line bg-surface text-ink-soft hover:border-sandstone/40 hover:text-ink'
                 }`}
               >
                 {s.name}

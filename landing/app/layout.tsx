@@ -1,15 +1,18 @@
 import type { Metadata, Viewport } from 'next';
-import { Baloo_2, Mukta } from 'next/font/google';
+import { Mukta, Newsreader } from 'next/font/google';
 
 import './globals.css';
 
-// Both hold Latin, IAST diacritics and Devanagari, so names never fall back mid-word.
-const baloo = Baloo_2({
-  subsets: ['latin', 'latin-ext', 'devanagari'],
-  weight: ['500', '600', '700'],
-  variable: '--font-baloo',
+// Headlines: an editorial serif, so the page reads like a well-made guidebook
+// rather than an app template. Its latin-ext subset carries the IAST marks
+// (ā ṣ ī) in Sākṣī; Devanagari headings fall through to Mukta, glyph by glyph.
+const newsreader = Newsreader({
+  subsets: ['latin', 'latin-ext'],
+  weight: ['500', '600'],
+  variable: '--font-newsreader',
   display: 'swap',
 });
+// Body and every Devanagari line.
 const mukta = Mukta({
   subsets: ['latin', 'latin-ext', 'devanagari'],
   weight: ['400', '500', '600', '700'],
@@ -24,7 +27,7 @@ export const metadata: Metadata = {
    * Each page sets its own full title and this only fills the gap.
    */
   title: {
-    default: 'Sākṣī: A living map of a sacred landscape',
+    default: 'Sākṣī: a real-time guide to Nepal',
     template: '%s',
   },
   description:
@@ -47,7 +50,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${baloo.variable} ${mukta.variable}`}>
+    <html lang="en" className={`${newsreader.variable} ${mukta.variable}`}>
       <body>{children}</body>
     </html>
   );

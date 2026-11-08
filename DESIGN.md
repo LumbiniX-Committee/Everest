@@ -30,11 +30,26 @@ Prayer flag colours (`#2F6FD0`, `#FFFFFF`, `#D8412F`, `#1F9D6B`, `#F7C325`) are 
 
 | Role | Face | Why |
 | --- | --- | --- |
-| Display | Baloo 2 | Warm and rounded, with Latin, IAST diacritics and Devanagari in one family |
+| Display (app) | Baloo 2 | Latin, IAST diacritics and Devanagari in one family. Android's per-glyph fallback in a mixed-script heading is unreliable, so the app keeps one family |
+| Display (website) | Newsreader | An editorial serif, so the site reads as a well-made guide rather than an app template. Its latin-ext subset carries IAST; Devanagari headings fall through to Mukta |
 | Body | Mukta | Clear at small sizes, with the same coverage |
 | Measurements | IBM Plex Mono | Coordinates, bearings and timestamps only, never prose |
 
 Devanagari needs vertical room. Keep display line height at about 1.3 or more, and never tighten letter spacing on Nepali text.
+
+## Working rules (from the November 2026 design research)
+
+The full report, with sources, is `reports/Sākṣī redesign design direction.md` (kept outside git). These are the rules it led to:
+
+1. **Show where things come from.** Every sourced claim carries its source, one tap away. Unmeasured is "not recorded", never 0.
+2. **Depth is one control.** Glance · Story · Scholar, one segmented control that swaps content in place and is remembered. Never nested "more" links.
+3. **Honest status.** A report's timeline only moves when someone acts. "Received" until then.
+4. **Sacred subjects are content, never ornament.** No Buddha images, Swayambhu eyes, Om, Kumari or prayer flags as icons, borders, loaders or decoration. The website's five-colour prayer-flag stripe was retired for this reason.
+5. **Readable in sunlight.** Aim for 7:1 on primary reading text (an inference from display physics; WCAG's 4.5:1 is the floor), 48dp targets, and layouts that survive 200% text.
+6. **Restraint over ornament.** Hairlines and spacing before cards; cards only for things you can tap. No identical three-card rows, no gradient blobs, no uniform fade-ins.
+7. **Real, credited photographs** of the place, never stock or generated images.
+
+**Open question for the owner:** the monk character (`components/monk`, the website's former hero) has the curled hair of Buddha images. The research recommends against sacred figures as mascots. It has been removed from the website hero; its use in the app needs a decision.
 
 ## Shape and motion
 

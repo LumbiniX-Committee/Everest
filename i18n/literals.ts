@@ -11,6 +11,15 @@ import type { InterfaceLanguage } from '@/types';
  * Text boundary and are never registered here.
  */
 export const NEPALI_UI_LITERALS = {
+  "Know where you are, as deeply as you want.": "तपाईं कहाँ हुनुहुन्छ, जति गहिरो चाहनुहुन्छ त्यति जान्नुहोस्।",
+  "Plan your trip": "यात्राको योजना",
+  "Guide": "मार्गदर्शन",
+  "Report": "रिपोर्ट",
+  "Where you are, explained": "तपाईं कहाँ हुनुहुन्छ, व्याख्यासहित",
+  "Answers with sources": "स्रोतसहितका उत्तर",
+  "Flag it, follow it": "जनाउनुहोस्, पछ्याउनुहोस्",
+  "Poon Hill, Langtang, Everest Base Camp: day by day, with altitude.": "पुनहिल, लाङटाङ, सगरमाथा आधार शिविर: दिनदिनै, उचाइसहित।",
+  "Stay, eat, health and money, with a number to call ahead.": "बास, खाना, स्वास्थ्य र पैसा, पहिले फोन गर्ने नम्बरसहित।",
   "About 30 seconds: what this place is and one thing worth knowing.": "करिब ३० सेकेन्ड: यो ठाउँ के हो र जान्नुपर्ने एउटा कुरा।",
   "Acknowledged by the site": "स्थलले स्वीकार गर्‍यो",
   "A few minutes: the history, the key facts, and what happened when.": "केही मिनेट: इतिहास, मुख्य तथ्य, र कहिले के भयो।",

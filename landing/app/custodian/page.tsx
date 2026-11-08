@@ -45,8 +45,8 @@ const STATUS_LABEL: Record<ReportStatus, string> = {
 
 const STATUS_TONE: Record<ReportStatus, string> = {
   open: 'bg-robe/10 text-robe',
-  acknowledged: 'bg-sakshi/15 text-sakshi',
-  in_progress: 'bg-sakshi/15 text-sakshi',
+  acknowledged: 'bg-sandstone/15 text-sandstone-deep',
+  in_progress: 'bg-sandstone/15 text-sandstone-deep',
   resolved: 'bg-tirtha/15 text-tirtha',
 };
 
@@ -149,7 +149,7 @@ function ReportRow({
           type="button"
           onClick={() => void openPhoto()}
           disabled={photoBusy}
-          className="mt-2 text-xs font-semibold text-sakshi underline-offset-4 hover:underline disabled:opacity-50"
+          className="mt-2 text-xs font-semibold text-sandstone-deep underline-offset-4 hover:underline disabled:opacity-50"
         >
           {photoBusy ? 'Opening…' : 'View private photograph'}
         </button>
@@ -168,7 +168,7 @@ function ReportRow({
                 type="button"
                 onClick={() => act('acknowledged')}
                 disabled={busy !== null}
-                className="inline-flex items-center gap-1 rounded-lg bg-sakshi/10 px-2.5 py-1 text-xs font-semibold text-sakshi transition hover:bg-sakshi/20 disabled:opacity-50"
+                className="inline-flex items-center gap-1 rounded-lg bg-surface-secondary px-2.5 py-1 text-xs font-semibold text-sandstone-deep transition hover:bg-sandstone/20 disabled:opacity-50"
               >
                 {busy === 'acknowledged' ? <Loader2 className="size-3 animate-spin" /> : <CheckCircle2 className="size-3" />}
                 Acknowledge

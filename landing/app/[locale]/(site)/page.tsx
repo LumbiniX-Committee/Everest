@@ -5,25 +5,21 @@ import {
   BedDouble,
   Check,
   Compass,
-  Cpu,
   Download,
-  FileText,
-  Landmark,
   Mountain,
-  Navigation,
   Settings,
   ShieldCheck,
   Smartphone,
   WifiOff,
 } from 'lucide-react';
 
-import { AlignmentDial } from '@/components/AlignmentDial';
-import { GreetingMonk } from '@/components/GreetingMonk';
+import { HeroPlace } from '@/components/HeroPlace';
+import { Provenance } from '@/components/Provenance';
+import { ThreeVerbs } from '@/components/ThreeVerbs';
 import { MapExplorer } from '@/components/MapExplorer';
 import { CountUp, Reveal } from '@/components/motion';
 import { formatBuildDate, getLatestBuild } from '@/lib/eas';
 import { localeHref, type Locale } from '@/lib/i18n';
-import { REPORTS, SURFACES } from '@/lib/site';
 import { SITES } from '@/lib/generated/explorer';
 
 /**
@@ -36,17 +32,10 @@ import { SITES } from '@/lib/generated/explorer';
  */
 export const revalidate = 300;
 
+const MAYA = SITES.find((site) => site.id === 'maya-devi-temple')!;
+const PILLAR = SITES.find((site) => site.id === 'ashokan-pillar')!;
 const vantageTotal = SITES.reduce((n, s) => n + s.vantages, 0);
 const sourceTotal = SITES.reduce((n, s) => n + s.sources.length, 0);
-
-const ICONS = {
-  wisdom: Compass,
-  navigation: Navigation,
-  measurement: ShieldCheck,
-  ai: Cpu,
-  offline: WifiOff,
-  custodian: Landmark,
-} as const;
 
 const INSTALL_ICONS = [Download, Settings, Check] as const;
 
@@ -72,11 +61,11 @@ const EN = {
     badge: 'Lumbini · Kathmandu Valley · Pokhara · Chitwan · three treks',
     title: (
       <>
-        A real-time guide<br className="hidden sm:block" /> to Nepal
+        Know where you are, as deeply as you want
       </>
     ),
-    lede: 'Sākṣī shows you where things are, walks you there, and explains them when you arrive, from sources you can check. It carries your treks day by day, saves its maps for when the signal goes, and lets every visit add to the record of how a place is changing.',
-    exploreCta: 'Explore the map',
+    lede: 'A guide to Nepal’s heritage sites and treks that explains each place when you reach it, from a glance to the full history, and shows where every fact comes from. It keeps working when the signal doesn’t.',
+    exploreCta: 'See it at Maya Devi',
     getAppCta: 'Get the app',
     android: 'Android 7.0 and above',
     version: 'Version',
@@ -115,8 +104,8 @@ const EN = {
     measurement: {
       name: 'Every reading is evidence, or says it is not',
       body: 'Standing at a marked viewpoint turns the phone into a survey instrument. It locks only when position, heading and tilt all agree and the GPS is accurate enough to mean it. Frame it by eye instead and the record says so, permanently.',
-      accent: 'text-sakshi',
-      chip: 'bg-sakshi/10',
+      accent: 'text-sandstone-deep',
+      chip: 'bg-surface-secondary',
     },
     ai: {
       name: 'AI that proposes and never decides',
@@ -127,8 +116,8 @@ const EN = {
     offline: {
       name: 'Works where the signal does not',
       body: 'The map, the content and the knowledge base are all on the device. Every reading is written to a database on the phone before anything touches the network, because the moment you are standing there cannot be rescheduled.',
-      accent: 'text-sakshi',
-      chip: 'bg-sakshi/10',
+      accent: 'text-sandstone-deep',
+      chip: 'bg-surface-secondary',
     },
     custodian: {
       name: 'It reaches the institution that can act',
@@ -214,11 +203,11 @@ const NE: typeof EN = {
     badge: 'लुम्बिनी · काठमाडौं उपत्यका · पोखरा · चितवन · तीन ट्रेक',
     title: (
       <>
-        नेपालका लागि<br className="hidden sm:block" /> वास्तविक-समयको मार्गदर्शक
+        तपाईं कहाँ हुनुहुन्छ, जति गहिरो चाहनुहुन्छ त्यति जान्नुहोस्
       </>
     ),
     lede: 'साक्षीले ठाउँ कहाँ छ देखाउँछ, त्यहाँसम्म हिँडाएर पुर्‍याउँछ, र पुगेपछि जाँच्न सकिने स्रोतबाट त्यसको बारेमा बताउँछ। यसले तपाईंका ट्रेक दिनदिनै बोक्छ, सिग्नल नहुँदाका लागि नक्सा सुरक्षित राख्छ, र हरेक भ्रमणलाई ठाउँ कसरी बदलिँदैछ भन्ने अभिलेखमा थप्छ।',
-    exploreCta: 'नक्सा अन्वेषण गर्नुहोस्',
+    exploreCta: 'मायादेवीमा हेर्नुहोस्',
     getAppCta: 'एप प्राप्त गर्नुहोस्',
     android: 'Android 7.0 र माथि',
     version: 'संस्करण',
@@ -256,8 +245,8 @@ const NE: typeof EN = {
     measurement: {
       name: 'हरेक रिडिङ प्रमाण हो, वा त्यो होइन भनी भन्छ',
       body: 'चिन्हित दृष्टिकोणमा उभिनुले फोनलाई सर्वेक्षण उपकरणमा बदल्छ। यो तब मात्र लक हुन्छ जब स्थिति, दिशा र झुकाव सबै मिल्छन् र GPS त्यसलाई अर्थपूर्ण बनाउने गरी शुद्ध हुन्छ। बरु आँखाले फ्रेम गर्नुभयो भने अभिलेखले त्यही भन्छ, सधैंका लागि।',
-      accent: 'text-sakshi',
-      chip: 'bg-sakshi/10',
+      accent: 'text-sandstone-deep',
+      chip: 'bg-surface-secondary',
     },
     ai: {
       name: 'सुझाव दिने, कहिल्यै निर्णय नगर्ने AI',
@@ -268,8 +257,8 @@ const NE: typeof EN = {
     offline: {
       name: 'सिग्नल नभएको ठाउँमा पनि काम गर्छ',
       body: 'नक्सा, सामग्री र ज्ञान आधार सबै डिभाइसमा छन्। नेटवर्कमा केही पुग्नुअघि नै हरेक रिडिङ फोनको डाटाबेसमा लेखिन्छ, किनभने तपाईं त्यहाँ उभिएको क्षणलाई पछि सार्न मिल्दैन।',
-      accent: 'text-sakshi',
-      chip: 'bg-sakshi/10',
+      accent: 'text-sandstone-deep',
+      chip: 'bg-surface-secondary',
     },
     custodian: {
       name: 'यो कारबाही गर्न सक्ने संस्थासम्म पुग्छ',
@@ -372,20 +361,15 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
     <main>
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 -top-40 h-[32rem] bg-[radial-gradient(ellipse_at_top,rgba(200,148,50,0.18),transparent_65%)]"
-        />
-
         <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-14 sm:pt-20">
-          <div className="grid items-center gap-y-12 lg:grid-cols-[1fr_auto] lg:gap-x-16">
+          <div className="grid items-center gap-y-14 lg:grid-cols-[1.05fr_1fr] lg:gap-x-16">
             <div className="text-center lg:text-left">
               <span className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 px-4 py-1.5 text-sm font-medium text-ink-soft shadow-sm">
-                <span className="size-1.5 animate-pulse rounded-full bg-dhamma" />
+                <span className="size-1.5 rounded-full bg-sandstone" />
                 {c.hero.badge}
               </span>
 
-              <h1 className="mt-8 font-[family-name:var(--font-display)] text-5xl leading-[1.03] font-semibold tracking-tight text-ink sm:text-7xl">
+              <h1 className="mt-8 font-[family-name:var(--font-display)] text-5xl leading-[1.05] font-semibold tracking-tight text-balance text-ink sm:text-6xl xl:text-7xl">
                 {c.hero.title}
               </h1>
 
@@ -395,7 +379,7 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
 
               <div className="mt-9 flex flex-wrap items-center justify-center gap-4 lg:justify-start">
                 <a
-                  href="#explore"
+                  href="#three-verbs"
                   className="inline-flex items-center gap-3 rounded-2xl bg-marigold px-8 py-4 text-lg font-semibold text-on-marigold shadow-lg shadow-earth/25 transition hover:-translate-y-0.5 hover:brightness-95 hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-earth"
                 >
                   <Compass className="size-6" aria-hidden />
@@ -428,28 +412,14 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
               </p>
             </div>
 
-            <GreetingMonk className="h-52 sm:h-64 lg:h-[24rem]" />
+            <HeroPlace site={MAYA} locale={locale === 'ne' ? 'ne' : 'en'} />
           </div>
         </div>
       </section>
 
-      {/* The explorer, the centrepiece */}
-      <section className="mx-auto max-w-6xl px-6 py-14">
-        <div className="grid gap-6 md:grid-cols-3">
-          {FEATURES[locale === 'ne' ? 'ne' : 'en'].map(({ icon: Icon, title, body }, i) => (
-            <Reveal key={title} delay={i * 70}>
-              <article className="h-full rounded-3xl border border-line bg-surface p-7 shadow-sm">
-                <span className="flex size-11 items-center justify-center rounded-xl bg-surface-secondary text-sandstone-deep">
-                  <Icon className="size-5" aria-hidden />
-                </span>
-                <h2 className="mt-4 font-semibold text-ink">{title}</h2>
-                <p className="mt-2 leading-relaxed text-ink-soft">{body}</p>
-              </article>
-            </Reveal>
-          ))}
-        </div>
-      </section>
+      <ThreeVerbs maya={MAYA} pillar={PILLAR} locale={locale === 'ne' ? 'ne' : 'en'} />
 
+      {/* The explorer, the centrepiece */}
       <section id="explore" className="scroll-mt-20 border-y border-line bg-ground-deep">
         <div className="mx-auto max-w-6xl px-6 py-16 sm:py-20">
           <Reveal>
@@ -479,7 +449,7 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
                 { v: 3, ...c.explorer.stats[3] },
               ].map(({ v, k, n }) => (
                 <div key={k} className="bg-surface p-6">
-                  <dt className="font-[family-name:var(--font-display)] text-4xl font-semibold text-sakshi">
+                  <dt className="font-[family-name:var(--font-display)] text-4xl font-semibold text-sandstone-deep">
                     <CountUp value={v} />
                   </dt>
                   <dd className="mt-2 text-sm leading-relaxed text-ink-soft">
@@ -493,259 +463,66 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
         </div>
       </section>
 
-      {/* Identity */}
-      <section className="mx-auto max-w-6xl px-6 py-16 sm:py-20">
-        <Reveal>
-          <p className="text-sm font-semibold tracking-widest text-sandstone-deep uppercase">
-            {c.identityKicker}
-          </p>
-          <h2 className="mt-3 max-w-3xl font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight text-ink">
-            {c.identityTitle}
-          </h2>
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-ink-soft">
-            {c.identityLede}
-          </p>
-        </Reveal>
-
-        <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {(Object.keys(ICONS) as (keyof typeof ICONS)[]).map((id, i) => {
-            const Icon = ICONS[id];
-            const { name, body, accent, chip } = c.identity[id];
-            return (
-              <Reveal key={id} delay={i * 60}>
-                <article className="h-full rounded-3xl border border-line bg-surface p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-sakshi/40 hover:shadow-lg">
-                  <span
-                    className={`inline-flex size-11 items-center justify-center rounded-2xl ${chip} ${accent}`}
-                  >
-                    <Icon className="size-5" aria-hidden />
-                  </span>
-                  <h3 className="mt-5 font-[family-name:var(--font-display)] text-2xl leading-snug font-semibold text-ink">
-                    {name}
-                  </h3>
-                  <p className="mt-3 leading-relaxed text-ink-soft">{body}</p>
-                </article>
-              </Reveal>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Alignment demo */}
-      <section className="border-y border-line bg-ground-deep">
-        <div className="mx-auto max-w-5xl px-6 py-16 sm:py-20">
-          <Reveal>
-            <p className="text-sm font-semibold tracking-widest text-sandstone-deep uppercase">
-              {c.alignment.kicker}
-            </p>
-            <h2 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight text-ink">
-              {c.alignment.title}
+      {/* Beyond the temple: treks, offline, essentials, as a list rather than look-alike cards */}
+      <section className="mx-auto max-w-6xl px-6 py-16 sm:py-24" aria-labelledby="beyond">
+        <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
+          <div>
+            <p className="text-sm font-semibold tracking-widest text-sandstone-deep uppercase">{locale === 'ne' ? 'मन्दिरभन्दा पर' : 'Beyond the temple'}</p>
+            <h2 id="beyond" className="mt-3 font-[family-name:var(--font-display)] text-4xl leading-tight font-semibold text-ink sm:text-5xl">
+              {locale === 'ne' ? 'लुम्बिनी, काठमाडौं, पोखरा, चितवन, र तीन ट्रेक' : 'Lumbini, Kathmandu, Pokhara, Chitwan, and three treks'}
             </h2>
-            <p className="mt-5 max-w-2xl text-lg leading-relaxed text-ink-soft">
-              {c.alignment.lede}
-            </p>
-          </Reveal>
-
-          <Reveal delay={80}>
-            <div className="mt-10">
-              <AlignmentDial />
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Surfaces */}
-      <section className="mx-auto max-w-6xl px-6 py-16 sm:py-20">
-        <Reveal>
-          <p className="text-sm font-semibold tracking-widest text-sandstone-deep uppercase">
-            {c.surfaces.kicker}
-          </p>
-          <h2 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight text-ink">
-            {c.surfaces.title}
-          </h2>
-        </Reveal>
-
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
-          {SURFACES.map(({ name, accent, chip, rule, en, ne }, i) => {
-            const s = locale === 'ne' ? ne : en;
-            return (
-              <Reveal key={name} delay={i * 70}>
-                <article className="relative h-full overflow-hidden rounded-3xl border border-line bg-surface p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <span className={`absolute inset-x-0 top-0 h-1 ${rule}`} />
-                  <span
-                    className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold tracking-wide uppercase ${chip} ${accent}`}
-                  >
-                    {s.subtitle}
-                  </span>
-                  <h3 className="mt-5 font-[family-name:var(--font-display)] text-3xl font-semibold text-ink">
-                    {name}
-                  </h3>
-                  <p className="mt-1 text-sm text-ink-muted italic">{s.means}</p>
-                  <p className="mt-4 leading-relaxed text-ink-soft">{s.body}</p>
-                </article>
-              </Reveal>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Why it matters */}
-      <section className="border-y border-line bg-ground-deep">
-        <div className="mx-auto max-w-4xl px-6 py-16 sm:py-20">
-          <Reveal>
-            <p className="text-sm font-semibold tracking-widest text-sandstone-deep uppercase">
-              {c.whyKicker}
-            </p>
-            <h2 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight text-ink">
-              {c.whyTitle}
-            </h2>
-            <p className="mt-6 text-lg leading-relaxed text-ink-soft">{c.whyP1}</p>
             <p className="mt-5 text-lg leading-relaxed text-ink-soft">
-              <strong className="font-semibold text-ink">{c.whyP2.strong}</strong> {c.whyP2.rest}
+              {locale === 'ne'
+                ? 'यी ठाउँमा गहिरो जानकारी छ। बाँकी नेपालमा आधारभूत सूची, जसले थाहा नभएको कुरा थाहा छैन भन्छ।'
+                : 'Deep where it has the records, basic everywhere else, and honest about which is which.'}
             </p>
-          </Reveal>
-
-          <Reveal delay={80}>
-            <dl className="mt-10 grid gap-px overflow-hidden rounded-3xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                { v: 1.17, dp: 2, suffix: 'M', k: c.whyStats[0].k, n: c.whyStats[0].n },
-                { v: 80, suffix: '%', k: c.whyStats[1].k, n: c.whyStats[1].n },
-                {
-                  v: 624.6,
-                  dp: 1,
-                  prefix: '$',
-                  suffix: 'B',
-                  k: c.whyStats[2].k,
-                  n: c.whyStats[2].n,
-                },
-                { v: 0, k: c.whyStats[3].k, n: c.whyStats[3].n },
-              ].map(({ v, dp, prefix, suffix, k, n }) => (
-                <div key={k} className="bg-surface p-6">
-                  <dt className="font-[family-name:var(--font-display)] text-4xl font-semibold text-sakshi">
-                    <CountUp value={v} decimals={dp} prefix={prefix} suffix={suffix} />
-                  </dt>
-                  <dd className="mt-2 text-sm leading-relaxed text-ink-soft">
-                    {k}
-                    {n ? <span className="mt-1 block text-ink-muted">{n}</span> : null}
-                  </dd>
+          </div>
+          <ul className="divide-y divide-line border-y border-line">
+            {FEATURES[locale === 'ne' ? 'ne' : 'en'].map(({ icon: Icon, title, body }) => (
+              <li key={title} className="flex gap-5 py-6">
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-surface-secondary text-sandstone-deep">
+                  <Icon className="size-5" aria-hidden />
+                </span>
+                <div>
+                  <h3 className="font-semibold text-ink">{title}</h3>
+                  <p className="mt-1 leading-relaxed text-ink-soft">{body}</p>
                 </div>
-              ))}
-            </dl>
-          </Reveal>
-
-          <Reveal delay={120}>
-            <p className="mt-6 text-sm text-ink-muted">
-              {c.whyFootnote.before}{' '}
-              <Link
-                href={localeHref(locale, '/research')}
-                className="underline decoration-line underline-offset-4 transition hover:text-ink"
-              >
-                {c.whyFootnote.linkLabel}
-              </Link>
-              {c.whyFootnote.after}
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Custodians */}
-      <section className="mx-auto max-w-4xl px-6 py-16 sm:py-20">
-        <Reveal>
-          <p className="text-sm font-semibold tracking-widest text-sandstone-deep uppercase">
-            {c.custodiansKicker}
-          </p>
-          <h2 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight text-ink">
-            {c.custodiansTitle}
-          </h2>
-          <p className="mt-6 text-lg leading-relaxed text-ink-soft">{c.custodiansBody}</p>
-          <div className="mt-9 flex flex-wrap gap-4">
-            <Link
-              href={localeHref(locale, '/for-custodians')}
-              className="inline-flex items-center gap-2 rounded-2xl bg-marigold px-6 py-3.5 font-semibold text-on-marigold shadow-sm transition hover:-translate-y-0.5 hover:brightness-95"
-            >
-              {c.custodiansCta1}
-              <ArrowRight className="size-4" aria-hidden />
-            </Link>
-            <Link
-              href="/custodian"
-              className="inline-flex items-center gap-2 rounded-2xl border border-line bg-surface px-6 py-3.5 font-semibold text-ink shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-            >
-              {c.custodiansCta2}
-            </Link>
-          </div>
-        </Reveal>
-      </section>
-
-      {/* Public transparency */}
-      <section className="border-t border-line bg-ground-deep">
-        <div className="mx-auto max-w-4xl px-6 py-16 sm:py-20">
-          <Reveal>
-            <p className="text-sm font-semibold tracking-widest text-sandstone-deep uppercase">
-              {c.transparencyKicker}
-            </p>
-            <h2 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight text-ink">
-              {c.transparencyTitle}
-            </h2>
-            <p className="mt-5 max-w-2xl text-lg leading-relaxed text-ink-soft">
-              {c.transparencyLede}
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3 text-sm">
-              <Link
-                href="/sites/patan-durbar-square/condition"
-                className="rounded-xl border border-line bg-surface px-4 py-2.5 font-semibold text-ink"
-              >
-                {c.transparencyLinks.patan}
-              </Link>
-              <Link
-                href="/sites/changu-narayan/condition"
-                className="rounded-xl border border-line bg-surface px-4 py-2.5 font-semibold text-ink"
-              >
-                {c.transparencyLinks.changu}
-              </Link>
-              <Link
-                href="/sites/manga-hiti/condition"
-                className="rounded-xl border border-line bg-surface px-4 py-2.5 font-semibold text-ink"
-              >
-                {c.transparencyLinks.manga}
-              </Link>
-              <Link href="/adopt" className="rounded-xl bg-ink px-4 py-2.5 font-semibold text-white">
-                {c.transparencyLinks.adopt}
-              </Link>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Reports */}
-      <section className="border-t border-line bg-ground-deep">
-        <div className="mx-auto max-w-4xl px-6 py-16 sm:py-20">
-          <Reveal>
-            <p className="text-sm font-semibold tracking-widest text-sandstone-deep uppercase">
-              {c.reportsKicker}
-            </p>
-            <h2 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight text-ink">
-              {c.reportsTitle}
-            </h2>
-          </Reveal>
-
-          <div className="mt-10 grid gap-4 sm:grid-cols-2">
-            {[REPORTS.techStack, REPORTS.research].map(({ href, title, pages, blurb }, i) => (
-              <Reveal key={href} delay={i * 70}>
-                <a
-                  href={href}
-                  className="flex h-full flex-col rounded-3xl border border-line bg-surface p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
-                >
-                  <span className="inline-flex size-11 items-center justify-center rounded-2xl bg-sakshi/10 text-sakshi">
-                    <FileText className="size-5" aria-hidden />
-                  </span>
-                  <h3 className="mt-5 font-[family-name:var(--font-display)] text-2xl font-semibold text-ink">
-                    {title}
-                  </h3>
-                  <p className="mt-3 grow leading-relaxed text-ink-soft">{blurb}</p>
-                  <p className="mt-5 text-sm font-semibold text-earth">{c.reportsPages(pages)}</p>
-                </a>
-              </Reveal>
+              </li>
             ))}
+          </ul>
+        </div>
+      </section>
+
+      <Provenance locale={locale === 'ne' ? 'ne' : 'en'} />
+
+      {/* For institutions: the monitoring case, compressed to one band that links to its own pages */}
+      <section className="border-t border-line bg-ground-deep" aria-labelledby="institutions">
+        <div className="mx-auto grid max-w-6xl gap-10 px-6 py-16 sm:py-20 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
+          <div>
+            <p className="text-sm font-semibold tracking-widest text-sandstone-deep uppercase">
+              {locale === 'ne' ? 'सम्पदा संस्थाहरूका लागि' : 'For heritage institutions'}
+            </p>
+            <h2 id="institutions" className="mt-3 font-[family-name:var(--font-display)] text-4xl leading-tight font-semibold text-ink">
+              {locale === 'ne' ? 'हरेक भ्रमणले हेरचाहकर्ताले काम गर्न सक्ने अभिलेख छोड्न सक्छ' : 'Every visit can leave a record a custodian can act on'}
+            </h2>
+            <p className="mt-5 text-lg leading-relaxed text-ink-soft">{c.custodiansBody}</p>
           </div>
+          <ul className="divide-y divide-line self-end border-y border-line">
+            {[
+              { href: localeHref(locale, '/for-custodians'), label: c.custodiansCta1 },
+              { href: '/custodian', label: c.custodiansCta2 },
+              { href: localeHref(locale, '/research'), label: c.reportsTitle },
+              { href: '/sites/patan-durbar-square/condition', label: `${c.transparencyKicker}: ${c.transparencyLinks.patan}` },
+              { href: '/adopt', label: c.transparencyLinks.adopt },
+            ].map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className="flex min-h-12 items-center justify-between gap-4 py-3 font-semibold text-ink hover:text-sandstone-deep">
+                  {link.label}
+                  <ArrowRight className="size-4 shrink-0" aria-hidden />
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

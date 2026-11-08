@@ -3,11 +3,14 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
 import { ScreenHeader, SettingsButton } from '@/components/common';
-import { ArrivalWisdom, StartGuide, VisitorPrompt } from '@/components/arrival';
+import { ArrivalWisdom, VisitorPrompt } from '@/components/arrival';
 import { SiteMap3D } from '@/components/map';
 import { SiteListItem } from '@/components/site';
 import { placesForHub, placesNear } from '@/data';
 import { QuestCard } from '@/features/quests';
+
+import { PlanList } from './PlanList';
+import { VerbBar } from './VerbBar';
 import { useCurrentPosition, useNearbySites } from '@/hooks';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { usePermission, usePreferences, useQuests } from '@/store';
@@ -44,13 +47,13 @@ export function TirthaScreen() {
         subtitle={
           coordinate
             ? 'Sites near you, nearest first.'
-            : 'Heritage, nature and culture, wherever you are.'
+            : 'Know where you are, as deeply as you want.'
         }
         rightAction={<SettingsButton />}
       />
 
+      <VerbBar />
       <VisitorPrompt />
-      <StartGuide />
       <ArrivalWisdom coordinate={coordinate} />
 
       {/* Wrapping the map is safe again: inline it is built inert, so it
@@ -79,25 +82,7 @@ export function TirthaScreen() {
       </Pressable>
 
 
-      <Card onPress={() => router.push('/(main)/tirtha/essentials')} accessibilityLabel={ui('Essentials')} style={styles.trekCard}>
-        <Text variant="label" tone="muted" uppercase>
-          Essentials
-        </Text>
-        <Text variant="bodyStrong">Stay, eat, health and money</Text>
-        <Text variant="caption" tone="secondary">
-          Hotels, restaurants, hospitals, banks and travel help near you, with a phone number to call ahead.
-        </Text>
-      </Card>
-
-      <Card onPress={() => router.push('/(main)/tirtha/treks')} accessibilityLabel={ui('Trekking routes')} style={styles.trekCard}>
-        <Text variant="label" tone="muted" uppercase>
-          Trekking
-        </Text>
-        <Text variant="bodyStrong">Trekking routes</Text>
-        <Text variant="caption" tone="secondary">
-          Poon Hill, Langtang Valley and Everest Base Camp, day by day, with altitude, permits and your position on the trail.
-        </Text>
-      </Card>
+      <PlanList />
 
       {showLocationOffer ? (
         <View style={styles.offer}>
@@ -177,5 +162,4 @@ const styles = StyleSheet.create({
   },
   sectionActions: { flexDirection: 'row', alignItems: 'center' },
   list: { marginTop: spacing.lg, gap: spacing.md },
-  trekCard: { marginTop: spacing.lg },
 });

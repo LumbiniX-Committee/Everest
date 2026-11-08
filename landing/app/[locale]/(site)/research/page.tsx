@@ -370,7 +370,7 @@ export default async function ResearchPage({
           href={REPORTS.research.href}
           className="mt-9 inline-flex items-center gap-3 rounded-2xl border border-line bg-surface px-6 py-4 font-semibold text-ink shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
         >
-          <FileText className="size-5 text-sakshi" aria-hidden />
+          <FileText className="size-5 text-sandstone-deep" aria-hidden />
           {c.hero.cta}
           <span className="text-sm font-normal text-ink-muted">
             {c.hero.ctaMeta(REPORTS.research.pages)}
