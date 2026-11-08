@@ -91,6 +91,12 @@ The map is MapLibre GL JS 4.7.1 in a WebView, bundled with the app (`components/
 
 - **Basemap:** OpenFreeMap vector tiles.
 - **Modes:** Standard (default, flat), 3D, Terrain (AWS open elevation tiles), and Satellite and Hybrid (Pro).
+- **3D town:** in 3D mode at street zoom (15 and closer), buildings are drawn as houses rather than boxes (`components/map/townLayer.ts`, three.js).
+  - **Houses:** OpenStreetMap footprints and heights, walls with window rows, and pitched terracotta or tin roofs on small buildings. Large or irregular buildings get flat concrete roofs with a parapet.
+  - **Colours:** from `MAP_MATERIALS` in the theme.
+  - **Monuments are drawn as what they are, never grander:** stupas as domes, the Ashokan Pillar as a column, Ramagrama as a mound, excavated remains as low brick, and the Maya Devi Temple as the plain white building it is.
+  - **Below zoom 15, and on maps without the figure,** the plain extrusions remain.
+  - **Not tested:** frame rate on a low-end phone.
 - **Imagery:** Google Map Tiles API with `EXPO_PUBLIC_GOOGLE_MAPS_KEY` (`services/imagery`), falling back to MapTiler with `EXPO_PUBLIC_MAPTILER_KEY`. Google needs **billing enabled and the Map Tiles API turned on** in its Cloud project; until a session is actually created, Satellite and Hybrid stay hidden and the Pro list says "Coming soon". Google hybrid uses Google's own road layer, so Google imagery is never mixed with OSM map data, and the on-screen credit shows Google's copyright for the current view.
 - **Key safety:** an `EXPO_PUBLIC_` key ships inside the app. In Google Cloud, restrict it to the Map Tiles API only. An Android-app restriction does not help here, because the WebView's requests carry no app signature.
 - **Routes:** walking directions come from Valhalla at `valhalla1.openstreetmap.de`, or `EXPO_PUBLIC_ROUTING_URL`. Self-host it for production if its terms don't allow your use.

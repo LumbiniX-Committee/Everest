@@ -284,3 +284,26 @@ export const sakshiMapStyle = {
 
 /** MapLibre wants the style as a JSON string, not an object. */
 export const sakshiMapStyleJSON = JSON.stringify(sakshiMapStyle);
+
+/**
+ * Materials for the 3D town: the colours of buildings as they are in Nepal,
+ * not interface colours, so they are the same in both themes.
+ *
+ * Walls run from lime wash and cream through the painted pinks, greens and
+ * yellows of Kathmandu's concrete houses to Newari brick. Pitched roofs are
+ * terracotta or tin; big flat roofs are bare concrete. Monuments get
+ * whitewash, gilt and dark timber.
+ */
+export const MAP_MATERIALS = {
+  walls: ['#F4EFE4', '#EEDDBF', '#B05E3E', '#F0D5CC', '#DDE5CF', '#F2E1A8', '#F7F4EC', '#E7CFB0'],
+  pitchedRoofs: ['#B8633F', '#9AA59B', '#A9493B', '#9C7A5E'],
+  flatRoof: '#CBC8C0',
+  parapet: '#CFCBC1',
+  windowFrame: '#5A3A22',
+  windowGlass: '#2B3437',
+  whitewash: '#F6F3EC',
+  gilt: '#D4A23A',
+  templeBrick: '#A65A3C',
+  sandstone: '#C9A27A',
+  grass: '#8DAA6B',
+} as const;

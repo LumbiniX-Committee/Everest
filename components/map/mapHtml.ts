@@ -9,6 +9,7 @@ import {
 } from '@/data';
 import { colors, MAP_GLYPHS_URL, MAP_TILES_URL, sakshiMapStyle } from '@/theme';
 
+import { townLayerScript } from './townLayer';
 import { MAPLIBRE_CSS, MAPLIBRE_JS, THREE_JS } from './vendor.generated';
 
 /**
@@ -434,7 +435,7 @@ ${POSITION_MARKER}
       // schematic plan. The map does not need the character; the character
       // needs the map.
       post({ type:'ready' });
-${avatar ? AVATAR_LAYER : ''}
+${avatar ? AVATAR_LAYER + townLayerScript(monumentGeoJSON) : ''}
     });
   } catch (err) {
     post({ type:'error', message: String(err) });
@@ -517,6 +518,7 @@ function MAP_MODES(): string {
       window.sakshiSetMapMode = function (mode) {
         if ((mode === 'satellite' || mode === 'hybrid') && !imagery) mode = 'standard';
         currentMode = mode;
+        window.sakshiCurrentMode = mode;
         var useImagery = mode === 'satellite' || mode === 'hybrid';
         // The provider's own hybrid tiles replace the basemap entirely; without
         // them, our roads and labels are laid over plain imagery.
@@ -532,6 +534,14 @@ function MAP_MODES(): string {
         refreshCredit();
         show('hillshade', mode === 'terrain');
         show('monument-massing', mode === '3d');
+        // With the 3D town drawn, the plain boxes give way to it at street
+        // zoom and stay below it, where houses are too small to read.
+        if (window.sakshiHasTown) {
+          var townZoom = mode === '3d' ? 15 : 24;
+          if (map.getLayer('building')) map.setLayerZoomRange('building', 14, townZoom);
+          if (map.getLayer('monument-massing')) map.setLayerZoomRange('monument-massing', 0, townZoom);
+          if (mode === '3d' && window.sakshiTownRefresh) window.sakshiTownRefresh();
+        }
         map.setTerrain(mode === 'terrain' ? { source: 'dem', exaggeration: 1.4 } : null);
         var tilted = mode === '3d' || mode === 'terrain';
         map.easeTo({ pitch: tilted ? 58 : 0, bearing: tilted ? map.getBearing() : 0, duration: 700 });

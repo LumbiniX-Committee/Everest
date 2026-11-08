@@ -32,3 +32,17 @@ describe('map page without the figure', () => {
     }
   });
 });
+
+describe('the 3D town', () => {
+  it('replaces the plain boxes in 3D mode when the figure (and so three.js) is loaded', () => {
+    const html = buildMapHtml({ fullscreen: true, interactive: true, avatar: true });
+    expect(html).toContain("id: 'sakshi-town'");
+    expect(html).toContain('sakshiTownRefresh');
+    const own = scripts(html).filter((code) => code.includes('sakshiSetMapMode'));
+    expect(() => new Function(own[0])).not.toThrow();
+  });
+
+  it('is left out where three.js is not loaded', () => {
+    expect(buildMapHtml({ fullscreen: false, interactive: false })).not.toContain("id: 'sakshi-town'");
+  });
+});
