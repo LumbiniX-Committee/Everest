@@ -9,7 +9,7 @@ import { GreetingMonk } from '@/components/monk';
 import { NarrationPlayer } from '@/components/site';
 import { BottomSheet, Button, Card, Icon, Text } from '@/components/ui';
 import { closestIndex, distanceFromRoute, isOffRoute, nextManeuver, reachedNewLevel, standingFor } from '@/core';
-import { hubCentre, findPlace, findSite, findVantage, questsForPrecinct, vantagesForSite, questAreas, type QuestArea } from '@/data';
+import { hubCentre, findEssential, findPlace, findSite, findVantage, questsForPrecinct, vantagesForSite, questAreas, type QuestArea } from '@/data';
 import {
   useArrivalCredit,
   useCurrentPosition,
@@ -71,6 +71,8 @@ function resolveGuideTarget(id: string | null | undefined): { id: string; name: 
   if (vantage) return { id, name: vantage.label, coordinate: vantage.coordinate };
   const place = findPlace(id);
   if (place) return { id, name: place.name, coordinate: place.coordinate };
+  const essential = findEssential(id);
+  if (essential) return { id, name: essential.name, coordinate: essential.coordinate };
   return undefined;
 }
 

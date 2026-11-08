@@ -356,6 +356,14 @@ Three treks: Ghorepani–Poon Hill, Langtang Valley, Everest Base Camp. Entry: t
 - **Offline:** a trek's corridor can be saved from its page (Pro), via `services/offlineMaps`.
 - **Not done:** Nepali text for the authored passages.
 
+## 20b. Essentials — Fully implemented (open data, not checked on site)
+
+Places to stay, eat, get medical help or money, travel services, transport and police, from Overture Maps Places. Entry: the "Essentials" card on Tīrtha Home, and "Places to stay at …" on each trek day.
+
+- **Data:** `python3 tools/data/build_overture.py` (needs `pip install duckdb`) reads Overture's public parquet for Nepal, keeps confidence ≥ 0.8 and not permanently closed, caps each hub per kind, and keeps every stay, food and health place within 800 m of each trek line, tagged with its nearest stop. Writes `seed/essentials.json` and `data/generated/essentials.ts`. Cache: `harvest/overture-cache/` (gitignored).
+- **Licences:** per record (CDLA-Permissive-2.0, CC0-1.0, Apache-2.0 for Foursquare); see LICENCES.md and NOTICE. Overture places contain no OSM data.
+- **No opening hours** exist in Overture, so none are shown; each card offers Call, Directions (via the map's `guideTo`) and Website.
+
 ## 21. `features/practice/` — Unused / dead code
 
 Contains **only** `index.ts`, no screen. Merit functionality lives in [store/practice.tsx](../../store/practice.tsx) and [components/practice/](../../components/practice/). No route renders anything from this directory.

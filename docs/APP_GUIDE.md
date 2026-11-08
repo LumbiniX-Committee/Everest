@@ -69,6 +69,7 @@ node tools/issue-codes.mjs --count 10 --days 30 --note "Kathmandu agents, May"
 | --- | --- | --- |
 | 74 curated heritage sites, 53 viewpoints | `seed/` → `data/generated/sites.ts` | Cited sources per site (see `LICENSE-CONTENT`) |
 | 434 listed places | `seed/places.json` → `data/generated/places.ts` | OpenStreetMap (ODbL, attribution shown) and Wikidata (CC0) |
+| 1,086 visitor essentials (stay, eat, health, money, travel, transport, police) | `seed/essentials.json` → `data/generated/essentials.ts` | Overture Maps Places, per-record licence (CDLA-Permissive-2.0, CC0, Apache-2.0); `python3 tools/data/build_overture.py` |
 | Entry fees, 10 sites | `seed/fees.json` | Nepal Tourism Board, with the date last checked |
 | Photos of listed places | Loaded from Wikimedia Commons | Per-file licences, credited |
 | 9 schematic 3D models | `landing/public/models/` → `data/generated/models.ts` | Generated; labelled as schematic and unmeasured |

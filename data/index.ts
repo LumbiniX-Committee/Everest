@@ -14,3 +14,4 @@ export { commonsThumb, feeAmount, feeForPlace, feeForSite, findPlace, placesForH
 export { MODELS } from './generated/models';
 export { modelFor, findModel } from './models';
 export { TREKS, dayStops, findTrek, trekLine, trekStop } from './treks';
+export { ESSENTIALS, essentialsFor, essentialsNear, findEssential } from './essentials';

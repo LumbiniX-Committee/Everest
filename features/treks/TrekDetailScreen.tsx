@@ -5,7 +5,7 @@ import { BackBar, EmptyState } from '@/components/common';
 import { MapWebView } from '@/components/map';
 import { boundsOfLine } from '@/core';
 import { Button, Card, Divider, Screen, Text } from '@/components/ui';
-import { findTrek, trekLine, trekStop } from '@/data';
+import { essentialsFor, findTrek, trekLine, trekStop } from '@/data';
 import { useSafeBack } from '@/hooks';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { application } from '@/services';
@@ -164,6 +164,7 @@ export function TrekDetailScreen({ trekId }: { trekId: string }) {
 
 function DayCard({ trek, day, onOpen }: { trek: Trek; day: TrekDay; onOpen: () => void }) {
   const ui = useVisitorLiteralCopy();
+  const router = useRouter();
   const { preferences } = usePreferences();
   const unit = preferences.distanceUnit;
   const from = trekStop(trek, day.from);
@@ -199,6 +200,14 @@ function DayCard({ trek, day, onOpen }: { trek: Trek; day: TrekDay; onOpen: () =
         <Text variant="caption" tone="secondary" translate={false}>
           {`${ui('Sleep')}: ${sleep.name}, ${formatAltitude(sleep.elevationM, unit)}`}
         </Text>
+      ) : null}
+      {sleep && essentialsFor(trek.id, 'stay', sleep.id).length ? (
+        <Button
+          label={`${ui('Places to stay at')} ${sleep.name} (${essentialsFor(trek.id, 'stay', sleep.id).length})`}
+          icon="bed-outline"
+          variant="quiet"
+          onPress={() => router.push({ pathname: '/(main)/tirtha/essentials', params: { area: trek.id, near: sleep.id, kind: 'stay' } })}
+        />
       ) : null}
       {day.fastGain && day.sleepGainM != null ? (
         <View style={styles.warning}>

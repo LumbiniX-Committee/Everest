@@ -8,6 +8,7 @@
 ## Open data listings
 
 - `seed/places.json` and `data/generated/places.ts`: contains information from OpenStreetMap, © OpenStreetMap contributors, available under the Open Database License (ODbL). Records from Wikidata are CC0.
+- `seed/essentials.json` and `data/generated/essentials.ts`: visitor essentials from Overture Maps Places (release 2026-10-21.0), which contains no OpenStreetMap data. Each record names its source dataset and licence: CDLA-Permissive-2.0 (Meta, Microsoft and others, https://cdla.dev/permissive-2-0/), CC0-1.0 (AllThePlaces), or Apache-2.0 (Foursquare, https://www.apache.org/licenses/LICENSE-2.0; "Copyright 2024 Foursquare Labs, Inc. All rights reserved."). Records were filtered and reshaped by tools/data/build_overture.py on 2026-11-08.
 - Entry fees in `seed/fees.json` are facts recorded from the Nepal Tourism Board, cited with the date checked.
 
 ## CC BY 2.0 (11)

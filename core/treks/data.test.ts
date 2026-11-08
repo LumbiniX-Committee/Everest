@@ -43,3 +43,17 @@ test('day distances are close to the published route lengths', () => {
   assert.ok(km('langtang-valley') > 55 && km('langtang-valley') < 90, `langtang ${km('langtang-valley')}`);
   assert.ok(km('everest-base-camp') > 100 && km('everest-base-camp') < 145, `ebc ${km('everest-base-camp')}`);
 });
+
+test('essentials keep their source and licence, and never invent a phone', async () => {
+  const { ESSENTIALS } = await import('../../data/generated/essentials.ts');
+  assert.ok(ESSENTIALS.length > 500);
+  const licences = new Set(['CDLA-Permissive-2.0', 'Apache-2.0', 'CC0-1.0']);
+  for (const item of ESSENTIALS) {
+    assert.ok(licences.has(item.license), `${item.id} ${item.license}`);
+    assert.ok(item.source.length > 0);
+    assert.ok(item.phone === null || /\d{6,}/.test(item.phone), `${item.id} phone ${item.phone}`);
+    assert.ok(item.confidence >= 0.8);
+  }
+  // Treks list places to stay at their overnight stops.
+  assert.ok(ESSENTIALS.some((item) => item.area === 'everest-base-camp' && item.near === 'namche' && item.kind === 'stay'));
+});

@@ -79,6 +79,16 @@ export function TirthaScreen() {
       </Pressable>
 
 
+      <Card onPress={() => router.push('/(main)/tirtha/essentials')} accessibilityLabel={ui('Essentials')} style={styles.trekCard}>
+        <Text variant="label" tone="muted" uppercase>
+          Essentials
+        </Text>
+        <Text variant="bodyStrong">Stay, eat, health and money</Text>
+        <Text variant="caption" tone="secondary">
+          Hotels, restaurants, hospitals, banks and travel help near you, with a phone number to call ahead.
+        </Text>
+      </Card>
+
       <Card onPress={() => router.push('/(main)/tirtha/treks')} accessibilityLabel={ui('Trekking routes')} style={styles.trekCard}>
         <Text variant="label" tone="muted" uppercase>
           Trekking

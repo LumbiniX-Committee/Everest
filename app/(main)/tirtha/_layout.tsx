@@ -26,6 +26,7 @@ export default function TirthaLayout() {
       <Stack.Screen name="quests/[questId]" options={{ animation: 'slide_from_right', animationDuration: 280 }} />
       <Stack.Screen name="quests/completed/[questId]" options={{ animation: 'fade_from_bottom', animationDuration: 300 }} />
       <Stack.Screen name="then-now/[siteId]" options={{ animation: 'slide_from_right', animationDuration: 280 }} />
+      <Stack.Screen name="essentials" options={{ animation: 'slide_from_right', animationDuration: 280 }} />
       <Stack.Screen name="treks/index" options={{ animation: 'slide_from_right', animationDuration: 280 }} />
       <Stack.Screen name="treks/[trekId]" options={{ animation: 'slide_from_right', animationDuration: 280 }} />
       <Stack.Screen name="treks/map/[trekId]" options={{ animation: 'fade_from_bottom', animationDuration: 280, gestureEnabled: false }} />

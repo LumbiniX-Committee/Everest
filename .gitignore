@@ -81,6 +81,7 @@ harvest/_raw/
 harvest/_images/
 harvest/places-cache/
 harvest/treks-cache/
+harvest/overture-cache/
 *.pyc
 __pycache__/
 .venv/

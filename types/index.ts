@@ -9,3 +9,4 @@ export * from './preferences';
 export * from './precinct';
 export * from './places';
 export * from './treks';
+export * from './essentials';
