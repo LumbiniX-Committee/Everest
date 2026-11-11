@@ -444,6 +444,46 @@ export const MODELS: MonumentModel[] = [
   ]
  },
  {
+  "id": "maju-dega",
+  "title": "Maju Dega",
+  "targets": [
+   "ktm-maju-dega"
+  ],
+  "free": false,
+  "kind": "schematic",
+  "bytes": 213786,
+  "sources": [
+   {
+    "title": "Maju Dega, Wikipedia (1692, nine-step plinth, three roofs)",
+    "url": "https://en.wikipedia.org/wiki/Maju_Dega"
+   },
+   {
+    "title": "Kathmandu Post: reconstruction begins (2018)",
+    "url": "https://kathmandupost.com/valley/2018/10/29/mayor-shakya-inaugurates-reconstruction-of-maju-dega-temple-20181029144058"
+   }
+  ],
+  "hotspots": [
+   {
+    "label": "Nine steps",
+    "note": "A nine-step brick plinth, about 28 m square at its base. People sit on these steps to watch the square. Step heights here are estimates.",
+    "position": [
+     12,
+     4,
+     12
+    ]
+   },
+   {
+    "label": "Three roofs",
+    "note": "Built in 1692, destroyed in 2015 and rebuilt from 2018. Its overall height here is an estimate; check its condition on site.",
+    "position": [
+     0,
+     16,
+     5
+    ]
+   }
+  ]
+ },
+ {
   "id": "ashokan-pillar",
   "title": "Ashokan Pillar",
   "targets": [

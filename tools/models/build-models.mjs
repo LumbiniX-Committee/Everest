@@ -543,6 +543,38 @@ const MODELS = [
     },
   },
   {
+    id: 'maju-dega',
+    title: 'Maju Dega',
+    targets: ['ktm-maju-dega'],
+    sources: [
+      { title: 'Maju Dega, Wikipedia (1692, nine-step plinth, three roofs)', url: 'https://en.wikipedia.org/wiki/Maju_Dega' },
+      { title: 'Kathmandu Post: reconstruction begins (2018)', url: 'https://kathmandupost.com/valley/2018/10/29/mayor-shakya-inaugurates-reconstruction-of-maju-dega-temple-20181029144058' },
+    ],
+    // Sourced: built 1692, a nine-step brick plinth about 28 m square (from
+    // OpenStreetMap's outline), three roofs; destroyed in 2015 and rebuilt
+    // from 2018, with travel sources saying it reopened around 2022 (no
+    // official handover found). Estimated: every step and storey height, and
+    // so the overall height.
+    build(g) {
+      const top = plinth(g, { levels: 9, width: 28, stepHeight: 0.85, shrink: 1.9, colour: COLOUR.brick });
+      newarTemple(g, {
+        y: top,
+        wallColour: COLOUR.brick,
+        roofColour: COLOUR.copper,
+        doorColour: COLOUR.timber,
+        tiers: [
+          { side: 8, height: 3.6, eave: 12.5, rise: 2.4 },
+          { side: 6.2, height: 2.6, eave: 9.5, rise: 2 },
+          { side: 4.6, height: 2, eave: 7, rise: 1.7 },
+        ],
+      });
+      return [
+        { label: 'Nine steps', note: 'A nine-step brick plinth, about 28 m square at its base. People sit on these steps to watch the square. Step heights here are estimates.', position: [12, 4, 12] },
+        { label: 'Three roofs', note: 'Built in 1692, destroyed in 2015 and rebuilt from 2018. Its overall height here is an estimate; check its condition on site.', position: [0, 16, 5] },
+      ];
+    },
+  },
+  {
     id: 'ashokan-pillar',
     title: 'Ashokan Pillar',
     targets: ['ashokan-pillar'],
