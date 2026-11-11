@@ -161,7 +161,7 @@ Built after the 1.0 production bundle (`e08d04d`). **It is in preview APKs only 
 ### Not verified, and known gaps
 - These listings have not been checked on site, and say so.
 - **Chitwan has only 6 places,** because OpenStreetMap has little there. It needs local data.
-- **Bhaktapur Durbar Square isn't in the listing,** so its fee isn't attached.
+- **Bhaktapur Durbar Square isn't in the listing,** so its fee isn't attached. **Resolved 2026-11-11:** added by Wikidata id (Q4900869) as a named extra in `tools/data/build-places.mjs`; its fee now attaches.
 - Opening hours exist for only 22 places, so most show "Not known". That is honest, but thin.
 - Wikidata descriptions are shown as written, which sometimes means awkward phrasing.
 

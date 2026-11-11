@@ -88,6 +88,36 @@ SELECT DISTINCT ?item ?en ?ne ?descEn ?coord ?image ?article ?class WHERE {
   OPTIONAL { ?article schema:about ?item; schema:isPartOf <https://en.wikipedia.org/> }
 }`;
 
+/**
+ * Notable places the class query misses because Wikidata files them under a
+ * class this script does not list (a royal square is not a "palace"). Named
+ * here one by one, each with the category it should show under.
+ */
+const EXTRA_ITEMS = {
+  Q4900869: 'wd:Q16560', // Bhaktapur Durbar Square: shown as a palace square; its entry fee attaches to it.
+};
+
+const EXTRAS_QUERY = `
+SELECT DISTINCT ?item ?en ?ne ?descEn ?coord ?image ?article ?class WHERE {
+  VALUES (?item ?class) { ${Object.entries(EXTRA_ITEMS).map(([q, c]) => `(wd:${q} ${c})`).join(' ')} }
+  ?item wdt:P625 ?coord.
+  ?item rdfs:label ?en FILTER(lang(?en) = "en")
+  OPTIONAL { ?item rdfs:label ?ne FILTER(lang(?ne) = "ne") }
+  OPTIONAL { ?item schema:description ?descEn FILTER(lang(?descEn) = "en") }
+  OPTIONAL { ?item wdt:P18 ?image }
+  OPTIONAL { ?article schema:about ?item; schema:isPartOf <https://en.wikipedia.org/> }
+}`;
+
+async function fetchWikidataExtras() {
+  return cachedJson(`wikidata-extras-${Object.keys(EXTRA_ITEMS).join('-')}.json`, async () => {
+    const url = `https://query.wikidata.org/sparql?query=${encodeURIComponent(EXTRAS_QUERY)}`;
+    const response = await fetchWithRetry(url, {
+      headers: { 'User-Agent': AGENT, Accept: 'application/sparql-results+json' },
+    });
+    return response.json();
+  });
+}
+
 async function fetchWikidata() {
   return cachedJson('wikidata-nepal.json', async () => {
     const url = `https://query.wikidata.org/sparql?query=${encodeURIComponent(WIKIDATA_QUERY)}`;
@@ -215,7 +245,8 @@ async function main() {
 
   // Wikidata first, so a hub's OSM record merges into it and keeps the richer fields.
   const wikidata = await fetchWikidata();
-  for (const row of wikidata.results.bindings) {
+  const extras = await fetchWikidataExtras();
+  for (const row of [...wikidata.results.bindings, ...extras.results.bindings]) {
     const match = /Point\(([-\d.]+) ([-\d.]+)\)/.exec(row.coord.value);
     if (!match) continue;
     const qid = row.item.value.split('/').pop();

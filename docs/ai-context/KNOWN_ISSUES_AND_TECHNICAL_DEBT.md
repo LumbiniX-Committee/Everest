@@ -28,7 +28,7 @@ Every item below was **verified during this audit**. Nothing here was fixed — 
 - **Fix:** Verify in the Supabase dashboard that Authentication → Sign In / Providers → anonymous is **enabled** before (or immediately after) applying 0007. Confirm which migrations are actually applied.
 - **Risk of fixing:** None — a dashboard check.
 - **Validation:** Capture an observation on a fresh install, foreground the app, confirm the row appears in `observations`.
-- **Status:** **Needs verification against the live project.** Cannot be determined from source.
+- **Status:** **Checked 2026-11-11: safe.** The live project's auth config has `external_anonymous_users_enabled: true` (read through the Supabase management API), and anonymous sessions have written successfully (the Pro redemption tests on 2026-11-07). Re-check if anyone changes sign-in providers.
 
 ---
 

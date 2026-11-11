@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-07",
+ "generatedAt": "2026-11-11",
  "licence": {
   "osm": "Contains information from OpenStreetMap, © OpenStreetMap contributors, available under the Open Database License (ODbL).",
   "wikidata": "Wikidata, available under CC0."
@@ -993,6 +993,26 @@
     "wikidata",
     "osm"
    ]
+  },
+  {
+   "id": "wd:Q4900869",
+   "wikidata": "Q4900869",
+   "name": "Bhaktapur Durbar Square",
+   "nameNe": "भक्तपुर दरवार क्षेत्र",
+   "description": "Royal square in Bhaktapur, Nepal",
+   "category": "palace",
+   "lat": 27.67218333,
+   "lon": 85.42845278,
+   "hub": "kathmandu",
+   "image": "View of Bhaktapur Durbar Square.jpg",
+   "wikipedia": "Bhaktapur_Durbar_Square",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ],
+   "feeId": "bhaktapur-durbar-square"
   },
   {
    "id": "osm:node/12627867302",
