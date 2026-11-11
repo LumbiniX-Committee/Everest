@@ -39,7 +39,7 @@ Devanagari needs vertical room. Keep display line height at about 1.3 or more, a
 
 ## Working rules (from the November 2026 design research)
 
-The full report, with sources, is `reports/Sākṣī redesign design direction.md` (kept outside git). These are the rules it led to:
+The full report, with sources, is `docs/research/Sākṣī redesign design direction.md`. These are the rules it led to:
 
 1. **Show where things come from.** Every sourced claim carries its source, one tap away. Unmeasured is "not recorded", never 0.
 2. **Depth is one control.** Glance · Story · Scholar, one segmented control that swaps content in place and is remembered. Never nested "more" links.
@@ -67,7 +67,7 @@ The full report, with sources, is `reports/Sākṣī redesign design direction.m
 - a **rhesus macaque**, in empty states, with no Hanuman symbols and never shown being fed or touched;
 - a **Newar woodcarver** at a lattice window, beside the 3D models.
 
-**Deities are never drawn as characters.** At Pashupatinath the deity is described in words only (`data/placeNotes.ts`), with the visitor rules. The research and sources are in `reports/Pashupati and Basantapur 3D models.md` (kept outside git).
+**Deities are never drawn as characters.** At Pashupatinath the deity is described in words only (`data/placeNotes.ts`), with the visitor rules. The research and sources are in `docs/research/Pashupati and Basantapur 3D models.md`.
 
 **Open question for the owner:** the monk character (`components/monk`, the website's former hero) has the curled hair of Buddha images. The research recommends against sacred figures as mascots. It has been removed from the website hero; its use in the app needs a decision.
 
