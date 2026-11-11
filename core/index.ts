@@ -15,6 +15,7 @@
  */
 
 // --- Shared vocabulary: domain types, geo primitives, the merit table --------
+// eslint-disable-next-line import/export -- `Citation` and `Passage` are also re-exported by core/dhamma/engine.ts; both point at the one declaration in shared/types.ts, so the name is not ambiguous.
 export * from '../shared/types.ts';
 export * from '../shared/geo.ts';
 export * from '../shared/merit.ts';
@@ -55,6 +56,7 @@ export * from './copy/failure-lines.ts';
 export * from './adapters/coords.ts';
 
 // --- Dhamma Engine: Bilara corpus, RRF retrieval, Grounding Gate, Reflection --
+// eslint-disable-next-line import/export -- see the note on the shared/types.ts export above.
 export * from './dhamma/index';
 
 // --- Progression: wisdom and spiritual level, read off the puṇya ledger -----

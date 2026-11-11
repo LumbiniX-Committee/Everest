@@ -130,7 +130,7 @@ Read the actual source — do not rely on these documents alone — when:
 | `npm run vocab` | ✅ Clean |
 | `npm run eval:dhamma` | ✅ **50/50**, 0 ungrounded citations |
 | `npm run verify` | ✅ Pass |
-| `npm run lint` | ✅ clean (default folders only); `npm run lint:all` ❌ 70 known errors |
+| `npm run lint` | ✅ clean (default folders only); `npm run lint:all` ❌ 59 known errors |
 | `npx expo start --web` | ✅ Bundles and serves |
 
 > **`npm run verify` does not include `lint`**, and does not type-check `core/` or `shared/`. A green `verify` is not "everything is clean."

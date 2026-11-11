@@ -51,7 +51,8 @@ Every item below was **verified during this audit**. Nothing here was fixed — 
 
 ### H3 — 16 lint errors in `SpeechCloud.tsx`
 
-- **Update 2026-11-08:** `npm run lint` is clean, but it only scans `expo lint`'s default folders and skips `features/`. `npm run lint:all` scans every source folder and reports 70 known errors (2026-11-08): mostly React Compiler rules (`react-hooks/refs` in the animated QuestHud and StorySequence, `set-state-in-effect`, `immutability`), plus a few `import/export`, `no-undef` and unescaped quotes. Add no new ones.
+- **Update 2026-11-11:** 59 errors remain, all React Compiler rules (`react-hooks/refs` 30, `set-state-in-effect` 16, `immutability` 13) in animated and stateful screens. The 11 others (duplicate type re-exports, unescaped quotes, Node globals in tools, the optional vitest config) were fixed.
+- **Update 2026-11-08:** `npm run lint` is clean, but it only scans `expo lint`'s default folders and skips `features/`. `npm run lint:all` scans every source folder and reports 59 known errors (2026-11-08): mostly React Compiler rules (`react-hooks/refs` in the animated QuestHud and StorySequence, `set-state-in-effect`, `immutability`), plus a few `import/export`, `no-undef` and unescaped quotes. Add no new ones.
 - **Evidence (historical):** `npm run lint` → 16 errors, **all** in [components/monk/SpeechCloud.tsx](../../components/monk/SpeechCloud.tsx): 15 × `react-hooks/refs`, 1 × `react-hooks/set-state-in-effect`. Example: `{ translateY: cloudAnim.interpolate({...}) }` → *"Passing a ref to a function may read its value during render."*
 - **Impact:** Blocks a clean lint run. The pattern (reading an `Animated.Value` ref during render) is a legacy RN idiom that may break under React Compiler optimisation. Likely works at runtime today.
 - **Fix:** Migrate the component to Reanimated (used elsewhere in the project), or restructure so the animated value is not read during render.
