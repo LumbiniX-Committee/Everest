@@ -53,3 +53,6 @@ npm-debug.*
 yarn-debug.*
 yarn-error.*
 .DS_Store
+
+# direnv loader: no secrets itself, but it names the key file
+.envrc

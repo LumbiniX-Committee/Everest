@@ -91,7 +91,7 @@ export default function AdoptVantagePage() {
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-16">
-      <p className="text-sm font-semibold tracking-wide text-sakshi uppercase">Adopt a vantage</p>
+      <p className="text-sm font-semibold tracking-wide text-sandstone-deep uppercase">Adopt a vantage</p>
       <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold text-ink">
         Return to one viewpoint every quarter
       </h1>
@@ -161,7 +161,7 @@ export default function AdoptVantagePage() {
                 <div className="flex items-start justify-between gap-3">
                   <p className="font-semibold text-ink">{commitment.vantage_id}</p>
                   {new Date(commitment.next_due_at).getTime() < renderedAt ? (
-                    <span className="rounded-full bg-earth/10 px-2 py-1 text-xs font-semibold text-earth">Overdue</span>
+                    <span className="rounded-full bg-robe/10 px-2 py-1 text-xs font-semibold text-robe">Overdue</span>
                   ) : null}
                 </div>
                 <p className="mt-1 text-sm text-ink-soft">
@@ -170,7 +170,7 @@ export default function AdoptVantagePage() {
                 <button
                   type="button"
                   onClick={() => void endCommitment(commitment.id)}
-                  className="mt-3 text-sm font-semibold text-earth underline-offset-4 hover:underline"
+                  className="mt-3 text-sm font-semibold text-robe underline-offset-4 hover:underline"
                 >
                   End commitment
                 </button>

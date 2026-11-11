@@ -24,6 +24,16 @@ export const StorageKeys = {
   prefWisdomTier: `${PREFIX}.preferences.wisdomTier`,
   prefAutoWisdom: `${PREFIX}.preferences.autoWisdom`,
   prefAutoNarration: `${PREFIX}.preferences.autoNarration`,
+  prefVisitorType: `${PREFIX}.preferences.visitorType`,
+  prefHomeHub: `${PREFIX}.preferences.homeHub`,
+
+  /** The last Pro entitlement this phone confirmed with the server. */
+  planEntitlement: `${PREFIX}.plan.entitlement`,
+  /** The Home screen's getting-started guide has been dismissed. */
+  homeGuideDismissed: `${PREFIX}.home.guideDismissed`,
+  /** Crash reports kept on this phone until sent, or forever if sharing is off. */
+  crashReports: `${PREFIX}.diagnostics.crashReports`,
+  prefShareCrashReports: `${PREFIX}.preferences.shareCrashReports`,
 
   /**
    * Which sites have had their story sequence read through to the end, as a
@@ -56,6 +66,12 @@ export const StorageKeys = {
 
   /** Last public, redacted vantage-priority response for offline quest order. */
   coveragePriority: `${PREFIX}.tirtha.coveragePriority`,
+  /** Google Map Tiles sessions, reused until they expire (about two weeks). */
+  googleTileSessions: `${PREFIX}.map.googleTileSessions`,
+  /** Offline map packs saved on the phone: which areas, how many tiles, when. */
+  offlineMapPacks: `${PREFIX}.map.offlinePacks`,
+  /** Last known custodian steps on the visitor's own reports, for offline viewing. */
+  reportTimelines: `${PREFIX}.reports.timelines`,
 } as const;
 
 /** Preference field → storage key. The settings screen iterates this. */
@@ -72,6 +88,9 @@ export const PreferenceKeys = {
   wisdomTier: StorageKeys.prefWisdomTier,
   autoWisdom: StorageKeys.prefAutoWisdom,
   autoNarration: StorageKeys.prefAutoNarration,
+  visitorType: StorageKeys.prefVisitorType,
+  homeHub: StorageKeys.prefHomeHub,
+  shareCrashReports: StorageKeys.prefShareCrashReports,
 } as const;
 
 export const DATABASE_NAME = 'sakshi.db';

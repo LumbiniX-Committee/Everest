@@ -2,6 +2,9 @@ import { Stack } from 'expo-router';
 
 import { colors } from '@/theme';
 
+// Keeps this surface's home beneath any screen opened from elsewhere.
+export const unstable_settings = { anchor: 'index' };
+
 /** Detail routes push inside the surface, so the navigator never disappears. */
 export default function SakshiLayout() {
   return (

@@ -99,7 +99,7 @@ export function Callout({
   return (
     <div className="mt-8 flex gap-5 rounded-3xl border border-line border-l-4 border-l-sakshi bg-surface p-7 shadow-sm">
       {Icon ? (
-        <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-sakshi/10 text-sakshi">
+        <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-surface-secondary text-sandstone-deep">
           <Icon className="size-5" aria-hidden />
         </span>
       ) : null}
@@ -146,7 +146,7 @@ export function Figures({
     <dl className="mt-8 grid gap-px overflow-hidden rounded-3xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
       {items.map(({ value, label, note }) => (
         <div key={label} className="bg-surface p-6">
-          <dt className="font-[family-name:var(--font-display)] text-4xl font-semibold text-sakshi">
+          <dt className="font-[family-name:var(--font-display)] text-4xl font-semibold text-sandstone-deep">
             {value}
           </dt>
           <dd className="mt-2 text-sm leading-relaxed text-ink-soft">

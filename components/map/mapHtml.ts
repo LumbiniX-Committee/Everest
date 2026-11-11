@@ -1,13 +1,109 @@
 import {
+  PLACES,
   MAP_CAMERA,
   MAP_HOME,
   monumentGeoJSON,
   precinctGroundGeoJSON,
-  precinctWallGeoJSON,
   siteGeoJSON,
   waterGeoJSON,
 } from '@/data';
-import { colors, sakshiMapStyle } from '@/theme';
+import { colors, MAP_GLYPHS_URL, MAP_TILES_URL, sakshiMapStyle } from '@/theme';
+
+import { townLayerScript } from './townLayer';
+import { MAPLIBRE_CSS, MAPLIBRE_JS, THREE_JS } from './vendor.generated';
+
+/**
+ * The basemap, terrain and fonts all load through the page's own \`saksi://\`
+ * protocol (see OFFLINE_PROTOCOL), so a saved copy on the phone can stand in
+ * when the network cannot.
+ */
+const OFFLINE_STYLE = {
+  ...sakshiMapStyle,
+  glyphs: 'saksi://glyphs/{fontstack}/{range}',
+  sources: {
+    ...sakshiMapStyle.sources,
+    openmaptiles: {
+      type: 'vector' as const,
+      tiles: ['saksi://ofm/{z}/{x}/{y}'],
+      minzoom: 0,
+      maxzoom: 14,
+      attribution:
+        '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> <a href="https://www.openmaptiles.org/" target="_blank">&copy; OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
+    },
+  },
+};
+
+/**
+ * Network first, saved copy second.
+ *
+ * Online, every request goes straight to its server, as it always did. Only a
+ * failed fetch asks the app for a tile saved in an offline pack; the app
+ * answers through window.sakshiTileReply. No saved copy means the tile stays
+ * blank, exactly as an offline map without packs always behaved.
+ */
+const OFFLINE_PROTOCOL = `
+  (function () {
+    var waiting = {};
+    var nextId = 1;
+    var template = null;
+    function basemapTemplate() {
+      if (!template) {
+        template = fetch(${JSON.stringify(MAP_TILES_URL)})
+          .then(function (r) { if (!r.ok) throw new Error('tilejson ' + r.status); return r.json(); })
+          .then(function (j) { return j.tiles[0]; })
+          .catch(function (e) { template = null; throw e; });
+      }
+      return template;
+    }
+    function networkUrl(kind, parts) {
+      if (kind === 'ofm') return basemapTemplate().then(function (t) {
+        return t.replace('{z}', parts[0]).replace('{x}', parts[1]).replace('{y}', parts[2]);
+      });
+      if (kind === 'dem') return Promise.resolve('https://s3.amazonaws.com/elevation-tiles-prod/terrarium/' + parts.join('/') + '.png');
+      if (kind === 'glyphs') return Promise.resolve(${JSON.stringify(MAP_GLYPHS_URL)}
+        .replace('{fontstack}', encodeURIComponent(parts[0])).replace('{range}', parts[1]));
+      return Promise.reject(new Error('unknown ' + kind));
+    }
+    function fromPhone(key) {
+      return new Promise(function (resolve) {
+        var id = nextId++;
+        waiting[id] = resolve;
+        post({ type: 'tile-request', id: id, key: key });
+        setTimeout(function () { if (waiting[id]) { delete waiting[id]; resolve(null); } }, 8000);
+      });
+    }
+    window.sakshiTileReply = function (id, base64) {
+      var resolve = waiting[id];
+      if (!resolve) return;
+      delete waiting[id];
+      if (!base64) return resolve(null);
+      var bin = atob(base64);
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      resolve(bytes.buffer);
+    };
+    maplibregl.addProtocol('saksi', function (params, abort) {
+      var parts = params.url.slice('saksi://'.length).split('/').map(decodeURIComponent);
+      var kind = parts.shift();
+      var key = kind + '/' + parts.join('/');
+      return networkUrl(kind, parts)
+        .then(function (url) { return fetch(url, { signal: abort.signal }); })
+        .then(function (r) {
+          // An empty tile is an answer, not a failure: open ground has no data.
+          if (r.status === 204 || r.status === 404) return { data: new ArrayBuffer(0) };
+          if (!r.ok) throw new Error(String(r.status));
+          return r.arrayBuffer().then(function (data) { return { data: data }; });
+        })
+        .catch(function (error) {
+          if (abort.signal.aborted) throw error;
+          return fromPhone(key).then(function (data) {
+            if (!data) throw error;
+            return { data: data };
+          });
+        });
+    });
+  })();
+`;
 
 export type MapHtmlOptions = {
   /**
@@ -32,7 +128,12 @@ export type MapHtmlOptions = {
   interactive?: boolean;
   /** Safe area inset top (in pixels) for floating map control offset. */
   topInset?: number;
+  /** Where the map opens, as [longitude, latitude]. Defaults to Lumbini. */
+  center?: readonly [number, number];
 };
+
+/** The ways the map can be drawn. Satellite and hybrid need a working imagery provider. */
+export type MapMode = 'standard' | '3d' | 'terrain' | 'satellite' | 'hybrid';
 
 /**
  * The MapLibre GL JS document rendered inside the WebView.
@@ -51,17 +152,32 @@ export type MapHtmlOptions = {
  * possible through GL JS and a custom layer. That is a capability difference,
  * not a preference.
  */
+function placesGeoJSON() {
+  return {
+    type: 'FeatureCollection',
+    features: PLACES.map((place) => ({
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [place.coordinate.longitude, place.coordinate.latitude] },
+      properties: { id: place.id, name: place.name },
+    })),
+  };
+}
+
 export function buildMapHtml({
   avatar = false,
   fullscreen = false,
   interactive = fullscreen,
   topInset = 0,
+  center = MAP_HOME.centre,
 }: MapHtmlOptions = {}): string {
   // Named camera rather than an offset from MAP_HOME — see MAP_CAMERA for why
   // the old `+ 1.5` opened the world about three times too close to play in.
   const camera = fullscreen ? MAP_CAMERA.world : MAP_CAMERA.overview;
   const zoom = camera.zoom;
-  const pitch = camera.pitch;
+  // Flat, north-up by default, as people expect from a street map. Tilt is a
+  // mode they choose, not the first thing they have to make sense of.
+  const pitch = fullscreen ? 0 : camera.pitch;
+  const bearing = fullscreen ? 0 : MAP_HOME.bearing;
   // Clear of the standing pill in the top-left of the app's HUD, which is
   // 60pt tall including its own top padding.
   const controlTopOffset = fullscreen ? (topInset > 0 ? topInset + 132 : 156) : 10;
@@ -73,9 +189,11 @@ export function buildMapHtml({
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
 <!-- user-scalable=no disables *page* zoom only; MapLibre handles map zoom itself,
      and leaving page zoom on makes a pinch ambiguous between the two. -->
-<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
-<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-${avatar ? '<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>' : ''}
+<!-- Bundled with the app rather than fetched from a CDN, so the map opens with
+     no network and can't be blanked by an outage elsewhere. -->
+<style>${MAPLIBRE_CSS}</style>
+<script>${MAPLIBRE_JS}</script>
+${avatar ? `<script>${THREE_JS}</script>` : ''}
 <style>
   html,body,#map{margin:0;padding:0;height:100%;width:100%;background:${colors.mapBase}}
   .maplibregl-ctrl-attrib{font-size:10px}
@@ -137,19 +255,19 @@ ${avatar ? '<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></s
 <div id="map"></div>
 <script>
   function post(msg){ window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify(msg)); }
+${OFFLINE_PROTOCOL}
   try {
     var map = new maplibregl.Map({
       container: 'map',
-      style: ${JSON.stringify(sakshiMapStyle)},
-      center: ${JSON.stringify(MAP_HOME.centre)},
+      style: ${JSON.stringify(OFFLINE_STYLE)},
+      center: ${JSON.stringify(center)},
       zoom: ${zoom},
       pitch: ${pitch},
-      bearing: ${MAP_HOME.bearing},
+      bearing: ${bearing},
       attributionControl: { compact: false },
       interactive: ${interactive},
-      // Lumbini is a few square kilometres; there is no reason to allow a
-      // whole-planet zoom-out that loses the place entirely.
-      minZoom: 12,
+      // Wide enough to see the whole of Nepal, not so wide the place is lost.
+      minZoom: 6,
       maxZoom: 19,
       // A pinch that also rotates makes a small map feel unsteady. Zoom is the
       // gesture people actually want here; rotation stays on the compass.
@@ -157,9 +275,21 @@ ${avatar ? '<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></s
       dragRotate: ${interactive}
     });
 ${interactive ? INTERACTIVE_CONTROLS : ''}
-    map.on('error', function(e){ post({ type:'error', message: String((e && e.error && e.error.message) || 'map error') }); });
+    // Only a failure before the map has loaded is fatal. After that, a missing
+    // tile is just a missing tile: the map stays, instead of being swapped for
+    // the schematic plan for the rest of the visit.
+    var loaded = false;
+    map.on('error', function(e){
+      var message = String((e && e.error && e.error.message) || 'map error');
+      post({ type: loaded ? 'tile-error' : 'error', message: message });
+    });
+
+    // Panning means "let me look around", so stop dragging the camera back.
+    map.on('dragstart', function(e){ if (e && e.originalEvent) post({ type:'user-pan' }); });
 
     map.on('load', function(){
+      loaded = true;
+${MAP_MODES()}
       // The enclosed ground, flat. Nothing stands between the camera and the
       // monuments; this is only what says you are inside something.
       //
@@ -179,35 +309,9 @@ ${interactive ? INTERACTIVE_CONTROLS : ''}
         }
       }, 'road-major-casing');
 
-      map.addSource('precinct-walls', { type:'geojson', data: ${JSON.stringify(precinctWallGeoJSON)} });
-
-      // The wall. A band with a gateway rather than an extruded disc — see
-      // wallBand() in data/demo/geo.ts for why the disc was both wrong and
-      // expensive.
-      map.addLayer({
-        id:'precinct-wall', type:'fill-extrusion', source:'precinct-walls',
-        paint:{
-          'fill-extrusion-color': ${JSON.stringify(colors.sandstoneDeep)},
-          'fill-extrusion-height': ['get','height'],
-          'fill-extrusion-base': 0,
-          'fill-extrusion-opacity': 0.9,
-          'fill-extrusion-vertical-gradient': true
-        }
-      });
-
-      // The capping course, a shade lighter and slightly proud of the wall.
-      // minzoom 15: below it the whole precinct is a few hundred pixels across
-      // and a 45 cm band is subpixel — geometry that can only cost fill rate.
-      map.addLayer({
-        id:'precinct-coping', type:'fill-extrusion', source:'precinct-walls',
-        minzoom: 15,
-        paint:{
-          'fill-extrusion-color': ${JSON.stringify(colors.sandstone)},
-          'fill-extrusion-height': ['get','copingHeight'],
-          'fill-extrusion-base': ['get','copingBase'],
-          'fill-extrusion-opacity': 0.95
-        }
-      });
+      // No precinct walls are drawn. They were generated from geofence circles,
+      // so they put a wall on the map wherever one was assumed, not where one
+      // stands. A map must not show structure that isn't there.
       map.addSource('site-water', { type:'geojson', data: ${JSON.stringify(waterGeoJSON)} });
       map.addLayer({
         id:'site-water-fill', type:'fill', source:'site-water',
@@ -219,6 +323,8 @@ ${interactive ? INTERACTIVE_CONTROLS : ''}
       map.addSource('monuments', { type:'geojson', data: ${JSON.stringify(monumentGeoJSON)} });
       map.addLayer({
         id:'monument-massing', type:'fill-extrusion', source:'monuments',
+        // Schematic volumes, so only in 3D mode, where a tilted view asks for them.
+        layout:{ visibility:'none' },
         paint:{
           'fill-extrusion-color': ${JSON.stringify(colors.mapBuildingRoof)},
           'fill-extrusion-height': ['get','height'],
@@ -230,25 +336,76 @@ ${interactive ? INTERACTIVE_CONTROLS : ''}
         }
       });
 
-      map.addSource('sites', { type:'geojson', data: ${JSON.stringify(siteGeoJSON)} });
+      // Listed places from open data, drawn quieter than the curated sites and only
+      // once zoomed in, so they add detail without crowding the map.
+      ${fullscreen ? `map.addSource('places', { type:'geojson', data: ${JSON.stringify(placesGeoJSON())} });
       map.addLayer({
-        id:'site-dot', type:'circle', source:'sites',
+        id:'place-dot', type:'circle', source:'places', minzoom: 13,
         paint:{
           'circle-radius': 6,
-          'circle-color': ${JSON.stringify(colors.earth)},
-          'circle-stroke-width': 2,
+          'circle-color': ${JSON.stringify(colors.surface)},
+          'circle-stroke-width': 2.5,
+          'circle-stroke-color': ${JSON.stringify(colors.primary)}
+        }
+      });
+      map.addLayer({
+        id:'place-hit', type:'circle', source:'places', minzoom: 13,
+        paint:{ 'circle-radius': 18, 'circle-color': '#000000', 'circle-opacity': 0 }
+      });
+      map.addLayer({
+        id:'listed-place-label', type:'symbol', source:'places', minzoom: 14.5,
+        layout:{ 'text-field':['get','name'], 'text-font':['Noto Sans Regular'], 'text-size':12, 'text-offset':[0,-1.3], 'text-anchor':'bottom', 'text-optional': true },
+        paint:{ 'text-color': ${JSON.stringify(colors.textSecondary)}, 'text-halo-color': ${JSON.stringify(colors.background)}, 'text-halo-width': 1.4 }
+      });
+      map.on('click','place-hit', function(e){
+        var f = e.features && e.features[0];
+        if (f && f.properties && f.properties.id) post({ type:'place', id: f.properties.id });
+      });` : ''}
+
+      // Clustered, so 70 places in one valley read as a few countable groups
+      // rather than a smear of overlapping dots.
+      map.addSource('sites', {
+        type:'geojson', data: ${JSON.stringify(siteGeoJSON)},
+        cluster: true, clusterRadius: 44, clusterMaxZoom: 15
+      });
+      map.addLayer({
+        id:'site-cluster', type:'circle', source:'sites', filter:['has','point_count'],
+        paint:{
+          'circle-color': ${JSON.stringify(colors.accent)},
+          'circle-radius': ['step', ['get','point_count'], 16, 10, 20, 30, 26],
+          'circle-stroke-width': 3,
           'circle-stroke-color': ${JSON.stringify(colors.surface)}
         }
       });
       map.addLayer({
-        id:'site-label', type:'symbol', source:'sites',
+        id:'site-cluster-count', type:'symbol', source:'sites', filter:['has','point_count'],
+        layout:{ 'text-field':['get','point_count_abbreviated'], 'text-font':['Noto Sans Bold'], 'text-size':13, 'text-allow-overlap':true },
+        paint:{ 'text-color': ${JSON.stringify(colors.onAccent)} }
+      });
+      map.addLayer({
+        id:'site-dot', type:'circle', source:'sites', filter:['!',['has','point_count']],
+        paint:{
+          'circle-radius': 8,
+          'circle-color': ${JSON.stringify(colors.primary)},
+          'circle-stroke-width': 3,
+          'circle-stroke-color': ${JSON.stringify(colors.surface)}
+        }
+      });
+      // An invisible ring around each dot, so a thumb can hit it.
+      map.addLayer({
+        id:'site-hit', type:'circle', source:'sites', filter:['!',['has','point_count']],
+        paint:{ 'circle-radius': 22, 'circle-color': '#000000', 'circle-opacity': 0 }
+      });
+      map.addLayer({
+        id:'site-label', type:'symbol', source:'sites', filter:['!',['has','point_count']],
         layout:{
           'text-field':['get','name'],
           'text-font':['Noto Sans Regular'],
-          'text-size':12,
-          'text-offset':[0,-1.4],
+          'text-size':13,
+          'text-offset':[0,-1.5],
           'text-anchor':'bottom',
-          'text-allow-overlap':false
+          'text-allow-overlap':false,
+          'symbol-sort-key':['get','rank']
         },
         paint:{
           'text-color': ${JSON.stringify(colors.textPrimary)},
@@ -256,12 +413,21 @@ ${interactive ? INTERACTIVE_CONTROLS : ''}
           'text-halo-width': 1.6
         }
       });
-      map.on('click','site-dot', function(e){
+      map.on('click','site-hit', function(e){
         var f = e.features && e.features[0];
         if (f && f.properties && f.properties.id) post({ type:'site', id: f.properties.id });
       });
+      map.on('click','site-cluster', function(e){
+        var f = e.features && e.features[0];
+        if (!f) return;
+        map.getSource('sites').getClusterExpansionZoom(f.properties.cluster_id).then(function (z) {
+          map.easeTo({ center: f.geometry.coordinates, zoom: z + 0.5 });
+        }).catch(function () {});
+      });
       map.getCanvas().style.cursor = 'default';
-${avatar ? POSITION_MARKER : ''}
+      // Position, route and waypoints never needed the figure: a trek map draws
+      // all three with no character at all.
+${POSITION_MARKER}
       // Ready is posted *before* the character. The figure needs three.js from
       // a CDN, and when that request fails — a cold start on site signal, an
       // offline device — the throw used to escape this handler before the ready
@@ -269,7 +435,7 @@ ${avatar ? POSITION_MARKER : ''}
       // schematic plan. The map does not need the character; the character
       // needs the map.
       post({ type:'ready' });
-${avatar ? AVATAR_LAYER : ''}
+${avatar ? AVATAR_LAYER + townLayerScript(monumentGeoJSON) : ''}
     });
   } catch (err) {
     post({ type:'error', message: String(err) });
@@ -292,6 +458,108 @@ ${avatar ? AVATAR_LAYER : ''}
  * notice a rotation, a split screen, or a container that grew, so the canvas
  * and the viewport drift apart and the map renders letterboxed or clipped.
  */
+/**
+ * Map modes, switched in the running page so tiles and camera survive the change.
+ *
+ * Terrain uses the open AWS elevation tiles (Mapzen Terrarium). Satellite and
+ * hybrid use MapTiler, and exist only when a key is configured: the free
+ * imagery checked so far is either non-commercial or too coarse for close-up use.
+ */
+function MAP_MODES(): string {
+  return `
+      var baseLayers = map.getStyle().layers.map(function (l) { return { id: l.id, type: l.type }; });
+      var imagery = null;
+      var currentMode = 'standard';
+      map.addSource('dem', {
+        type: 'raster-dem', encoding: 'terrarium', tileSize: 256, maxzoom: 15,
+        tiles: ['saksi://dem/{z}/{x}/{y}'],
+        attribution: 'Elevation: Mapzen Terrain Tiles, AWS Open Data'
+      });
+      map.addLayer({ id:'hillshade', type:'hillshade', source:'dem', layout:{ visibility:'none' },
+        paint:{ 'hillshade-shadow-color': ${JSON.stringify(colors.mapLabel)}, 'hillshade-highlight-color': ${JSON.stringify(colors.mapBase)}, 'hillshade-exaggeration': 0.3 } },
+        baseLayers.length > 1 ? baseLayers[1].id : undefined);
+
+      // Google asks for the copyright of what is on screen, shown with its name.
+      var credit = document.createElement('div');
+      credit.style.cssText = 'position:absolute;left:8px;bottom:8px;z-index:5;font:600 11px sans-serif;color:#fff;text-shadow:0 0 3px #000;pointer-events:none;display:none';
+      document.body.appendChild(credit);
+      function refreshCredit() {
+        var showing = imagery && (currentMode === 'satellite' || currentMode === 'hybrid');
+        credit.style.display = showing ? 'block' : 'none';
+        if (!showing || !imagery.viewportUrl) { credit.textContent = imagery ? 'Imagery: ' + imagery.provider : ''; return; }
+        var b = map.getBounds();
+        fetch(imagery.viewportUrl + '&zoom=' + Math.round(map.getZoom()) + '&north=' + b.getNorth() + '&south=' + b.getSouth() + '&east=' + b.getEast() + '&west=' + b.getWest())
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (v) { credit.textContent = 'Google' + (v && v.copyright ? ' · ' + v.copyright : ''); })
+          .catch(function () { credit.textContent = 'Google'; });
+      }
+      map.on('moveend', refreshCredit);
+
+      /** Imagery arrives after load: its provider may need a session first. */
+      window.sakshiSetImagery = function (value) {
+        if (!value || imagery) return;
+        imagery = value;
+        var below = baseLayers.length > 1 ? baseLayers[1].id : undefined;
+        map.addSource('satellite', { type:'raster', tileSize: value.tileSize, maxzoom: 20, tiles: [value.satellite],
+          attribution: value.provider === 'google' ? '' : value.attribution });
+        map.addLayer({ id:'satellite', type:'raster', source:'satellite', layout:{ visibility:'none' } }, below);
+        if (value.hybrid) {
+          map.addSource('hybrid', { type:'raster', tileSize: value.tileSize, maxzoom: 20, tiles: [value.hybrid] });
+          map.addLayer({ id:'hybrid', type:'raster', source:'hybrid', layout:{ visibility:'none' } }, below);
+        }
+        window.sakshiSetMapMode(currentMode);
+      };
+
+      function show(id, visible) {
+        if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', visible ? 'visible' : 'none');
+      }
+      var isRoadOrLabel = function (l) { return l.type === 'symbol' || /road|path|bridge|tunnel/.test(l.id); };
+
+      window.sakshiSetMapMode = function (mode) {
+        if ((mode === 'satellite' || mode === 'hybrid') && !imagery) mode = 'standard';
+        currentMode = mode;
+        window.sakshiCurrentMode = mode;
+        var useImagery = mode === 'satellite' || mode === 'hybrid';
+        // The provider's own hybrid tiles replace the basemap entirely; without
+        // them, our roads and labels are laid over plain imagery.
+        var ownHybrid = mode === 'hybrid' && imagery && imagery.hybrid;
+        baseLayers.forEach(function (l) {
+          if (l.type === 'background') return show(l.id, !useImagery);
+          if (mode === 'satellite' || ownHybrid) return show(l.id, false);
+          if (mode === 'hybrid') return show(l.id, isRoadOrLabel(l));
+          show(l.id, true);
+        });
+        show('satellite', mode === 'satellite' || (mode === 'hybrid' && !ownHybrid));
+        show('hybrid', Boolean(ownHybrid));
+        refreshCredit();
+        show('hillshade', mode === 'terrain');
+        show('monument-massing', mode === '3d');
+        // With the 3D town drawn, the plain boxes give way to it at street
+        // zoom and stay below it, where houses are too small to read.
+        if (window.sakshiHasTown) {
+          var townZoom = mode === '3d' ? 15 : 24;
+          if (map.getLayer('building')) map.setLayerZoomRange('building', 14, townZoom);
+          if (map.getLayer('monument-massing')) map.setLayerZoomRange('monument-massing', 0, townZoom);
+          if (mode === '3d' && window.sakshiTownRefresh) window.sakshiTownRefresh();
+        }
+        map.setTerrain(mode === 'terrain' ? { source: 'dem', exaggeration: 1.4 } : null);
+        var tilted = mode === '3d' || mode === 'terrain';
+        map.easeTo({ pitch: tilted ? 58 : 0, bearing: tilted ? map.getBearing() : 0, duration: 700 });
+        post({ type:'mode', mode: mode });
+      };
+
+      // Label every place in a script we can be sure renders. MapLibre GL JS does
+      // not shape Devanagari, so a Nepali name could draw with its letters in the
+      // wrong order; English names fall back to the local name where none exists.
+      baseLayers.forEach(function (l) {
+        if (l.type !== 'symbol') return;
+        var field = map.getLayoutProperty(l.id, 'text-field');
+        if (!field) return;
+        map.setLayoutProperty(l.id, 'text-field', ['coalesce', ['get','name:en'], ['get','name_en'], ['get','name']]);
+      });
+`;
+}
+
 const INTERACTIVE_CONTROLS = `
       // Left, not right. The right-hand column belongs to the app's own HUD —
       // the quest marker and the two place controls — and MapLibre's stack was
@@ -359,8 +627,10 @@ const POSITION_MARKER = `
       var TRAIL_MAX = 400;
 
       map.addSource('me', { type:'geojson', data: { type:'FeatureCollection', features: [] } });
+      map.addSource('me-accuracy', { type:'geojson', data: { type:'FeatureCollection', features: [] } });
       map.addSource('me-trail', { type:'geojson', data: { type:'FeatureCollection', features: [] } });
       map.addSource('me-route', { type:'geojson', data: { type:'FeatureCollection', features: [] } });
+      map.addSource('waypoints', { type:'geojson', data: { type:'FeatureCollection', features: [] } });
 
       // The planned way, under everything. Demo itineraries are dashed; live
       // guidance switches this same layer to a strong solid route.
@@ -384,6 +654,23 @@ const POSITION_MARKER = `
           'line-color': ${JSON.stringify(colors.earth)},
           'line-width': 4,
           'line-opacity': 0.7
+        }
+      });
+
+      // How sure the phone is about where you are. A real distance on the
+      // ground, so it grows as you zoom in, which a fixed-size dot can't show.
+      map.addLayer({
+        id:'me-accuracy', type:'circle', source:'me-accuracy',
+        paint:{
+          'circle-radius': ['interpolate', ['exponential', 2], ['zoom'],
+            0, ['/', ['get','acc'], ['get','mpp0']],
+            22, ['/', ['*', ['get','acc'], 4194304], ['get','mpp0']]],
+          'circle-color': ${JSON.stringify(colors.navigationRoute)},
+          'circle-opacity': 0.12,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': ${JSON.stringify(colors.navigationRoute)},
+          'circle-stroke-opacity': 0.4,
+          'circle-pitch-alignment': 'map'
         }
       });
 
@@ -478,7 +765,15 @@ const POSITION_MARKER = `
        * Records the target; the smoothing towards it happens per frame, in the
        * character's render loop, or here when there is no character to run it.
        */
-      window.sakshiSetPose = function (lng, lat, heading, follow) {
+      window.sakshiSetPose = function (lng, lat, heading, follow, accuracy) {
+        map.getSource('me-accuracy').setData({
+          type:'FeatureCollection',
+          features: (typeof accuracy === 'number' && accuracy > 0) ? [{
+            type:'Feature', geometry:{ type:'Point', coordinates:[lng, lat] },
+            // Metres per pixel at zoom 0 at this latitude, for the radius expression.
+            properties:{ acc: accuracy, mpp0: 156543.03 * Math.cos(lat * Math.PI / 180) }
+          }] : []
+        });
         var now = Date.now();
         if (pose.has && pose.lastAt) {
           var dt = Math.max(0.001, (now - pose.lastAt) / 1000);
@@ -520,6 +815,47 @@ const POSITION_MARKER = `
             ? [{ type:'Feature', geometry:{ type:'LineString', coordinates: coords }, properties:{} }]
             : []
         });
+      };
+
+      /**
+       * Named stops along a route, such as a trek's villages. Labels always
+       * show, because on a trek the stop names are the point of the map.
+       */
+      window.sakshiSetWaypoints = function (points) {
+        if (!map.getLayer('waypoint-dot')) {
+          map.addLayer({
+            id:'waypoint-dot', type:'circle', source:'waypoints',
+            paint:{
+              'circle-radius': 5,
+              'circle-color': ${JSON.stringify(colors.surface)},
+              'circle-stroke-width': 2.5,
+              'circle-stroke-color': ${JSON.stringify(colors.primary)}
+            }
+          });
+          map.addLayer({
+            id:'waypoint-label', type:'symbol', source:'waypoints',
+            layout:{ 'text-field':['get','name'], 'text-font':['Noto Sans Regular'], 'text-size':12, 'text-offset':[0,-1.1], 'text-anchor':'bottom', 'text-optional': true },
+            paint:{ 'text-color': ${JSON.stringify(colors.textPrimary)}, 'text-halo-color': ${JSON.stringify(colors.background)}, 'text-halo-width': 1.4 }
+          });
+          map.on('click','waypoint-dot', function(e){
+            var f = e.features && e.features[0];
+            if (f && f.properties && f.properties.id) post({ type:'waypoint', id: f.properties.id });
+          });
+        }
+        map.getSource('waypoints').setData({
+          type:'FeatureCollection',
+          features: (points || []).map(function (p) {
+            return { type:'Feature', geometry:{ type:'Point', coordinates:[p.longitude, p.latitude] }, properties:{ id: p.id, name: p.name } };
+          })
+        });
+      };
+
+      /** Frame a line so all of it is on screen. */
+      window.sakshiFitLine = function (coords) {
+        if (!coords || coords.length < 2) return;
+        var b = new maplibregl.LngLatBounds(coords[0], coords[0]);
+        coords.forEach(function (c) { b.extend(c); });
+        map.fitBounds(b, { padding: 40, maxZoom: 15, duration: 600 });
       };
 
       window.sakshiSetRouteColor = function (color) {

@@ -3,6 +3,7 @@ import * as Location from 'expo-location';
 
 import { removeWatch, silenceWatchRemovalRejections } from '../location/watchTeardown';
 
+import { cameraElevationDeg } from '@/core';
 import { normalizeBearing } from '@/utils';
 
 /**
@@ -121,7 +122,7 @@ export function watchAttitude(onAttitude: (attitude: Attitude) => void, interval
     const subscription = DeviceMotion.addListener(({ rotation }: DeviceMotionData) => {
       if (!rotation) return;
       const toDeg = 180 / Math.PI;
-      pitch = smoothAngle(pitch, rotation.beta * toDeg, PITCH_SMOOTHING);
+      pitch = smoothAngle(pitch, cameraElevationDeg(rotation.beta * toDeg), PITCH_SMOOTHING);
       roll = smoothAngle(roll, rotation.gamma * toDeg, PITCH_SMOOTHING);
       onAttitude({
         pitch: pitch > 180 ? pitch - 360 : pitch,

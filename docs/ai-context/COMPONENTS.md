@@ -48,8 +48,9 @@ The 12 primitives every screen composes from. **Highest blast radius in the code
 
 ### Colour themes
 
-[theme/colors.ts](../../theme/colors.ts) defines matching `navyColors` and
-`whiteColors` semantic palettes. Components continue to consume `colors`; the
+[theme/colors.ts](../../theme/colors.ts) defines matching `navyColors` (shown as Himalayan dusk) and
+`whiteColors` (shown as Lumbini morning) semantic palettes. Text on a fill must use
+its paired role (`onPrimary`, `onAccent`, `onScrim`); see [DESIGN.md](../../DESIGN.md). Components continue to consume `colors`; the
 root [index.tsx](../../index.tsx) selects that stable object's initial values
 before Expo Router loads. The Appearance toggle lives in
 [features/settings/SettingsScreen.tsx](../../features/settings/SettingsScreen.tsx)
@@ -185,3 +186,12 @@ Present but not systematic:
 ---
 
 *Part of the [docs/ai-context](README.md) knowledge base. Snapshot of commit `dbe6d45e`; verify against current source before relying on details.*
+
+## Added since 1.0 (2026-11)
+
+- **`SegmentedControl`** (`components/ui`): one choice from a few, 48dp segments; used for depth.
+- **`ReportTimeline`** (`components/report`): a report's custodian steps; future steps are hollow and undated.
+- **`PhotoHero`** (`components/site`): a remote photo with its credit on the image; renders nothing on load failure.
+- **`SiteVisual`** gained `credited` and a remote Commons photo before the plate or schematic fallback.
+- **`Mascot`** (`components/mascot`): the four original characters, decorative (`accessible={false}`).
+

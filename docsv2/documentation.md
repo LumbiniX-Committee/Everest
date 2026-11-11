@@ -8,7 +8,7 @@ the basic idea to the deepest technical parts. If you read this top to bottom yo
 will understand what we built, why we built it that way, how each part works, and
 what its limits are.*
 
-*Project: LumbiniX-Committee/Everest. Event: LumbiniX 2026 hackathon. Last
+*Project: siddantasodari4-eng/saksi. Event: LumbiniX 2026 hackathon. Last
 updated: 2026-08-10.*
 
 ---

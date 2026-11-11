@@ -3,6 +3,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { CameraView } from 'expo-camera';
 import { Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { EmptyState } from '@/components/common';
+import { useConfirmLeave, useSafeBack } from '@/hooks';
 import { Button, Icon, Screen, Text } from '@/components/ui';
 import { areaForQuest, isVantageTask } from '@/data';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
@@ -13,6 +14,7 @@ import { colors, radii, spacing } from '@/theme';
 export function QuestMemoryCameraScreen() {
   const ui = useVisitorLiteralCopy();
   const router = useRouter();
+  const goBack = useSafeBack('/(main)/tirtha/quests');
   const { questId, taskId } = useLocalSearchParams<{ questId: string; taskId: string }>();
   const { hydrated, getQuestById, completeTask } = useQuests();
   const { preferences } = usePreferences();
@@ -29,7 +31,9 @@ export function QuestMemoryCameraScreen() {
   const [ready, setReady] = useState(false);
   const [busy, setBusy] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [questDone, setQuestDone] = useState(false);
   const [error, setError] = useState<string>();
+  useConfirmLeave(photoUri != null && !saved && !busy);
   const quest = getQuestById(questId);
   const task = quest?.tasks.find((item) => item.id === taskId);
 
@@ -44,7 +48,7 @@ export function QuestMemoryCameraScreen() {
 
   if (!hydrated) return <Screen><Text>Loading camera…</Text></Screen>;
   if (!quest || !task || task.evidence !== 'photo' || isVantageTask(task)) {
-    return <Screen><EmptyState title="Choose a memory activity" body="This camera is for your quest memories." actionLabel="Back" onAction={() => router.back()} /></Screen>;
+    return <Screen><EmptyState title="Choose a memory activity" body="This camera is for your quest memories." actionLabel="Back" onAction={goBack} /></Screen>;
   }
 
   const capture = async () => {
@@ -92,8 +96,11 @@ export function QuestMemoryCameraScreen() {
       // the photo or produce a second copy.
       durablePhoto.current ??= await questMemories.keepPhoto(photoUri);
       await questMemories.save({ questId, taskId, photoUri: durablePhoto.current, note: reflection.trim(), submittedAt: new Date().toISOString() });
-      await completeTask(questId, taskId);
-      if (live.current) setSaved(true);
+      const result = await completeTask(questId, taskId);
+      if (live.current) {
+        setQuestDone(result.questCompleted);
+        setSaved(true);
+      }
     } catch {
       if (live.current) setError('Could not finish saving. Your photo and words are still here. Tap to retry.');
     } finally {
@@ -109,7 +116,7 @@ export function QuestMemoryCameraScreen() {
           <CameraView ref={cameraRef} style={styles.camera} facing={facing} onCameraReady={() => setReady(true)} onMountError={() => setError('Camera unavailable. Close other camera apps and retry.')} /> :
           <View style={styles.gate}><Icon name="camera-outline" size={48} /><Text center>Allow camera to capture your memory</Text><Button label={permission.status === 'blocked' ? 'Open settings' : 'Allow camera'} onPress={permission.status === 'blocked' ? openSettings : requestCamera} /><Button label="Choose existing photo" variant="secondary" onPress={() => void choose()} /></View>}
         <View style={styles.hud}>
-          <Pressable accessibilityRole="button" accessibilityLabel={ui('Back to quests')} onPress={() => { if (!busy) router.back(); }} style={styles.round}><Icon name="close" /></Pressable>
+          <Pressable accessibilityRole="button" accessibilityLabel={ui('Back to quests')} onPress={() => { if (!busy) goBack(); }} style={styles.round}><Icon name="close" /></Pressable>
           <View style={styles.title}><Text variant="caption" tone="sandstone">{areaForQuest(quest)?.name ?? 'Quest memory'}</Text><Text variant="heading" numberOfLines={2}>{task.title}</Text></View>
         </View>
         {countdown > 0 ? <View style={styles.countdown}><Text variant="title">{countdown}</Text></View> : null}
@@ -119,7 +126,7 @@ export function QuestMemoryCameraScreen() {
           <Icon name="check-circle" size={36} color={colors.resolved} />
           <Text variant="heading">Memory saved · Activity complete</Text>
           <Text variant="caption" tone="secondary">Your photo and experience are saved on this phone. Upload will retry when a connection is available.</Text>
-          <Button label="Back to adventures" onPress={() => router.back()} />
+          {questDone ? <Button label="See what you completed" onPress={() => router.replace(`/(main)/tirtha/quests/completed/${questId}`)} /> : <Button label="Back to adventures" onPress={() => goBack()} />}
           <Button label="View my memories" variant="secondary" onPress={() => router.replace('/(main)/tirtha/memories')} />
         </> : photoUri ? <>
           <View style={styles.grip} />

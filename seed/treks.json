@@ -1,0 +1,705 @@
+{
+  "_about": "Curated trekking routes. Positions, distances, climbs and altitudes are NOT written here: tools/data/build-treks.mjs takes them from OpenStreetMap, routes each day over mapped trails and reads altitude from an elevation model. Words here are authored; numbers here are only permit fees, each with its source and the date it was checked.",
+  "checked": "2026-11-08",
+  "treks": [
+    {
+      "id": "poon-hill",
+      "name": "Ghorepani–Poon Hill",
+      "nameNepali": "घोरेपानी–पुनहिल",
+      "hub": "pokhara",
+      "region": "Annapurna Conservation Area, Kaski and Myagdi",
+      "difficulty": "moderate",
+      "summary": "The classic short trek from Pokhara: rhododendron forest, Gurung and Magar villages, and a dawn view from Poon Hill across Dhaulagiri, Annapurna South and Machhapuchhre. It stays below 3,300 m, so altitude sickness is rarely an issue, but the stone staircases to Ulleri are relentless.",
+      "seasons": {
+        "best": "October to November for clear views; March to April for rhododendrons in flower.",
+        "avoid": "June to September: monsoon cloud hides the mountains, trails are slippery and leeches are common below 2,500 m."
+      },
+      "access": {
+        "start": "From Pokhara, about 1.5 hours by road to Nayapul. Many trekkers now take a jeep further, to Tikhedhunga or Ulleri, which shortens the first two days.",
+        "finish": "From Ghandruk, jeeps run down to Nayapul or Pokhara if you prefer not to walk the last day."
+      },
+      "permits": [
+        {
+          "name": "Annapurna Conservation Area permit (ACAP)",
+          "feeNpr": {
+            "foreign": 3000
+          },
+          "where": "Nepal Tourism Board, Kathmandu or Pokhara",
+          "note": "Checked at Birethanti and Ghorepani."
+        },
+        {
+          "name": "TIMS card",
+          "feeNpr": null,
+          "where": "Issued through a registered trekking agency",
+          "note": "Sources disagree on the current fee (NPR 1,000 to 2,000). Your agency will confirm it."
+        }
+      ],
+      "stops": [
+        {
+          "id": "nayapul",
+          "name": "Nayapul",
+          "kind": "trailhead",
+          "approx": [
+            28.2981,
+            83.7679
+          ],
+          "osm": "^Nayapul$",
+          "note": "Road head on the Pokhara–Baglung highway. Shops for last supplies."
+        },
+        {
+          "id": "birethanti",
+          "name": "Birethanti",
+          "kind": "village",
+          "approx": [
+            28.3095,
+            83.7748
+          ],
+          "osm": "^Birethanti$",
+          "note": "ACAP checkpoint at the confluence of the Modi and Bhurungdi rivers."
+        },
+        {
+          "id": "tikhedhunga",
+          "name": "Tikhedhunga",
+          "kind": "village",
+          "approx": [
+            28.3491,
+            83.7423
+          ],
+          "osm": "^Tikhe ?[Dd]hunga$",
+          "note": "Small teahouse settlement at a suspension bridge, below the Ulleri staircase."
+        },
+        {
+          "id": "ulleri",
+          "name": "Ulleri",
+          "kind": "village",
+          "approx": [
+            28.3567,
+            83.7354
+          ],
+          "osm": "^Ulleri$",
+          "note": "Magar village at the top of roughly 3,000 stone steps. The first good mountain views open here."
+        },
+        {
+          "id": "ghorepani",
+          "name": "Ghorepani",
+          "kind": "village",
+          "approx": [
+            28.4025,
+            83.6999
+          ],
+          "osm": "^Ghorepani$",
+          "note": "Ridge-top village of lodges, crowded in season. Leave about 4:45 am for sunrise on Poon Hill."
+        },
+        {
+          "id": "poon-hill",
+          "name": "Poon Hill",
+          "kind": "viewpoint",
+          "approx": [
+            28.4004,
+            83.6894
+          ],
+          "osm": "^(Poon ?Hill|Pun Danda)$",
+          "note": "Viewing tower about 45 minutes above Ghorepani. A small entry fee is collected. Dhaulagiri to the west, the Annapurnas and Machhapuchhre to the east."
+        },
+        {
+          "id": "deurali",
+          "name": "Deurali Pass",
+          "kind": "pass",
+          "approx": [
+            28.3955,
+            83.7127
+          ],
+          "osm": "^Deurali Pass$",
+          "note": "Highest point of the crossing to Tadapani, through rhododendron forest. Can hold snow and ice in winter."
+        },
+        {
+          "id": "tadapani",
+          "name": "Tadapani",
+          "kind": "village",
+          "approx": [
+            28.3965,
+            83.7653
+          ],
+          "osm": "^Tadapani$",
+          "note": "Forest clearing with lodges. Machhapuchhre fills the view at dawn."
+        },
+        {
+          "id": "ghandruk",
+          "name": "Ghandruk",
+          "kind": "village",
+          "approx": [
+            28.3769,
+            83.8078
+          ],
+          "osm": "^Ghandruk$",
+          "note": "Large Gurung village of stone-slate houses, with a small Gurung heritage museum. Annapurna South rises straight above it."
+        },
+        {
+          "id": "kimche",
+          "name": "Kimche",
+          "kind": "village",
+          "approx": [
+            28.3563,
+            83.8047
+          ],
+          "osm": "^Kimche$",
+          "note": "Jeep road head below Ghandruk."
+        }
+      ],
+      "days": [
+        {
+          "route": [
+            "nayapul",
+            "birethanti",
+            "tikhedhunga"
+          ],
+          "sleep": "tikhedhunga",
+          "note": "An easy riverside start on a farm road, then trail. Show your ACAP permit at Birethanti."
+        },
+        {
+          "route": [
+            "tikhedhunga",
+            "ulleri",
+            "ghorepani"
+          ],
+          "sleep": "ghorepani",
+          "note": "The hard day: the long stone staircase to Ulleri, then steady forest climbing to the ridge at Ghorepani."
+        },
+        {
+          "route": [
+            "ghorepani",
+            "poon-hill",
+            "ghorepani",
+            "deurali",
+            "tadapani"
+          ],
+          "sleep": "tadapani",
+          "note": "Dawn on Poon Hill and back for breakfast, then east over Deurali Pass and down through forest to Tadapani. Expect mud and ice on the shaded descents."
+        },
+        {
+          "route": [
+            "tadapani",
+            "ghandruk"
+          ],
+          "sleep": "ghandruk",
+          "note": "A short, steep descent. Spend the afternoon in Ghandruk's old village and museum."
+        },
+        {
+          "route": [
+            "ghandruk",
+            "kimche",
+            "nayapul"
+          ],
+          "sleep": null,
+          "note": "Down to the road. Many people take a jeep from Ghandruk or Kimche instead."
+        }
+      ],
+      "safety": [
+        "Stays below 3,300 m: altitude sickness is uncommon, but go back down if you have a severe headache, vomiting or confusion.",
+        "The descent from Deurali to Tadapani is steep and often wet; trekking poles help.",
+        "Mobile signal reaches most villages; lodges sell hot showers and charging."
+      ],
+      "sources": [
+        {
+          "label": "OpenStreetMap contributors (ODbL): trail and village positions",
+          "url": "https://www.openstreetmap.org/copyright"
+        },
+        {
+          "label": "Open-Meteo elevation API (Copernicus DEM GLO-90)",
+          "url": "https://open-meteo.com/en/docs/elevation-api"
+        },
+        {
+          "label": "Permit fees as published by trekking agencies, November 2026 (not an official notice)",
+          "url": "https://annapurnatrekking.com/blog/nepal-trekking-permits-guide"
+        }
+      ]
+    },
+    {
+      "id": "langtang-valley",
+      "name": "Langtang Valley",
+      "nameNepali": "लाङटाङ उपत्यका",
+      "hub": "kathmandu",
+      "region": "Langtang National Park, Rasuwa",
+      "difficulty": "challenging",
+      "summary": "The closest high-mountain valley to Kathmandu: up the Langtang Khola gorge through forest, into a wide glacial valley of yak pastures and Tamang villages, to the monastery at Kyanjin Gompa beneath Langtang Lirung. The 2015 earthquake set off an avalanche that buried the old Langtang village; the village has since been rebuilt nearby.",
+      "seasons": {
+        "best": "October to November, and March to May.",
+        "avoid": "June to September for monsoon landslides on the road and lower trail; December to February is very cold at Kyanjin."
+      },
+      "access": {
+        "start": "About 7 to 9 hours by bus or jeep from Kathmandu to Syabrubesi. The road has landslide-prone sections.",
+        "finish": "The same road back from Syabrubesi."
+      },
+      "permits": [
+        {
+          "name": "Langtang National Park entry permit",
+          "feeNpr": {
+            "foreign": 3000
+          },
+          "where": "Department of National Parks counter, Kathmandu, or the park entrance at Dhunche",
+          "note": "A 13% VAT may be added."
+        },
+        {
+          "name": "TIMS card",
+          "feeNpr": null,
+          "where": "Issued through a registered trekking agency",
+          "note": "Sources disagree on the current fee (NPR 1,000 to 2,000). Your agency will confirm it."
+        }
+      ],
+      "stops": [
+        {
+          "id": "syabrubesi",
+          "name": "Syabrubesi",
+          "kind": "trailhead",
+          "approx": [
+            28.1606,
+            85.3445
+          ],
+          "osm": "^Sya[bp]ru ?[Bb]esi$",
+          "note": "Road-end town on the Bhote Koshi. Last ATM is unreliable; bring cash from Kathmandu."
+        },
+        {
+          "id": "bamboo",
+          "name": "Bamboo",
+          "kind": "village",
+          "approx": [
+            28.1597,
+            85.388
+          ],
+          "osm": "^Bamboo$",
+          "note": "Lodges in the gorge beside the river. Langur monkeys are common."
+        },
+        {
+          "id": "lama-hotel",
+          "name": "Lama Hotel",
+          "kind": "village",
+          "approx": [
+            28.169,
+            85.428
+          ],
+          "osm": "^Lama Hotel$",
+          "note": "A cluster of lodges in deep forest; red pandas live in this part of the park."
+        },
+        {
+          "id": "ghoda-tabela",
+          "name": "Ghoda Tabela",
+          "kind": "village",
+          "approx": [
+            28.1915,
+            85.466
+          ],
+          "osm": "^Ghoda ?[Tt]abela$",
+          "note": "The forest opens out; a National Park army post checks permits."
+        },
+        {
+          "id": "langtang",
+          "name": "Langtang",
+          "kind": "village",
+          "approx": [
+            28.2155,
+            85.518
+          ],
+          "osm": "^Langtang$",
+          "note": "The rebuilt village, near the site buried by the 2015 avalanche. Walk quietly past the memorial area."
+        },
+        {
+          "id": "kyanjin-gompa",
+          "name": "Kyanjin Gompa",
+          "kind": "monastery",
+          "approx": [
+            28.2112,
+            85.5627
+          ],
+          "osm": "^Kyanjin ?[Gg]ompa$",
+          "note": "Buddhist monastery and village at the head of the valley, with a cheese factory. Ask before photographing inside the gompa."
+        },
+        {
+          "id": "kyanjin-ri",
+          "name": "Kyanjin Ri",
+          "kind": "viewpoint",
+          "approx": [
+            28.2237,
+            85.5653
+          ],
+          "osm": "^Kyanjin Ri$",
+          "note": "Prayer-flag summit above the village, about 3 hours up and back, with a close view of Langtang Lirung's glacier."
+        }
+      ],
+      "days": [
+        {
+          "route": [
+            "syabrubesi",
+            "bamboo",
+            "lama-hotel"
+          ],
+          "sleep": "lama-hotel",
+          "note": "Into the gorge: forest, river crossings and a long, steady climb."
+        },
+        {
+          "route": [
+            "lama-hotel",
+            "ghoda-tabela",
+            "langtang"
+          ],
+          "sleep": "langtang",
+          "note": "A big height gain in one day. Walk slowly and drink plenty; this is where altitude starts to matter."
+        },
+        {
+          "route": [
+            "langtang",
+            "kyanjin-gompa"
+          ],
+          "sleep": "kyanjin-gompa",
+          "note": "A short day up the open valley past mani walls and prayer wheels."
+        },
+        {
+          "route": [
+            "kyanjin-gompa",
+            "kyanjin-ri",
+            "kyanjin-gompa"
+          ],
+          "sleep": "kyanjin-gompa",
+          "note": "Acclimatisation day: climb Kyanjin Ri early before cloud builds, then rest."
+        },
+        {
+          "route": [
+            "kyanjin-gompa",
+            "langtang",
+            "lama-hotel"
+          ],
+          "sleep": "lama-hotel",
+          "note": "Retrace the valley, losing height fast."
+        },
+        {
+          "route": [
+            "lama-hotel",
+            "bamboo",
+            "syabrubesi"
+          ],
+          "sleep": null,
+          "note": "Down the gorge to the road."
+        }
+      ],
+      "safety": [
+        "Kyanjin Gompa is near 3,900 m and Kyanjin Ri above 4,500 m. Know the signs of altitude sickness, and descend if they worsen.",
+        "The trail between Lama Hotel and Langtang passes old landslide and avalanche ground; do not linger there after heavy rain or snow.",
+        "Signal is patchy above Lama Hotel. Tell someone your plan."
+      ],
+      "sources": [
+        {
+          "label": "OpenStreetMap contributors (ODbL): trail and village positions",
+          "url": "https://www.openstreetmap.org/copyright"
+        },
+        {
+          "label": "Open-Meteo elevation API (Copernicus DEM GLO-90)",
+          "url": "https://open-meteo.com/en/docs/elevation-api"
+        },
+        {
+          "label": "Permit fees as published by trekking agencies, November 2026 (not an official notice)",
+          "url": "https://travelhimalayanepal.com/nepal-trekking-permits-cost-2026"
+        }
+      ]
+    },
+    {
+      "id": "everest-base-camp",
+      "name": "Everest Base Camp",
+      "nameNepali": "सगरमाथा आधार शिविर",
+      "hub": null,
+      "region": "Sagarmatha National Park, Solukhumbu",
+      "difficulty": "challenging",
+      "summary": "From the airstrip at Lukla up the Dudh Koshi into the Khumbu: Sherpa villages, Tengboche monastery, and the moraine to the foot of the Khumbu Icefall. The best Everest view is not from base camp but from Kala Patthar at dawn. Two rest days for acclimatisation are part of the route, not optional.",
+      "seasons": {
+        "best": "October to November, and late March to May.",
+        "avoid": "June to September: monsoon cloud and frequent cancelled flights to Lukla. December to February is bitterly cold above Dingboche."
+      },
+      "access": {
+        "start": "A short flight to Lukla, from Kathmandu or from Ramechhap (Manthali), which most flights use in peak season. Flights are weather-dependent: keep two spare days.",
+        "finish": "Fly back from Lukla."
+      },
+      "permits": [
+        {
+          "name": "Sagarmatha National Park entry permit",
+          "feeNpr": {
+            "foreign": 3000
+          },
+          "where": "Kathmandu, or the park entrance at Monjo",
+          "note": "A 13% VAT may be added."
+        },
+        {
+          "name": "Khumbu Pasang Lhamu Rural Municipality permit",
+          "feeNpr": {
+            "foreign": 3000
+          },
+          "where": "Collected at Lukla or Monjo, in rupees",
+          "note": "Some sources give a different amount. Bring cash."
+        }
+      ],
+      "stops": [
+        {
+          "id": "lukla",
+          "name": "Lukla",
+          "kind": "trailhead",
+          "approx": [
+            27.6869,
+            86.7314
+          ],
+          "osm": "^Lukla$",
+          "note": "Tenzing–Hillary Airport. Gear shops and lodges; most trekkers meet porters here."
+        },
+        {
+          "id": "phakding",
+          "name": "Phakding",
+          "kind": "village",
+          "approx": [
+            27.7397,
+            86.7128
+          ],
+          "osm": "^Phakding$",
+          "note": "Riverside village, lower than Lukla: a gentle first night."
+        },
+        {
+          "id": "monjo",
+          "name": "Monjo",
+          "kind": "village",
+          "approx": [
+            27.7745,
+            86.7225
+          ],
+          "osm": "^Monjo$",
+          "note": "Sagarmatha National Park gate: permits are checked here."
+        },
+        {
+          "id": "namche",
+          "name": "Namche Bazaar",
+          "kind": "village",
+          "approx": [
+            27.8048,
+            86.714
+          ],
+          "osm": "^Namche( Bazaar)?$",
+          "note": "The Sherpa capital of the Khumbu, in a horseshoe bowl. Bakeries, gear, the Sherpa Culture Museum and the park headquarters. First rest day here."
+        },
+        {
+          "id": "tengboche",
+          "name": "Tengboche",
+          "kind": "monastery",
+          "approx": [
+            27.8361,
+            86.7646
+          ],
+          "osm": "^Tengboche$",
+          "note": "The largest monastery in the Khumbu, with Ama Dablam and Everest in view. Visitors may watch the afternoon prayers quietly; no photography during ceremonies."
+        },
+        {
+          "id": "pangboche",
+          "name": "Pangboche",
+          "kind": "village",
+          "approx": [
+            27.8578,
+            86.7944
+          ],
+          "osm": "^Pangboche$",
+          "note": "One of the oldest Sherpa villages, with an old gompa above the trail."
+        },
+        {
+          "id": "dingboche",
+          "name": "Dingboche",
+          "kind": "village",
+          "approx": [
+            27.892,
+            86.831
+          ],
+          "osm": "^Dingboche$",
+          "note": "Stone-walled barley fields under Ama Dablam. Second rest day: a slow climb up the ridge behind the village helps acclimatise."
+        },
+        {
+          "id": "thukla",
+          "name": "Thukla",
+          "kind": "village",
+          "approx": [
+            27.9208,
+            86.8148
+          ],
+          "osm": "^(Thukla|Dughla)$",
+          "note": "Lodges below the steep climb to the memorial cairns for climbers who died on Everest."
+        },
+        {
+          "id": "lobuche",
+          "name": "Lobuche",
+          "kind": "village",
+          "approx": [
+            27.9485,
+            86.8105
+          ],
+          "osm": "^Lobuche$",
+          "note": "A cold, basic lodge settlement beside the Khumbu Glacier."
+        },
+        {
+          "id": "gorak-shep",
+          "name": "Gorak Shep",
+          "kind": "village",
+          "approx": [
+            27.981,
+            86.8293
+          ],
+          "osm": "^Gorak ?[Ss]hep$",
+          "note": "The last lodges, on a frozen lakebed. Sleep here is hard at this height."
+        },
+        {
+          "id": "ebc",
+          "name": "Everest Base Camp",
+          "kind": "basecamp",
+          "approx": [
+            28.004,
+            86.853
+          ],
+          "osm": "^Everest Base Camp",
+          "note": "A rocky moraine at the foot of the Khumbu Icefall. In spring it fills with expedition tents; Everest's summit cannot be seen from here."
+        },
+        {
+          "id": "kala-patthar",
+          "name": "Kala Patthar",
+          "kind": "viewpoint",
+          "approx": [
+            27.9957,
+            86.8285
+          ],
+          "osm": "^Kala ?[Pp]att?har$",
+          "note": "Dark hill above Gorak Shep: the classic close view of Everest, best at sunrise."
+        },
+        {
+          "id": "pheriche",
+          "name": "Pheriche",
+          "kind": "village",
+          "approx": [
+            27.8952,
+            86.8195
+          ],
+          "osm": "^Pheriche$",
+          "note": "Windy valley village with the Himalayan Rescue Association aid post, staffed in season."
+        }
+      ],
+      "days": [
+        {
+          "route": [
+            "lukla",
+            "phakding"
+          ],
+          "sleep": "phakding",
+          "note": "A short, mostly downhill first day to let you adjust after the flight."
+        },
+        {
+          "route": [
+            "phakding",
+            "monjo",
+            "namche"
+          ],
+          "sleep": "namche",
+          "note": "Through the park gate at Monjo, across the high suspension bridges, then the long climb to Namche. First distant view of Everest on the way up."
+        },
+        {
+          "route": [],
+          "rest": "namche",
+          "sleep": "namche",
+          "note": "Rest day. Climb a few hundred metres above Namche towards Syangboche and come back down to sleep: climb high, sleep low."
+        },
+        {
+          "route": [
+            "namche",
+            "tengboche"
+          ],
+          "sleep": "tengboche",
+          "note": "A balcony trail with Ama Dablam ahead, a drop to the river at Phunki Tenga, then a steep climb to Tengboche."
+        },
+        {
+          "route": [
+            "tengboche",
+            "pangboche",
+            "dingboche"
+          ],
+          "sleep": "dingboche",
+          "note": "Above the treeline. The air gets noticeably thinner."
+        },
+        {
+          "route": [],
+          "rest": "dingboche",
+          "sleep": "dingboche",
+          "note": "Rest day. Walk slowly up the ridge behind the village for an hour or two, then return."
+        },
+        {
+          "route": [
+            "dingboche",
+            "thukla",
+            "lobuche"
+          ],
+          "sleep": "lobuche",
+          "note": "Gentle at first, then the steep moraine climb above Thukla to the memorials."
+        },
+        {
+          "route": [
+            "lobuche",
+            "gorak-shep",
+            "ebc",
+            "gorak-shep"
+          ],
+          "sleep": "gorak-shep",
+          "note": "Along the glacier to Gorak Shep, then out to base camp and back. A long day at extreme altitude."
+        },
+        {
+          "route": [
+            "gorak-shep",
+            "kala-patthar",
+            "gorak-shep",
+            "pheriche"
+          ],
+          "sleep": "pheriche",
+          "note": "Kala Patthar before dawn, then descend: going down is the best cure for altitude."
+        },
+        {
+          "route": [
+            "pheriche",
+            "pangboche",
+            "tengboche",
+            "namche"
+          ],
+          "sleep": "namche",
+          "note": "A long descent back to Namche."
+        },
+        {
+          "route": [
+            "namche",
+            "monjo",
+            "phakding",
+            "lukla"
+          ],
+          "sleep": "lukla",
+          "note": "The last day ends with a climb back up to Lukla. Confirm your flight."
+        }
+      ],
+      "safety": [
+        "Above 3,000 m, raise your sleeping height by no more than about 500 m a night, and rest a day every 3 to 4 days.",
+        "Altitude sickness can kill. Severe headache, vomiting, confusion, loss of balance or breathlessness at rest mean go down now, not tomorrow.",
+        "Yaks and porters have right of way: step to the hillside, never the drop side.",
+        "Buy insurance that covers helicopter evacuation up to 6,000 m."
+      ],
+      "sources": [
+        {
+          "label": "OpenStreetMap contributors (ODbL): trail and village positions",
+          "url": "https://www.openstreetmap.org/copyright"
+        },
+        {
+          "label": "Open-Meteo elevation API (Copernicus DEM GLO-90)",
+          "url": "https://open-meteo.com/en/docs/elevation-api"
+        },
+        {
+          "label": "Wilderness Medical Society altitude illness guidelines",
+          "url": "https://doi.org/10.1016/j.wem.2019.04.006"
+        },
+        {
+          "label": "Permit fees as published by trekking agencies, November 2026 (not an official notice)",
+          "url": "https://nepalguidetrekking.com/blogs/nepal-trekking-permits"
+        }
+      ]
+    }
+  ]
+}

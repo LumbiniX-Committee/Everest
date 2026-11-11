@@ -98,7 +98,7 @@ export function AlignmentDial() {
             <span
               className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold shadow-sm transition ${
                 locked
-                  ? 'bg-sakshi text-white'
+                  ? 'bg-sandstone text-white'
                   : byEye
                     ? 'bg-earth text-white'
                     : 'bg-surface text-ink-soft'
@@ -129,7 +129,7 @@ export function AlignmentDial() {
                 <dt className="w-20 text-sm text-ink-muted">{r.label}</dt>
                 <dd
                   className={`font-mono text-lg tabular-nums transition-colors ${
-                    r.ok ? 'text-sakshi' : 'text-ink'
+                    r.ok ? 'text-sandstone-deep' : 'text-ink'
                   }`}
                 >
                   {r.value}

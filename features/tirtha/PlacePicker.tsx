@@ -1,10 +1,11 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import { SiteVisual } from '@/components/site';
 import { BottomSheet, Text } from '@/components/ui';
-import { demoSites } from '@/data';
+import { demoSites, PLACES } from '@/data';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
-import { colors, radii, spacing } from '@/theme';
+import { colors, font, radii, spacing } from '@/theme';
 import type { Coordinate } from '@/types';
 import { distanceMeters, formatDistance } from '@/utils';
 
@@ -33,6 +34,8 @@ export type PlacePickerProps = {
   /** True when the walk can actually carry the player there. */
   canTravel: boolean;
   onSelect: (siteId: string) => void;
+  /** A listed place from open data, chosen from search. */
+  onSelectPlace?: (placeId: string) => void;
 };
 
 export function PlacePicker({
@@ -42,8 +45,11 @@ export function PlacePicker({
   atSiteId,
   canTravel,
   onSelect,
+  onSelectPlace,
 }: PlacePickerProps) {
   const ui = useVisitorLiteralCopy();
+  const [query, setQuery] = useState('');
+  const needle = normalise(query);
   // Nearest first. A list of places to walk to that is not ordered by how far
   // away they are is a list you have to read rather than scan.
   const places = [...demoSites]
@@ -51,6 +57,7 @@ export function PlacePicker({
       site,
       distanceM: coordinate ? distanceMeters(coordinate, site.coordinate) : null,
     }))
+    .filter(({ site }) => !needle || [site.name, site.nameNepali ?? ''].some((name) => normalise(name).includes(needle)))
     .sort((a, b) => (a.distanceM ?? Infinity) - (b.distanceM ?? Infinity));
 
   return (
@@ -61,6 +68,40 @@ export function PlacePicker({
       subtitle={canTravel ? 'Takes you there' : 'Moves the view; your position is your own'}
       scroll
     >
+      <TextInput
+        value={query}
+        onChangeText={setQuery}
+        placeholder={ui('Search places')}
+        placeholderTextColor={colors.textMuted}
+        accessibilityLabel={ui('Search places')}
+        autoCorrect={false}
+        style={styles.search}
+      />
+      {needle && onSelectPlace ? (
+        <View style={styles.list}>
+          {PLACES.filter((place) => [place.name, place.nameNepali ?? ''].some((name) => normalise(name).includes(needle)))
+            .slice(0, 15)
+            .map((place) => (
+              <Pressable
+                key={place.id}
+                accessibilityRole="button"
+                accessibilityLabel={place.name}
+                onPress={() => onSelectPlace(place.id)}
+                style={({ pressed }) => [styles.placeRow, pressed && styles.pressed]}
+              >
+                <Text variant="bodyStrong" translate={false}>{place.name}</Text>
+                {place.description ? (
+                  <Text variant="caption" tone="secondary" numberOfLines={1} translate={false}>{place.description}</Text>
+                ) : null}
+              </Pressable>
+            ))}
+        </View>
+      ) : null}
+      {places.length === 0 && !(needle && onSelectPlace) ? (
+        <Text variant="body" tone="secondary">
+          No place matches that name.
+        </Text>
+      ) : null}
       <View style={styles.list}>
         {places.map(({ site, distanceM }) => {
           const here = site.id === atSiteId;
@@ -98,8 +139,25 @@ export function PlacePicker({
   );
 }
 
+/** Matches "Sakshi" to "Sākṣī", so nobody needs to type diacritics. */
+function normalise(value: string): string {
+  return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+}
+
 const styles = StyleSheet.create({
+  search: {
+    ...font('body'),
+    minHeight: 48,
+    marginBottom: spacing.sm,
+    paddingHorizontal: spacing.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radii.md,
+    backgroundColor: colors.surface,
+    color: colors.textPrimary,
+  },
   list: { gap: spacing.sm, paddingBottom: spacing.base },
+  placeRow: { gap: spacing.xxs, minHeight: 56, justifyContent: 'center', paddingHorizontal: spacing.md, borderRadius: radii.md, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },
   row: {
     flexDirection: 'row',
     alignItems: 'center',

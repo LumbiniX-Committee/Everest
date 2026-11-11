@@ -49,6 +49,8 @@ export type QuestTaskItemProps = {
   submission?: QuestSubmission;
   /** Opens the aligned Sākṣī capture required by a vantage-backed task. */
   onWitness?: () => void;
+  /** Walking directions, for a task completed by arriving somewhere. */
+  onGuide?: () => void;
 };
 
 export function QuestTaskItem({
@@ -63,6 +65,7 @@ export function QuestTaskItem({
   filedSeverities = [],
   submission,
   onWitness,
+  onGuide,
 }: QuestTaskItemProps) {
   const ui = useVisitorLiteralCopy();
   const { selection, notification } = useHaptics();
@@ -198,6 +201,8 @@ export function QuestTaskItem({
         {task.type === 'site_visit' && site ? (
           <TaskProximity site={site} distanceM={distanceM} unit={distanceUnit} />
         ) : null}
+
+        {onGuide ? <Button label="Guide me" icon="directions" variant="secondary" onPress={onGuide} /> : null}
 
         {!completed && task.autoComplete === 'vantage_capture' && onWitness ? (
           <Button label="Open Sākṣī vantage" variant="secondary" onPress={onWitness} />

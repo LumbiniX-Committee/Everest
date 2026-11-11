@@ -46,7 +46,7 @@ export function CompassCalibrationPrompt({ visible, onDismiss }: CompassCalibrat
 const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: 'rgba(14, 21, 18, 0.9)',
+    backgroundColor: colors.scrimStrong,
     justifyContent: 'center',
     alignItems: 'center',
     padding: spacing.gutter,

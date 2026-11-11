@@ -38,7 +38,7 @@ These were **actually executed during this audit** on Windows 11 / PowerShell, a
 | `npm run validate` | ✅ **Passes with 5 warnings** | Seed totals: 12 sites, 6 vantages, 10 quests, 3 needs, 5 timeline, 10 plates. Warnings: 5 sites have `coords still 'doc'` (see below) |
 | `npm run vocab` | ✅ **Passes clean** | "content and app sweeps pass, and no em dash reaches a reader" |
 | `npm run eval:dhamma` | ✅ **Passes 50/50** | answerable 18/18, adjacent 10/10, out_of_scope 12/12, adversarial 6/6, nepali 4/4. **Citations naming an unretrieved passage: 0** |
-| `npm run lint` | ❌ **FAILS — 16 errors** | All 16 in one file: [components/monk/SpeechCloud.tsx](../../components/monk/SpeechCloud.tsx). 15 × `react-hooks/refs`, 1 × `react-hooks/set-state-in-effect` |
+| `npm run lint` | ✅ clean | Scans `expo lint`'s default folders only, not `features/`. `npm run lint:all` scans everything: 70 known errors (2026-11-08), mostly React Compiler rules. |
 | `npx expo start --web` | ✅ **Serves** | Metro bundles, HTTP 200, ~11 MB JS bundle compiles without error |
 
 > `npm run verify` chains typecheck + test + validate + vocab + eval:dhamma. **It does not include `lint`** — which is why the 16 lint errors can persist while `verify` passes.
@@ -148,11 +148,11 @@ npx eas build --profile preview --platform android       # installable APK (demo
 npx eas build --profile production --platform android    # AAB for Play
 ```
 
-**Untested in this audit** — EAS builds require an authenticated Expo account and were not run. Project id `e8454679-10b7-42cc-8961-95a421426705`, owner `siddantasodari` (`app.json`).
+**Untested in this audit** — EAS builds require an authenticated Expo account and were not run. Project id `56cf1d5c-20d3-4379-83b9-bc40d194f5a2`, owner `saksi-nepal` (`app.json`).
 
 ### Updates (OTA)
 
-`expo-updates` is configured with `runtimeVersion: "1.0.0"` and URL `https://u.expo.dev/e8454679-10b7-42cc-8961-95a421426705`. A native rebuild is required when native parts change (adding/removing a plugin, or changing a native dependency).
+`expo-updates` is configured with `runtimeVersion: "1.0.0"` and URL `https://u.expo.dev/56cf1d5c-20d3-4379-83b9-bc40d194f5a2`. A native rebuild is required when native parts change (adding/removing a plugin, or changing a native dependency).
 
 ---
 

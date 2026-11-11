@@ -28,6 +28,12 @@ export * from './merit/rules.ts';
 export * from './map/geofence.ts';
 export * from './map/pradakshina.ts';
 export * from './map/polyline.ts';
+export * from './map/presence.ts';
+export * from './map/route.ts';
+export * from './alignment/attitude.ts';
+export * from './alignment/precision.ts';
+export * from './sync/policy.ts';
+export * from './plans/index.ts';
 
 // --- Quests: availability, stillness, observation riddles --------------------
 export * from './quests/registry.ts';
@@ -66,3 +72,6 @@ export {
   type ReportableTask,
   type ReportLink,
 } from './quests/reports.ts';
+export * from './treks/progress.ts';
+export * from './map/tiles.ts';
+export * from './reports/timeline.ts';

@@ -28,6 +28,13 @@ export const PITCH_TOLERANCE_DEG = 10;
 /** A fix worse than this cannot be trusted to place the observer. */
 export const MAX_GPS_ACCURACY_M = 15;
 
+/**
+ * The visitor's alignment setting, as a multiple of a vantage's own tolerances.
+ * It changes when the reticle locks, never what is recorded: a record still
+ * compares its measured errors against the vantage's real tolerance.
+ */
+export const TOLERANCE_FACTORS = { strict: 0.75, standard: 1, forgiving: 1.4 } as const;
+
 export type AlignmentScoreInput = {
   /** Metres from the vantage, or null when there is no position fix. */
   distanceM: number | null;

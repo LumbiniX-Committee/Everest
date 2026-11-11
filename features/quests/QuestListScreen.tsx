@@ -119,6 +119,8 @@ export function QuestListScreen() {
         <EmptyState
           title={t('quest.emptyTitle')}
           body={t('quest.emptyBody')}
+          actionLabel="Explore the map"
+          onAction={() => router.push('/(main)/tirtha/map')}
         />
       ) : (
         <View style={styles.list}>

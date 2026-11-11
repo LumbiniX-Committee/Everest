@@ -14,6 +14,9 @@ import { colors } from '@/theme';
 export default function MainLayout() {
   return (
     <Tabs
+      // Back retraces where the visitor actually came from, rather than always
+      // jumping to the first tab.
+      backBehavior="history"
       tabBar={(props) => <SurfaceTabBar {...props} />}
       screenOptions={{
         headerShown: false,

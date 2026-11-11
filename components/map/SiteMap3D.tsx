@@ -2,7 +2,7 @@ import Constants, { ExecutionEnvironment } from 'expo-constants';
 import { useState } from 'react';
 import { StyleSheet, View, Image } from 'react-native';
 
-import { MAP_HOME, demoSites, monumentGeoJSON, precinctGeoJSON, siteGeoJSON, waterGeoJSON } from '@/data';
+import { MAP_HOME, demoSites, monumentGeoJSON, siteGeoJSON, waterGeoJSON } from '@/data';
 import { colors, radii, sakshiMapStyleJSON } from '@/theme';
 
 import { MapWebView } from './MapWebView';
@@ -109,21 +109,7 @@ export function SiteMap3D({ height = 320, onSelectSite }: SiteMap3DProps) {
           }}
         />
 
-        <GeoJSONSource id="precincts" data={precinctGeoJSON}>
-          <Layer
-            id="precinct-walls"
-            type="fill-extrusion"
-            paint={{
-              'fill-extrusion-color': colors.sandstone,
-              // Low: an enclosure to read across, not a wall to hide behind.
-              'fill-extrusion-height': 6,
-              'fill-extrusion-base': 0,
-              // 0.5, not 0.35: on the dark ground 0.35 measured 2.20:1 and the
-              // enclosure read as a smudge rather than a wall.
-              'fill-extrusion-opacity': 0.5,
-            }}
-          />
-        </GeoJSONSource>
+        {/* No precinct walls: they were drawn from geofence circles, not from anything standing. */}
 
         <GeoJSONSource id="site-water" data={waterGeoJSON}>
           <Layer id="site-water-fill" type="fill" paint={{ 'fill-color': colors.mapWater }} />

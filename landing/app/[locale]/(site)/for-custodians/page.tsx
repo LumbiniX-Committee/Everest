@@ -169,7 +169,7 @@ export default async function ForCustodiansPage({
       <PageHero eyebrow={c.hero.eyebrow} title={c.hero.title} lede={c.hero.lede}>
         <Link
           href="/custodian"
-          className="mt-9 inline-flex items-center gap-3 rounded-2xl bg-earth px-6 py-4 font-semibold text-white shadow-lg shadow-earth/25 transition hover:-translate-y-0.5 hover:bg-sandstone-deep"
+          className="mt-9 inline-flex items-center gap-3 rounded-2xl bg-marigold px-6 py-4 font-semibold text-on-marigold shadow-lg shadow-earth/25 transition hover:-translate-y-0.5 hover:brightness-95"
         >
           {c.hero.cta}
           <ArrowRight className="size-5" aria-hidden />

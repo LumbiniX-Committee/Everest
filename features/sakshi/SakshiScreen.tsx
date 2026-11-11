@@ -14,13 +14,15 @@ import {
   historicalImagesForSite,
   vantagesForSite,
 } from '@/data';
-import { useCurrentPosition } from '@/hooks';
+import { useCurrentPosition, useOpenInTabs } from '@/hooks';
 import { visitorCopy, type VisitorCopyKey } from '@/i18n/visitor';
 import { visitorLiteralCopy } from '@/i18n/literals';
 import { database } from '@/services';
 import { onnxAvailable } from '@/services/ai/onnx';
 import { usePractice, usePreferences } from '@/store';
 import { colors, radii, spacing } from '@/theme';
+
+import { ReportHero } from './ReportHero';
 import { distanceMeters, formatDistance, formatTimestamp } from '@/utils';
 import type { Observation, ObservationAssessment } from '@/types';
 
@@ -65,6 +67,7 @@ const COMPARABLE_SITES = demoSites.filter((site) => historicalImagesForSite(site
  */
 export function SakshiScreen() {
   const router = useRouter();
+  const openInTabs = useOpenInTabs();
   const { coordinate } = useCurrentPosition({ watch: true });
   const [observations, setObservations] = useState<Observation[]>([]);
   const [activeTab, setActiveTab] = useState<TabMode>('vantages');
@@ -119,6 +122,8 @@ export function SakshiScreen() {
         subtitle={t('sakshi.subtitle')}
         rightAction={<SettingsButton />}
       />
+
+      <ReportHero />
 
       {/*
         A visible answer to "is the detector actually in this build".
@@ -183,7 +188,7 @@ export function SakshiScreen() {
               style={styles.photoButton}
               onPress={() =>
                 router.push({
-                  pathname: '/(main)/sakshi/vantage',
+                  pathname: '/visit/vantage',
                   params: { vantageId: primaryVantage.id },
                 })
               }
@@ -240,7 +245,7 @@ export function SakshiScreen() {
                   lastCaptureAt={lastCapture?.capturedAt ?? null}
                   onPress={() =>
                     router.push({
-                      pathname: '/(main)/sakshi/vantage',
+                      pathname: '/visit/vantage',
                       params: { vantageId: vantage.id },
                     })
                   }
@@ -262,6 +267,8 @@ export function SakshiScreen() {
             <EmptyState
               title={t('sakshi.noComparisonsTitle')}
               body={t('sakshi.noComparisonsBody')}
+              actionLabel="Explore the map"
+              onAction={() => openInTabs('/(main)/tirtha/map')}
             />
           ) : (
             <View style={styles.list}>
@@ -310,7 +317,7 @@ export function SakshiScreen() {
                 vantageLabel={activeSite?.name ?? t('sakshi.thisPlace')}
                 onSelectObservation={(obs) =>
                   router.push({
-                    pathname: '/(main)/sakshi/observation',
+                    pathname: '/visit/observation',
                     params: { observationId: obs.id },
                   })
                 }
@@ -323,6 +330,8 @@ export function SakshiScreen() {
             <EmptyState
               title={t('sakshi.nothingTitle')}
               body={t('sakshi.nothingBody')}
+              actionLabel="See viewpoints"
+              onAction={() => setActiveTab('vantages')}
             />
           ) : (
             <View style={styles.list}>
@@ -333,7 +342,7 @@ export function SakshiScreen() {
                   assessment={t(ASSESSMENT_KEYS[observation.assessment])}
                   onPress={() =>
                     router.push({
-                      pathname: '/(main)/sakshi/observation',
+                      pathname: '/visit/observation',
                       params: { observationId: observation.id },
                     })
                   }
@@ -346,12 +355,12 @@ export function SakshiScreen() {
           <Button
             label={t('sakshi.openRegister')}
             variant="secondary"
-            onPress={() => router.push('/(main)/sakshi/register' as any)}
+            onPress={() => router.push('/(main)/sakshi/register')}
           />
           <Button
             label={t('sakshi.contributors')}
             variant="quiet"
-            onPress={() => router.push('/(main)/sakshi/guardians' as any)}
+            onPress={() => router.push('/(main)/sakshi/guardians')}
           />
         </View>
       ) : null}

@@ -1,3 +1,4 @@
+import { meaningfulDistanceM } from '@/core';
 import type { AlignmentState } from '@/types';
 
 /**
@@ -11,7 +12,7 @@ import type { AlignmentState } from '@/types';
  * actionable; "You're almost there!" is not.
  */
 
-const POSITION_THRESHOLD_M = 1.5;
+const POSITION_THRESHOLD_M = 2;
 const BEARING_THRESHOLD_DEG = 3;
 const PITCH_THRESHOLD_DEG = 4;
 
@@ -23,15 +24,12 @@ export function alignmentHint(alignment: AlignmentState): string {
 
   const { distanceM, bearingDeltaDeg, pitchDeltaDeg } = alignment;
 
-  // Position first — there is no point turning if you are standing in the wrong place
-  if (distanceM != null && distanceM > POSITION_THRESHOLD_M) {
-    if (distanceM > 50) {
-      return `Move ${Math.round(distanceM)} m closer to the vantage.`;
-    }
-    if (distanceM > 10) {
-      return `Move about ${Math.round(distanceM)} m closer.`;
-    }
-    return `${distanceM.toFixed(1)} m away. Walk slowly toward the vantage.`;
+  // Position first — there is no point turning if you are standing in the wrong place.
+  // Inside the GPS uncertainty a distance is noise, so it is never quoted.
+  const away = distanceM == null ? null : meaningfulDistanceM(distanceM, alignment.gpsAccuracyM);
+  if (away != null && distanceM != null && distanceM > (alignment.tolPosM ?? POSITION_THRESHOLD_M)) {
+    if (away > 50) return `Walk about ${away} m toward the mark.`;
+    return `Walk about ${away} m toward the mark, slowly.`;
   }
 
   // Bearing second

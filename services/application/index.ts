@@ -35,6 +35,13 @@ export async function reload(reason: string): Promise<void> {
   throw new Error('This build cannot reload itself automatically.');
 }
 
+/** The public privacy policy, in the visitor's language. Also the store's data-deletion page (#delete). */
+export async function openPrivacyPolicy(language: 'en' | 'ne'): Promise<boolean> {
+  const base = (process.env.EXPO_PUBLIC_PORTAL_URL ?? '').trim().replace(/\/$/, '');
+  if (!base) return false;
+  return openExternal(`${base}/${language}/privacy`);
+}
+
 /** Opens the authenticated web portal without putting its URL in a screen. */
 export async function openCustodianPortal(): Promise<void> {
   const base = (process.env.EXPO_PUBLIC_PORTAL_URL ?? '').trim().replace(/\/$/, '');
@@ -42,4 +49,18 @@ export async function openCustodianPortal(): Promise<void> {
     throw new Error('Set EXPO_PUBLIC_PORTAL_URL to the deployed Sākṣī portal.');
   }
   await Linking.openURL(`${base}/custodian`);
+}
+
+/**
+ * Opens a web page in the phone's browser. Only http and https: a listing's
+ * website field comes from open data, and must never launch some other scheme.
+ */
+export async function openExternal(url: string): Promise<boolean> {
+  if (!/^https?:\/\//i.test(url)) return false;
+  try {
+    await Linking.openURL(url);
+    return true;
+  } catch {
+    return false;
+  }
 }

@@ -143,6 +143,7 @@ One key per preference is deliberate — a later addition "reads as absent and f
 | [types/source.ts](../../types/source.ts) | Citation/source records |
 | [types/permissions.ts](../../types/permissions.ts) | `PermissionKind`, `PermissionState`, `PermissionMap` |
 | [types/precinct.ts](../../types/precinct.ts) | `Precinct` — geofenced areas (distinct from sites) |
+| [types/treks.ts](../../types/treks.ts) | `Trek`, `TrekDay`, `TrekStop`, `TrekPermit`. Measured fields (distance, climb, hours, altitude) are `null` when unmeasured; `TrekStop.mapped` is false for a position OSM does not have |
 | [types/declarations.d.ts](../../types/declarations.d.ts) | Ambient module declarations |
 
 **Known shapes** (from usage):
@@ -174,8 +175,8 @@ All read via `useLocalSearchParams<T>()` in `app/`. **URL params are always `str
 |---|---|
 | `tirtha/site/[siteId]`, `tirtha/then-now/[siteId]`, `sakshi/then-now/[siteId]`, `sakshi/register/[siteId]` | `{ siteId: string }` |
 | `tirtha/quests/[questId]`, `tirtha/quests/completed/[questId]` | `{ questId: string }` — defaulted `?? ''` |
-| `sakshi/vantage`, `sakshi/capture` | `{ vantageId: string }` |
-| `sakshi/observation` | `{ observationId: string }` |
+| `visit/vantage`, `visit/capture` | `{ vantageId: string }` |
+| `visit/observation` | `{ observationId: string }` |
 | `dhamma/question` | `{ questionId?: string; q?: string }` — **both optional**; `q` maps to prop `query` |
 | `dhamma/reflect` | `{ siteId?: string }` — **optional** |
 

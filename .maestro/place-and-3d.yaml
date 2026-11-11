@@ -1,0 +1,10 @@
+# A listed place, its visit planning, and the free 3D sample.
+appId: com.saksinepal.saksi
+---
+- launchApp
+- openLink: "saksi://tirtha/place/wd-Q12946982"
+- assertVisible: "Swayambhunath"
+- assertVisible: "Plan your visit"
+- tapOn: "View in 3D"
+- assertVisible: "Schematic model"
+- tapOn: "The dome"

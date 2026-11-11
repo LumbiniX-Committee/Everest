@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { Text } from '@/components/ui';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
-import { radii, spacing } from '@/theme';
+import { colors, radii, spacing } from '@/theme';
 import type { EvidenceTier } from '@/types';
 
 /**
@@ -38,7 +38,7 @@ export function EvidenceTierLabel({ tier }: { tier: EvidenceTier }) {
         generated ? `, ${ui('Reconstruction')}, ${ui('not a photograph')}` : ''
       }`}
     >
-      <Text variant="label" tone={generated ? 'seeking' : 'inverse'} uppercase>
+      <Text variant="label" tone={generated ? 'accent' : 'onScrim'} uppercase>
         {ui(TIER_LABELS[tier])}
       </Text>
     </View>
@@ -51,6 +51,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xxs,
     borderRadius: radii.sm,
-    backgroundColor: 'rgba(37, 42, 39, 0.72)',
+    backgroundColor: colors.scrim,
   },
 });

@@ -11,13 +11,11 @@ const EAS_GRAPHQL = 'https://api.expo.dev/graphql';
 /**
  * From app.json, extra.eas.projectId.
  *
- * Moved from the `siddantasodari` project (e8454679-…) to `siddantasodari-2`
- * on 2026-08-10: the original account exhausted its free-plan Android builds
- * for the month, so new APKs are built under a second account. This must stay
+ * Moved to `@saksi-nepal/saksi` on 2026-11-04 with the rest of the project. This must stay
  * in step with app.json — pointing at a project with no finished preview build
  * silently serves the pinned fallback instead.
  */
-const PROJECT_ID = 'b41eee97-484c-4afd-b664-fa65fca50e66';
+const PROJECT_ID = '56cf1d5c-20d3-4379-83b9-bc40d194f5a2';
 
 /**
  * Only the `preview` profile is eligible. `production` builds an app-bundle

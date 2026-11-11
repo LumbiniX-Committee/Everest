@@ -3,6 +3,9 @@ import { StyleSheet, View } from 'react-native';
 
 import { LoadingState, ScreenHeader } from '@/components/common';
 import { Button, Screen, Text } from '@/components/ui';
+import { HUB_BOUNDS } from '@/data';
+import { SaveOfflineMap, formatMegabytes } from '@/features/treks';
+import { useOfflinePacks } from '@/hooks';
 import { database } from '@/services';
 import { useQuests } from '@/store';
 import { spacing } from '@/theme';
@@ -80,6 +83,8 @@ export function StorageScreen() {
         <Row label="Sites witnessed" value={counts.sitesWitnessed} />
       </SettingsSection>
 
+      <OfflineMapsSection />
+
       <SettingsSection
         title="Quest progress"
         footnote="Clears which tasks are ticked and re-seeds the demo quests. Observations you made while completing them are untouched."
@@ -130,3 +135,57 @@ const styles = StyleSheet.create({
   },
   body: { paddingHorizontal: spacing.base, paddingVertical: spacing.md },
 });
+
+const HUB_LABELS = { lumbini: 'Lumbini', kathmandu: 'Kathmandu Valley', pokhara: 'Pokhara', chitwan: 'Chitwan' } as const;
+
+/**
+ * Saved map areas. Clearing them is offered because they are a cache of public
+ * map data, not the visitor's record: anything removed can be saved again.
+ */
+function OfflineMapsSection() {
+  const { packs, removeAll } = useOfflinePacks();
+  const [confirming, setConfirming] = useState(false);
+  const total = packs.reduce((sum, pack) => sum + pack.bytes, 0);
+
+  return (
+    <SettingsSection
+      title="Offline maps"
+      footnote="Treks can be saved from their own page. Satellite imagery is never saved."
+    >
+      {(Object.keys(HUB_BOUNDS) as (keyof typeof HUB_BOUNDS)[]).map((hub) => (
+        <View key={hub} style={styles.body}>
+          <Text variant="bodyStrong" translate={false}>
+            {HUB_LABELS[hub]}
+          </Text>
+          <SaveOfflineMap id={`hub-${hub}`} label={HUB_LABELS[hub]} bounds={HUB_BOUNDS[hub]} />
+        </View>
+      ))}
+      {packs.length ? (
+        confirming ? (
+          <>
+            <Text variant="body" tone="secondary" style={styles.body}>
+              Remove every saved map from this phone? Your records are not affected.
+            </Text>
+            <Button
+              label="Remove saved maps"
+              variant="primary"
+              block
+              onPress={() => {
+                setConfirming(false);
+                void removeAll();
+              }}
+            />
+            <Button label="Cancel" variant="quiet" block onPress={() => setConfirming(false)} />
+          </>
+        ) : (
+          <Button
+            label={`${packs.length} saved · ${formatMegabytes(total)} · Remove`}
+            variant="quiet"
+            block
+            onPress={() => setConfirming(true)}
+          />
+        )
+      ) : null}
+    </SettingsSection>
+  );
+}

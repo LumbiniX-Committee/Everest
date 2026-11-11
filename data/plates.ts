@@ -100,6 +100,13 @@ export const plateMeta: Record<PlateId, PlateMeta> = {
   },
 };
 
+/** Credit for each bundled modern photograph, from seed/now-images.json. Shown wherever the photo is. */
+export const nowImageCredits: Record<string, string> = {
+  'ashokan-pillar': 'Photo: Shadow Ayush, CC BY-SA 4.0, Wikimedia Commons',
+  'maya-devi-temple': 'Photo: Dhrubapaudel, CC BY-SA 4.0, Wikimedia Commons',
+  'puskarini': 'Photo: Shadow Ayush, CC BY-SA 4.0, Wikimedia Commons',
+};
+
 /** The modern reference photograph for a site, if one is bundled. */
 export function nowImageForSite(siteId: string): number | undefined {
   return nowImages[siteId];

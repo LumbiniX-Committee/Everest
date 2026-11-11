@@ -35,8 +35,15 @@ export type OfflineSyncMode = 'wifi' | 'any' | 'manual';
 export type PhotoQuality = 'standard' | 'high';
 
 /** The two complete visual systems that ship with the app. */
-export type ColorTheme = 'navy' | 'white';
+/** 'outdoor' is the morning palette at sunlight contrast. */
+export type ColorTheme = 'navy' | 'white' | 'outdoor';
 export type InterfaceLanguage = 'en' | 'ne';
+
+/** Self-declared, and never checked against any document. Sets prices and entry fees shown. */
+export type VisitorType = 'unset' | 'foreign' | 'nepali';
+
+/** Where this person wants to start. */
+export type HomeHub = 'unset' | 'near-me' | 'lumbini' | 'kathmandu' | 'pokhara' | 'chitwan';
 
 /**
  * How much a place is asked to say when you arrive at it.
@@ -68,6 +75,10 @@ export type UserPreferences = {
   autoWisdom: boolean;
   /** Start the recorded narration when that opens. */
   autoNarration: boolean;
+  visitorType: VisitorType;
+  homeHub: HomeHub;
+  /** Off unless the visitor turns it on. */
+  shareCrashReports: boolean;
 };
 
 export const DEFAULT_USER_PREFERENCES: UserPreferences = {
@@ -98,6 +109,9 @@ export const DEFAULT_USER_PREFERENCES: UserPreferences = {
   // silent and the text is still there to read. That is what makes an automatic
   // narration defensible in a place people come to be quiet in.
   autoNarration: true,
+  visitorType: 'unset',
+  homeHub: 'unset',
+  shareCrashReports: false,
 };
 
 /**
@@ -145,8 +159,21 @@ export const PHOTO_QUALITY_OPTIONS: { value: PhotoQuality; label: string; hint: 
 ];
 
 export const WISDOM_TIER_OPTIONS: { value: WisdomTier; label: string; hint: string }[] = [
-  { value: 'basic', label: 'Basic', hint: 'What this place is, and one thing worth knowing.' },
-  { value: 'medium', label: 'Medium', hint: 'The history, the facts table, and what happened when.' },
-  { value: 'high', label: 'In depth', hint: 'Everything, with the scholarly sources and the canonical passages.' },
+  { value: 'basic', label: 'Glance', hint: 'About 30 seconds: what this place is and one thing worth knowing.' },
+  { value: 'medium', label: 'Story', hint: 'A few minutes: the history, the key facts, and what happened when.' },
+  { value: 'high', label: 'Scholar', hint: 'Everything, with the scholarly sources and the canonical passages.' },
   { value: 'custom', label: 'Ask your own', hint: 'Put your question to the canon, about the place you are standing in.' },
+];
+
+export const VISITOR_TYPE_OPTIONS: { value: VisitorType; label: string; hint: string }[] = [
+  { value: 'foreign', label: 'Visiting from abroad', hint: 'Prices in US dollars, and foreign visitor entry fees.' },
+  { value: 'nepali', label: 'Nepali', hint: 'Prices in rupees, and entry fees for Nepali visitors.' },
+];
+
+export const HOME_HUB_OPTIONS: { value: HomeHub; label: string; hint: string }[] = [
+  { value: 'near-me', label: 'Near me', hint: 'Start from where you are now.' },
+  { value: 'lumbini', label: 'Lumbini', hint: 'The birthplace of the Buddha.' },
+  { value: 'kathmandu', label: 'Kathmandu Valley', hint: 'Durbar squares, stupas and temples.' },
+  { value: 'pokhara', label: 'Pokhara', hint: 'Lakes, peace pagoda and mountain views.' },
+  { value: 'chitwan', label: 'Chitwan', hint: 'National park and Tharu culture.' },
 ];

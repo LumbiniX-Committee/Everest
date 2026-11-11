@@ -4,9 +4,10 @@ import { Share, StyleSheet, View } from 'react-native';
 import { LoadingState, ScreenHeader } from '@/components/common';
 import { Button, Screen, Text } from '@/components/ui';
 import { privacy } from '@/services';
+import { usePreferences } from '@/store';
 import { spacing } from '@/theme';
 
-import { SettingsSection } from './components';
+import { SettingsSection, SettingsToggle } from './components';
 
 /**
  * Export and deletion for this device's own records.
@@ -21,6 +22,7 @@ import { SettingsSection } from './components';
  * privacy control that overstates what it did is worse than none.
  */
 export function PrivacyScreen() {
+  const { preferences, update } = usePreferences();
   const [count, setCount] = useState<number | null>(null);
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState<string | null>(null);
@@ -125,6 +127,14 @@ export function PrivacyScreen() {
             onPress={() => setConfirming(true)}
           />
         )}
+      </SettingsSection>
+      <SettingsSection title="Crash reports" footnote="A report holds the error and the screen it happened on. It never includes your location, photographs, records or name.">
+        <SettingsToggle
+          label="Share crash reports"
+          hint="Off unless you turn it on. Reports are kept on this phone until then."
+          value={preferences.shareCrashReports}
+          onValueChange={(next) => void update('shareCrashReports', next)}
+        />
       </SettingsSection>
     </Screen>
   );

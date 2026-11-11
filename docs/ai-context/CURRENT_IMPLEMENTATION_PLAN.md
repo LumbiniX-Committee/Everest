@@ -34,7 +34,7 @@ Untracked: docs/ai-context/   (this knowledge base)
 | `npm run vocab` | ✅ Clean |
 | `npm run eval:dhamma` | ✅ **50/50**, 0 ungrounded citations |
 | `npm run verify` | ✅ Pass |
-| `npm run lint` | ❌ **16 errors** (one file) |
+| `npm run lint` | ✅ clean; `lint:all` ❌ 70 known errors |
 | `npx expo start --web` | ✅ Bundles and serves |
 
 ### Content

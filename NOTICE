@@ -24,3 +24,9 @@ licence, in LICENCES.md.
 The name "Sākṣī", the Sākṣī wordmark, and the reticle mark are not licensed
 for use by this licence. See Section 6 of the Apache License, and the
 Trademark section of docs/LICENSING.md.
+
+Visitor essentials (seed/essentials.json, data/generated/essentials.ts) come from
+Overture Maps Places, release 2026-10-21.0, filtered and reshaped on 2026-11-08.
+Records keep their source licence: CDLA-Permissive-2.0, CC0-1.0, or Apache-2.0
+for Foursquare-sourced records, which carry this notice:
+Copyright 2024 Foursquare Labs, Inc. All rights reserved.

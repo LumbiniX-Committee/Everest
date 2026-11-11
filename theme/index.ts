@@ -5,6 +5,7 @@ import { radii } from './radii';
 export {
   colors,
   navyColors,
+  prayerFlags,
   whiteColors,
   getInitialColorTheme,
   setInitialColorTheme,
@@ -26,7 +27,7 @@ export {
 } from './typography';
 export { useAppFonts } from './fonts';
 export { layers } from './layers';
-export { sakshiMapStyle, sakshiMapStyleJSON, MAP_TILES_URL, MAP_GLYPHS_URL } from './mapStyle';
+export { sakshiMapStyle, sakshiMapStyleJSON, MAP_TILES_URL, MAP_GLYPHS_URL, MAP_MATERIALS } from './mapStyle';
 
 /** Convenience bundle for anything that wants the whole set at once. */
 export const theme = { colors, spacing, radii } as const;

@@ -9,3 +9,5 @@ next-env.d.ts
 
 # Staged from node_modules by scripts/copy-map-worker.mjs on every build.
 public/maplibre-gl-worker.mjs
+# Chunks the worker imports, copied with it by scripts/copy-map-worker.mjs
+public/maplibre-gl-shared.mjs

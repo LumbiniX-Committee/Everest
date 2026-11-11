@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320">
+  <title>Dai, a trekking porter</title>
+  <ellipse cx="120" cy="306" rx="66" ry="9" fill="#12302B" opacity=".14"/>
+  <!-- walking stick -->
+  <path d="M176 140 L188 300" stroke="#7A5B44" stroke-width="6" stroke-linecap="round"/>
+  <path d="M168 140 h18" stroke="#7A5B44" stroke-width="7" stroke-linecap="round"/>
+  <!-- doko basket, modest load -->
+  <path d="M58 70 L108 70 L100 196 L70 196 Z" fill="#C9A27A"/>
+  <path d="M60 86 L106 86 M62 106 L105 106 M64 126 L103 126 M66 146 L102 146 M68 166 L101 166 M69 184 L100 184" stroke="#9C7A5E" stroke-width="3"/>
+  <path d="M70 70 L74 196 M84 70 L85 196 M97 70 L94 196" stroke="#9C7A5E" stroke-width="2"/>
+  <rect x="60" y="46" width="46" height="30" rx="10" fill="#2F5FA8"/>
+  <path d="M64 56 h38" stroke="#264F8C" stroke-width="3"/>
+  <!-- legs and boots -->
+  <path d="M104 206 L98 290 L116 290 L122 214 Z" fill="#46524F"/>
+  <path d="M146 206 L154 288 L136 290 L128 214 Z" fill="#3E4A47"/>
+  <path d="M92 288 h28 v12 h-32 v-6 a6 6 0 0 1 4-6z" fill="#5B3420"/>
+  <path d="M132 286 h26 a6 6 0 0 1 4 6 v8 h-32 v-12z" fill="#5B3420"/>
+  <!-- warm jacket -->
+  <path d="M98 106 Q124 94 152 106 L156 214 Q124 222 96 214 Z" fill="#A9493B"/>
+  <path d="M124 100 L124 214" stroke="#8C3A30" stroke-width="3"/>
+  <path d="M100 150 h52" stroke="#8C3A30" stroke-width="3" opacity=".5"/>
+  <!-- arms: right hand on the stick -->
+  <path d="M150 112 Q172 124 174 150 L162 154 Q160 134 146 124 Z" fill="#A9493B"/>
+  <circle cx="172" cy="150" r="9" fill="#7A4E36"/>
+  <path d="M100 112 Q88 140 92 168 L104 166 Q102 144 110 126 Z" fill="#A9493B"/>
+  <circle cx="98" cy="170" r="8.5" fill="#7A4E36"/>
+  <!-- namlo: the tumpline from the basket over the forehead -->
+  <path d="M106 64 Q118 44 124 56" fill="none" stroke="#5B3420" stroke-width="5"/>
+  <!-- head with woolly hat -->
+  <rect x="117" y="84" width="16" height="16" rx="5" fill="#7A4E36"/>
+  <ellipse cx="125" cy="66" rx="23" ry="25" fill="#8A5A3C"/>
+  <path d="M101 60 Q102 32 126 32 Q150 32 149 60 Z" fill="#0E6E62"/>
+  <path d="M100 58 Q125 52 150 58 L150 64 Q125 58 100 64 Z" fill="#F7A823"/>
+  <circle cx="126" cy="30" r="6" fill="#F7A823"/>
+  <path d="M100 56 Q112 52 124 55" fill="none" stroke="#5B3420" stroke-width="5"/>
+  <ellipse cx="116" cy="72" rx="2.6" ry="3" fill="#1E1714"/>
+  <ellipse cx="135" cy="72" rx="2.6" ry="3" fill="#1E1714"/>
+  <path d="M116 83 Q125 89 134 83" fill="none" stroke="#4A2418" stroke-width="2.6" stroke-linecap="round"/>
+  <path d="M112 66 q4 -3 8 0 M131 66 q4 -3 8 0" fill="none" stroke="#1E1714" stroke-width="2"/>
+</svg>

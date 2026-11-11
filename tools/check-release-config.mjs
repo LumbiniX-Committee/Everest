@@ -28,4 +28,10 @@ try {
   console.error('Production Supabase and portal URLs must be valid HTTPS URLs.');
   process.exit(1);
 }
+// Store builds open every feature. Gating them shows prices and a code box,
+// which store review reads as selling digital features outside store billing.
+if (process.env.EXPO_PUBLIC_PRO_GATING === 'on') {
+  console.error('Pro gating must stay off in store builds until store billing exists.');
+  process.exit(1);
+}
 console.log('production app configuration passed');

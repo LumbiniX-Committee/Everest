@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
 import { useFonts } from 'expo-font';
 
-import { AnekDevanagari_400Regular } from '@expo-google-fonts/anek-devanagari/400Regular';
-import { AnekDevanagari_500Medium } from '@expo-google-fonts/anek-devanagari/500Medium';
-import { AnekDevanagari_600SemiBold } from '@expo-google-fonts/anek-devanagari/600SemiBold';
-import { IBMPlexSans_400Regular } from '@expo-google-fonts/ibm-plex-sans/400Regular';
-import { IBMPlexSans_500Medium } from '@expo-google-fonts/ibm-plex-sans/500Medium';
-import { IBMPlexSans_600SemiBold } from '@expo-google-fonts/ibm-plex-sans/600SemiBold';
+import { Baloo2_400Regular } from '@expo-google-fonts/baloo-2/400Regular';
+import { Baloo2_500Medium } from '@expo-google-fonts/baloo-2/500Medium';
+import { Baloo2_600SemiBold } from '@expo-google-fonts/baloo-2/600SemiBold';
+import { Mukta_400Regular } from '@expo-google-fonts/mukta/400Regular';
+import { Mukta_500Medium } from '@expo-google-fonts/mukta/500Medium';
+import { Mukta_600SemiBold } from '@expo-google-fonts/mukta/600SemiBold';
 import { IBMPlexMono_400Regular } from '@expo-google-fonts/ibm-plex-mono/400Regular';
 import { IBMPlexMono_500Medium } from '@expo-google-fonts/ibm-plex-mono/500Medium';
 import { IBMPlexMono_600SemiBold } from '@expo-google-fonts/ibm-plex-mono/600SemiBold';
@@ -28,17 +28,20 @@ import { setFontsAvailable } from './typography';
  * Keys below are the family names `theme/typography.ts` resolves through. Change
  * a key here and you must change it there.
  *
- * Anek Devanagari — display. Headings, site names, Devanagari.
- * IBM Plex Sans   — body. UI, navigation, prose.
- * IBM Plex Mono   — measurements. Coordinates, bearings, timestamps.
+ * Baloo 2       — display. Headings and site names, warm and rounded.
+ * Mukta         — body. UI, navigation, prose.
+ * IBM Plex Mono — measurements. Coordinates, bearings, timestamps.
+ *
+ * Baloo 2 and Mukta were chosen because each holds Latin, Devanagari and the
+ * IAST diacritics in one file, so Sākṣī and साक्षी never fall back mid-word.
  */
 const fontAssets: Record<string, number> = {
-  'Anek-Regular': AnekDevanagari_400Regular,
-  'Anek-Medium': AnekDevanagari_500Medium,
-  'Anek-SemiBold': AnekDevanagari_600SemiBold,
-  'IBMPlexSans-Regular': IBMPlexSans_400Regular,
-  'IBMPlexSans-Medium': IBMPlexSans_500Medium,
-  'IBMPlexSans-SemiBold': IBMPlexSans_600SemiBold,
+  'Baloo-Regular': Baloo2_400Regular,
+  'Baloo-Medium': Baloo2_500Medium,
+  'Baloo-SemiBold': Baloo2_600SemiBold,
+  'Mukta-Regular': Mukta_400Regular,
+  'Mukta-Medium': Mukta_500Medium,
+  'Mukta-SemiBold': Mukta_600SemiBold,
   'IBMPlexMono-Regular': IBMPlexMono_400Regular,
   'IBMPlexMono-Medium': IBMPlexMono_500Medium,
   'IBMPlexMono-SemiBold': IBMPlexMono_600SemiBold,

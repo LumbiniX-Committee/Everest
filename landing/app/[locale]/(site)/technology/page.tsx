@@ -231,7 +231,7 @@ export default async function TechnologyPage({
           href={REPORTS.techStack.href}
           className="mt-9 inline-flex items-center gap-3 rounded-2xl border border-line bg-surface px-6 py-4 font-semibold text-ink shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
         >
-          <FileText className="size-5 text-sakshi" aria-hidden />
+          <FileText className="size-5 text-sandstone-deep" aria-hidden />
           {c.hero.cta}
           <span className="text-sm font-normal text-ink-muted">
             {c.hero.ctaMeta(REPORTS.techStack.pages)}
@@ -249,7 +249,7 @@ export default async function TechnologyPage({
                 key={id}
                 className="flex gap-5 rounded-3xl border border-line bg-surface p-7 shadow-sm"
               >
-                <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-sakshi/10 text-sakshi">
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-surface-secondary text-sandstone-deep">
                   <Icon className="size-5" aria-hidden />
                 </span>
                 <div>

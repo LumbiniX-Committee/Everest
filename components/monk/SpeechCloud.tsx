@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     // The map stays legible. A guide in the world, not a page over it.
-    backgroundColor: 'rgba(5, 21, 33, 0.55)',
+    backgroundColor: colors.scrim,
   },
 
   avatarWrap: { position: 'absolute', left: -16 },
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: '800',
     letterSpacing: 1,
-    color: colors.backgroundDeep,
+    color: colors.onPrimary,
   },
 
   closeBubble: {

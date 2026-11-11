@@ -167,31 +167,68 @@ export async function presentArrival({
   }
 }
 
+type NotificationResponse = Parameters<
+  Parameters<NotificationsModule['addNotificationResponseReceivedListener']>[0]
+>[0];
+
+/** The arrival a tapped banner names, or null for anything that is not one. */
+function arrivalTargetOf(response: NotificationResponse): ArrivalTarget | null {
+  const data = response.notification.request.content.data as {
+    kind?: string;
+    siteId?: string;
+    precinctId?: string;
+  } | null;
+  if (!data || data.kind !== 'arrival') return null;
+  // Site first: it is the more specific of the two, and a notification
+  // carrying both came from the fine-grained path.
+  if (typeof data.siteId === 'string') return { kind: 'site', id: data.siteId };
+  if (typeof data.precinctId === 'string') return { kind: 'precinct', id: data.precinctId };
+  return null;
+}
+
+/**
+ * Responses already routed, by notification id.
+ *
+ * The launching tap can reach us twice — once from the last-response lookup
+ * and again from the listener on hosts that replay it — and opening the same
+ * site page twice stacks two copies of it.
+ */
+const routedResponses = new Set<string>();
+
 /**
  * Calls back when someone taps an arrival banner.
  *
  * A banner that does nothing when tapped is worse than no banner: it says there
- * is something here to read and then refuses to show it. Returns an unsubscribe
- * that is safe to call on an unsupported host, where nothing was subscribed.
+ * is something here to read and then refuses to show it. That includes the
+ * most common case for a geofence banner — the app was not running, and the
+ * tap is what launched it. The listener is attached too late to see that tap,
+ * so the response that launched the app is looked up as well.
+ *
+ * Returns an unsubscribe that is safe to call on an unsupported host, where
+ * nothing was subscribed.
  */
 export function subscribeToArrivalTaps(handler: (target: ArrivalTarget) => void): () => void {
   const N = load();
   if (!N) return () => undefined;
 
+  let active = true;
+  const route = (response: NotificationResponse | null) => {
+    if (!active || !response) return;
+    const id = response.notification.request.identifier;
+    if (routedResponses.has(id)) return;
+    const target = arrivalTargetOf(response);
+    if (!target) return;
+    routedResponses.add(id);
+    handler(target);
+  };
+
   try {
-    const subscription = N.addNotificationResponseReceivedListener((response) => {
-      const data = response.notification.request.content.data as {
-        kind?: string;
-        siteId?: string;
-        precinctId?: string;
-      } | null;
-      if (!data || data.kind !== 'arrival') return;
-      // Site first: it is the more specific of the two, and a notification
-      // carrying both came from the fine-grained path.
-      if (typeof data.siteId === 'string') handler({ kind: 'site', id: data.siteId });
-      else if (typeof data.precinctId === 'string') handler({ kind: 'precinct', id: data.precinctId });
-    });
-    return () => subscription.remove();
+    const subscription = N.addNotificationResponseReceivedListener(route);
+    void N.getLastNotificationResponseAsync().then(route, () => undefined);
+    return () => {
+      active = false;
+      subscription.remove();
+    };
   } catch {
     return () => undefined;
   }

@@ -16,7 +16,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import { SourceDetailSheet } from '@/components/source';
 import { SpeakButton } from '@/components/voice/SpeakButton';
 import { findDhammaEntry } from '@/data';
-import { useKeyboardInset, useSceneBottomGap } from '@/hooks';
+import { useKeyboardInset, useSafeBack, useSceneBottomGap } from '@/hooks';
 import { visitorLiteralCopy } from '@/i18n/literals';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { dhamma } from '@/services';
@@ -95,6 +95,7 @@ type Turn =
 
 export function DhammaChatScreen({ questionId, query }: { questionId?: string; query?: string }) {
   const router = useRouter();
+  const goBack = useSafeBack('/(main)/dhamma');
   const { preferences } = usePreferences();
   const [turns, setTurns] = useState<Turn[]>([]);
   const [input, setInput] = useState('');
@@ -186,7 +187,7 @@ export function DhammaChatScreen({ questionId, query }: { questionId?: string; q
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={visitorLiteralCopy(preferences.interfaceLanguage, 'Back')}
-            onPress={() => router.back()}
+            onPress={goBack}
             hitSlop={10}
             style={styles.back}
           >

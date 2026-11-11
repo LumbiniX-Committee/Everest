@@ -55,7 +55,7 @@ export type HeritageSite = {
   parentOrder?: number;
   /** Latin-script name used throughout the UI. */
   name: string;
-  /** Devanagari name, rendered in Anek where present. */
+  /** Devanagari name, rendered in the display face where present. */
   nameNepali?: string;
   /** One line. Shown under the name in lists. */
   /** Pali name, where one exists (e.g. "Māyādevī"). */
@@ -129,6 +129,8 @@ export type Vantage = {
   hfovDeg?: number;
   /** Why this viewpoint was chosen. Shown before capture. */
   note?: string;
+  /** Placed from a map, not measured on site. Shown as "Estimated" until surveyed. */
+  estimated?: boolean;
   /** Timestamp of the earliest observation in the series, if any. */
   seriesBegan?: string;
   /** Historical/reference image URI for dissolve slider and ghost overlay. */
@@ -190,6 +192,16 @@ export type Observation = {
   note?: string;
   /** What the observer said about what they saw. */
   assessment: ObservationAssessment;
+  /**
+   * Readings the phone could not provide at capture. Their fields hold the
+   * vantage's catalogued values only because the local columns require a value;
+   * they must be shown as not measured, and leave the phone as null.
+   */
+  unmeasured?: ('coordinate' | 'bearing' | 'pitch')[];
+  /** Made during a demo walk. Stays on this phone and is never a real record. */
+  isDemo?: boolean;
+  /** Degrees the observer corrected the compass by. Nonzero is never `aligned`. */
+  headingNudgeDeg?: number;
   /** False until the observation has left the device. */
   synced: boolean;
 };
@@ -280,4 +292,10 @@ export type AlignmentState = {
   /** Metres to the vantage. */
   distanceM: number | null;
   pitchDeltaDeg: number | null;
+  /** What is holding the lock back, so the screen can say what to fix. Null when locked or idle. */
+  blockedBy?: 'position' | 'heading' | 'pitch' | 'gps' | null;
+  /** The position tolerance actually used for the lock, after the visitor's setting. */
+  tolPosM?: number;
+  /** How far the phone trusts its compass. A poor compass can never lock. */
+  headingQuality?: 'good' | 'fair' | 'poor' | null;
 };

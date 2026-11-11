@@ -22,7 +22,7 @@
     "description": "Heritage and pilgrimage app for Lumbini, Nepal. Turns a visitor's attention into evidence a conservator can trust.",
     "builtFor": "LumbiniX 2026 hackathon",
     "team": "LumbiniX-Committee",
-    "repositoryRoot": "Everest/",
+    "repositoryRoot": "saksi/",
     "private": true
   },
 
@@ -45,12 +45,12 @@
   },
 
   "identity": {
-    "androidPackage": "org.lumbinix.sakshi",
-    "iosBundleIdentifier": "org.lumbinix.sakshi",
-    "scheme": "sakshi",
-    "expoOwner": "siddantasodari",
-    "easProjectId": "e8454679-10b7-42cc-8961-95a421426705",
-    "updatesUrl": "https://u.expo.dev/e8454679-10b7-42cc-8961-95a421426705",
+    "androidPackage": "com.saksinepal.saksi",
+    "iosBundleIdentifier": "com.saksinepal.saksi",
+    "scheme": "saksi",
+    "expoOwner": "saksi-nepal",
+    "easProjectId": "56cf1d5c-20d3-4379-83b9-bc40d194f5a2",
+    "updatesUrl": "https://u.expo.dev/56cf1d5c-20d3-4379-83b9-bc40d194f5a2",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "supportsTablet": true,

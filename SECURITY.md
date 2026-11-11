@@ -3,7 +3,7 @@
 ## Reporting a vulnerability
 
 Please do not open a public issue. Report it privately through GitHub's
-[security advisory form](https://github.com/LumbiniX-Committee/Everest/security/advisories/new),
+[security advisory form](https://github.com/siddantasodari4-eng/saksi/security/advisories/new),
 or by contacting a maintainer directly.
 
 Tell us what you found, how to reproduce it, and what you think it exposes. We

@@ -2,16 +2,17 @@
 
 Instructions for AI coding agents working in this repository.
 
-**Sākṣī** — a heritage and pilgrimage app for Lumbini, Nepal. Expo SDK 57 (managed) · React Native 0.86.2 · React 19 · TypeScript strict · Supabase.
+**Sākṣī** — a heritage and pilgrimage app for Lumbini, Nepal. Expo SDK 57 (managed) · React Native 0.86.3 · React 19 · TypeScript strict · Supabase.
 
 ---
 
 ## 1. Read before you work
 
-1. **[CODEX_START_HERE.md](CODEX_START_HERE.md)** — project summary, commands, major warnings
-2. The relevant documents under **[docs/ai-context/](docs/ai-context/README.md)** — start with its [README](docs/ai-context/README.md), which routes you by task
-3. **[docs/ai-context/CHANGE_IMPACT_PLAYBOOK.md](docs/ai-context/CHANGE_IMPACT_PLAYBOOK.md)** before making any change
-4. **[docs/ai-context/CODEX_WORKING_GUIDE.md](docs/ai-context/CODEX_WORKING_GUIDE.md)** for conventions
+1. **[docs/APP_GUIDE.md](docs/APP_GUIDE.md)** — what the app is, plans, data, map, running, testing and releasing
+2. **[docs/WORK_LOG.md](docs/WORK_LOG.md)** — what changed recently, and what has and hasn't been verified
+3. The relevant documents under **[docs/ai-context/](docs/ai-context/README.md)** — start with its [README](docs/ai-context/README.md), which routes you by task
+4. **[docs/ai-context/CHANGE_IMPACT_PLAYBOOK.md](docs/ai-context/CHANGE_IMPACT_PLAYBOOK.md)** before making any change
+5. **[docs/ai-context/CODEX_WORKING_GUIDE.md](docs/ai-context/CODEX_WORKING_GUIDE.md)** for conventions
 
 ---
 
@@ -37,18 +38,18 @@ The knowledge base was audited at commit `dbe6d45e7297c5d889be9e69c3e2e190a578e6
 
 ## 4. Verify affected source
 
-Do not rely on documentation alone for anything you are changing. Read the file, trace its imports, and check consumers with `grep` before editing shared code — **there are no tests for the React layer**.
+Do not rely on documentation alone for anything you are changing. Read the file, trace its imports, and check consumers with `grep` before editing shared code — **the React tests mock heavily, so a green run doesn't prove a screen works**.
 
 ---
 
 ## 5. Run the checks
 
 ```bash
-npm run verify    # typecheck + test + validate + vocab + eval:dhamma
-npm run lint      # expect exactly 16 known errors in components/monk/SpeechCloud.tsx
+npm run verify    # types, core and React tests, data, i18n, routes, Dhamma benchmark, lint
+npm run lint:all  # every source folder; 70 known errors, add none (npm run lint skips features/)
 ```
 
-`verify` excludes `lint` and does not type-check `core/` or `shared/`. Do not read a green `verify` as "everything is clean."
+Needs Node 22 (`.nvmrc`). A green `verify` says nothing about the camera, GPS or compass, which only run on a real phone. Record what you could not test in `docs/WORK_LOG.md`.
 
 After a route change: `npx expo start -c` to regenerate typed routes.
 

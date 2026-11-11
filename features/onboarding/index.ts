@@ -1,8 +1,7 @@
 export { WelcomeScreen } from './WelcomeScreen';
-export { PurposeScreen } from './PurposeScreen';
-export { HowItWorksScreen } from './HowItWorksScreen';
-export { PermissionsScreen } from './PermissionsScreen';
-export { OnboardingFrame } from './OnboardingFrame';
-export { onboardingSteps, nextRoute, stepIndex, TOTAL_STEPS, type OnboardingStep } from './steps';
-export { AlignScreen } from './AlignScreen';
+export { VisitorScreen } from './VisitorScreen';
+export { DiscoverScreen } from './DiscoverScreen';
+export { StartScreen } from './StartScreen';
+export { PlanStepScreen } from './PlanStepScreen';
 export { AlignmentRehearsal } from './AlignmentRehearsal';
+export { onboardingSteps } from './steps';

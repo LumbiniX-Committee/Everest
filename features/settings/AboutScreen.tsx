@@ -2,13 +2,28 @@ import Constants from 'expo-constants';
 import { StyleSheet, View } from 'react-native';
 
 import { ScreenHeader } from '@/components/common';
-import { Screen, Text } from '@/components/ui';
+import { Button, Screen, Text } from '@/components/ui';
 import { APP_EPIGRAPH, APP_NAME, APP_SUBTITLE } from '@/constants';
+import { application } from '@/services';
+import { usePreferences } from '@/store';
 import { spacing } from '@/theme';
 
 import { SettingsSection } from './components';
 
+/**
+ * Attribution the data's licences require, in one place. Names and licences are
+ * proper nouns and legal text, so they are shown as written rather than translated.
+ */
+const CREDITS = [
+  'Map data © OpenStreetMap contributors, ODbL. Basemap by OpenFreeMap, © OpenMapTiles.',
+  'Terrain: Mapzen Terrain Tiles on AWS Open Data. Trek altitudes: Copernicus DEM GLO-90 via Open-Meteo, © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018, provided under COPERNICUS by the European Union and ESA.',
+  'Walking directions: Valhalla routing on the FOSSGIS OpenStreetMap server.',
+  'Listed places: Wikidata (CC0); photographs from Wikimedia Commons, credited per file.',
+  'Essentials: Overture Maps Places (CDLA-Permissive-2.0, CC0-1.0, Apache-2.0). Foursquare data: Copyright 2024 Foursquare Labs, Inc. All rights reserved.',
+].join('\n\n');
+
 export function AboutScreen() {
+  const { preferences } = usePreferences();
   // Read from the manifest rather than hardcoded, so it cannot drift.
   //
   // Only the version is shown. eas.json sets appVersionSource: "remote", so the
@@ -44,6 +59,25 @@ export function AboutScreen() {
           Historical imagery and site records are attributed to their holding institutions on each
           site's detail screen. Pali passages cite the collection, book and verse.
         </Text>
+      </SettingsSection>
+
+      <SettingsSection
+        title="Map and data credits"
+        footnote="Every listing names its own source and licence where it is shown."
+      >
+        <Text variant="body" tone="secondary" style={styles.body} translate={false}>
+          {CREDITS}
+        </Text>
+      </SettingsSection>
+
+      <SettingsSection title="Privacy">
+        <View style={styles.body}>
+          <Button
+            label="Read the privacy policy"
+            variant="secondary"
+            onPress={() => void application.openPrivacyPolicy(preferences.interfaceLanguage === 'ne' ? 'ne' : 'en')}
+          />
+        </View>
       </SettingsSection>
 
       <SettingsSection title="Acknowledgement">

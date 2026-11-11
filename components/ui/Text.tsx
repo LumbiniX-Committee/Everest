@@ -15,7 +15,9 @@ type ToneName =
   | 'error'
   | 'open'
   | 'resolved'
-  | 'inverse';
+  | 'inverse'
+  | 'onScrim'
+  | 'accent';
 
 const tones: Record<ToneName, string> = {
   primary: colors.textPrimary,
@@ -28,7 +30,12 @@ const tones: Record<ToneName, string> = {
   error: colors.error,
   open: colors.openCondition,
   resolved: colors.resolved,
-  inverse: colors.backgroundDeep,
+  /** Text on a `primary` fill. */
+  inverse: colors.onPrimary,
+  /** Text over a photograph or dark scrim, in either palette. */
+  onScrim: colors.onScrim,
+  /** A marigold highlight, only over a dark scrim. */
+  accent: colors.accent,
 };
 
 export type TextProps = RNTextProps & {

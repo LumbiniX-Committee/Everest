@@ -28,7 +28,7 @@ Every item below was **verified during this audit**. Nothing here was fixed — 
 - **Fix:** Verify in the Supabase dashboard that Authentication → Sign In / Providers → anonymous is **enabled** before (or immediately after) applying 0007. Confirm which migrations are actually applied.
 - **Risk of fixing:** None — a dashboard check.
 - **Validation:** Capture an observation on a fresh install, foreground the app, confirm the row appears in `observations`.
-- **Status:** **Needs verification against the live project.** Cannot be determined from source.
+- **Status:** **Checked 2026-11-11: safe.** The live project's auth config has `external_anonymous_users_enabled: true` (read through the Supabase management API), and anonymous sessions have written successfully (the Pro redemption tests on 2026-11-07). Re-check if anyone changes sign-in providers.
 
 ---
 
@@ -51,7 +51,8 @@ Every item below was **verified during this audit**. Nothing here was fixed — 
 
 ### H3 — 16 lint errors in `SpeechCloud.tsx`
 
-- **Evidence:** `npm run lint` → 16 errors, **all** in [components/monk/SpeechCloud.tsx](../../components/monk/SpeechCloud.tsx): 15 × `react-hooks/refs`, 1 × `react-hooks/set-state-in-effect`. Example: `{ translateY: cloudAnim.interpolate({...}) }` → *"Passing a ref to a function may read its value during render."*
+- **Update 2026-11-08:** `npm run lint` is clean, but it only scans `expo lint`'s default folders and skips `features/`. `npm run lint:all` scans every source folder and reports 70 known errors (2026-11-08): mostly React Compiler rules (`react-hooks/refs` in the animated QuestHud and StorySequence, `set-state-in-effect`, `immutability`), plus a few `import/export`, `no-undef` and unescaped quotes. Add no new ones.
+- **Evidence (historical):** `npm run lint` → 16 errors, **all** in [components/monk/SpeechCloud.tsx](../../components/monk/SpeechCloud.tsx): 15 × `react-hooks/refs`, 1 × `react-hooks/set-state-in-effect`. Example: `{ translateY: cloudAnim.interpolate({...}) }` → *"Passing a ref to a function may read its value during render."*
 - **Impact:** Blocks a clean lint run. The pattern (reading an `Animated.Value` ref during render) is a legacy RN idiom that may break under React Compiler optimisation. Likely works at runtime today.
 - **Fix:** Migrate the component to Reanimated (used elsewhere in the project), or restructure so the animated value is not read during render.
 - **Risk of fixing:** Medium — animation regressions are visual and untested.
@@ -65,7 +66,9 @@ Every item below was **verified during this audit**. Nothing here was fixed — 
 - **Risk of fixing:** **High** — this path writes evidence photographs. A mistake loses captures.
 - **Validation:** Capture in both `aligned` and `manual` modes; confirm the file persists, the row is inserted, and sync uploads it.
 
-### H5 — The React layer has no tests at all
+### H5 — The React layer has no tests at all (resolved, 2026-11)
+
+> **Update 2026-11-11:** no longer true. `tests/native/` holds React Native tests run by Jest inside `npm run verify` (108 passing), covering navigation, the map page, theme contrast and screens. Coverage is still partial; new shared UI should add a test there.
 
 - **Evidence:** All 18 test files are under `core/`. Zero tests for screens, components, hooks, stores, services, or navigation.
 - **Impact:** The entire UI, state, and platform-integration surface is verified by hand only. Highest-risk untested area is the capture → sync pipeline.
@@ -118,7 +121,9 @@ Every item below was **verified during this audit**. Nothing here was fixed — 
 - **Impact:** Easy to edit the wrong one.
 - **Fix:** Rename one (e.g. `OnboardingPermissionsScreen`).
 
-### M8 — No CI/CD
+### M8 — No CI/CD (resolved, 2026-11)
+
+> **Update 2026-11-11:** `.github/workflows/verify.yml` runs the app checks, the website checks, and Supabase migrations with pgTAP tests on every push to `main`. EAS builds are still started by hand.
 
 - **Evidence:** No `.github/workflows/`, `.gitlab-ci.yml`, or equivalent.
 - **Impact:** Nothing enforces `verify` before merge.

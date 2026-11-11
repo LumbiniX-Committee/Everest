@@ -130,9 +130,8 @@ export function MemoriesScreen() {
               label="All Quests"
               variant="secondary"
               onPress={() => {
-                const questId = selectedMemory?.questId;
                 setSelectedMemory(null);
-                if (questId) router.push(`/(main)/tirtha/quests/${questId}`);
+                router.push('/(main)/tirtha/quests');
               }}
             />
           </View>

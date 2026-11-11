@@ -7,6 +7,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import { usePathname } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { BottomTabBarProps } from 'expo-router/js-tabs';
 
@@ -20,17 +21,22 @@ import { usePreferences } from '@/store';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 /**
- * The bottom navigator: one floating navy instrument for the three surfaces.
+ * The bottom navigator: one floating instrument for the three surfaces.
  *
  * Compass for Tīrtha, eye for Sākṣī, lotus for Dhamma — drawn icons, so the
- * selected one can take the teal tint the label and the top mark share.
- * The active surface carries a teal rule above it, a quiet panel behind it,
+ * selected one can take the primary tint the label and the top mark share.
+ * The active surface carries a marigold rule above it, a quiet panel behind it,
  * and a heavier label. There is no fourth entry; see `constants/app.ts`.
  */
 export function SurfaceTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
   const { selection } = useHaptics();
   const { preferences } = usePreferences();
+  const pathname = usePathname();
+
+  // A full-screen camera needs all of the screen, and leaving it mid-capture by
+  // a stray tab tap would discard the photograph.
+  if (pathname.endsWith('/quest-camera')) return null;
 
   return (
     <View style={[styles.container, { paddingBottom: Math.max(insets.bottom, spacing.sm) }]}>
@@ -220,7 +226,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceRaised,
   },
   indexMarkActive: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.accent,
   },
   iconContainer: {
     height: 32,

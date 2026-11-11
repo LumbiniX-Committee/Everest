@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
+import { Platform } from 'react-native';
 
+import { headingQuality, type HeadingQuality } from '@/core';
 import { sensors } from '@/services';
 
 /**
@@ -10,7 +12,13 @@ import { sensors } from '@/services';
  * running behind a navigation stack drains battery for nothing.
  */
 export function useHeading(enabled = true, nudgeDeg = 0): number | null {
+  return useHeadingReading(enabled, nudgeDeg).heading;
+}
+
+/** The heading, and how far the phone itself says it can be trusted. */
+export function useHeadingReading(enabled = true, nudgeDeg = 0): { heading: number | null; quality: HeadingQuality | null } {
   const [raw, setRaw] = useState<number | null>(null);
+  const [accuracy, setAccuracy] = useState<number | null>(null);
 
   // The subscription depends only on `enabled`. The manual nudge is applied at
   // read time below, not inside the effect — otherwise every ±° adjustment tore
@@ -27,7 +35,10 @@ export function useHeading(enabled = true, nudgeDeg = 0): number | null {
 
     sensors.isHeadingAvailable().then((available) => {
       if (cancelled || !available) return;
-      unsubscribe = sensors.watchHeading(({ degrees }) => setRaw(degrees));
+      unsubscribe = sensors.watchHeading(({ degrees, accuracy: reported }) => {
+        setRaw(degrees);
+        setAccuracy(reported ?? null);
+      });
     });
 
     return () => {
@@ -36,8 +47,9 @@ export function useHeading(enabled = true, nudgeDeg = 0): number | null {
     };
   }, [enabled]);
 
-  if (raw == null) return null;
-  return (raw + nudgeDeg + 360) % 360;
+  if (raw == null) return { heading: null, quality: null };
+  const platform = Platform.OS === 'ios' || Platform.OS === 'android' ? Platform.OS : 'web';
+  return { heading: (raw + nudgeDeg + 360) % 360, quality: headingQuality(accuracy, platform) };
 }
 
 /** Live pitch in degrees from level, or null when device motion is unavailable. */
