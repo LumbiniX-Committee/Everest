@@ -112,6 +112,16 @@ export function DhammaScreen() {
           <Text variant="body" tone="secondary" style={styles.subtitle}>
             Everything here carries a citation you can go and check.
           </Text>
+          {/* The two promises that make Ask worth trusting, shown before the first question. */}
+          <View style={styles.promises}>
+            {['Every claim cites its source', 'Says "I don\'t know" rather than guess'].map((promise) => (
+              <View key={promise} style={styles.promise}>
+                <Text variant="caption" tone="primary">
+                  {visitorLiteralCopy(language, promise)}
+                </Text>
+              </View>
+            ))}
+          </View>
         </View>
       </View>
 
@@ -249,6 +259,15 @@ export function DhammaScreen() {
 }
 
 const styles = StyleSheet.create({
+  promises: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs, marginTop: spacing.sm },
+  promise: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xxs,
+    borderRadius: radii.full,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
   hero: { position: 'relative' },
   heroImage: {
     position: 'absolute',

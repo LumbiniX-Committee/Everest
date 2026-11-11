@@ -11,6 +11,13 @@ import type { InterfaceLanguage } from '@/types';
  * Text boundary and are never registered here.
  */
 export const NEPALI_UI_LITERALS = {
+  "Describe": "वर्णन",
+  "Follow": "पछ्याउनुहोस्",
+  "Every claim cites its source": "हरेक दाबीको स्रोत",
+  "Says \"I don't know\" rather than guess": "अनुमान होइन, \"थाहा छैन\" भन्छ",
+  "See something wrong?": "केही गलत देख्नुभयो?",
+  "Flag it, then follow it.": "जनाउनुहोस्, अनि पछ्याउनुहोस्।",
+  "It works offline and sends when you are back in range. Each step is added by the people who look after the site, only when they act.": "यो अफलाइन चल्छ र सिग्नल आएपछि पठाउँछ। हरेक चरण स्थलको हेरचाह गर्नेहरूले काम गरेपछि मात्र थप्छन्।",
   "High contrast for sunlight": "घामका लागि उच्च कन्ट्रास्ट",
   "Darker text and stronger lines, easier to read outdoors in bright sun.": "गाढा अक्षर र बलियो रेखा, चर्को घाममा बाहिर पढ्न सजिलो।",
   "as deeply as you want.": "जति गहिरो चाहनुहुन्छ त्यति।",

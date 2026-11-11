@@ -21,6 +21,8 @@ import { database } from '@/services';
 import { onnxAvailable } from '@/services/ai/onnx';
 import { usePractice, usePreferences } from '@/store';
 import { colors, radii, spacing } from '@/theme';
+
+import { ReportHero } from './ReportHero';
 import { distanceMeters, formatDistance, formatTimestamp } from '@/utils';
 import type { Observation, ObservationAssessment } from '@/types';
 
@@ -120,6 +122,8 @@ export function SakshiScreen() {
         subtitle={t('sakshi.subtitle')}
         rightAction={<SettingsButton />}
       />
+
+      <ReportHero />
 
       {/*
         A visible answer to "is the detector actually in this build".
