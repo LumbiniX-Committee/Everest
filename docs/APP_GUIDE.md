@@ -1,5 +1,7 @@
 # Sākṣī app guide
 
+> The full feature guide, with where each feature lives and how far it is verified, is [FEATURES.md](FEATURES.md). Changes for users are in [CHANGELOG.md](../CHANGELOG.md).
+
 The living guide to what the app is, how it works, and how to run, test and release it. What changed and when is in [WORK_LOG.md](WORK_LOG.md). The rules for working in the code are in [AGENTS.md](../AGENTS.md), and the design system is in [DESIGN.md](../DESIGN.md).
 
 ## What it is

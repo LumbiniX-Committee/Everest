@@ -186,3 +186,12 @@ Present but not systematic:
 ---
 
 *Part of the [docs/ai-context](README.md) knowledge base. Snapshot of commit `dbe6d45e`; verify against current source before relying on details.*
+
+## Added since 1.0 (2026-11)
+
+- **`SegmentedControl`** (`components/ui`): one choice from a few, 48dp segments; used for depth.
+- **`ReportTimeline`** (`components/report`): a report's custodian steps; future steps are hollow and undated.
+- **`PhotoHero`** (`components/site`): a remote photo with its credit on the image; renders nothing on load failure.
+- **`SiteVisual`** gained `credited` and a remote Commons photo before the plate or schematic fallback.
+- **`Mascot`** (`components/mascot`): the four original characters, decorative (`accessible={false}`).
+

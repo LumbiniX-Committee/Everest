@@ -364,6 +364,24 @@ Places to stay, eat, get medical help or money, travel services, transport and p
 - **Licences:** per record (CDLA-Permissive-2.0, CC0-1.0, Apache-2.0 for Foursquare); see LICENCES.md and NOTICE. Overture places contain no OSM data.
 - **No opening hours** exist in Overture, so none are shown; each card offers Call, Directions (via the map's `guideTo`) and Website.
 
+## 20c. Additions since 1.0 (2026-11-08 to 2026-11-11)
+
+Full descriptions are in [docs/FEATURES.md](../FEATURES.md). Code pointers:
+
+| Feature | Code |
+|---|---|
+| Depth control (Glance · Story · Scholar) | `components/ui/SegmentedControl.tsx`; `features/tirtha/SiteDetailScreen.tsx`; labels `WISDOM_TIER_OPTIONS` in `types/preferences.ts` |
+| Explore Guide card and plan list | `features/tirtha/VerbBar.tsx`, `features/tirtha/PlanList.tsx` |
+| Report timeline | `core/reports/timeline.ts` (pure, tested); `services/reportStatus`; `components/report/ReportTimeline.tsx`; migration `0013_reporter_timeline.sql` (live) |
+| Report hero | `features/sakshi/ReportHero.tsx` |
+| 3D town | `components/map/townLayer.ts` (three.js custom layer, 3D mode, zoom ≥ 15); materials in `MAP_MATERIALS` (`theme/mapStyle.ts`) |
+| 3D models (13) | `tools/models/build-models.mjs` (`newarTemple`, `courtyardWall`, `bull`, `storeyTower`) |
+| Site and trek photos | `data/sitePhotos.ts` (`seed/site-photos.json`), `data/trekPhotos.ts`, `components/site/PhotoHero.tsx`, `SiteVisual` (`credited`) |
+| Place notes (Pashupatinath) | `data/placeNotes.ts`, shown in `PlaceDetailScreen` |
+| Sunlight theme | `outdoorColors` in `theme/colors.ts`; `ColorTheme` adds `'outdoor'` |
+| Mascots | `components/mascot/Mascot.tsx`; art `brand/mascots/*.svg` → `assets/mascots/*.webp` |
+| Bhaktapur Durbar Square | `EXTRA_ITEMS` in `tools/data/build-places.mjs` |
+
 ## 21. `features/practice/` — Unused / dead code
 
 Contains **only** `index.ts`, no screen. Merit functionality lives in [store/practice.tsx](../../store/practice.tsx) and [components/practice/](../../components/practice/). No route renders anything from this directory.
