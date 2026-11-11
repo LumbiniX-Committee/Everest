@@ -66,7 +66,9 @@ Every item below was **verified during this audit**. Nothing here was fixed — 
 - **Risk of fixing:** **High** — this path writes evidence photographs. A mistake loses captures.
 - **Validation:** Capture in both `aligned` and `manual` modes; confirm the file persists, the row is inserted, and sync uploads it.
 
-### H5 — The React layer has no tests at all
+### H5 — The React layer has no tests at all (resolved, 2026-11)
+
+> **Update 2026-11-11:** no longer true. `tests/native/` holds React Native tests run by Jest inside `npm run verify` (108 passing), covering navigation, the map page, theme contrast and screens. Coverage is still partial; new shared UI should add a test there.
 
 - **Evidence:** All 18 test files are under `core/`. Zero tests for screens, components, hooks, stores, services, or navigation.
 - **Impact:** The entire UI, state, and platform-integration surface is verified by hand only. Highest-risk untested area is the capture → sync pipeline.
@@ -119,7 +121,9 @@ Every item below was **verified during this audit**. Nothing here was fixed — 
 - **Impact:** Easy to edit the wrong one.
 - **Fix:** Rename one (e.g. `OnboardingPermissionsScreen`).
 
-### M8 — No CI/CD
+### M8 — No CI/CD (resolved, 2026-11)
+
+> **Update 2026-11-11:** `.github/workflows/verify.yml` runs the app checks, the website checks, and Supabase migrations with pgTAP tests on every push to `main`. EAS builds are still started by hand.
 
 - **Evidence:** No `.github/workflows/`, `.gitlab-ci.yml`, or equivalent.
 - **Impact:** Nothing enforces `verify` before merge.

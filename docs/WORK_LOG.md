@@ -2,6 +2,20 @@
 
 What changed in each milestone, what was verified, and what was not. Newest first. The plan lives in the delivery plan; this records what actually happened.
 
+## Design, Guide · Ask · Report, and new content (2026-11-08 to 2026-11-11)
+
+Built after the 1.0 production bundle (`e08d04d`). **It is in preview APKs only (latest from `5c5b8b5`), not in any Play bundle.** None of it has been tried on a phone.
+
+- **Guide:** the Glance · Story · Scholar depth control on the 74 curated site pages (not the 434 listed places), remembered across places. Explore opens on Guide · Ask · Report.
+- **Report:** a timeline under each report (received, acknowledged, being worked on, resolved), from migration `0013_reporter_timeline.sql`. It was applied to production on 2026-11-08 and checked live: authenticated users can run it, anonymous users cannot.
+- **Map:** a 3D town in 3D mode at street zoom (`components/map/townLayer.ts`); monuments drawn as what they are.
+- **Photos:** 10 more sites and the three treks have credited Commons photos, loaded online with a fallback offline.
+- **Sunlight theme:** primary and secondary text at 7:1, tested.
+- **3D models:** 13 now. Pashupatinath was rebuilt in detail; Basantapur tower, Taleju, Kasthamandap and Maju Dega are new. Only overall heights and counts are sourced.
+- **Words and characters:** Pashupati is described in words only. Four original mascots: guide, porter, macaque and woodcarver.
+- **Website:** redesigned (Newsreader serif, bento grid, the visit circle), and the explorer map fixed (the MapLibre worker's shared chunk was missing).
+- **Ask in store builds:** no language-model key is set in `eas.json`, so Ask likely answers from retrieval alone, still cited. Confirm the EAS environment before marketing it as AI chat.
+
 ## Release readiness for 1.0 (2026-11-08)
 
 **Store-policy fixes**

@@ -146,7 +146,7 @@ The file's own rule: **"Schema changes go through `migrations` below. Never edit
 grep -rn "ComponentName" app features components
 ```
 
-**Validate:** typecheck; lint (`npm run lint` clean, `npm run lint:all` at most the 70 known errors); then **manually** open at least one screen per surface. **There are no component tests.**
+**Validate:** typecheck; lint (`npm run lint` clean, `npm run lint:all` at most the 70 known errors); then **manually** open at least one screen per surface. React tests in `tests/native/` cover some screens, not all.
 
 **Mistakes**
 - ❌ Hardcoding a colour or size instead of a `theme/` token
@@ -314,7 +314,7 @@ Keep the privacy contract: the view exposes handle, points and a day count only 
 | Native config / dependency | Full rebuild |
 | Preference | Add 4 places; verify persistence |
 | Merit points | Update client **and** SQL view |
-| Shared UI | Manual smoke test — no tests exist |
+| Shared UI | `tests/native/` where a test exists; otherwise a manual smoke test |
 | User-facing copy | `npm run vocab` |
 
 ---
