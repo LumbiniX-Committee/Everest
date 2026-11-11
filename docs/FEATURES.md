@@ -86,7 +86,7 @@ Where it ships:
 
 **Since 1.0: Pashupatinath rebuilt** with its courtyard and west gate, the Nandi, Vasuki, Unmatta Bhairav, the Bagmati and the 15 Pandra Shivalaya shrines.
 
-**Sourced:** only overall heights (Pashupatinath ~23.7 m, Taleju 35 m, Kasthamandap ~20 m) and counts. Every other size is an estimate from photographs, and each model's points say so. The research is in `reports/Pashupati and Basantapur 3D models.md` (outside git).
+**Sourced:** only overall heights (Pashupatinath ~23.7 m, Taleju 35 m, Kasthamandap ~20 m) and counts. Every other size is an estimate from photographs, and each model's points say so. The research is in `docs/research/Pashupati and Basantapur 3D models.md`.
 
 **Tested** (rendered in Chrome). **Needs:** cultural review.
 
@@ -191,7 +191,7 @@ Licences for all of it are in `LICENCES.md` and `NOTICE`.
 ## 15. Release
 
 - **Release kit:** `docs/PLAY-STORE-HANDOFF.md`.
-- **Marketing kit:** `reports/Sākṣī features fit and marketing kit.md` (outside git).
+- **Marketing kit:** `docs/research/Sākṣī features fit and marketing kit.md`.
 
 **Before a public launch:**
 1. Build a new production bundle and test it on a phone.
