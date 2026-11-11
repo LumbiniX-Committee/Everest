@@ -175,10 +175,10 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     height: 84,
-    backgroundColor: 'rgba(37, 42, 39, 0.72)',
+    backgroundColor: colors.scrim,
   },
   heroText: { position: 'absolute', left: spacing.base, right: 76, bottom: spacing.md },
-  heroTitle: { color: '#FFFFFF' },
+  heroTitle: { color: colors.onScrim },
   heroRing: { position: 'absolute', right: spacing.base, bottom: spacing.md },
 
   body: { padding: spacing.base, gap: spacing.sm },

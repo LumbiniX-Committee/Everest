@@ -55,6 +55,8 @@ cp .env.example .env.local
 |---|---|---|---|
 | `EXPO_PUBLIC_SUPABASE_URL` | For sync | Supabase project URL | [services/supabase/index.ts](../../services/supabase/index.ts) |
 | `EXPO_PUBLIC_SUPABASE_KEY` | For sync | **Publishable (anon) key** — designed to ship in client code | [services/supabase/index.ts](../../services/supabase/index.ts) |
+| `EXPO_PUBLIC_GOOGLE_MAPS_KEY` | Optional | Google Map Tiles API key for satellite and hybrid. Needs billing and the Map Tiles API enabled; restrict it to that API. Set in EAS (preview, production, development) as sensitive | [services/imagery/index.ts](../../services/imagery/index.ts) |
+| `EXPO_PUBLIC_MAPTILER_KEY` | Optional | MapTiler satellite fallback when no Google session can be made | [services/imagery/index.ts](../../services/imagery/index.ts) |
 
 > The app **runs without these**. `isConfigured()` returns false and sync is skipped; nothing crashes. Verified during this audit — the app started and bundled with placeholder values.
 >
@@ -178,7 +180,7 @@ Fonts are Google Fonts packages loaded via `useAppFonts()` ([theme/fonts.ts](../
 - `@expo-google-fonts/ibm-plex-sans` — UI text
 - `@expo-google-fonts/ibm-plex-mono` — monospace
 
-Native colour values also appear in `app.json` (adaptive icon `#F3E4CB`, splash `#F5F3EE`, notification `#8E7657`). **These are separate from `theme/colors.ts` and must be changed together when rebranding.**
+Native colour values also appear in `app.json` (adaptive icon `#0E6E62`, splash `#F5F8F3` with dusk `#0B2024`, notification `#0E6E62`). **These are separate from `theme/colors.ts` and must be changed together when rebranding.**
 
 ---
 
@@ -229,8 +231,8 @@ EXPO_PUBLIC_DHAMMA_MODEL=gpt-oss:120b-cloud
 
 | Service | What must be configured there |
 |---|---|
-| **Supabase** | Project + 8 migrations applied; RLS on every table; **Authentication → Sign In / Providers → anonymous sign-in enabled** |
-| **Expo / EAS** | Project `e8454679-…`, owner `siddantasodari`; env vars per profile; build credentials |
+| **Supabase** | Project (`xvahqoivcmfiasffuufr`, Sydney) + 9 migrations applied; RLS on every table; **Authentication → Sign In / Providers → anonymous sign-in enabled** |
+| **Expo / EAS** | Project `56cf1d5c-…`, owner `saksi-nepal`; env vars per profile; build credentials |
 | **Google Play** | Service account JSON for `production` submit; internal track |
 | **Railway** | Mock API hosting (optional) |
 | **Mapillary / Flickr** | Tokens for the harvest pipeline (optional) |
@@ -251,3 +253,23 @@ EXPO_PUBLIC_DHAMMA_MODEL=gpt-oss:120b-cloud
 ---
 
 *Part of the [docs/ai-context](README.md) knowledge base. Snapshot of commit `dbe6d45e`; verify against current source before relying on details.*
+
+---
+
+## Deploy keys and account separation
+
+This repository (`siddantasodari4-eng/saksi`) is kept apart from the older `LumbiniX-Committee/Everest` checkout. Each uses its own accounts, and neither folder holds the other's keys.
+
+| Service | Saksi |
+|---|---|
+| GitHub | `siddantasodari4-eng/saksi` |
+| Expo | `@saksi-nepal/saksi` |
+| Vercel | project `saksi`, root `landing/`, connected to `main` |
+| Supabase | `xvahqoivcmfiasffuufr` |
+
+- Deploy keys live in `.env.tools.local`, which is gitignored. They do not go in `.env.local`, because Expo CLI auto-loads that file.
+- Metro's `blockList` also refuses `.env*` files, so the bundler can never read these keys.
+- `.easignore` excludes every `.env.*` file, so EAS builds read `EXPO_PUBLIC_*` values from the project's EAS environment variables. Local values do not reach a build.
+- The app ID is `com.saksinepal.saksi` and the scheme is `saksi`. Everest is published as `org.lumbinix.sakshi`, and the two must not share an ID or scheme.
+- Commits here must use the email on the `siddantasodari4-eng` account. Vercel blocks deployments whose commit author has no access to the project, and reports them as `BLOCKED`.
+- Run `tools/seed-history-supabase.mjs` only against staging. It writes synthetic history, so it must never touch this production project.

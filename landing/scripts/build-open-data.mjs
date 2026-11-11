@@ -48,9 +48,9 @@ const siteFeatures = sites.map((s) => ({
     region: REGION[s.zone] ?? null,
     zone: s.zone,
     tier: s.tier ?? null,
-    /* False means the coordinate came off a document and has never been
-       checked. Exported rather than hidden, so nobody mistakes it for survey. */
-    surveyed: s.coords_source === 'osm',
+    /* True only for a coordinate someone measured on site. OSM and UNESCO values
+       are useful, but neither is a field survey, and coords_source says which. */
+    surveyed: s.coords_source === 'field',
     coords_source: s.coords_source ?? null,
     geofence_m: s.geofence_m ?? null,
     period_from: s.period?.from ?? null,
@@ -128,7 +128,7 @@ const manifest = {
     .update(JSON.stringify({ sites: siteFeatures, vantages: vantageFeatures }))
     .digest('hex')
     .slice(0, 12),
-  source: 'https://github.com/LumbiniX-Committee/Everest — seed/sites.json, seed/vantages.json',
+  source: 'https://github.com/siddantasodari4-eng/saksi — seed/sites.json, seed/vantages.json',
   crs: 'EPSG:4326 (WGS 84), longitude before latitude',
   counts: {
     sites: siteFeatures.length,
@@ -138,7 +138,7 @@ const manifest = {
   licence: 'CC-BY-4.0',
   licence_url: 'https://creativecommons.org/licenses/by/4.0/',
   attribution:
-    'Heritage site register from Sākṣī (LumbiniX-Committee), CC BY 4.0, https://github.com/LumbiniX-Committee/Everest',
+    'Heritage site register from Sākṣī (LumbiniX-Committee), CC BY 4.0, https://github.com/siddantasodari4-eng/saksi',
   /* The OSM obligation is not ours to waive, so it travels with the file
      rather than living only in a licence document nobody fetches. */
   licence_note:

@@ -67,7 +67,7 @@ graph TD
     Root --> Main["(main)/ (Tabs)"]
 
     Idx -->|onboardingComplete = false| Onb
-    Idx -->|onboardingComplete = true| Map["/(main)/tirtha/map"]
+    Idx -->|onboardingComplete = true| Map["/(main)/tirtha"]
 
     Onb --> W[welcome] --> P[purpose] --> H[how-it-works] --> A[align] --> Perm[permissions]
     Perm -->|completeOnboarding| Map
@@ -112,11 +112,11 @@ The source states the reason plainly: rendering early "would flash onboarding at
 [app/index.tsx](../../app/index.tsx) is the entire launch decision:
 
 ```tsx
-return <Redirect href={onboardingComplete ? '/(main)/tirtha/map' : '/onboarding'} />;
+return <Redirect href={onboardingComplete ? '/(main)/tirtha' : '/onboarding'} />;
 ```
 
 - First launch → `/onboarding`
-- Otherwise → `/(main)/tirtha/map`
+- Otherwise → `/(main)/tirtha`
 
 `onboardingComplete` is persisted via `storage.getBoolean(StorageKeys.onboardingComplete)` ([store/app-state.tsx](../../store/app-state.tsx)).
 
@@ -162,17 +162,21 @@ Sequence is data-driven from [features/onboarding/steps.ts](../../features/onboa
 | `/(main)/tirtha/quests` | [app/(main)/tirtha/quests/index.tsx](<../../app/(main)/tirtha/quests/index.tsx>) | `QuestListScreen` ([features/quests/QuestListScreen.tsx](../../features/quests/QuestListScreen.tsx)) | — |
 | `/(main)/tirtha/quests/[questId]` | [app/(main)/tirtha/quests/[questId].tsx](<../../app/(main)/tirtha/quests/[questId].tsx>) | `QuestDetailScreen` ([features/quests/QuestDetailScreen.tsx](../../features/quests/QuestDetailScreen.tsx)) | `questId: string` (defaulted `?? ''`) |
 | `/(main)/tirtha/quests/completed/[questId]` | [app/(main)/tirtha/quests/completed/[questId].tsx](<../../app/(main)/tirtha/quests/completed/[questId].tsx>) | `QuestCompletedScreen` ([features/quests/QuestCompletedScreen.tsx](../../features/quests/QuestCompletedScreen.tsx)) | `questId: string` (defaulted `?? ''`) |
+| `/(main)/tirtha/essentials` | [app/(main)/tirtha/essentials.tsx](<../../app/(main)/tirtha/essentials.tsx>) | `EssentialsScreen` ([features/essentials/EssentialsScreen.tsx](../../features/essentials/EssentialsScreen.tsx)) | `area?`, `near?`, `kind?` |
+| `/(main)/tirtha/treks` | [app/(main)/tirtha/treks/index.tsx](<../../app/(main)/tirtha/treks/index.tsx>) | `TrekListScreen` ([features/treks/TrekListScreen.tsx](../../features/treks/TrekListScreen.tsx)) | — |
+| `/(main)/tirtha/treks/[trekId]` | [app/(main)/tirtha/treks/[trekId].tsx](<../../app/(main)/tirtha/treks/[trekId].tsx>) | `TrekDetailScreen` ([features/treks/TrekDetailScreen.tsx](../../features/treks/TrekDetailScreen.tsx)) | `trekId: string` |
+| `/(main)/tirtha/treks/map/[trekId]` | [app/(main)/tirtha/treks/map/[trekId].tsx](<../../app/(main)/tirtha/treks/map/[trekId].tsx>) | `TrekMapScreen` ([features/treks/TrekMapScreen.tsx](../../features/treks/TrekMapScreen.tsx)) | `trekId: string`, `day?: string` (a 0-based day index) |
 
-> **`/(main)/tirtha` vs `/(main)/tirtha/map`:** the launch redirect goes to `/map`, not the tab index. Both routes exist and render different components (`TirthaScreen` vs `LiveMapScreen`). Which one the tab button activates — and whether `TirthaScreen` is reachable in normal use — **Needs verification** (see [KNOWN_ISSUES_AND_TECHNICAL_DEBT.md](KNOWN_ISSUES_AND_TECHNICAL_DEBT.md)).
+> **`/(main)/tirtha` vs `/(main)/tirtha/map`:** the launch redirect goes to Tīrtha Home, with the map opened from there, so on-screen and hardware back agree.
 
 ### Sākṣī surface (`/(main)/sakshi/*`) — tab 2
 
 | Route | Source file | Renders (component file) | Params |
 |---|---|---|---|
 | `/(main)/sakshi` | [app/(main)/sakshi/index.tsx](<../../app/(main)/sakshi/index.tsx>) | `SakshiScreen` ([features/sakshi/SakshiScreen.tsx](../../features/sakshi/SakshiScreen.tsx)) | — |
-| `/(main)/sakshi/vantage` | [app/(main)/sakshi/vantage.tsx](<../../app/(main)/sakshi/vantage.tsx>) | `VantageScreen` ([features/sakshi/VantageScreen.tsx](../../features/sakshi/VantageScreen.tsx)) | `vantageId: string` (query param) |
-| `/(main)/sakshi/capture` | [app/(main)/sakshi/capture.tsx](<../../app/(main)/sakshi/capture.tsx>) | `CaptureScreen` ([features/sakshi/CaptureScreen.tsx](../../features/sakshi/CaptureScreen.tsx)) | `vantageId: string` (query param) |
-| `/(main)/sakshi/observation` | [app/(main)/sakshi/observation.tsx](<../../app/(main)/sakshi/observation.tsx>) | `ObservationScreen` ([features/sakshi/ObservationScreen.tsx](../../features/sakshi/ObservationScreen.tsx)) | `observationId: string` (query param) |
+| `/visit/vantage` | [app/visit/vantage.tsx](<../../app/visit/vantage.tsx>) | `VantageScreen` ([features/sakshi/VantageScreen.tsx](../../features/sakshi/VantageScreen.tsx)) | `vantageId: string` (query param) |
+| `/visit/capture` | [app/visit/capture.tsx](<../../app/visit/capture.tsx>) | `CaptureScreen` ([features/sakshi/CaptureScreen.tsx](../../features/sakshi/CaptureScreen.tsx)) | `vantageId: string` (query param) |
+| `/visit/observation` | [app/visit/observation.tsx](<../../app/visit/observation.tsx>) | `ObservationScreen` ([features/sakshi/ObservationScreen.tsx](../../features/sakshi/ObservationScreen.tsx)) | `observationId: string` (query param) |
 | `/(main)/sakshi/guardians` | [app/(main)/sakshi/guardians.tsx](<../../app/(main)/sakshi/guardians.tsx>) | `LeaderboardScreen` ([features/leaderboard/LeaderboardScreen.tsx](../../features/leaderboard/LeaderboardScreen.tsx)) | — |
 | `/(main)/sakshi/register` | [app/(main)/sakshi/register/index.tsx](<../../app/(main)/sakshi/register/index.tsx>) | `ChaityavaliScreen` ([features/chaityavali/ChaityavaliScreen.tsx](../../features/chaityavali/ChaityavaliScreen.tsx)) | — |
 | `/(main)/sakshi/register/[siteId]` | [app/(main)/sakshi/register/[siteId].tsx](<../../app/(main)/sakshi/register/[siteId].tsx>) | `SiteHistoryScreen` ([features/chaityavali/SiteHistoryScreen.tsx](../../features/chaityavali/SiteHistoryScreen.tsx)) | `siteId: string` |
@@ -248,14 +252,16 @@ The source explains the placement and the behaviour it fixes: it is wired in the
 
 ---
 
-## 9. Back-navigation assumptions
+## 9. Back and navigation rules
 
-- Each surface is an independent `Stack`, so back within a surface pops that surface's stack and keeps the tab bar visible.
-- Onboarding uses `animation: 'slide_from_right'` specifically so "back should undo one step, and the gesture should feel like turning back a page, not scrubbing a carousel."
-- Android predictive back is **disabled**: `"predictiveBackGestureEnabled": false` in `app.json`.
-- Root stack uses `animation: 'fade'`.
-
----
+- **Tab stacks are anchored.** Each surface's layout sets `unstable_settings.anchor`, so its home is always beneath any screen opened from elsewhere. Open a tab screen from another surface with `useOpenInTabs`, which passes `withAnchor`.
+- **Back follows history.** `(main)/_layout.tsx` sets `backBehavior="history"`.
+- **Never call `router.back()` directly.** Use `useSafeBack(fallback)`, which still works on a screen opened cold from a deep link.
+- **Every pushed screen shows a way back,** through `ScreenHeader` or `BackBar`. Tab homes show none.
+- **The Visit flow** (`app/visit`: vantage, capture, observation, then-now, record) sits above the tabs. `useExitVisit` returns to where it was opened from. The tab bar also hides over `quest-camera`.
+- **Ask before discarding work** with `useConfirmLeave(when)`. It must be false before a save navigates away.
+- **Onboarding is a guard,** using `Stack.Protected`, so deep links can't skip it.
+- **`tools/validate-routes.mjs`** enforces the link, `router.back()` and back-control rules in `npm run verify`.
 
 ## Needs verification
 

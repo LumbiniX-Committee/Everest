@@ -5,7 +5,7 @@ import { MeritRewardModal } from '@/components/practice/MeritAcknowledgement';
 import { Citation, SourceDetailSheet } from '@/components/source';
 import { Button, Card, Divider, Text } from '@/components/ui';
 import { findSource } from '@/data';
-import { useSiteArrival } from '@/hooks';
+import { useArrivalCredit, useSiteArrival } from '@/hooks';
 import { arrival } from '@/services';
 import { usePractice } from '@/store/practice';
 import { colors, spacing } from '@/theme';
@@ -42,6 +42,7 @@ export function ArrivalWisdom({ coordinate, notify = true, siteId }: ArrivalWisd
 
   const { recognise, events } = usePractice();
   const { atSiteId, nearest } = useSiteArrival(coordinate, { notify });
+  useArrivalCredit(atSiteId);
 
   const effectiveSiteId = siteId ?? atSiteId ?? nearest?.site.id;
 

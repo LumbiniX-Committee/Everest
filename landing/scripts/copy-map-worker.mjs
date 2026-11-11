@@ -15,7 +15,7 @@
  * The copy is generated rather than committed, because its source is a
  * dependency: anywhere a build runs, `npm install` has already put it there.
  */
-import { copyFile, access } from 'node:fs/promises';
+import { access, copyFile, readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
@@ -35,5 +35,23 @@ try {
   process.exit(0);
 }
 
-await copyFile(from, to);
-console.log(`[map-worker] ${WORKER_FILE}`);
+/*
+ * The worker is not one file. MapLibre v6 splits it into the worker and the
+ * chunks it imports (`./maplibre-gl-shared.mjs`). Copying only the worker left
+ * its import answering 404, so the worker died silently: the style and sprites
+ * loaded but no tile was ever decoded, and the explorer showed a blank grey map
+ * under its pins. Copy every relative import the worker pulls in, recursively.
+ */
+const dist = dirname(from);
+const copied = new Set();
+async function copyWithImports(name) {
+  if (copied.has(name)) return;
+  copied.add(name);
+  const source = join(dist, name);
+  await copyFile(source, join(here, '..', 'public', name));
+  const code = await readFile(source, 'utf8');
+  for (const [, dep] of code.matchAll(/from\s*["']\.\/([^"']+)["']/g)) await copyWithImports(dep);
+  for (const [, dep] of code.matchAll(/import\(\s*["']\.\/([^"']+)["']\s*\)/g)) await copyWithImports(dep);
+}
+await copyWithImports(WORKER_FILE);
+console.log(`[map-worker] ${[...copied].join(', ')}`);

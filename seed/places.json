@@ -1,0 +1,8305 @@
+{
+ "generatedAt": "2026-11-11",
+ "licence": {
+  "osm": "Contains information from OpenStreetMap, © OpenStreetMap contributors, available under the Open Database License (ODbL).",
+  "wikidata": "Wikidata, available under CC0."
+ },
+ "places": [
+  {
+   "id": "osm:node/4327655493",
+   "wikidata": null,
+   "name": "Aadheswor Temple",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7227342,
+   "lon": 85.271104,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/4243043012",
+   "wikidata": null,
+   "name": "Abhiyantra Consulting (Engineering)",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.6883584,
+   "lon": 85.3273044,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/14073012719",
+   "wikidata": null,
+   "name": "Adeshwor View Spot",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.7224141,
+   "lon": 85.2682195,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q16058104",
+   "wikidata": "Q16058104",
+   "name": "Adinath Lokeshwar",
+   "nameNe": null,
+   "description": "temple in Nepal",
+   "category": "temple",
+   "lat": 27.6657,
+   "lon": 85.2913,
+   "hub": "kathmandu",
+   "image": "Chobhar-Adinath Lokeshwar-04-2007-gje.jpg",
+   "wikipedia": "Adinath_Lokeshwar",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q55642860",
+   "wikidata": "Q55642860",
+   "name": "Aircraft Museum Dhangadhi",
+   "nameNe": null,
+   "description": "aviation museum in Dhangadhi, Nepal",
+   "category": "museum",
+   "lat": 28.707477113,
+   "lon": 80.588377535,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Aircraft_Museum_Dhangadhi",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q55075091",
+   "wikidata": "Q55075091",
+   "name": "Aircraft Museum Kathmandu",
+   "nameNe": null,
+   "description": "aviation museum in Kathmandu, Nepal",
+   "category": "museum",
+   "lat": 27.694002649,
+   "lon": 85.353559714,
+   "hub": "kathmandu",
+   "image": "Aviation Museum Kathmandu.jpg",
+   "wikipedia": "Aircraft_Museum_Kathmandu",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q29440339",
+   "wikidata": "Q29440339",
+   "name": "Alam Devi Temple",
+   "nameNe": "आलम देवी",
+   "description": "Hindu temple in Syangja District, Nepal",
+   "category": "temple",
+   "lat": 27.952652777,
+   "lon": 83.524863888,
+   "hub": null,
+   "image": "Aalamdevi1.jpg",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q96371753",
+   "wikidata": "Q96371753",
+   "name": "Ali Taal",
+   "nameNe": null,
+   "description": "body of water",
+   "category": "nature",
+   "lat": 29.09,
+   "lon": 80.49,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Ali_Taal_(Dadeldhura)",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q109321229",
+   "wikidata": "Q109321229",
+   "name": "Amarnaryan Temple",
+   "nameNe": null,
+   "description": "Hindu temple in Tansen, Nepal",
+   "category": "temple",
+   "lat": 27.867777777,
+   "lon": 83.547777777,
+   "hub": null,
+   "image": "Amar Narayan Temple complex.jpg",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/10841616394",
+   "wikidata": null,
+   "name": "Amarsingh Gate",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 28.2035124,
+   "lon": 84.0043974,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q4741483",
+   "wikidata": "Q4741483",
+   "name": "Ambikeshwori Temple",
+   "nameNe": "अम्बिकेश्वरी मन्दिर, दाङ",
+   "description": "Hindu temple in Ghorahi, Nepal",
+   "category": "temple",
+   "lat": 28.045,
+   "lon": 82.48777778,
+   "hub": null,
+   "image": "Ambikeshwari Temple अम्बिकेश्वरी मन्दिर, Ghorahi.jpg",
+   "wikipedia": "Ambikeshwori_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/14072964997",
+   "wikidata": null,
+   "name": "Amitabha Monastry View Spot",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.7244472,
+   "lon": 85.2622356,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q115313709",
+   "wikidata": "Q115313709",
+   "name": "Ananda Kuti Vihar",
+   "nameNe": null,
+   "description": "the first Theravada Vihar in modern Nepal",
+   "category": "temple",
+   "lat": 27.705156101,
+   "lon": 85.303551731,
+   "hub": "kathmandu",
+   "image": "Ananda kuti vihar.jpg",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q106506509",
+   "wikidata": "Q106506509",
+   "name": "Andhimul Temple",
+   "nameNe": null,
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 27.93,
+   "lon": 84.447,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Andhimul_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:way/120747249",
+   "wikidata": "Q7245949",
+   "name": "Annapurna Butterfly Museum",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 28.2392374,
+   "lon": 83.9914308,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": "10:00 -17:00",
+   "website": null,
+   "wheelchair": "yes",
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:relation/4497739",
+   "wikidata": "Q2982581",
+   "name": "Annapurna Conservation Area",
+   "nameNe": "अन्‍नपूर्ण संरक्षण क्षेत्र",
+   "description": null,
+   "category": "nature",
+   "lat": 28.7867633,
+   "lon": 83.9659422,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q3415404",
+   "wikidata": "Q3415404",
+   "name": "Arjundhara Dham",
+   "nameNe": "अर्जुनधारा धाम",
+   "description": "Hindu temple in Jhapa District, Nepal",
+   "category": "temple",
+   "lat": 26.685277777,
+   "lon": 87.988,
+   "hub": null,
+   "image": "Arjun Dhara1.jpg",
+   "wikipedia": "Arjundhara_Dham",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/4734125821",
+   "wikidata": null,
+   "name": "Armala Kot",
+   "nameNe": "अर्मला कोट",
+   "description": null,
+   "category": "viewpoint",
+   "lat": 28.2765224,
+   "lon": 84.0089134,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/136488250",
+   "wikidata": null,
+   "name": "Army Museum",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 27.706519,
+   "lon": 85.2894969,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": "yes",
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/1842725717",
+   "wikidata": null,
+   "name": "Art Of Living Centre",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6900375,
+   "lon": 85.3344392,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/1945544350",
+   "wikidata": null,
+   "name": "Arun Thapa Chok",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6808591,
+   "lon": 85.3102932,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q21079429",
+   "wikidata": "Q21079429",
+   "name": "Ashok Binayak Temple",
+   "nameNe": "अशोक विनायक",
+   "description": "a Hindu temple located in Kathmandu district at eastern side of Kathmandu Durbar Square in Maru Tole",
+   "category": "temple",
+   "lat": 26.7286,
+   "lon": 85.9247,
+   "hub": null,
+   "image": "Ashok Vinayak at Hanuman-Dhoka Durbar Square.jpg",
+   "wikipedia": "Ashok_Binayak_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q18416909",
+   "wikidata": "Q18416909",
+   "name": "Assumption of the Blessed Virgin Mary Cathedral, Kathmandu",
+   "nameNe": null,
+   "description": "church in Kathmandu, Nepal",
+   "category": "temple",
+   "lat": 27.672777777,
+   "lon": 85.306527777,
+   "hub": "kathmandu",
+   "image": "Kathmandu, catholic Assumption cathedral.jpg",
+   "wikipedia": "Assumption_of_the_Blessed_Virgin_Mary_Cathedral,_Kathmandu",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:way/417806532",
+   "wikidata": null,
+   "name": "B.P Koirala statue",
+   "nameNe": "बी पी कोइराला को सालिक",
+   "description": null,
+   "category": "monument",
+   "lat": 28.2238204,
+   "lon": 83.9878673,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q13183742",
+   "wikidata": "Q13183742",
+   "name": "Badimalika Temple",
+   "nameNe": "बडिमालिका",
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 29.346916,
+   "lon": 81.477488,
+   "hub": null,
+   "image": "Badimalika Temple, Bajura, Nepal.jpg",
+   "wikipedia": "Badimalika_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:way/211080702",
+   "wikidata": null,
+   "name": "Badrinath Tirtha",
+   "nameNe": null,
+   "description": null,
+   "category": "temple",
+   "lat": 27.6721295,
+   "lon": 85.4273817,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q13183892",
+   "wikidata": "Q13183892",
+   "name": "Bageshwori Temple",
+   "nameNe": "बागेश्वरी मन्दिर, नेपालगञ्ज",
+   "description": "Hindu temple in Nepalgunj",
+   "category": "temple",
+   "lat": 28.0617,
+   "lon": 81.6238,
+   "hub": null,
+   "image": "Nepalgunj skyline.jpg",
+   "wikipedia": "Bageshwori_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q19680989",
+   "wikidata": "Q19680989",
+   "name": "Bagh Bhairab Temple",
+   "nameNe": "बाघभैरव मन्दिर",
+   "description": "HIndu temple in Kirtipur, Kathmandu",
+   "category": "temple",
+   "lat": 27.679442602,
+   "lon": 85.276463597,
+   "hub": "kathmandu",
+   "image": "Bagh Bhairab Kritipur IMG 8037 03.jpg",
+   "wikipedia": "Bagh_Bhairab_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:way/208654932",
+   "wikidata": null,
+   "name": "bahil",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6778979,
+   "lon": 85.3250202,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/235411212",
+   "wikidata": "Q4848945",
+   "name": "Bajrayogini temple",
+   "nameNe": null,
+   "description": null,
+   "category": "temple",
+   "lat": 27.7438166,
+   "lon": 85.4672298,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q104848932",
+   "wikidata": "Q104848932",
+   "name": "Bala Tripura Sundari Temple",
+   "nameNe": null,
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 29.025,
+   "lon": 82.784,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Bala_Tripura_Sundari_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q106554965",
+   "wikidata": "Q106554965",
+   "name": "Balkumari temple",
+   "nameNe": null,
+   "description": "Hindu temple in Lalitpur district, Nepal",
+   "category": "temple",
+   "lat": 27.6719,
+   "lon": 85.3341,
+   "hub": "kathmandu",
+   "image": "Balkumari Devi Temple Balkumari Lalitpur Nepal Rajesh Dhungana (2).jpg",
+   "wikipedia": "Balkumari_temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q106597868",
+   "wikidata": "Q106597868",
+   "name": "Balkumari temple",
+   "nameNe": null,
+   "description": "Hindu temple in Bhaktapur District, Nepal",
+   "category": "temple",
+   "lat": 27.6759,
+   "lon": 85.385,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": "Balkumari_temple,_Bhaktapur",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/14073012725",
+   "wikidata": null,
+   "name": "Bandevi Temple View Spot",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.7365315,
+   "lon": 85.2797388,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q3695702",
+   "wikidata": "Q3695702",
+   "name": "Banke National Park",
+   "nameNe": "बाँके राष्ट्रिय निकुञ्ज",
+   "description": "national park of Nepal",
+   "category": "nature",
+   "lat": 28.1911,
+   "lon": 81.9128,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Banke_National_Park",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q808021",
+   "wikidata": "Q808021",
+   "name": "Bardiya National Park",
+   "nameNe": "बर्दिया राष्ट्रिय निकुञ्ज",
+   "description": "national park",
+   "category": "nature",
+   "lat": 28.47,
+   "lon": 81.47,
+   "hub": null,
+   "image": "Bardia National Park.JPG",
+   "wikipedia": "Bardiya_National_Park",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q111914605",
+   "wikidata": "Q111914605",
+   "name": "Barhakune Daha",
+   "nameNe": null,
+   "description": "lake in Nepal",
+   "category": "nature",
+   "lat": 28.073333333,
+   "lon": 82.485555555,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Barhakune_Daha",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q96373156",
+   "wikidata": "Q96373156",
+   "name": "Barju Taal",
+   "nameNe": "बर्जु ताल",
+   "description": "body of water",
+   "category": "nature",
+   "lat": 26.485444444,
+   "lon": 87.173222222,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Barju_Taal",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/4243026503",
+   "wikidata": null,
+   "name": "Barudkhana",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.6825695,
+   "lon": 85.4103121,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/1060498234",
+   "wikidata": null,
+   "name": "Basanti Bagh Durbar",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.8145286,
+   "lon": 85.2643957,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/14073012714",
+   "wikidata": null,
+   "name": "Batase Dada View Spot",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.7289779,
+   "lon": 85.2546395,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/2218533779",
+   "wikidata": null,
+   "name": "Bedakopari Chaitya",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.671863,
+   "lon": 85.332345,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q3451677",
+   "wikidata": "Q3451677",
+   "name": "Begnas Lake",
+   "nameNe": "बेगनास ताल",
+   "description": "lake in Kaski District, Nepal",
+   "category": "nature",
+   "lat": 28.171666666,
+   "lon": 84.1,
+   "hub": null,
+   "image": "Rishav Adhikari Begnastal 4.jpg",
+   "wikipedia": "Begnas_Lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q118645599",
+   "wikidata": "Q118645599",
+   "name": "Betkot Lake",
+   "nameNe": null,
+   "description": "lake in Kanchanpur District, Nepal",
+   "category": "nature",
+   "lat": 29.026666666,
+   "lon": 80.320555555,
+   "hub": null,
+   "image": "Betkot lake (बेतकोट ताल) 5 - panoramio.jpg",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q97357162",
+   "wikidata": "Q97357162",
+   "name": "Bhadrakali Temple",
+   "nameNe": null,
+   "description": "Hindu temple in Pokhara, Nepal",
+   "category": "temple",
+   "lat": 28.2125,
+   "lon": 84.007083333,
+   "hub": "pokhara",
+   "image": "Bhadrakali Temple,Pokhara.JPG",
+   "wikipedia": "Bhadrakali_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q85746836",
+   "wikidata": "Q85746836",
+   "name": "Bhadrakali Temple",
+   "nameNe": "भद्रकाली मन्दिर",
+   "description": "Hindu temple near Tundikhel, in Kathmandu, Nepal",
+   "category": "temple",
+   "lat": 27.6993,
+   "lon": 85.3168,
+   "hub": "kathmandu",
+   "image": "Bhadrakali Temple.JPG",
+   "wikipedia": "Bhadrakali_Temple,_Kathmandu",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q20822726",
+   "wikidata": "Q20822726",
+   "name": "Bhagwati Temple",
+   "nameNe": "भगवती मन्दिर राजविराज",
+   "description": "one of the famous Hindu temple of Eastern Nepal",
+   "category": "temple",
+   "lat": 26.9025,
+   "lon": 86.975277777,
+   "hub": null,
+   "image": "Bhagwati Mandir Rajbiraj (1).JPG",
+   "wikipedia": "Bhagwati_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/3074569311",
+   "wikidata": null,
+   "name": "Bhairab Mandir",
+   "nameNe": null,
+   "description": null,
+   "category": "temple",
+   "lat": 27.7094976,
+   "lon": 85.339716,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/4269625792",
+   "wikidata": null,
+   "name": "Bhairab Temple",
+   "nameNe": "भैरव मन्दिर",
+   "description": null,
+   "category": "attraction",
+   "lat": 28.2328413,
+   "lon": 83.9853073,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q106506210",
+   "wikidata": "Q106506210",
+   "name": "Bhairabi Temple",
+   "nameNe": "भैरवी मन्दिर (नुवाकोट)",
+   "description": "Hindu temple in Nuwakot district, Nepal",
+   "category": "temple",
+   "lat": 27.912583333,
+   "lon": 85.16375,
+   "hub": null,
+   "image": "Vairab mandira,nuwakot.JPG",
+   "wikipedia": "Bhairabi_Temple,_Nuwakot",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q97188189",
+   "wikidata": "Q97188189",
+   "name": "Bhairabsthan Temple",
+   "nameNe": null,
+   "description": "Hindu temple in Palpa District, Nepal",
+   "category": "temple",
+   "lat": 27.869722222,
+   "lon": 83.478611111,
+   "hub": null,
+   "image": "Bhairabsthan Palpa-2.jpg",
+   "wikipedia": "Bhairabsthan_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q854699",
+   "wikidata": "Q854699",
+   "name": "Bhairavnath temple",
+   "nameNe": null,
+   "description": "hinduist temple in Bhaktapur, Nepal",
+   "category": "temple",
+   "lat": 27.67105556,
+   "lon": 85.42952778,
+   "hub": "kathmandu",
+   "image": "Bhaktapur-Bhairava Mandir am Taumadhi Tole-02-2007-gje.jpg",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q4900869",
+   "wikidata": "Q4900869",
+   "name": "Bhaktapur Durbar Square",
+   "nameNe": "भक्तपुर दरवार क्षेत्र",
+   "description": "Royal square in Bhaktapur, Nepal",
+   "category": "palace",
+   "lat": 27.67218333,
+   "lon": 85.42845278,
+   "hub": "kathmandu",
+   "image": "View of Bhaktapur Durbar Square.jpg",
+   "wikipedia": "Bhaktapur_Durbar_Square",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ],
+   "feeId": "bhaktapur-durbar-square"
+  },
+  {
+   "id": "osm:node/12627867302",
+   "wikidata": null,
+   "name": "Bhalam View Point",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 28.25595,
+   "lon": 83.999998,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q30232689",
+   "wikidata": "Q30232689",
+   "name": "Bhaleshwor Mahadev Temple",
+   "nameNe": "भालेश्वर महादेव मन्दिर",
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 27.6661,
+   "lon": 85.2054,
+   "hub": "kathmandu",
+   "image": "Baleshwor Mahadev Temple at Chandragiri Hill, Nepal 18.jpg",
+   "wikipedia": "Bhaleshwor_Mahadev",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/3577277381",
+   "wikidata": null,
+   "name": "Bhanu Bhakta Statue",
+   "nameNe": "भानुभक्तको सालिक",
+   "description": null,
+   "category": "monument",
+   "lat": 27.7078718,
+   "lon": 85.3142714,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/10016058611",
+   "wikidata": null,
+   "name": "bhanubhakta marga",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.751164,
+   "lon": 85.3256715,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q114056366",
+   "wikidata": "Q114056366",
+   "name": "Bharat Lake",
+   "nameNe": null,
+   "description": "man-made lake in Nepal",
+   "category": "nature",
+   "lat": 27.108,
+   "lon": 85.472,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Bharat_Lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/4340567491",
+   "wikidata": null,
+   "name": "bhaudhoka",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.7281022,
+   "lon": 85.4616943,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/2470810067",
+   "wikidata": null,
+   "name": "Bhayaarthaan of Manikharka",
+   "nameNe": "भयारथान, मानिखर्क",
+   "description": null,
+   "category": "temple",
+   "lat": 28.20376,
+   "lon": 83.9449695,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q28183939",
+   "wikidata": "Q28183939",
+   "name": "Bhutandevi Mandir",
+   "nameNe": "भूटनदेवी मन्दिर",
+   "description": "Hindu temple in Hetauda, Nepal",
+   "category": "temple",
+   "lat": 27.4241,
+   "lon": 85.0232,
+   "hub": null,
+   "image": "BhutanDevi Temple.jpg",
+   "wikipedia": "Bhutandevi_Mandir",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/1974298499",
+   "wikidata": null,
+   "name": "Bichari Pati",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.5947796,
+   "lon": 85.5202468,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/4907151222",
+   "wikidata": null,
+   "name": "Bijeswori Temple",
+   "nameNe": "विजेश्वरी मन्दिर",
+   "description": null,
+   "category": "attraction",
+   "lat": 27.7139294,
+   "lon": 85.3007676,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/4203978205",
+   "wikidata": null,
+   "name": "Bindhyabasini Party Palace",
+   "nameNe": "बिन्दबासिनी पार्टी प्यालेस",
+   "description": null,
+   "category": "attraction",
+   "lat": 28.2379961,
+   "lon": 83.9845462,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q16254765",
+   "wikidata": "Q16254765",
+   "name": "Bindhyabasini Temple",
+   "nameNe": "विन्ध्यवासिनी मन्दिर",
+   "description": "Hindu temple in Pokhara, Nepal",
+   "category": "temple",
+   "lat": 28.237777777,
+   "lon": 83.984166666,
+   "hub": "pokhara",
+   "image": "Bindhyabasini Temple GP (3).JPG",
+   "wikipedia": "Bindhyabasini_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/2019707026",
+   "wikidata": null,
+   "name": "Birendra Batika",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7434103,
+   "lon": 85.3332716,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/206805746",
+   "wikidata": null,
+   "name": "Birendra Chwok",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6987205,
+   "lon": 85.3739718,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q30594107",
+   "wikidata": "Q30594107",
+   "name": "Birendra Lake",
+   "nameNe": null,
+   "description": "body of water",
+   "category": "nature",
+   "lat": 28.595833333,
+   "lon": 84.628333333,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Birendra_Lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/4265547295",
+   "wikidata": null,
+   "name": "Bisheswar Mahadev",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6747515,
+   "lon": 85.3875027,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q13186165",
+   "wikidata": "Q13186165",
+   "name": "Bishnupaduka, Dharan",
+   "nameNe": "विष्णुपादुका",
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 26.823536111,
+   "lon": 87.247925,
+   "hub": null,
+   "image": "Bishnupaduka Temple.jpg",
+   "wikipedia": "Bishnupaduka_(shrine)",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/568497246",
+   "wikidata": null,
+   "name": "Boat for rent",
+   "nameNe": "डुङ्गा सवार",
+   "description": null,
+   "category": "attraction",
+   "lat": 28.2034895,
+   "lon": 83.9626075,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/4144009690",
+   "wikidata": null,
+   "name": "Bojepokhari",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.6648498,
+   "lon": 85.3487309,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q124260195",
+   "wikidata": "Q124260195",
+   "name": "Bolbam Dham",
+   "nameNe": null,
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 27.6756963,
+   "lon": 83.35435,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Bolbam_Dham",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q889902",
+   "wikidata": "Q889902",
+   "name": "Boudhanath",
+   "nameNe": "बौद्धनाथ",
+   "description": "Buddhist stupa in Kathmandu, Nepal",
+   "category": "stupa",
+   "lat": 27.721389,
+   "lon": 85.361944,
+   "hub": "kathmandu",
+   "image": "Bouddhanath, 2009.jpg",
+   "wikipedia": "Boudha_Stupa",
+   "hours": null,
+   "website": "http://boudhanathstupa.org/#_home",
+   "wheelchair": "yes",
+   "sources": [
+    "wikidata",
+    "osm"
+   ],
+   "feeId": "boudha"
+  },
+  {
+   "id": "osm:node/9917635530",
+   "wikidata": null,
+   "name": "BP Koirala Statue",
+   "nameNe": "बि.पी. कोइराला सालिक",
+   "description": null,
+   "category": "monument",
+   "lat": 28.2543896,
+   "lon": 83.9764366,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/292519100",
+   "wikidata": null,
+   "name": "Brammayadi Devi Fix Itta Udhyog",
+   "nameNe": null,
+   "description": null,
+   "category": "archaeological",
+   "lat": 27.6801427,
+   "lon": 85.4717606,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/11934802170",
+   "wikidata": null,
+   "name": "Brass & Bronze Museum",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 27.6737206,
+   "lon": 85.435587,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/13120618055",
+   "wikidata": null,
+   "name": "Bridge the world",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 28.2208476,
+   "lon": 83.9572587,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/10959561216",
+   "wikidata": null,
+   "name": "Buddha Akshobya",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7155001,
+   "lon": 85.2903468,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/2202917311",
+   "wikidata": null,
+   "name": "Buddha Pokhari",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6120966,
+   "lon": 85.3199958,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/2087434219",
+   "wikidata": null,
+   "name": "Buddha stupa",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7183569,
+   "lon": 85.3348353,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q1001415",
+   "wikidata": "Q1001415",
+   "name": "Budhanilkantha Temple",
+   "nameNe": "बूढानीलकण्ठ मन्दिर",
+   "description": "Hindu temple in Kathmandu District, Nepal",
+   "category": "temple",
+   "lat": 27.77805556,
+   "lon": 85.36222222,
+   "hub": "kathmandu",
+   "image": "Budhanilkantha Temple Entrance.jpg",
+   "wikipedia": "Budhanilkantha_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": "yes",
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q4985069",
+   "wikidata": "Q4985069",
+   "name": "Budhasubba",
+   "nameNe": "बुढा सुब्बा",
+   "description": "religious shrine in Nepal",
+   "category": "temple",
+   "lat": 26.82,
+   "lon": 87.3,
+   "hub": null,
+   "image": "Budhasubba.jpg",
+   "wikipedia": "Budha_Subba_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q19681783",
+   "wikidata": "Q19681783",
+   "name": "Bulbule Lake",
+   "nameNe": "बुलबुले ताल",
+   "description": "lake in Karnali Province, Nepal",
+   "category": "nature",
+   "lat": 28.581388888,
+   "lon": 81.619444444,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Bulbule_Lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/4401481355",
+   "wikidata": null,
+   "name": "Bungamati Museum",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 27.6288672,
+   "lon": 85.3024433,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": "Su-Fr 10:00-17:00",
+   "website": "http://www.facebook.com/bungamatimuseum",
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q5070967",
+   "wikidata": "Q5070967",
+   "name": "Chandannath Temple",
+   "nameNe": "चन्दननाथ दत्रात्रय",
+   "description": "Hindu temple in Chandannath, Jumla district, Nepal",
+   "category": "temple",
+   "lat": 29.274208333,
+   "lon": 82.183513888,
+   "hub": null,
+   "image": "Channdannath and Bhairabnath.jpg",
+   "wikipedia": "Chandannath_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q5071024",
+   "wikidata": "Q5071024",
+   "name": "Chandeshwari temple",
+   "nameNe": "चण्डेश्वरी मन्दिर",
+   "description": "Hintu temple in Nepal",
+   "category": "temple",
+   "lat": 27.63583333,
+   "lon": 85.53222222,
+   "hub": "kathmandu",
+   "image": "Chandeshwari Temple.JPG",
+   "wikipedia": "Chandeshwori_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/4243017315",
+   "wikidata": null,
+   "name": "Chandika house",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.628242,
+   "lon": 85.5207428,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q29510100",
+   "wikidata": "Q29510100",
+   "name": "Chandikalika Temple",
+   "nameNe": "सतौं चण्डीकालीका",
+   "description": "Hindu temple in Syangja District, Nepal",
+   "category": "temple",
+   "lat": 28.101666666,
+   "lon": 83.831666666,
+   "hub": null,
+   "image": "Chandikalika Temple 06.jpg",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q25247752",
+   "wikidata": "Q25247752",
+   "name": "Chandrabhoga Gadhi",
+   "nameNe": null,
+   "description": "archaeological site in Saptari district",
+   "category": "archaeological",
+   "lat": 26.668989,
+   "lon": 86.6865608,
+   "hub": null,
+   "image": "Chandrabhoga Gadhi (Saptari) (3).JPG",
+   "wikipedia": "Chandrabhoga_Gadhi",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/6018817255",
+   "wikidata": null,
+   "name": "Chandragiri Cable Car",
+   "nameNe": "चन्द्रागिरि केबलकार",
+   "description": null,
+   "category": "attraction",
+   "lat": 27.6862072,
+   "lon": 85.2145851,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/6333301847",
+   "wikidata": null,
+   "name": "Chandragiri Hill",
+   "nameNe": "चन्द्रागिरि हिल्स",
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.666021,
+   "lon": 85.2054264,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/6501755114",
+   "wikidata": null,
+   "name": "Changu Entrance Gate",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7162881,
+   "lon": 85.4266686,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/6499243432",
+   "wikidata": null,
+   "name": "Changu Museum",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 27.7165172,
+   "lon": 85.4292412,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/1801257243",
+   "wikidata": null,
+   "name": "chapache sana guthi,chabahal",
+   "nameNe": null,
+   "description": null,
+   "category": "archaeological",
+   "lat": 27.676683,
+   "lon": 85.3194667,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q30174256",
+   "wikidata": "Q30174256",
+   "name": "Charumati Stupa",
+   "nameNe": "चारुमती विहार",
+   "description": "Buddhist Stupa in Kathmandu, Nepal",
+   "category": "stupa",
+   "lat": 27.715894444,
+   "lon": 85.345872222,
+   "hub": "kathmandu",
+   "image": "Charumati bihar.jpg",
+   "wikipedia": "Charumati_Stupa",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:way/331774981",
+   "wikidata": null,
+   "name": "Chhaabahal Chapaa Chhen",
+   "nameNe": null,
+   "description": null,
+   "category": "archaeological",
+   "lat": 27.6766159,
+   "lon": 85.319362,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/4321058000",
+   "wikidata": null,
+   "name": "Chhauni",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6461211,
+   "lon": 85.3571382,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/136488251",
+   "wikidata": "Q2157355",
+   "name": "Chhauni Museum",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 27.7054391,
+   "lon": 85.2891375,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": "https://www.nationalmuseum.gov.np/",
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q139500033",
+   "wikidata": "Q139500033",
+   "name": "Chhayanath National Park",
+   "nameNe": "छायाँनाथ राष्ट्रिय निकुञ्ज",
+   "description": "national park of Nepal",
+   "category": "nature",
+   "lat": 29.75,
+   "lon": 82.55,
+   "hub": null,
+   "image": "Moon rise above Chhayanath mountain range.jpg",
+   "wikipedia": "Chhayanath_National_Park",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/4348451709",
+   "wikidata": null,
+   "name": "chhyabasti",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.7172935,
+   "lon": 85.4683588,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/14072965000",
+   "wikidata": null,
+   "name": "Chihan Dada View Spot",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.7233999,
+   "lon": 85.2676861,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q19839182",
+   "wikidata": "Q19839182",
+   "name": "Children's Art Museum of Nepal",
+   "nameNe": null,
+   "description": "a children's art museum of Nepal",
+   "category": "museum",
+   "lat": 27.711081775,
+   "lon": 85.322259581,
+   "hub": "kathmandu",
+   "image": "Children's Art Museum of Nepal.jpg",
+   "wikipedia": "Children's_Art_Museum_of_Nepal",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q13181099",
+   "wikidata": "Q13181099",
+   "name": "Chinnamasta Bhagawati",
+   "nameNe": "छिन्नमस्ता भगवती",
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 26.6667,
+   "lon": 86.7486,
+   "hub": null,
+   "image": "Chinnamasta,Saptari (4).JPG",
+   "wikipedia": "Chinnamasta_Bhagawati_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q104879211",
+   "wikidata": "Q104879211",
+   "name": "Chintang Devi temple",
+   "nameNe": null,
+   "description": "hindu/Kirati temple in Dhankuta, Nepal",
+   "category": "temple",
+   "lat": 26.955,
+   "lon": 87.2041,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Chintang_Devi_temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q1075023",
+   "wikidata": "Q1075023",
+   "name": "Chitwan National Park",
+   "nameNe": "चितवन राष्ट्रिय निकुञ्ज",
+   "description": "national park of Nepal",
+   "category": "nature",
+   "lat": 27.5,
+   "lon": 84.333333,
+   "hub": "chitwan",
+   "image": "Chitwan swamp.jpg",
+   "wikipedia": "Chitwan_National_Park",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ],
+   "feeId": "chitwan-national-park"
+  },
+  {
+   "id": "osm:node/2084372303",
+   "wikidata": null,
+   "name": "Chunni Devi",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7192529,
+   "lon": 85.3308204,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q82280564",
+   "wikidata": "Q82280564",
+   "name": "Chyasilin Mandap",
+   "nameNe": null,
+   "description": "hinduist temple in Bhaktapur, Nepal",
+   "category": "temple",
+   "lat": 27.67205,
+   "lon": 85.42856,
+   "hub": "kathmandu",
+   "image": "Bhaktapur-Palastplatz 53-Siddhilakshmi-Cyasilim-2014-gje.jpg",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:way/404004169",
+   "wikidata": null,
+   "name": "Chyatriya Sangralaya",
+   "nameNe": "क्षेत्रीय संग्रालय",
+   "description": null,
+   "category": "museum",
+   "lat": 28.2173146,
+   "lon": 83.990756,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/654875359",
+   "wikidata": null,
+   "name": "Classic Art Gallery",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 27.6792298,
+   "lon": 85.325767,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": "10:00-17:00",
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/9871425646",
+   "wikidata": null,
+   "name": "Dabu (Dance Platform)",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6721171,
+   "lon": 85.4277664,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q60742955",
+   "wikidata": "Q60742955",
+   "name": "Dakneshwori Temple",
+   "nameNe": null,
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 26.51,
+   "lon": 86.62,
+   "hub": null,
+   "image": "Dakneshwori Temple.jpg",
+   "wikipedia": "Dakneshwori_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q5210100",
+   "wikidata": "Q5210100",
+   "name": "Dakshinkali Temple",
+   "nameNe": "दक्षिणकाली भगवती",
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 27.58333333,
+   "lon": 85.25,
+   "hub": "kathmandu",
+   "image": "Dakshin Kali main Temple.JPG",
+   "wikipedia": "Dakshinkali_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q140984352",
+   "wikidata": "Q140984352",
+   "name": "Damak View Tower",
+   "nameNe": "दमक भ्यू टावर",
+   "description": "skyscraper in Damak, Nepal",
+   "category": "monument",
+   "lat": 26.6886,
+   "lon": 87.6633,
+   "hub": null,
+   "image": "Damak View Tower झापाको दमक भ्यू टावर.jpg",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/4243030036",
+   "wikidata": null,
+   "name": "Dandipakha",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.6820235,
+   "lon": 85.4089415,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q60786069",
+   "wikidata": "Q60786069",
+   "name": "Dantakali Temple",
+   "nameNe": "दन्तकाली मन्दिर",
+   "description": "Hindu temple in Sunsari District, Nepal",
+   "category": "temple",
+   "lat": 26.8186,
+   "lon": 87.2909,
+   "hub": null,
+   "image": "Dantakali.jpg",
+   "wikipedia": "Dantakali_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q13182228",
+   "wikidata": "Q13182228",
+   "name": "Daunne Devi Temple",
+   "nameNe": "दाउन्ने देवी",
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 27.55,
+   "lon": 83.837,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Daunne_Devi_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/10015764442",
+   "wikidata": null,
+   "name": "Decoration and Fine Art Gallery",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 27.7489458,
+   "lon": 85.315746,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q18351223",
+   "wikidata": "Q18351223",
+   "name": "Depang lake",
+   "nameNe": "दिपाङ ताल",
+   "description": "body of water",
+   "category": "nature",
+   "lat": 28.18,
+   "lon": 84.069,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Dipang_Lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/2230601510",
+   "wikidata": null,
+   "name": "Depressed stone icon",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6738061,
+   "lon": 85.3257489,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/10006894148",
+   "wikidata": null,
+   "name": "Destination Art Gallery",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 27.7868633,
+   "lon": 85.3288859,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/3074569539",
+   "wikidata": null,
+   "name": "Devi Mandir",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7119958,
+   "lon": 85.340802,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/3127570787",
+   "wikidata": null,
+   "name": "Dhaneshwar Temple",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6481677,
+   "lon": 85.3580171,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q16973680",
+   "wikidata": "Q16973680",
+   "name": "Dhaneshwor Temple",
+   "nameNe": "धनेश्वर",
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 27.62972222,
+   "lon": 85.52138889,
+   "hub": "kathmandu",
+   "image": "Dhaneshwor Temple.jpg",
+   "wikipedia": "Dhaneshwor_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/2218533761",
+   "wikidata": null,
+   "name": "Dhanya Rasya Kriti Chaitya",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6713268,
+   "lon": 85.3325413,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q110235975",
+   "wikidata": "Q110235975",
+   "name": "Dhumba lake",
+   "nameNe": "धुम्बा ताल",
+   "description": "fresh water lake in Mustang, Nepal",
+   "category": "nature",
+   "lat": 28.763333333,
+   "lon": 83.716388888,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Dhumba_lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q13182269",
+   "wikidata": "Q13182269",
+   "name": "Diyalo Bangala",
+   "nameNe": "दियालो बङ्गला",
+   "description": "former palace used by the Nepalese royal family",
+   "category": "palace",
+   "lat": 27.710101008,
+   "lon": 84.436328183,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Diyalo_Bangala",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q19679215",
+   "wikidata": "Q19679215",
+   "name": "Dolakha Bhimsen Temple",
+   "nameNe": "दोलखा भीमसेन",
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 27.649,
+   "lon": 86.0892,
+   "hub": null,
+   "image": "Dolakha vhimsen - panoramio.jpg",
+   "wikipedia": "Dolakha_Bhimsen_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q5288959",
+   "wikidata": "Q5288959",
+   "name": "Doleshwor Mahadeva Temple",
+   "nameNe": "देालेश्वर माहादेव नेपाल",
+   "description": "doleshwor Mahadeva is a Hindu Temple of Lord Shiva located in the Suryabinayak Municipality, south eastern part of Bhaktapur District, Nepal, and is believed to be the head part of Kedarnath located in Uttarakhand, India",
+   "category": "temple",
+   "lat": 27.63888889,
+   "lon": 85.43805556,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": "Doleshwor_Mahadeva_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:way/1179996912",
+   "wikidata": null,
+   "name": "Drukpa kagyu Monastry",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7149464,
+   "lon": 85.2900923,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q19678588",
+   "wikidata": "Q19678588",
+   "name": "Dungeshwor Temple",
+   "nameNe": "डुङ्गेश्वर मन्दिर",
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 28.78,
+   "lon": 81.58,
+   "hub": null,
+   "image": "डुङ्गेश्वर.jpg",
+   "wikipedia": "Dungeshwor_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/2195513966",
+   "wikidata": null,
+   "name": "Dwakha Pukhu",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6312996,
+   "lon": 85.5219654,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/2254050236",
+   "wikidata": null,
+   "name": "Eastern Gate",
+   "nameNe": null,
+   "description": null,
+   "category": "archaeological",
+   "lat": 27.5760372,
+   "lon": 83.0567677,
+   "hub": "lumbini",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/6501755122",
+   "wikidata": null,
+   "name": "Entrance Gate 400rs",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7162174,
+   "lon": 85.4306238,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q5516371",
+   "wikidata": "Q5516371",
+   "name": "Gadhimai",
+   "nameNe": "गढीमाई",
+   "description": "Hindu temple in Bara District, Nepal",
+   "category": "temple",
+   "lat": 26.9932,
+   "lon": 85.0466,
+   "hub": null,
+   "image": "Gadhimai Temple (2).JPG",
+   "wikipedia": "Gadhimai_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/10833741289",
+   "wikidata": null,
+   "name": "Gam Dhoka Park",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.7170626,
+   "lon": 85.4261389,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q35700135",
+   "wikidata": "Q35700135",
+   "name": "Gaṇesh Kuṇḍ",
+   "nameNe": null,
+   "description": "lake in Nepal, Nepal",
+   "category": "nature",
+   "lat": 28.124444444,
+   "lon": 85.468611111,
+   "hub": null,
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/5463724221",
+   "wikidata": null,
+   "name": "Ganesh Man Singh",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 28.2303014,
+   "lon": 83.9847861,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/348771060",
+   "wikidata": null,
+   "name": "Ganesh Man Singh Memorial",
+   "nameNe": "गणेशमान सिंह शालिक",
+   "description": null,
+   "category": "monument",
+   "lat": 27.7069296,
+   "lon": 85.3153526,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q5520885",
+   "wikidata": "Q5520885",
+   "name": "Ganeshthan Temple",
+   "nameNe": null,
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 27.70611111,
+   "lon": 84.44861111,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Ganeshthan_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q106406206",
+   "wikidata": "Q106406206",
+   "name": "Gangapurna Lake",
+   "nameNe": "गङ्गापूर्ण ताल",
+   "description": "body of water",
+   "category": "nature",
+   "lat": 28.663888888,
+   "lon": 84.0175,
+   "hub": null,
+   "image": "Beautiful Gangapurna Lake.jpg",
+   "wikipedia": "Gangapurna_Lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:way/656229379",
+   "wikidata": null,
+   "name": "Ganwaria",
+   "nameNe": null,
+   "description": null,
+   "category": "archaeological",
+   "lat": 27.4419202,
+   "lon": 83.1214262,
+   "hub": "lumbini",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/85650618",
+   "wikidata": "Q5522383",
+   "name": "Garden of Dreams",
+   "nameNe": null,
+   "description": null,
+   "category": "nature",
+   "lat": 27.7141051,
+   "lon": 85.3148269,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": "https://gardenofdreams.org.np/",
+   "wheelchair": "no",
+   "sources": [
+    "osm"
+   ],
+   "feeId": "garden-of-dreams"
+  },
+  {
+   "id": "osm:node/2084347899",
+   "wikidata": null,
+   "name": "Garuda",
+   "nameNe": null,
+   "description": null,
+   "category": "temple",
+   "lat": 27.7040151,
+   "lon": 85.3062336,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/6354691445",
+   "wikidata": null,
+   "name": "Gate 5",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.4695363,
+   "lon": 83.2836828,
+   "hub": "lumbini",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/12043799172",
+   "wikidata": null,
+   "name": "Gate 8",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.4792109,
+   "lon": 83.2678985,
+   "hub": "lumbini",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/6938699285",
+   "wikidata": null,
+   "name": "Ghantaghar( Clock Tower )",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.7074673,
+   "lon": 85.3168427,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": "limited",
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/2476613537",
+   "wikidata": null,
+   "name": "Gharme Dada View Point",
+   "nameNe": "घर्मे डाडा भिउ पोइन्ट",
+   "description": null,
+   "category": "viewpoint",
+   "lat": 28.272368,
+   "lon": 83.9722727,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/4071313801",
+   "wikidata": null,
+   "name": "Ghataraj Salik Chok",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7322266,
+   "lon": 85.3594121,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q66133854",
+   "wikidata": "Q66133854",
+   "name": "Ghorkha Palace",
+   "nameNe": "गोरखा दरबार",
+   "description": "Tentative World Heritage Site in Nepal",
+   "category": "palace",
+   "lat": 28.0044,
+   "lon": 84.6289,
+   "hub": null,
+   "image": "Gorkha Palace durbar.jpg",
+   "wikipedia": "Gorkha_Palace",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q25104610",
+   "wikidata": "Q25104610",
+   "name": "Ghunchok Pokhari",
+   "nameNe": null,
+   "description": "body of water",
+   "category": "nature",
+   "lat": 28.117777777,
+   "lon": 84.704166666,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Ghunchok_Pokhari",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/4582351699",
+   "wikidata": null,
+   "name": "Go Kart",
+   "nameNe": null,
+   "description": null,
+   "category": "nature",
+   "lat": 27.6787978,
+   "lon": 85.3026952,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/198032234",
+   "wikidata": null,
+   "name": "Gokarna",
+   "nameNe": null,
+   "description": null,
+   "category": "archaeological",
+   "lat": 27.7359757,
+   "lon": 85.392354,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q1534467",
+   "wikidata": "Q1534467",
+   "name": "Gokarneshwor Mahadev temple",
+   "nameNe": null,
+   "description": "Hindu temple in Kathmandu district, Nepal",
+   "category": "temple",
+   "lat": 27.73944444,
+   "lon": 85.38777778,
+   "hub": "kathmandu",
+   "image": "Gokarneshwor Temple 2017 101.jpg",
+   "wikipedia": "Gokarneshwor_Mahadev_temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q97279927",
+   "wikidata": "Q97279927",
+   "name": "Gopal Fun Park",
+   "nameNe": null,
+   "description": "park in Nepal",
+   "category": "attraction",
+   "lat": 26.4603683,
+   "lon": 87.3076172,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Gopal_Fun_Park",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/7765273342",
+   "wikidata": null,
+   "name": "Gopi Maharjan Saalik",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7022746,
+   "lon": 85.3041913,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/1833841880",
+   "wikidata": null,
+   "name": "Gosainsthan View Point",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.6339614,
+   "lon": 85.5404017,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q18357441",
+   "wikidata": "Q18357441",
+   "name": "Gudal lake",
+   "nameNe": "गुँदे ताल",
+   "description": "body of water",
+   "category": "nature",
+   "lat": 28.191527777,
+   "lon": 84.041555555,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": "Gude_Lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q5615319",
+   "wikidata": "Q5615319",
+   "name": "Guhyeshwari Temple",
+   "nameNe": "गुह्येश्वरी",
+   "description": "Nepalese Hindu temple",
+   "category": "temple",
+   "lat": 27.71111111,
+   "lon": 85.35333333,
+   "hub": "kathmandu",
+   "image": "Pashupatinath-oberer Zugang-10-Guhyeshvari-2013-gje.jpg",
+   "wikipedia": "Guhyeshwari_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:way/209961179",
+   "wikidata": null,
+   "name": "Guji Bahal",
+   "nameNe": null,
+   "description": null,
+   "category": "archaeological",
+   "lat": 27.6695884,
+   "lon": 85.3269856,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q5619700",
+   "wikidata": "Q5619700",
+   "name": "Guphapokhari",
+   "nameNe": "गुफापोखरी",
+   "description": "Pond in Nepal",
+   "category": "nature",
+   "lat": 27.285277777,
+   "lon": 87.506388888,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Gupha_Pokhari",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/4115481689",
+   "wikidata": null,
+   "name": "Gurje Bhanjyang(गुर्जे)",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.8135536,
+   "lon": 85.3155919,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/564059950",
+   "wikidata": null,
+   "name": "Gurkha Memorial Museum",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 28.2462063,
+   "lon": 83.9885326,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": "08:00-16:30",
+   "website": "https://gurkhamuseum.org.np/",
+   "wheelchair": "no",
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/14073012701",
+   "wikidata": null,
+   "name": "Hal Chowk View Spot",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.7253314,
+   "lon": 85.2743823,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/4099201703",
+   "wikidata": null,
+   "name": "Hare Ram Hare Krishna building",
+   "nameNe": "हरे राम हरे कृष्ण भवन",
+   "description": null,
+   "category": "palace",
+   "lat": 27.7025675,
+   "lon": 85.3076074,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": "Mo-Su 08:00-20:00",
+   "website": "https://www.facebook.com/Punte-Bakery-235363433476556/",
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q5657387",
+   "wikidata": "Q5657387",
+   "name": "Harihar Temple",
+   "nameNe": null,
+   "description": "Hindu temple in Narayani, Nepal",
+   "category": "temple",
+   "lat": 27.6253,
+   "lon": 84.5039,
+   "hub": "chitwan",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q141520829",
+   "wikidata": "Q141520829",
+   "name": "Harinandeshwar Mahadev Mandir",
+   "nameNe": null,
+   "description": "Hindu temple in Rajbiraj, Saptari",
+   "category": "temple",
+   "lat": 26.540952,
+   "lon": 86.746853,
+   "hub": null,
+   "image": "Shiva temple Rajbiraj (1).JPG",
+   "wikipedia": "Harinandeshwar_Mahadev_Mandir",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/13254164501",
+   "wikidata": null,
+   "name": "Harmony Handicraft House",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 27.7073837,
+   "lon": 85.3078338,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q5769439",
+   "wikidata": "Q5769439",
+   "name": "Hiranya Varna Mahavihar",
+   "nameNe": "हिरण्यवर्ण महाविहार",
+   "description": "newar Buddhist temple in Nepal",
+   "category": "temple",
+   "lat": 27.67523,
+   "lon": 85.3246,
+   "hub": "kathmandu",
+   "image": "2015-03-30 04-15 Nepal 926 Patan, Lalitpur, Golden Temple (16769604853).jpg",
+   "wikipedia": "Hiranya_Varna_Mahavihar",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/4533176868",
+   "wikidata": null,
+   "name": "Hyumat",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6994087,
+   "lon": 85.3039574,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q109534058",
+   "wikidata": "Q109534058",
+   "name": "Ichangu Narayan Temple",
+   "nameNe": null,
+   "description": "ancient Hindu temple in Kathmandu, Nepal",
+   "category": "temple",
+   "lat": 27.7262,
+   "lon": 85.2515,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": "Ichangu_Narayan_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/14072964988",
+   "wikidata": null,
+   "name": "Ichangu Ratomate View Spot",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.7281354,
+   "lon": 85.2752231,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q2421886",
+   "wikidata": "Q2421886",
+   "name": "Imja Tsho",
+   "nameNe": "इम्जा हिमताल",
+   "description": "lake in Nepal",
+   "category": "nature",
+   "lat": 27.898,
+   "lon": 86.928,
+   "hub": null,
+   "image": "Imja-Lake.jpg",
+   "wikipedia": "Imja_Tsho",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q35711298",
+   "wikidata": "Q35711298",
+   "name": "Indra Sarowar Lake",
+   "nameNe": "इन्द्र सरोबर ताल",
+   "description": "Lake situated in Makawanpur District",
+   "category": "nature",
+   "lat": 27.60092,
+   "lon": 85.15977,
+   "hub": null,
+   "image": "Indra Sarowar, Markhu, Kulekhani Nepal 13.jpg",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q108544599",
+   "wikidata": "Q108544599",
+   "name": "Indreshwar Mahadev Temple",
+   "nameNe": null,
+   "description": "Temple in Panauti",
+   "category": "temple",
+   "lat": 27.585253478,
+   "lon": 85.517566433,
+   "hub": "kathmandu",
+   "image": "\"Indreswor Mahadev Temple\" A holy place in Panauti.jpg",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q28183979",
+   "wikidata": "Q28183979",
+   "name": "International Mountain Museum",
+   "nameNe": "अन्तर्राष्ट्रिय पर्वतीय सङ्ग्रहालय",
+   "description": "history Museum in Pokhara, Nepal Nepal",
+   "category": "museum",
+   "lat": 28.190065,
+   "lon": 83.98286,
+   "hub": "pokhara",
+   "image": "International Mountain Museum gate, Pokhara.jpg",
+   "wikipedia": "International_Mountain_Museum",
+   "hours": "Su-Sa 9:00-16:30",
+   "website": "www.internationalmountainmuseum.org",
+   "wheelchair": null,
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/10187727281",
+   "wikidata": null,
+   "name": "International Mountain Museum",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 28.1891632,
+   "lon": 83.9797903,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q6122354",
+   "wikidata": "Q6122354",
+   "name": "Jagdishpur Reservoir",
+   "nameNe": "जगदीशपुर जलाशय",
+   "description": "reservoir in Kapilvastu district, Nepal",
+   "category": "nature",
+   "lat": 27.62,
+   "lon": 83.101388888,
+   "hub": "lumbini",
+   "image": "Jagdispue Taal (12).JPG",
+   "wikipedia": "Jagdishpur_Reservoir",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q30123706",
+   "wikidata": "Q30123706",
+   "name": "Jakhera Lake",
+   "nameNe": "जखेरा ताल",
+   "description": "lake in Dang District, Nepal",
+   "category": "nature",
+   "lat": 27.875,
+   "lon": 82.573611111,
+   "hub": null,
+   "image": "Jakhera Taal.jpeg",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q111915360",
+   "wikidata": "Q111915360",
+   "name": "Jakhera Tal",
+   "nameNe": null,
+   "description": "lake in Nepal",
+   "category": "nature",
+   "lat": 27.875277777,
+   "lon": 82.573333333,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Jakhera_Tal",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q13181210",
+   "wikidata": "Q13181210",
+   "name": "Jal Binayak Temple",
+   "nameNe": "जलविनायक",
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 27.65833333,
+   "lon": 85.29333333,
+   "hub": "kathmandu",
+   "image": "Chobhar-Jal Binayak-04-von oben-2007-gje.jpg",
+   "wikipedia": "Jal_Binayak_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q108824497",
+   "wikidata": "Q108824497",
+   "name": "Jaleshwar Mahadev Temple",
+   "nameNe": "जलेश्वर महादेव मन्दिर",
+   "description": "Hindu temple in Jaleshwar, Nepal",
+   "category": "temple",
+   "lat": 26.651107,
+   "lon": 85.796785,
+   "hub": null,
+   "image": "Jaleshwar Mahadev Temple front view.jpg",
+   "wikipedia": "Jaleshwar_Mahadev_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q3161830",
+   "wikidata": "Q3161830",
+   "name": "Janaki Mandir",
+   "nameNe": "जानकी मन्दिर",
+   "description": "Hindu temple dedicated to Goddess Sita, located in Janakpur, Nepal",
+   "category": "temple",
+   "lat": 26.7304,
+   "lon": 85.9257,
+   "hub": null,
+   "image": "Janaki Temple Janakpurdham ,Nepal.jpg",
+   "wikipedia": "Janaki_Mandir",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/4112383204",
+   "wikidata": null,
+   "name": "Jawalakhel",
+   "nameNe": "जावलाखेल",
+   "description": null,
+   "category": "monument",
+   "lat": 27.6728976,
+   "lon": 85.3135363,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/13913715127",
+   "wikidata": null,
+   "name": "Jhaakri Thaan",
+   "nameNe": "झाक्री थान",
+   "description": null,
+   "category": "temple",
+   "lat": 28.2010372,
+   "lon": 83.9609185,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/417636773",
+   "wikidata": null,
+   "name": "Jhalakman Ghandarva Statue",
+   "nameNe": "झलकमान गंदर्व सालिक",
+   "description": null,
+   "category": "monument",
+   "lat": 28.2585986,
+   "lon": 83.9813002,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q25099701",
+   "wikidata": "Q25099701",
+   "name": "Jhilmila Lake",
+   "nameNe": "झिलमिला ताल",
+   "description": "lake located in Nepal",
+   "category": "nature",
+   "lat": 29.0680169,
+   "lon": 80.1846398,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Jhilmila_Lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:way/494375491",
+   "wikidata": null,
+   "name": "Juddha Shamsher",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7036466,
+   "lon": 85.3091327,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/1783303872",
+   "wikidata": null,
+   "name": "Jyapu samaj",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 27.6736999,
+   "lon": 85.3319528,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q6343110",
+   "wikidata": "Q6343110",
+   "name": "Ka-Nying Shedrub Ling",
+   "nameNe": null,
+   "description": "tibetan Buddhist monastery near Kathmandu, Nepal",
+   "category": "monastery",
+   "lat": 27.723997,
+   "lon": 85.362747,
+   "hub": "kathmandu",
+   "image": "Ka-Nying Shedrub Ling.jpg",
+   "wikipedia": "Ka-Nying_Shedrub_Ling",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q6347940",
+   "wikidata": "Q6347940",
+   "name": "Kailashnath Mahadev Statue",
+   "nameNe": "कैलाशनाथ महादेव मन्दिर",
+   "description": "Shiva statue in Nepal",
+   "category": "monument",
+   "lat": 27.646017,
+   "lon": 85.474774,
+   "hub": "kathmandu",
+   "image": "Kailashnath Mahadev Statue.jpg",
+   "wikipedia": "Kailashnath_Mahadev_Statue",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q67913916",
+   "wikidata": "Q67913916",
+   "name": "Kajin Sara",
+   "nameNe": "काजिन सारा ताल",
+   "description": "lake in Manang district, Nepal",
+   "category": "nature",
+   "lat": 28.496861111,
+   "lon": 84.256166666,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Kajin_Sara_Lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/4424529690",
+   "wikidata": null,
+   "name": "Kakani View Point",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.8139252,
+   "lon": 85.2696285,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/3404903237",
+   "wikidata": null,
+   "name": "Kala Kendra",
+   "nameNe": "कला केन्द्र",
+   "description": null,
+   "category": "museum",
+   "lat": 28.2088797,
+   "lon": 83.9635642,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q60761465",
+   "wikidata": "Q60761465",
+   "name": "Kalika Bhagawati Temple",
+   "nameNe": "कालिका मन्दिर, बागलुङ",
+   "description": "Hindu temple in Baglung, Nepal",
+   "category": "temple",
+   "lat": 28.2559,
+   "lon": 83.613577777,
+   "hub": null,
+   "image": "Baglung Kalika Temple 2018 14.jpg",
+   "wikipedia": "Kalika_Bhagawati_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q35720767",
+   "wikidata": "Q35720767",
+   "name": "Kālo Pokhari̇̄",
+   "nameNe": null,
+   "description": "lake in Nepal, Nepal",
+   "category": "nature",
+   "lat": 28.2925,
+   "lon": 85.170277777,
+   "hub": null,
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:way/926072167",
+   "wikidata": null,
+   "name": "Kalu Pandey's Cremation",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7177396,
+   "lon": 85.2226583,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q25104621",
+   "wikidata": "Q25104621",
+   "name": "Kamadhenu Mandir",
+   "nameNe": null,
+   "description": "Hindu temple in Gandaki Province, Nepal",
+   "category": "temple",
+   "lat": 28.26,
+   "lon": 83.66,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Kamadhenu_Mandir",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q19683221",
+   "wikidata": "Q19683221",
+   "name": "Kamal lake",
+   "nameNe": "रुक्मिणी ताल",
+   "description": "natural lake in Nepal",
+   "category": "nature",
+   "lat": 28.614166666,
+   "lon": 82.625555555,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Kamal_Lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q141540983",
+   "wikidata": "Q141540983",
+   "name": "Kanakpatti Palace",
+   "nameNe": "कनकपट्टी दरबार",
+   "description": "Ancient fortified palace in Saptari",
+   "category": "palace",
+   "lat": 26.65517,
+   "lon": 86.66256,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Kanakpatti_Palace",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q19671049",
+   "wikidata": "Q19671049",
+   "name": "Kankalini Temple",
+   "nameNe": "कंकालिनी मन्दिर",
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 26.55,
+   "lon": 86.92,
+   "hub": null,
+   "image": "Kankalini Temple.jpg",
+   "wikipedia": "Kankalini_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q13179941",
+   "wikidata": "Q13179941",
+   "name": "Kankre Bihar",
+   "nameNe": "काँक्रे विहार",
+   "description": "Temple in Nepal",
+   "category": "monument",
+   "lat": 28.916666666,
+   "lon": 82.066666666,
+   "hub": null,
+   "image": "Kakrebihar Temple.jpg",
+   "wikipedia": "Kakrebihar",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/2071315788",
+   "wikidata": null,
+   "name": "Kanti Rajya Laxmi Devi Shah",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.73253,
+   "lon": 85.3284156,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:relation/19990298",
+   "wikidata": "Q30610827",
+   "name": "Kapilavastu (I) Tilaurakot",
+   "nameNe": null,
+   "description": null,
+   "category": "archaeological",
+   "lat": 27.5759153,
+   "lon": 83.0547243,
+   "hub": "lumbini",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/215216670",
+   "wikidata": null,
+   "name": "Kapilavastu (II) Piprahava",
+   "nameNe": null,
+   "description": null,
+   "category": "archaeological",
+   "lat": 27.448,
+   "lon": 83.1278925,
+   "hub": "lumbini",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q106238324",
+   "wikidata": "Q106238324",
+   "name": "Kapileshwar Temple",
+   "nameNe": "कपिलेश्वरनाथ महादेव मन्दिर",
+   "description": "Hindu temple in Janakpur, Nepal",
+   "category": "temple",
+   "lat": 26.727666666,
+   "lon": 85.945277777,
+   "hub": null,
+   "image": "Kapileshwar Mahadev, Janakpur-September 22, 2016-7265.jpg",
+   "wikipedia": "Kapileshwar_Temple,_Janakpur",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q21129901",
+   "wikidata": "Q21129901",
+   "name": "Karya Binayak Temple",
+   "nameNe": "कार्यविनायक मन्दिर",
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 27.63186944,
+   "lon": 85.302375,
+   "hub": "kathmandu",
+   "image": "KaryaBinayak Temple.jpg",
+   "wikipedia": "Karyabinayak_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q6374805",
+   "wikidata": "Q6374805",
+   "name": "Kasthamandap",
+   "nameNe": "काष्ठमण्डप",
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 27.704,
+   "lon": 85.30583,
+   "hub": "kathmandu",
+   "image": "Kasthamandap Kathmandu (2023).jpg",
+   "wikipedia": "Kasthamandap",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/206617817",
+   "wikidata": null,
+   "name": "Kathmandu Art House",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 27.7152166,
+   "lon": 85.3092129,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q220043",
+   "wikidata": "Q220043",
+   "name": "Kathmandu Zoo",
+   "nameNe": "सदर चिडियाखाना, नेपाल",
+   "description": "zoo",
+   "category": "attraction",
+   "lat": 27.6731849,
+   "lon": 85.3109334,
+   "hub": "kathmandu",
+   "image": "Zoo Kathmandu Nepal (5085903803).jpg",
+   "wikipedia": "Central_Zoo",
+   "hours": null,
+   "website": null,
+   "wheelchair": "yes",
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q25620569",
+   "wikidata": "Q25620569",
+   "name": "Kelidighat",
+   "nameNe": "केलादीघाट",
+   "description": null,
+   "category": "temple",
+   "lat": 27.875,
+   "lon": 83.931666666,
+   "hub": null,
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/1962909336",
+   "wikidata": null,
+   "name": "Keshar Mahal",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7146983,
+   "lon": 85.314299,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q19828219",
+   "wikidata": "Q19828219",
+   "name": "Khaptad Lake",
+   "nameNe": "खप्तड ताल",
+   "description": "lake in Nepal",
+   "category": "nature",
+   "lat": 29.386666666,
+   "lon": 80.168333333,
+   "hub": null,
+   "image": "Beautiful lake located at the far-west Nepal.jpg",
+   "wikipedia": "Khaptad_Lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q2625399",
+   "wikidata": "Q2625399",
+   "name": "Khaptad national park",
+   "nameNe": "खप्तड राष्ट्रिय निकुञ्ज",
+   "description": "national park of nepal",
+   "category": "nature",
+   "lat": 29.27,
+   "lon": 80.99,
+   "hub": null,
+   "image": "Khaptadnationalpark.jpg",
+   "wikipedia": "Khaptad_National_Park",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q18342275",
+   "wikidata": "Q18342275",
+   "name": "Khaste lake",
+   "nameNe": "खास्टे ताल",
+   "description": "lake at Kaski,Nepal",
+   "category": "nature",
+   "lat": 28.194444444,
+   "lon": 84.05,
+   "hub": "pokhara",
+   "image": "Khste.jpg",
+   "wikipedia": "Khaste_Lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/3307488696",
+   "wikidata": null,
+   "name": "Khyali Dya",
+   "nameNe": "ख्यली दाया",
+   "description": null,
+   "category": "temple",
+   "lat": 27.6798705,
+   "lon": 85.2748898,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/348771974",
+   "wikidata": null,
+   "name": "King Pratap Malla",
+   "nameNe": "प्रताप मल्ल मुर्ति",
+   "description": null,
+   "category": "monument",
+   "lat": 27.7070986,
+   "lon": 85.3154196,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/1966285198",
+   "wikidata": null,
+   "name": "King Tribhuvan Statue",
+   "nameNe": "त्रिभुवन शालिक",
+   "description": null,
+   "category": "monument",
+   "lat": 27.6937979,
+   "lon": 85.3141359,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q2352212",
+   "wikidata": "Q2352212",
+   "name": "Kopan Monastery",
+   "nameNe": null,
+   "description": "tibetan Buddhist monastery near Kathmandu, Nepal",
+   "category": "monastery",
+   "lat": 27.74222222,
+   "lon": 85.36416667,
+   "hub": "kathmandu",
+   "image": "Kopan 01.JPG",
+   "wikipedia": "Kopan_Monastery",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/5307974771",
+   "wikidata": null,
+   "name": "Korean 108-Temple Pilgrimage and Repatriation",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.4892048,
+   "lon": 83.2760673,
+   "hub": "lumbini",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/10007036554",
+   "wikidata": null,
+   "name": "Kpindol Naya Basti",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7713602,
+   "lon": 85.3338592,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/216472846",
+   "wikidata": null,
+   "name": "krishna mandir",
+   "nameNe": null,
+   "description": null,
+   "category": "archaeological",
+   "lat": 27.5782213,
+   "lon": 85.5004568,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/1349560620",
+   "wikidata": null,
+   "name": "KU Corner",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 27.6196854,
+   "lon": 85.5385823,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q111169528",
+   "wikidata": "Q111169528",
+   "name": "Kubinde Daha",
+   "nameNe": "कुपिन्डे दह",
+   "description": "lake in Nepal",
+   "category": "nature",
+   "lat": 28.670555555,
+   "lon": 82.287222222,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Kubinde_Daha",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q28408062",
+   "wikidata": "Q28408062",
+   "name": "Kulpani Mandir",
+   "nameNe": null,
+   "description": "Hindu temple in Dang District, Nepal",
+   "category": "temple",
+   "lat": 27.807071,
+   "lon": 82.709862,
+   "hub": null,
+   "image": "Kulpani Mandir.jpg",
+   "wikipedia": "Kulpani_Mandir",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q85846344",
+   "wikidata": "Q85846344",
+   "name": "Kumari Temple",
+   "nameNe": null,
+   "description": "Hindu temple in Bagmati Province, Nepal",
+   "category": "temple",
+   "lat": 27.709722222,
+   "lon": 85.348611111,
+   "hub": "kathmandu",
+   "image": "Kumari temple.jpg",
+   "wikipedia": "Kumari_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q18344056",
+   "wikidata": "Q18344056",
+   "name": "Kumbheshwar Temple",
+   "nameNe": "कुम्भेश्वर मन्दिर",
+   "description": "Hindu temple in Lalitpur, Nepal",
+   "category": "temple",
+   "lat": 27.6767,
+   "lon": 85.3258,
+   "hub": "kathmandu",
+   "image": "A morning at Kumbeshwar Temple, Patan (January 2023) - IMG 09.jpg",
+   "wikipedia": "Kumbheshwar_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/4295711656",
+   "wikidata": null,
+   "name": "Lamchya dhadha",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 28.2699891,
+   "lon": 83.8971888,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/1417964988",
+   "wikidata": null,
+   "name": "lamo patti",
+   "nameNe": null,
+   "description": null,
+   "category": "archaeological",
+   "lat": 27.5854865,
+   "lon": 85.5147958,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q4351267",
+   "wikidata": "Q4351267",
+   "name": "Langtang National Park",
+   "nameNe": "लाङ्टाङ राष्ट्रिय निकुञ्ज",
+   "description": "National park of Nepal",
+   "category": "nature",
+   "lat": 28.1738,
+   "lon": 85.5531,
+   "hub": null,
+   "image": "Starry night in Langtang National Park.jpg",
+   "wikipedia": "Langtang_National_Park",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/2202902560",
+   "wikidata": null,
+   "name": "Late Laxmi Prasad Devkota",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6807875,
+   "lon": 85.2832968,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/11933661414",
+   "wikidata": null,
+   "name": "Laxmi Narsing Mandir",
+   "nameNe": null,
+   "description": null,
+   "category": "temple",
+   "lat": 27.6705822,
+   "lon": 85.4289799,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/10005589867",
+   "wikidata": null,
+   "name": "LHO HITI:",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6329701,
+   "lon": 85.4933073,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/1942507475",
+   "wikidata": null,
+   "name": "Lion statue",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6721039,
+   "lon": 85.42898,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": "no",
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/5504193918",
+   "wikidata": null,
+   "name": "Lovely Hill View Point",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 28.2292694,
+   "lon": 83.9779419,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/2218694134",
+   "wikidata": null,
+   "name": "Lumbini Museum",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 27.4891462,
+   "lon": 83.2769853,
+   "hub": "lumbini",
+   "image": null,
+   "wikipedia": null,
+   "hours": "Mo-Su 10:00-17:00",
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/9655535677",
+   "wikidata": null,
+   "name": "Lyaku Museum",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 27.6794137,
+   "lon": 85.275236,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/13914740079",
+   "wikidata": null,
+   "name": "Maai Temple",
+   "nameNe": null,
+   "description": null,
+   "category": "temple",
+   "lat": 28.2074234,
+   "lon": 83.9426999,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/3531968326",
+   "wikidata": null,
+   "name": "Machhapuchhre view point",
+   "nameNe": "माछाफुच्छ्रे भ्यु पोईन्ट",
+   "description": null,
+   "category": "viewpoint",
+   "lat": 28.1885578,
+   "lon": 83.9035482,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q134933127",
+   "wikidata": "Q134933127",
+   "name": "Mahadev Temple",
+   "nameNe": null,
+   "description": "Hindu temple located in Bhalam, Nepal",
+   "category": "temple",
+   "lat": 28.246094227,
+   "lon": 84.003726092,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q16977242",
+   "wikidata": "Q16977242",
+   "name": "Mahendra Cave",
+   "nameNe": "महेन्द्र गुफा",
+   "description": "Cave in Batulechaur, Kaski, Nepal",
+   "category": "attraction",
+   "lat": 28.2714,
+   "lon": 83.9797,
+   "hub": "pokhara",
+   "image": "Mahendra Cave.JPG",
+   "wikipedia": "Mahendra_Cave",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/6144699206",
+   "wikidata": null,
+   "name": "Mahendra Pillar",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.4675481,
+   "lon": 83.2751738,
+   "hub": "lumbini",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/194744623",
+   "wikidata": null,
+   "name": "Mahendra Shalik",
+   "nameNe": "महेन्द्र शालिक",
+   "description": null,
+   "category": "monument",
+   "lat": 27.7099779,
+   "lon": 85.317324,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q18351706",
+   "wikidata": "Q18351706",
+   "name": "Maidi lake",
+   "nameNe": "मैदी ताल",
+   "description": "body of water",
+   "category": "nature",
+   "lat": 28.176502805,
+   "lon": 84.08103527,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Maidi_Lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q19682713",
+   "wikidata": "Q19682713",
+   "name": "Maitidevi Temple",
+   "nameNe": "मैतीदेवी",
+   "description": "Hindu temple in Kathmandu, Nepal",
+   "category": "temple",
+   "lat": 27.70595,
+   "lon": 85.33408,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": "Maitidevi_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q3811730",
+   "wikidata": "Q3811730",
+   "name": "Maitighar Mandala",
+   "nameNe": "माइतीघर मण्डला",
+   "description": "symbolic monument",
+   "category": "monument",
+   "lat": 27.69444,
+   "lon": 85.32027,
+   "hub": "kathmandu",
+   "image": "Maitighar Mandala.jpg",
+   "wikipedia": "Maitighar_Mandala",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/3307485463",
+   "wikidata": null,
+   "name": "Maka dya",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6781719,
+   "lon": 85.2780857,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q964013",
+   "wikidata": "Q964013",
+   "name": "Makalu Barun National Park",
+   "nameNe": "मकालु-बरूण राष्ट्रिय निकुञ्ज",
+   "description": "national park of Nepal",
+   "category": "nature",
+   "lat": 27.75693134,
+   "lon": 87.11362679,
+   "hub": null,
+   "image": "Makalu Barun National Park, Nepal. - panoramio.jpg",
+   "wikipedia": "Makalu_Barun_National_Park",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q2385286",
+   "wikidata": "Q2385286",
+   "name": "Manakamana Temple",
+   "nameNe": "मनकामना मन्दिर",
+   "description": "Hindu temple in Gorkha District, Nepal",
+   "category": "temple",
+   "lat": 27.9,
+   "lon": 84.583333333,
+   "hub": null,
+   "image": "Gorkha Manakamana Temple (cropped).jpg",
+   "wikipedia": "Manakamana_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q6746791",
+   "wikidata": "Q6746791",
+   "name": "Manakamana Temple",
+   "nameNe": "Manakamana of Tumlingtar",
+   "description": "Hindu temple in Sankhuwasabha District, Nepal",
+   "category": "temple",
+   "lat": 27.3396,
+   "lon": 87.1889,
+   "hub": null,
+   "image": "Manakamana temple of sankhuwasabha.jpg",
+   "wikipedia": "Manakamana_Temple_(Sankhuwasabha)",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:way/425300022",
+   "wikidata": null,
+   "name": "Manandhar House",
+   "nameNe": null,
+   "description": null,
+   "category": "palace",
+   "lat": 28.2040263,
+   "lon": 83.9755841,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q13184797",
+   "wikidata": "Q13184797",
+   "name": "Mandavya Temple",
+   "nameNe": "माण्डव्य मन्दिर",
+   "description": "Historical Hindu temple in Tansen",
+   "category": "temple",
+   "lat": 27.825836,
+   "lon": 83.570895,
+   "hub": null,
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:way/908430314",
+   "wikidata": null,
+   "name": "Mane wheel",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7141215,
+   "lon": 85.2931119,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/9725866768",
+   "wikidata": null,
+   "name": "Manjushree",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6611141,
+   "lon": 85.2936629,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/4208420190",
+   "wikidata": null,
+   "name": "Mars",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6930621,
+   "lon": 85.3409148,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/9756720714",
+   "wikidata": null,
+   "name": "Martyrs Memorial",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6775992,
+   "lon": 85.2752401,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q108861272",
+   "wikidata": "Q108861272",
+   "name": "Matatirtha Temple",
+   "nameNe": "मातातीर्थ मन्दिर",
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 27.679622357,
+   "lon": 85.231064003,
+   "hub": "kathmandu",
+   "image": "Matatirtha Temple-9020.jpg",
+   "wikipedia": "Matatirtha_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q6792424",
+   "wikidata": "Q6792424",
+   "name": "Maula Kalika Temple",
+   "nameNe": "मौलाकालिका मन्दिर",
+   "description": "Hindu temple in Gaindakot municipality, Nepal",
+   "category": "temple",
+   "lat": 27.7275,
+   "lon": 84.4088,
+   "hub": null,
+   "image": "Maula Kalika Temple 20171007 105131.jpg",
+   "wikipedia": "Maula_Kalika_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/10083284991",
+   "wikidata": null,
+   "name": "Memorial Park View Tower",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.6557118,
+   "lon": 84.284897,
+   "hub": "chitwan",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/5500051503",
+   "wikidata": null,
+   "name": "Methlang View Point",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 28.2317815,
+   "lon": 83.9657485,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/1317084932",
+   "wikidata": null,
+   "name": "Milan Chowk",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.695048,
+   "lon": 85.340662,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/9917534100",
+   "wikidata": null,
+   "name": "Mithila Chitrakala and Province 2 Places",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 28.2547226,
+   "lon": 83.9774492,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q1025465",
+   "wikidata": "Q1025465",
+   "name": "Muktinath Temple",
+   "nameNe": "मुक्तिनाथ",
+   "description": "sacred place in Muktinath Valley, Nepal",
+   "category": "temple",
+   "lat": 28.816667,
+   "lon": 83.870833,
+   "hub": null,
+   "image": "Muktinath Temple (1).jpg",
+   "wikipedia": "Muktinath",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/6636692797",
+   "wikidata": null,
+   "name": "Musahari chauraha",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.4049924,
+   "lon": 83.040636,
+   "hub": "lumbini",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/905518415",
+   "wikidata": null,
+   "name": "Museum of Nepali Art",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 27.7150597,
+   "lon": 85.3097838,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q19679607",
+   "wikidata": "Q19679607",
+   "name": "Naag Pokhari",
+   "nameNe": "नागपोखरी",
+   "description": "17th century pond in Kathmandu, Nepal",
+   "category": "nature",
+   "lat": 27.71346,
+   "lon": 85.32342,
+   "hub": "kathmandu",
+   "image": "Nag Panchami at Nag Pokhari, Naxal Kathmandu Nepal-070A0773.jpg",
+   "wikipedia": "Naag_Pokhari",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/1398437048",
+   "wikidata": null,
+   "name": "Nagarkot Trigonometry Tower",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.6921682,
+   "lon": 85.5199012,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q6958740",
+   "wikidata": "Q6958740",
+   "name": "Nagdaha",
+   "nameNe": "नागदह",
+   "description": "lake in Lalitpur District, Nepal",
+   "category": "nature",
+   "lat": 27.6246,
+   "lon": 85.3331,
+   "hub": "kathmandu",
+   "image": "NagDaha (3544462830).jpg",
+   "wikipedia": "Nagdaha",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q25620593",
+   "wikidata": "Q25620593",
+   "name": "Naradevi Temple",
+   "nameNe": "नरदेवी मन्दिर",
+   "description": "temple in Nepal",
+   "category": "temple",
+   "lat": 27.7076367,
+   "lon": 85.306,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": "Naradevi_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/4113142690",
+   "wikidata": null,
+   "name": "Narayan Gopal Chowk",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7400234,
+   "lon": 85.3370704,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q1050042",
+   "wikidata": "Q1050042",
+   "name": "Narayanhiti Palace",
+   "nameNe": "नारायणहिटी दरवार",
+   "description": "palace in Kathmandu, Nepal",
+   "category": "museum",
+   "lat": 27.71555556,
+   "lon": 85.32,
+   "hub": "kathmandu",
+   "image": "Narayanhiti Palace Museum, crop.jpg",
+   "wikipedia": "Narayanhiti_Palace_Museum",
+   "hours": "Th-Mo 11:00-16:00",
+   "website": null,
+   "wheelchair": "limited",
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q6980524",
+   "wikidata": "Q6980524",
+   "name": "Natural History Museum of Nepal",
+   "nameNe": "प्राकृतिक इतिहास संग्रहालय नेपाल",
+   "description": "natural history museum in Kathmandu, Nepal",
+   "category": "museum",
+   "lat": 27.714513519,
+   "lon": 85.287943491,
+   "hub": "kathmandu",
+   "image": "Natural History Museum Nepal - 2.jpg",
+   "wikipedia": "Natural_History_Museum_of_Nepal",
+   "hours": "09:00-19:00",
+   "website": "http://nhmnepal@edu.np",
+   "wheelchair": "no",
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/172956640",
+   "wikidata": null,
+   "name": "Naxal Dhungedhara",
+   "nameNe": null,
+   "description": null,
+   "category": "archaeological",
+   "lat": 27.7135878,
+   "lon": 85.325795,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/207293089",
+   "wikidata": null,
+   "name": "Nepal Art Council",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 27.692219,
+   "lon": 85.3234595,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": "yes",
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q15961667",
+   "wikidata": "Q15961667",
+   "name": "Nepal Olympic Museum",
+   "nameNe": null,
+   "description": "Museum in Nepal",
+   "category": "museum",
+   "lat": 27.7056,
+   "lon": 85.289,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": "Nepal_Olympic_Museum",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q18391865",
+   "wikidata": "Q18391865",
+   "name": "Neureni lake",
+   "nameNe": "न्युरेनी ताल",
+   "description": "body of water",
+   "category": "nature",
+   "lat": 28.191666666,
+   "lon": 84.048611111,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": "Neureni_Lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/5245962322",
+   "wikidata": null,
+   "name": "Newari Khaja",
+   "nameNe": "नेवारी खाजा",
+   "description": null,
+   "category": "attraction",
+   "lat": 28.1986196,
+   "lon": 83.9697477,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/1169644430",
+   "wikidata": "Q55625203",
+   "name": "Nigali Sagar",
+   "nameNe": null,
+   "description": null,
+   "category": "archaeological",
+   "lat": 27.5949831,
+   "lon": 83.0957814,
+   "hub": "lumbini",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/574929699",
+   "wikidata": null,
+   "name": "Nijamati Smarak",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.741591,
+   "lon": 85.3809893,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/3189982098",
+   "wikidata": null,
+   "name": "nktpa",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7274041,
+   "lon": 85.3653443,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/185748284",
+   "wikidata": null,
+   "name": "Northern Ashok Stupa",
+   "nameNe": null,
+   "description": null,
+   "category": "stupa",
+   "lat": 27.6771392,
+   "lon": 85.3275766,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q1513892",
+   "wikidata": "Q1513892",
+   "name": "Nyatapola Temple",
+   "nameNe": "न्यातपोल मन्दिर",
+   "description": "Hindu temple in Bhaktapur, Nepal",
+   "category": "temple",
+   "lat": 27.6714,
+   "lon": 85.4293,
+   "hub": "kathmandu",
+   "image": "Nyatapol by GP15.JPG",
+   "wikipedia": "Nyatapola_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/2224398921",
+   "wikidata": null,
+   "name": "Obelsiks at Jhyatapole",
+   "nameNe": null,
+   "description": null,
+   "category": "archaeological",
+   "lat": 27.6757137,
+   "lon": 85.3250409,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/3498367331",
+   "wikidata": null,
+   "name": "Old Dharahara Remains",
+   "nameNe": "भीमसेन स्तम्भ",
+   "description": null,
+   "category": "monument",
+   "lat": 27.7006092,
+   "lon": 85.3118687,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/13518656001",
+   "wikidata": null,
+   "name": "overhanging deck viewpoint of Kathmandu valley & Himalayas",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.6545602,
+   "lon": 85.2290001,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q7126679",
+   "wikidata": "Q7126679",
+   "name": "Palanchok Bhagawati Temple",
+   "nameNe": "पलाञ्चोक",
+   "description": "Hindu temple in Kavrepalanchok District, Nepal",
+   "category": "temple",
+   "lat": 27.62861111,
+   "lon": 85.67388889,
+   "hub": null,
+   "image": "Palanchok Bhagawati.jpg",
+   "wikipedia": "Palanchok_Bhagawati_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q16736120",
+   "wikidata": "Q16736120",
+   "name": "Paleo Kathmandu Lake",
+   "nameNe": "काठमाडौँ ताल",
+   "description": "former lake in Nepal, which lied where Kathmandu Valley is today",
+   "category": "nature",
+   "lat": 27.7,
+   "lon": 85.333333333,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": "Paleo_Kathmandu_Lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q108544634",
+   "wikidata": "Q108544634",
+   "name": "Panauti Museum",
+   "nameNe": null,
+   "description": "Museum in Nepal",
+   "category": "museum",
+   "lat": 27.584753413,
+   "lon": 85.517110309,
+   "hub": "kathmandu",
+   "image": "Panauti Temple Square 04.jpg",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q13183162",
+   "wikidata": "Q13183162",
+   "name": "Panch Pokhari",
+   "nameNe": "पाँच पोखरी",
+   "description": "group of five lakes in Sindhupalchowk District, Nepal",
+   "category": "nature",
+   "lat": 28.042,
+   "lon": 85.716,
+   "hub": null,
+   "image": "Paach pokhri.jpg",
+   "wikipedia": "Panch_Pokhari",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q135672481",
+   "wikidata": "Q135672481",
+   "name": "Panch Pokhari Ramechhap",
+   "nameNe": null,
+   "description": "lakes in Nepal",
+   "category": "nature",
+   "lat": 27.731393001,
+   "lon": 86.42196709,
+   "hub": null,
+   "image": "Pach Pokhari.jpg",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q19679979",
+   "wikidata": "Q19679979",
+   "name": "Panchase Lake",
+   "nameNe": "पञ्चासे ताल",
+   "description": null,
+   "category": "nature",
+   "lat": 28.234541,
+   "lon": 83.787478,
+   "hub": null,
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/6176110788",
+   "wikidata": null,
+   "name": "Pandeli Park",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 28.2383402,
+   "lon": 83.9403455,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q15265453",
+   "wikidata": "Q15265453",
+   "name": "Park Gallery",
+   "nameNe": null,
+   "description": "art gallery in Patan, Nepal",
+   "category": "museum",
+   "lat": 27.675447,
+   "lon": 85.315975,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": "Park_Gallery",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q4351857",
+   "wikidata": "Q4351857",
+   "name": "Parsa National Park",
+   "nameNe": "पर्सा वन्यजन्तु आरक्ष",
+   "description": "national park of Nepal",
+   "category": "nature",
+   "lat": 27.46666667,
+   "lon": 84.33333333,
+   "hub": "chitwan",
+   "image": null,
+   "wikipedia": "Parsa_National_Park",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q107427354",
+   "wikidata": "Q107427354",
+   "name": "Parvati Kunda",
+   "nameNe": null,
+   "description": "lake in Nepal",
+   "category": "nature",
+   "lat": 28.1697923,
+   "lon": 85.0999524,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Parvati_Kunda",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/3074580748",
+   "wikidata": null,
+   "name": "Pashupati Bhandareshore",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7122848,
+   "lon": 85.3388131,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q380384",
+   "wikidata": "Q380384",
+   "name": "Pashupatinath Temple",
+   "nameNe": "पशुपतिनाथको मन्दिर",
+   "description": "Hindu temple in Kathmandu",
+   "category": "temple",
+   "lat": 27.710495,
+   "lon": 85.348645,
+   "hub": "kathmandu",
+   "image": "2023 January night aarti at Pashupatinath Temple, Kathmandu 02.jpg",
+   "wikipedia": "Pashupatinath_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ],
+   "feeId": "pashupatinath"
+  },
+  {
+   "id": "osm:node/4213348389",
+   "wikidata": null,
+   "name": "Patale Chhango (Devi's Falls)",
+   "nameNe": "पाताले छाँगो",
+   "description": null,
+   "category": "attraction",
+   "lat": 28.1898956,
+   "lon": 83.9588804,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q7161836",
+   "wikidata": "Q7161836",
+   "name": "Pema Namding Monastery",
+   "nameNe": null,
+   "description": "nyingma Tibetan Buddhist monastery in Nepal",
+   "category": "monastery",
+   "lat": 27.604593,
+   "lon": 86.699969,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Pema_Namding_Monastery",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/2365593755",
+   "wikidata": null,
+   "name": "Pharping View Point",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.6123823,
+   "lon": 85.2880902,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q1192928",
+   "wikidata": "Q1192928",
+   "name": "Phewa Lake",
+   "nameNe": "फेवा ताल",
+   "description": "lake in Kaski District, Nepal",
+   "category": "nature",
+   "lat": 28.214166666,
+   "lon": 83.947222222,
+   "hub": "pokhara",
+   "image": "Annapurna Range and the Phewa Lake.jpg",
+   "wikipedia": "Phewa_Lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/4161865224",
+   "wikidata": null,
+   "name": "Phewa Lake View Point",
+   "nameNe": "फेवा लेक भिउ पोइन्ट",
+   "description": null,
+   "category": "viewpoint",
+   "lat": 28.214786,
+   "lon": 83.9557226,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q3215132",
+   "wikidata": "Q3215132",
+   "name": "Phoksundo Lake",
+   "nameNe": "फोक्सुण्डो ताल",
+   "description": "lake in Dolpa District, Nepal",
+   "category": "nature",
+   "lat": 29.2,
+   "lon": 82.952222222,
+   "hub": null,
+   "image": "Panorama phoksumdo lake from camp.jpg",
+   "wikipedia": "Phoksundo_Lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q60751045",
+   "wikidata": "Q60751045",
+   "name": "Pindeshwor Temple",
+   "nameNe": "पिण्डेश्वर",
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 26.8133,
+   "lon": 87.2946,
+   "hub": null,
+   "image": "Pindeshwor Temple-Dharan 18.jpg",
+   "wikipedia": "Pindeshwor_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/3074575816",
+   "wikidata": null,
+   "name": "pipal bot",
+   "nameNe": null,
+   "description": null,
+   "category": "temple",
+   "lat": 27.7160991,
+   "lon": 85.3463729,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/422578200",
+   "wikidata": null,
+   "name": "Pokhara Dharahara",
+   "nameNe": "पोखरा धरहरा",
+   "description": null,
+   "category": "viewpoint",
+   "lat": 28.2395571,
+   "lon": 84.0105899,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/10859703357",
+   "wikidata": null,
+   "name": "Pokhara Rangasala Gate",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 28.206598,
+   "lon": 83.9914499,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/7021748151",
+   "wikidata": null,
+   "name": "Pokhara Valley View Point",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 28.2338327,
+   "lon": 83.9665478,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q16917852",
+   "wikidata": "Q16917852",
+   "name": "Pujarimath Museum",
+   "nameNe": null,
+   "description": "a museum located in Bhaktapur, Nepal",
+   "category": "museum",
+   "lat": 27.673263,
+   "lon": 85.435578,
+   "hub": "kathmandu",
+   "image": "Bhaktapur (27) (29613370528).jpg",
+   "wikipedia": "Pujarimath_Museum",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/14073012711",
+   "wikidata": null,
+   "name": "Puldol View Spot",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.7084527,
+   "lon": 85.2590883,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/4666814990",
+   "wikidata": null,
+   "name": "Pumdi Bhumdi View Tower",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 28.1999466,
+   "lon": 83.9298204,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/193622926",
+   "wikidata": null,
+   "name": "Pushpalal Shrestha",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6584075,
+   "lon": 85.2514954,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q124344703",
+   "wikidata": "Q124344703",
+   "name": "Rajaji Than",
+   "nameNe": "राजाजी थान",
+   "description": "Historical religious place in Saptari",
+   "category": "temple",
+   "lat": 26.56,
+   "lon": 86.59,
+   "hub": null,
+   "image": "Raja Ji Than, Manraja (13).jpg",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q133465016",
+   "wikidata": "Q133465016",
+   "name": "Rajarshi Janak Mandir",
+   "nameNe": null,
+   "description": "Hindu temple",
+   "category": "temple",
+   "lat": 26.72915,
+   "lon": 85.928088888,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Rajarshi_Janak_Mandir",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q28184004",
+   "wikidata": "Q28184004",
+   "name": "Rajdevi mandir",
+   "nameNe": "राजदेवी मन्दिर",
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 26.7683,
+   "lon": 85.3158,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Rajdevi_Temple_(Gaur)",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q21092001",
+   "wikidata": "Q21092001",
+   "name": "Rajdevi Temple",
+   "nameNe": "राजदेवी मन्दिर, राजविराज",
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 26.54055556,
+   "lon": 86.74861111,
+   "hub": null,
+   "image": "Rajdevi Temple 1.jpg",
+   "wikipedia": "Rajdevi_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/4157626091",
+   "wikidata": null,
+   "name": "ram kumar family's house",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.6332563,
+   "lon": 85.3200805,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/4235620291",
+   "wikidata": null,
+   "name": "Rames",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.6749671,
+   "lon": 85.3870724,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/211080700",
+   "wikidata": null,
+   "name": "Rameshwar temple",
+   "nameNe": null,
+   "description": null,
+   "category": "temple",
+   "lat": 27.6722639,
+   "lon": 85.4273924,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q29418925",
+   "wikidata": "Q29418925",
+   "name": "Ramghatdham",
+   "nameNe": "रामघाटधाम",
+   "description": null,
+   "category": "temple",
+   "lat": 27.873888888,
+   "lon": 83.912777777,
+   "hub": null,
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q104849209",
+   "wikidata": "Q104849209",
+   "name": "Rana Ujeshwori Bhagwati temple",
+   "nameNe": null,
+   "description": "Hindu temple in Tansen, Nepal",
+   "category": "temple",
+   "lat": 27.868,
+   "lon": 83.544,
+   "hub": null,
+   "image": "Rana-Ujireshowri-Temple 05.jpg",
+   "wikipedia": "Rana_Ujeshwori_Bhagwati_temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q13185406",
+   "wikidata": "Q13185406",
+   "name": "Ranighat Palace",
+   "nameNe": "रानीमहल",
+   "description": "palace in Palpa District, Nepal",
+   "category": "palace",
+   "lat": 27.5535,
+   "lon": 83.314,
+   "hub": "lumbini",
+   "image": "RaniMahal, Palpa.jpg",
+   "wikipedia": "Ranighat_Palace",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q5300315",
+   "wikidata": "Q5300315",
+   "name": "Ranipokhari",
+   "nameNe": "रानी पोखरी",
+   "description": "reservoir in Nepal",
+   "category": "nature",
+   "lat": 27.707847,
+   "lon": 85.315447,
+   "hub": "kathmandu",
+   "image": "Rani-Pokhari.jpg",
+   "wikipedia": "Rani_Pokhari",
+   "hours": null,
+   "website": null,
+   "wheelchair": "no",
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q2120180",
+   "wikidata": "Q2120180",
+   "name": "Rara Lake",
+   "nameNe": "राराताल",
+   "description": "lake in Mugu District, Nepal",
+   "category": "nature",
+   "lat": 29.525722222,
+   "lon": 82.090211111,
+   "hub": null,
+   "image": "Rara lake, Murma top.jpg",
+   "wikipedia": "Rara_Lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q3505873",
+   "wikidata": "Q3505873",
+   "name": "Rara National Park",
+   "nameNe": "रारा राष्ट्रिय निकुञ्ज",
+   "description": "national park in Karnali Province, Nepal",
+   "category": "nature",
+   "lat": 29.491666666,
+   "lon": 82.072222222,
+   "hub": null,
+   "image": "Rara lake from afar.jpg",
+   "wikipedia": "Rara_National_Park",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:way/358822877",
+   "wikidata": null,
+   "name": "Ratna Mandir",
+   "nameNe": "रत्न मन्दिर",
+   "description": null,
+   "category": "palace",
+   "lat": 28.2062356,
+   "lon": 83.9587107,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/28523872",
+   "wikidata": "Q7295836",
+   "name": "Ratna Park",
+   "nameNe": null,
+   "description": null,
+   "category": "nature",
+   "lat": 27.7060365,
+   "lon": 85.3152246,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": "Ratna Park",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/2128612807",
+   "wikidata": null,
+   "name": "Respected Martyars Sukra Raj Sastri",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6834423,
+   "lon": 85.3188152,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q109925262",
+   "wikidata": "Q109925262",
+   "name": "Rishikesh Temple",
+   "nameNe": null,
+   "description": "Hindu temple at Ruru Kshetra (Ridi), Palpa District, Nepal",
+   "category": "temple",
+   "lat": 27.937222222,
+   "lon": 83.432222222,
+   "hub": null,
+   "image": "Rishikesh Mandir, Palpa, Nepal 12.jpg",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q13020937",
+   "wikidata": "Q13020937",
+   "name": "Royal Thai Monastery Lumbini Nepal",
+   "nameNe": null,
+   "description": null,
+   "category": "monastery",
+   "lat": 27.480881,
+   "lon": 83.278363,
+   "hub": "lumbini",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/2194109114",
+   "wikidata": null,
+   "name": "Rudrabarna Mahabihar",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6682216,
+   "lon": 85.3272321,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q3451065",
+   "wikidata": "Q3451065",
+   "name": "Rupa Lake",
+   "nameNe": "रुपा ताल",
+   "description": "freshwater lake in Nepal",
+   "category": "nature",
+   "lat": 28.14861111,
+   "lon": 84.11111111,
+   "hub": null,
+   "image": "Rupa lake.jpg",
+   "wikipedia": "Rupa_Lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q2211959",
+   "wikidata": "Q2211959",
+   "name": "Sagarmatha National Park",
+   "nameNe": "सगरमाथा राष्ट्रिय निकुञ्ज",
+   "description": "national park in Nepal",
+   "category": "nature",
+   "lat": 27.891069,
+   "lon": 86.693033,
+   "hub": null,
+   "image": "Everest, Nuptse, Khumbu Glacier, Nepal, Himalayas.jpg",
+   "wikipedia": "Sagarmatha_National_Park",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/9917534091",
+   "wikidata": null,
+   "name": "Sahid Abinash Statue",
+   "nameNe": "सहिद अविनाश शालिक",
+   "description": null,
+   "category": "monument",
+   "lat": 28.2549182,
+   "lon": 83.9770631,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/2166426558",
+   "wikidata": null,
+   "name": "Sahid Sukraraj Brikshya",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6962674,
+   "lon": 85.3070359,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/2699680691",
+   "wikidata": null,
+   "name": "Saibu Bhainsepati Main Entrance",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6543873,
+   "lon": 85.3054723,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/4292367994",
+   "wikidata": null,
+   "name": "salinadi hydropower",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.7478171,
+   "lon": 85.4811292,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q19712712",
+   "wikidata": "Q19712712",
+   "name": "Salpa Pokhari",
+   "nameNe": "साल्पा पोखरी",
+   "description": "lake in Nepal",
+   "category": "nature",
+   "lat": 27.446388888,
+   "lon": 86.933611111,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Salpa_Pokhari",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q110052864",
+   "wikidata": "Q110052864",
+   "name": "Samai Mai Temple",
+   "nameNe": null,
+   "description": "temple at Tilaurakot, Nepal",
+   "category": "temple",
+   "lat": 27.551805555,
+   "lon": 83.046805555,
+   "hub": "lumbini",
+   "image": "Samai Mai Temple Tilaurakot Taulihawa Kapilbastu Lumbini Zone Nepal Rajesh Dhungana (17).jpg",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/11306545969",
+   "wikidata": null,
+   "name": "sandip khanal",
+   "nameNe": null,
+   "description": null,
+   "category": "palace",
+   "lat": 27.6637089,
+   "lon": 85.415554,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q15747268",
+   "wikidata": "Q15747268",
+   "name": "Sankata Temple",
+   "nameNe": "संकटा मन्दिर, काठमाडौं",
+   "description": "Hindu temple in Kathmandu, Nepal",
+   "category": "temple",
+   "lat": 27.70238056,
+   "lon": 85.31215,
+   "hub": "kathmandu",
+   "image": "Sankata Temple Tebahal Kathmandu Nepal Rajesh Dhungana (8).jpg",
+   "wikipedia": "Sankata_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": "limited",
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/185045486",
+   "wikidata": null,
+   "name": "Sankha",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7335741,
+   "lon": 85.342428,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/3307481394",
+   "wikidata": null,
+   "name": "Sankhadhar saalik",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6790406,
+   "lon": 85.2764702,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/3485963579",
+   "wikidata": null,
+   "name": "Sarangkot View Point",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 28.2462534,
+   "lon": 83.9488094,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/520698757",
+   "wikidata": "Q906285",
+   "name": "Sarangkot Viewpoint",
+   "nameNe": "सराङ्गकोट भ्यु प्वाइन्ट",
+   "description": null,
+   "category": "viewpoint",
+   "lat": 28.2436947,
+   "lon": 83.9574975,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": "Sarankot",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/323987249",
+   "wikidata": null,
+   "name": "Saraswati Temple",
+   "nameNe": null,
+   "description": null,
+   "category": "temple",
+   "lat": 27.680875,
+   "lon": 85.2735804,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/444096589",
+   "wikidata": null,
+   "name": "Saraswoti Pati",
+   "nameNe": null,
+   "description": null,
+   "category": "archaeological",
+   "lat": 27.5859492,
+   "lon": 85.5133341,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q104868896",
+   "wikidata": "Q104868896",
+   "name": "Satyawati temple",
+   "nameNe": null,
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 27.7598,
+   "lon": 83.5357,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Satyawati_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:way/36485776",
+   "wikidata": null,
+   "name": "Saugal Water Spout",
+   "nameNe": null,
+   "description": null,
+   "category": "archaeological",
+   "lat": 27.670674,
+   "lon": 85.3268216,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q141660779",
+   "wikidata": "Q141660779",
+   "name": "Science Playground",
+   "nameNe": null,
+   "description": "hands-on science center in Bhaktapur, Nepal",
+   "category": "museum",
+   "lat": 27.6641673,
+   "lon": 85.39963,
+   "hub": "kathmandu",
+   "image": "Science Playground.jpg",
+   "wikipedia": null,
+   "hours": "Mo-Su 09:00-19:00",
+   "website": "https://science-playground.com",
+   "wheelchair": null,
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/14073012704",
+   "wikidata": null,
+   "name": "Selfie Dada",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.7061834,
+   "lon": 85.248148,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/5470587951",
+   "wikidata": null,
+   "name": "Sesh Sahi Narayan Statue",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 28.2469535,
+   "lon": 83.9971431,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/239888846",
+   "wikidata": null,
+   "name": "Seti River George",
+   "nameNe": "सेती नदी घाटी",
+   "description": null,
+   "category": "nature",
+   "lat": 28.2456516,
+   "lon": 83.9893435,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": "07:00-18:00",
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q7461663",
+   "wikidata": "Q7461663",
+   "name": "Shahid Gate",
+   "nameNe": "शहिदगेट",
+   "description": "monument in Kathmandu, Nepal",
+   "category": "monument",
+   "lat": 27.699444444,
+   "lon": 85.315,
+   "hub": "kathmandu",
+   "image": "Sahid gate (Martyrs Gate).JPG",
+   "wikipedia": "Shahid_Gate",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/4243029634",
+   "wikidata": null,
+   "name": "Shakhal Basti",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.6781793,
+   "lon": 85.4074757,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/1919864427",
+   "wikidata": null,
+   "name": "Shalik",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6699979,
+   "lon": 85.2812842,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q24934884",
+   "wikidata": "Q24934884",
+   "name": "Shambhunath Temple",
+   "nameNe": "शम्भुनाथ मन्दिर",
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 26.628691,
+   "lon": 86.685865,
+   "hub": null,
+   "image": "Sambhunath Temple,Saptari (3).JPG",
+   "wikipedia": "Shambhunath_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/3489694998",
+   "wikidata": null,
+   "name": "Shankhadar Shakwa statue",
+   "nameNe": "शंखधर शाख्वा",
+   "description": null,
+   "category": "monument",
+   "lat": 27.6734873,
+   "lon": 85.3852785,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/219073440",
+   "wikidata": null,
+   "name": "shankhadevi mandir",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6301312,
+   "lon": 85.366178,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/3294328568",
+   "wikidata": null,
+   "name": "Shankhardhar Shakwa",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6759,
+   "lon": 85.2801758,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/315269263",
+   "wikidata": null,
+   "name": "Shantinagar Gate",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6870367,
+   "lon": 85.3426841,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q106808162",
+   "wikidata": "Q106808162",
+   "name": "Shashwat Dham",
+   "nameNe": "सिजी मन्दिर",
+   "description": "Hindu complex in Devchuli, Nawalpur District, Nepal",
+   "category": "temple",
+   "lat": 27.677222222,
+   "lon": 84.211388888,
+   "hub": null,
+   "image": "Shashwat Dham ( CG temple).jpg",
+   "wikipedia": "Shashwat_Dham",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q7495631",
+   "wikidata": "Q7495631",
+   "name": "Sheshnarayan Temple",
+   "nameNe": "शेषनारायण मन्दिर",
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 27.63,
+   "lon": 85.27,
+   "hub": "kathmandu",
+   "image": "Lord Bishnu-Shesh Narayan.JPG",
+   "wikipedia": "Sheshnarayan_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q3236458",
+   "wikidata": "Q3236458",
+   "name": "Shey Phoksundo National Park",
+   "nameNe": "शे-फोक्सुण्डो राष्ट्रिय निकुञ्ज",
+   "description": "national park in Karnali Province, Nepal",
+   "category": "nature",
+   "lat": 29.3581,
+   "lon": 82.8456,
+   "hub": null,
+   "image": "Panorama phoksumdo lake from camp.jpg",
+   "wikipedia": "Shey_Phoksundo_National_Park",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q82281675",
+   "wikidata": "Q82281675",
+   "name": "Shilu Mahadev Temple",
+   "nameNe": "शिलु महादेव मन्दिर",
+   "description": "hinduist temple in Bhaktapur, Nepal",
+   "category": "temple",
+   "lat": 27.672323,
+   "lon": 85.428955,
+   "hub": "kathmandu",
+   "image": "Bhaktapur Durbar Square Nepal 2024 10.jpg",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": "no",
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q110529436",
+   "wikidata": "Q110529436",
+   "name": "Shiva Temple",
+   "nameNe": "पुम्दिकोट",
+   "description": "Hindu temple at Pumdikot, Pokhara, Nepal",
+   "category": "temple",
+   "lat": 28.316666666,
+   "lon": 83.983333333,
+   "hub": "pokhara",
+   "image": "Shiva Temple Pumdikot Ward No. 22 Pokhara Kaski Gandaki Pradesh Nepal Rajesh Dhungana (4).jpg",
+   "wikipedia": "Pumdikot_Shiva_Statue",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q3123431",
+   "wikidata": "Q3123431",
+   "name": "Shivapuri Nagarjun National Park",
+   "nameNe": "शिवपुरी नागार्जुन राष्ट्रिय निकुञ्ज",
+   "description": "national park of Nepal",
+   "category": "nature",
+   "lat": 27.795,
+   "lon": 85.39,
+   "hub": "kathmandu",
+   "image": "Shivapuri Nagarjun National Park (Wide Gate and Board).jpg",
+   "wikipedia": "Shivapuri_Nagarjun_National_Park",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:way/1179996046",
+   "wikidata": null,
+   "name": "Shree Karma Raja Maha Vihar",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7150568,
+   "lon": 85.2905361,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q30592783",
+   "wikidata": "Q30592783",
+   "name": "Shree Siddha Baghnath Baba Dham",
+   "nameNe": null,
+   "description": "ashram in Dang District, Nepal",
+   "category": "temple",
+   "lat": 27.780277777,
+   "lon": 82.626388888,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Shree_Siddha_Baghnath_Baba_Dham",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q1573525",
+   "wikidata": "Q1573525",
+   "name": "Shuklaphanta National Park",
+   "nameNe": "शुक्लाफाँट वन्यजन्तु आरक्ष",
+   "description": "national park in Nepal",
+   "category": "nature",
+   "lat": 28.8402,
+   "lon": 80.229,
+   "hub": null,
+   "image": "Ranitaal1.JPG",
+   "wikipedia": "Shuklaphanta_National_Park",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q19898357",
+   "wikidata": "Q19898357",
+   "name": "Siddha Baba Temple",
+   "nameNe": "सिद्धबाबा मन्दिर",
+   "description": "Shiva temple in Nepal",
+   "category": "temple",
+   "lat": 27.722,
+   "lon": 83.4686,
+   "hub": null,
+   "image": "Siddha Baba Temple 20170323.jpg",
+   "wikipedia": "Siddha_Baba_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/1947167477",
+   "wikidata": null,
+   "name": "Siddhi Binayak",
+   "nameNe": "सिद्धि बिनायक",
+   "description": null,
+   "category": "temple",
+   "lat": 27.6839021,
+   "lon": 85.3082892,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/2084372330",
+   "wikidata": null,
+   "name": "Siddhi Ganesh",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7192401,
+   "lon": 85.3308584,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/11058074676",
+   "wikidata": null,
+   "name": "Simulation Science Center",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 27.6678423,
+   "lon": 85.2864898,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q107695172",
+   "wikidata": "Q107695172",
+   "name": "Sindhuligadhi War Museum",
+   "nameNe": "सिन्धुलीगढी युद्व संग्रहालय",
+   "description": "war museum in Nepal",
+   "category": "museum",
+   "lat": 27.280756567,
+   "lon": 85.955381722,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Sindhuligadhi_War_Museum",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q3457358",
+   "wikidata": "Q3457358",
+   "name": "Singha Durbar",
+   "nameNe": "सिंहदरवार",
+   "description": "palace in Kathmandu, Nepal",
+   "category": "palace",
+   "lat": 27.69826944,
+   "lon": 85.32525278,
+   "hub": "kathmandu",
+   "image": "Kathmandu-35.JPG",
+   "wikipedia": "Singha_Durbar",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q7524492",
+   "wikidata": "Q7524492",
+   "name": "Sinja Valley",
+   "nameNe": "सिञ्जा उपत्यका",
+   "description": "Ancient valley-city of Jumla",
+   "category": "archaeological",
+   "lat": 29.324444444,
+   "lon": 81.9825,
+   "hub": null,
+   "image": "Narakot Sinja Valley.JPG",
+   "wikipedia": "Sinja_Valley",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/10016136079",
+   "wikidata": null,
+   "name": "Sinkhada Basti",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7435797,
+   "lon": 85.322468,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/9012748104",
+   "wikidata": null,
+   "name": "Sishaniya Kot",
+   "nameNe": null,
+   "description": null,
+   "category": "archaeological",
+   "lat": 27.4747704,
+   "lon": 83.0885965,
+   "hub": "lumbini",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/5498511395",
+   "wikidata": null,
+   "name": "Soho Point",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 28.2419189,
+   "lon": 83.9479387,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/5602334821",
+   "wikidata": null,
+   "name": "Star Banquet and Party Palace",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.7165585,
+   "lon": 85.3258502,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/2060240290",
+   "wikidata": null,
+   "name": "Statue of Sleeping Narayan",
+   "nameNe": null,
+   "description": null,
+   "category": "temple",
+   "lat": 27.6765998,
+   "lon": 85.4312982,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/694164541",
+   "wikidata": null,
+   "name": "Stupa with the remains of Chagdud Tulku Rinpoche",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6013136,
+   "lon": 85.2460633,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/14061119417",
+   "wikidata": null,
+   "name": "Subarneshowr Viewpoint",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.6614195,
+   "lon": 85.4125666,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/2254123783",
+   "wikidata": null,
+   "name": "Suddhodana's Palace",
+   "nameNe": null,
+   "description": null,
+   "category": "archaeological",
+   "lat": 27.5761932,
+   "lon": 83.0558704,
+   "hub": "lumbini",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/1143907504",
+   "wikidata": null,
+   "name": "Sukedhara Tap",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7273839,
+   "lon": 85.345303,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q110594690",
+   "wikidata": "Q110594690",
+   "name": "Sundhara",
+   "nameNe": null,
+   "description": "dhunge dhara in Kathmandu, Nepal",
+   "category": "monument",
+   "lat": 27.700694444,
+   "lon": 85.3125,
+   "hub": "kathmandu",
+   "image": "Sandhai or golden tap.jpg",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/2194086510",
+   "wikidata": null,
+   "name": "Sundhara stone spout",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6696943,
+   "lon": 85.3280825,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q19713918",
+   "wikidata": "Q19713918",
+   "name": "Supa Deurali Temple",
+   "nameNe": "सुपा देउराली",
+   "description": "Hindu temple in Sandhikharka, Nepal",
+   "category": "temple",
+   "lat": 27.90018,
+   "lon": 83.13631,
+   "hub": null,
+   "image": "सुपा देउराली मन्दिर 01.JPG",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q19713923",
+   "wikidata": "Q19713923",
+   "name": "Supa Deurali Temple",
+   "nameNe": "सुपादेउराली मन्दिर",
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 27.9002247,
+   "lon": 83.1336951,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Supa_Deurali_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q85847511",
+   "wikidata": "Q85847511",
+   "name": "Suryachaur",
+   "nameNe": "सुर्यचौर",
+   "description": "viewpoint in Bagmati Pradesh, Nepal",
+   "category": "attraction",
+   "lat": 27.8232055,
+   "lon": 85.3105702,
+   "hub": null,
+   "image": "View of Ganesh Himal from Suryachaur, Nuwakot2.jpg",
+   "wikipedia": "Suryachaur",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q7647436",
+   "wikidata": "Q7647436",
+   "name": "Suryavinayak Temple",
+   "nameNe": "सूर्यविनायक",
+   "description": "Hindu Temple in Nepal",
+   "category": "temple",
+   "lat": 27.6563,
+   "lon": 85.4234,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": "Suryavinayak_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/4590416991",
+   "wikidata": null,
+   "name": "Susan Ko Ghar",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.6461524,
+   "lon": 85.3573606,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q13187340",
+   "wikidata": "Q13187340",
+   "name": "Swargadwari",
+   "nameNe": "स्वर्गद्वारी",
+   "description": "Hindu temple in Rapti Zone, Nepal",
+   "category": "temple",
+   "lat": 28.1214,
+   "lon": 84.6744,
+   "hub": null,
+   "image": "Swargadwari temple.jpg",
+   "wikipedia": "Swargadwari",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:way/255881416",
+   "wikidata": null,
+   "name": "Swayambhu Buddhist Museum",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 27.714828,
+   "lon": 85.2900476,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q12946982",
+   "wikidata": "Q12946982",
+   "name": "Swayambhunath",
+   "nameNe": "स्वयम्भूनाथ",
+   "description": "Hindus and Buddhist holy place and tourist center in Kathmandu, Nepal",
+   "category": "temple",
+   "lat": 27.715,
+   "lon": 85.29,
+   "hub": "kathmandu",
+   "image": "Swayambhu, Kathmandu, Nepal.jpg",
+   "wikipedia": "Swayambhunath",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ],
+   "feeId": "swayambhu"
+  },
+  {
+   "id": "osm:node/2224398919",
+   "wikidata": null,
+   "name": "Swotha Jhya",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6751077,
+   "lon": 85.3254998,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q13187314",
+   "wikidata": "Q13187314",
+   "name": "Syarpu lake",
+   "nameNe": "स्यार्पु ताल",
+   "description": "natural lake in Nepal",
+   "category": "nature",
+   "lat": 28.6969,
+   "lon": 82.4758,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Syarpu_lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q108898199",
+   "wikidata": "Q108898199",
+   "name": "Taalpokhara",
+   "nameNe": null,
+   "description": "natural lake in Nepal",
+   "category": "nature",
+   "lat": 27.8765,
+   "lon": 83.8795,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Taalpokhara",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q16172918",
+   "wikidata": "Q16172918",
+   "name": "Tal Barahi Temple",
+   "nameNe": "तालबाराही मन्दिर",
+   "description": "Hindu temple on an island in Phewa Lake, Nepal",
+   "category": "temple",
+   "lat": 28.2074,
+   "lon": 83.9536,
+   "hub": "pokhara",
+   "image": "Taal Barahi Temple - Pokhara - 02.jpg",
+   "wikipedia": "Tal_Barahi_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": "no",
+   "sources": [
+    "wikidata",
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q19678683",
+   "wikidata": "Q19678683",
+   "name": "Tansen Durbar",
+   "nameNe": "तानसेन दरवार",
+   "description": "building in Tansen, Nepal",
+   "category": "palace",
+   "lat": 27.867361111,
+   "lon": 83.545138888,
+   "hub": null,
+   "image": "Palpa Darbar.jpg",
+   "wikipedia": "Tansen_Durbar",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:way/502031421",
+   "wikidata": null,
+   "name": "Taragaon Museum",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 27.7200271,
+   "lon": 85.3566228,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": "Mo-Fr,Su 10:00-17:00; Sa,PH off",
+   "website": "https://taragaonmuseum.com/",
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q7688661",
+   "wikidata": "Q7688661",
+   "name": "Taudaha Lake",
+   "nameNe": "टौदह",
+   "description": "lake in Nepal",
+   "category": "nature",
+   "lat": 27.6487,
+   "lon": 85.282,
+   "hub": "kathmandu",
+   "image": "View of Taudaha Lake.jpg",
+   "wikipedia": "Taudaha_Lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q7699760",
+   "wikidata": "Q7699760",
+   "name": "Tengboche Monastery",
+   "nameNe": null,
+   "description": "Tibetan Buddhist monastery in Nepal",
+   "category": "monastery",
+   "lat": 27.836,
+   "lon": 86.763944444,
+   "hub": null,
+   "image": "Tengboche Buddhist Monastery, Nepal.jpg",
+   "wikipedia": "Tengboche_Monastery",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q16901442",
+   "wikidata": "Q16901442",
+   "name": "Tergar Osel Ling Monastery",
+   "nameNe": null,
+   "description": "tibetan Buddhist monastery in Kathmandu, Nepal",
+   "category": "monastery",
+   "lat": 27.718,
+   "lon": 85.2767,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": "Tergar_Osel_Ling_Monastery",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/14072964992",
+   "wikidata": null,
+   "name": "Tergar Osel Ling Monastry View Spot",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.7181118,
+   "lon": 85.2769825,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/3079586714",
+   "wikidata": "Q3422922",
+   "name": "Thapagaun",
+   "nameNe": "थापागाउँ",
+   "description": null,
+   "category": "temple",
+   "lat": 27.692798,
+   "lon": 85.2775141,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": "Sitapaila",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/209976637",
+   "wikidata": null,
+   "name": "Thapahiti Water spout",
+   "nameNe": null,
+   "description": null,
+   "category": "archaeological",
+   "lat": 27.6692002,
+   "lon": 85.3264432,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/567142203",
+   "wikidata": null,
+   "name": "Tharu Cultural Museum",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 27.581435,
+   "lon": 84.5084926,
+   "hub": "chitwan",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/2852782177",
+   "wikidata": null,
+   "name": "The City Museum Kathmandu",
+   "nameNe": null,
+   "description": null,
+   "category": "museum",
+   "lat": 27.7110138,
+   "lon": 85.3182587,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": "http://thecitymuseum.org/",
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q135672085",
+   "wikidata": "Q135672085",
+   "name": "Thodung",
+   "nameNe": null,
+   "description": "monastery in Nepal",
+   "category": "monastery",
+   "lat": 27.5898,
+   "lon": 86.3416,
+   "hub": null,
+   "image": "Thodung Monastary.jpg",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q7797125",
+   "wikidata": "Q7797125",
+   "name": "Thrangu Tashi Yangtse Monastery",
+   "nameNe": null,
+   "description": "Tibetan Buddhist monastery in Nepal",
+   "category": "monastery",
+   "lat": 27.57111111,
+   "lon": 85.5825,
+   "hub": null,
+   "image": "Thrangu Tashi Yangtse Monastery.jpg",
+   "wikipedia": "Thrangu_Tashi_Yangtse_Monastery,_Nepal",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q619766",
+   "wikidata": "Q619766",
+   "name": "Tilicho Lake",
+   "nameNe": "तिलिचो ताल",
+   "description": "lake",
+   "category": "nature",
+   "lat": 28.683333333,
+   "lon": 83.856666666,
+   "hub": null,
+   "image": "Tilichofotolake.jpg",
+   "wikipedia": "Tilicho_Lake",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q108470932",
+   "wikidata": "Q108470932",
+   "name": "Timbung Pokhari",
+   "nameNe": "तिम्बु पोखरी",
+   "description": "natural lake at 4480m elevation in Nepal",
+   "category": "nature",
+   "lat": 27.4375,
+   "lon": 88.058333333,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Timbung_Pokhari",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q20058813",
+   "wikidata": "Q20058813",
+   "name": "Tintale",
+   "nameNe": "तिनतले",
+   "description": "Castle in Nepal",
+   "category": "attraction",
+   "lat": 27.8829,
+   "lon": 83.9313,
+   "hub": null,
+   "image": "TintaleHouse.jpeg",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q109941644",
+   "wikidata": "Q109941644",
+   "name": "Tribhuvan Sadan",
+   "nameNe": "त्रिभुवन सदन",
+   "description": "mansion in Nepal",
+   "category": "palace",
+   "lat": 27.715450841,
+   "lon": 85.317466085,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": "Tribhuvan_Sadan",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:way/194744621",
+   "wikidata": "Q11205395",
+   "name": "Trichandra Campus",
+   "nameNe": "घण्टाघर",
+   "description": null,
+   "category": "monument",
+   "lat": 27.7075084,
+   "lon": 85.3168185,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": "limited",
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/14073012729",
+   "wikidata": null,
+   "name": "Triten Norbutse Bonpo Monastry View Spot",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.7288634,
+   "lon": 85.281747,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q248010",
+   "wikidata": "Q248010",
+   "name": "Tsho Rolpa",
+   "nameNe": "च्छोरोल्पा हिमताल",
+   "description": "glacial lake",
+   "category": "nature",
+   "lat": 27.8667,
+   "lon": 86.4667,
+   "hub": null,
+   "image": "Cho-Rolpa Glacier lake.jpg",
+   "wikipedia": "Tsho_Rolpa",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/8458607537",
+   "wikidata": null,
+   "name": "Tutunga View Point",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 28.1791462,
+   "lon": 83.9921361,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q109658342",
+   "wikidata": "Q109658342",
+   "name": "Upardanggadhi",
+   "nameNe": null,
+   "description": "historical site in Chitwan District, Nepal",
+   "category": "archaeological",
+   "lat": 27.761666666,
+   "lon": 84.582777777,
+   "hub": null,
+   "image": "Upardanggadhi Chitwan 20180303 095440.jpg",
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "wd:Q104845865",
+   "wikidata": "Q104845865",
+   "name": "Valmiki Ashram",
+   "nameNe": null,
+   "description": "Hindu temple in Nepal",
+   "category": "temple",
+   "lat": 26.597018197,
+   "lon": 80.270874492,
+   "hub": null,
+   "image": null,
+   "wikipedia": "Valmiki_Ashram",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:relation/2640059",
+   "wikidata": "Q2428291",
+   "name": "Valmiki National park",
+   "nameNe": null,
+   "description": null,
+   "category": "nature",
+   "lat": 27.4067153,
+   "lon": 84.1200742,
+   "hub": "chitwan",
+   "image": null,
+   "wikipedia": "Valmiki National Park",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q19595680",
+   "wikidata": "Q19595680",
+   "name": "Venkatesh Mandir, Kathmandu",
+   "nameNe": "वेङ्कटेश मन्दिर",
+   "description": "Hindu temple in Kathmandu, Nepal",
+   "category": "temple",
+   "lat": 27.70608,
+   "lon": 85.34324,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": "Venkatesh_Mandir,_Kathmandu",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/4476159389",
+   "wikidata": null,
+   "name": "Vidhyaganesh",
+   "nameNe": "विद्यागणेश",
+   "description": null,
+   "category": "temple",
+   "lat": 27.6817928,
+   "lon": 85.3865107,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q25674861",
+   "wikidata": "Q25674861",
+   "name": "Vidhyeshvari Vajra Yogini Temple",
+   "nameNe": null,
+   "description": "Buddhist temple in Nepal",
+   "category": "temple",
+   "lat": 27.713944444,
+   "lon": 85.300888888,
+   "hub": "kathmandu",
+   "image": "Bidjeswori temple 2016-06-06.jpg",
+   "wikipedia": "Vidhyeshvari_Vajra_Yogini_Temple",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:node/4158677039",
+   "wikidata": null,
+   "name": "view to pokhara (Tiju ko Chautara)",
+   "nameNe": "भिउ टु पोखरा पोइन्ट",
+   "description": null,
+   "category": "viewpoint",
+   "lat": 28.1959867,
+   "lon": 83.9506653,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/2254123785",
+   "wikidata": null,
+   "name": "Western Gate",
+   "nameNe": null,
+   "description": null,
+   "category": "archaeological",
+   "lat": 27.5766926,
+   "lon": 83.0548083,
+   "hub": "lumbini",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/990795854",
+   "wikidata": null,
+   "name": "White Gate",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.6723594,
+   "lon": 85.4273281,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/2041489293",
+   "wikidata": null,
+   "name": "White house",
+   "nameNe": null,
+   "description": null,
+   "category": "viewpoint",
+   "lat": 27.6516305,
+   "lon": 85.2686792,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/596603713",
+   "wikidata": null,
+   "name": "World Peace Pagoda",
+   "nameNe": "विश्व शान्ति स्तुपा",
+   "description": null,
+   "category": "monastery",
+   "lat": 28.2010313,
+   "lon": 83.9447407,
+   "hub": "pokhara",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "wd:Q100989576",
+   "wikidata": "Q100989576",
+   "name": "World Peace Pagoda, Lumbini",
+   "nameNe": null,
+   "description": "Buddhist pagoda in Lumbini, Nepal",
+   "category": "stupa",
+   "lat": 27.498,
+   "lon": 83.274,
+   "hub": "lumbini",
+   "image": "Peace Pagoda of Lumbini.JPG",
+   "wikipedia": "World_Peace_Pagoda,_Lumbini",
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "wikidata"
+   ]
+  },
+  {
+   "id": "osm:way/80913260",
+   "wikidata": null,
+   "name": "Yetkha Bahal",
+   "nameNe": null,
+   "description": null,
+   "category": "nature",
+   "lat": 27.7066279,
+   "lon": 85.306518,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:way/904433284",
+   "wikidata": null,
+   "name": "Yogamvar",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7155739,
+   "lon": 85.2901764,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  },
+  {
+   "id": "osm:node/3877763908",
+   "wikidata": null,
+   "name": "藏传佛教转j经塔",
+   "nameNe": null,
+   "description": null,
+   "category": "monument",
+   "lat": 27.7220154,
+   "lon": 85.3621304,
+   "hub": "kathmandu",
+   "image": null,
+   "wikipedia": null,
+   "hours": null,
+   "website": null,
+   "wheelchair": null,
+   "sources": [
+    "osm"
+   ]
+  }
+ ]
+}

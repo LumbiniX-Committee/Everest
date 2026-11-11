@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import { Button, Card, Screen, Text } from '@/components/ui';
-import { LoadingState } from '@/components/common';
+import { BackBar, LoadingState, ProGate } from '@/components/common';
 import {
   ChatBubble,
   ChatComposer,
@@ -13,9 +13,9 @@ import {
 } from '@/components/chat';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { SpeakButton } from '@/components/voice/SpeakButton';
-import { useKeyboardInset, useSceneBottomGap } from '@/hooks';
+import { useConfirmLeave, useKeyboardInset, useOpenInTabs, useSafeBack, useSceneBottomGap } from '@/hooks';
 import { dhamma } from '@/services';
-import { usePreferences } from '@/store';
+import { usePlan, usePreferences } from '@/store';
 import type { CrisisHelpline, DhammaLanguage } from '@/services/dhamma';
 import { colors, radii, spacing } from '@/theme';
 
@@ -114,8 +114,10 @@ const T = {
   },
 } as const;
 
-export function ReflectionScreen({ siteId }: { siteId?: string }) {
+function ReflectionSession({ siteId }: { siteId?: string }) {
   const router = useRouter();
+  const goBack = useSafeBack('/(main)/dhamma');
+  const openInTabs = useOpenInTabs();
   const { preferences } = usePreferences();
   const [language, setLanguage] = useState<DhammaLanguage>(preferences.interfaceLanguage);
   const [phase, setPhase] = useState<Phase>('intro');
@@ -125,6 +127,7 @@ export function ReflectionScreen({ siteId }: { siteId?: string }) {
   const [answers, setAnswers] = useState<string[]>([]);
   const [opening, setOpening] = useState('');
   const [input, setInput] = useState('');
+  useConfirmLeave(input.trim().length > 0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [crisis, setCrisis] = useState<{ message: string; helplines: CrisisHelpline[] } | null>(null);
@@ -296,6 +299,7 @@ export function ReflectionScreen({ siteId }: { siteId?: string }) {
         onLayout={onSceneLayout}
         style={[styles.fill, { paddingBottom: Math.max(0, keyboardInset - sceneGap) }]}
       >
+        <BackBar fallback="/(main)/dhamma" />
         <View style={styles.header}>
           <Text variant="label" tone="muted" uppercase>
             {t.eyebrow}
@@ -385,7 +389,8 @@ export function ReflectionScreen({ siteId }: { siteId?: string }) {
             style={styles.footerActions}
           >
             <Button label={t.startAgain} variant="secondary" onPress={startAgain} />
-            <Button label={t.back} variant="quiet" onPress={() => router.back()} />
+            <Button label="Explore the map" variant="quiet" onPress={() => openInTabs('/(main)/tirtha/map')} />
+            <Button label={t.back} variant="quiet" onPress={goBack} />
           </View>
         )}
       </View>
@@ -547,3 +552,21 @@ const styles = StyleSheet.create({
     borderTopColor: colors.border,
   },
 });
+
+/** The reflection companion is Pro. Asking a sourced question in Dhamma stays free. */
+export function ReflectionScreen({ siteId }: { siteId?: string }) {
+  const { canUse } = usePlan();
+  if (canUse('ai-companion')) return <ReflectionSession siteId={siteId} />;
+  return (
+    <Screen scroll>
+      <BackBar fallback="/(main)/dhamma" />
+      <ProGate
+        feature="ai-companion"
+        title="Reflection companion"
+        body="Pro adds a guided reflection on what you saw, in your own words."
+      >
+        {null}
+      </ProGate>
+    </Screen>
+  );
+}

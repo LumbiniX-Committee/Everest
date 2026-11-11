@@ -119,6 +119,11 @@ export function PracticeProvider({ children }: { children: ReactNode }) {
 
   const recognise = useCallback(
     async ({ kind, siteId, observationId }: RecogniseInput) => {
+      // Reading a place is recognised once, whether on the map or on Tīrtha.
+      if (kind === 'wisdom' && siteId && (await database.hasMeritEventForSite('wisdom', siteId))) {
+        return null;
+      }
+
       // Recomputed here rather than read from state: the app may have been open
       // across midnight, and a stale boundary would either deny a new day's
       // first recognition or extend yesterday's allowance into today.

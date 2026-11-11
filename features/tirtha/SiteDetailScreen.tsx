@@ -1,22 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
 
-import { Button, Card, ConditionBadge, Divider, MetaRow, Screen, SourceBadge, Text } from '@/components/ui';
-import { EmptyState } from '@/components/common';
-import { NarrationPlayer, SiteListItem, VantageListItem } from '@/components/site';
+import { Button, Card, ConditionBadge, Divider, MetaRow, Screen, SegmentedControl, SourceBadge, Text } from '@/components/ui';
+import { BackBar, EmptyState, ProGate } from '@/components/common';
+import { NarrationPlayer, SiteListItem, SiteVisual, VantageListItem, VisitInfo } from '@/components/site';
 import { SourceCard, SourceDetailSheet } from '@/components/source';
-import { audioForSite, findSite, historicalImagesForSite, narrationForSite, questsForSite, resolveSources, sitesForParent, vantagesForSite } from '@/data';
-import { useCurrentPosition } from '@/hooks';
-import { database, location as locationService } from '@/services';
+import { audioForSite, findSite, historicalImagesForSite, narrationForSite, questsForSite, resolveSources, sitesForParent, vantagesForSite, feeForSite, modelFor } from '@/data';
+import { useCurrentPosition, useOpenInTabs, useSafeBack } from '@/hooks';
+import { location as locationService } from '@/services';
 import { usePreferences } from '@/store';
-import { SITE_VISIT_RADIUS_M } from '@/constants';
-import { spacing } from '@/theme';
+import { radii, spacing } from '@/theme';
 import { AskThisPlace } from './AskThisPlace';
 import { formatVisitorCopy } from '@/i18n/visitor';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { depthFor, scriptureForSite } from './wisdom';
-import type { Source } from '@/types';
+import { WISDOM_TIER_OPTIONS, type Source, type WisdomTier } from '@/types';
 import { distanceMeters, formatCoordinate, formatDistance } from '@/utils';
+
+/** The three depths, in reading order. 'custom' stays a Settings choice. */
+const DEPTH_OPTIONS = WISDOM_TIER_OPTIONS.filter((option): option is typeof option & { value: Exclude<WisdomTier, 'custom'> } => option.value !== 'custom');
 
 /**
  * A single heritage site.
@@ -27,27 +31,14 @@ import { distanceMeters, formatCoordinate, formatDistance } from '@/utils';
  */
 export function SiteDetailScreen({ siteId }: { siteId: string }) {
   const router = useRouter();
+  const goBack = useSafeBack();
+  const openInTabs = useOpenInTabs();
   const site = findSite(siteId);
   const { coordinate } = useCurrentPosition();
-  const { preferences } = usePreferences();
+  const { preferences, update } = usePreferences();
+  const ui = useVisitorLiteralCopy();
   const [openSource, setOpenSource] = useState<Source | null>(null);
 
-  /**
-   * Marks the register when the reader is actually standing here.
-   *
-   * Gated on distance rather than on opening the screen: "visited" has to mean
-   * you were there. Reading about a site on the bus is not a visit, and a
-   * register that says otherwise is worthless in an app built on first-hand
-   * evidence.
-   *
-   * Failure is ignored. Missing a register mark is a small loss; an error
-   * banner over a site's history for it would be a larger one.
-   */
-  useEffect(() => {
-    if (!site || !coordinate) return;
-    if (distanceMeters(coordinate, site.coordinate) > SITE_VISIT_RADIUS_M) return;
-    void database.recordSiteVisit(site.id).catch(() => undefined);
-  }, [site, coordinate]);
 
   if (!site) {
     return (
@@ -56,7 +47,7 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
           title="No such site"
           body="This site is not in the catalogue. It may have been removed, or the link may be stale."
           actionLabel="Back to Tīrtha"
-          onAction={() => router.back()}
+          onAction={goBack}
         />
       </Screen>
     );
@@ -78,7 +69,7 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
     // Public-catalog sites do not have an invented walking route. Place the
     // demo walker at the recorded coordinate so location-driven UI is testable.
     locationService.demo.goToSite(site.id);
-    router.push('/(main)/tirtha/map');
+    router.dismissTo('/(main)/tirtha/map');
   };
 
   // One policy, shared with the arrival notification, so a person who asked for
@@ -88,6 +79,11 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
 
   return (
     <Screen scroll>
+      <BackBar />
+      {/* The place first: its photograph, or an honestly labelled plate or schematic. */}
+      <Animated.View entering={FadeIn.duration(380)}>
+        <SiteVisual siteId={site.id} height={240} radius={radii.xl} style={styles.hero} credited />
+      </Animated.View>
       <View style={styles.head}>
         <Text variant="label" tone="muted" uppercase>
           Tīrtha
@@ -103,6 +99,20 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
           <ConditionBadge status={site.condition} />
           <SourceBadge tier={site.sourceTier} />
         </View>
+      </View>
+
+      {/* One remembered setting, changed where the reading happens. 'custom'
+          (ask your own) is a Settings choice; here it reads as Story. */}
+      <View style={styles.depth}>
+        <SegmentedControl
+          accessibilityLabel={ui('How much to tell')}
+          options={DEPTH_OPTIONS.map((option) => ({ value: option.value, label: ui(option.label) }))}
+          value={preferences.wisdomTier === 'custom' ? 'medium' : preferences.wisdomTier}
+          onChange={(value) => void update('wisdomTier', value)}
+        />
+        <Text variant="caption" tone="muted" center>
+          {ui(DEPTH_OPTIONS.find((option) => option.value === (preferences.wisdomTier === 'custom' ? 'medium' : preferences.wisdomTier))!.hint)}
+        </Text>
       </View>
 
       <Text variant="body" style={styles.description} translate={false}>
@@ -168,6 +178,30 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
         onPress={simulateHere}
       />
 
+      <View style={styles.mapActions}>
+        <Button
+          label="Directions"
+          icon="directions"
+          onPress={() => router.dismissTo({ pathname: '/(main)/tirtha/map', params: { guideTo: site.id } })}
+        />
+        <Button
+          label="See on the map"
+          icon="map-marker-outline"
+          variant="secondary"
+          onPress={() =>
+            router.dismissTo({ pathname: '/(main)/tirtha/map', params: { focusSiteId: site.id } })
+          }
+        />
+        {modelFor(site.id) ? (
+          <Button
+            label="View in 3D"
+            icon="cube-outline"
+            variant="secondary"
+            onPress={() => router.push(`/(main)/tirtha/model/${modelFor(site.id)!.id}`)}
+          />
+        ) : null}
+      </View>
+
       {localQuests.length > 0 ? (
         <Button
           label={localQuests.length === 1
@@ -184,10 +218,10 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
         label="Reflect from this place"
         variant="secondary"
         onPress={() =>
-          router.push({
+          openInTabs({
             pathname: '/(main)/dhamma/reflect',
             params: { siteId: site.id },
-          } as never)
+          })
         }
       />
 
@@ -197,9 +231,18 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
       {narration || audioSource ? (
         <>
           <Divider />
-          <NarrationPlayer siteId={site.id} />
+          <ProGate
+            feature="narration"
+            title="Audio narration"
+            body="Pro adds a recorded guide you can listen to as you walk."
+          >
+            <NarrationPlayer siteId={site.id} />
+          </ProGate>
         </>
       ) : null}
+
+      <Divider />
+      <VisitInfo fee={feeForSite(site)} />
 
       <Divider />
 
@@ -312,7 +355,7 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
                 distanceM={coordinate ? distanceMeters(coordinate, vantage.coordinate) : null}
                 onPress={() =>
                   router.push({
-                    pathname: '/(main)/sakshi/vantage',
+                    pathname: '/visit/vantage',
                     params: { vantageId: vantage.id },
                   })
                 }
@@ -328,9 +371,12 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
 }
 
 const styles = StyleSheet.create({
+  mapActions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   head: { paddingTop: spacing.lg, paddingBottom: spacing.lg, gap: spacing.sm },
   badges: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginTop: spacing.xs },
   description: { paddingBottom: spacing.lg },
+  depth: { gap: spacing.xs, marginBottom: spacing.lg },
+  hero: { marginBottom: spacing.md },
   facts: { paddingBottom: spacing.lg },
   scripture: {
     gap: spacing.xs,

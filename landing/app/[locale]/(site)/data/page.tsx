@@ -213,7 +213,7 @@ export default async function DataPage({
             { v: manifest.counts.established_vantages, k: c.statLabels.vantages },
           ].map(({ v, k }) => (
             <div key={k} className="bg-surface p-6">
-              <dt className="font-[family-name:var(--font-display)] text-4xl font-semibold text-sakshi tabular-nums">
+              <dt className="font-[family-name:var(--font-display)] text-4xl font-semibold text-sandstone-deep tabular-nums">
                 {v}
               </dt>
               <dd className="mt-2 text-sm leading-relaxed text-ink-soft">{k}</dd>

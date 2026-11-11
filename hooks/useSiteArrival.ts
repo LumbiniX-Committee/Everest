@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { resolvePresence } from '@/core';
+import { ambiguousCandidates, resolvePresence } from '@/core';
 import { findSite } from '@/data';
 import { arrival, notifications } from '@/services';
 import { usePreferences } from '@/store';
@@ -46,6 +46,8 @@ export type SiteArrivalState = {
   atSiteId: string | null;
   /** Nearest site regardless of reach, for a "how far" readout. */
   nearest: ReturnType<typeof arrival.nearestSite>;
+  /** Sites this fix can't tell apart, when there is more than one. */
+  ambiguous: string[];
 };
 
 /** Lets the demo walk start a fresh run without inheriting the last one's silence. */
@@ -128,5 +130,7 @@ export function useSiteArrival(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [candidates, accuracyM, notify, wisdomTier]);
 
-  return { atSiteId, nearest };
+  const ambiguous = useMemo(() => (atSiteId ? [] : ambiguousCandidates(candidates, accuracyM)), [atSiteId, candidates, accuracyM]);
+
+  return { atSiteId, nearest, ambiguous };
 }

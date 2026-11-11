@@ -114,6 +114,6 @@ In-app: Settings → Privacy.
   a site's conservation record, for the reason given under Retention above.
 
 Outside the app: open an issue against the repository
-(<https://github.com/LumbiniX-Committee/Everest>) naming the device or
+(<https://github.com/siddantasodari4-eng/saksi>) naming the device or
 capture you are asking about as specifically as you can. There is no other
 contact channel today; adding one is future work, not a claim made here.

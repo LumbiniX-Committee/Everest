@@ -73,7 +73,7 @@ export default function LoginPage() {
 
   return (
     <main className="mx-auto max-w-md px-6 py-24">
-      <p className="text-sm font-semibold tracking-wide text-sakshi uppercase">Sākṣī secure access</p>
+      <p className="text-sm font-semibold tracking-wide text-sandstone-deep uppercase">Sākṣī secure access</p>
       <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold text-ink">
         Sign in
       </h1>

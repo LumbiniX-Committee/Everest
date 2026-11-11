@@ -10,3 +10,4 @@ export { Chip, type ChipProps } from './Chip';
 export { BottomSheet, type BottomSheetProps } from './BottomSheet';
 export { ProgressIndicator, type ProgressIndicatorProps } from './ProgressIndicator';
 export { ProgressRing, type ProgressRingProps } from './ProgressRing';
+export { SegmentedControl, type SegmentedControlProps, type SegmentedOption } from './SegmentedControl';

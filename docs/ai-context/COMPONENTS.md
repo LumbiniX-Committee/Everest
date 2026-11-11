@@ -48,8 +48,9 @@ The 12 primitives every screen composes from. **Highest blast radius in the code
 
 ### Colour themes
 
-[theme/colors.ts](../../theme/colors.ts) defines matching `navyColors` and
-`whiteColors` semantic palettes. Components continue to consume `colors`; the
+[theme/colors.ts](../../theme/colors.ts) defines matching `navyColors` (shown as Himalayan dusk) and
+`whiteColors` (shown as Lumbini morning) semantic palettes. Text on a fill must use
+its paired role (`onPrimary`, `onAccent`, `onScrim`); see [DESIGN.md](../../DESIGN.md). Components continue to consume `colors`; the
 root [index.tsx](../../index.tsx) selects that stable object's initial values
 before Expo Router loads. The Appearance toggle lives in
 [features/settings/SettingsScreen.tsx](../../features/settings/SettingsScreen.tsx)

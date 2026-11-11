@@ -376,6 +376,6 @@ export const waterGeoJSON: FeatureCollection<Polygon> = {
         type: 'Polygon',
         coordinates: square(site.coordinate, Math.max(10, (site.radiusMeters ?? 25) * 0.8)),
       },
-      properties: { id: site.id, name: site.name },
+      properties: { id: site.id, name: site.name, rank: site.parentSiteId ? 4 : (site.tier ?? 3) },
     })),
 };

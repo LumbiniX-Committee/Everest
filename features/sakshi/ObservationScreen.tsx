@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Image, StyleSheet, View } from 'react-native';
 
-import { Button, Chip, Divider, Icon, MetaRow, Screen, Text } from '@/components/ui';
+import { Button, Card, Chip, Divider, Icon, MetaRow, Screen, Text } from '@/components/ui';
 import { TimeSeriesScrubber } from '@/components';
-import { EmptyState, LoadingState } from '@/components/common';
+import { BackBar, EmptyState, LoadingState, NextStep } from '@/components/common';
+import { useExitVisit, useSafeBack } from '@/hooks';
 import {
   ConditionSheet,
   type ConditionDraft,
@@ -20,7 +21,9 @@ import {
   conditionSubtypeCopy,
 } from '@/i18n/condition';
 import { formatVisitorCopy, visitorCopy, type VisitorCopyKey } from '@/i18n/visitor';
-import { database } from '@/services';
+import { database, reportStatus } from '@/services';
+import { ReportTimeline } from '@/components/report';
+import { reportTimeline } from '@/core';
 import { useDamageDetector, scanToSuggestion, type YoloScanResult } from '@/services/ai/yoloEngine';
 import { usePractice, usePreferences, useQuests } from '@/store';
 import { colors, radii, spacing } from '@/theme';
@@ -41,8 +44,25 @@ type LoadState = 'loading' | 'ready' | 'missing';
  */
 export function ObservationScreen({ observationId }: { observationId: string }) {
   const router = useRouter();
+  const goBack = useSafeBack();
+  const exitVisit = useExitVisit();
   const [observation, setObservation] = useState<Observation | null>(null);
   const [reports, setReports] = useState<ConditionReport[]>([]);
+  // The custodian steps on this visitor's reports: last known copy first, then
+  // a refresh. Offline, the cached copy stays, dated, rather than going blank.
+  const [timelines, setTimelines] = useState<reportStatus.ReportTimelines>({ fetchedAt: null, byReport: {} });
+  useEffect(() => {
+    let live = true;
+    void reportStatus.cachedTimelines().then((cached) => {
+      if (live) setTimelines(cached);
+      return reportStatus.refreshTimelines();
+    }).then((fresh) => {
+      if (live && fresh) setTimelines(fresh);
+    });
+    return () => {
+      live = false;
+    };
+  }, []);
   const [status, setStatus] = useState<LoadState>('loading');
   const [sheetOpen, setSheetOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -167,6 +187,8 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
   };
 
   const acknowledge = async (saved: Observation) => {
+    // Practice earns nothing: only a real visit adds to the ledger.
+    if (saved.isDemo) return;
     try {
       const event = await recognise({
         kind: 'observation',
@@ -238,7 +260,7 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
           title={t('observation.missingTitle')}
           body={t('observation.missingBody')}
           actionLabel={t('capture.back')}
-          onAction={() => router.back()}
+          onAction={goBack}
         />
       </Screen>
     );
@@ -258,6 +280,12 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
 
   return (
     <Screen scroll>
+      <BackBar onBack={exitVisit} />
+      {observation.isDemo ? (
+        <Card>
+          <Text variant="body">Demo walk: this photograph stays on this phone and is not part of the record.</Text>
+        </Card>
+      ) : null}
       <View style={styles.head}>
         <View style={styles.headRow}>
           <Text variant="label" tone="muted" uppercase>
@@ -278,7 +306,9 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
         <Button
           label={t('observation.compare')}
           variant="secondary"
-          onPress={() => router.push('/(main)/sakshi')}
+          onPress={() =>
+            router.push({ pathname: '/visit/then-now/[siteId]', params: { siteId: observation.siteId } })
+          }
           style={styles.featureBtn}
         />
       </View>
@@ -300,13 +330,13 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
         {/* Floating Telemetry HUD */}
         <View style={styles.hudOverlay}>
           <View style={styles.hudBadge}>
-            <Icon name="crosshairs-gps" size={13} color={colors.surface} />
+            <Icon name="crosshairs-gps" size={13} color={colors.onScrim} />
             <Text variant="mono" style={styles.hudText}>
               {formatDistance(observation.positionErrorM)}
             </Text>
           </View>
           <View style={styles.hudBadge}>
-            <Icon name="compass-outline" size={13} color={colors.surface} />
+            <Icon name="compass-outline" size={13} color={colors.onScrim} />
             <Text variant="mono" style={styles.hudText}>
               {formatBearing(observation.bearing)}
             </Text>
@@ -385,6 +415,13 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
                 ? t('observation.withinTolerance')
                 : t('observation.outsideTolerance')}
             </Text>
+            {observation.unmeasured?.includes('pitch') ? (
+              // Aligned on position and bearing only. The scorer assumes level
+              // when there is no motion sensor, so the record must say tilt is unknown.
+              <Text variant="caption" tone="muted" style={styles.accuracyNote}>
+                Tilt was not measured: this phone reported no motion sensor.
+              </Text>
+            ) : null}
           </>
         )}
       </View>
@@ -437,6 +474,14 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
                     “{report.note}”
                   </Text>
                 ) : null}
+                <ReportTimeline
+                  steps={reportTimeline({
+                    recordedAt: report.recordedAt,
+                    synced: report.synced,
+                    actions: timelines.byReport[report.id] ?? [],
+                  })}
+                  fetchedAt={timelines.fetchedAt}
+                />
               </View>
             ))
           )}
@@ -489,13 +534,18 @@ export function ObservationScreen({ observationId }: { observationId: string }) 
             block
             onPress={() =>
               router.push({
-                pathname: '/(main)/sakshi/register/[siteId]',
+                pathname: '/visit/record/[siteId]',
                 params: { siteId: observation.siteId },
               })
             }
           />
         ) : null}
-        <Button label={t('observation.done')} block onPress={() => router.replace('/(main)/sakshi')} />
+        <NextStep
+          title="Your record is saved"
+          body="It stays on this phone. What would you like to do next?"
+          actionLabel={t('observation.done')}
+          onAction={exitVisit}
+        />
       </View>
 
       <ConditionSheet
@@ -547,15 +597,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.xxs,
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    backgroundColor: colors.scrim,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xxs,
     borderRadius: radii.sm,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: colors.onScrimBorder,
   },
   hudText: {
-    color: '#ffffff',
+    color: colors.onScrim,
     fontSize: 12,
     fontWeight: 'bold',
   },

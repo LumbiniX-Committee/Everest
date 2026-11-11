@@ -72,7 +72,7 @@ a Play Console app that must exist first. Three one-time steps:
 Play's API cannot create a listing, and it rejects the first upload from any
 API client. So the **first** `.aab` has to be uploaded by hand:
 
-1. Play Console → Create app → package name `org.lumbinix.sakshi`
+1. Play Console → Create app → package name `com.saksinepal.saksi`
 2. Internal testing → Create new release → upload the `.aab` from
    `eas build:list --platform android --limit 1`
 3. Complete the content rating, data safety, and privacy policy forms — Play

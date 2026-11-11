@@ -4,10 +4,12 @@ import { useRouter } from 'expo-router';
 import { ScreenHeader } from '@/components/common';
 import { Screen } from '@/components/ui';
 import { application } from '@/services';
-import { usePermissions, usePreferences } from '@/store';
+import { useAppState, usePermissions, usePlan, usePreferences } from '@/store';
+import { VISITOR_TYPE_OPTIONS } from '@/types';
 import { visitorCopy, type VisitorCopyKey } from '@/i18n/visitor';
+import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 
-import { SettingsRow, SettingsSection, SettingsToggle } from './components';
+import { SettingsChoice, SettingsRow, SettingsSection, SettingsToggle } from './components';
 
 const TOLERANCE_LABEL_KEYS: Record<'strict' | 'standard' | 'forgiving', VisitorCopyKey> = {
   strict: 'settings.strict',
@@ -17,6 +19,10 @@ const TOLERANCE_LABEL_KEYS: Record<'strict' | 'standard' | 'forgiving', VisitorC
 
 /** The Settings index and the one app-wide visual switch. */
 export function SettingsScreen() {
+  const ui = useVisitorLiteralCopy();
+  const { resetOnboarding } = useAppState();
+  const { gatingOn, isPro } = usePlan();
+  const planLabel = !gatingOn ? 'Early release' : isPro ? 'Pro' : 'Free';
   const router = useRouter();
   const { preferences, update } = usePreferences();
   const { states } = usePermissions();
@@ -43,6 +49,28 @@ export function SettingsScreen() {
         subtitle={t('settings.subtitle')}
       />
 
+      <SettingsSection title="Your trip" divided>
+        <SettingsRow
+          label="Your plan"
+          value={planLabel}
+          hint="What is free, and what Pro adds"
+          onPress={() => router.push('/(main)/settings/plans')}
+        />
+        <SettingsChoice
+          legend="Who is visiting?"
+          options={VISITOR_TYPE_OPTIONS}
+          selected={preferences.visitorType}
+          onSelect={(value) => void update('visitorType', value)}
+        />
+        <SettingsRow
+          label="Replay introduction"
+          hint="See the first-run guide again"
+          onPress={() => {
+            void resetOnboarding().then(() => router.replace('/onboarding'));
+          }}
+        />
+      </SettingsSection>
+
       <SettingsSection
         title={t('settings.appearance')}
         footnote={
@@ -57,6 +85,21 @@ export function SettingsScreen() {
           value={preferences.colorTheme === 'navy'}
           onValueChange={(enabled) => {
             const next = enabled ? 'navy' : 'white';
+            if (next === preferences.colorTheme) return;
+            setNeedsManualRestart(false);
+            void update('colorTheme', next).then(() =>
+              application
+                .reload(`Changed colour theme to ${next}`)
+                .catch(() => setNeedsManualRestart(true)),
+            );
+          }}
+        />
+        <SettingsToggle
+          label={ui('High contrast for sunlight')}
+          hint={ui('Darker text and stronger lines, easier to read outdoors in bright sun.')}
+          value={preferences.colorTheme === 'outdoor'}
+          onValueChange={(enabled) => {
+            const next = enabled ? 'outdoor' : 'white';
             if (next === preferences.colorTheme) return;
             setNeedsManualRestart(false);
             void update('colorTheme', next).then(() =>

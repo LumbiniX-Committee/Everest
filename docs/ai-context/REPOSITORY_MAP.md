@@ -1,14 +1,14 @@
 # Repository Map
 
 **Audited commit:** `dbe6d45e7297c5d889be9e69c3e2e190a578e6b1` (branch `main`)
-**Repository root:** the `Everest/` directory (this is the app root — `package.json`, `app.json` and `node_modules` all live here).
+**Repository root:** the `saksi/` directory (this is the app root — `package.json`, `app.json` and `node_modules` all live here).
 
 ---
 
 ## 1. Top-level layout
 
 ```
-Everest/
+saksi/
 ├── app/              43 files   Routes (expo-router). Thin wrappers.
 ├── features/         68 files   Screen implementations, by domain.
 ├── components/       70 files   Presentation: ui/ primitives + feature support.

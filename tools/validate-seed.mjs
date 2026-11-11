@@ -156,8 +156,35 @@ for (const n of needs) {
   if (typeof n.target_npr !== 'number') err(`${at}: missing target_npr`);
 }
 
+// --- places and fees ---------------------------------------------------------
+const placeSeed = JSON.parse(readFileSync(join(root, 'seed', 'places.json'), 'utf8'));
+const feeSeed = JSON.parse(readFileSync(join(root, 'seed', 'fees.json'), 'utf8'));
+const feeIds = new Set(feeSeed.fees.map((f) => f.id));
+const seenPlaces = new Set();
+for (const p of placeSeed.places) {
+  const at = `place '${p.id}'`;
+  if (seenPlaces.has(p.id)) err(`${at}: duplicate id`);
+  seenPlaces.add(p.id);
+  if (!(p.lat >= 26.3 && p.lat <= 30.5 && p.lon >= 80 && p.lon <= 88.25)) err(`${at}: outside Nepal`);
+  if (!p.sources?.length) err(`${at}: no source, so its licence is unknown`);
+  if (p.feeId && !feeIds.has(p.feeId)) err(`${at}: unknown fee '${p.feeId}'`);
+}
+for (const f of feeSeed.fees) {
+  for (const k of ['foreign', 'saarc', 'chinese', 'nepali']) {
+    if (!Number.isInteger(f[k]) || f[k] < 0) err(`fee '${f.id}': ${k} must be a whole number of rupees`);
+  }
+  for (const id of f.siteIds ?? []) if (!siteIds.has(id) && id !== 'kathmandu-durbar-square') err(`fee '${f.id}': unknown site '${id}'`);
+}
+// Fees change. Warn once they have gone unchecked for six months.
+const checkedDaysAgo = (Date.now() - Date.parse(feeSeed.lastChecked)) / 86_400_000;
+if (!(checkedDaysAgo < 183)) warn(`entry fees were last checked ${feeSeed.lastChecked}; check them again`);
+// The generated module must match the seed it was built from.
+const generated = readFileSync(join(root, 'data', 'generated', 'places.ts'), 'utf8');
+const generatedCount = (generated.match(/"sources":/g) ?? []).length;
+if (generatedCount !== placeSeed.places.length) err(`data/generated/places.ts is stale; run node tools/data/gen-places.mjs`);
+
 // --- report -----------------------------------------------------------------
-console.log(`seed: ${sites.length} sites, ${vantages.length} vantages, ${needs.length} needs, ${timeline.length} timeline, ${plates.length} plates`);
+console.log(`seed: ${placeSeed.places.length} places, ${feeSeed.fees.length} fees, ${sites.length} sites, ${vantages.length} vantages, ${needs.length} needs, ${timeline.length} timeline, ${plates.length} plates`);
 for (const w of warnings) console.log(`  WARN  ${w}`);
 if (errors.length) {
   for (const e of errors) console.error(`  ERROR ${e}`);

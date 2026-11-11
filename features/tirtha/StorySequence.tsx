@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  BackHandler,
   Animated,
   Easing,
   Modal,
@@ -15,11 +16,11 @@ import { findSite } from '@/data';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { arrival, voice } from '@/services';
 import { usePractice, usePreferences } from '@/store';
-import { colors, radii, spacing } from '@/theme';
+import { colors, prayerFlags, radii, spacing } from '@/theme';
 
 // ─── Confetti particle ────────────────────────────────────────────────────────
 
-const CONFETTI_COLORS = ['#F4B942', '#E8573F', '#4DAA57', '#4A90D9', '#9B59B6', '#E67E22', '#F39C12'];
+const CONFETTI_COLORS = prayerFlags;
 
 type ParticleRef = {
   x: Animated.Value;
@@ -262,6 +263,17 @@ export function StorySequence({ siteId, visible, onComplete, onDismiss, onOpenQu
   const [voiceMuted, setVoiceMuted] = useState(false);
   const [speaking, setSpeaking] = useState(false);
 
+  // The story is an overlay rather than a Modal, so Android's back button would
+  // otherwise leave the whole map behind it instead of closing it.
+  useEffect(() => {
+    if (!visible) return;
+    const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+      onDismiss();
+      return true;
+    });
+    return () => subscription.remove();
+  }, [visible, onDismiss]);
+
   const beats = useMemo(() => {
     const significance = arrival.significanceOf(siteId, preferences.wisdomTier);
     if (!significance) return [];
@@ -456,7 +468,7 @@ const styles = StyleSheet.create({
   },
 
   voiceTxtPlaying: {
-    color: colors.backgroundDeep,
+    color: colors.onPrimary,
   },
 
   footer: {
@@ -522,13 +534,13 @@ const styles = StyleSheet.create({
   },
 
   nextBtnClaim: {
-    backgroundColor: colors.heritageGold,
+    backgroundColor: colors.primaryPressed,
   },
 
   nextBtnTxt: {
     fontSize: 14,
     fontWeight: '800',
-    color: colors.backgroundDeep,
+    color: colors.onPrimary,
     letterSpacing: 0.4,
   },
 });
@@ -538,7 +550,7 @@ const styles = StyleSheet.create({
 const popup = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(5, 21, 33, 0.85)',
+    backgroundColor: colors.scrimStrong,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -570,7 +582,7 @@ const popup = StyleSheet.create({
     shadowRadius: 30,
     elevation: 22,
     borderWidth: 1.5,
-    borderColor: 'rgba(198, 166, 106, 0.45)',
+    borderColor: colors.borderStrong,
   },
 
   closeBtn: {
@@ -620,7 +632,7 @@ const popup = StyleSheet.create({
     gap: spacing.xs,
     marginVertical: spacing.xxs,
     borderWidth: 1,
-    borderColor: 'rgba(126, 169, 190, 0.2)',
+    borderColor: colors.border,
   },
 
   progressHead: {
@@ -644,7 +656,7 @@ const popup = StyleSheet.create({
   track: {
     width: '100%',
     height: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    backgroundColor: colors.primarySoft,
     borderRadius: radii.full,
     overflow: 'hidden',
   },
@@ -699,7 +711,7 @@ const popup = StyleSheet.create({
   questBtnTxt: {
     fontSize: 15,
     fontWeight: '800',
-    color: colors.backgroundDeep,
+    color: colors.onPrimary,
     letterSpacing: 0.5,
   },
 });

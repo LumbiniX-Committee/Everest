@@ -1,0 +1,16 @@
+# First run, as a foreign visitor starting in Lumbini, ending on Home.
+appId: com.saksinepal.saksi
+---
+- clearState
+- launchApp
+- tapOn: "English"
+- tapOn: "Begin"
+- tapOn: "Visiting from abroad"
+- tapOn: "Continue"
+- tapOn: "Continue"
+- tapOn: "Lumbini"
+- tapOn: "Continue"
+- assertVisible: "USD 20 a month"
+- tapOn: "Continue free"
+- assertVisible: "Explore Nepal"
+- assertVisible: "Start here"

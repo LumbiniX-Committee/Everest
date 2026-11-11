@@ -98,7 +98,7 @@
 
 ### Fonts & assets
 
-`@expo-google-fonts/anek-devanagari`, `@expo-google-fonts/ibm-plex-sans`, `@expo-google-fonts/ibm-plex-mono` — all imported by [theme/fonts.ts](../../theme/fonts.ts).
+`@expo-google-fonts/baloo-2`, `@expo-google-fonts/mukta`, `@expo-google-fonts/ibm-plex-mono` — all imported by [theme/fonts.ts](../../theme/fonts.ts).
 `expo-font`, `expo-asset`, `expo-splash-screen`, `expo-status-bar`, `expo-constants`.
 
 ### App infrastructure

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { exitRadius, MAX_DECISIVE_ACCURACY_M, resolvePresence, type PresenceCandidate } from './presence.ts';
+import { ambiguousCandidates, exitRadius, MAX_DECISIVE_ACCURACY_M, resolvePresence, type PresenceCandidate } from './presence.ts';
 
 // Two monuments 39 m apart, as in the Sacred Garden: a 20 m stone and a 30 m temple.
 const at = (stone: number, temple: number): PresenceCandidate[] => [
@@ -43,4 +43,17 @@ test('unknown accuracy is decisive, not disqualifying', () => {
 
 test('a previous site absent from the candidates is dropped', () => {
   assert.equal(resolvePresence('gone', at(25, 64), 5), null);
+});
+
+test('a fix far looser than a small site cannot mark arrival there', () => {
+  // 40 m accuracy around a 20 m stone: inside the decisive cap, but not fine enough.
+  assert.equal(resolvePresence(null, at(5, 44), 40), null);
+  // The 30 m temple tolerates up to 45 m.
+  assert.equal(resolvePresence(null, at(60, 10), 40), 'temple');
+});
+
+test('neighbours the fix cannot separate are offered as a choice', () => {
+  assert.deepEqual(ambiguousCandidates(at(12, 20), 15), ['stone', 'temple']);
+  assert.deepEqual(ambiguousCandidates(at(5, 44), 4), []);
+  assert.deepEqual(ambiguousCandidates(at(12, 20), null), []);
 });

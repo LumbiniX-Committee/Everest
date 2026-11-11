@@ -31,7 +31,7 @@
     "lockEntriesTotal": 980
   },
   "dependencies": {
-    "@expo-google-fonts/anek-devanagari": {
+    "@expo-google-fonts/baloo-2": {
       "declared": "^0.4.1",
       "resolved": "0.4.1",
       "type": "production",
@@ -47,7 +47,7 @@
         "theme/fonts.ts"
       ]
     },
-    "@expo-google-fonts/ibm-plex-sans": {
+    "@expo-google-fonts/mukta": {
       "declared": "^0.4.1",
       "resolved": "0.4.1",
       "type": "production",

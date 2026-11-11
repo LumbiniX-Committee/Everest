@@ -13,9 +13,9 @@ Cross-reference for impact analysis: given any one column, find everything conne
 | Feature | Route(s) | Screen | Store | Service | Core | Table | Permission | Test | Status |
 |---|---|---|---|---|---|---|---|---|---|
 | Onboarding | `/onboarding/*` (5) | `features/onboarding/*Screen` | `app-state` | `storage`, `permissions` | — | AsyncStorage | camera, location, motion | ❌ | ✅ |
-| Capture review + submission | `/(main)/sakshi/capture` | `sakshi/CaptureScreen` | `preferences`, `permissions` | `camera`, `database` | `alignment/score` | `observations` | **camera**, location, motion | ✅ core only | ✅ |
+| Capture review + submission | `/visit/capture` | `sakshi/CaptureScreen` | `preferences`, `permissions` | `camera`, `database` | `alignment/score` | `observations` | **camera**, location, motion | ✅ core only | ✅ |
 | Alignment gate | *(within capture)* | `components/reticle/*` | `preferences` | `sensors`, `location` | `alignment/score` | — | motion, location | ✅ | ✅ |
-| Condition report | `/(main)/sakshi/observation` | `sakshi/ObservationScreen` | `quests` | `database` | `quests/reports` | `condition_reports` | — | ✅ core only | ✅ |
+| Condition report | `/visit/observation` | `sakshi/ObservationScreen` | `quests` | `database` | `quests/reports` | `condition_reports` | — | ✅ core only | ✅ |
 | Damage detection | *(within capture)* | `observation/YoloVisionOverlay` | — | `ai/onnx`, `ai/yoloEngine` | `vision/*` (4 files) | — | camera | ✅ **4 files** | ✅ |
 | Map | `/(main)/tirtha/map` | `tirtha/LiveMapScreen` | `arrival` | `location` | `map/*` | — | location | ✅ core only | ✅ dev build |
 | Site detail | `/(main)/tirtha/site/[siteId]` | `tirtha/SiteDetailScreen` | `practice` | `audio`, `guide` | `story`, `wisdom` | `site_visits` | location | ✅ `story` | ✅ |
@@ -51,9 +51,9 @@ Cross-reference for impact analysis: given any one column, find everything conne
 | `/(main)/tirtha/quests/[questId]` | `QuestDetailScreen` | **`features/quests`** |
 | `/(main)/tirtha/quests/completed/[questId]` | `QuestCompletedScreen` | **`features/quests`** |
 | `/(main)/sakshi` | `SakshiScreen` | `features/sakshi` |
-| `/(main)/sakshi/vantage` | `VantageScreen` | `features/sakshi` |
-| `/(main)/sakshi/capture` | `CaptureScreen` | `features/sakshi` |
-| `/(main)/sakshi/observation` | `ObservationScreen` | `features/sakshi` |
+| `/visit/vantage` | `VantageScreen` | `features/sakshi` |
+| `/visit/capture` | `CaptureScreen` | `features/sakshi` |
+| `/visit/observation` | `ObservationScreen` | `features/sakshi` |
 | `/(main)/sakshi/guardians` | `LeaderboardScreen` | **`features/leaderboard`** |
 | `/(main)/sakshi/register` | `ChaityavaliScreen` | **`features/chaityavali`** |
 | `/(main)/sakshi/register/[siteId]` | `SiteHistoryScreen` | **`features/chaityavali`** |

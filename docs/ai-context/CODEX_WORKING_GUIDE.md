@@ -143,10 +143,10 @@ npm run validate         # after seed/ changes (run npm run gen first)
 npm run vocab            # after any user-facing copy
 npm run eval:dhamma      # after any core/dhamma change — must stay 50/50, 0 ungrounded
 npm run verify           # all of the above
-npm run lint             # expect EXACTLY 16 errors in SpeechCloud.tsx
+npm run lint             # clean; npm run lint:all reports 70 known errors
 ```
 
-**Minimum bar:** `npm run verify` passes, and `npm run lint` shows **no new** errors beyond the 16 known ones.
+**Minimum bar:** `npm run verify` passes, `npm run lint` is clean, and `npm run lint:all` shows **no new** errors beyond the 70 known ones.
 
 **`verify` does not include `lint`, and does not type-check `core/` or `shared/`.** Do not read a green `verify` as "everything is clean."
 
@@ -246,7 +246,7 @@ Also note: `npm run vocab` enforces project terminology **and typography** — i
 ## 12. Before you finish
 
 - [ ] `npm run verify` passes
-- [ ] `npm run lint` shows no new errors (16 known)
+- [ ] `npm run lint` clean; `npm run lint:all` no new errors (70 known)
 - [ ] No generated file hand-edited
 - [ ] No applied migration edited
 - [ ] No secret added to `EXPO_PUBLIC_*`

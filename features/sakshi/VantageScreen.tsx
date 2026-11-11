@@ -1,18 +1,18 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 
-import { Button, Chip, Divider, MetaRow, Screen, Text } from '@/components/ui';
-import { EmptyState, SettingsButton } from '@/components/common';
-import { AlignmentReadout, Reticle } from '@/components/reticle';
-import { SpeakButton } from '@/components/voice/SpeakButton';
+import { Button, Card, Chip, Divider, MetaRow, Screen, Text } from '@/components/ui';
+import { BackBar, EmptyState, ProGate } from '@/components/common';
+import { AlignmentReadout, CompassCalibrationPrompt, Reticle } from '@/components/reticle';
 import { findSite, findVantage } from '@/data';
-import { useAlignment, useHaptics } from '@/hooks';
+import { useAlignment, useHaptics, useOpenInTabs, useSafeBack } from '@/hooks';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { usePermission } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 import { formatCoordinate } from '@/utils';
-import { alignmentHint } from '@/utils/alignmentHint';
+
+import { GuidanceSteps } from './GuidanceSteps';
 
 /**
  * Align to a vantage.
@@ -23,12 +23,22 @@ import { alignmentHint } from '@/utils/alignmentHint';
 export function VantageScreen({ vantageId }: { vantageId: string }) {
   const ui = useVisitorLiteralCopy();
   const router = useRouter();
+  const goBack = useSafeBack();
+  const openInTabs = useOpenInTabs();
   const vantage = findVantage(vantageId);
   const { state: locationPermission, request: requestLocation } = usePermission('location');
   const { pulse } = useHaptics();
   const { width } = useWindowDimensions();
 
   const alignment = useAlignment({ vantage });
+  const locked = alignment.phase === 'locked';
+  const [calibrating, setCalibrating] = useState(false);
+
+  useEffect(() => {
+    if (locked) {
+      pulse();
+    }
+  }, [locked, pulse]);
 
   if (!vantage) {
     return (
@@ -37,41 +47,60 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
           title="No such vantage"
           body="This viewpoint is not in the catalogue."
           actionLabel="Back"
-          onAction={() => router.back()}
+          onAction={goBack}
         />
       </Screen>
     );
   }
 
   const site = findSite(vantage.siteId);
-  const locked = alignment.phase === 'locked';
   const needsLocation = locationPermission.status !== 'granted';
-  const spokenHint = alignmentHint(alignment);
+  const photographyRestricted = site?.photography != null && site.photography !== 'allowed';
   const reticleSize = Math.min(280, width - spacing.gutter * 2);
-
-  useEffect(() => {
-    if (locked) {
-      pulse();
-    }
-  }, [locked, pulse]);
 
   const openCapture = () => {
     router.push({
-      pathname: '/(main)/sakshi/capture',
+      pathname: '/visit/capture',
       params: { vantageId: vantage.id, mode: locked ? 'aligned' : 'manual' },
     });
   };
 
   return (
     <Screen scroll>
+      <BackBar />
       <View style={styles.head}>
         <View style={styles.instrumentHeader}>
           <Chip label={site?.name ?? 'VANTAGE'} style={styles.siteChip} />
           <Chip label={phaseLabel(alignment.phase)} selected={locked} />
-          <SettingsButton />
         </View>
         <Text variant="title">{vantage.label}</Text>
+        {vantage.estimated ? (
+          <Text variant="caption" tone="seeking">
+            Estimated viewpoint: placed from a map and not yet surveyed on site.
+          </Text>
+        ) : null}
       </View>
+
+      {photographyRestricted ? (
+        <Card>
+          <Text variant="bodyStrong">Photography is restricted at this site.</Text>
+          <Text variant="body" tone="secondary">
+            You can still use this viewpoint to look and learn, but the camera stays off here.
+          </Text>
+        </Card>
+      ) : null}
+
+      <Button
+        label="Directions to this viewpoint"
+        icon="directions"
+        variant="secondary"
+        onPress={() => openInTabs({ pathname: '/(main)/tirtha/map', params: { guideTo: vantage.id } })}
+      />
+      <Button
+        label="Try the alignment first"
+        variant="quiet"
+        onPress={() => router.push('/visit/practice')}
+      />
 
       <View style={styles.reticleBlock}>
         <Reticle size={reticleSize} progress={alignment.progress} phase={alignment.phase} />
@@ -80,7 +109,7 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
       {needsLocation ? (
         <View style={styles.notice}>
           <Text variant="body" tone="secondary">
-            Alignment needs your location. Without it, you can still frame the shot by eye against the ghost overlay.
+            Alignment needs your location. Without it, you can still frame the shot by eye.
           </Text>
           <Button label="Allow location" variant="secondary" onPress={requestLocation} />
         </View>
@@ -90,10 +119,19 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
         </View>
       )}
 
-      <View style={styles.voiceHint}>
-        <Text variant="caption" tone="muted">Alignment voice hint</Text>
-        <SpeakButton text={spokenHint} language="en" />
-      </View>
+      {!needsLocation ? (
+        <ProGate
+          feature="close-up-guidance"
+          title="Step-by-step guidance"
+          body="Pro guides you onto the mark and into the view, one step at a time. You can still take the photograph by eye."
+        >
+          <GuidanceSteps alignment={alignment} vantage={vantage} />
+        </ProGate>
+      ) : null}
+
+      {alignment.blockedBy === 'heading' || alignment.headingQuality === 'poor' ? (
+        <Button label="Calibrate compass" icon="compass-outline" variant="quiet" onPress={() => setCalibrating(true)} />
+      ) : null}
 
       <Divider />
 
@@ -113,6 +151,7 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
 
       <View style={styles.actions}>
         <Button
+          disabled={photographyRestricted}
           label={locked ? 'Take it, aligned' : 'Match by eye'}
           icon={locked ? 'camera-outline' : 'eye-outline'}
           block
@@ -123,11 +162,12 @@ export function VantageScreen({ vantageId }: { vantageId: string }) {
         {!locked ? (
           <Text variant="caption" tone="muted" center>
             {alignment.phase === 'unavailable'
-              ? 'No position fix. Frame by eye against the ghost overlay.'
+              ? 'No position fix. Frame the shot by eye.'
               : 'Not yet within tolerance. Align further, or capture by eye.'}
           </Text>
         ) : null}
       </View>
+      <CompassCalibrationPrompt visible={calibrating} onDismiss={() => setCalibrating(false)} />
     </Screen>
   );
 }
@@ -157,7 +197,6 @@ const styles = StyleSheet.create({
   siteChip: { flex: 1 },
   reticleBlock: { alignItems: 'center', paddingVertical: spacing.lg },
   notice: { gap: spacing.md, alignItems: 'flex-start', paddingBottom: spacing.lg },
-  voiceHint: { gap: spacing.xs, paddingBottom: spacing.md },
   readoutCard: {
     padding: spacing.base,
     borderRadius: radii.lg,

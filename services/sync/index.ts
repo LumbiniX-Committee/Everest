@@ -1,4 +1,8 @@
-import { getUnsyncedConditionReports, getUnsyncedObservations } from '../database';
+import {
+  getUnsyncedConditionReports,
+  getUnsyncedObservations,
+  getUnsyncedQuestSubmissions,
+} from '../database';
 import { syncData } from '../supabase/sync';
 
 export * from '../supabase/sync';
@@ -7,24 +11,23 @@ export * from '../supabase/sync';
  * Triggers sync pass for pending observations and condition reports.
  */
 export async function syncPendingObservations(): Promise<number> {
-  const beforeObs = await getUnsyncedObservations();
-  const beforeReps = await getUnsyncedConditionReports();
-  const initialCount = beforeObs.length + beforeReps.length;
+  const initialCount = await pendingCount();
 
   if (initialCount === 0) return 0;
 
   await syncData();
 
-  const afterObs = await getUnsyncedObservations();
-  const afterReps = await getUnsyncedConditionReports();
-  const remainingCount = afterObs.length + afterReps.length;
+  const remainingCount = await pendingCount();
 
   return Math.max(0, initialCount - remainingCount);
 }
 
-/** Count of items (observations + condition reports) waiting to sync. */
+/** Count of items (observations, condition reports, quest memories) waiting to sync. */
 export async function pendingCount(): Promise<number> {
-  const obs = await getUnsyncedObservations();
-  const reps = await getUnsyncedConditionReports();
-  return obs.length + reps.length;
+  const [obs, reps, memories] = await Promise.all([
+    getUnsyncedObservations(),
+    getUnsyncedConditionReports(),
+    getUnsyncedQuestSubmissions(),
+  ]);
+  return obs.length + reps.length + memories.length;
 }

@@ -16,7 +16,7 @@ export const NAV = [
   { href: '/privacy', labelKey: 'nav.privacy' },
 ] as const;
 
-export const REPO_URL = 'https://github.com/LumbiniX-Committee/Everest';
+export const REPO_URL = 'https://github.com/siddantasodari4-eng/saksi';
 
 /**
  * Copied into `public/reports/` by `scripts/copy-reports.mjs` before dev and

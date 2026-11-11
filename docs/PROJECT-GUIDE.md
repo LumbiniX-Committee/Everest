@@ -55,7 +55,7 @@ a known point on a known day.
 
 **Lumbini** is the birthplace of the Buddha, a UNESCO World Heritage Site in
 Nepal. This is a **hackathon project** (LumbiniX 2026) built by the
-`LumbiniX-Committee/Everest` team.
+`siddantasodari4-eng/saksi` team.
 
 ---
 

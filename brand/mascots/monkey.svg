@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320">
+  <title>A rhesus macaque</title>
+  <ellipse cx="120" cy="300" rx="70" ry="9" fill="#12302B" opacity=".14"/>
+  <!-- stone step it sits on -->
+  <rect x="44" y="250" width="152" height="46" rx="6" fill="#A7A196"/>
+  <path d="M44 268 h152" stroke="#8E887D" stroke-width="3"/>
+  <!-- tail -->
+  <path d="M150 248 Q196 252 196 214 Q196 196 184 200" fill="none" stroke="#8C6E50" stroke-width="10" stroke-linecap="round"/>
+  <!-- body, sitting -->
+  <ellipse cx="120" cy="206" rx="54" ry="50" fill="#9A7B5A"/>
+  <ellipse cx="120" cy="214" rx="32" ry="34" fill="#B89C7C"/>
+  <!-- legs folded -->
+  <ellipse cx="86" cy="244" rx="24" ry="13" fill="#8C6E50"/>
+  <ellipse cx="154" cy="244" rx="24" ry="13" fill="#8C6E50"/>
+  <ellipse cx="72" cy="250" rx="11" ry="6" fill="#C98E7A"/>
+  <ellipse cx="168" cy="250" rx="11" ry="6" fill="#C98E7A"/>
+  <!-- arms resting on knees -->
+  <path d="M82 190 Q72 220 92 236" fill="none" stroke="#8C6E50" stroke-width="16" stroke-linecap="round"/>
+  <path d="M158 190 Q168 220 148 236" fill="none" stroke="#8C6E50" stroke-width="16" stroke-linecap="round"/>
+  <ellipse cx="96" cy="238" rx="9" ry="7" fill="#C98E7A"/>
+  <ellipse cx="144" cy="238" rx="9" ry="7" fill="#C98E7A"/>
+  <!-- head -->
+  <ellipse cx="120" cy="124" rx="50" ry="46" fill="#9A7B5A"/>
+  <ellipse cx="76" cy="124" rx="12" ry="14" fill="#C98E7A"/>
+  <ellipse cx="164" cy="124" rx="12" ry="14" fill="#C98E7A"/>
+  <path d="M84 104 Q120 74 156 104 Q150 92 120 86 Q90 92 84 104 Z" fill="#8C6E50"/>
+  <!-- the pink, bare face of a rhesus macaque -->
+  <path d="M90 118 Q90 96 120 98 Q150 96 150 118 Q154 150 120 160 Q86 150 90 118 Z" fill="#D9A08A"/>
+  <ellipse cx="106" cy="120" rx="6" ry="6.5" fill="#2A1B14"/>
+  <ellipse cx="134" cy="120" rx="6" ry="6.5" fill="#2A1B14"/>
+  <circle cx="108" cy="118" r="2" fill="#FFFFFF"/>
+  <circle cx="136" cy="118" r="2" fill="#FFFFFF"/>
+  <path d="M98 110 q8 -5 16 -1 M126 109 q8 -4 16 1" fill="none" stroke="#7A4E3C" stroke-width="2.4" stroke-linecap="round"/>
+  <ellipse cx="120" cy="142" rx="17" ry="12" fill="#E3B4A0"/>
+  <ellipse cx="115" cy="136" rx="2" ry="1.6" fill="#7A4E3C"/>
+  <ellipse cx="125" cy="136" rx="2" ry="1.6" fill="#7A4E3C"/>
+  <path d="M112 146 Q120 150 128 146" fill="none" stroke="#7A4E3C" stroke-width="2.2" stroke-linecap="round"/>
+</svg>

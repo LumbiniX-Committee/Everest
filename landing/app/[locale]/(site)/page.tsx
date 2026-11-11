@@ -4,24 +4,20 @@ import {
   ArrowRight,
   Check,
   Compass,
-  Cpu,
   Download,
-  FileText,
-  Landmark,
-  Navigation,
   Settings,
-  ShieldCheck,
   Smartphone,
-  WifiOff,
 } from 'lucide-react';
 
-import { AlignmentDial } from '@/components/AlignmentDial';
-import { GreetingMonk } from '@/components/GreetingMonk';
+import { Bento } from '@/components/Bento';
+import { PhoneHero } from '@/components/PhoneHero';
+import { VisitCircle } from '@/components/VisitCircle';
+import { Provenance } from '@/components/Provenance';
+import { ThreeVerbs } from '@/components/ThreeVerbs';
 import { MapExplorer } from '@/components/MapExplorer';
 import { CountUp, Reveal } from '@/components/motion';
 import { formatBuildDate, getLatestBuild } from '@/lib/eas';
 import { localeHref, type Locale } from '@/lib/i18n';
-import { REPORTS, SURFACES } from '@/lib/site';
 import { SITES } from '@/lib/generated/explorer';
 
 /**
@@ -34,34 +30,27 @@ import { SITES } from '@/lib/generated/explorer';
  */
 export const revalidate = 300;
 
+const MAYA = SITES.find((site) => site.id === 'maya-devi-temple')!;
+const PILLAR = SITES.find((site) => site.id === 'ashokan-pillar')!;
 const vantageTotal = SITES.reduce((n, s) => n + s.vantages, 0);
 const sourceTotal = SITES.reduce((n, s) => n + s.sources.length, 0);
-
-const ICONS = {
-  wisdom: Compass,
-  navigation: Navigation,
-  measurement: ShieldCheck,
-  ai: Cpu,
-  offline: WifiOff,
-  custodian: Landmark,
-} as const;
 
 const INSTALL_ICONS = [Download, Settings, Check] as const;
 
 const EN = {
-  metaTitle: 'Sākṣī: A living map of a sacred landscape',
+  metaTitle: 'Sākṣī: a real-time guide to Nepal',
   metaDescription:
-    'A real-time map explorer for the heritage sites of Lumbini and the Kathmandu Valley. Walk, and the places you reach speak, as deeply as you asked, from sources you can check. Everything else the app does exists so that walking through a place also leaves a record of it behind.',
+    'Heritage sites, treks and offline maps for visitors to Nepal: Lumbini, the Kathmandu Valley, Pokhara and Chitwan, Poon Hill, Langtang and Everest Base Camp. Every place speaks from sources you can check, and works when the signal does not.',
   hero: {
-    badge: 'Live across Lumbini and the Kathmandu Valley',
+    badge: 'Built in Nepal · Lumbini to Everest',
     title: (
       <>
-        A living map of a<br className="hidden sm:block" /> sacred landscape
+        Know where you are, <span className="text-sandstone">as deeply as you want.</span>
       </>
     ),
-    lede: 'Sākṣī is a real-time map explorer for heritage sites. Walk, and the places you reach speak, as deeply as you asked them to, from sources you can check. Everything else the app does exists so that walking through a place also leaves a record of it behind.',
-    exploreCta: 'Explore the map',
-    getAppCta: 'Get the app',
+    lede: 'A guide to Nepal’s heritage sites and treks that explains each place when you reach it, from a glance to the full history, and shows where every fact comes from. It keeps working when the signal doesn’t.',
+    exploreCta: 'See it at Maya Devi',
+    getAppCta: 'Get the app free',
     android: 'Android 7.0 and above',
     version: 'Version',
     build: (n: string) => `(build ${n})`,
@@ -99,8 +88,8 @@ const EN = {
     measurement: {
       name: 'Every reading is evidence, or says it is not',
       body: 'Standing at a marked viewpoint turns the phone into a survey instrument. It locks only when position, heading and tilt all agree and the GPS is accurate enough to mean it. Frame it by eye instead and the record says so, permanently.',
-      accent: 'text-sakshi',
-      chip: 'bg-sakshi/10',
+      accent: 'text-sandstone-deep',
+      chip: 'bg-surface-secondary',
     },
     ai: {
       name: 'AI that proposes and never decides',
@@ -111,8 +100,8 @@ const EN = {
     offline: {
       name: 'Works where the signal does not',
       body: 'The map, the content and the knowledge base are all on the device. Every reading is written to a database on the phone before anything touches the network, because the moment you are standing there cannot be rescheduled.',
-      accent: 'text-sakshi',
-      chip: 'bg-sakshi/10',
+      accent: 'text-sandstone-deep',
+      chip: 'bg-surface-secondary',
     },
     custodian: {
       name: 'It reaches the institution that can act',
@@ -191,18 +180,18 @@ const EN = {
 };
 
 const NE: typeof EN = {
-  metaTitle: 'साक्षी: एउटा पवित्र भू-दृश्यको जीवन्त नक्सा',
+  metaTitle: 'साक्षी: नेपालका लागि वास्तविक-समयको मार्गदर्शक',
   metaDescription:
-    'लुम्बिनी र काठमाडौं उपत्यकाका सम्पदा स्थलहरूका लागि एउटा प्रत्यक्ष-समय नक्सा अन्वेषक। हिँड्नुहोस्, र तपाईं पुगेका ठाउँहरू बोल्छन्, तपाईंले मागेको गहिराइमा, तपाईंले जाँच्न सक्ने स्रोतहरूबाट। एपले गर्ने अरू सबै कुरा यसैका लागि अस्तित्वमा छन्: कुनै ठाउँबाट हिँड्नुले पनि त्यसको अभिलेख छोडोस्।',
+    'नेपाल घुम्नेहरूका लागि सम्पदा स्थल, ट्रेक र अफलाइन नक्सा: लुम्बिनी, काठमाडौं उपत्यका, पोखरा र चितवन, पुनहिल, लाङटाङ र सगरमाथा आधार शिविर। हरेक ठाउँले जाँच्न सकिने स्रोतबाट बोल्छ, र सिग्नल नहुँदा पनि काम गर्छ।',
   hero: {
-    badge: 'लुम्बिनी र काठमाडौं उपत्यकाभर सक्रिय',
+    badge: 'नेपालमा निर्मित · लुम्बिनीदेखि सगरमाथासम्म',
     title: (
       <>
-        एउटा पवित्र भू-दृश्यको<br className="hidden sm:block" /> जीवन्त नक्सा
+        तपाईं कहाँ हुनुहुन्छ, <span className="text-sandstone">जति गहिरो चाहनुहुन्छ त्यति जान्नुहोस्।</span>
       </>
     ),
-    lede: 'साक्षी सम्पदा स्थलहरूका लागि एउटा प्रत्यक्ष-समय नक्सा अन्वेषक हो। हिँड्नुहोस्, र तपाईं पुगेका ठाउँहरू बोल्छन्, तपाईंले मागेको गहिराइमा, तपाईंले जाँच्न सक्ने स्रोतहरूबाट। एपले गर्ने अरू सबै कुरा यसैका लागि अस्तित्वमा छन्: कुनै ठाउँबाट हिँड्नुले पनि त्यसको अभिलेख छोडोस्।',
-    exploreCta: 'नक्सा अन्वेषण गर्नुहोस्',
+    lede: 'साक्षीले ठाउँ कहाँ छ देखाउँछ, त्यहाँसम्म हिँडाएर पुर्‍याउँछ, र पुगेपछि जाँच्न सकिने स्रोतबाट त्यसको बारेमा बताउँछ। यसले तपाईंका ट्रेक दिनदिनै बोक्छ, सिग्नल नहुँदाका लागि नक्सा सुरक्षित राख्छ, र हरेक भ्रमणलाई ठाउँ कसरी बदलिँदैछ भन्ने अभिलेखमा थप्छ।',
+    exploreCta: 'मायादेवीमा हेर्नुहोस्',
     getAppCta: 'एप प्राप्त गर्नुहोस्',
     android: 'Android 7.0 र माथि',
     version: 'संस्करण',
@@ -240,8 +229,8 @@ const NE: typeof EN = {
     measurement: {
       name: 'हरेक रिडिङ प्रमाण हो, वा त्यो होइन भनी भन्छ',
       body: 'चिन्हित दृष्टिकोणमा उभिनुले फोनलाई सर्वेक्षण उपकरणमा बदल्छ। यो तब मात्र लक हुन्छ जब स्थिति, दिशा र झुकाव सबै मिल्छन् र GPS त्यसलाई अर्थपूर्ण बनाउने गरी शुद्ध हुन्छ। बरु आँखाले फ्रेम गर्नुभयो भने अभिलेखले त्यही भन्छ, सधैंका लागि।',
-      accent: 'text-sakshi',
-      chip: 'bg-sakshi/10',
+      accent: 'text-sandstone-deep',
+      chip: 'bg-surface-secondary',
     },
     ai: {
       name: 'सुझाव दिने, कहिल्यै निर्णय नगर्ने AI',
@@ -252,8 +241,8 @@ const NE: typeof EN = {
     offline: {
       name: 'सिग्नल नभएको ठाउँमा पनि काम गर्छ',
       body: 'नक्सा, सामग्री र ज्ञान आधार सबै डिभाइसमा छन्। नेटवर्कमा केही पुग्नुअघि नै हरेक रिडिङ फोनको डाटाबेसमा लेखिन्छ, किनभने तपाईं त्यहाँ उभिएको क्षणलाई पछि सार्न मिल्दैन।',
-      accent: 'text-sakshi',
-      chip: 'bg-sakshi/10',
+      accent: 'text-sandstone-deep',
+      chip: 'bg-surface-secondary',
     },
     custodian: {
       name: 'यो कारबाही गर्न सक्ने संस्थासम्म पुग्छ',
@@ -354,48 +343,50 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
 
   return (
     <main>
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 -top-40 h-[32rem] bg-[radial-gradient(ellipse_at_top,rgba(200,148,50,0.18),transparent_65%)]"
-        />
-
-        <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-14 sm:pt-20">
-          <div className="grid items-center gap-y-12 lg:grid-cols-[1fr_auto] lg:gap-x-16">
+      {/* Hero: the name in its own script, the promise, and the app in hand */}
+      <section className="hero-wash paper relative -mt-20 overflow-hidden pt-20">
+        <div className="relative mx-auto max-w-6xl px-6 pt-16 pb-20 sm:pt-24 sm:pb-28">
+          <div className="grid items-center gap-y-16 lg:grid-cols-[1.15fr_1fr] lg:gap-x-12">
             <div className="text-center lg:text-left">
-              <span className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 px-4 py-1.5 text-sm font-medium text-ink-soft shadow-sm">
-                <span className="size-1.5 animate-pulse rounded-full bg-dhamma" />
-                {c.hero.badge}
-              </span>
+              <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+                <span className="hidden h-px w-10 bg-marigold sm:block" aria-hidden />
+                <span className="text-xs font-semibold tracking-[0.2em] text-ink-soft uppercase">{c.hero.badge}</span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-sandstone/30 bg-surface px-3 py-1 text-[11px] font-bold tracking-widest text-sandstone-deep uppercase">
+                  <span className="size-1.5 rounded-full bg-sandstone" aria-hidden />
+                  {locale === 'ne' ? 'अहिले उपलब्ध' : 'Now live'}
+                </span>
+              </div>
 
-              <h1 className="mt-8 font-[family-name:var(--font-display)] text-5xl leading-[1.03] font-semibold tracking-tight text-ink sm:text-7xl">
+              <p lang="ne" aria-hidden className="mt-8 font-[family-name:var(--font-mukta)] text-[5.5rem] leading-[0.95] font-bold tracking-tight text-ink sm:text-[8.5rem]">
+                साक्<span className="text-sandstone">षी</span><span className="text-marigold">.</span>
+              </p>
+
+              <h1 className="mx-auto mt-6 max-w-xl font-[family-name:var(--font-display)] text-3xl leading-[1.15] font-medium text-balance text-ink italic sm:text-[2.6rem] lg:mx-0">
                 {c.hero.title}
               </h1>
 
-              <p className="mx-auto mt-7 max-w-2xl text-xl leading-relaxed text-ink-soft lg:mx-0">
-                {c.hero.lede}
-              </p>
+              <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-ink-soft lg:mx-0">{c.hero.lede}</p>
 
-              <div className="mt-9 flex flex-wrap items-center justify-center gap-4 lg:justify-start">
-                <a
-                  href="#explore"
-                  className="inline-flex items-center gap-3 rounded-2xl bg-earth px-8 py-4 text-lg font-semibold text-white shadow-lg shadow-earth/25 transition hover:-translate-y-0.5 hover:bg-sandstone-deep hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-earth"
-                >
-                  <Compass className="size-6" aria-hidden />
-                  {c.hero.exploreCta}
-                </a>
-
+              <div className="mt-10 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
                 <a
                   href={build.apkUrl}
-                  className="inline-flex items-center gap-2 rounded-2xl border border-line bg-surface px-7 py-4 text-lg font-semibold text-ink shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                  className="group inline-flex items-center gap-3 rounded-full bg-ink py-4 pr-5 pl-7 text-base font-semibold text-ground shadow-xl shadow-ink/20 transition hover:-translate-y-0.5 hover:bg-sandstone-deep focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sandstone"
                 >
-                  <Download className="size-5" aria-hidden />
                   {c.hero.getAppCta}
+                  <span className="flex size-8 items-center justify-center rounded-full bg-marigold text-on-marigold transition group-hover:translate-x-0.5">
+                    <ArrowRight className="size-4" aria-hidden />
+                  </span>
+                </a>
+                <a
+                  href="#three-verbs"
+                  className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/80 px-6 py-4 text-base font-semibold text-ink backdrop-blur transition hover:-translate-y-0.5 hover:border-sandstone"
+                >
+                  <Compass className="size-5 text-sandstone" aria-hidden />
+                  {c.hero.exploreCta}
                 </a>
               </div>
 
-              <p className="mt-5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm text-ink-muted lg:justify-start">
+              <p className="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm text-ink-muted lg:justify-start">
                 <Smartphone className="size-4" aria-hidden />
                 <span>{c.hero.android}</span>
                 <span aria-hidden>·</span>
@@ -412,10 +403,16 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
               </p>
             </div>
 
-            <GreetingMonk className="h-52 sm:h-64 lg:h-[24rem]" />
+            <PhoneHero site={MAYA} locale={locale === 'ne' ? 'ne' : 'en'} />
           </div>
         </div>
       </section>
+
+      <Bento locale={locale === 'ne' ? 'ne' : 'en'} />
+
+      <ThreeVerbs maya={MAYA} pillar={PILLAR} locale={locale === 'ne' ? 'ne' : 'en'} />
+
+      <VisitCircle locale={locale === 'ne' ? 'ne' : 'en'} />
 
       {/* The explorer, the centrepiece */}
       <section id="explore" className="scroll-mt-20 border-y border-line bg-ground-deep">
@@ -447,7 +444,7 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
                 { v: 3, ...c.explorer.stats[3] },
               ].map(({ v, k, n }) => (
                 <div key={k} className="bg-surface p-6">
-                  <dt className="font-[family-name:var(--font-display)] text-4xl font-semibold text-sakshi">
+                  <dt className="font-[family-name:var(--font-display)] text-4xl font-semibold text-sandstone-deep">
                     <CountUp value={v} />
                   </dt>
                   <dd className="mt-2 text-sm leading-relaxed text-ink-soft">
@@ -461,309 +458,96 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
         </div>
       </section>
 
-      {/* Identity */}
-      <section className="mx-auto max-w-6xl px-6 py-16 sm:py-20">
-        <Reveal>
-          <p className="text-sm font-semibold tracking-widest text-sandstone-deep uppercase">
-            {c.identityKicker}
-          </p>
-          <h2 className="mt-3 max-w-3xl font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight text-ink">
-            {c.identityTitle}
-          </h2>
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-ink-soft">
-            {c.identityLede}
-          </p>
-        </Reveal>
+      <Provenance locale={locale === 'ne' ? 'ne' : 'en'} />
 
-        <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {(Object.keys(ICONS) as (keyof typeof ICONS)[]).map((id, i) => {
-            const Icon = ICONS[id];
-            const { name, body, accent, chip } = c.identity[id];
-            return (
-              <Reveal key={id} delay={i * 60}>
-                <article className="h-full rounded-3xl border border-line bg-surface p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-sakshi/40 hover:shadow-lg">
-                  <span
-                    className={`inline-flex size-11 items-center justify-center rounded-2xl ${chip} ${accent}`}
-                  >
-                    <Icon className="size-5" aria-hidden />
-                  </span>
-                  <h3 className="mt-5 font-[family-name:var(--font-display)] text-2xl leading-snug font-semibold text-ink">
-                    {name}
-                  </h3>
-                  <p className="mt-3 leading-relaxed text-ink-soft">{body}</p>
-                </article>
-              </Reveal>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Alignment demo */}
-      <section className="border-y border-line bg-ground-deep">
-        <div className="mx-auto max-w-5xl px-6 py-16 sm:py-20">
-          <Reveal>
+      {/* For institutions: the monitoring case, compressed to one band that links to its own pages */}
+      <section className="border-t border-line bg-ground-deep" aria-labelledby="institutions">
+        <div className="mx-auto grid max-w-6xl gap-10 px-6 py-16 sm:py-20 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
+          <div>
             <p className="text-sm font-semibold tracking-widest text-sandstone-deep uppercase">
-              {c.alignment.kicker}
+              {locale === 'ne' ? 'सम्पदा संस्थाहरूका लागि' : 'For heritage institutions'}
             </p>
-            <h2 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight text-ink">
-              {c.alignment.title}
+            <h2 id="institutions" className="mt-3 font-[family-name:var(--font-display)] text-4xl leading-tight font-semibold text-ink">
+              {locale === 'ne' ? 'हरेक भ्रमणले हेरचाहकर्ताले काम गर्न सक्ने अभिलेख छोड्न सक्छ' : 'Every visit can leave a record a custodian can act on'}
             </h2>
-            <p className="mt-5 max-w-2xl text-lg leading-relaxed text-ink-soft">
-              {c.alignment.lede}
-            </p>
-          </Reveal>
-
-          <Reveal delay={80}>
-            <div className="mt-10">
-              <AlignmentDial />
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Surfaces */}
-      <section className="mx-auto max-w-6xl px-6 py-16 sm:py-20">
-        <Reveal>
-          <p className="text-sm font-semibold tracking-widest text-sandstone-deep uppercase">
-            {c.surfaces.kicker}
-          </p>
-          <h2 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight text-ink">
-            {c.surfaces.title}
-          </h2>
-        </Reveal>
-
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
-          {SURFACES.map(({ name, accent, chip, rule, en, ne }, i) => {
-            const s = locale === 'ne' ? ne : en;
-            return (
-              <Reveal key={name} delay={i * 70}>
-                <article className="relative h-full overflow-hidden rounded-3xl border border-line bg-surface p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <span className={`absolute inset-x-0 top-0 h-1 ${rule}`} />
-                  <span
-                    className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold tracking-wide uppercase ${chip} ${accent}`}
-                  >
-                    {s.subtitle}
-                  </span>
-                  <h3 className="mt-5 font-[family-name:var(--font-display)] text-3xl font-semibold text-ink">
-                    {name}
-                  </h3>
-                  <p className="mt-1 text-sm text-ink-muted italic">{s.means}</p>
-                  <p className="mt-4 leading-relaxed text-ink-soft">{s.body}</p>
-                </article>
-              </Reveal>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Why it matters */}
-      <section className="border-y border-line bg-ground-deep">
-        <div className="mx-auto max-w-4xl px-6 py-16 sm:py-20">
-          <Reveal>
-            <p className="text-sm font-semibold tracking-widest text-sandstone-deep uppercase">
-              {c.whyKicker}
-            </p>
-            <h2 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight text-ink">
-              {c.whyTitle}
-            </h2>
-            <p className="mt-6 text-lg leading-relaxed text-ink-soft">{c.whyP1}</p>
-            <p className="mt-5 text-lg leading-relaxed text-ink-soft">
-              <strong className="font-semibold text-ink">{c.whyP2.strong}</strong> {c.whyP2.rest}
-            </p>
-          </Reveal>
-
-          <Reveal delay={80}>
-            <dl className="mt-10 grid gap-px overflow-hidden rounded-3xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                { v: 1.17, dp: 2, suffix: 'M', k: c.whyStats[0].k, n: c.whyStats[0].n },
-                { v: 80, suffix: '%', k: c.whyStats[1].k, n: c.whyStats[1].n },
-                {
-                  v: 624.6,
-                  dp: 1,
-                  prefix: '$',
-                  suffix: 'B',
-                  k: c.whyStats[2].k,
-                  n: c.whyStats[2].n,
-                },
-                { v: 0, k: c.whyStats[3].k, n: c.whyStats[3].n },
-              ].map(({ v, dp, prefix, suffix, k, n }) => (
-                <div key={k} className="bg-surface p-6">
-                  <dt className="font-[family-name:var(--font-display)] text-4xl font-semibold text-sakshi">
-                    <CountUp value={v} decimals={dp} prefix={prefix} suffix={suffix} />
-                  </dt>
-                  <dd className="mt-2 text-sm leading-relaxed text-ink-soft">
-                    {k}
-                    {n ? <span className="mt-1 block text-ink-muted">{n}</span> : null}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </Reveal>
-
-          <Reveal delay={120}>
-            <p className="mt-6 text-sm text-ink-muted">
-              {c.whyFootnote.before}{' '}
-              <Link
-                href={localeHref(locale, '/research')}
-                className="underline decoration-line underline-offset-4 transition hover:text-ink"
-              >
-                {c.whyFootnote.linkLabel}
-              </Link>
-              {c.whyFootnote.after}
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Custodians */}
-      <section className="mx-auto max-w-4xl px-6 py-16 sm:py-20">
-        <Reveal>
-          <p className="text-sm font-semibold tracking-widest text-sandstone-deep uppercase">
-            {c.custodiansKicker}
-          </p>
-          <h2 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight text-ink">
-            {c.custodiansTitle}
-          </h2>
-          <p className="mt-6 text-lg leading-relaxed text-ink-soft">{c.custodiansBody}</p>
-          <div className="mt-9 flex flex-wrap gap-4">
-            <Link
-              href={localeHref(locale, '/for-custodians')}
-              className="inline-flex items-center gap-2 rounded-2xl bg-earth px-6 py-3.5 font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-sandstone-deep"
-            >
-              {c.custodiansCta1}
-              <ArrowRight className="size-4" aria-hidden />
-            </Link>
-            <Link
-              href="/custodian"
-              className="inline-flex items-center gap-2 rounded-2xl border border-line bg-surface px-6 py-3.5 font-semibold text-ink shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-            >
-              {c.custodiansCta2}
-            </Link>
+            <p className="mt-5 text-lg leading-relaxed text-ink-soft">{c.custodiansBody}</p>
           </div>
-        </Reveal>
-      </section>
-
-      {/* Public transparency */}
-      <section className="border-t border-line bg-ground-deep">
-        <div className="mx-auto max-w-4xl px-6 py-16 sm:py-20">
-          <Reveal>
-            <p className="text-sm font-semibold tracking-widest text-sandstone-deep uppercase">
-              {c.transparencyKicker}
-            </p>
-            <h2 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight text-ink">
-              {c.transparencyTitle}
-            </h2>
-            <p className="mt-5 max-w-2xl text-lg leading-relaxed text-ink-soft">
-              {c.transparencyLede}
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3 text-sm">
-              <Link
-                href="/sites/patan-durbar-square/condition"
-                className="rounded-xl border border-line bg-surface px-4 py-2.5 font-semibold text-ink"
-              >
-                {c.transparencyLinks.patan}
-              </Link>
-              <Link
-                href="/sites/changu-narayan/condition"
-                className="rounded-xl border border-line bg-surface px-4 py-2.5 font-semibold text-ink"
-              >
-                {c.transparencyLinks.changu}
-              </Link>
-              <Link
-                href="/sites/manga-hiti/condition"
-                className="rounded-xl border border-line bg-surface px-4 py-2.5 font-semibold text-ink"
-              >
-                {c.transparencyLinks.manga}
-              </Link>
-              <Link href="/adopt" className="rounded-xl bg-ink px-4 py-2.5 font-semibold text-white">
-                {c.transparencyLinks.adopt}
-              </Link>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Reports */}
-      <section className="border-t border-line bg-ground-deep">
-        <div className="mx-auto max-w-4xl px-6 py-16 sm:py-20">
-          <Reveal>
-            <p className="text-sm font-semibold tracking-widest text-sandstone-deep uppercase">
-              {c.reportsKicker}
-            </p>
-            <h2 className="mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight text-ink">
-              {c.reportsTitle}
-            </h2>
-          </Reveal>
-
-          <div className="mt-10 grid gap-4 sm:grid-cols-2">
-            {[REPORTS.techStack, REPORTS.research].map(({ href, title, pages, blurb }, i) => (
-              <Reveal key={href} delay={i * 70}>
-                <a
-                  href={href}
-                  className="flex h-full flex-col rounded-3xl border border-line bg-surface p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
-                >
-                  <span className="inline-flex size-11 items-center justify-center rounded-2xl bg-sakshi/10 text-sakshi">
-                    <FileText className="size-5" aria-hidden />
-                  </span>
-                  <h3 className="mt-5 font-[family-name:var(--font-display)] text-2xl font-semibold text-ink">
-                    {title}
-                  </h3>
-                  <p className="mt-3 grow leading-relaxed text-ink-soft">{blurb}</p>
-                  <p className="mt-5 text-sm font-semibold text-earth">{c.reportsPages(pages)}</p>
-                </a>
-              </Reveal>
+          <ul className="divide-y divide-line self-end border-y border-line">
+            {[
+              { href: localeHref(locale, '/for-custodians'), label: c.custodiansCta1 },
+              { href: '/custodian', label: c.custodiansCta2 },
+              { href: localeHref(locale, '/research'), label: c.reportsTitle },
+              { href: '/sites/patan-durbar-square/condition', label: `${c.transparencyKicker}: ${c.transparencyLinks.patan}` },
+              { href: '/adopt', label: c.transparencyLinks.adopt },
+            ].map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className="flex min-h-12 items-center justify-between gap-4 py-3 font-semibold text-ink hover:text-sandstone-deep">
+                  {link.label}
+                  <ArrowRight className="size-4 shrink-0" aria-hidden />
+                </Link>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
 
       {/* Install */}
-      <section id="download" className="scroll-mt-20 border-t border-line">
-        <div className="mx-auto max-w-4xl px-6 py-20">
-          <div className="text-center">
-            <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-sandstone/15 text-sandstone-deep">
-              <ShieldCheck className="size-6" aria-hidden />
-            </span>
-            <h2 className="mt-6 font-[family-name:var(--font-display)] text-4xl font-semibold text-ink">
-              {c.install.title}
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl leading-relaxed text-ink-soft">
-              {c.install.lede}
-            </p>
+      {/* Get the app: a dark closing panel, the way the page signs off */}
+      <section id="download" className="scroll-mt-24 px-4 py-16 sm:px-6 sm:py-24">
+        <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-ink via-ink to-sandstone-deep px-6 py-16 text-ground shadow-2xl sm:px-14 sm:py-20">
+          <div className="watermark !text-ground !opacity-[0.06]" aria-hidden>साक्षी</div>
+          <span aria-hidden className="pointer-events-none absolute -top-32 -right-24 size-96 rounded-full bg-marigold/25 blur-3xl" />
 
-            <a
-              href={build.apkUrl}
-              className="mt-8 inline-flex items-center gap-3 rounded-2xl bg-earth px-8 py-4 font-semibold text-white shadow-lg shadow-earth/25 transition hover:-translate-y-0.5 hover:bg-sandstone-deep"
-            >
-              <Download className="size-5" aria-hidden />
-              {c.install.cta}
-            </a>
-          </div>
+          <div className="relative grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:items-center">
+            <div>
+              <p className="text-sm font-semibold tracking-widest text-marigold uppercase">{c.install.title}</p>
+              <h2 className="mt-4 font-[family-name:var(--font-display)] text-4xl leading-tight font-semibold sm:text-5xl">
+                {locale === 'ne' ? 'नेपालको सबैभन्दा इमानदार मार्गदर्शक साथमा लैजानुहोस्।' : 'Take an honest guide to Nepal with you.'}
+              </h2>
+              <p className="mt-5 max-w-lg text-lg leading-relaxed text-ground/75">{c.install.lede}</p>
 
-          <ol className="mt-12 space-y-4">
-            {c.installSteps.map(({ title, body }, i) => {
-              const Icon = INSTALL_ICONS[i];
-              return (
-                <li
-                  key={title}
-                  className="flex gap-5 rounded-2xl border border-line bg-surface p-6 shadow-sm"
+              <div className="mt-9 flex flex-wrap gap-3">
+                <a
+                  href={build.apkUrl}
+                  className="inline-flex items-center gap-3 rounded-2xl bg-ground px-5 py-3 text-ink shadow-lg transition hover:-translate-y-0.5"
                 >
-                  <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-surface-secondary text-sandstone-deep">
-                    <Icon className="size-5" aria-hidden />
+                  <Download className="size-6 text-sandstone" aria-hidden />
+                  <span className="text-left leading-tight">
+                    <span className="block text-[11px] font-semibold tracking-widest text-ink-muted uppercase">Android</span>
+                    <span className="block font-semibold">{c.install.cta}</span>
                   </span>
-                  <div>
-                    <h3 className="font-semibold text-ink">
-                      <span className="mr-2 text-ink-muted tabular-nums">{i + 1}.</span>
-                      {title}
-                    </h3>
-                    <p className="mt-1.5 leading-relaxed text-ink-soft">{body}</p>
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
+                </a>
+                <span className="inline-flex items-center gap-3 rounded-2xl border border-ground/20 px-5 py-3 text-ground/70">
+                  <Smartphone className="size-6" aria-hidden />
+                  <span className="text-left leading-tight">
+                    <span className="block text-[11px] font-semibold tracking-widest uppercase">iPhone</span>
+                    <span className="block font-semibold">{locale === 'ne' ? 'छिट्टै आउँदै' : 'Coming soon'}</span>
+                  </span>
+                </span>
+              </div>
+              <p className="mt-6 max-w-lg text-sm text-ground/55">{c.install.footnote}</p>
+            </div>
 
-          <p className="mt-8 text-center text-sm text-ink-muted">{c.install.footnote}</p>
+            <ol className="grid gap-3">
+              {c.installSteps.map(({ title, body }, i) => {
+                const Icon = INSTALL_ICONS[i];
+                return (
+                  <li key={title} className="flex gap-4 rounded-2xl border border-ground/10 bg-ground/5 p-5 backdrop-blur-sm">
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-ground/10 text-marigold">
+                      <Icon className="size-5" aria-hidden />
+                    </span>
+                    <div>
+                      <h3 className="font-semibold">
+                        <span className="mr-2 text-ground/50 tabular-nums">{i + 1}.</span>
+                        {title}
+                      </h3>
+                      <p className="mt-1 text-sm leading-relaxed text-ground/70">{body}</p>
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
         </div>
       </section>
     </main>

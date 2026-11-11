@@ -4,23 +4,26 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ArrivalWisdom } from '@/components/arrival';
-import { MapWebView } from '@/components/map';
+import { MapWebView, type MapMode } from '@/components/map';
 import { GreetingMonk } from '@/components/monk';
 import { NarrationPlayer } from '@/components/site';
 import { BottomSheet, Button, Card, Icon, Text } from '@/components/ui';
-import { reachedNewLevel, standingFor } from '@/core';
-import { findSite, findVantage, questsForPrecinct, vantagesForSite, questAreas, type QuestArea } from '@/data';
+import { closestIndex, distanceFromRoute, isOffRoute, nextManeuver, reachedNewLevel, standingFor } from '@/core';
+import { hubCentre, findEssential, findPlace, findSite, findVantage, questsForPrecinct, vantagesForSite, questAreas, type QuestArea } from '@/data';
 import {
+  useArrivalCredit,
   useCurrentPosition,
   useDemoWalk,
   useHaptics,
   useHeading,
+  useImagery,
+  useSafeBack,
   useSiteArrival,
   useStoryProgress,
 } from '@/hooks';
 import { arrival, location as locationService, navigation } from '@/services';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
-import { usePractice, usePreferences, useQuests } from '@/store';
+import { usePlan, usePractice, usePreferences, useQuests } from '@/store';
 import { colors, radii, spacing } from '@/theme';
 import { distanceMeters, formatDistance } from '@/utils';
 
@@ -49,12 +52,41 @@ const HUD_ROW_H = 72;
  * native module — the figure is a three.js custom layer, and MapLibre Native
  * has no 3D model support, so the native map cannot draw it at any quality.
  */
+const MAP_MODES: { mode: MapMode; label: string; hint: string; icon: 'map-outline' | 'cube-outline' | 'image-filter-hdr' | 'satellite-variant' | 'map-marker-path'; pro?: boolean; needsKey?: boolean }[] = [
+  { mode: 'standard', label: 'Standard', hint: 'Streets and paths, flat and north up', icon: 'map-outline' },
+  { mode: '3d', label: '3D', hint: 'Tilted, with buildings', icon: 'cube-outline' },
+  { mode: 'terrain', label: 'Terrain', hint: 'Hills and valleys in relief', icon: 'image-filter-hdr' },
+  { mode: 'satellite', label: 'Satellite', hint: 'Aerial imagery', icon: 'satellite-variant', pro: true, needsKey: true },
+  { mode: 'hybrid', label: 'Hybrid', hint: 'Aerial imagery with streets and names', icon: 'map-marker-path', pro: true, needsKey: true },
+];
+
+/** Anything the map can walk someone to: a quest area, a site, or a viewpoint. */
+function resolveGuideTarget(id: string | null | undefined): { id: string; name: string; coordinate: { latitude: number; longitude: number } } | undefined {
+  if (!id) return undefined;
+  const area = questAreas.find((candidate) => candidate.id === id);
+  if (area) return { id, name: area.name, coordinate: area.coordinate };
+  const site = findSite(id);
+  if (site) return { id, name: site.name, coordinate: site.coordinate };
+  const vantage = findVantage(id);
+  if (vantage) return { id, name: vantage.label, coordinate: vantage.coordinate };
+  const place = findPlace(id);
+  if (place) return { id, name: place.name, coordinate: place.coordinate };
+  const essential = findEssential(id);
+  if (essential) return { id, name: essential.name, coordinate: essential.coordinate };
+  return undefined;
+}
+
 export function LiveMapScreen() {
   const ui = useVisitorLiteralCopy();
   const router = useRouter();
-  const { guideArea } = useLocalSearchParams<{ guideArea?: string }>();
+  const { guideArea, guideTo, focusSiteId } = useLocalSearchParams<{ guideArea?: string; guideTo?: string; focusSiteId?: string }>();
+  const [mapMode, setMapMode] = useState<MapMode>('standard');
+  const [showModes, setShowModes] = useState(false);
+  const goBack = useSafeBack();
   const returnToQuests = useRef(false);
   const insets = useSafeAreaInsets();
+  // Satellite and hybrid are offered only once a provider has actually answered.
+  const imagery = useImagery();
   /**
    * Fine GPS only while the map is in front of someone.
    *
@@ -79,14 +111,17 @@ export function LiveMapScreen() {
 
   // notify:false — Tīrtha's card already announces, and two banners for one
   // arrival is the app talking over itself.
-  const { atSiteId, nearest: near } = useSiteArrival(coordinate, { notify: false, accuracyM });
+  const { atSiteId, nearest: near, ambiguous } = useSiteArrival(coordinate, { notify: false, accuracyM });
 
   const activeSiteId = atSiteId ?? near?.site.id;
   const activeSignificance = activeSiteId ? arrival.significanceOf(activeSiteId) : null;
 
   const { preferences } = usePreferences();
+  const { canUse } = usePlan();
+  // Opens on the starting area chosen in onboarding, until a real fix arrives.
+  const [openingCenter] = useState(() => hubCentre(preferences.homeHub) ?? undefined);
   const { summary, recognise } = usePractice();
-  const { quests, creditArrival } = useQuests();
+  const { quests } = useQuests();
   const story = useStoryProgress();
   // Mirror story into a ref so imperative code can always read the latest
   // value without being in a stale closure.
@@ -120,17 +155,12 @@ export function LiveMapScreen() {
   // the arrival story. Reaching a child monument also settles the parent
   // complex's arrival objective, so entering Hanuman Dhoka immediately changes
   // “Reach Kathmandu Durbar Square” to completed without asking for a tap.
-  useEffect(() => {
-    if (!atSiteId) return;
-    void creditArrival(atSiteId).then((count) => {
-      if (count > 0) {
-        setReward({
-          title: count === 1 ? '✓ Place reached' : `✓ ${count} visit objectives complete`,
-          detail: findSite(atSiteId)?.name,
-        });
-      }
+  useArrivalCredit(atSiteId, (count, siteId) => {
+    setReward({
+      title: count === 1 ? '✓ Place reached' : `✓ ${count} visit objectives complete`,
+      detail: findSite(siteId)?.name,
     });
-  }, [atSiteId, creditArrival]);
+  });
   /**
    * A commanded camera move.
    *
@@ -150,30 +180,48 @@ export function LiveMapScreen() {
     cameraNonce.current += 1;
     setCamera({ longitude, latitude, distance, nonce: cameraNonce.current });
   }, []);
+  // Arriving from a site page: show that place, and stop following the visitor
+  // so the next location fix does not pull the camera straight back off it.
+  useEffect(() => {
+    const site = focusSiteId ? (findSite(focusSiteId) ?? findPlace(focusSiteId)) : undefined;
+    if (!site) return;
+    setFollow(false);
+    flyTo(site.coordinate.longitude, site.coordinate.latitude, 'close');
+  }, [focusSiteId, flyTo]);
   const [guideTargetId, setGuideTargetId] = useState<string | null>(null);
-  const guideTarget = guideTargetId ? questAreas.find((area) => area.id === guideTargetId) : undefined;
+  const guideTarget = resolveGuideTarget(guideTargetId);
   const [walkingRoute, setWalkingRoute] = useState<navigation.WalkingRoute | null>(null);
   const [routeState, setRouteState] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
+  const upcoming =
+    walkingRoute && coordinate
+      ? nextManeuver(walkingRoute.maneuvers, closestIndex(walkingRoute.coordinates, coordinate))
+      : null;
   const [routeRetry, setRouteRetry] = useState(0);
   const lastRouteRequest = useRef<{ targetId: string; coordinate: { latitude: number; longitude: number } } | null>(null);
   const routeSequence = useRef(0);
   useFocusEffect(useCallback(() => {
-    if (guideArea && questAreas.some((area) => area.id === guideArea)) {
+    const target = guideTo ?? guideArea;
+    if (target && resolveGuideTarget(target)) {
       setWalkingRoute(null);
       lastRouteRequest.current = null;
       setRouteState('loading');
-      setGuideTargetId(guideArea);
+      setGuideTargetId(target);
       setFollow(true);
     }
-  }, [guideArea]));
+  }, [guideArea, guideTo]));
   useEffect(() => {
     if (!coordinate || !guideTarget) {
       lastRouteRequest.current = null;
       return;
     }
 
+    // Ask again only for a new destination, or once the walker has really left
+    // the line. Re-asking on every few metres costs data and makes the line jump.
     const previous = lastRouteRequest.current;
-    if (previous?.targetId === guideTarget.id && distanceMeters(previous.coordinate, coordinate) < 20) return;
+    const offRoute =
+      walkingRoute != null && isOffRoute(distanceFromRoute(walkingRoute.coordinates, coordinate), accuracyM);
+    if (previous?.targetId === guideTarget.id && !offRoute) return;
+    if (offRoute) setRouteState('loading');
 
     lastRouteRequest.current = { targetId: guideTarget.id, coordinate };
     const sequence = ++routeSequence.current;
@@ -186,7 +234,9 @@ export function LiveMapScreen() {
       setWalkingRoute(null);
       setRouteState('error');
     });
-  }, [coordinate, guideTarget, routeRetry]);
+  // walkingRoute and accuracyM are read, not watched: a new route must not ask for another.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [coordinate, guideTarget?.id, routeRetry]);
 
   /** Quests belong to the nearby cultural area, not an exact monument pin. */
   const questAreaSiteId = near && near.distanceM <= 5_000 ? near.site.id : null;
@@ -342,27 +392,33 @@ export function LiveMapScreen() {
    * perfectly good screen with no camera anywhere on it. Witnessing appeared to
    * do nothing because it went somewhere else.
    *
-   * Only three of the twelve sites carry vantages, so the honest answer at the
-   * other nine is to say so rather than navigate into a dead end.
+   * Not every site has a vantage, so the honest answer at the others is to say so
+   * rather than navigate into a dead end.
    */
   const openSakshi = (targetId: string) => {
     setShowQuests(false);
 
     if (findVantage(targetId)) {
-      router.push({ pathname: '/(main)/sakshi/vantage', params: { vantageId: targetId } });
+      router.push({ pathname: '/visit/vantage', params: { vantageId: targetId } });
       return;
     }
 
     const vantages = vantagesForSite(targetId);
-    if (vantages.length > 0) {
-      router.push({ pathname: '/(main)/sakshi/vantage', params: { vantageId: vantages[0].id } });
+    if (vantages.length === 1) {
+      router.push({ pathname: '/visit/vantage', params: { vantageId: vantages[0].id } });
+      return;
+    }
+    // More than one viewpoint: the site page lists them with distances, so the
+    // visitor chooses rather than being sent to whichever is first in the data.
+    if (vantages.length > 1) {
+      router.push(`/(main)/tirtha/site/${targetId}`);
       return;
     }
 
     const site = findSite(targetId);
     setReward({
       title: 'No vantage here yet',
-      detail: `${site?.name ?? 'This place'} has no surveyed viewpoint to photograph from`,
+      detail: `${site?.name ?? 'This place'} has no viewpoint to photograph from yet`,
     });
   };
 
@@ -409,7 +465,12 @@ export function LiveMapScreen() {
         guideDestination={guideTarget ? { ...guideTarget.coordinate, name: guideTarget.name } : null}
         camera={camera}
         onSelectSite={(id) => router.push(`/(main)/tirtha/site/${id}`)}
+        onSelectPlace={(id) => router.push(`/(main)/tirtha/place/${id}`)}
         topInset={insets.top}
+        mode={mapMode}
+        accuracyM={demoMode ? null : accuracyM}
+        initialCenter={openingCenter}
+        onUserPan={() => setFollow(false)}
       />
 
       <View style={[styles.topBar, { paddingTop: insets.top + spacing.sm }]} pointerEvents="box-none">
@@ -420,11 +481,7 @@ export function LiveMapScreen() {
             accessibilityHint={ui('Everything else at Lumbini: the sites, the quests, then and now')}
             onPress={() => {
               pulse();
-              if (router.canGoBack()) {
-                router.back();
-              } else {
-                router.replace('/(main)/tirtha');
-              }
+              goBack();
             }}
             style={({ pressed }) => [styles.homeButton, pressed && styles.buttonPressed]}
           >
@@ -442,6 +499,18 @@ export function LiveMapScreen() {
         </View>
 
         <View style={styles.topRight} pointerEvents="box-none">
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={ui('Map type')}
+            onPress={() => {
+              pulse();
+              setShowModes(true);
+            }}
+            style={({ pressed }) => [styles.iconPill, pressed && styles.buttonPressed]}
+          >
+            <Icon name="layers-outline" size={24} color={colors.primary} />
+          </Pressable>
+
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={ui('Go to a place')}
@@ -549,8 +618,32 @@ export function LiveMapScreen() {
       </View>
 
       <View style={styles.dock} pointerEvents="box-none">
+        {ambiguous.length > 1 && !guideTarget ? (
+          <View style={styles.guideCard}>
+            <Text variant="heading">Which monument are you at?</Text>
+            <Text variant="caption" tone="secondary">
+              Your location is not precise enough to tell these apart.
+            </Text>
+            {ambiguous.slice(0, 3).map((id) => (
+              <Button
+                key={id}
+                label={findSite(id)?.name ?? id}
+                variant="secondary"
+                onPress={() => router.push(`/(main)/tirtha/site/${id}`)}
+              />
+            ))}
+          </View>
+        ) : null}
         {guideTarget ? <View style={styles.guideCard}>
-          <Text variant="heading">{guideTarget.name}</Text>
+          <Text variant="heading" translate={false}>{guideTarget.name}</Text>
+          {routeState === 'ready' && upcoming ? (
+            <View style={styles.maneuver}>
+              <Icon name="navigation-variant-outline" size={22} color={colors.navigationRoute} />
+              <Text variant="bodyStrong" translate={false} style={styles.maneuverText}>
+                {upcoming.instruction}
+              </Text>
+            </View>
+          ) : null}
           {routeState === 'loading' ? <Text variant="caption" tone="secondary">{walkingRoute ? 'Updating walking route…' : 'Finding walking route…'}</Text> : null}
           {routeState === 'ready' && walkingRoute ? <Text variant="caption" tone="secondary">{formatDistance(walkingRoute.distanceM)} · {Math.max(1, Math.round(walkingRoute.durationSeconds / 60))} min walk · updates as you move</Text> : null}
           {routeState === 'error' ? <>
@@ -659,12 +752,45 @@ export function LiveMapScreen() {
         onWitness={openSakshi}
       />
 
+      <BottomSheet visible={showModes} onClose={() => setShowModes(false)} title="Map type">
+        {MAP_MODES.filter((option) => option.needsKey ? imagery != null : true).map((option) => {
+          const locked = option.pro && !canUse('satellite-map');
+          return (
+            <Pressable
+              key={option.mode}
+              accessibilityRole="radio"
+              accessibilityState={{ selected: mapMode === option.mode, disabled: locked }}
+              onPress={() => {
+                if (locked) {
+                  setShowModes(false);
+                  router.push('/(main)/settings/plans');
+                  return;
+                }
+                setMapMode(option.mode);
+                setShowModes(false);
+              }}
+              style={({ pressed }) => [styles.modeRow, mapMode === option.mode && styles.modeRowSelected, pressed && styles.buttonPressed]}
+            >
+              <Icon name={option.icon} size={24} color={mapMode === option.mode ? colors.primary : colors.textSecondary} />
+              <View style={styles.modeCopy}>
+                <Text variant="bodyStrong">{option.label}</Text>
+                <Text variant="caption" tone="secondary">{locked ? 'Pro' : option.hint}</Text>
+              </View>
+            </Pressable>
+          );
+        })}
+      </BottomSheet>
+
       <PlacePicker
         visible={showPlaces}
         onClose={() => setShowPlaces(false)}
         coordinate={coordinate}
         atSiteId={atSiteId}
         canTravel={demo.active}
+        onSelectPlace={(placeId) => {
+          setShowPlaces(false);
+          router.push(`/(main)/tirtha/place/${placeId}`);
+        }}
         onSelect={goToSite}
       />
 
@@ -716,6 +842,11 @@ export function LiveMapScreen() {
 }
 
 const styles = StyleSheet.create({
+  maneuver: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  maneuverText: { flex: 1 },
+  modeRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, minHeight: 60, paddingHorizontal: spacing.sm, borderRadius: radii.md },
+  modeRowSelected: { backgroundColor: colors.surfaceSelected },
+  modeCopy: { flex: 1 },
   guideCard: { margin: spacing.md, padding: spacing.md, gap: spacing.xs, borderRadius: radii.lg, backgroundColor: colors.surface, borderColor: colors.navigationRoute, borderWidth: 1 },
   root: { flex: 1, backgroundColor: colors.background },
   topBar: {

@@ -3,7 +3,8 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import { Button, Divider, Screen, Text } from '@/components/ui';
-import { EmptyState, LoadingState } from '@/components/common';
+import { BackBar, EmptyState, LoadingState } from '@/components/common';
+import { useOpenInTabs, useSafeBack } from '@/hooks';
 import { Timeline, type TimelineEntry } from '@/components/timeline';
 import { demoSites, findSite, findSource, historicalImagesForSite, vantagesForSite } from '@/data';
 import { database } from '@/services';
@@ -32,6 +33,8 @@ import { buildRegister, REGISTER_LABELS, REGISTER_MEANINGS, type RegisterEntry }
  */
 export function SiteHistoryScreen({ siteId }: { siteId: string }) {
   const router = useRouter();
+  const goBack = useSafeBack();
+  const openInTabs = useOpenInTabs();
   const [entry, setEntry] = useState<RegisterEntry | null>(null);
   const [reports, setReports] = useState<ConditionReport[]>([]);
   const [loading, setLoading] = useState(true);
@@ -77,7 +80,7 @@ export function SiteHistoryScreen({ siteId }: { siteId: string }) {
           title="No such site"
           body="This site is not in the catalogue."
           actionLabel="Back to the register"
-          onAction={() => router.back()}
+          onAction={goBack}
         />
       </Screen>
     );
@@ -88,6 +91,7 @@ export function SiteHistoryScreen({ siteId }: { siteId: string }) {
 
   return (
     <Screen scroll>
+      <BackBar />
       <View style={styles.head}>
         <Text variant="label" tone="muted" uppercase>
           Chaityāvalī
@@ -140,7 +144,7 @@ export function SiteHistoryScreen({ siteId }: { siteId: string }) {
                     variant="secondary"
                     onPress={() =>
                       router.push({
-                        pathname: '/(main)/sakshi/observation',
+                        pathname: '/visit/observation',
                         params: { observationId: observations[0].id },
                       })
                     }
@@ -159,7 +163,7 @@ export function SiteHistoryScreen({ siteId }: { siteId: string }) {
           label="Open site in Tīrtha"
           variant="quiet"
           onPress={() =>
-            router.push({
+            openInTabs({
               pathname: '/(main)/tirtha/site/[siteId]',
               params: { siteId: site.id },
             })

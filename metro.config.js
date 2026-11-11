@@ -24,6 +24,8 @@ config.watchman = {
 };
 
 config.resolver.blockList = [
+  // Env files hold deploy keys. Expo reads them through dotenv, so the bundler never needs them.
+  /[\\/]\.env(rc|\..*)?$/,
   /.*\.playwright-.*/,
   /node_modules\/\.playwright-.*/,
 ];

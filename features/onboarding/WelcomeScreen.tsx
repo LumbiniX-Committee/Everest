@@ -1,10 +1,12 @@
+import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import { Button, Text } from '@/components/ui';
 import { GreetingMonk } from '@/components/monk';
-import { APP_EPIGRAPH, APP_NAME, APP_SUBTITLE } from '@/constants';
-import { spacing } from '@/theme';
+import { APP_NAME, APP_SUBTITLE } from '@/constants';
+import { usePreferences } from '@/store';
+import { colors, prayerFlags, radii, spacing } from '@/theme';
 
 import { OnboardingFrame } from './OnboardingFrame';
 import { nextRoute } from './steps';
@@ -28,6 +30,15 @@ import { nextRoute } from './steps';
 export function WelcomeScreen() {
   const router = useRouter();
   const next = nextRoute('welcome');
+  const { preferences, update } = usePreferences();
+
+  // Start in the phone's own language when we have it. The choice stays one tap away.
+  useEffect(() => {
+    const locale = Intl.DateTimeFormat().resolvedOptions().locale ?? '';
+    if (locale.toLowerCase().startsWith('ne')) void update('interfaceLanguage', 'ne');
+    // Runs once, on arrival: it must not undo a choice made here.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <OnboardingFrame
@@ -43,7 +54,10 @@ export function WelcomeScreen() {
       }
     >
       <View style={styles.body}>
-        <GreetingMonk height={240} />
+        <View style={styles.greeting}>
+          <View style={styles.sun} />
+          <GreetingMonk height={240} />
+        </View>
 
         <View style={styles.wordmark}>
           <Text variant="display" center>
@@ -52,11 +66,26 @@ export function WelcomeScreen() {
           <Text variant="body" tone="secondary" center>
             {APP_SUBTITLE}
           </Text>
+          {/* A prayer flag in miniature. Decorative, so hidden from assistive tech. */}
+          <View style={styles.flags} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+            {prayerFlags.map((flag) => (
+              <View key={flag} style={[styles.flag, { backgroundColor: flag }]} />
+            ))}
+          </View>
         </View>
 
-        <Text variant="mono" tone="muted" center style={styles.epigraph}>
-          {APP_EPIGRAPH}
-        </Text>
+        <View style={styles.languages} accessibilityRole="radiogroup">
+          <Button
+            label="English"
+            variant={preferences.interfaceLanguage === 'en' ? 'primary' : 'secondary'}
+            onPress={() => void update('interfaceLanguage', 'en')}
+          />
+          <Button
+            label="नेपाली"
+            variant={preferences.interfaceLanguage === 'ne' ? 'primary' : 'secondary'}
+            onPress={() => void update('interfaceLanguage', 'ne')}
+          />
+        </View>
       </View>
     </OnboardingFrame>
   );
@@ -66,6 +95,25 @@ const styles = StyleSheet.create({
   // Tighter under the figure than between the text blocks: the monk and the
   // wordmark are one greeting, not two things stacked.
   body: { alignItems: 'center', gap: spacing.xl },
+  greeting: { alignItems: 'center', justifyContent: 'center' },
+  // The rising sun from the mark, soft enough that the monk's robe stays distinct.
+  sun: {
+    position: 'absolute',
+    width: 224,
+    height: 224,
+    borderRadius: radii.full,
+    backgroundColor: colors.accentSoft,
+  },
   wordmark: { alignItems: 'center', gap: spacing.sm },
-  epigraph: { letterSpacing: 1 },
+  // The hairline keeps the flag's white panel visible on the morning ground.
+  flags: {
+    flexDirection: 'row',
+    marginTop: spacing.xs,
+    borderRadius: radii.full,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.border,
+    overflow: 'hidden',
+  },
+  flag: { width: 20, height: 4 },
+  languages: { flexDirection: 'row', gap: spacing.sm },
 });

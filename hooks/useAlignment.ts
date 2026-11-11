@@ -1,11 +1,14 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import { alignmentScore } from '@/core/alignment/score';
+import { LOCK_HOLD_MS, LOCK_RELEASE_MS } from '@/core';
+import { alignmentScore, TOLERANCE_FACTORS } from '@/core/alignment/score';
+import { location as locationService } from '@/services';
+import { usePreferences } from '@/store';
 import { bearingDelta, bearingDegrees, distanceMeters } from '@/utils';
 import type { AlignmentState, Coordinate, Vantage } from '@/types';
 
 import { useCurrentPosition } from './useCurrentPosition';
-import { useHeading, usePitch } from './useHeading';
+import { useHeadingReading, usePitch } from './useHeading';
 
 /**
  * The alignment computation: how far is the observer from standing where the
@@ -34,6 +37,8 @@ export type AlignmentTelemetry = AlignmentState & {
   heading: number | null;
   /** The same device attitude used to calculate pitch error. */
   pitch: number | null;
+  /** True when the position is the demo walk's rather than this phone's. */
+  isDemo: boolean;
 };
 
 export function useAlignment({
@@ -41,11 +46,13 @@ export function useAlignment({
   active = true,
   nudgeDeg = 0,
 }: AlignmentInput): AlignmentTelemetry {
-  const { coordinate, accuracyM } = useCurrentPosition({ watch: active, highAccuracy: true });
-  const heading = useHeading(active, nudgeDeg);
+  const { coordinate, accuracyM } = useCurrentPosition({ watch: active, highAccuracy: true, smooth: true });
+  const { heading, quality: headingQuality } = useHeadingReading(active, nudgeDeg);
   const pitch = usePitch(active);
+  const { preferences } = usePreferences();
+  const toleranceFactor = TOLERANCE_FACTORS[preferences.alignmentTolerance];
 
-  return useMemo(
+  const live = useMemo(
     () => ({
       ...computeAlignment({
         vantage,
@@ -54,12 +61,30 @@ export function useAlignment({
         heading,
         pitch,
         active,
+        toleranceFactor,
+        headingQuality,
       }),
       coordinate,
       heading,
       pitch,
+      isDemo: locationService.isDemoMode(),
     }),
-    [vantage, coordinate, accuracyM, heading, pitch, active],
+    [vantage, coordinate, accuracyM, heading, pitch, active, toleranceFactor, headingQuality],
+  );
+
+  // A lock must hold before it counts, and survives a brief wobble. Without this
+  // one lucky reading could mark a photograph as aligned.
+  const canLock = live.phase === 'locked';
+  const [held, setHeld] = useState(false);
+  useEffect(() => {
+    if (canLock === held) return;
+    const timer = setTimeout(() => setHeld(canLock), canLock ? LOCK_HOLD_MS : LOCK_RELEASE_MS);
+    return () => clearTimeout(timer);
+  }, [canLock, held]);
+
+  return useMemo(
+    () => ({ ...live, phase: live.phase === 'locked' && !held ? 'seeking' : held && live.phase === 'seeking' ? 'locked' : live.phase }),
+    [live, held],
   );
 }
 
@@ -74,8 +99,10 @@ export function computeAlignment(input: {
   heading: number | null;
   pitch: number | null;
   active?: boolean;
+  toleranceFactor?: number;
+  headingQuality?: 'good' | 'fair' | 'poor' | null;
 }): AlignmentState {
-  const { vantage, coordinate, gpsAccuracyM, heading, pitch, active = true } = input;
+  const { vantage, coordinate, gpsAccuracyM, heading, pitch, active = true, toleranceFactor = 1, headingQuality = null } = input;
 
   if (!active || !vantage) {
     return {
@@ -116,13 +143,18 @@ export function computeAlignment(input: {
     distanceM,
     headingDeltaDeg: bearingDeltaDeg,
     pitchDeltaDeg,
-    tolPosM: vantage.positionToleranceM,
-    tolHeadingDeg: vantage.bearingToleranceDeg,
+    tolPosM: vantage.positionToleranceM * toleranceFactor,
+    tolHeadingDeg: vantage.bearingToleranceDeg * toleranceFactor,
     gpsAccuracyM,
   });
 
+  // A compass that reports itself unreliable cannot vouch for a bearing.
+  const compassUnreliable = headingQuality === 'poor';
   return {
-    phase: score.canLock ? 'locked' : 'seeking',
+    phase: score.canLock && !compassUnreliable ? 'locked' : 'seeking',
+    blockedBy: compassUnreliable && score.blockedBy !== 'gps' ? 'heading' : score.blockedBy,
+    tolPosM: vantage.positionToleranceM * toleranceFactor,
+    headingQuality,
     progress: score.align,
     alignScore: score.align,
     gpsAccuracyM,

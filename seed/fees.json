@@ -1,0 +1,131 @@
+{
+  "source": {
+    "name": "Nepal Tourism Board, heritage site entry fees",
+    "url": "https://ntb.gov.np/plan-your-trip/before-you-come/heritage-site-entry-fees",
+    "note": "Facts recorded from the official page, which names the site authorities as its source. Fees change: always show the last checked date, and confirm at the gate."
+  },
+  "lastChecked": "2026-11-07",
+  "currency": "NPR",
+  "fees": [
+    {
+      "id": "lumbini-sacred-garden",
+      "label": "Lumbini (Sacred Garden)",
+      "siteIds": [
+        "maya-devi-temple",
+        "ashokan-pillar",
+        "puskarini",
+        "marker-stone",
+        "vihara-remains"
+      ],
+      "foreign": 700,
+      "saarc": 400,
+      "chinese": 700,
+      "nepali": 20
+    },
+    {
+      "id": "kathmandu-durbar-square",
+      "label": "Kathmandu Durbar Square",
+      "siteIds": [
+        "kathmandu-durbar-square"
+      ],
+      "foreign": 1000,
+      "saarc": 500,
+      "chinese": 1000,
+      "nepali": 0,
+      "note": "Includes the Tribhuvan Museum. The SAARC rate applies to BIMSTEC nationals."
+    },
+    {
+      "id": "patan-durbar-square",
+      "label": "Patan Durbar Square",
+      "siteIds": [
+        "patan-durbar-square"
+      ],
+      "foreign": 1000,
+      "saarc": 500,
+      "chinese": 500,
+      "nepali": 30,
+      "note": "Includes the Patan Museum. The SAARC rate applies to BIMSTEC nationals. Nepali students pay less with a student card."
+    },
+    {
+      "id": "changu-narayan",
+      "label": "Changu Narayan Temple",
+      "siteIds": [
+        "changu-narayan"
+      ],
+      "foreign": 300,
+      "saarc": 100,
+      "chinese": 300,
+      "nepali": 0
+    },
+    {
+      "id": "bhaktapur-durbar-square",
+      "label": "Bhaktapur Durbar Square",
+      "matchPlaceNames": [
+        "^Bhaktapur Durbar Square$"
+      ],
+      "foreign": 1800,
+      "saarc": 500,
+      "chinese": 500,
+      "nepali": 0,
+      "note": "Also payable as USD 18."
+    },
+    {
+      "id": "swayambhu",
+      "label": "Swayambhu",
+      "matchPlaceNames": [
+        "^Swayambhu(nath)?( Stupa| Mahachaitya)?$"
+      ],
+      "foreign": 200,
+      "saarc": 50,
+      "chinese": 200,
+      "nepali": 0
+    },
+    {
+      "id": "boudha",
+      "label": "Boudha Stupa",
+      "matchPlaceNames": [
+        "^Bou?d?dhan[aā]th( Stupa)?$",
+        "^Boudha( Stupa)?$"
+      ],
+      "foreign": 400,
+      "saarc": 100,
+      "chinese": 400,
+      "nepali": 0
+    },
+    {
+      "id": "pashupatinath",
+      "label": "Pashupatinath Temple",
+      "matchPlaceNames": [
+        "^Pashupatinath( Temple)?$"
+      ],
+      "foreign": 1000,
+      "saarc": 1000,
+      "chinese": 1000,
+      "nepali": 0,
+      "note": "Per day, per entry. Free for Indian nationals."
+    },
+    {
+      "id": "garden-of-dreams",
+      "label": "Garden of Dreams",
+      "matchPlaceNames": [
+        "^Garden of Dreams$"
+      ],
+      "foreign": 400,
+      "saarc": 400,
+      "chinese": 400,
+      "nepali": 150
+    },
+    {
+      "id": "chitwan-national-park",
+      "label": "Chitwan National Park",
+      "matchPlaceNames": [
+        "^Chitwan National Park$"
+      ],
+      "foreign": 2000,
+      "saarc": 1000,
+      "chinese": 2000,
+      "nepali": 150,
+      "note": "Per day, per entry, plus 13% VAT."
+    }
+  ]
+}

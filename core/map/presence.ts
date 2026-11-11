@@ -43,6 +43,22 @@ export const MIN_EXIT_MARGIN_M = 10;
  */
 export const MAX_DECISIVE_ACCURACY_M = 50;
 
+/** The loosest fix that may mark arrival at even the smallest site. */
+export const MIN_ARRIVAL_ACCURACY_M = 20;
+
+/**
+ * Sites the fix can't tell apart: every site within reach of the uncertainty
+ * circle, when more than one is. Asking "which one?" is more honest than a guess.
+ */
+export function ambiguousCandidates(candidates: readonly PresenceCandidate[], accuracyM: number | null): string[] {
+  if (accuracyM === null) return [];
+  const near = candidates
+    .filter((c) => c.distanceM <= c.reachM + accuracyM)
+    .sort((a, b) => a.distanceM - b.distanceM);
+  if (near.length < 2) return [];
+  return near.filter((c) => c.distanceM - near[0].distanceM < accuracyM).map((c) => c.id);
+}
+
 export interface PresenceCandidate {
   id: string;
   /** Distance from the fix to the site, metres. */
@@ -73,7 +89,10 @@ export function resolvePresence(
   let current: PresenceCandidate | null = null;
   for (const c of candidates) {
     if (c.id === previousId) current = c;
-    if (c.distanceM <= c.reachM && (!entered || c.distanceM < entered.distanceM)) entered = c;
+    // A fix much looser than the site itself can't say you reached it: a ±45 m
+    // circle around a 14 m monument covers its neighbours too.
+    const fineEnough = accuracyM === null || accuracyM <= Math.max(MIN_ARRIVAL_ACCURACY_M, c.reachM * 1.5);
+    if (fineEnough && c.distanceM <= c.reachM && (!entered || c.distanceM < entered.distanceM)) entered = c;
   }
 
   // A neighbour you have walked into, and are closer to, wins outright.

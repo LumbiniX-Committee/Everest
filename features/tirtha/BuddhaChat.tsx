@@ -205,7 +205,7 @@ export function BuddhaChat({ visible, onClose, siteId, siteName }: BuddhaChatPro
                   pressed && s.pressed,
                 ]}
               >
-                <Icon name="send" size={isTypingActive ? 16 : 18} color={colors.backgroundDeep} />
+                <Icon name="send" size={isTypingActive ? 16 : 18} color={colors.onPrimary} />
               </Pressable>
             </View>
           </View>

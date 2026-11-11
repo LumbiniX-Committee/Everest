@@ -3,7 +3,8 @@ import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import { Button, Chip, Divider, Screen, Text } from '@/components/ui';
-import { EmptyState } from '@/components/common';
+import { BackBar, EmptyState } from '@/components/common';
+import { useSafeBack } from '@/hooks';
 import { SourceCard } from '@/components/source';
 import { ThenNowCompare } from '@/components/thennow';
 import { findSite, findSource, historicalImagesForSite, nowImageForSite, vantagesForSite } from '@/data';
@@ -23,6 +24,7 @@ import { spacing } from '@/theme';
  */
 export function ThenNowScreen({ siteId }: { siteId: string }) {
   const router = useRouter();
+  const goBack = useSafeBack();
   const site = findSite(siteId);
   const images = historicalImagesForSite(siteId);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -36,7 +38,7 @@ export function ThenNowScreen({ siteId }: { siteId: string }) {
           // Just "Back": this screen is now reached from Sākṣī as well as
           // Tīrtha, and naming the wrong surface is worse than naming none.
           actionLabel="Back"
-          onAction={() => router.back()}
+          onAction={goBack}
         />
       </Screen>
     );
@@ -50,7 +52,7 @@ export function ThenNowScreen({ siteId }: { siteId: string }) {
           title="No historical record yet"
           body={`Nothing in the archive has been matched to ${site.name}. When an image is found and its viewpoint confirmed, the comparison will appear here.`}
           actionLabel="Back to the site"
-          onAction={() => router.back()}
+          onAction={goBack}
         />
       </Screen>
     );
@@ -141,7 +143,7 @@ export function ThenNowScreen({ siteId }: { siteId: string }) {
               label="Witness this site"
               onPress={() =>
                 router.push({
-                  pathname: '/(main)/sakshi/vantage',
+                  pathname: '/visit/vantage',
                   params: { vantageId: vantage.id },
                 })
               }
@@ -156,6 +158,7 @@ export function ThenNowScreen({ siteId }: { siteId: string }) {
 function Header({ name }: { name: string }) {
   return (
     <View style={styles.head}>
+      <BackBar />
       <Text variant="label" tone="muted" uppercase>
         Then / Now
       </Text>

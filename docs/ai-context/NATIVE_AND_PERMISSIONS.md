@@ -22,16 +22,16 @@ Native projects are generated at build time (`expo prebuild` / EAS Build). **Nev
 | Setting | Value |
 |---|---|
 | Display name | `Sākṣī` |
-| Slug | `sakshi` |
+| Slug | `saksi` |
 | Owner | `siddantasodari` |
-| Scheme (deep links) | `sakshi` |
-| Version / runtimeVersion | `0.1.0` / `0.1.0` |
-| iOS bundle identifier | `org.lumbinix.sakshi` |
-| Android package | `org.lumbinix.sakshi` |
+| Scheme (deep links) | `saksi` |
+| Version / runtimeVersion | `1.0.0` / `1.0.0` |
+| iOS bundle identifier | `com.saksinepal.saksi` |
+| Android package | `com.saksinepal.saksi` |
 | Orientation | `portrait` |
 | UI style | `automatic` — selected from the persisted navy/white theme at boot |
-| EAS project id | `e8454679-10b7-42cc-8961-95a421426705` |
-| Updates URL | `https://u.expo.dev/e8454679-10b7-42cc-8961-95a421426705` |
+| EAS project id | `56cf1d5c-20d3-4379-83b9-bc40d194f5a2` |
+| Updates URL | `https://u.expo.dev/56cf1d5c-20d3-4379-83b9-bc40d194f5a2` |
 
 Android-specific: `predictiveBackGestureEnabled: false`. iOS: `supportsTablet: true`.
 
@@ -46,15 +46,16 @@ that configuration change; Expo web/development bundles pick it up directly.
 
 ## 3. Declared Android permissions
 
-From `app.json` → `expo.android.permissions` — **only three**:
+From `app.json` → `expo.android.permissions`:
 
 ```json
 "android.permission.ACCESS_COARSE_LOCATION",
 "android.permission.ACCESS_FINE_LOCATION",
-"android.permission.CAMERA"
+"android.permission.CAMERA",
+"android.permission.MODIFY_AUDIO_SETTINGS"
 ```
 
-> Config plugins add further permissions to the generated manifest (e.g. `expo-notifications`, `expo-audio`). The final merged manifest is only visible after `expo prebuild`. **Needs verification** against a generated build if the exact manifest matters.
+`expo.android.blockedPermissions` strips what config plugins would otherwise add but the app never uses, because each one draws a Play Console declaration: `RECORD_AUDIO` (speech input was removed), `FOREGROUND_SERVICE` and `FOREGROUND_SERVICE_MEDIA_PLAYBACK` (narration does not play in the background), `ACCESS_BACKGROUND_LOCATION`, and `SYSTEM_ALERT_WINDOW`. Notifications still add `POST_NOTIFICATIONS`. If a feature later needs one of these, remove it from the block list and file the Play declaration.
 
 **Notably absent:** no background-location permission (`ACCESS_BACKGROUND_LOCATION`). Geofencing via `expo-task-manager` + `expo-location` is therefore foreground-scoped. Whether the arrival feature needs background location to work as intended is **Needs verification**.
 
@@ -157,7 +158,7 @@ From `app.json` → `expo.plugins`, in order:
 | `expo-router` | File-based routing, deep-link wiring |
 | `expo-font` | Font loading |
 | `expo-sqlite` | SQLite native module |
-| `expo-splash-screen` | Splash: `./assets/splash-icon.png`, width 180, `contain`, bg `#F5F3EE` |
+| `expo-splash-screen` | Splash: `./assets/splash-icon.png`, width 180, `contain`, bg `#F5F8F3`, dusk variant on `#0B2024` |
 | `expo-location` | Location modules + usage description |
 | `expo-notifications` | Notification icon `./assets/android-icon-monochrome.png`, colour `#8E7657` |
 | `expo-camera` | Camera + usage description, `recordAudioAndroid: false` |
@@ -168,8 +169,9 @@ From `app.json` → `expo.plugins`, in order:
 | **`./plugins/withOnnxAutolink`** | **Custom — see below** |
 | `expo-asset` | Asset bundling |
 | `llama.rn` | On-device LLM native module |
+| `expo-build-properties` | Ships only `arm64-v8a` and `armeabi-v7a`, and compresses native libraries, to cut the APK size. x86 builds are for emulators; add those architectures back locally if you need one. |
 
-Adaptive icon: background `#F3E4CB`, foreground/background/monochrome PNGs in `assets/`.
+Adaptive icon: background `#0E6E62`, foreground/background/monochrome PNGs in `assets/`.
 
 ---
 

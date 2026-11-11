@@ -1,5 +1,7 @@
 # Sākṣī — AI Context Knowledge Base
 
+> Start with [../APP_GUIDE.md](../APP_GUIDE.md) for the current product, and [../WORK_LOG.md](../WORK_LOG.md) for what changed since this knowledge base was audited.
+
 > **Current-state override (10 September 2026):** this knowledge base is an
 > architectural snapshot of commit `dbe6d45e`, not a current feature inventory.
 > Read [the production-pilot guide](../PRODUCTION-PILOT.md) first for the secure
@@ -59,7 +61,7 @@ Every substantive claim cites a file path and symbol name. Uncertain findings ar
 |---|---|
 | [REPOSITORY_MAP.md](REPOSITORY_MAP.md) | Where does X live? What is this directory for? |
 | [FEATURES.md](FEATURES.md) | What actually works? 21 features with honest status |
-| [SCREENS_AND_NAVIGATION.md](SCREENS_AND_NAVIGATION.md) | All 33 routes, navigation model, provider order |
+| [SCREENS_AND_NAVIGATION.md](SCREENS_AND_NAVIGATION.md) | All routes, navigation model, provider order |
 | [COMPONENTS.md](COMPONENTS.md) | The 12 design-system primitives + feature components |
 | [STATE_AND_DATA_FLOW.md](STATE_AND_DATA_FLOW.md) | The 6 stores, persistence, storage keys |
 | [BACKEND_AND_API.md](BACKEND_AND_API.md) | Supabase schema, RLS, auth, sync |
@@ -128,7 +130,7 @@ Read the actual source — do not rely on these documents alone — when:
 | `npm run vocab` | ✅ Clean |
 | `npm run eval:dhamma` | ✅ **50/50**, 0 ungrounded citations |
 | `npm run verify` | ✅ Pass |
-| `npm run lint` | ❌ **16 errors** — all in `components/monk/SpeechCloud.tsx` |
+| `npm run lint` | ✅ clean (default folders only); `npm run lint:all` ❌ 70 known errors |
 | `npx expo start --web` | ✅ Bundles and serves |
 
 > **`npm run verify` does not include `lint`**, and does not type-check `core/` or `shared/`. A green `verify` is not "everything is clean."

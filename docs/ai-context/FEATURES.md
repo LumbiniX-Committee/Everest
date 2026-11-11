@@ -36,9 +36,9 @@ Validation: `node tools/check-quest-experiences.cjs` covers area grouping/range,
 | # | Feature | Status | Entry route | Data source |
 |---|---|---|---|---|
 | 1 | Onboarding | **Fully implemented** | `/onboarding` | Local |
-| 2 | Fixed-viewpoint capture | **Fully implemented** | `/(main)/sakshi/capture` | SQLite + files |
+| 2 | Fixed-viewpoint capture | **Fully implemented** | `/visit/capture` | SQLite + files |
 | 3 | Alignment gate | **Fully implemented** | within capture | Sensors + `core/alignment` |
-| 4 | Condition reporting | **Fully implemented** | `/(main)/sakshi/observation` | SQLite |
+| 4 | Condition reporting | **Fully implemented** | `/visit/observation` | SQLite |
 | 5 | On-device damage detection | **Fully implemented** | within capture/observation | ONNX + `core/vision` |
 | 6 | Map exploration | **Fully implemented** (needs dev build) | `/(main)/tirtha/map` | `@/data` + MapLibre |
 | 7 | Site detail + narration | **Fully implemented** (bundled content) | `/(main)/tirtha/site/[siteId]` | `@/data` + `.opus` |
@@ -63,7 +63,7 @@ Validation: `node tools/check-quest-experiences.cjs` covers area grouping/range,
 
 **Purpose:** First-run introduction, ending with permission priming.
 
-**Flow:** `/onboarding` redirects to `onboardingSteps[0]`, then welcome → purpose → how-it-works → align → permissions → `completeOnboarding()` → `/(main)/tirtha/map`.
+**Flow:** `/onboarding` redirects to `onboardingSteps[0]`, then welcome (language) → visitor (self-declared visitor type) → discover → start (home hub) → plan (Free or Pro, with code redemption). Skippable from step 3. Ends on Tīrtha Home, which shows a dismissible "Start here" guide. Permissions are asked in context, not here. Replay it from Settings → Your trip.
 
 The sequence is **data-driven** from [features/onboarding/steps.ts](../../features/onboarding/steps.ts) (`onboardingSteps`, `nextRoute()`, `TOTAL_STEPS`) — declared as data "so the flow can be reordered or extended in one place and the progress indicator stays honest."
 
@@ -79,7 +79,7 @@ The sequence is **data-driven** from [features/onboarding/steps.ts](../../featur
 
 **The app's core loop.** Verified wired end to end.
 
-**Entry:** `/(main)/sakshi` → vantage list → `/(main)/sakshi/vantage?vantageId=…` → `/(main)/sakshi/capture?vantageId=…`
+**Entry:** `/(main)/sakshi` → vantage list → `/visit/vantage?vantageId=…` → `/visit/capture?vantageId=…`
 
 **Traced path** in [features/sakshi/CaptureScreen.tsx](../../features/sakshi/CaptureScreen.tsx):
 
@@ -124,7 +124,7 @@ Tolerance is user-configurable (`alignmentTolerance`). A user may capture out of
 
 ## 4. Condition reporting — Fully implemented
 
-**Entry:** `/(main)/sakshi/observation?observationId=…`
+**Entry:** `/visit/observation?observationId=…`
 
 Files: [features/sakshi/ObservationScreen.tsx](../../features/sakshi/ObservationScreen.tsx), [components/observation/ConditionSheet.tsx](../../components/observation/ConditionSheet.tsx), [PathologySummaryCard.tsx](../../components/observation/PathologySummaryCard.tsx). Types in [types/condition.ts](../../types/condition.ts). Persists to `condition_reports` (local + remote, FK cascade from `observations`).
 
@@ -345,6 +345,24 @@ Simulates a pilgrim's walk: south gate → pond → temple → clockwise circuit
 ⚠️ Its ids come from `data/generated/sites.ts`. See the dead-code trap in [REPOSITORY_MAP.md](REPOSITORY_MAP.md) §7.
 
 ---
+
+## 20a. Trekking routes — Fully implemented (needs field checks)
+
+Three treks: Ghorepani–Poon Hill, Langtang Valley, Everest Base Camp. Entry: the "Trekking routes" card on Tīrtha Home.
+
+- **Data:** words in `seed/treks.json`; `npm run data:treks` (`tools/data/build-treks.mjs`) snaps stops to OSM, routes each day over OSM trails with Valhalla, reads altitudes from Open-Meteo's DEM (Copernicus 90 m), and writes `data/generated/treks.ts`. Responses cache in `harvest/treks-cache/` (gitignored). A leg the router cannot find leaves the day's distance `null`.
+- **Detail:** totals, a whole-route altitude profile, each day with distance, up, down, estimated hours, the bed's altitude and a warning when you sleep more than 500 m higher above 3,000 m; seasons, access, permits (agency-published fees, dated), the guide rule and safety.
+- **Trail map:** full screen, terrain mode, per-day line, stops tappable, your position placed along the day's trail by `trailProgress` (`core/treks/progress.ts`), with the distance and climb to the next stop measured along the trail. Off the trail (150 m plus GPS accuracy) it says so rather than snapping. Demo positions show no progress.
+- **Offline:** a trek's corridor can be saved from its page (Pro), via `services/offlineMaps`.
+- **Not done:** Nepali text for the authored passages.
+
+## 20b. Essentials — Fully implemented (open data, not checked on site)
+
+Places to stay, eat, get medical help or money, travel services, transport and police, from Overture Maps Places. Entry: the "Essentials" card on Tīrtha Home, and "Places to stay at …" on each trek day.
+
+- **Data:** `python3 tools/data/build_overture.py` (needs `pip install duckdb`) reads Overture's public parquet for Nepal, keeps confidence ≥ 0.8 and not permanently closed, caps each hub per kind, and keeps every stay, food and health place within 800 m of each trek line, tagged with its nearest stop. Writes `seed/essentials.json` and `data/generated/essentials.ts`. Cache: `harvest/overture-cache/` (gitignored).
+- **Licences:** per record (CDLA-Permissive-2.0, CC0-1.0, Apache-2.0 for Foursquare); see LICENCES.md and NOTICE. Overture places contain no OSM data.
+- **No opening hours** exist in Overture, so none are shown; each card offers Call, Directions (via the map's `guideTo`) and Website.
 
 ## 21. `features/practice/` — Unused / dead code
 

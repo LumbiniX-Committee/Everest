@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { getUnsyncedConditionReports, getUnsyncedObservations } from '@/services/database';
+import { pendingCount as countPending } from '@/services/sync';
 import { isConfigured } from '@/services/supabase';
 import { syncData, type SyncState } from '@/services/supabase/sync';
 
@@ -10,9 +10,7 @@ export function useSync() {
 
   const checkPending = useCallback(async () => {
     try {
-      const obs = await getUnsyncedObservations();
-      const reps = await getUnsyncedConditionReports();
-      const total = obs.length + reps.length;
+      const total = await countPending();
       setPendingCount(total);
 
       if (total === 0) {
@@ -37,7 +35,7 @@ export function useSync() {
 
     setSyncState('syncing');
     try {
-      await syncData();
+      await syncData({ requestedByUser: true });
       await checkPending();
     } catch (error) {
       console.warn('[useSync] Sync failed:', error);

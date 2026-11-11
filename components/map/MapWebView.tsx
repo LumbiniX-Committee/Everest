@@ -4,10 +4,12 @@ import { WebView } from 'react-native-webview';
 
 import { Text } from '@/components/ui';
 import { demoSites } from '@/data';
+import { useImagery } from '@/hooks';
+import { offlineMaps } from '@/services';
 import { colors, radii, spacing } from '@/theme';
 import type { Coordinate } from '@/types';
 
-import { buildMapHtml } from './mapHtml';
+import { buildMapHtml, type MapMode } from './mapHtml';
 import { SitePlan } from './SitePlan';
 
 export type MapWebViewProps = {
@@ -15,6 +17,8 @@ export type MapWebViewProps = {
   /** Fills its parent instead of sitting at a fixed height. */
   fill?: boolean;
   onSelectSite?: (siteId: string) => void;
+  /** A listed place was tapped. Only the full-screen map shows places. */
+  onSelectPlace?: (placeId: string) => void;
   /** Live position, pushed into the running page. */
   coordinate?: Coordinate | null;
   /**
@@ -51,7 +55,24 @@ export type MapWebViewProps = {
    * camera on every frame. Bump `nonce` to repeat the same move deliberately.
    */
   camera?: { longitude: number; latitude: number; distance: 'world' | 'close'; nonce?: number } | null;
+  /** How the map is drawn. Changing it keeps the camera and the loaded tiles. */
+  mode?: MapMode;
+  /** The fix's accuracy radius in metres, drawn as a circle around you. */
+  accuracyM?: number | null;
+  /** Where the map opens, as [longitude, latitude]. Read once. */
+  initialCenter?: readonly [number, number];
+  /** The visitor dragged the map: they want to look around, not be followed. */
+  onUserPan?: () => void;
+  /** Named stops drawn with labels, such as a trek's villages. */
+  waypoints?: readonly { id: string; name: string; latitude: number; longitude: number }[];
+  /** A waypoint was tapped. */
+  onSelectWaypoint?: (id: string) => void;
+  /** Frame the whole route whenever it changes, instead of following a position. */
+  fitRoute?: boolean;
+  /** Draw the route as a strong solid line even without a guide destination. */
+  solidRoute?: boolean;
 };
+
 
 /**
  * The map, drawn by MapLibre GL JS inside a WebView.
@@ -68,6 +89,7 @@ export function MapWebView({
   height = 320,
   fill = false,
   onSelectSite,
+  onSelectPlace,
   coordinate,
   heading,
   follow = true,
@@ -77,6 +99,14 @@ export function MapWebView({
   routeColor = colors.sandstoneDeep,
   guideDestination,
   camera,
+  mode = 'standard',
+  accuracyM = null,
+  initialCenter,
+  onUserPan,
+  waypoints,
+  onSelectWaypoint,
+  fitRoute = false,
+  solidRoute = false,
 }: MapWebViewProps) {
   const [failed, setFailed] = useState(false);
   const [ready, setReady] = useState(false);
@@ -100,10 +130,31 @@ export function MapWebView({
   //
   // Depends only on props that do not change while the screen is open, so the
   // document is built once and never rebuilt underneath a running map.
+  // The opening centre is read once: moving it later is the camera's job.
+  const [openingCenter] = useState(initialCenter);
   const html = useMemo(
-    () => buildMapHtml({ avatar: showFigure, fullscreen: fill, interactive: fill, topInset }),
-    [showFigure, fill, topInset],
+    () =>
+      buildMapHtml({
+        avatar: showFigure,
+        fullscreen: fill,
+        interactive: fill,
+        topInset,
+        center: openingCenter,
+      }),
+    [showFigure, fill, topInset, openingCenter],
   );
+
+  // Imagery is offered only to the full-screen map, where the mode switcher is.
+  const imagery = useImagery();
+  useEffect(() => {
+    if (!ready || !fill || !imagery) return;
+    webRef.current?.injectJavaScript(`window.sakshiSetImagery && window.sakshiSetImagery(${JSON.stringify(imagery)}); true;`);
+  }, [ready, fill, imagery]);
+
+  useEffect(() => {
+    if (!ready || !fill) return;
+    webRef.current?.injectJavaScript(`window.sakshiSetMapMode && window.sakshiSetMapMode(${JSON.stringify(mode)}); true;`);
+  }, [ready, fill, mode]);
 
   /**
    * Position is pushed in rather than re-rendering the document.
@@ -116,9 +167,11 @@ export function MapWebView({
     if (!ready || !coordinate) return;
     const { latitude, longitude } = coordinate;
     webRef.current?.injectJavaScript(
-      `window.sakshiSetPose && window.sakshiSetPose(${longitude}, ${latitude}, ${heading ?? 0}, ${follow}); true;`,
+      // A missing heading is sent as null, so the figure keeps its last direction
+      // instead of snapping to face north.
+      `window.sakshiSetPose && window.sakshiSetPose(${longitude}, ${latitude}, ${heading ?? 'null'}, ${follow}, ${accuracyM ?? 'null'}); true;`,
     );
-  }, [ready, coordinate, heading, follow]);
+  }, [ready, coordinate, heading, follow, accuracyM]);
 
   /**
    * The planned route, pushed in the same way and for the same reason.
@@ -134,6 +187,17 @@ export function MapWebView({
       `window.sakshiSetRoute && window.sakshiSetRoute(${routeJson}); true;`,
     );
   }, [ready, routeJson]);
+
+  const waypointsJson = useMemo(() => JSON.stringify(waypoints ?? []), [waypoints]);
+  useEffect(() => {
+    if (!ready) return;
+    webRef.current?.injectJavaScript(`window.sakshiSetWaypoints && window.sakshiSetWaypoints(${waypointsJson}); true;`);
+  }, [ready, waypointsJson]);
+
+  useEffect(() => {
+    if (!ready || !fitRoute) return;
+    webRef.current?.injectJavaScript(`window.sakshiFitLine && window.sakshiFitLine(${routeJson}); true;`);
+  }, [ready, fitRoute, routeJson]);
 
   useEffect(() => {
     if (!ready) return;
@@ -153,8 +217,8 @@ export function MapWebView({
   const guideJson = JSON.stringify(guideDestination ?? null);
   useEffect(() => {
     if (!ready) return;
-    webRef.current?.injectJavaScript(`window.sakshiSetGuide && window.sakshiSetGuide(${guideJson}); window.sakshiSetRouteMode && window.sakshiSetRouteMode(${guideJson !== 'null'}); true;`);
-  }, [ready, guideJson]);
+    webRef.current?.injectJavaScript(`window.sakshiSetGuide && window.sakshiSetGuide(${guideJson}); window.sakshiSetRouteMode && window.sakshiSetRouteMode(${solidRoute || guideJson !== 'null'}); true;`);
+  }, [ready, guideJson, solidRoute]);
   useEffect(() => {
     if (!ready || !cameraJson) return;
     const target = JSON.parse(cameraJson) as NonNullable<MapWebViewProps['camera']>;
@@ -207,13 +271,25 @@ export function MapWebView({
         javaScriptEnabled
         domStorageEnabled
         onError={() => setFailed(true)}
-        onHttpError={() => setFailed(true)}
         onMessage={(event) => {
           try {
             const msg = JSON.parse(event.nativeEvent.data);
             if (msg.type === 'ready') setReady(true);
             if (msg.type === 'site' && typeof msg.id === 'string') onSelectSite?.(msg.id);
-            if (msg.type === 'error') setFailed(true);
+            if (msg.type === 'place' && typeof msg.id === 'string') onSelectPlace?.(msg.id);
+            if (msg.type === 'waypoint' && typeof msg.id === 'string') onSelectWaypoint?.(msg.id);
+            if (msg.type === 'tile-request' && typeof msg.id === 'number' && typeof msg.key === 'string') {
+              const requestId = msg.id;
+              void offlineMaps.readTile(msg.key).then((data) => {
+                webRef.current?.injectJavaScript(
+                  `window.sakshiTileReply && window.sakshiTileReply(${requestId}, ${data ? JSON.stringify(data) : 'null'}); true;`,
+                );
+              });
+            }
+            // Only a failure before the map loaded. A missing tile later posts
+            // 'tile-error', which is not a reason to give up the whole map.
+            if (msg.type === 'error' && !ready) setFailed(true);
+            if (msg.type === 'user-pan') onUserPan?.();
           } catch {
             // A malformed message from the page is not worth reacting to.
           }

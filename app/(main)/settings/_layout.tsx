@@ -2,6 +2,9 @@ import { Stack } from 'expo-router';
 
 import { colors } from '@/theme';
 
+// Keeps this surface's home beneath any screen opened from elsewhere.
+export const unstable_settings = { anchor: 'index' };
+
 /**
  * Settings is a stack, not a fourth surface.
  *
