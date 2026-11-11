@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 
+import { Mascot } from '@/components/mascot';
 import { Icon, Text } from '@/components/ui';
 import { useHaptics } from '@/hooks';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
@@ -36,6 +37,7 @@ export function VerbBar() {
     <View style={styles.wrap}>
       <Animated.View entering={FadeInDown.duration(420)} style={styles.hero}>
         <View pointerEvents="none" style={styles.glow} />
+        <Mascot name="guide" height={128} style={styles.guide} />
         <Text variant="label" tone="accent" uppercase>
           Guide
         </Text>
@@ -130,7 +132,9 @@ const styles = StyleSheet.create({
     top: -GLOW / 3,
     backgroundColor: colors.accentSoft,
   },
-  heroTitle: { marginTop: spacing.sm },
+  heroTitle: { marginTop: spacing.sm, marginRight: 96 },
+  // The guide stands at the card's top-right edge, beside the promise, not over it.
+  guide: { position: 'absolute', right: spacing.sm, top: spacing.md },
   heroTitleAccent: { marginTop: -spacing.xs },
   depths: {
     flexDirection: 'row',

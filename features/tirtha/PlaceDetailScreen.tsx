@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 import { BackBar, EmptyState } from '@/components/common';
 import { VisitInfo } from '@/components/site';
 import { Button, Divider, MetaRow, Screen, Text } from '@/components/ui';
-import { commonsThumb, feeForPlace, findPlace, modelFor } from '@/data';
+import { commonsThumb, feeForPlace, findPlace, modelFor, placeNote } from '@/data';
 import { useCurrentPosition, useSafeBack } from '@/hooks';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { application } from '@/services';
@@ -101,6 +101,19 @@ export function PlaceDetailScreen({ placeId }: { placeId: string }) {
         ) : null}
       </View>
 
+      {placeNote(place.id) ? (
+        <View style={styles.note}>
+          <Text variant="heading">{placeNote(place.id)!.heading}</Text>
+          <Text variant="body" translate={false}>{placeNote(place.id)!.body}</Text>
+          {placeNote(place.id)!.rules.map((rule) => (
+            <Text key={rule} variant="body" tone="secondary" translate={false}>{`• ${rule}`}</Text>
+          ))}
+          <Text variant="caption" tone="muted" translate={false}>
+            {`Sources: ${placeNote(place.id)!.sources.map((source) => source.title).join('; ')}`}
+          </Text>
+        </View>
+      ) : null}
+
       <Divider />
       <VisitInfo fee={feeForPlace(place)} hours={place.hours} wheelchair={place.wheelchair} />
       {distance != null ? <MetaRow label={ui('Distance')} value={formatDistance(distance, preferences.distanceUnit)} /> : null}
@@ -131,6 +144,7 @@ export function PlaceDetailScreen({ placeId }: { placeId: string }) {
 }
 
 const styles = StyleSheet.create({
+  note: { gap: spacing.sm, marginVertical: spacing.lg },
   image: { width: '100%', height: 220, borderRadius: radii.lg, marginBottom: spacing.md },
   head: { gap: spacing.xs, marginBottom: spacing.md },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },

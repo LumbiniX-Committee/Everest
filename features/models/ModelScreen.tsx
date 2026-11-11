@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
+import { Mascot } from '@/components/mascot';
 import { BackBar, EmptyState, ProGate } from '@/components/common';
 import { ModelView } from '@/components/models';
 import { Button, Card, Screen, Text } from '@/components/ui';
@@ -57,6 +58,12 @@ export function ModelScreen({ modelId }: { modelId: string }) {
   return (
     <Screen scroll>
       <BackBar />
+      <View style={styles.carverRow}>
+        <Mascot name="woodcarver" height={96} />
+        <Text variant="caption" tone="secondary" style={styles.carverNote}>
+          A schematic model: the shapes are drawn from photographs and published descriptions. Sizes that no source gives are estimates, and the points below say which.
+        </Text>
+      </View>
       <View style={styles.head}>
         <Text variant="label" tone="muted" uppercase>
           3D
@@ -116,6 +123,8 @@ export function ModelScreen({ modelId }: { modelId: string }) {
 }
 
 const styles = StyleSheet.create({
+  carverRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginBottom: spacing.sm },
+  carverNote: { flex: 1 },
   head: { gap: spacing.xs, marginBottom: spacing.md },
   gap: { gap: spacing.sm },
   list: { gap: spacing.sm, marginTop: spacing.lg },

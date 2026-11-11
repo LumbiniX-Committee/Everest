@@ -3,6 +3,7 @@ import { Linking, ScrollView, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { ScreenHeader } from '@/components/common';
+import { Mascot } from '@/components/mascot';
 import { Button, Card, Chip, Screen, Text } from '@/components/ui';
 import { HUB_CENTRES, essentialsFor, essentialsNear, findTrek, trekStop } from '@/data';
 import { useCurrentPosition } from '@/hooks';
@@ -87,9 +88,12 @@ export function EssentialsScreen({ area, near, kind: initialKind }: { area?: str
           Waiting for your position. Pick an area above to browse instead.
         </Text>
       ) : items.length === 0 ? (
-        <Text variant="body" tone="secondary" style={styles.empty}>
-          Nothing of this kind is listed here yet.
-        </Text>
+        <View style={styles.emptyRow}>
+          <Mascot name="monkey" height={96} />
+          <Text variant="body" tone="secondary" style={styles.emptyText}>
+            Nothing of this kind is listed here yet.
+          </Text>
+        </View>
       ) : (
         <View style={styles.list}>
           {items.slice(0, 80).map((item) => (
@@ -143,5 +147,7 @@ const styles = StyleSheet.create({
   list: { gap: spacing.md, marginTop: spacing.sm },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginTop: spacing.xs },
   empty: { marginTop: spacing.lg },
+  emptyRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginTop: spacing.lg },
+  emptyText: { flex: 1 },
   note: { marginTop: spacing.lg, marginBottom: spacing.xl },
 });

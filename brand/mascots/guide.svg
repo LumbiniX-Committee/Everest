@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320">
+  <title>Didi, a licensed guide</title>
+  <ellipse cx="120" cy="306" rx="62" ry="9" fill="#12302B" opacity=".14"/>
+  <!-- legs and shoes -->
+  <path d="M96 205 L92 292 L110 292 L116 214 Z" fill="#3E4A47"/>
+  <path d="M144 205 L148 292 L130 292 L124 214 Z" fill="#46524F"/>
+  <path d="M86 290 h28 a6 6 0 0 1 6 6 v4 h-38 v-6 a4 4 0 0 1 4-4z" fill="#F4EFE4"/>
+  <path d="M126 290 h28 a4 4 0 0 1 4 4 v6 h-38 v-4 a6 6 0 0 1 6-6z" fill="#F4EFE4"/>
+  <path d="M84 300 h36 M120 300 h38" stroke="#0E6E62" stroke-width="3"/>
+  <!-- backpack straps behind -->
+  <rect x="82" y="112" width="76" height="70" rx="18" fill="#A9493B"/>
+  <!-- fleece jacket -->
+  <path d="M86 110 Q120 96 154 110 L160 214 Q120 222 80 214 Z" fill="#0E6E62"/>
+  <path d="M120 104 L120 214" stroke="#0A564C" stroke-width="3"/>
+  <path d="M104 104 Q120 122 136 104" fill="none" stroke="#F7A823" stroke-width="5"/>
+  <!-- arms: left holds a phone, right points -->
+  <path d="M88 116 Q66 150 74 182 L88 180 Q86 152 100 128 Z" fill="#0E6E62"/>
+  <path d="M152 116 Q184 128 196 106 L186 98 Q172 116 150 118 Z" fill="#0E6E62"/>
+  <circle cx="80" cy="186" r="9" fill="#8A5A3C"/>
+  <rect x="70" y="164" width="16" height="26" rx="3" fill="#12302B"/>
+  <rect x="72.5" y="167" width="11" height="18" rx="1.5" fill="#9CC9BF"/>
+  <circle cx="192" cy="100" r="9" fill="#8A5A3C"/>
+  <path d="M195 94 L206 84" stroke="#8A5A3C" stroke-width="6" stroke-linecap="round"/>
+  <!-- lanyard and an invented ID card -->
+  <path d="M110 108 L116 150 M130 108 L124 150" stroke="#F7A823" stroke-width="3"/>
+  <rect x="108" y="148" width="24" height="30" rx="3" fill="#FFFFFF"/>
+  <rect x="112" y="153" width="8" height="10" rx="1.5" fill="#9CC9BF"/>
+  <path d="M112 168 h16 M112 172 h12" stroke="#0E6E62" stroke-width="2"/>
+  <!-- head -->
+  <rect x="112" y="84" width="16" height="16" rx="5" fill="#8A5A3C"/>
+  <ellipse cx="120" cy="66" rx="24" ry="27" fill="#9A6644"/>
+  <path d="M95 64 Q96 34 122 36 Q148 36 146 64 Q140 48 122 46 Q102 48 95 64 Z" fill="#1E1714"/>
+  <path d="M142 54 Q162 66 156 96 Q150 80 140 70 Z" fill="#1E1714"/>
+  <ellipse cx="111" cy="68" rx="2.6" ry="3.2" fill="#1E1714"/>
+  <ellipse cx="130" cy="68" rx="2.6" ry="3.2" fill="#1E1714"/>
+  <path d="M112 80 Q120 86 129 80" fill="none" stroke="#5B2E22" stroke-width="2.6" stroke-linecap="round"/>
+  <ellipse cx="104" cy="77" rx="5" ry="3" fill="#C97A5A" opacity=".45"/>
+  <ellipse cx="137" cy="77" rx="5" ry="3" fill="#C97A5A" opacity=".45"/>
+  <!-- sun cap -->
+  <path d="M94 50 Q96 26 122 26 Q146 26 148 48 Z" fill="#F7A823"/>
+  <path d="M90 50 Q120 42 162 52 L160 57 Q122 50 92 56 Z" fill="#D88F12"/>
+</svg>

@@ -11,6 +11,10 @@ import type { InterfaceLanguage } from '@/types';
  * Text boundary and are never registered here.
  */
 export const NEPALI_UI_LITERALS = {
+  "A schematic model: the shapes are drawn from photographs and published descriptions. Sizes that no source gives are estimates, and the points below say which.": "सरलीकृत मोडेल: आकारहरू तस्बिर र प्रकाशित विवरणबाट बनाइएका हुन्। कुनै स्रोतले नदिएका नापहरू अनुमान हुन्, र तलका बिन्दुहरूले कुन हुन् भन्छन्।",
+  "Most treks now need a licensed guide. Porters carry loads for a living: book through agencies that follow porter-welfare guidelines on loads, clothing and insurance.": "अधिकांश ट्रेकमा अब इजाजतप्राप्त गाइड चाहिन्छ। भरियाहरूले भारी बोकेर जीविका चलाउँछन्: भारी, लुगा र बीमासम्बन्धी भरिया-कल्याण निर्देशिका पालना गर्ने एजेन्सीमार्फत बुक गर्नुहोस्।",
+  "Sources:": "स्रोत:",
+  "Who is worshipped here": "यहाँ कसको पूजा हुन्छ",
   "Describe": "वर्णन",
   "Follow": "पछ्याउनुहोस्",
   "Every claim cites its source": "हरेक दाबीको स्रोत",

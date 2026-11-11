@@ -91,6 +91,10 @@ The map is MapLibre GL JS 4.7.1 in a WebView, bundled with the app (`components/
 
 - **Basemap:** OpenFreeMap vector tiles.
 - **Modes:** Standard (default, flat), 3D, Terrain (AWS open elevation tiles), and Satellite and Hybrid (Pro).
+- **3D monuments (2026-11-11):**
+  - **Pashupatinath** is rebuilt in detail: the two gilded tiers, silver doors, carved struts, the gilt pinnacle, the walled courtyard with its west gate, the gilded Nandi, Vasuki, Unmatta Bhairav, the Bagmati, and the fifteen Pandra Shivalaya shrines.
+  - **New models:** the Basantapur tower with Lohan Chowk, Taleju (35 m, twelve plinths, three roofs), and Kasthamandap (about 20 m, 32 outer columns, four great pillars).
+  - **Sourced vs estimated:** only the overall heights (Pashupatinath about 23.7 m, Taleju 35 m, Kasthamandap about 20 m) and the counts are sourced. Every other size is an estimate from photographs, and each model's points say so.
 - **3D town:** in 3D mode at street zoom (15 and closer), buildings are drawn as houses rather than boxes (`components/map/townLayer.ts`, three.js).
   - **Houses:** OpenStreetMap footprints and heights, walls with window rows, and pitched terracotta or tin roofs on small buildings. Large or irregular buildings get flat concrete roofs with a parapet.
   - **Colours:** from `MAP_MATERIALS` in the theme.

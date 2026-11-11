@@ -61,6 +61,14 @@ The full report, with sources, is `reports/Sākṣī redesign design direction.m
 - **Treks:** each has a hand-checked photo (`data/trekPhotos.ts`).
 - **Credit and offline:** the credit sits on the image itself, so when a photo cannot load offline its credit disappears with it, and the place falls back to its plate or schematic.
 
+**Characters (2026-11-11):** four original, non-sacred mascots, drawn in `brand/mascots/*.svg` and exported to `assets/mascots/`:
+- a licensed **guide**, on Explore;
+- a trekking **porter** with doko and namlo, on the trek list (a porter, never "a Sherpa", which is a people);
+- a **rhesus macaque**, in empty states, with no Hanuman symbols and never shown being fed or touched;
+- a **Newar woodcarver** at a lattice window, beside the 3D models.
+
+**Deities are never drawn as characters.** At Pashupatinath the deity is described in words only (`data/placeNotes.ts`), with the visitor rules. The research and sources are in `reports/Pashupati and Basantapur 3D models.md` (kept outside git).
+
 **Open question for the owner:** the monk character (`components/monk`, the website's former hero) has the curled hair of Buddha images. The research recommends against sacred figures as mascots. It has been removed from the website hero; its use in the app needs a decision.
 
 ## Shape and motion

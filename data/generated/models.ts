@@ -200,21 +200,70 @@ export const MODELS: MonumentModel[] = [
   ],
   "free": false,
   "kind": "schematic",
-  "bytes": 34573,
+  "bytes": 477534,
   "sources": [
    {
-    "title": "Pashupatinath Temple, Wikipedia",
+    "title": "Pashupatinath Temple, Wikipedia (height about 23.7 m)",
     "url": "https://en.wikipedia.org/wiki/Pashupatinath_Temple"
+   },
+   {
+    "title": "Pashupati Area Development Trust",
+    "url": "https://pashupati.org.np/"
    }
   ],
   "hotspots": [
    {
     "label": "Two gilded roofs",
-    "note": "A two-tiered pagoda with gold-covered roofs.",
+    "note": "A two-tiered pagoda with gilded copper roofs, about 23.7 m to the tip of its gilt finial. The present form dates from 1692. Storey and roof sizes here are estimates from photographs.",
     "position": [
      0,
-     10.5,
+     17,
      9
+    ]
+   },
+   {
+    "label": "Four silver doors",
+    "note": "A silver-clad door on each of the four sides. Only Hindus may enter the courtyard; others view the temple from the east bank.",
+    "position": [
+     0,
+     5,
+     7
+    ]
+   },
+   {
+    "label": "Carved struts",
+    "note": "Carved wooden struts (tundal) hold up the eaves on every side.",
+    "position": [
+     7,
+     10,
+     7
+    ]
+   },
+   {
+    "label": "Nandi",
+    "note": "The gilded bull Nandi faces the west door. Its size here is an estimate.",
+    "position": [
+     -19,
+     3,
+     0
+    ]
+   },
+   {
+    "label": "Vasuki",
+    "note": "A small shrine in the north-east corner of the courtyard.",
+    "position": [
+     23,
+     6,
+     -23
+    ]
+   },
+   {
+    "label": "Pandra Shivalaya",
+    "note": "Fifteen small shrines facing the temple across the Bagmati, on the bank where visitors stand.",
+    "position": [
+     47,
+     4,
+     0
     ]
    }
   ]
@@ -269,6 +318,127 @@ export const MODELS: MonumentModel[] = [
      0,
      15,
      3
+    ]
+   }
+  ]
+ },
+ {
+  "id": "basantapur-tower",
+  "title": "Basantapur Tower and Lohan Chowk",
+  "targets": [
+   "ktm-basantapur-durbar"
+  ],
+  "free": false,
+  "kind": "schematic",
+  "bytes": 160014,
+  "sources": [
+   {
+    "title": "Hanuman Dhoka, Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/Hanuman_Dhoka"
+   },
+   {
+    "title": "Kathmandu Durbar Square, UNESCO Kathmandu Valley",
+    "url": "https://whc.unesco.org/en/list/121"
+   }
+  ],
+  "hotspots": [
+   {
+    "label": "Basantapur Tower",
+    "note": "Nine storeys, built by Prithvi Narayan Shah around 1770. Its top storeys fell in 2015 and were rebuilt. No source gives its height; about 30 m here is an estimate.",
+    "position": [
+     -14.5,
+     33,
+     14.5
+    ]
+   },
+   {
+    "label": "Lohan Chowk",
+    "note": "The four-storey courtyard the towers stand around. Its size here is an estimate.",
+    "position": [
+     0,
+     14,
+     0
+    ]
+   },
+   {
+    "label": "Three more towers",
+    "note": "Kirtipur, Bhaktapur and Lalitpur towers stand at the other corners. Their storey counts here are estimates.",
+    "position": [
+     14.5,
+     19,
+     -14.5
+    ]
+   }
+  ]
+ },
+ {
+  "id": "taleju-temple",
+  "title": "Taleju Temple, Kathmandu",
+  "targets": [
+   "ktm-taleju-temple"
+  ],
+  "free": false,
+  "kind": "schematic",
+  "bytes": 246736,
+  "sources": [
+   {
+    "title": "Taleju Temple, Wikipedia (35 m, twelve plinths, three roofs)",
+    "url": "https://en.wikipedia.org/wiki/Taleju_Temple"
+   }
+  ],
+  "hotspots": [
+   {
+    "label": "Twelve plinths",
+    "note": "The temple stands on twelve stepped plinths. Their widths here are estimates.",
+    "position": [
+     14,
+     7,
+     14
+    ]
+   },
+   {
+    "label": "Three gilded roofs",
+    "note": "About 35 m to the finial, one of the tallest temples in the square.",
+    "position": [
+     0,
+     28,
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "kasthamandap",
+  "title": "Kasthamandap",
+  "targets": [
+   "ktm-kasthamandap"
+  ],
+  "free": false,
+  "kind": "schematic",
+  "bytes": 385797,
+  "sources": [
+   {
+    "title": "Kasthamandap, Wikipedia (Slusser, after Korn: about 20 m wide and tall)",
+    "url": "https://en.wikipedia.org/wiki/Kasthamandap"
+   }
+  ],
+  "hotspots": [
+   {
+    "label": "An open pavilion",
+    "note": "A public rest house: an open ground floor on 32 outer columns, with four great pillars at its centre.",
+    "position": [
+     0,
+     3,
+     10
+    ]
+   },
+   {
+    "label": "Three roofs",
+    "note": "About 20 m wide and as tall, after Korn's measured drawings; another survey gives 18.7 m by 16.3 m. Rebuilt 2017 to 2021.",
+    "position": [
+     0,
+     16,
+     6
     ]
    }
   ]

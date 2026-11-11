@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { ScreenHeader } from '@/components/common';
 import { Card, Screen, Text } from '@/components/ui';
+import { Mascot } from '@/components/mascot';
 import { PhotoHero } from '@/components/site';
 import { TREKS, trekPhoto, trekStop } from '@/data';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
@@ -31,6 +32,12 @@ export function TrekListScreen() {
         title="Trekking routes"
         subtitle="Day-by-day routes measured from open map data, with altitude, permits and safety."
       />
+      <View style={styles.porterRow}>
+        <Mascot name="porter" height={112} />
+        <Text variant="caption" tone="secondary" style={styles.porterNote}>
+          Most treks now need a licensed guide. Porters carry loads for a living: book through agencies that follow porter-welfare guidelines on loads, clothing and insurance.
+        </Text>
+      </View>
       <View style={styles.list}>
         {TREKS.map((trek) => {
           const highest = trekStop(trek, trek.totals.highest?.stopId);
@@ -84,6 +91,8 @@ export function Stat({ label, value }: { label: string; value: string }) {
 
 const styles = StyleSheet.create({
   list: { gap: spacing.md },
+  porterRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginBottom: spacing.md },
+  porterNote: { flex: 1 },
   photo: { marginBottom: spacing.md },
   stats: { flexDirection: 'row', gap: spacing.lg, marginTop: spacing.sm, marginBottom: spacing.xs },
   stat: { gap: spacing.xxs },
