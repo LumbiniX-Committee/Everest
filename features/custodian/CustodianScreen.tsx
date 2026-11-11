@@ -40,7 +40,7 @@ export function CustodianScreen() {
         <Text variant="heading">One protected record</Text>
         <Text variant="body" tone="secondary">
           The portal works on phones and computers. Email sign-in and site assignments
-          keep one custodian from reading another site's evidence.
+          keep one custodian from reading another site’s evidence.
         </Text>
         <Text variant="body" tone="secondary">
           Your visitor session stays on this device, so queued photographs keep their

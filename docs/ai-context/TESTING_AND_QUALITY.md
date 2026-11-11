@@ -27,7 +27,7 @@ All results below were **actually executed** during this audit.
 | Seed validation | `npm run validate` | ✅ Pass, 5 warnings |
 | Vocabulary lint | `npm run vocab` | ✅ Clean |
 | Dhamma eval | `npm run eval:dhamma` | ✅ **50/50** |
-| **ESLint** | `npm run lint` / `npm run lint:all` | ✅ clean / ❌ **70 known errors** (see below) |
+| **ESLint** | `npm run lint` / `npm run lint:all` | ✅ clean / ❌ **59 known errors** (see below) |
 | Aggregate | `npm run verify` | ✅ Passes (**excludes lint**) |
 
 > **The most important fact here:** `npm run verify` = `typecheck && test && validate && vocab && eval:dhamma`. **`lint` is not in the chain.** That is how 16 lint errors coexist with a green `verify`. If you want a true all-green gate, run `npm run verify && npm run lint`.
@@ -148,7 +148,7 @@ This is a **grounding/hallucination gate**. It checks not only that answerable q
 
 ## 5. Lint failures — the one real code-quality defect
 
-> **Update 2026-11-08:** `npm run lint` is clean, but it only scans `expo lint`'s default folders and skips `features/`. `npm run lint:all` scans every source folder and reports 70 known errors (2026-11-08): mostly React Compiler rules (`react-hooks/refs` in the animated QuestHud and StorySequence, `set-state-in-effect`, `immutability`), plus a few `import/export`, `no-undef` and unescaped quotes. Add no new ones. The SpeechCloud errors described below were since fixed.
+> **Update 2026-11-08:** `npm run lint` is clean, but it only scans `expo lint`'s default folders and skips `features/`. `npm run lint:all` scans every source folder and reports 59 known errors (2026-11-08): mostly React Compiler rules (`react-hooks/refs` in the animated QuestHud and StorySequence, `set-state-in-effect`, `immutability`), plus a few `import/export`, `no-undef` and unescaped quotes. Add no new ones. The SpeechCloud errors described below were since fixed.
 
 `npm run lint` used to report **16 errors, all in one file**:
 

@@ -38,7 +38,7 @@ These were **actually executed during this audit** on Windows 11 / PowerShell, a
 | `npm run validate` | ✅ **Passes with 5 warnings** | Seed totals: 12 sites, 6 vantages, 10 quests, 3 needs, 5 timeline, 10 plates. Warnings: 5 sites have `coords still 'doc'` (see below) |
 | `npm run vocab` | ✅ **Passes clean** | "content and app sweeps pass, and no em dash reaches a reader" |
 | `npm run eval:dhamma` | ✅ **Passes 50/50** | answerable 18/18, adjacent 10/10, out_of_scope 12/12, adversarial 6/6, nepali 4/4. **Citations naming an unretrieved passage: 0** |
-| `npm run lint` | ✅ clean | Scans `expo lint`'s default folders only, not `features/`. `npm run lint:all` scans everything: 70 known errors (2026-11-08), mostly React Compiler rules. |
+| `npm run lint` | ✅ clean | Scans `expo lint`'s default folders only, not `features/`. `npm run lint:all` scans everything: 59 known errors (2026-11-08), mostly React Compiler rules. |
 | `npx expo start --web` | ✅ **Serves** | Metro bundles, HTTP 200, ~11 MB JS bundle compiles without error |
 
 > `npm run verify` chains typecheck + test + validate + vocab + eval:dhamma. **It does not include `lint`** — which is why the 16 lint errors can persist while `verify` passes.
