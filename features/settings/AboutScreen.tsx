@@ -57,7 +57,7 @@ export function AboutScreen() {
       >
         <Text variant="body" tone="secondary" style={styles.body}>
           Historical imagery and site records are attributed to their holding institutions on each
-          site's detail screen. Pali passages cite the collection, book and verse.
+          site’s detail screen. Pali passages cite the collection, book and verse.
         </Text>
       </SettingsSection>
 

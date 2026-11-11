@@ -7,6 +7,7 @@
 //
 // Output: landing/public/models/<id>.gltf (served by the website, downloaded on
 // demand by the app) and data/generated/models.ts.
+import { Buffer } from 'node:buffer';
 import { mkdirSync, writeFileSync } from 'node:fs';
 
 import * as THREE from 'three';
