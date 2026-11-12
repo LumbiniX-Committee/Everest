@@ -188,7 +188,7 @@ export function WeeklyBars({ title, points, field }: { title: string; points: We
         </table>
       ) : (
         <div className="relative mt-3">
-          <svg viewBox={`0 0 ${W} ${H + 18}`} className="w-full" role="img" aria-label={`${title}, weekly, ${total} in all`}>
+          <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={`${title}, weekly, ${total} in all`}>
             <line x1="0" x2={W} y1={H} y2={H} className="stroke-line" strokeWidth="1" />
             {values.map((value, i) => {
               const h = value === 0 ? 1.5 : Math.max(3, (value / max) * (H - 8));
@@ -220,12 +220,14 @@ export function WeeklyBars({ title, points, field }: { title: string; points: We
                 </g>
               );
             })}
-            <text x="0" y={H + 14} className="fill-ink-muted text-[10px]">{points[0] ? label(points[0].week) : ''}</text>
-            <text x={W} y={H + 14} textAnchor="end" className="fill-ink-muted text-[10px]">This week</text>
           </svg>
+          <div className="mt-1 flex justify-between text-xs text-ink-muted tabular">
+            <span>{points[0] ? label(points[0].week) : ''}</span>
+            <span>This week</span>
+          </div>
           {hover != null ? (
             <div
-              className="pointer-events-none absolute -top-2 z-10 -translate-x-1/2 -translate-y-full rounded-lg bg-ink px-2.5 py-1.5 text-xs whitespace-nowrap text-white tabular"
+              className="pointer-events-none absolute top-0 z-10 -translate-x-1/2 rounded-lg bg-ink px-2.5 py-1.5 text-xs whitespace-nowrap text-white tabular"
               style={{ left: `${((hover * (bar + gap) + bar / 2) / W) * 100}%` }}
             >
               {`Week of ${label(points[hover].week)} · ${values[hover]}`}

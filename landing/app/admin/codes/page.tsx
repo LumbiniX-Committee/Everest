@@ -116,7 +116,7 @@ export default function AdminCodesPage() {
         ) : null}
       </Panel>
 
-      <Panel title="Batches">
+      <Panel title="Batches" description="A code can be redeemed twice, so a reinstall can recover its time; redemptions can outnumber codes.">
         {!data ? (
           <Loading />
         ) : data.batches.length === 0 ? (
@@ -129,7 +129,7 @@ export default function AdminCodesPage() {
                   <th scope="col" className="px-5 py-3 font-medium">Batch</th>
                   <th scope="col" className="px-5 py-3 font-medium">Issued</th>
                   <th scope="col" className="px-5 py-3 font-medium">Pro length</th>
-                  <th scope="col" className="w-56 px-5 py-3 font-medium">Redeemed</th>
+                  <th scope="col" className="w-64 px-5 py-3 font-medium">Redemptions</th>
                   <th scope="col" className="px-5 py-3 font-medium">Redeem by</th>
                   <th scope="col" className="px-5 py-3"><span className="sr-only">Revoke</span></th>
                 </tr>
@@ -152,7 +152,7 @@ export default function AdminCodesPage() {
                           <div className="h-2 flex-1 rounded-full bg-surface-secondary">
                             <div className="h-2 rounded-full bg-sandstone" style={{ width: `${Math.min(100, share * 100)}%` }} />
                           </div>
-                          <span className="text-sm text-ink-soft tabular">{`${batch.redeemed}/${batch.issued}`}</span>
+                          <span className="text-sm text-ink-soft tabular">{`${batch.redeemed} of ${batch.issued} code${batch.issued === 1 ? '' : 's'}`}</span>
                         </div>
                       </td>
                       <td className="px-5 py-3 text-ink-soft tabular">{shortDate(batch.valid_until)}</td>

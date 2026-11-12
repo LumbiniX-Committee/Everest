@@ -361,7 +361,7 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
                 साक्<span className="text-sandstone">षी</span><span className="text-marigold">.</span>
               </p>
 
-              <h1 className="mx-auto mt-6 max-w-xl font-[family-name:var(--font-display)] text-3xl leading-[1.15] font-medium text-balance text-ink italic sm:text-[2.6rem] lg:mx-0">
+              <h1 className="mx-auto mt-6 max-w-xl font-[family-name:var(--font-display)] text-3xl leading-[1.12] font-semibold text-balance text-ink sm:text-[2.6rem] lg:mx-0">
                 {c.hero.title}
               </h1>
 

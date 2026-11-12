@@ -304,6 +304,10 @@ Deployment config exists at [mock-api/railway.json](../../mock-api/railway.json)
 - Crash rows are shown without user id or stack.
 - The website calls these through `landing/app/api/admin/*`, which check `is_platform_admin` first only to choose the right error.
 
+### 0015 — [admin detail](../../supabase/migrations/0015_admin_detail.sql)
+
+`admin_list_reports`, `admin_weekly_activity` (every week present, 0 where nothing happened), `admin_crash_groups`, `admin_list_admins`, and a wider `admin_overview` (accounts, admins, per-site photos, previous window). Same rules as 0014: admin-only, read-only. Website routes: `/api/admin`, `/api/admin/{reports,access,codes/batches,crashes,activity,me}`; password change `/api/account/password`.
+
 ## Needs verification
 
 1. Whether migration 0007 has been applied to the live project, and whether anonymous sign-in is enabled there.
