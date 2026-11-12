@@ -2,6 +2,29 @@
 
 What changed in each milestone, what was verified, and what was not. Newest first. The plan lives in the delivery plan; this records what actually happened.
 
+## Detailed admin console, change password, new website type (2026-11-12, evening)
+
+- **Admin console** is now a full app at `/admin`:
+  - sidebar sections with their own addresses: Overview, Reports, Sites, Access, Pro codes, Crashes, Admin log, Account;
+  - the overview leads with "Needs attention", then headline numbers against the previous window, 12 weeks of activity, where reports stand, the oldest open reports by site, plans and people;
+  - reports filter by status and site, page through, and expand to the visitor's note and the site's full action history.
+- **Database:** migration `0015_admin_detail.sql` (read-only, admin-only), with pgTAP test `supabase/tests/admin_detail.test.sql`, which passed in CI.
+- **Change password** at `/admin/account`, and at `/account` for custodians (linked from the portal):
+  - the current password is checked with a session-less client before the change;
+  - the rules live in `lib/password-policy.ts`;
+  - the route has tests.
+- **Website type:** Source Serif 4 and Source Sans 3 replace Newsreader and Mukta, chosen because they carry every IAST mark; Noto Devanagari carries Nepali. The hero line and heading accents are upright (a faked italic had been slanting Devanagari).
+
+**Verified:**
+- `landing` verify: 42 tests and the build.
+- Every admin page rendered in headless Chrome at 1440 and 390 px with sample data, and checked by eye.
+- The English and Nepali home pages rendered in the new type.
+
+**Not done:**
+- **Migration 0015 is not applied to production.** The session's permission check blocked it, so until it is applied the Overview and Reports pages show "Could not load".
+- The password change was not run against the live auth server.
+- No phone test.
+
 ## Place guides, and the admin console live (2026-11-12, later)
 
 - **Place guides** for Pashupatinath, Boudhanath and Swayambhunath (`features/guides`, content in `data/guides.ts`). Each has:

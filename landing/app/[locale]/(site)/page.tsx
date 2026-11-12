@@ -357,11 +357,11 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
                 </span>
               </div>
 
-              <p lang="ne" aria-hidden className="mt-8 font-[family-name:var(--font-mukta)] text-[5.5rem] leading-[0.95] font-bold tracking-tight text-ink sm:text-[8.5rem]">
+              <p lang="ne" aria-hidden className="mt-8 font-[family-name:var(--font-devanagari)] text-[5.5rem] leading-[0.95] font-bold tracking-tight text-ink sm:text-[8.5rem]">
                 साक्<span className="text-sandstone">षी</span><span className="text-marigold">.</span>
               </p>
 
-              <h1 className="mx-auto mt-6 max-w-xl font-[family-name:var(--font-display)] text-3xl leading-[1.15] font-medium text-balance text-ink italic sm:text-[2.6rem] lg:mx-0">
+              <h1 className="mx-auto mt-6 max-w-xl font-[family-name:var(--font-display)] text-3xl leading-[1.12] font-semibold text-balance text-ink sm:text-[2.6rem] lg:mx-0">
                 {c.hero.title}
               </h1>
 
