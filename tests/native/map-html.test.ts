@@ -80,6 +80,13 @@ describe('real scans standing on the map', () => {
     expect(scans).toEqual(expect.arrayContaining(['scans/yetkha-bahal.glb', 'scans/keshar-mahal.glb']));
     expect(html).toContain('3D scans on the map: Airlift Technology, Bhugol Tour');
   });
+
+  it('credit our own models as modelled, never as scans', () => {
+    expect(placements.map((p) => p.file)).toContain('modelled/world-peace-pagoda.glb');
+    const scanCredit = html.match(/3D scans on the map: [^"`]*/)![0];
+    expect(scanCredit).not.toContain('Sākṣī');
+    expect(html).toMatch(/\d+ monuments modelled by Sākṣī from photos and OpenStreetMap, not scanned/);
+  });
 });
 
 describe('walking view', () => {

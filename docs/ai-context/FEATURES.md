@@ -376,7 +376,7 @@ Full descriptions are in [docs/FEATURES.md](../FEATURES.md). Code pointers:
 | Report hero | `features/sakshi/ReportHero.tsx` |
 | 3D town | `components/map/townLayer.ts` (three.js custom layer, 3D mode, zoom ≥ 15); materials in `MAP_MATERIALS` (`theme/mapStyle.ts`) |
 | Walking figure | `AVATAR_LAYER` in `components/map/mapHtml.ts`: Renderpeople glb from the website `/characters/walker.glb` via vendored GLTFLoader (`gltfLoader.generated.ts`); cadence = speed ÷ (measured natural speed × drawn scale); robed figure is the fallback |
-| Monuments on the map | `components/map/monumentModels.ts` (3D mode, zoom ≥ 15, ≤ 4 models, placements from `modelPlacements()` in `data/models.ts`, only coordinates with ≥ 4 decimals); sets `window.sakshiModelZones`, which `townLayer` skips |
+| Monuments on the map | `components/map/monumentModels.ts` (3D mode, zoom ≥ 15, ≤ 6 models) from `MAP_SCANS` in `data/mapScans.ts`: real scans (`landing/public/models/scans/`) and our Blender models (`modelled: true`, `landing/public/models/modelled/`, built by `tools/models/blender/*.py` with `kit.py`); sets `window.sakshiModelZones`, which `townLayer` skips. Website `/3d` lists the same files via `tools/gen-3d-web.mjs` → `landing/lib/generated/models.ts` |
 | Sketchfab downloads | `tools/data/fetch-sketchfab.mjs <uid> <out.glb>`: CC0/CC BY only, token from `.env.tools.local` |
 | 3D models (13) | `tools/models/build-models.mjs` (`newarTemple`, `courtyardWall`, `bull`, `storeyTower`) |
 | Site and trek photos | `data/sitePhotos.ts` (`seed/site-photos.json`), `data/trekPhotos.ts`, `components/site/PhotoHero.tsx`, `SiteVisual` (`credited`) |

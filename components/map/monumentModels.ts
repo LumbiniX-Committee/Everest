@@ -34,7 +34,7 @@ export function monumentModelsScript(placements: ModelPlacement[], modelsUrl: st
       longitude: s.longitude,
       latitude: s.latitude,
       targets: s.targets,
-      file: `scans/${s.id}.glb`,
+      file: s.modelled ? `modelled/${s.file ?? s.id}.glb` : `scans/${s.id}.glb`,
       scan: true,
       headingDeg: s.headingDeg,
       scale: s.scale,
@@ -48,7 +48,7 @@ export function monumentModelsScript(placements: ModelPlacement[], modelsUrl: st
         // The same zoom the town layer starts at, so a model and the shape it
         // replaces never show together, or neither.
         var MIN_ZOOM = 15;
-        var MAX_MODELS = 4;
+        var MAX_MODELS = 6;
         var VIEW_M = 1500;
         var entries = {};
         var renderer = null;

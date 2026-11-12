@@ -43,7 +43,9 @@ const WALKER_CREDIT =
   'Walking figure: <a href="https://sketchfab.com/3d-models/nathan-animated-003-walking-3d-man-143a2b1ea5eb4385ae90a73657aca3bc" target="_blank">Renderpeople</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a>';
 
 /** CC BY credit for the real scans standing on the map, named by creator. */
-const SCANS_CREDIT = `3D scans on the map: ${[...new Set(MAP_SCANS.map((scan) => scan.creator))].join(', ')} (Sketchfab, CC BY 4.0)`;
+const SCANS_CREDIT = `3D scans on the map: ${[...new Set(MAP_SCANS.filter((scan) => !scan.modelled).map((scan) => scan.creator))].join(', ')} (Sketchfab, CC BY 4.0)`;
+// Our own models are said to be modelled, never passed off as scans.
+const MODELLED_CREDIT = `${MAP_SCANS.filter((scan) => scan.modelled).length} monuments modelled by Sākṣī from photos and OpenStreetMap, not scanned`;
 
 /**
  * The basemap, terrain and fonts all load through the page's own \`saksi://\`
@@ -298,7 +300,7 @@ ${OFFLINE_PROTOCOL}
       pitch: ${pitch},
       bearing: ${bearing},
       attributionControl: ${JSON.stringify(
-        avatar ? { compact: false, customAttribution: [WALKER_CREDIT, SCANS_CREDIT] } : { compact: false },
+        avatar ? { compact: false, customAttribution: [WALKER_CREDIT, SCANS_CREDIT, MODELLED_CREDIT] } : { compact: false },
       )},
       interactive: ${interactive},
       // Wide enough to see the whole of Nepal, not so wide the place is lost.

@@ -11,10 +11,10 @@ const EN = {
   hero: {
     eyebrow: 'Nepal in 3D',
     title: 'Walk around a stupa from your desk',
-    lede: 'Our own models of thirteen monuments, which you can place in your room through your phone’s camera, and real scans of the places by the people who captured them.',
+    lede: 'Real scans and our own detailed models of the places, which you can place in your room through your phone’s camera, and more scans in their creators’ own player.',
   },
-  modelsKicker: 'Our models',
-  modelsTitle: 'Thirteen monuments, schematic and sourced',
+  modelsKicker: 'On the map',
+  modelsTitle: 'Real scans and detailed models',
   scansKicker: 'Real scans',
   scansTitle: 'The places as they were captured',
 };
@@ -26,10 +26,10 @@ const NE: typeof EN = {
   hero: {
     eyebrow: '3D मा नेपाल',
     title: 'आफ्नै टेबलबाट स्तूप परिक्रमा',
-    lede: 'तेह्र स्मारकका हाम्रा आफ्नै मोडेल, जसलाई फोनको क्यामेराले कोठामा राख्न सकिन्छ, र खिच्नेहरूकै श्रेयसहित ठाउँहरूका वास्तविक स्क्यान।',
+    lede: 'ठाउँहरूका वास्तविक स्क्यान र हाम्रा आफ्नै विस्तृत मोडेल, जसलाई फोनको क्यामेराले कोठामा राख्न सकिन्छ, र निर्माताकै प्लेयरमा थप स्क्यान।',
   },
-  modelsKicker: 'हाम्रा मोडेल',
-  modelsTitle: 'तेह्र स्मारक, सरलीकृत र स्रोतसहित',
+  modelsKicker: 'नक्सामा',
+  modelsTitle: 'वास्तविक स्क्यान र विस्तृत मोडेल',
   scansKicker: 'वास्तविक स्क्यान',
   scansTitle: 'खिचिएका बेलाका ठाउँहरू',
 };
