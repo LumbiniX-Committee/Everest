@@ -20,6 +20,7 @@ export const NEPALI_UI_LITERALS = {
   "Nepal in 3D": "3D मा नेपाल",
   "No such scan": "यस्तो स्क्यान छैन",
   "Open on Sketchfab": "Sketchfab मा खोल्नुहोस्",
+  "More scans here": "यहाँका अरू स्क्यानहरू",
   "Our models": "हाम्रा मोडेलहरू",
   "Our models are schematic: drawn from photographs and published sizes. Each can be placed in your room with “View in your space”.": "हाम्रा मोडेलहरू सरलीकृत हुन्: तस्बिर र प्रकाशित नापबाट बनाइएका। “आफ्नो ठाउँमा हेर्नुहोस्” ले हरेकलाई तपाईंको कोठामा राख्न सकिन्छ।",
   "Our models are schematic: drawn from photographs and published sizes. On iPhone, place them in your room from the website’s 3D page.": "हाम्रा मोडेलहरू सरलीकृत हुन्: तस्बिर र प्रकाशित नापबाट बनाइएका। iPhone मा, वेबसाइटको 3D पृष्ठबाट तिनलाई आफ्नो कोठामा राख्नुहोस्।",

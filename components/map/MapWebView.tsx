@@ -19,6 +19,8 @@ export type MapWebViewProps = {
   onSelectSite?: (siteId: string) => void;
   /** A listed place was tapped. Only the full-screen map shows places. */
   onSelectPlace?: (placeId: string) => void;
+  /** A real 3D scan's pin was tapped. */
+  onSelectScan?: (scanId: string) => void;
   /** Live position, pushed into the running page. */
   coordinate?: Coordinate | null;
   /**
@@ -90,6 +92,7 @@ export function MapWebView({
   fill = false,
   onSelectSite,
   onSelectPlace,
+  onSelectScan,
   coordinate,
   heading,
   follow = true,
@@ -277,6 +280,7 @@ export function MapWebView({
             if (msg.type === 'ready') setReady(true);
             if (msg.type === 'site' && typeof msg.id === 'string') onSelectSite?.(msg.id);
             if (msg.type === 'place' && typeof msg.id === 'string') onSelectPlace?.(msg.id);
+            if (msg.type === 'scan' && typeof msg.id === 'string') onSelectScan?.(msg.id);
             if (msg.type === 'waypoint' && typeof msg.id === 'string') onSelectWaypoint?.(msg.id);
             if (msg.type === 'tile-request' && typeof msg.id === 'number' && typeof msg.key === 'string') {
               const requestId = msg.id;

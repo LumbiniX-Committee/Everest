@@ -34,8 +34,12 @@ const scanType = `export type Scan = {
   captured: string | null;
   published: string | null;
   thumbnail: string;
+  /** About 1280 px wide, for a large stage. */
+  poster: string;
   /** Site or place ids this scan shows. */
   targets: string[];
+  /** Where it stands on the map: an OpenStreetMap point, a pin rather than a survey. */
+  at: { latitude: number; longitude: number };
   note: string;
 };
 `;
@@ -50,6 +54,20 @@ export function scanEmbedUrl(id: string, autostart = true): string {
 export function scansFor(...ids: (string | undefined)[]): Scan[] {
   const wanted = new Set(ids.filter(Boolean));
   return SCANS.filter((scan) => scan.targets.some((target) => wanted.has(target)));
+}
+
+/** One map pin per place that has scans: scans at the same point share it. */
+export type ScanSpot = { key: string; latitude: number; longitude: number; label: string; scanIds: string[] };
+
+export function scanSpots(): ScanSpot[] {
+  const spots = new Map<string, ScanSpot>();
+  for (const scan of SCANS) {
+    const key = \`\${scan.at.latitude.toFixed(5)},\${scan.at.longitude.toFixed(5)}\`;
+    const spot = spots.get(key);
+    if (spot) spot.scanIds.push(scan.id);
+    else spots.set(key, { key, latitude: scan.at.latitude, longitude: scan.at.longitude, label: scan.label, scanIds: [scan.id] });
+  }
+  return [...spots.values()];
 }
 `;
 const models = MODELS.map(({ id, title, targets, kind, bytes, sources, hotspots }) => ({ id, title, targets, kind, bytes, sources, hotspots }));

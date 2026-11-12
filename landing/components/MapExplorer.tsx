@@ -1,10 +1,13 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Compass, Crosshair, Layers, Loader2, MapPin, Quote, ScrollText } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Compass, Crosshair, ExternalLink, Layers, Loader2, MapPin, Play, Quote, ScrollText, X } from 'lucide-react';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 import { SITES, type ExplorerSite } from '@/lib/generated/explorer';
+import { SCANS, scanEmbedUrl, scanSpots } from '@/lib/generated/scans';
+
+const SPOTS = scanSpots();
 
 /** Kept in step with scripts/copy-map-worker.mjs, which stages this file. */
 const WORKER_FILE = 'maplibre-gl-worker.mjs';
@@ -70,6 +73,15 @@ export function MapExplorer() {
   const [tier, setTier] = useState<Tier>('medium');
   const [selectedId, setSelectedId] = useState<string>(SITES[0].id);
   const [visited, setVisited] = useState<string[]>([]);
+  /* Not started until the map is nearly on screen: MapLibre is the heaviest
+     thing on the home page, and most visitors read the top first. */
+  const [near, setNear] = useState(false);
+  /* A real scan picked on the map: the spot, which of its scans, and whether
+     the visitor has asked for Sketchfab's player (nothing loads until then). */
+  const [scanSpot, setScanSpot] = useState<string | null>(null);
+  const [scanIndex, setScanIndex] = useState(0);
+  const [scanPlaying, setScanPlaying] = useState(false);
+  const scanMarkers = useRef<Map<string, import('maplibre-gl').Marker>>(new Map());
 
   const shown = useMemo(
     () => (region === 'all' ? SITES : SITES.filter((s) => s.region === region)),
@@ -112,9 +124,30 @@ export function MapExplorer() {
     });
   }, []);
 
+  useEffect(() => {
+    const el = holder.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === 'undefined') {
+      const timer = window.setTimeout(() => setNear(true), 0);
+      return () => window.clearTimeout(timer);
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setNear(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: '600px 0px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   /* MapLibre is imported inside the effect rather than at module scope: it
      touches `window` on evaluation, and this component is prerendered. */
   useEffect(() => {
+    if (!near) return;
     let cancelled = false;
     let instance: import('maplibre-gl').Map | null = null;
     let overlayTimer: ReturnType<typeof setTimeout> | undefined;
@@ -190,7 +223,42 @@ export function MapExplorer() {
       instance?.remove();
       map.current = null;
     };
-  }, []);
+  }, [near]);
+
+  /* Real 3D scans as their own badges, one per spot. */
+  useEffect(() => {
+    if (!ready || !map.current) return;
+    let live = true;
+    const registry = scanMarkers.current;
+    (async () => {
+      const maplibregl = await import('maplibre-gl');
+      if (!live || !map.current) return;
+      for (const spot of SPOTS) {
+        const el = document.createElement('button');
+        el.type = 'button';
+        el.className = 'sk-scan';
+        el.setAttribute('aria-label', `${spot.label}: real 3D scan${spot.scanIds.length > 1 ? `, ${spot.scanIds.length} here` : ''}`);
+        el.innerHTML = '<span class="sk-scan-badge" aria-hidden="true">3D</span>';
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          setScanSpot(spot.key);
+          setScanIndex(0);
+          setScanPlaying(false);
+          map.current?.easeTo({ center: [spot.longitude, spot.latitude], duration: 700, zoom: Math.max(map.current.getZoom(), 14) });
+        });
+        registry.set(spot.key, new maplibregl.Marker({ element: el }).setLngLat([spot.longitude, spot.latitude]).addTo(map.current));
+      }
+    })();
+    return () => {
+      live = false;
+      registry.forEach((m) => m.remove());
+      registry.clear();
+    };
+  }, [ready]);
+
+  useEffect(() => {
+    scanMarkers.current.forEach((marker, key) => marker.getElement().classList.toggle('is-selected', key === scanSpot));
+  }, [scanSpot, ready]);
 
   /* Markers are rebuilt when the visible set changes. Plain DOM markers rather
      than a symbol layer: fifteen points do not need a tile pipeline, and DOM
@@ -339,6 +407,15 @@ export function MapExplorer() {
               hidden`, so the map was present, sized, and completely invisible.
               Taking the height from the sized parent avoids the fight. */}
           <div ref={holder} className="size-full" />
+
+          <ScanOverlay
+            spotKey={scanSpot}
+            index={scanIndex}
+            playing={scanPlaying}
+            onIndex={(i) => { setScanIndex(i); setScanPlaying(false); }}
+            onPlay={() => setScanPlaying(true)}
+            onClose={() => { setScanSpot(null); setScanPlaying(false); }}
+          />
 
           {!painted && !failed ? (
             <div className="absolute inset-0 grid place-items-center bg-ground-deep text-ink-muted">
@@ -528,3 +605,110 @@ export function MapExplorer() {
 }
 
 export const SITE_COUNT = SITES.length;
+
+/** Warm the connection to Sketchfab when someone shows intent, so the player starts sooner. */
+function preconnectSketchfab() {
+  for (const href of ['https://sketchfab.com', 'https://static.sketchfab.com', 'https://media.sketchfab.com']) {
+    if (document.head.querySelector(`link[rel="preconnect"][href="${href}"]`)) continue;
+    const link = document.createElement('link');
+    link.rel = 'preconnect';
+    link.href = href;
+    link.crossOrigin = '';
+    document.head.appendChild(link);
+  }
+}
+
+/**
+ * A scan picked on the map. First its thumbnail and credit; the Sketchfab
+ * player loads only when asked, and then fills the map pane, with a way back.
+ */
+function ScanOverlay({
+  spotKey,
+  index,
+  playing,
+  onIndex,
+  onPlay,
+  onClose,
+}: {
+  spotKey: string | null;
+  index: number;
+  playing: boolean;
+  onIndex: (i: number) => void;
+  onPlay: () => void;
+  onClose: () => void;
+}) {
+  const spot = SPOTS.find((s) => s.key === spotKey);
+  if (!spot) return null;
+  const scan = SCANS.find((s) => s.id === spot.scanIds[index]) ?? SCANS.find((s) => s.id === spot.scanIds[0]);
+  if (!scan) return null;
+  const many = spot.scanIds.length > 1;
+
+  if (playing) {
+    return (
+      <div className="absolute inset-0 z-10 bg-ink">
+        <iframe
+          title={`${scan.label}, by ${scan.creator}`}
+          src={scanEmbedUrl(scan.id)}
+          allow="autoplay; fullscreen; xr-spatial-tracking"
+          allowFullScreen
+          className="size-full border-0"
+        />
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute top-3 left-3 inline-flex min-h-11 items-center gap-1.5 rounded-full bg-ground px-4 text-sm font-semibold text-ink shadow-md hover:bg-surface focus-visible:outline-2 focus-visible:outline-sakshi"
+        >
+          <X className="size-4" aria-hidden /> Back to the map
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="absolute inset-x-3 bottom-3 z-10 flex gap-3 rounded-2xl bg-surface p-3 shadow-lg sm:right-auto sm:w-[23rem]">
+      <button
+        type="button"
+        onClick={onPlay}
+        onPointerEnter={preconnectSketchfab}
+        onFocus={preconnectSketchfab}
+        className="group relative aspect-[4/3] w-32 shrink-0 overflow-hidden rounded-xl bg-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sakshi"
+        aria-label={`Load the 3D scan: ${scan.label}`}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element -- a remote Sketchfab thumbnail, shown as is */}
+        <img src={scan.thumbnail} alt="" decoding="async" className="size-full object-cover transition duration-300 group-hover:scale-105 motion-reduce:transition-none" />
+        <span className="absolute inset-0 grid place-items-center">
+          <span className="grid size-10 place-items-center rounded-full bg-ink/85 text-ground">
+            <Play className="size-4" aria-hidden />
+          </span>
+        </span>
+      </button>
+      <div className="min-w-0 flex-1">
+        <div className="flex items-start gap-2">
+          <p className="min-w-0 flex-1 leading-snug font-semibold text-ink">{scan.label}</p>
+          <button type="button" onClick={onClose} aria-label="Close" className="-m-2 grid size-11 shrink-0 place-items-center rounded-full text-ink-muted hover:bg-surface-secondary hover:text-ink">
+            <X className="size-4" aria-hidden />
+          </button>
+        </div>
+        <p className="mt-0.5 text-sm text-ink-muted">
+          {scan.kind} · {scan.creator}
+        </p>
+        <div className="mt-2 flex items-center gap-1">
+          {many ? (
+            <>
+              <button type="button" aria-label="Previous scan here" onClick={() => onIndex((index - 1 + spot.scanIds.length) % spot.scanIds.length)} className="grid size-11 place-items-center rounded-full text-ink-soft hover:bg-surface-secondary">
+                <ChevronLeft className="size-4" aria-hidden />
+              </button>
+              <span className="text-sm text-ink-muted tabular-nums">{index + 1} / {spot.scanIds.length}</span>
+              <button type="button" aria-label="Next scan here" onClick={() => onIndex((index + 1) % spot.scanIds.length)} className="grid size-11 place-items-center rounded-full text-ink-soft hover:bg-surface-secondary">
+                <ChevronRight className="size-4" aria-hidden />
+              </button>
+            </>
+          ) : null}
+          <a href={scan.viewerUrl} target="_blank" rel="noreferrer" aria-label={`Open ${scan.label} on Sketchfab`} className="ml-auto grid size-11 place-items-center rounded-full text-sandstone-deep hover:bg-surface-secondary">
+            <ExternalLink className="size-4" aria-hidden />
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
