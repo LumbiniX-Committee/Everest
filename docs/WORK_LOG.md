@@ -2,6 +2,15 @@
 
 What changed in each milestone, what was verified, and what was not. Newest first. The plan lives in the delivery plan; this records what actually happened.
 
+## Real scans standing on the map, and walking view (2026-11-13, later)
+
+- **Two real scans now stand in the map's 3D scene**, not only in Sketchfab's player: Yetkha Bahal's stupa (Airlift Technology) and Keshar Mahal with the Garden of Dreams (Bhugol Tour), both CC BY 4.0. Downloaded with `tools/data/fetch-sketchfab.mjs`, reduced with glTF-Transform (10.2 MB to 1.4 MB; 29.7 MB to 3.9 MB, vertex-coloured), served from `landing/public/models/scans/`, listed in `data/mapScans.ts`, credited on the map and in `LICENCES.md`. Size is as captured (metres, not surveyed); heading set by eye (Keshar Mahal lines up with Kantipath at 0°). Rendered at both sites.
+- **Not placed:** Mahabodhi, Chobhar (CC BY, reduced to 3.4 MB): its temple is not in OpenStreetMap by name and Overpass was down, so no position. The CC BY Kasthamandap scan shows the building under scaffolding, so it is not stood on the map as today's Kasthamandap. Unlicensed scans (Swayambhu and most others) cannot be copied; they stay in the player.
+- **Walking view** (app map, walk button): the camera follows the figure from behind at about rooftop height (pitch 70°, zoom 20.1, allowed only in this view), turning with the heading, with a sky and fog horizon. The figure is drawn larger (110 px) and in front of the town. A drag ends it. The town and monuments refresh on a 1.5 s timer, because a moving camera never lets the map go idle. Rendered walking across Kathmandu Durbar Square.
+- **Players:** Sketchfab embeds now turn slowly (`autospin`). The Swayambhu player was seen playing in a real Chrome on the live home page.
+- **Explored:** github.com/orgs/sketchfab. The viewer API is usable for scripted camera tours (not built). The HDRI environments repo has no licence, so it was not used.
+- **Not checked:** on a phone (frame rate in walking view in particular); the player inside the app's WebView.
+
 ## Real 3D scans on the map and the home page (2026-11-13)
 
 - **22 scans** (was 11) in `tools/data/build-scans.mjs`, each with an `at` position from a named OpenStreetMap feature. New: Swayambhu hill (Bhugol Tour's 6.7-million-point drone survey, the one the owner linked), the Swayambhunath stupa (yuichi hayakawa) and a gilded shrine (Brad Erickson), Kal Bhairav, Krishna Mandir (Patan), Keshar Mahal, Yetkha Bahal (two), a Bhaktapur inscription, Tsarang and Ghemi (Mustang). Rejected by eye: a CG Janaki Mandir, a block-built "temple site", a near-abstract Boudhanath point cloud, loose objects. None is copied: the Swayambhu survey has no licence and download is off, so it is shown only in Sketchfab's player.

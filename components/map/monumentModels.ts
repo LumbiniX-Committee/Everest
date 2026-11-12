@@ -1,4 +1,4 @@
-import type { ModelPlacement } from '@/data';
+import type { MapScan, ModelPlacement } from '@/data';
 
 /**
  * Our own monument models, standing on the map at their sites.
@@ -21,8 +21,25 @@ import type { ModelPlacement } from '@/data';
  * Returned as page script, injected after the town layer. Without three.js or
  * the glTF loader it does nothing.
  */
-export function monumentModelsScript(placements: ModelPlacement[], modelsUrl: string): string {
-  const precise = placements.filter((p) => decimals(p.latitude) >= 4 && decimals(p.longitude) >= 4);
+export function monumentModelsScript(placements: ModelPlacement[], modelsUrl: string, scans: MapScan[] = []): string {
+  // A real scan stands in for our schematic model of the same place.
+  const scanned = new Set(scans.flatMap((s) => s.targets));
+  const precise = [
+    ...placements
+      .filter((p) => decimals(p.latitude) >= 4 && decimals(p.longitude) >= 4)
+      .filter((p) => !p.targets.some((t) => scanned.has(t)))
+      .map((p) => ({ ...p, file: `${p.id}.gltf`, scan: false, headingDeg: 0, scale: 1 })),
+    ...scans.map((s) => ({
+      id: s.id,
+      longitude: s.longitude,
+      latitude: s.latitude,
+      targets: s.targets,
+      file: `scans/${s.id}.glb`,
+      scan: true,
+      headingDeg: s.headingDeg,
+      scale: s.scale,
+    })),
+  ];
   return `
       (function () {
         if (typeof THREE === 'undefined' || !THREE.GLTFLoader) return;
@@ -59,7 +76,7 @@ export function monumentModelsScript(placements: ModelPlacement[], modelsUrl: st
 
         function load(p) {
           var e = entries[p.id] = { p: p, state: 'loading' };
-          new THREE.GLTFLoader().load(BASE + '/' + p.id + '.gltf', function (gltf) {
+          new THREE.GLTFLoader().load(BASE + '/' + p.file, function (gltf) {
             if (entries[p.id] !== e) return;
             var model = gltf.scene;
             // The viewer's ground plate: the map has ground of its own, and
@@ -67,6 +84,23 @@ export function monumentModelsScript(placements: ModelPlacement[], modelsUrl: st
             var plate = model.getObjectByName('ground');
             if (plate) plate.parent.remove(plate);
             model.updateMatrixWorld(true);
+            if (p.scan) {
+              // A scan comes in its capture's own frame: centre it on its
+              // footprint, stand its lowest point on the ground, then turn it
+              // to line up with the map (clockwise from north).
+              var raw = new THREE.Box3().setFromObject(model);
+              var holder = new THREE.Group();
+              model.position.x -= (raw.min.x + raw.max.x) / 2;
+              model.position.z -= (raw.min.z + raw.max.z) / 2;
+              model.position.y -= raw.min.y;
+              holder.add(model);
+              holder.scale.setScalar(p.scale);
+              holder.rotation.y = -p.headingDeg * Math.PI / 180;
+              model = holder;
+              model.updateMatrixWorld(true);
+              // Photogrammetry carries its own daylight in the texture.
+              model.traverse(function (o) { if (o.isMesh) o.frustumCulled = false; });
+            }
             var size = new THREE.Box3().setFromObject(model).getSize(new THREE.Vector3());
             // Y-up glTF stood up in the map's Z-up frame: -Z (north) becomes +Y.
             var upright = new THREE.Group();
@@ -83,7 +117,9 @@ export function monumentModelsScript(placements: ModelPlacement[], modelsUrl: st
             scene.add(sun);
             e.scene = scene;
             e.origin = maplibregl.MercatorCoordinate.fromLngLat([p.longitude, p.latitude], 0);
-            e.radius = Math.max(size.x, size.z) / 2;
+            // At least 6 m clear: OSM often maps a small monument as a
+            // building whose middle sits outside a tight footprint.
+            e.radius = Math.max(p.scan ? 6 : 0, Math.max(size.x, size.z) / 2);
             e.state = 'ready';
             zones();
             map.triggerRepaint();
@@ -125,6 +161,8 @@ export function monumentModelsScript(placements: ModelPlacement[], modelsUrl: st
         }
         var pending = null;
         map.on('idle', function () { clearTimeout(pending); pending = setTimeout(update, 250); });
+        // Walking view never lets the map go idle; it calls this on a timer.
+        window.sakshiMonumentsCheck = update;
 
         map.addLayer({
           id: 'sakshi-monuments',

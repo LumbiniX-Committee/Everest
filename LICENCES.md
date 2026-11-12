@@ -158,6 +158,10 @@ The files are the Google Fonts subsets (latin, latin-ext, devanagari), unmodifie
 ## 3D
 
 - **Our 13 models** are our own work (`tools/models/build-models.mjs`). The map stands them at their sites in 3D mode, credited there as schematic models, not surveys.
+- **Real scans on the map** (`landing/public/models/scans/`, listed in `data/mapScans.ts`), reduced for phones with glTF-Transform (simplified mesh, WebP textures, quantized geometry):
+  - "YETKHA BAHAL" by Airlift Technology (https://sketchfab.com/3d-models/yetkha-bahal-dedca951739f4362b51b777d3ea826e1), CC BY 4.0, modified (reduced), at `yetkha-bahal.glb`.
+  - "Keshar Mahal, National Library" by Bhugol Tour (https://sketchfab.com/3d-models/keshar-mahal-national-library-c5bdfc4d02fa4c668b8e1bf31beca067), CC BY 4.0, modified (reduced), at `keshar-mahal.glb`.
+  Credited on the map as "3D scans on the map: Airlift Technology, Bhugol Tour (Sketchfab, CC BY 4.0)".
 - **Downloading from Sketchfab** goes through `tools/data/fetch-sketchfab.mjs`, which refuses anything but CC0 and CC BY and prints the credit line to add here.
 - **Real scans** (`seed/scans.json`) are not copied. They are shown through Sketchfab's embedded player with each creator's credit. Only "Kasthamandap Rebuilding Process" by Bhugol Tour is CC BY 4.0; the others are not offered for download.
 - **model-viewer** (Google, BSD-3-Clause) is served from `landing/public/vendor/` and bundled in the app.
