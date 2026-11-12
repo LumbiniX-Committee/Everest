@@ -160,3 +160,5 @@ The files are the Google Fonts subsets (latin, latin-ext, devanagari), unmodifie
 - **Our 13 models** are our own work (`tools/models/build-models.mjs`).
 - **Real scans** (`seed/scans.json`) are not copied. They are shown through Sketchfab's embedded player with each creator's credit. Only "Kasthamandap Rebuilding Process" by Bhugol Tour is CC BY 4.0; the others are not offered for download.
 - **model-viewer** (Google, BSD-3-Clause) is served from `landing/public/vendor/` and bundled in the app.
+
+- **Map walking figure:** "Nathan Animated 003 - Walking 3D Man" by Renderpeople (https://sketchfab.com/3d-models/nathan-animated-003-walking-3d-man-143a2b1ea5eb4385ae90a73657aca3bc), CC BY 4.0, unmodified, at `landing/public/characters/walker.glb`.

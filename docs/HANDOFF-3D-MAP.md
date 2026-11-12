@@ -42,6 +42,22 @@ Before that (done and live): "apply 0015" and "analyse the nepali project which 
 ### Interim character (uncommitted)
 - `landing/public/characters/cesium-man.glb` (438 KB) downloaded from KhronosGroup glTF-Sample-Assets, **CC BY 4.0 by Cesium**, walk animation. **Its licence excludes the Cesium logo**, which appears to be on the shirt texture. Was about to extract the texture to check (script failed on `animations[].name` KeyError; use `.get('name')`). If the logo is there, blank it or do not use CesiumMan; prefer the Renderpeople model once a token exists.
 
+## Progress since the handoff was first written (2026-11-12, later)
+
+Saved on branch **`wip/realistic-walker`** (not on `main`, not deployed):
+
+- The user gave a Sketchfab API token. It is stored only in `~/saksi/.env.tools.local` as `SKETCHFAB_API_TOKEN` (git-ignored) and verified (account `MiddleMacaw667`).
+- **Downloaded** Renderpeople "Nathan Animated 003 - Walking 3D Man" (uid `143a2b1ea5eb4385ae90a73657aca3bc`, **CC BY 4.0**) as `landing/public/characters/walker.glb` (1.8 MB, 89 joints, one 2.23 s in-place walk clip "Take 001", Y-up, cm units under a root matrix). The CesiumMan stand-in was deleted (its logo was excluded from its licence).
+- **Step 1 done:** `tools/vendor-gltf-loader.mjs` → `components/map/gltfLoader.generated.ts` (`GLTF_LOADER_JS`, three 0.160.0, 108 KB, parses). Injected after `THREE_JS` in `buildMapHtml` when `avatar` is on.
+- **Step 2 written, not yet seen working:** in `AVATAR_LAYER` (`components/map/mapHtml.ts`), `WALKER_URL` = website `/characters/walker.glb`. On load: scale to 1.75 m, feet at origin, Y-up→Z-up (`upright.rotation.x = π/2`), `walker.rotation.z = π` (assumes the model walks toward +Z; **check by eye**), `AnimationMixer`. `measureWalk()` estimates natural speed from the left-foot bone's sweep (stance ≈ 60% of cycle) and finds "feet together" times. Each frame: walking → `timeScale = clamp(speed / naturalSpeed, 0.35, 2.2)`; stopping → finish the step at 0.8× and stop at a neutral time. The robed figure hides except its shadow; it remains the fallback (offline, load error). Posts `figure-ready` / `figure-model-failed`.
+- **Website:** `landing/next.config.mjs` adds `Access-Control-Allow-Origin: *` and caching for `/characters/*` and `/models/*`, because the WebView page has no origin.
+- `npx tsc` clean; `tests/native/map-html.test.ts` passes (6). Full `npm run verify`, website verify and lint not yet run on this branch.
+
+**Next on this branch:**
+1. Render the map page in Chrome to check the walker by eye: dump `buildMapHtml({ fullscreen: true, interactive: true, avatar: true })` from a throwaway Jest test into the scratchpad (and delete the test afterwards), open it with puppeteer-core (scratchpad `pp/` has it; launch args `--use-angle=swiftshader --enable-unsafe-swiftshader`), call `window.sakshiSetPose` with moving positions, and screenshot. Check facing (flip `walker.rotation.z` if he walks backwards), height, the feet not sliding, and the stop pose. The walker only loads once the website has deployed the CORS headers and `walker.glb`, or serve them locally.
+2. Credit Renderpeople: add to `LICENCES.md`, and to the map's attribution (`customAttribution` on the MapLibre map in `mapHtml.ts`) as "Walking figure: Renderpeople, CC BY 4.0".
+3. Steps 3–6 below (monuments on the map, Sketchfab fetch script, checks and docs), then merge to `main`, push, sync Everest, and optionally publish an OTA update to the preview channel.
+
 ## Plan to finish
 
 1. **Vendor GLTFLoader for the map.** Write `tools/vendor-gltf-loader.mjs`: read `node_modules/three/examples/jsm/loaders/GLTFLoader.js` (three 0.160.0), replace its `import {...} from 'three'` with `const {...} = THREE;`, inline `toTrianglesDrawMode` from `examples/jsm/utils/BufferGeometryUtils.js` (line 746, destructuring `TrianglesDrawMode, TriangleFanDrawMode, TriangleStripDrawMode` from THREE), drop `export`, wrap in an IIFE that sets `THREE.GLTFLoader`. Output `GLTF_LOADER_JS` into `components/map/vendor.generated.ts` or a new generated file, and inject it after `THREE_JS` in `mapHtml.ts`. No bundler is installed (no esbuild/rollup).
