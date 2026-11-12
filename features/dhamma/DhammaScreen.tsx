@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useRouter } from 'expo-router';
+import { useCallback, useState } from 'react';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { Image, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -10,6 +10,7 @@ import { demoDhammaEntries, findSource, type DhammaEntry } from '@/data';
 import { useHaptics } from '@/hooks';
 import { useInterfaceLanguage } from '@/i18n/context';
 import { visitorLiteralCopy } from '@/i18n/literals';
+import { dhamma } from '@/services';
 import { colors, font, radii, spacing } from '@/theme';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -29,6 +30,18 @@ const ENTRY_ICONS: Record<string, IconName> = {
   ehipassiko: 'leaf',
 };
 const FALLBACK_ICON: IconName = 'dharmachakra';
+
+/**
+ * Questions a visitor actually asks at a gate, each answered from a site page
+ * with its source (core/dhamma/sites.ts). Shown so the wider scope is
+ * discoverable: before, Ask looked like a scripture box and refused these.
+ */
+const SUGGESTIONS: { icon: IconName; text: string }[] = [
+  { icon: 'ticket-outline', text: 'How much is the entry fee for Kathmandu Durbar Square?' },
+  { icon: 'door-closed-lock', text: 'Can non-Hindus enter Pashupatinath?' },
+  { icon: 'camera-off-outline', text: 'Can I take photos inside the Maya Devi Temple?' },
+  { icon: 'history', text: 'What happened to Kasthamandap in 2015?' },
+];
 
 function DhammaEntryCard({
   entry,
@@ -77,12 +90,28 @@ export function DhammaScreen() {
   const insets = useSafeAreaInsets();
   const { selection } = useHaptics();
   const [question, setQuestion] = useState('');
+  const [recent, setRecent] = useState<string[]>([]);
 
-  const askTyped = () => {
-    const text = question.trim();
+  useFocusEffect(
+    useCallback(() => {
+      let live = true;
+      void dhamma.recentQuestions().then((items) => live && setRecent(items));
+      return () => {
+        live = false;
+      };
+    }, []),
+  );
+
+  const askText = (raw: string) => {
+    const text = raw.trim();
     if (!text) return;
     selection();
+    void dhamma.rememberQuestion(text).then(setRecent);
     router.push({ pathname: '/(main)/dhamma/question', params: { q: text } });
+  };
+
+  const askTyped = () => {
+    askText(question);
     setQuestion('');
   };
 
@@ -137,7 +166,7 @@ export function DhammaScreen() {
             value={question}
             onChangeText={setQuestion}
             style={[styles.searchInput, font('body')]}
-            placeholder={visitorLiteralCopy(language, 'Ask something about Lumbini or the early record')}
+            placeholder={visitorLiteralCopy(language, 'Ask about a place in Nepal, or the early texts')}
             placeholderTextColor={colors.textMuted}
             multiline
             returnKeyType="send"
@@ -172,9 +201,49 @@ export function DhammaScreen() {
             color={colors.textMuted}
           />
           <Text variant="caption" tone="secondary" style={styles.noteText}>
-            A small, narrow collection. It will say so when it cannot answer.
+            It answers from the app’s site pages, official fees, the Pali texts and heritage charters, and says so when it cannot.
           </Text>
         </View>
+
+        <View style={styles.suggestions}>
+          <Text variant="label" tone="muted" uppercase>
+            Try asking
+          </Text>
+          {SUGGESTIONS.map((item) => (
+            <Pressable
+              key={item.text}
+              accessibilityRole="button"
+              onPress={() => askText(visitorLiteralCopy(language, item.text))}
+              style={({ pressed }) => [styles.suggestion, pressed && styles.pressed]}
+            >
+              <Icon name={item.icon} size={18} color={colors.primary} />
+              <Text variant="body" style={styles.suggestionText}>
+                {item.text}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+
+        {recent.length ? (
+          <View style={styles.suggestions}>
+            <Text variant="label" tone="muted" uppercase>
+              You asked
+            </Text>
+            {recent.map((text) => (
+              <Pressable
+                key={text}
+                accessibilityRole="button"
+                onPress={() => askText(text)}
+                style={({ pressed }) => [styles.suggestion, pressed && styles.pressed]}
+              >
+                <Icon name="history" size={18} color={colors.textMuted} />
+                <Text variant="body" tone="secondary" translate={false} style={styles.suggestionText} numberOfLines={2}>
+                  {text}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        ) : null}
 
         <View style={styles.reflectionCard}>
           <View style={styles.reflectionRow}>
@@ -217,7 +286,7 @@ export function DhammaScreen() {
         </View>
 
         <Text variant="title" style={styles.sectionTitle}>
-          What it can answer
+          From the collection
         </Text>
 
         <View style={styles.list}>
@@ -373,6 +442,20 @@ const styles = StyleSheet.create({
   pressed: { opacity: 0.7 },
 
   note: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm },
+  suggestions: { gap: spacing.xs },
+  suggestion: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    minHeight: 48,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: radii.md,
+    backgroundColor: colors.surfaceRaised,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  suggestionText: { flex: 1 },
   noteText: { flex: 1 },
 
   reflectionCard: {
