@@ -2,6 +2,16 @@
 
 What changed in each milestone, what was verified, and what was not. Newest first. The plan lives in the delivery plan; this records what actually happened.
 
+## Visitor record, Ask about places, admin console (2026-11-12)
+
+- **Your record** (`features/me`): places visited, photos, every report at the step it has really reached, pending sync and plan, from this phone's database and the cached report steps. Reached from Explore's plan list and from Settings.
+- **Ask about places:** 631 passages built from the 74 curated site pages, the official fees, Pashupatinath's note and the listed places with a Wikidata description. A question that names a place (every distinctive word of its name, or its Devanagari stem) is answered by quoting that place's page, with its source. The hand-checked heritage passages still win for history questions about the same place; the page wins for fees, rules and photography. Unrecorded opening hours are said to be unrecorded. The 74-question benchmark still passes 74/74; 9 new tests.
+- **Ask page:** suggested questions, the visitor's recent questions (on this phone; "Delete my data" now clears them and the cached report steps), and a scope note that matches what it answers.
+- **Admin console** at `/admin` on the website: reports waiting on each site, sites with no custodian, site access by email, Pro codes (issue, see batches, revoke), recent crashes and an admin log. Migration `0014_platform_admin.sql`.
+
+**Verified:** `npm run verify` (200 core tests, 108 React tests, 103 links across 48 routes, benchmark 74/74), `landing` verify (36 tests and the build), lint at 59 known errors.
+**Not verified:** the pgTAP test for 0014 runs in CI only (no local database: the disk is full); 0014 is **not applied to production** yet; `/admin` has not been opened against real data; none of it has been tried on a phone. Answers about places are in English even when asked in Nepali, unless a language model is configured.
+
 ## Design, Guide · Ask · Report, and new content (2026-11-08 to 2026-11-11)
 
 Built after the 1.0 production bundle (`e08d04d`). **It is in preview APKs only (latest from `5c5b8b5`), not in any Play bundle.** None of it has been tried on a phone.
