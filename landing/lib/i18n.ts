@@ -27,6 +27,7 @@ export function isLocale(value: string): value is Locale {
 
 const EN = {
   'nav.howItWorks': 'How it works',
+  'nav.threeD': 'In 3D',
   'nav.technology': 'Technology',
   'nav.research': 'Research',
   'nav.forCustodians': 'For custodians',
@@ -50,6 +51,7 @@ export type LandingCopyKey = keyof typeof EN;
 
 const NE: Record<LandingCopyKey, string> = {
   'nav.howItWorks': 'यसरी काम गर्छ',
+  'nav.threeD': '3D मा',
   'nav.technology': 'प्रविधि',
   'nav.research': 'अनुसन्धान',
   'nav.forCustodians': 'संरक्षकका लागि',

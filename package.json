@@ -27,7 +27,7 @@
     "eas-build-pre-install": "node tools/check-release-config.mjs",
     "test": "node tools/run-tests.mjs",
     "test:react": "jest --runInBand --config jest.config.js",
-    "validate": "node tools/validate-seed.mjs && node --experimental-strip-types --no-warnings tools/gen-site-corpus.mjs --check",
+    "validate": "node tools/validate-seed.mjs && node --experimental-strip-types --no-warnings tools/gen-site-corpus.mjs --check && node --experimental-strip-types --no-warnings tools/gen-3d-web.mjs --check",
     "vocab": "node tools/lint-vocab.mjs",
     "i18n": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types tools/validate-i18n.mjs",
     "verify": "npm run typecheck && npm run typecheck:core && npm run test && npm run test:react && npm run validate && npm run vocab && npm run i18n && npm run routes && npm run eval:dhamma && npm run lint",

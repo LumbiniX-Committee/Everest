@@ -19,3 +19,4 @@ export { photoCreditForSite, remotePhotoForSite } from './sitePhotos';
 export { trekPhoto } from './trekPhotos';
 export { placeNote, type PlaceNote } from './placeNotes';
 export { guideFor, PLACE_GUIDES } from './guides';
+export { SCANS, scanEmbedUrl, scansFor, type Scan } from './generated/scans';

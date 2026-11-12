@@ -7,6 +7,7 @@ import { colors, spacing } from '@/theme';
 
 const ROWS = [
   { key: 'me', title: 'Your record', hint: 'Places visited, photos, and where each of your reports has got to.', icon: 'account-circle-outline', href: '/(main)/tirtha/me' },
+  { key: 'in-3d', title: 'Nepal in 3D', hint: 'Real scans of the places, and models you can place in your room.', icon: 'cube-outline', href: '/(main)/tirtha/in-3d' },
   { key: 'treks', title: 'Trekking routes', hint: 'Poon Hill, Langtang, Everest Base Camp: day by day, with altitude.', icon: 'image-filter-hdr', href: '/(main)/tirtha/treks' },
   { key: 'essentials', title: 'Essentials', hint: 'Stay, eat, health and money, with a number to call ahead.', icon: 'bed-outline', href: '/(main)/tirtha/essentials' },
 ] as const;

@@ -5,9 +5,10 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { EmptyState } from '@/components/common';
+import { ScanCards } from '@/components/models';
 import { PhotoHero, PhotoVeil, VisitInfo } from '@/components/site';
 import { Icon, Screen, SegmentedControl, Text, type IconName } from '@/components/ui';
-import { commonsThumb, feeForPlace, findPlace, guideFor, modelFor } from '@/data';
+import { commonsThumb, feeForPlace, findPlace, guideFor, modelFor, scansFor } from '@/data';
 import { useHaptics, useSafeBack } from '@/hooks';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { application } from '@/services';
@@ -190,6 +191,12 @@ export function PlaceGuideScreen({ placeId }: { placeId: string }) {
               </View>
             ))}
           </ScrollView>
+        </View>
+      ) : null}
+
+      {scansFor(place.id).length ? (
+        <View style={styles.section}>
+          <ScanCards scans={scansFor(place.id)} bleed={spacing.gutter} />
         </View>
       ) : null}
 

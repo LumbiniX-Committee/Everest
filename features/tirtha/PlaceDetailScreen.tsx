@@ -3,9 +3,10 @@ import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { BackBar, EmptyState } from '@/components/common';
+import { ScanCards } from '@/components/models';
 import { VisitInfo } from '@/components/site';
 import { Button, Divider, Icon, MetaRow, Screen, Text } from '@/components/ui';
-import { commonsThumb, feeForPlace, findPlace, guideFor, modelFor, placeNote } from '@/data';
+import { commonsThumb, feeForPlace, findPlace, guideFor, modelFor, placeNote, scansFor } from '@/data';
 import { useCurrentPosition, useSafeBack } from '@/hooks';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { application } from '@/services';
@@ -130,6 +131,12 @@ export function PlaceDetailScreen({ placeId }: { placeId: string }) {
           <Text variant="caption" tone="muted" translate={false}>
             {`Sources: ${placeNote(place.id)!.sources.map((source) => source.title).join('; ')}`}
           </Text>
+        </View>
+      ) : null}
+
+      {scansFor(place.id).length ? (
+        <View style={styles.note}>
+          <ScanCards scans={scansFor(place.id)} />
         </View>
       ) : null}
 
