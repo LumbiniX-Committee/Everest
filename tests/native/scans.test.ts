@@ -41,3 +41,18 @@ describe('3D scans', () => {
     expect(MODELS.length).toBeGreaterThanOrEqual(13);
   });
 });
+
+/** What stands on the map: real scans and our own models, never schematic ones. */
+describe('models on the map', () => {
+  it('have their file on the website, a precise position, and our models name their map feature', () => {
+    const { existsSync } = require('node:fs') as typeof import('node:fs');
+    const { MAP_SCANS } = require('@/data') as typeof import('@/data');
+    for (const m of MAP_SCANS) {
+      const file = m.modelled ? `landing/public/models/modelled/${m.file ?? m.id}.glb` : `landing/public/models/scans/${m.id}.glb`;
+      expect(existsSync(file)).toBe(true);
+      expect(String(m.latitude).split('.')[1]?.length ?? 0).toBeGreaterThanOrEqual(4);
+      if (m.modelled) expect(m.osm).toMatch(/^(way|node|relation)\/\d+$/);
+      else expect(m.licence).toMatch(/^CC (BY|0)/);
+    }
+  });
+});
