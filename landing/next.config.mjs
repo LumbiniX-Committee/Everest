@@ -10,6 +10,21 @@ const nextConfig = {
   turbopack: {
     root: fileURLToPath(new URL('.', import.meta.url)),
   },
+  /*
+   * The app's map runs in a WebView document with no web origin of its own,
+   * so it can load the walking figure and the monument models only if these
+   * files allow any origin. They are public, static and versioned by name.
+   */
+  async headers() {
+    const shared = [
+      { key: 'Access-Control-Allow-Origin', value: '*' },
+      { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=604800' },
+    ];
+    return [
+      { source: '/characters/:path*', headers: shared },
+      { source: '/models/:path*', headers: shared },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -2,6 +2,22 @@
 
 What changed in each milestone, what was verified, and what was not. Newest first. The plan lives in the delivery plan; this records what actually happened.
 
+## Realistic walking figure and monuments on the map (2026-11-12, branch `wip/realistic-walker`)
+
+- **Walking figure.** Renderpeople's "Nathan Animated 003" (CC BY 4.0, Sketchfab, downloaded with the owner's API token) replaces the robed figure on the map; the robed figure stays as the fallback (offline, load failure). GLTFLoader for three 0.160.0 is vendored as `components/map/gltfLoader.generated.ts` (`tools/vendor-gltf-loader.mjs`).
+- **Checked by eye** in headless Chrome (swiftshader), with the website's files served locally: faces the way he walks from behind, side and front; 1.75 m, feet on the ground.
+- **Fixed after that check:**
+  - the walk-speed measurement used the scan's centimetres and missed the step at the loop seam, so it always fell back to defaults; it now measures 1.02 m/s and a 1.117 s cycle;
+  - stopping could skip its stop frame on a slow frame; it now stops exactly on the next feet-together time;
+  - GPS sends no fix while you stand still (2 m distance filter), so the figure walked on the spot for ever; speed now counts as zero once a fix is overdue;
+  - the figure is 46 px at every zoom, so at the map's closest zoom (19) he is 3.5× life size and his planted foot slid 0.5–1 m per step. The owner chose planted feet: cadence = speed ÷ (natural speed × drawn scale). **Measured** foot drift per stance is now 1–13 cm at zoom 19 and 20 cm at zoom 18 (at most about 1 px).
+- **Monuments on the map** (`components/map/monumentModels.ts`): in 3D mode at zoom 15 and closer, our own 13 models stand at their sites, true size and north-aligned, at most 4 loaded at once. The town layer leaves out its own shape and any OSM building inside a model's footprint. The models' viewer ground plate is now named `ground` in `build-models.mjs` and dropped on the map. Models whose site coordinate is rounded (fewer than 4 decimals) are not placed: Swayambhunath's is 27.715, 85.29. Rendered at Kathmandu Durbar Square, Patan, Boudhanath and Lumbini.
+- **Credits:** on the map ("Walking figure: Renderpeople, CC BY 4.0"; "3D monuments: schematic models, not surveys") and in `LICENCES.md`.
+- **`tools/data/fetch-sketchfab.mjs`** downloads one model only if it is CC0 or CC BY, and prints the credit line. Tested: refused Maya Devi (not downloadable); the walker it downloaded is byte-identical to ours.
+- **Bhugol Tour** (sketchfab.com/Raj.Bikram.Maharjan) has 25 scans. Lumbini's Maya Devi Temple and Shanti Stupa have no licence, so they can only be embedded. 7 are CC BY and downloadable: Kasthamandap Rebuilding Process (5 MB glb), kasthmandap foundation, Keshar Mahal, banepa house, Chauni Idol2, ekleybhatti, and the Mustang petroglyph (11–70 MB). None is on the map yet.
+- **Checks:** app `npm run verify` passes; `lint:all` at 59 errors; website typecheck, lint and tests pass; the website build was not run (disk).
+- **Not verified:** frame rate and look on a phone (all of this is WebView/WebGL); terrain mode with models (they stand at sea-level height 0, like the town); the stop pose is the walk's feet-passing frame, since the clip has no idle.
+
 ## Nepal in 3D: real scans and AR (2026-11-12, night)
 
 - **0015 applied to production** with the owner's approval. Checked by calling `admin_weekly_activity`, `admin_list_reports`, `admin_crash_groups`, `admin_list_admins` and `admin_overview` as the admin in a rolled-back transaction. The console's sections now load live data.

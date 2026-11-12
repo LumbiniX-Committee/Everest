@@ -2,6 +2,7 @@ import {
   PLACES,
   MAP_CAMERA,
   MAP_HOME,
+  modelPlacements,
   monumentGeoJSON,
   precinctGroundGeoJSON,
   siteGeoJSON,
@@ -9,8 +10,27 @@ import {
 } from '@/data';
 import { colors, MAP_GLYPHS_URL, MAP_TILES_URL, sakshiMapStyle } from '@/theme';
 
+import { monumentModelsScript } from './monumentModels';
 import { townLayerScript } from './townLayer';
+import { GLTF_LOADER_JS } from './gltfLoader.generated';
 import { MAPLIBRE_CSS, MAPLIBRE_JS, THREE_JS } from './vendor.generated';
+
+/**
+ * The walking figure: Renderpeople's "Nathan Animated 003", a scanned person
+ * with a walk cycle (CC BY 4.0, credited in the map's attribution and in
+ * LICENCES.md). Served by the website with an open CORS header; the robed
+ * figure below stands in until it loads, offline, or if it fails.
+ */
+/** Where the website serves our monument models (as in services/models). */
+const MODELS_URL = process.env.EXPO_PUBLIC_MODELS_URL?.trim() || 'https://saksi-beta.vercel.app/models';
+const WALKER_URL = `${MODELS_URL.replace(/\/models\/?$/, '')}/characters/walker.glb`;
+
+/** CC BY asks for credit where the work is shown: on the map, beside the tile credits. */
+const WALKER_CREDIT =
+  'Walking figure: <a href="https://sketchfab.com/3d-models/nathan-animated-003-walking-3d-man-143a2b1ea5eb4385ae90a73657aca3bc" target="_blank">Renderpeople</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a>';
+
+/** The monument models are built from published descriptions, not measured: say so where they are seen. */
+const MONUMENTS_CREDIT = '3D monuments: schematic models, not surveys';
 
 /**
  * The basemap, terrain and fonts all load through the page's own \`saksi://\`
@@ -193,7 +213,7 @@ export function buildMapHtml({
      no network and can't be blanked by an outage elsewhere. -->
 <style>${MAPLIBRE_CSS}</style>
 <script>${MAPLIBRE_JS}</script>
-${avatar ? `<script>${THREE_JS}</script>` : ''}
+${avatar ? `<script>${THREE_JS}</script><script>${GLTF_LOADER_JS}</script>` : ''}
 <style>
   html,body,#map{margin:0;padding:0;height:100%;width:100%;background:${colors.mapBase}}
   .maplibregl-ctrl-attrib{font-size:10px}
@@ -264,7 +284,9 @@ ${OFFLINE_PROTOCOL}
       zoom: ${zoom},
       pitch: ${pitch},
       bearing: ${bearing},
-      attributionControl: { compact: false },
+      attributionControl: ${JSON.stringify(
+        avatar ? { compact: false, customAttribution: [WALKER_CREDIT, MONUMENTS_CREDIT] } : { compact: false },
+      )},
       interactive: ${interactive},
       // Wide enough to see the whole of Nepal, not so wide the place is lost.
       minZoom: 6,
@@ -435,7 +457,7 @@ ${POSITION_MARKER}
       // schematic plan. The map does not need the character; the character
       // needs the map.
       post({ type:'ready' });
-${avatar ? AVATAR_LAYER + townLayerScript(monumentGeoJSON) : ''}
+${avatar ? AVATAR_LAYER + townLayerScript(monumentGeoJSON) + monumentModelsScript(modelPlacements(), MODELS_URL) : ''}
     });
   } catch (err) {
     post({ type:'error', message: String(err) });
@@ -1080,6 +1102,106 @@ const AVATAR_LAYER = `
         /** 0 while walking, 1 once settled. Eased, never switched. */
         var settle = 0;
 
+        /*
+         * The realistic walker, replacing the robed figure once it loads.
+         *
+         * Its walk cycle is "in place": the body does not travel, so the feet
+         * would slide unless the cycle plays at the speed the person is really
+         * walking. That speed is measured from the animation itself, from how
+         * far the left foot sweeps back during its stance and how many steps
+         * the clip holds, so the playback rate follows the GPS speed and each
+         * foot stays planted for as long as it is on the ground.
+         */
+        var walker = null, mixer = null, walkAction = null;
+        var naturalSpeed = 1.3, clipPeriod = 1.1, clipDuration = 1, neutralTimes = [0];
+        function measureWalk(model, clip) {
+          var foot = null;
+          model.traverse(function (o) {
+            if (!foot && o.isBone && /foot/i.test(o.name) && /(^|[^a-z])l([^a-z]|$)|left/i.test(o.name)) foot = o;
+          });
+          if (!foot) return null;
+          var probe = new THREE.AnimationMixer(model);
+          var act = probe.clipAction(clip);
+          act.play();
+          // Sampled in the model's parent frame, which is metres once the
+          // model is scaled. Not model.worldToLocal: that undoes the scale
+          // and measures in the scan's own centimetres.
+          var N = 120, xs = [], zs = [], p = new THREE.Vector3();
+          for (var i = 0; i < N; i++) {
+            probe.setTime((clip.duration * i) / N);
+            model.updateMatrixWorld(true);
+            foot.getWorldPosition(p);
+            xs.push(p.x); zs.push(p.z);
+          }
+          act.stop(); probe.uncacheRoot(model);
+          var range = function (a) { return Math.max.apply(null, a) - Math.min.apply(null, a); };
+          var fwd = range(zs) >= range(xs) ? zs : xs;
+          var mean = fwd.reduce(function (a, b) { return a + b; }, 0) / N;
+          // Each upward crossing of the mean is one full cycle of the left
+          // foot. The clip loops, so the seam from the last sample back to the
+          // first is checked too; a crossing there was being missed, halving
+          // the count.
+          var cycles = 0, crossings = [];
+          for (var k = 1; k <= N; k++) {
+            var a = fwd[k - 1] - mean, b = fwd[k % N] - mean;
+            if (a < 0 && b >= 0) cycles++;
+            if ((a < 0) !== (b < 0)) crossings.push((clip.duration * (k % N)) / N);
+          }
+          cycles = Math.max(1, cycles);
+          var period = clip.duration / cycles;
+          // About 60% of a walking cycle is stance, when the foot is planted
+          // and the body passes over it at walking speed.
+          var speed = range(fwd) / (0.6 * period);
+          return { speed: speed, period: period, neutral: crossings.length ? crossings : [0] };
+        }
+        if (THREE.GLTFLoader) {
+          new THREE.GLTFLoader().load(${JSON.stringify(WALKER_URL)}, function (gltf) {
+            try {
+              var model = gltf.scene;
+              var clip = gltf.animations && gltf.animations[0];
+              if (!clip) throw new Error('no walk cycle');
+              model.updateMatrixWorld(true);
+              var box = new THREE.Box3().setFromObject(model);
+              var size = box.getSize(new THREE.Vector3());
+              model.scale.multiplyScalar(FIGURE_HEIGHT_M / size.y);
+              model.updateMatrixWorld(true);
+              box.setFromObject(model);
+              model.position.x -= (box.min.x + box.max.x) / 2;
+              model.position.z -= (box.min.z + box.max.z) / 2;
+              model.position.y -= box.min.y;
+              model.traverse(function (o) { if (o.isMesh) o.frustumCulled = false; });
+
+              var measured = measureWalk(model, clip);
+              if (measured && measured.speed > 0.4 && measured.speed < 3) {
+                naturalSpeed = measured.speed; clipPeriod = measured.period; neutralTimes = measured.neutral;
+              }
+
+              // glTF is Y-up and faces +Z; the map frame is Z-up with north +Y.
+              var upright = new THREE.Group();
+              upright.rotation.x = Math.PI / 2;
+              upright.add(model);
+              walker = new THREE.Group();
+              walker.rotation.z = Math.PI;
+              walker.add(upright);
+
+              clipDuration = clip.duration;
+              mixer = new THREE.AnimationMixer(model);
+              walkAction = mixer.clipAction(clip);
+              walkAction.play();
+              walkAction.timeScale = 0;
+              walkAction.time = neutralTimes[0];
+
+              figure.children.forEach(function (c) { if (c !== shadow) c.visible = false; });
+              figure.add(walker);
+              post({ type: 'figure-ready', kind: 'walker', naturalSpeed: Math.round(naturalSpeed * 100) / 100 });
+            } catch (walkerErr) {
+              post({ type: 'figure-model-failed', message: String(walkerErr) });
+            }
+          }, undefined, function (loadErr) {
+            post({ type: 'figure-model-failed', message: String(loadErr && loadErr.message || loadErr) });
+          });
+        }
+
         map.addLayer({
           id: 'sakshi-figure',
           type: 'custom',
@@ -1102,11 +1224,20 @@ const AVATAR_LAYER = `
 
             // 512 px tiles, so this is the half of the usual constant.
             var mPerPx = 78271.51696 * Math.cos(pose.drawLat * Math.PI / 180) / Math.pow(2, map.getZoom());
-            var scale = (FIGURE_PX * mPerPx) / FIGURE_HEIGHT_M;
+            // Never smaller than life: zoomed in far enough that a real person
+            // would stand taller than FIGURE_PX, draw them at true size, so
+            // the stride matches the ground passing under it.
+            var scale = Math.max(1, (FIGURE_PX * mPerPx) / FIGURE_HEIGHT_M);
 
             // Walking is judged from the reported speed, not from whether the
-            // smoothed position happens to be moving this frame.
-            var walking = pose.speed > 0.35;
+            // smoothed position happens to be moving this frame. Fixes only
+            // arrive every couple of metres, so standing still sends nothing
+            // and the last speed would stand forever: once the next fix is
+            // well overdue for that speed (twice the 2 m it should take), the
+            // person has stopped.
+            var sinceFix = Date.now() - (pose.lastAt || 0);
+            var speedNow = sinceFix > Math.max(2500, 4000 / Math.max(0.4, pose.speed)) ? 0 : pose.speed;
+            var walking = speedNow > 0.35;
             walkPhase += dt * (walking ? 5.2 : 1.3);
 
             // Two postures, eased between rather than switched. Walking, the
@@ -1137,6 +1268,37 @@ const AVATAR_LAYER = `
             shadowMat.opacity = 0.22 + settle * 0.10;
 
             halo.rotation.z += dt * 0.6;
+
+            if (mixer && walkAction) {
+              if (walking) {
+                // Cadence follows the real speed and the size he is drawn at,
+                // so a planted foot stays put on the ground. Drawn larger than
+                // life (every zoom up to the map's 19), his stride is longer
+                // by the same factor, so he takes fewer steps: a larger figure
+                // walking unhurriedly, rather than one skating on the spot.
+                walkAction.timeScale = Math.min(2.2, Math.max(0.2, speedNow / (naturalSpeed * scale)));
+              } else if (walkAction.timeScale !== 0) {
+                // Finish the step and stand with the feet together, rather
+                // than freezing mid-stride, at no faster than he was walking.
+                // Stop exactly on the next feet-together time if this frame
+                // would reach it; a window around it is skipped by a slow frame.
+                var finishRate = Math.min(0.8, Math.max(0.2, 1 / scale));
+                var t = walkAction.time, adv = dt * finishRate;
+                var ahead = Math.min.apply(null, neutralTimes.map(function (n) {
+                  return ((n - t) % clipDuration + clipDuration) % clipDuration;
+                }));
+                if (ahead <= adv) {
+                  walkAction.time = (t + ahead) % clipDuration;
+                  walkAction.timeScale = 0;
+                } else {
+                  walkAction.timeScale = finishRate;
+                }
+              }
+              mixer.update(dt);
+              // The walker carries its own contact shadow cue; the robed
+              // figure's bob and settle do not apply to it.
+              figure.position.z = 0;
+            }
 
             var origin = maplibregl.MercatorCoordinate.fromLngLat([pose.drawLng, pose.drawLat], 0);
             var unit = origin.meterInMercatorCoordinateUnits() * scale;
