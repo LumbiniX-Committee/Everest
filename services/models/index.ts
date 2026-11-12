@@ -34,3 +34,19 @@ export async function loadModel(id: string): Promise<string> {
   }
   return FileSystem.readAsStringAsync(path);
 }
+
+/**
+ * Opens a model in Google's Scene Viewer, which places it in the room through
+ * the camera (Android with Google Play Services for AR). The model is the same
+ * file the website serves. Without Scene Viewer, Android falls back to the
+ * website's 3D page, which has its own AR button.
+ */
+export function arIntentUrl(id: string, title: string): string | null {
+  if (!SAFE_ID.test(id)) return null;
+  const file = encodeURIComponent(`${BASE_URL}/${id}.gltf`);
+  const fallback = encodeURIComponent(`${BASE_URL.replace(/\/models$/, '')}/en/3d#${id}`);
+  return (
+    `intent://arvr.google.com/scene-viewer/1.0?file=${file}&mode=ar_preferred&title=${encodeURIComponent(title)}` +
+    `#Intent;scheme=https;package=com.google.android.googlequicksearchbox;action=android.intent.action.VIEW;S.browser_fallback_url=${fallback};end;`
+  );
+}

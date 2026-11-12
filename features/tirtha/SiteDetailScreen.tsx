@@ -5,9 +5,10 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { Button, Card, ConditionBadge, Divider, MetaRow, Screen, SegmentedControl, SourceBadge, Text } from '@/components/ui';
 import { BackBar, EmptyState, ProGate } from '@/components/common';
+import { ScanCards } from '@/components/models';
 import { NarrationPlayer, SiteListItem, SiteVisual, VantageListItem, VisitInfo } from '@/components/site';
 import { SourceCard, SourceDetailSheet } from '@/components/source';
-import { audioForSite, findSite, historicalImagesForSite, narrationForSite, questsForSite, resolveSources, sitesForParent, vantagesForSite, feeForSite, modelFor } from '@/data';
+import { audioForSite, findSite, historicalImagesForSite, narrationForSite, questsForSite, resolveSources, sitesForParent, vantagesForSite, feeForSite, modelFor, scansFor } from '@/data';
 import { useCurrentPosition, useOpenInTabs, useSafeBack } from '@/hooks';
 import { location as locationService } from '@/services';
 import { usePreferences } from '@/store';
@@ -327,6 +328,13 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
               </View>
             ))}
           </View>
+        </>
+      ) : null}
+
+      {scansFor(site.id, site.parentSiteId).length ? (
+        <>
+          <Divider />
+          <ScanCards scans={scansFor(site.id, site.parentSiteId)} />
         </>
       ) : null}
 

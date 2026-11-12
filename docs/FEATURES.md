@@ -106,6 +106,18 @@ Reached from the "In depth" shelf on Explore and from each place's page. The tex
 
 **Tested** (rendered in Chrome). **Needs:** cultural review.
 
+## 5a. Nepal in 3D: real scans and AR
+
+Since 2026-11-12.
+
+- **Real scans:** 11 captures of our places by photographers, drone surveyors and university teams, many of them Nepali (`seed/scans.json`). They play in Sketchfab's embedded player, only when opened, with the creator's credit and its VR mode. They are not copied, because only one is openly licensed.
+- **App:**
+  - a "Nepal in 3D" screen;
+  - scan cards on site pages, place pages, place guides and the model screen;
+  - "View in your space" on Android, which places our model in the room with Google's Scene Viewer.
+- **Website:** `/en/3d` and `/ne/3d`, with a model stage for all 13 models (AR on Android and iPhone) and the scan gallery.
+- **Tested** (data tests; the website page rendered in a browser). **Not checked:** scan playback, AR and VR on a real phone.
+
 ## 6. Trekking
 
 `features/treks/`, `data/generated/treks.ts`, built by `tools/data/build-treks.mjs`

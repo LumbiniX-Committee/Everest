@@ -2,6 +2,43 @@
 
 What changed in each milestone, what was verified, and what was not. Newest first. The plan lives in the delivery plan; this records what actually happened.
 
+## Nepal in 3D: real scans and AR (2026-11-12, night)
+
+- **0015 applied to production** with the owner's approval. Checked by calling `admin_weekly_activity`, `admin_list_reports`, `admin_crash_groups`, `admin_list_admins` and `admin_overview` as the admin in a rolled-back transaction. The console's sections now load live data.
+- **Research.** No Nepali project publishes its heritage scans under an open licence that would let us copy them. The strongest were found on Sketchfab:
+  - Bhugol Tour (Nepali drone surveys of Lumbini and Kasthamandap);
+  - 3Dystopia's "Nepal Heritage" series (paid, Standard licence);
+  - the UNC Chapel Hill Swayambhu project (scanned with the custodians' permission);
+  - Visualising Heritage (research reconstructions);
+  - Durham University's UNESCO Chair (Tilaurakot);
+  - drone surveys of Kathmandu after the 2015 earthquake.
+- **11 scans chosen by eye** (`tools/data/build-scans.mjs` → `seed/scans.json`):
+  - only one is CC BY (Kasthamandap, rebuilding);
+  - the rest are shown only in Sketchfab's own embedded player, with the creator's credit and `dnt=1`, and are never copied;
+  - interior altars and patchy reconstructions were left out.
+- **App:**
+  - "Nepal in 3D" (`/(main)/tirtha/in-3d`, from Explore's plan list);
+  - a scan screen (`/(main)/tirtha/scan/[scanId]`) whose player loads only when opened;
+  - scan cards on the site page, the place page, the place guides and the model screen;
+  - "View in your space" on Android, which opens our model in Google's Scene Viewer for AR (`models.arIntentUrl`) and falls back to the website.
+- **Website:** `/[locale]/3d`, with:
+  - a model-viewer stage for all 13 models, with numbered features, sources and an AR button (WebXR, Scene Viewer, and Quick Look on iPhone);
+  - a scan gallery that loads Sketchfab only on click.
+  - model-viewer is served from our own domain (`landing/public/vendor`), so no CDN is involved.
+  - `tools/gen-3d-web.mjs` feeds both from one source; `npm run validate` fails if its output is stale.
+- **Privacy policy** names Sketchfab and Scene Viewer.
+
+**Verified:**
+- App verify: 201 core tests and 114 React tests, plus 5 new scan tests run separately; 114 links across 51 routes.
+- Website verify: 42 tests and the build.
+- In headless Chrome, model-viewer loaded and drew the models on the 3D page.
+
+**Not verified:**
+- Sketchfab's player failed to start in headless Chrome (software WebGL), so scan playback has not been seen working.
+- AR has not been tried on a phone: neither Scene Viewer from the app nor Quick Look and WebXR from the website.
+- VR rests on Sketchfab's own player and has not been tried.
+- No creator has been asked. Embedding is what Sketchfab offers for public models, but asking Bhugol Tour and the others would be courteous, and is needed before using any scan beyond the embed.
+
 ## Detailed admin console, change password, new website type (2026-11-12, evening)
 
 - **Admin console** is now a full app at `/admin`:
