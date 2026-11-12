@@ -184,9 +184,28 @@ export function townLayerScript(monuments: FeatureCollection<Polygon>): string {
           }
         }
 
+        /*
+         * Where a monument model stands (monumentModels), this layer draws
+         * nothing: not the site's own shape, and no OSM building whose middle
+         * falls inside the model's footprint.
+         */
+        function zoneFor(lng, lat) {
+          var zones = window.sakshiModelZones || [];
+          for (var i = 0; i < zones.length; i++) {
+            var z = zones[i];
+            var x = (lng - z.lng) * 111320 * Math.cos(z.lat * Math.PI / 180), y = (lat - z.lat) * 111320;
+            if (Math.hypot(x, y) < z.r) return z;
+          }
+          return null;
+        }
+        function modelTakes(siteId) {
+          return (window.sakshiModelZones || []).some(function (z) { return z.targets.indexOf(siteId) >= 0; });
+        }
+
         function buildMonuments(textured, plain, unit) {
           var data = ${JSON.stringify(monuments)};
           data.features.forEach(function (f, idx) {
+            if (modelTakes(f.properties.id)) return;
             var pts = toLocal(f.geometry.coordinates[0], unit);
             if (pts.length < 3) return;
             var h = f.properties.height || 6;
@@ -261,6 +280,9 @@ export function townLayerScript(monuments: FeatureCollection<Polygon>): string {
               var key = ring[0][0].toFixed(6) + ',' + ring[0][1].toFixed(6) + ',' + ring.length;
               if (seen[key]) continue;
               seen[key] = 1;
+              var mx = 0, my = 0;
+              for (var q = 0; q < ring.length - 1; q++) { mx += ring[q][0]; my += ring[q][1]; }
+              if (zoneFor(mx / (ring.length - 1), my / (ring.length - 1))) continue;
               var d = Math.hypot(ring[0][0] - centre.lng, ring[0][1] - centre.lat);
               list.push({ ring: ring, d: d, h: f.properties.render_height || 6, base: f.properties.render_min_height || 0, id: (f.id || 0) + k });
             }

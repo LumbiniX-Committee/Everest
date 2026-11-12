@@ -157,7 +157,8 @@ The files are the Google Fonts subsets (latin, latin-ext, devanagari), unmodifie
 
 ## 3D
 
-- **Our 13 models** are our own work (`tools/models/build-models.mjs`).
+- **Our 13 models** are our own work (`tools/models/build-models.mjs`). The map stands them at their sites in 3D mode, credited there as schematic models, not surveys.
+- **Downloading from Sketchfab** goes through `tools/data/fetch-sketchfab.mjs`, which refuses anything but CC0 and CC BY and prints the credit line to add here.
 - **Real scans** (`seed/scans.json`) are not copied. They are shown through Sketchfab's embedded player with each creator's credit. Only "Kasthamandap Rebuilding Process" by Bhugol Tour is CC BY 4.0; the others are not offered for download.
 - **model-viewer** (Google, BSD-3-Clause) is served from `landing/public/vendor/` and bundled in the app.
 

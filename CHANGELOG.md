@@ -15,6 +15,8 @@ Not yet in a Play bundle, and not yet tried on a phone.
 
 ### Map and 3D
 - **3D town:** at street zoom, 3D mode draws houses with windows and roofs instead of boxes.
+- **A real walking figure:** a scanned person walks with you on the map, in step with your speed, and stops when you stop.
+- **Monuments on the map:** in 3D mode, close in, our 3D models of Kathmandu Durbar Square, Patan, Bhaktapur, Boudhanath, Pashupatinath, Changu Narayan, Pokhara and Lumbini stand at their sites.
 - **New 3D models:** a detailed Pashupatinath (courtyard, Nandi, shrines and river), the Basantapur tower with Lohan Chowk, Taleju, Kasthamandap and Maju Dega. 13 models in all. Overall heights are sourced; other sizes are estimates, and each model says so.
 
 ### In-depth guides
