@@ -5,3 +5,4 @@ export { NarrationPlayer } from './NarrationPlayer';
 export { SiteVisual, type SiteVisualProps } from './SiteVisual';
 export { VisitInfo } from './VisitInfo';
 export { PhotoHero } from './PhotoHero';
+export { PhotoVeil } from './PhotoVeil';

@@ -13,6 +13,7 @@
 import { resolveSegment, type BilaraChunk } from './bilara.ts';
 import { hybridRetrieve, type RetrievalResult } from './retrieval.ts';
 import { callLlm, DHAMMA_MODEL, hasProvider, trimToCompleteSentence } from './llm.ts';
+import { answerAboutPlace, findNamedPlace, type SiteAnswer } from './sites.ts';
 
 /**
  * Declared once, in the shared vocabulary, and re-exported here so everything
@@ -238,14 +239,57 @@ const DOMAIN_VOCAB = new Set([
   'विष्णु', 'तलेजु', 'कुमारी', 'गरुड',
 ]);
 
+/** Requests the engine must never act on, whatever they name. */
+const IMPERSONATION_PATTERNS = [
+  /\bspeak (to me )?as (the )?buddha\b/i,
+  /\byou are (the )?buddha\b/i,
+  /\bpretend (you are|to be)\b/i,
+  /\bsecret (teachings?|pali|dhamma)\b/i,
+  /\bhidden from (monks?|disciples?)\b/i,
+  /\bprevious instructions\b/i,
+  /\bno restrictions\b/i,
+  /\bpassword\b/i,
+  /\bverse 999\b/i,
+  /\bnever written down\b/i,
+  /\bhinduism\b/i,
+  /\btherav.da\b.*\bmah.y.na\b/i,
+  // Fabricated citation bait: "Buddha said [modern claim]. What sutta?"
+  /\bbuddha said\b.{0,60}\bwhat sutta\b/i,
+  /\bbuddha said\b.{0,60}\bsutta is this\b/i,
+];
+
 /** Returns true if the query contains at least one domain-relevant token */
 function isDomainQuery(question: string): boolean {
   const queryTerms = question.toLowerCase().split(/[\s,.:;?!'"()\[\]\/\\—–-]+/);
   return queryTerms.some((t) => t.length >= 2 && DOMAIN_VOCAB.has(t));
 }
 
-/** Grounding Gate & Citation Validator Engine execution */
+/**
+ * Grounding Gate & Citation Validator Engine execution.
+ *
+ * A question that names a place can also be answered from that place's own
+ * page (core/dhamma/sites.ts). The hand-checked heritage passages win where
+ * they answer, because they were written for exactly those questions; the
+ * page wins for practical questions (fee, rules, photography) and for the
+ * places the canon and the charters never mention, which they used to refuse.
+ */
 export function askDhamma(req: DhammaAskRequest): DhammaAskResponse {
+  const corpus = askCorpus(req);
+  if (corpus.tier === 'cached_demo' || IMPERSONATION_PATTERNS.some((p) => p.test(req.question))) return corpus;
+  const named = findNamedPlace(req.question);
+  const site = named ? answerAboutPlace(req.question, named) : null;
+  if (!site) return corpus;
+  // The heritage passage counts only when it is about the same place: a
+  // question about Trailokya Mohan once drew Patan's construction history
+  // because both mention Narayan and building.
+  const heritage = corpus.refused ? undefined : resolveSegment(corpus.passages[0]?.segment_id ?? '');
+  const heritageText = heritage ? `${heritage.title_en} ${heritage.english}`.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') : '';
+  const heritageAnswered = heritage?.corpus === 'heritage' && named!.key.every((word) => heritageText.includes(word));
+  if (heritageAnswered && !site.practical) return corpus;
+  return buildSiteResponse(site);
+}
+
+function askCorpus(req: DhammaAskRequest): DhammaAskResponse {
   // Trailing punctuation stripped before the cache lookup: DEMO_CACHE's keys
   // are punctuation-free, so "What are the Four Noble Truths?" (a real
   // question, typed the way anyone types a question) missed the cache
@@ -258,7 +302,7 @@ export function askDhamma(req: DhammaAskRequest): DhammaAskResponse {
     return {
       answer: null,
       refused: true,
-      refusal_reason: 'This question is outside the scope of what this engine draws on: the Pali Tipiṭaka, and heritage-conservation sources (UNESCO World Heritage records, the ICOMOS Venice and Burra Charters, Kathmandu Valley archaeology, and Hindu and Newar tradition texts on Vaishnava iconography, Newar temple architecture, and Taleju and Kumari).',
+      refusal_reason: 'This question is outside the scope of what this engine draws on: the app\'s own pages for the sites and places it lists, the Pali Tipiṭaka, and heritage-conservation sources (UNESCO World Heritage records, the ICOMOS Venice and Burra Charters, Kathmandu Valley archaeology, and Hindu and Newar tradition texts on Vaishnava iconography, Newar temple architecture, and Taleju and Kumari).',
       citations: [],
       passages: [],
       tier: 'full_rag',
@@ -267,23 +311,6 @@ export function askDhamma(req: DhammaAskRequest): DhammaAskResponse {
   }
 
   // 1. Impersonation & prompt-injection & non-canonical comparative gate — these override domain-vocab pass
-  const IMPERSONATION_PATTERNS = [
-    /\bspeak (to me )?as (the )?buddha\b/i,
-    /\byou are (the )?buddha\b/i,
-    /\bpretend (you are|to be)\b/i,
-    /\bsecret (teachings?|pali|dhamma)\b/i,
-    /\bhidden from (monks?|disciples?)\b/i,
-    /\bprevious instructions\b/i,
-    /\bno restrictions\b/i,
-    /\bpassword\b/i,
-    /\bverse 999\b/i,
-    /\bnever written down\b/i,
-    /\bhinduism\b/i,
-    /\btherav.da\b.*\bmah.y.na\b/i,
-    // Fabricated citation bait: "Buddha said [modern claim]. What sutta?"
-    /\bbuddha said\b.{0,60}\bwhat sutta\b/i,
-    /\bbuddha said\b.{0,60}\bsutta is this\b/i,
-  ];
   if (IMPERSONATION_PATTERNS.some((p) => p.test(req.question))) {
     return {
       answer: null,
@@ -359,6 +386,9 @@ export async function askDhammaAsync(req: DhammaAskRequest): Promise<DhammaAskRe
   // 1. Run Grounding Gate & Pre-checks synchronously
   const syncResult = askDhamma(req);
   // Cached demo answers are English. Re-run retrieval and generation for Nepali.
+  // A place's own page is quoted as written: rewording it adds nothing a
+  // visitor can check, and the synthesis below retrieves from the canon only.
+  if (syncResult.mode === 'site') return syncResult;
   if (syncResult.refused || req.mode === 'passages_only' || (syncResult.tier === 'cached_demo' && req.language !== 'ne')) {
     return syncResult;
   }
@@ -461,6 +491,26 @@ export function validateCitations(text: string, matches: RetrievalResult[]): Cit
   }
 
   return citations;
+}
+
+function buildSiteResponse({ place, chunks, notRecorded }: SiteAnswer): DhammaAskResponse {
+  const [top, ...rest] = chunks;
+  const passages: Passage[] = [top, ...rest.slice(0, 2)].map((chunk) => ({
+    segment_id: chunk.chunk_id,
+    pali: '',
+    english: chunk.english,
+    translator: chunk.translator,
+    collection: chunk.title_en,
+    licence: chunk.license,
+  }));
+  return {
+    answer: `${notRecorded ? `${notRecorded} What is on record: ` : ''}According to ${top.title_en} [${top.chunk_id}]: ${top.english}`,
+    refused: false,
+    citations: [{ segment_id: top.chunk_id, sutta_uid: place.id, display: top.title_en }],
+    passages,
+    tier: 'full_rag',
+    mode: 'site',
+  };
 }
 
 function buildRefusalResponse(_question: string, matches: RetrievalResult[]): DhammaAskResponse {

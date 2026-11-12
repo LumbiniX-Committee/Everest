@@ -295,6 +295,15 @@ Deployment config exists at [mock-api/railway.json](../../mock-api/railway.json)
 
 ---
 
+## 11. Platform admin — [0014](../../supabase/migrations/0014_platform_admin.sql)
+
+- `platform_admins` lists the service owners. Only the service role writes it (`tools/grant-admin.mjs <email>`), so no browser can make itself an admin.
+- Every console action is a `security definer` function that calls `require_platform_admin()` first: `admin_overview`, `admin_list_custodians`, `admin_set_custodian`, `admin_issue_codes`, `admin_code_batches`, `admin_revoke_batch`, `admin_recent_crashes`, `admin_recent_actions`. Anonymous callers have no execute grant.
+- Nothing deletes: site access is turned off (`active = false`), code batches are revoked, and each change is written to `admin_actions`, which a trigger keeps append-only.
+- `admin_issue_codes` hashes exactly as `redeem_activation_code` does; the pgTAP test redeems an issued code to prove it.
+- Crash rows are shown without user id or stack.
+- The website calls these through `landing/app/api/admin/*`, which check `is_platform_admin` first only to choose the right error.
+
 ## Needs verification
 
 1. Whether migration 0007 has been applied to the live project, and whether anonymous sign-in is enabled there.

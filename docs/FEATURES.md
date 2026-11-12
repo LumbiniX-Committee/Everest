@@ -61,6 +61,22 @@ Where it ships:
 
 **Tested** (React and data tests). **Not checked:** listings on site.
 
+## 3a. In-depth place guides
+
+Since 1.0. `features/guides/`, content in `data/guides.ts`.
+
+For **Pashupatinath, Boudhanath and Swayambhunath**:
+- a cover photograph and a credited gallery (Wikimedia Commons, free licences);
+- quick facts;
+- three chapters, each at Glance · Story · Scholar depth (the same remembered preference);
+- a numbered walk whose stops carry OpenStreetMap positions, or say "Not mapped yet";
+- before-you-go cards and the official fee;
+- Ask shortcuts and sources.
+
+Reached from the "In depth" shelf on Explore and from each place's page. The text also feeds Ask.
+
+**Tested** (data test `tests/native/place-guides.test.ts`; rendered in a browser). **Needs:** review by the site trusts, and a check of the Wikipedia-sourced heights and dates against primary sources.
+
 ## 4. Map
 
 `features/tirtha/LiveMapScreen.tsx`, `components/map/`
@@ -115,7 +131,9 @@ Where it ships:
 - Grounded answers with numbered, checkable sources, and a refusal when nothing supports an answer.
 - **Since 1.0:** the two promises shown under the title.
 - **Note:** `eas.json` sets no `EXPO_PUBLIC_LLM_API_KEY`, so store builds most likely answer from retrieval alone, still cited. Confirm the EAS environment before marketing Ask as AI chat.
-- **Tested** (Dhamma benchmark in `verify`).
+- **Since 1.0: questions about places.** A question that names a place is answered by quoting that place's own page (fee, rules, photography, history), with its source. 631 passages from the 74 curated sites, official fees and listed places (`tools/gen-site-corpus.mjs`, `core/dhamma/sites.ts`). History questions about a place the heritage corpus covers still use the hand-checked passage. Opening hours nobody recorded are said to be unrecorded.
+- **Since 1.0: suggested and recent questions** on the Ask page. Recent questions stay on the phone and are cleared by "Delete my data".
+- **Tested** (Dhamma benchmark in `verify`, 74/74; `core/dhamma/sites.test.ts`).
 
 ## 9. Report (Sākṣī)
 
@@ -140,6 +158,15 @@ Where it ships:
 - **Storage** and offline maps, preferences and plans.
 - **Since 1.0: the Sunlight theme** (`outdoorColors` in `theme/colors.ts`): Settings → Appearance → "High contrast for sunlight". Primary and secondary text are held to 7:1 by `tests/native/theme-contrast.test.ts`.
 - **Tested.**
+
+## 10a. Your record
+
+Since 1.0. `features/me/MeScreen.tsx`, from Explore's plan list or Settings.
+
+- Places visited (first and last visit), photos taken, quests done.
+- **Every report in one list**, at the step it has really reached (`core/reports/board.ts`), with the custodian's note and when the steps were last checked.
+- Records waiting to send, the plan, and a link to export or delete.
+- **Tested** (core tests for the report list). **Not checked:** on a phone.
 
 ## 11. Characters
 
@@ -172,6 +199,12 @@ English and Nepali throughout. New strings must be registered in `i18n/literals.
 - **Since 1.0: explorer map fix.** The MapLibre worker's `maplibre-gl-shared.mjs` chunk is now copied.
 - **Privacy policy:** names every outside service and has a `#delete` anchor.
 - **Custodian portal:** at `/custodian`.
+- **Since 1.0: admin console** at `/admin`, for the service owner (`landing/app/admin`, migration `0014_platform_admin.sql`):
+  - reports waiting on each site, the oldest open one, and sites with no custodian (whose reports cannot move);
+  - site access by email: grant, change role, turn off (never delete);
+  - Pro codes: issue a labelled batch (shown once), see redemptions, revoke a batch;
+  - recent crashes (no user id or stack) and a log of every admin change.
+  - **Live** since 2026-11-12: migration applied, owner account made admin.
 - **Tested** (`npm run verify` in `landing/`: typecheck, lint, 30 tests, build).
 
 ## 14. Data pipelines

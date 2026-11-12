@@ -77,3 +77,4 @@ export {
 export * from './treks/progress.ts';
 export * from './map/tiles.ts';
 export * from './reports/timeline.ts';
+export * from './reports/board.ts';

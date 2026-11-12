@@ -18,3 +18,4 @@ export { ESSENTIALS, essentialsFor, essentialsNear, findEssential } from './esse
 export { photoCreditForSite, remotePhotoForSite } from './sitePhotos';
 export { trekPhoto } from './trekPhotos';
 export { placeNote, type PlaceNote } from './placeNotes';
+export { guideFor, PLACE_GUIDES } from './guides';

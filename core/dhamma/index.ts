@@ -8,3 +8,4 @@ export * from './bilara.ts';
 export * from './retrieval.ts';
 export * from './engine.ts';
 export * from './reflection.ts';
+export { findNamedPlace, answerAboutPlace, resolveSiteChunk, type SiteAnswer } from './sites.ts';

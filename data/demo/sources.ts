@@ -275,6 +275,16 @@ export const demoSources: Source[] = [
     caveat:
       'Official institutional history of the palace and monuments. Museum access and interior photography remain subject to current posted rules.',
   },
+  {
+    // Cited by Ask when it answers a fee question (core/dhamma/sites.ts).
+    id: 'ntb-fees',
+    kind: 'record',
+    title: 'Heritage site entry fees',
+    attribution: 'Nepal Tourism Board',
+    date: '2026-11 (last checked 2026-11-07)',
+    url: 'https://ntb.gov.np/plan-your-trip/before-you-come/heritage-site-entry-fees',
+    caveat: 'Fees change. The official page names the site authorities as its source; confirm the amount at the gate.',
+  },
 ];
 
 export function findSource(id: string): Source | undefined {

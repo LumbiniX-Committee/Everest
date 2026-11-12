@@ -51,6 +51,11 @@ export function SettingsScreen() {
 
       <SettingsSection title="Your trip" divided>
         <SettingsRow
+          label="Your record"
+          hint="Places visited, photos and your reports"
+          onPress={() => router.push('/(main)/tirtha/me')}
+        />
+        <SettingsRow
           label="Your plan"
           value={planLabel}
           hint="What is free, and what Pro adds"

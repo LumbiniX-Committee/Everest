@@ -195,3 +195,8 @@ Present but not systematic:
 - **`SiteVisual`** gained `credited` and a remote Commons photo before the plate or schematic fallback.
 - **`Mascot`** (`components/mascot`): the four original characters, decorative (`accessible={false}`).
 
+
+
+## PhotoVeil — `components/site/PhotoVeil.tsx`
+
+A soft dark ramp over a photograph so white text holds contrast, built from thin translucent layers (no gradient module, so it ships over the air). Props: `height`, `edge` (`'bottom'` default or `'top'`), `steps`, `strength`. Used by the place guide cover and the Explore guide cards.

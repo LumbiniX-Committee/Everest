@@ -27,7 +27,7 @@ export type BilaraChunk = {
    * defaults to the old behaviour rather than requiring every call site to
    * branch on it.
    */
-  corpus?: 'pali' | 'heritage';
+  corpus?: 'pali' | 'heritage' | 'site';
   /**
    * Keys into `data/demo/sources.ts` — the app's shared source registry, so a
    * heritage citation resolves to a real, checkable source card the same way

@@ -3,9 +3,12 @@ import {
   checkDistressTrigger,
   generateReflectionQuestions,
   processReflectionAsync,
+  resolveSiteChunk,
   VERIFIED_NEPALI_HELPLINES,
 } from '@/core/dhamma';
+import { StorageKeys } from '@/constants';
 import { generateOfflineGroundedAnswer } from '@/services/offlineModel';
+import { getJSON, setJSON } from '@/services/storage';
 import { apiReachable, noteRemoteFailure } from '@/services/net/reachability';
 import { demoDhammaEntries, findSource, type DhammaEntry } from '@/data';
 import type { Citation, DhammaAnswer, Evidence, GroundedAnswer, RefusedAnswer } from '@/types';
@@ -287,6 +290,10 @@ const API_URL = (process.env.EXPO_PUBLIC_API_URL ?? '').trim().replace(/\/$/, ''
 const API_TIMEOUT_MS = 30000;
 
 function sourceIdFor(suttaUid: string | undefined, segmentId: string | undefined): string {
+  // A place passage carries the source its page cites, so the answer shows the
+  // same source card as the site page.
+  const placeSource = segmentId ? resolveSiteChunk(segmentId)?.source_id : undefined;
+  if (placeSource) return placeSource;
   if (suttaUid === 'dn16' || segmentId?.startsWith('dn16:')) return 'dn-16';
   if (suttaUid === 'sn56.11' || segmentId?.startsWith('sn56.11:')) return 'sn-11-3';
   // The current canonical corpus exposes additional suttas before the local
@@ -557,4 +564,20 @@ export async function reflect(request: {
   } finally {
     clearTimeout(timeout);
   }
+}
+
+const RECENT_LIMIT = 6;
+
+/** The visitor's last few typed questions, newest first. Kept on this phone only. */
+export function recentQuestions(): Promise<string[]> {
+  return getJSON<string[]>(StorageKeys.dhammaRecent, []);
+}
+
+export async function rememberQuestion(question: string): Promise<string[]> {
+  const text = question.trim();
+  const current = await recentQuestions();
+  if (!text) return current;
+  const next = [text, ...current.filter((item) => item.toLowerCase() !== text.toLowerCase())].slice(0, RECENT_LIMIT);
+  await setJSON(StorageKeys.dhammaRecent, next);
+  return next;
 }

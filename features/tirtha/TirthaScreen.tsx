@@ -7,6 +7,7 @@ import { ArrivalWisdom, VisitorPrompt } from '@/components/arrival';
 import { SiteMap3D } from '@/components/map';
 import { SiteListItem } from '@/components/site';
 import { placesForHub, placesNear } from '@/data';
+import { GuideShelf } from '@/features/guides';
 import { QuestCard } from '@/features/quests';
 
 import { PlanList } from './PlanList';
@@ -53,6 +54,7 @@ export function TirthaScreen() {
       />
 
       <VerbBar />
+      <GuideShelf />
       <VisitorPrompt />
       <ArrivalWisdom coordinate={coordinate} />
 
