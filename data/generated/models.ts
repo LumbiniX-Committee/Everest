@@ -10,7 +10,7 @@ export const MODELS: MonumentModel[] = [
   ],
   "free": true,
   "kind": "schematic",
-  "bytes": 237074,
+  "bytes": 237090,
   "sources": [
    {
     "title": "Swayambhunath, Wikipedia",
@@ -55,7 +55,7 @@ export const MODELS: MonumentModel[] = [
   ],
   "free": false,
   "kind": "schematic",
-  "bytes": 242927,
+  "bytes": 242943,
   "sources": [
    {
     "title": "Boudhanath, Wikipedia",
@@ -110,7 +110,7 @@ export const MODELS: MonumentModel[] = [
   ],
   "free": false,
   "kind": "schematic",
-  "bytes": 183685,
+  "bytes": 183701,
   "sources": [
    {
     "title": "World Peace Pagoda, Lumbini, Wikipedia",
@@ -137,7 +137,7 @@ export const MODELS: MonumentModel[] = [
   ],
   "free": false,
   "kind": "schematic",
-  "bytes": 189905,
+  "bytes": 189921,
   "sources": [
    {
     "title": "Shanti Stupa, Pokhara, Wikipedia",
@@ -164,7 +164,7 @@ export const MODELS: MonumentModel[] = [
   ],
   "free": false,
   "kind": "schematic",
-  "bytes": 56069,
+  "bytes": 56085,
   "sources": [
    {
     "title": "Nyatapola, Wikipedia",
@@ -200,7 +200,7 @@ export const MODELS: MonumentModel[] = [
   ],
   "free": false,
   "kind": "schematic",
-  "bytes": 477534,
+  "bytes": 477550,
   "sources": [
    {
     "title": "Pashupatinath Temple, Wikipedia (height about 23.7 m)",
@@ -276,7 +276,7 @@ export const MODELS: MonumentModel[] = [
   ],
   "free": false,
   "kind": "schematic",
-  "bytes": 36765,
+  "bytes": 36781,
   "sources": [
    {
     "title": "Changu Narayan, Wikipedia",
@@ -303,7 +303,7 @@ export const MODELS: MonumentModel[] = [
   ],
   "free": false,
   "kind": "schematic",
-  "bytes": 109155,
+  "bytes": 109171,
   "sources": [
    {
     "title": "Krishna Mandir, Wikipedia",
@@ -330,7 +330,7 @@ export const MODELS: MonumentModel[] = [
   ],
   "free": false,
   "kind": "schematic",
-  "bytes": 160014,
+  "bytes": 160030,
   "sources": [
    {
     "title": "Hanuman Dhoka, Wikipedia",
@@ -379,7 +379,7 @@ export const MODELS: MonumentModel[] = [
   ],
   "free": false,
   "kind": "schematic",
-  "bytes": 246736,
+  "bytes": 246752,
   "sources": [
    {
     "title": "Taleju Temple, Wikipedia (35 m, twelve plinths, three roofs)",
@@ -415,7 +415,7 @@ export const MODELS: MonumentModel[] = [
   ],
   "free": false,
   "kind": "schematic",
-  "bytes": 385797,
+  "bytes": 385813,
   "sources": [
    {
     "title": "Kasthamandap, Wikipedia (Slusser, after Korn: about 20 m wide and tall)",
@@ -451,7 +451,7 @@ export const MODELS: MonumentModel[] = [
   ],
   "free": false,
   "kind": "schematic",
-  "bytes": 213786,
+  "bytes": 213802,
   "sources": [
    {
     "title": "Maju Dega, Wikipedia (1692, nine-step plinth, three roofs)",
@@ -491,7 +491,7 @@ export const MODELS: MonumentModel[] = [
   ],
   "free": false,
   "kind": "schematic",
-  "bytes": 67485,
+  "bytes": 67501,
   "sources": [
    {
     "title": "Lumbini pillar inscription, Wikipedia",

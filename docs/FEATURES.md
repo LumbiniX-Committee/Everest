@@ -91,6 +91,8 @@ Reached from the "In depth" shelf on Explore and from each place's page. The tex
   - monuments drawn as what they are (stupa, column, mound, low ruins, plain shelter);
   - capped at 1,400 buildings.
 - **Tested** in a browser (`tests/native/map-html.test.ts`). **Not checked:** frame rate on a low-end phone.
+- **The walking figure** is a scanned person (Renderpeople, CC BY 4.0, credited on the map) with a walk cycle. His steps follow your GPS speed so his feet stay planted, and he finishes his step and stops when you do. The robed figure stands in offline or if he cannot load. **Checked by eye** in a browser; **not checked** on a phone.
+- **Monuments on the map:** in 3D mode at zoom 15 and closer, our own 3D models stand at their sites, true size, with the town drawn around them, credited as "schematic models, not surveys". At most 4 at once. Swayambhunath is left out until its coordinate is known to about 10 m.
 
 ## 5. 3D monument models
 

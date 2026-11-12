@@ -33,6 +33,34 @@ describe('map page without the figure', () => {
   });
 });
 
+describe('the walking figure', () => {
+  it('credits Renderpeople on the map wherever the figure can be drawn', () => {
+    expect(buildMapHtml({ fullscreen: true, interactive: true, avatar: true })).toContain('Walking figure: <a');
+    expect(buildMapHtml({ fullscreen: false, interactive: false, avatar: false })).not.toContain('Renderpeople');
+  });
+});
+
+describe('monument models on the map', () => {
+  const html = buildMapHtml({ fullscreen: true, interactive: true, avatar: true });
+  const placements = JSON.parse(html.match(/var PLACEMENTS = (\[.*?\]);/)![1]) as { id: string }[];
+
+  it('stand our own models at their sites, with the town stepping aside', () => {
+    expect(html).toContain("id: 'sakshi-monuments'");
+    expect(html).toContain('sakshiModelZones');
+    expect(placements.map((p) => p.id)).toEqual(expect.arrayContaining(['kasthamandap', 'peace-pagoda-lumbini', 'ashokan-pillar']));
+    expect(html).toContain('3D monuments: schematic models, not surveys');
+  });
+
+  it('leave out a model whose site is only known roughly', () => {
+    // Swayambhunath's coordinate is 27.715, 85.29: good to a hundred metres, not ten.
+    expect(placements.map((p) => p.id)).not.toContain('swayambhunath');
+  });
+
+  it('are left out where three.js is not loaded', () => {
+    expect(buildMapHtml({ fullscreen: false, interactive: false })).not.toContain("id: 'sakshi-monuments'");
+  });
+});
+
 describe('the 3D town', () => {
   it('replaces the plain boxes in 3D mode when the figure (and so three.js) is loaded', () => {
     const html = buildMapHtml({ fullscreen: true, interactive: true, avatar: true });

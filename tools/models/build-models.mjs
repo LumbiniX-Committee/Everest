@@ -602,7 +602,10 @@ for (const model of MODELS) {
   // Ground just wider than the monument, so the camera frames the monument, not a field.
   const size = new THREE.Box3().setFromObject(group).getSize(new THREE.Vector3());
   const groundRadius = Math.max(size.x, size.z) * 0.75;
-  group.add(mesh(new THREE.CylinderGeometry(groundRadius, groundRadius, 0.1, 64), COLOUR.ground, 0, -0.05));
+  const ground = mesh(new THREE.CylinderGeometry(groundRadius, groundRadius, 0.1, 64), COLOUR.ground, 0, -0.05);
+  // Named so the map, which has ground of its own, can leave it out.
+  ground.name = 'ground';
+  group.add(ground);
   const scene = new THREE.Scene();
   scene.add(group);
   const gltf = await exporter.parseAsync(scene, { binary: false });
