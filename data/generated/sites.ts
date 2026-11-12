@@ -3086,8 +3086,8 @@ export const demoSites: HeritageSite[] = [
     "summary": "Kasthamandap gave Kathmandu its name, collapsed catastrophically in 2015, and was rebuilt through…",
     "description": "Kasthamandap gave Kathmandu its name, collapsed catastrophically in 2015, and was rebuilt through a community-led process using salvaged historic fabric where possible.",
     "coordinate": {
-      "latitude": 27.70335,
-      "longitude": 85.30699
+      "latitude": 27.703934,
+      "longitude": 85.305779
     },
     "zone": "kathmandu_valley",
     "region": "kathmandu-valley",
@@ -3206,8 +3206,8 @@ export const demoSites: HeritageSite[] = [
     "summary": "Maju Dega's tall stepped plinth long served as both sacred base and public lookout; its 2015 coll…",
     "description": "Maju Dega's tall stepped plinth long served as both sacred base and public lookout; its 2015 collapse changed the square's skyline before reconstruction restored the form.",
     "coordinate": {
-      "latitude": 27.7037,
-      "longitude": 85.30715
+      "latitude": 27.704264,
+      "longitude": 85.306173
     },
     "zone": "kathmandu_valley",
     "region": "kathmandu-valley",
@@ -4878,8 +4878,8 @@ export const demoVantages: Vantage[] = [
     "siteId": "ktm-kasthamandap",
     "label": "East public approach, facing west",
     "coordinate": {
-      "latitude": 27.70335,
-      "longitude": 85.3070813158683
+      "latitude": 27.703934,
+      "longitude": 85.30587031635704
     },
     "bearing": 270,
     "pitch": 2,
@@ -4910,8 +4910,8 @@ export const demoVantages: Vantage[] = [
     "siteId": "ktm-maju-dega",
     "label": "West public approach, facing east",
     "coordinate": {
-      "latitude": 27.7037,
-      "longitude": 85.30705868383879
+      "latitude": 27.704264,
+      "longitude": 85.30608168336678
     },
     "bearing": 90,
     "pitch": 8,

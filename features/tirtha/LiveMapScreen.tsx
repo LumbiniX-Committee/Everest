@@ -469,6 +469,7 @@ export function LiveMapScreen() {
         camera={camera}
         onSelectSite={(id) => router.push(`/(main)/tirtha/site/${id}`)}
         onSelectPlace={(id) => router.push(`/(main)/tirtha/place/${id}`)}
+        onSelectScan={(id) => router.push({ pathname: '/(main)/tirtha/scan/[scanId]', params: { scanId: id } })}
         topInset={insets.top}
         mode={mapMode}
         accuracyM={demoMode ? null : accuracyM}

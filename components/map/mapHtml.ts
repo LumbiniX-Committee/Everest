@@ -4,6 +4,7 @@ import {
   MAP_HOME,
   modelPlacements,
   monumentGeoJSON,
+  scanSpots,
   precinctGroundGeoJSON,
   siteGeoJSON,
   waterGeoJSON,
@@ -24,6 +25,18 @@ import { MAPLIBRE_CSS, MAPLIBRE_JS, THREE_JS } from './vendor.generated';
 /** Where the website serves our monument models (as in services/models). */
 const MODELS_URL = process.env.EXPO_PUBLIC_MODELS_URL?.trim() || 'https://saksi-beta.vercel.app/models';
 const WALKER_URL = `${MODELS_URL.replace(/\/models\/?$/, '')}/characters/walker.glb`;
+
+/** One point per scan spot, labelled with the first scan's name and how many share it. */
+function scanSpotsGeoJSON() {
+  return {
+    type: 'FeatureCollection' as const,
+    features: scanSpots().map((spot) => ({
+      type: 'Feature' as const,
+      geometry: { type: 'Point' as const, coordinates: [spot.longitude, spot.latitude] },
+      properties: { scanId: spot.scanIds[0], count: spot.scanIds.length, label: spot.label },
+    })),
+  };
+}
 
 /** CC BY asks for credit where the work is shown: on the map, beside the tile credits. */
 const WALKER_CREDIT =
@@ -382,6 +395,34 @@ ${MAP_MODES()}
       map.on('click','place-hit', function(e){
         var f = e.features && e.features[0];
         if (f && f.properties && f.properties.id) post({ type:'place', id: f.properties.id });
+      });` : ''}
+
+      // Real 3D scans (Sketchfab, shown in its player, never copied): a gilt
+      // "3D" badge where a scan was made. A tap opens the first scan there;
+      // its screen lists the others at the same spot.
+      ${fullscreen ? `map.addSource('scans', { type:'geojson', data: ${JSON.stringify(scanSpotsGeoJSON())} });
+      map.addLayer({
+        id:'scan-pin', type:'circle', source:'scans', minzoom: 11,
+        paint:{
+          'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 9, 17, 13],
+          'circle-color': ${JSON.stringify(colors.seek)},
+          'circle-stroke-width': 2,
+          'circle-stroke-color': '#ffffff'
+        }
+      });
+      map.addLayer({
+        id:'scan-pin-text', type:'symbol', source:'scans', minzoom: 11,
+        layout:{ 'text-field':'3D', 'text-font':['Noto Sans Regular'], 'text-size': 9.5, 'text-allow-overlap': true, 'text-ignore-placement': true },
+        paint:{ 'text-color':'#ffffff' }
+      });
+      map.addLayer({
+        id:'scan-pin-label', type:'symbol', source:'scans', minzoom: 15,
+        layout:{ 'text-field':['get','label'], 'text-font':['Noto Sans Regular'], 'text-size': 11.5, 'text-offset':[0, 1.5], 'text-anchor':'top', 'text-optional': true },
+        paint:{ 'text-color': ${JSON.stringify(colors.seek)}, 'text-halo-color': ${JSON.stringify(colors.background)}, 'text-halo-width': 1.4 }
+      });
+      map.on('click','scan-pin', function(e){
+        var f = e.features && e.features[0];
+        if (f && f.properties && f.properties.scanId) post({ type:'scan', id: f.properties.scanId });
       });` : ''}
 
       // Clustered, so 70 places in one valley read as a few countable groups

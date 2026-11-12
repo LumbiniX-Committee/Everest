@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { BackBar, EmptyState } from '@/components/common';
-import { ScanPlayer } from '@/components/models';
+import { ScanCards, ScanPlayer } from '@/components/models';
 import { Button, Icon, Screen, Text } from '@/components/ui';
 import { findPlace, findSite, SCANS } from '@/data';
 import { useSafeBack } from '@/hooks';
@@ -33,6 +33,11 @@ export function ScanScreen({ scanId }: { scanId: string }) {
       return place ? { id, name: place.name, kind: 'place' as const } : null;
     })
     .filter((item): item is { id: string; name: string; kind: 'site' | 'place' } => item !== null);
+  // Other scans pinned at the same spot on the map, so one pin with several
+  // scans (Swayambhu has six) can be walked through from here.
+  const nearby = SCANS.filter(
+    (item) => item.id !== scan.id && item.at.latitude === scan.at.latitude && item.at.longitude === scan.at.longitude,
+  );
 
   return (
     <Screen scroll>
@@ -107,6 +112,10 @@ export function ScanScreen({ scanId }: { scanId: string }) {
           ))}
         </View>
       ) : null}
+
+      <View style={styles.more}>
+        <ScanCards scans={nearby} title="More scans here" />
+      </View>
     </Screen>
   );
 }
@@ -126,5 +135,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
   },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginTop: spacing.sm },
-  places: { gap: spacing.xxs, marginTop: spacing.lg, marginBottom: spacing.xl },
+  places: { gap: spacing.xxs, marginTop: spacing.lg },
+  more: { marginTop: spacing.lg, marginBottom: spacing.xl },
 });
