@@ -15,15 +15,22 @@ type Locale = 'en' | 'ne';
  * warmed when they point at the button, not before.
  */
 
-/** The whole Swayambhu hill first, then a spread of places and kinds of capture. */
-const FEATURED = [
-  '5dabfc2162fa44b4b415caf9358faddb', // Swayambhu hill, drone survey
-  '0db5beb3c6cb45f2b6c3fb63cc342044', // Kal Bhairav
-  'e28fe3fbf3a14c4f8aa83316382d8dc4', // Krishna Mandir, Patan
-  '4cdd98a88d3740ccb55c7510725bd98c', // Maya Devi Temple
-  '1faa2c27977041ad8877c88abecc8d24', // Tsarang, Mustang
+/**
+ * The whole Swayambhu hill first, then a spread of places and kinds of capture.
+ * `crop` enlarges a creator's still where the scan sits small in its frame,
+ * so the stage shows the place rather than the grey around it.
+ */
+const FEATURED: { id: string; crop: number }[] = [
+  { id: '5dabfc2162fa44b4b415caf9358faddb', crop: 1.9 }, // Swayambhu hill, drone survey
+  { id: '0db5beb3c6cb45f2b6c3fb63cc342044', crop: 1 }, // Kal Bhairav
+  { id: 'e28fe3fbf3a14c4f8aa83316382d8dc4', crop: 1.7 }, // Krishna Mandir, Patan
+  { id: '4cdd98a88d3740ccb55c7510725bd98c', crop: 1.15 }, // Maya Devi Temple
+  { id: '1faa2c27977041ad8877c88abecc8d24', crop: 1.1 }, // Tsarang, Mustang
 ];
-const PICKS = FEATURED.map((id) => SCANS.find((s) => s.id === id)).filter((s): s is (typeof SCANS)[number] => Boolean(s));
+const PICKS = FEATURED.flatMap(({ id, crop }) => {
+  const scan = SCANS.find((s) => s.id === id);
+  return scan ? [{ ...scan, crop }] : [];
+});
 
 const COPY = {
   en: {
@@ -67,7 +74,7 @@ export function HomeScans({ locale }: { locale: Locale }) {
   return (
     <section aria-labelledby="scans-title" className="px-6 py-20 sm:py-28">
       <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.55fr_1fr] lg:items-start">
-        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-ink sm:aspect-[16/10]">
+        <div className="relative aspect-[4/3] min-w-0 overflow-hidden rounded-3xl bg-ink sm:aspect-[16/10]">
           {playing ? (
             <iframe
               title={`${scan.label}, ${c.by} ${scan.creator}`}
@@ -92,7 +99,8 @@ export function HomeScans({ locale }: { locale: Locale }) {
                 alt=""
                 loading="lazy"
                 decoding="async"
-                className="size-full object-cover transition duration-500 ease-out group-hover:scale-[1.015] motion-reduce:transition-none"
+                style={{ transform: `scale(${scan.crop})` }}
+                className="size-full object-cover"
               />
               <span className="absolute inset-0 grid place-items-center">
                 <span className="inline-flex min-h-12 items-center gap-2 rounded-full bg-ink/90 px-5 text-base font-semibold text-ground transition group-hover:bg-ink motion-reduce:transition-none">
@@ -107,7 +115,7 @@ export function HomeScans({ locale }: { locale: Locale }) {
           )}
         </div>
 
-        <div>
+        <div className="min-w-0">
           <h2 id="scans-title" className="font-[family-name:var(--font-display)] text-4xl leading-tight font-semibold tracking-tight text-ink sm:text-5xl">
             {c.title}
           </h2>

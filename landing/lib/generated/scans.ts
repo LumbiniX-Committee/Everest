@@ -116,7 +116,7 @@ export const SCANS: Scan[] = [
    "latitude": 27.714931,
    "longitude": 85.290391
   },
-  "note": "The whole hilltop as a point cloud of 6.7 million points: the stupa, its shrines and the forest around them."
+  "note": "The whole hilltop as a drone-captured point cloud, 6.7 million measured samples: the stupa, its shrines and the forest around them."
  },
  {
   "id": "3d3ea93250734ccfb0a355d9e77c1453",
