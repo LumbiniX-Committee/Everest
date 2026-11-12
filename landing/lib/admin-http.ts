@@ -1,5 +1,4 @@
-import 'server-only';
-
+// Server code by way of '@/lib/admin', which carries the 'server-only' marker.
 import { getAdminAccess } from '@/lib/admin';
 import { jsonError } from '@/lib/http';
 

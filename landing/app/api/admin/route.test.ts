@@ -5,7 +5,6 @@ const state = vi.hoisted(() => ({
   rpc: vi.fn(),
 }));
 
-vi.mock('server-only', () => ({}));
 vi.mock('@/lib/admin', () => ({ getAdminAccess: state.access }));
 vi.mock('@/lib/supabase/server', () => ({
   createClient: async () => ({ rpc: state.rpc }),
