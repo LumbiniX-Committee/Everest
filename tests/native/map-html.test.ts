@@ -40,21 +40,16 @@ describe('the walking figure', () => {
   });
 });
 
-describe('monument models on the map', () => {
+describe('3D monuments on the map', () => {
   const html = buildMapHtml({ fullscreen: true, interactive: true, avatar: true });
-  const placements = JSON.parse(html.match(/var PLACEMENTS = (\[.*?\]);/)![1]) as { id: string }[];
+  const placements = JSON.parse(html.match(/var PLACEMENTS = (\[.*?\]);/)![1]) as { id: string; scan: boolean }[];
 
-  it('stand our own models at their sites, with the town stepping aside', () => {
+  it('are real scans only, never our schematic models, with the town stepping aside', () => {
     expect(html).toContain("id: 'sakshi-monuments'");
     expect(html).toContain('sakshiModelZones');
-    expect(placements.map((p) => p.id)).toEqual(expect.arrayContaining(['kasthamandap', 'peace-pagoda-lumbini', 'ashokan-pillar']));
-    expect(html).toContain('3D monuments: schematic models, not surveys');
-  });
-
-  it('stand Swayambhunath where OpenStreetMap draws it, not at its rounded record', () => {
-    const swayambhu = placements.find((p) => p.id === 'swayambhunath') as unknown as { latitude: number; longitude: number };
-    expect(swayambhu.latitude).toBeCloseTo(27.714931, 5);
-    expect(swayambhu.longitude).toBeCloseTo(85.290391, 5);
+    expect(placements.length).toBeGreaterThan(0);
+    expect(placements.every((p) => p.scan)).toBe(true);
+    expect(html).not.toContain('schematic models, not surveys');
   });
 
   it('are left out where three.js is not loaded', () => {

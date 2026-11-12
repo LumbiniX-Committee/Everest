@@ -57,4 +57,44 @@ export const MAP_SCANS: MapScan[] = [
     targets: ['osm-node-1962909336'],
     bytes: 3_870_000,
   },
+  {
+    id: 'nagbahal-hiti',
+    scanId: '38aa9a9e585d4bcd956897b472165fd0',
+    title: 'Stone tap (dhunge dhara), Nag Bahal',
+    creator: 'Semantic Creation',
+    licence: 'CC BY 4.0',
+    latitude: 27.6759896, // OSM way 608630219, Nagbahal hiti
+    longitude: 85.3242483,
+    headingDeg: 0, // not checked: the spout's facing is not mapped
+    scale: 1,
+    targets: [],
+    bytes: 1_860_000,
+  },
+  {
+    id: 'bagdwar',
+    scanId: 'c7452743c2f44ce3bacc212b7b4c5ee0',
+    title: 'Bagdwar, source of the Bagmati',
+    creator: 'robert.jackisch',
+    licence: 'CC BY 4.0',
+    latitude: 27.8113122, // the creator's stated coordinates
+    longitude: 85.3904385,
+    headingDeg: 0, // not checked: no map feature to line it up with
+    scale: 1,
+    targets: [],
+    bytes: 2_210_000,
+  },
+  {
+    id: 'tusha-hiti',
+    scanId: 'ae79c0cca5c34f0f9a9d869eeccdb983',
+    title: 'Tusha Hiti, Patan',
+    creator: 'rbm.1world',
+    licence: 'CC BY 4.0',
+    latitude: 27.672722, // OSM node 10034234966, the spout
+    longitude: 85.325134,
+    headingDeg: 0, // set by eye against Sundari Chowk's walls
+    scale: 1,
+    // Not the courtyard's site id: that would clear the whole palace wing.
+    targets: [],
+    bytes: 3_570_000,
+  },
 ];

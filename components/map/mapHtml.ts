@@ -3,7 +3,6 @@ import {
   MAP_CAMERA,
   MAP_HOME,
   MAP_SCANS,
-  modelPlacements,
   monumentGeoJSON,
   scanSpots,
   precinctGroundGeoJSON,
@@ -45,9 +44,6 @@ const WALKER_CREDIT =
 
 /** CC BY credit for the real scans standing on the map, named by creator. */
 const SCANS_CREDIT = `3D scans on the map: ${[...new Set(MAP_SCANS.map((scan) => scan.creator))].join(', ')} (Sketchfab, CC BY 4.0)`;
-
-/** The monument models are built from published descriptions, not measured: say so where they are seen. */
-const MONUMENTS_CREDIT = '3D monuments: schematic models, not surveys';
 
 /**
  * The basemap, terrain and fonts all load through the page's own \`saksi://\`
@@ -302,7 +298,7 @@ ${OFFLINE_PROTOCOL}
       pitch: ${pitch},
       bearing: ${bearing},
       attributionControl: ${JSON.stringify(
-        avatar ? { compact: false, customAttribution: [WALKER_CREDIT, MONUMENTS_CREDIT, SCANS_CREDIT] } : { compact: false },
+        avatar ? { compact: false, customAttribution: [WALKER_CREDIT, SCANS_CREDIT] } : { compact: false },
       )},
       interactive: ${interactive},
       // Wide enough to see the whole of Nepal, not so wide the place is lost.
@@ -502,7 +498,7 @@ ${POSITION_MARKER}
       // schematic plan. The map does not need the character; the character
       // needs the map.
       post({ type:'ready' });
-${avatar ? AVATAR_LAYER + townLayerScript(monumentGeoJSON) + monumentModelsScript(modelPlacements(), MODELS_URL, MAP_SCANS) : ''}
+${avatar ? AVATAR_LAYER + townLayerScript(monumentGeoJSON) + monumentModelsScript([], MODELS_URL, MAP_SCANS) : ''}
     });
   } catch (err) {
     post({ type:'error', message: String(err) });
