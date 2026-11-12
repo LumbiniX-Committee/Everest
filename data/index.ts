@@ -14,6 +14,7 @@ export { commonsThumb, feeAmount, feeForPlace, feeForSite, findPlace, placesForH
 export { MODELS } from './generated/models';
 export { modelFor, findModel, modelPlacements } from './models';
 export type { ModelPlacement } from './models';
+export { MAP_SCANS, type MapScan } from './mapScans';
 export { TREKS, dayStops, findTrek, trekLine, trekStop } from './treks';
 export { ESSENTIALS, essentialsFor, essentialsNear, findEssential } from './essentials';
 export { photoCreditForSite, remotePhotoForSite } from './sitePhotos';

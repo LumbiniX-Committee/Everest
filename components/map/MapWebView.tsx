@@ -59,6 +59,10 @@ export type MapWebViewProps = {
   camera?: { longitude: number; latitude: number; distance: 'world' | 'close'; nonce?: number } | null;
   /** How the map is drawn. Changing it keeps the camera and the loaded tiles. */
   mode?: MapMode;
+  /** The camera travels behind the walking figure, at street level. */
+  walkView?: boolean;
+  /** The page ended or started walking view (a drag ends it). */
+  onWalkViewChange?: (on: boolean) => void;
   /** The fix's accuracy radius in metres, drawn as a circle around you. */
   accuracyM?: number | null;
   /** Where the map opens, as [longitude, latitude]. Read once. */
@@ -103,6 +107,8 @@ export function MapWebView({
   guideDestination,
   camera,
   mode = 'standard',
+  walkView = false,
+  onWalkViewChange,
   accuracyM = null,
   initialCenter,
   onUserPan,
@@ -158,6 +164,11 @@ export function MapWebView({
     if (!ready || !fill) return;
     webRef.current?.injectJavaScript(`window.sakshiSetMapMode && window.sakshiSetMapMode(${JSON.stringify(mode)}); true;`);
   }, [ready, fill, mode]);
+
+  useEffect(() => {
+    if (!ready || !fill) return;
+    webRef.current?.injectJavaScript(`window.sakshiSetWalkView && window.sakshiSetWalkView(${walkView ? 'true' : 'false'}); true;`);
+  }, [ready, fill, walkView]);
 
   /**
    * Position is pushed in rather than re-rendering the document.
@@ -281,6 +292,7 @@ export function MapWebView({
             if (msg.type === 'site' && typeof msg.id === 'string') onSelectSite?.(msg.id);
             if (msg.type === 'place' && typeof msg.id === 'string') onSelectPlace?.(msg.id);
             if (msg.type === 'scan' && typeof msg.id === 'string') onSelectScan?.(msg.id);
+            if (msg.type === 'walk-view' && typeof msg.on === 'boolean') onWalkViewChange?.(msg.on);
             if (msg.type === 'waypoint' && typeof msg.id === 'string') onSelectWaypoint?.(msg.id);
             if (msg.type === 'tile-request' && typeof msg.id === 'number' && typeof msg.key === 'string') {
               const requestId = msg.id;

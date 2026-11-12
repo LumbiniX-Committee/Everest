@@ -2,6 +2,7 @@ import {
   PLACES,
   MAP_CAMERA,
   MAP_HOME,
+  MAP_SCANS,
   modelPlacements,
   monumentGeoJSON,
   scanSpots,
@@ -41,6 +42,9 @@ function scanSpotsGeoJSON() {
 /** CC BY asks for credit where the work is shown: on the map, beside the tile credits. */
 const WALKER_CREDIT =
   'Walking figure: <a href="https://sketchfab.com/3d-models/nathan-animated-003-walking-3d-man-143a2b1ea5eb4385ae90a73657aca3bc" target="_blank">Renderpeople</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a>';
+
+/** CC BY credit for the real scans standing on the map, named by creator. */
+const SCANS_CREDIT = `3D scans on the map: ${[...new Set(MAP_SCANS.map((scan) => scan.creator))].join(', ')} (Sketchfab, CC BY 4.0)`;
 
 /** The monument models are built from published descriptions, not measured: say so where they are seen. */
 const MONUMENTS_CREDIT = '3D monuments: schematic models, not surveys';
@@ -298,7 +302,7 @@ ${OFFLINE_PROTOCOL}
       pitch: ${pitch},
       bearing: ${bearing},
       attributionControl: ${JSON.stringify(
-        avatar ? { compact: false, customAttribution: [WALKER_CREDIT, MONUMENTS_CREDIT] } : { compact: false },
+        avatar ? { compact: false, customAttribution: [WALKER_CREDIT, MONUMENTS_CREDIT, SCANS_CREDIT] } : { compact: false },
       )},
       interactive: ${interactive},
       // Wide enough to see the whole of Nepal, not so wide the place is lost.
@@ -498,7 +502,7 @@ ${POSITION_MARKER}
       // schematic plan. The map does not need the character; the character
       // needs the map.
       post({ type:'ready' });
-${avatar ? AVATAR_LAYER + townLayerScript(monumentGeoJSON) + monumentModelsScript(modelPlacements(), MODELS_URL) : ''}
+${avatar ? AVATAR_LAYER + townLayerScript(monumentGeoJSON) + monumentModelsScript(modelPlacements(), MODELS_URL, MAP_SCANS) : ''}
     });
   } catch (err) {
     post({ type:'error', message: String(err) });
@@ -1243,6 +1247,62 @@ const AVATAR_LAYER = `
           });
         }
 
+        /*
+         * Walking view: the camera travels with the figure, behind and above
+         * it, low enough to see the street ahead and the sky, turning as the
+         * figure turns. The figure stays in the lower part of the screen,
+         * where a person walking looks ahead of themselves. A drag on the map
+         * ends it, so the map is never taken away from the hand.
+         */
+        var walkView = false;
+        var walkFrame = 0;
+        var walkTimer = 0;
+        /** Larger in walking view, where the figure is in the foreground. */
+        var WALK_FIGURE_PX = 110;
+        function walkCamera() {
+          if (!walkView) return;
+          if (pose.has) {
+            var h = map.getContainer().clientHeight || 600;
+            map.jumpTo({
+              center: [pose.drawLng, pose.drawLat],
+              bearing: pose.drawHeading,
+              pitch: 70,
+              zoom: 20.1,
+              padding: { top: Math.round(h * 0.42), bottom: 0, left: 0, right: 0 }
+            });
+          }
+          walkFrame = requestAnimationFrame(walkCamera);
+        }
+        window.sakshiSetWalkView = function (on) {
+          on = !!on;
+          if (on === walkView) return;
+          walkView = on;
+          if (on) {
+            map.setMaxPitch(80);
+            // Closer than browsing allows: the camera comes down to about
+            // rooftop height, just behind the figure. Vector tiles overzoom.
+            map.setMaxZoom(21);
+            try {
+              map.setSky({
+                'sky-color': '#a9cbe6', 'horizon-color': '#e8f0ec', 'fog-color': '#e8f0ec',
+                'sky-horizon-blend': 0.6, 'horizon-fog-blend': 0.7, 'fog-ground-blend': 0.75
+              });
+            } catch (skyErr) { /* an older renderer draws no sky; the view still works */ }
+            walkFrame = requestAnimationFrame(walkCamera);
+            walkTimer = setInterval(function () {
+              if (window.sakshiTownCheck) window.sakshiTownCheck();
+              if (window.sakshiMonumentsCheck) window.sakshiMonumentsCheck();
+            }, 1500);
+          } else {
+            cancelAnimationFrame(walkFrame);
+            clearInterval(walkTimer);
+            map.setMaxZoom(19);
+            map.easeTo({ pitch: 58, zoom: Math.min(map.getZoom(), 18), padding: { top: 0, bottom: 0, left: 0, right: 0 }, duration: 600 });
+          }
+          post({ type: 'walk-view', on: on });
+        };
+        map.on('dragstart', function (e) { if (walkView && e && e.originalEvent) window.sakshiSetWalkView(false); });
+
         map.addLayer({
           id: 'sakshi-figure',
           type: 'custom',
@@ -1268,7 +1328,7 @@ const AVATAR_LAYER = `
             // Never smaller than life: zoomed in far enough that a real person
             // would stand taller than FIGURE_PX, draw them at true size, so
             // the stride matches the ground passing under it.
-            var scale = Math.max(1, (FIGURE_PX * mPerPx) / FIGURE_HEIGHT_M);
+            var scale = Math.max(1, ((walkView ? WALK_FIGURE_PX : FIGURE_PX) * mPerPx) / FIGURE_HEIGHT_M);
 
             // Walking is judged from the reported speed, not from whether the
             // smoothed position happens to be moving this frame. Fixes only
@@ -1356,6 +1416,10 @@ const AVATAR_LAYER = `
 
             camera.projectionMatrix = new THREE.Matrix4().fromArray(matrix).multiply(l);
             renderer.resetState();
+            // In walking view a house between the camera and you must not
+            // hide you: the figure is drawn last, so clearing depth here puts
+            // it in front of the town, as a third-person view does.
+            if (walkView) renderer.clearDepth();
             renderer.render(scene, camera);
             map.triggerRepaint();
           }

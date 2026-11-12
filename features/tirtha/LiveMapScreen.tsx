@@ -81,6 +81,8 @@ export function LiveMapScreen() {
   const router = useRouter();
   const { guideArea, guideTo, focusSiteId, focusAt } = useLocalSearchParams<{ guideArea?: string; guideTo?: string; focusSiteId?: string; focusAt?: string }>();
   const [mapMode, setMapMode] = useState<MapMode>('standard');
+  /** The camera walks behind the figure, at street level, in the 3D town. */
+  const [walkView, setWalkView] = useState(false);
   const [showModes, setShowModes] = useState(false);
   const goBack = useSafeBack();
   const returnToQuests = useRef(false);
@@ -472,6 +474,8 @@ export function LiveMapScreen() {
         onSelectScan={(id) => router.push({ pathname: '/(main)/tirtha/scan/[scanId]', params: { scanId: id } })}
         topInset={insets.top}
         mode={mapMode}
+        walkView={walkView}
+        onWalkViewChange={setWalkView}
         accuracyM={demoMode ? null : accuracyM}
         initialCenter={openingCenter}
         onUserPan={() => setFollow(false)}
@@ -542,6 +546,24 @@ export function LiveMapScreen() {
               size={24}
               color={follow ? colors.primary : colors.textSecondary}
             />
+          </Pressable>
+
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={ui(walkView ? 'Leave walking view' : 'Walking view')}
+            accessibilityHint={ui('The camera follows the figure at street level, through the 3D town')}
+            accessibilityState={{ selected: walkView }}
+            onPress={() => {
+              pulse();
+              if (!walkView) {
+                setMapMode('3d');
+                setFollow(true);
+              }
+              setWalkView((on) => !on);
+            }}
+            style={({ pressed }) => [styles.iconPill, walkView && styles.pillActive, pressed && styles.buttonPressed]}
+          >
+            <Icon name="walk" size={24} color={walkView ? colors.primary : colors.textSecondary} />
           </Pressable>
 
           <Pressable
