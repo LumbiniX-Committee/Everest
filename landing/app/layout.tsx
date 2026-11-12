@@ -1,25 +1,15 @@
 import type { Metadata, Viewport } from 'next';
-import { Mukta, Newsreader } from 'next/font/google';
 
 import './globals.css';
 
-// Headlines: an editorial serif, so the page reads like a well-made guidebook
-// rather than an app template. Its latin-ext subset carries the IAST marks
-// (ā ṣ ī) in Sākṣī; Devanagari headings fall through to Mukta, glyph by glyph.
-const newsreader = Newsreader({
-  subsets: ['latin', 'latin-ext'],
-  weight: ['500', '600'],
-  style: ['normal', 'italic'],
-  variable: '--font-newsreader',
-  display: 'swap',
-});
-// Body and every Devanagari line.
-const mukta = Mukta({
-  subsets: ['latin', 'latin-ext', 'devanagari'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-mukta',
-  display: 'swap',
-});
+/*
+ * Type: the Adobe Source pair, chosen for an institutional, scholarly voice
+ * (the register of a museum catalogue or a UNESCO record) rather than a
+ * friendly app template. Both carry every IAST mark the site's names need
+ * (Sākṣī, Tīrtha: ā ī ṣ ṇ ṭ). Nepali falls through to Noto Devanagari. The
+ * faces are self-hosted; see the @font-face rules at the top of globals.css.
+ */
+const PRELOAD = ['/fonts/source-sans-3-latin.woff2', '/fonts/source-serif-4-latin.woff2'];
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://saksi-beta.vercel.app'),
@@ -51,7 +41,12 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${newsreader.variable} ${mukta.variable}`}>
+    <html lang="en">
+      <head>
+        {PRELOAD.map((href) => (
+          <link key={href} rel="preload" href={href} as="font" type="font/woff2" crossOrigin="anonymous" />
+        ))}
+      </head>
       <body>{children}</body>
     </html>
   );

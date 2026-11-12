@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   AlertTriangle,
@@ -318,11 +319,16 @@ export default function CustodianDashboard() {
             they collected.
           </p>
         </div>
-        <form action="/auth/signout" method="post">
-          <button className="rounded-lg border border-line bg-surface px-3 py-2 text-sm font-medium text-ink-soft">
-            Sign out
-          </button>
-        </form>
+        <div className="flex items-center gap-2">
+          <Link href="/account" className="rounded-lg border border-line bg-surface px-3 py-2 text-sm font-medium text-ink-soft">
+            Account
+          </Link>
+          <form action="/auth/signout" method="post">
+            <button className="rounded-lg border border-line bg-surface px-3 py-2 text-sm font-medium text-ink-soft">
+              Sign out
+            </button>
+          </form>
+        </div>
       </header>
 
       {error ? (

@@ -205,6 +205,9 @@ English and Nepali throughout. New strings must be registered in `i18n/literals.
   - Pro codes: issue a labelled batch (shown once), see redemptions, revoke a batch;
   - recent crashes (no user id or stack) and a log of every admin change.
   - **Live** since 2026-11-12: migration applied, owner account made admin.
+  - **Since 2026-11-12 evening:** a full console with Overview, Reports (every report across sites, filterable, with its history), Sites, Access, Pro codes (copy or download a batch), Crashes (grouped), Admin log and Account (change password). It needs migration `0015_admin_detail.sql` applied to production.
+- **Change password** at `/account` for custodians and `/admin/account` for admins.
+- **Type:** Source Serif 4 for headings, Source Sans 3 for text, Noto Devanagari for Nepali.
 - **Tested** (`npm run verify` in `landing/`: typecheck, lint, 30 tests, build).
 
 ## 14. Data pipelines

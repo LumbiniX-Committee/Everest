@@ -145,3 +145,12 @@
 - **File:ISS043-E-9392 - View of Earth.jpg** — Earth Science and Remote Sensing Unit, Lyndon B. Johnson Space Center · wikimedia · <https://upload.wikimedia.org/wikipedia/commons/2/2e/ISS043-E-9392_-_View_of_Earth.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original>
 - **File:ISS043-E-9393 - View of Earth.jpg** — Earth Science and Remote Sensing Unit, Lyndon B. Johnson Space Center · wikimedia · <https://upload.wikimedia.org/wikipedia/commons/8/85/ISS043-E-9393_-_View_of_Earth.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original>
 - **File:ISS043-E-9395 - View of Earth.jpg** — Earth Science and Remote Sensing Unit, Lyndon B. Johnson Space Center · wikimedia · <https://upload.wikimedia.org/wikipedia/commons/c/c0/ISS043-E-9395_-_View_of_Earth.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original>
+
+## Website fonts
+
+Self-hosted in `landing/public/fonts/`, all under the SIL Open Font License 1.1 (https://openfontlicense.org):
+
+- **Source Serif 4** and **Source Sans 3**: © Adobe, with Reserved Font Name "Source".
+- **Noto Serif Devanagari** and **Noto Sans Devanagari**: © The Noto Project Authors.
+
+The files are the Google Fonts subsets (latin, latin-ext, devanagari), unmodified.
