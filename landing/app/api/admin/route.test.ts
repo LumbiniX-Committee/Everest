@@ -65,3 +65,13 @@ describe('admin console API', () => {
     expect(await response.json()).toEqual({ codes: ['SAKSI-AAAA-BBBB-CCCC'] });
   });
 });
+
+import { GET as listReports } from './reports/route';
+
+describe('admin reports API', () => {
+  it('drops an unknown status rather than passing it to the database', async () => {
+    state.access.mockResolvedValue({ kind: 'admin', userId: 'owner' });
+    await listReports(new Request('https://sakshi.example/api/admin/reports?status=deleted&page=2'));
+    expect(state.rpc).toHaveBeenCalledWith('admin_list_reports', { p_status: null, p_site_id: null, p_limit: 25, p_offset: 50 });
+  });
+});

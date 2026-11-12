@@ -31,14 +31,16 @@
   --color-dhamma: #945900;
 
   /*
-   * Diacritics carry meaning in every name on this page — Sākṣī, Tīrtha,
-   * Chaityāvalī. Baloo 2 and Mukta hold ṣ, ṇ and Devanagari in one family. The
-   * fallbacks are not decorative: without them the app's own name renders as
-   * tofu on a plain Linux or Windows box.
+   * Diacritics carry meaning in every name on this page: Sākṣī, Tīrtha,
+   * Chaityāvalī. Source Serif 4 and Source Sans 3 hold the IAST marks; each
+   * stack then falls through to Noto Devanagari for Nepali, glyph by glyph.
+   * The system fallbacks are not decorative: without them the app's own name
+   * renders as tofu on a plain Linux or Windows box.
    */
-  --font-display: var(--font-newsreader), var(--font-mukta), Georgia, 'Noto Serif', serif;
-  --font-sans: var(--font-mukta), system-ui, -apple-system, 'Segoe UI', 'Noto Sans',
-    'DejaVu Sans', sans-serif;
+  --font-display: var(--font-source-serif), var(--font-noto-serif-deva), Georgia, 'Noto Serif', serif;
+  --font-sans: var(--font-source-sans), var(--font-noto-sans-deva), system-ui, -apple-system, 'Segoe UI',
+    'Noto Sans', 'DejaVu Sans', sans-serif;
+  --font-devanagari: var(--font-noto-sans-deva), var(--font-source-sans), sans-serif;
 }
 
 html {
@@ -73,7 +75,24 @@ body {
   background-color: var(--color-ground);
   color: var(--color-ink);
   font-family: var(--font-sans);
+  font-size: 1.0625rem;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Headings: upright and set tight. The italic accent word the old serif
+   carried read as decoration, so headings now take emphasis from weight. */
+:is(h1, h2, h3) {
+  letter-spacing: -0.015em;
+}
+:is(h1, h2) em {
+  font-style: normal;
+}
+
+/* Figures line up in tables, stats and dates. */
+.tabular,
+table {
+  font-variant-numeric: tabular-nums;
 }
 
 /* ── Map explorer ───────────────────────────────────────────────────────────
@@ -263,7 +282,7 @@ body {
   overflow: hidden;
   pointer-events: none;
   user-select: none;
-  font-family: var(--font-mukta), sans-serif;
+  font-family: var(--font-devanagari);
   font-weight: 700;
   font-size: clamp(9rem, 26vw, 24rem);
   line-height: 1;

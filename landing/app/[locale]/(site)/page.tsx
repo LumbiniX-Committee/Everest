@@ -357,7 +357,7 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
                 </span>
               </div>
 
-              <p lang="ne" aria-hidden className="mt-8 font-[family-name:var(--font-mukta)] text-[5.5rem] leading-[0.95] font-bold tracking-tight text-ink sm:text-[8.5rem]">
+              <p lang="ne" aria-hidden className="mt-8 font-[family-name:var(--font-devanagari)] text-[5.5rem] leading-[0.95] font-bold tracking-tight text-ink sm:text-[8.5rem]">
                 साक्<span className="text-sandstone">षी</span><span className="text-marigold">.</span>
               </p>
 

@@ -31,8 +31,9 @@ Prayer flag colours (`#2F6FD0`, `#FFFFFF`, `#D8412F`, `#1F9D6B`, `#F7C325`) are 
 | Role | Face | Why |
 | --- | --- | --- |
 | Display (app) | Baloo 2 | Latin, IAST diacritics and Devanagari in one family. Android's per-glyph fallback in a mixed-script heading is unreliable, so the app keeps one family |
-| Display (website) | Newsreader | An editorial serif, so the site reads as a well-made guide rather than an app template. Its latin-ext subset carries IAST; Devanagari headings fall through to Mukta |
-| Body | Mukta | Clear at small sizes, with the same coverage |
+| Display (website) | Source Serif 4 | Changed 2026-11-12 from Newsreader, which read as casual. A sober, institutional serif, the register of a museum catalogue or a UNESCO record. Carries every IAST mark (ā ī ṣ ṇ ṭ); Nepali headings fall through to Noto Serif Devanagari |
+| Body and interface (website) | Source Sans 3 | Changed from Mukta, whose rounded Latin read as friendly-app. Nepali text falls through to Noto Sans Devanagari, glyph by glyph |
+| Body (app) | Mukta | Clear at small sizes, Latin and Devanagari in one family |
 | Measurements | IBM Plex Mono | Coordinates, bearings and timestamps only, never prose |
 
 Devanagari needs vertical room. Keep display line height at about 1.3 or more, and never tighten letter spacing on Nepali text.
@@ -50,7 +51,7 @@ The full report, with sources, is `docs/research/Sākṣī redesign design direc
 7. **Real, credited photographs** of the place, never stock or generated images.
 
 **Premium layer (2026-11-08):**
-- **Website:** the name set huge in Devanagari; italic serif promises; a floating frosted nav; a bento grid with one dark anchor card; a "full circle" ring diagram; a dark closing panel; a lokta-paper grain and a giant साक्षी watermark.
+- **Website:** the name set huge in Devanagari; serif promises (upright since 2026-11-12: the italic accent word read as decoration); a floating frosted nav; a bento grid with one dark anchor card; a "full circle" ring diagram; a dark closing panel; a lokta-paper grain and a giant साक्षी watermark.
 - **App:** Explore opens on a deep-jade Guide card with a marigold glow, live depth pills and one marigold call to action, with Ask and Report beside it. Every place page opens on its photograph, historical plate or labelled schematic, with the photo's credit.
 - **Motion:** slow and once-only (float, orbit, fade-up). It always stops under reduced motion, which Reanimated respects by default in the app.
 
@@ -85,3 +86,12 @@ Warm, plain and honest. Invite people to look and walk, and say what is known an
 - Marigold text on light grounds, or white text on marigold
 - Prayer flag colours used to signal state
 - Religious imagery as decoration beyond the mark and the greeting monk
+
+## Admin console (2026-11-12)
+
+The owner's console at `/admin` is an operating surface, so it follows platform convention over the marketing pages' flourishes:
+- a fixed Pine Ink sidebar with real links (each section has its own address), a marigold bar marking the current section, and a scrolling tab row on phones;
+- white panels on the Morning Mist ground, separated by hairlines and tone, with no shadows;
+- Source Serif 4 for page titles and headline numbers, Source Sans 3 for everything else, tabular figures in every table;
+- Robe Maroon only for things that need the owner (reports unanswered for a week, sites with no custodian, fatal crashes);
+- charts are single-series weekly bars in Pond Jade, with a hover and focus tooltip and a table view.

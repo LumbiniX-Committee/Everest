@@ -1,23 +1,37 @@
 import type { Metadata, Viewport } from 'next';
-import { Mukta, Newsreader } from 'next/font/google';
+import { Noto_Sans_Devanagari, Noto_Serif_Devanagari, Source_Sans_3, Source_Serif_4 } from 'next/font/google';
 
 import './globals.css';
 
-// Headlines: an editorial serif, so the page reads like a well-made guidebook
-// rather than an app template. Its latin-ext subset carries the IAST marks
-// (ā ṣ ī) in Sākṣī; Devanagari headings fall through to Mukta, glyph by glyph.
-const newsreader = Newsreader({
+/*
+ * Type: the Adobe Source pair, chosen for an institutional, scholarly voice
+ * (the register of a museum catalogue or a UNESCO record) rather than a
+ * friendly app template. Both carry every IAST mark the site's names need
+ * (Sākṣī, Tīrtha: ā ī ṣ ṇ ṭ), which several alternatives lack. Nepali text
+ * falls through, glyph by glyph, to the matching Noto Devanagari face.
+ */
+const sourceSerif = Source_Serif_4({
   subsets: ['latin', 'latin-ext'],
-  weight: ['500', '600'],
-  style: ['normal', 'italic'],
-  variable: '--font-newsreader',
+  weight: ['500', '600', '700'],
+  variable: '--font-source-serif',
   display: 'swap',
 });
-// Body and every Devanagari line.
-const mukta = Mukta({
-  subsets: ['latin', 'latin-ext', 'devanagari'],
+const sourceSans = Source_Sans_3({
+  subsets: ['latin', 'latin-ext'],
   weight: ['400', '500', '600', '700'],
-  variable: '--font-mukta',
+  variable: '--font-source-sans',
+  display: 'swap',
+});
+const notoSerifDevanagari = Noto_Serif_Devanagari({
+  subsets: ['devanagari'],
+  weight: ['500', '600', '700'],
+  variable: '--font-noto-serif-deva',
+  display: 'swap',
+});
+const notoSansDevanagari = Noto_Sans_Devanagari({
+  subsets: ['devanagari'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-noto-sans-deva',
   display: 'swap',
 });
 
@@ -51,7 +65,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${newsreader.variable} ${mukta.variable}`}>
+    <html lang="en" className={`${sourceSerif.variable} ${sourceSans.variable} ${notoSerifDevanagari.variable} ${notoSansDevanagari.variable}`}>
       <body>{children}</body>
     </html>
   );
