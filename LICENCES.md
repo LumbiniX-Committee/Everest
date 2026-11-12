@@ -161,7 +161,10 @@ The files are the Google Fonts subsets (latin, latin-ext, devanagari), unmodifie
 - **Real scans on the map** (`landing/public/models/scans/`, listed in `data/mapScans.ts`), reduced for phones with glTF-Transform (simplified mesh, WebP textures, quantized geometry):
   - "YETKHA BAHAL" by Airlift Technology (https://sketchfab.com/3d-models/yetkha-bahal-dedca951739f4362b51b777d3ea826e1), CC BY 4.0, modified (reduced), at `yetkha-bahal.glb`.
   - "Keshar Mahal, National Library" by Bhugol Tour (https://sketchfab.com/3d-models/keshar-mahal-national-library-c5bdfc4d02fa4c668b8e1bf31beca067), CC BY 4.0, modified (reduced), at `keshar-mahal.glb`.
-  Credited on the map as "3D scans on the map: Airlift Technology, Bhugol Tour (Sketchfab, CC BY 4.0)".
+  - "Stone Tap Fountain (Dhunge Dhara) with Algae" by Semantic Creation (https://sketchfab.com/3d-models/38aa9a9e585d4bcd956897b472165fd0), CC BY 4.0, modified (materials converted, reduced), at `nagbahal-hiti.glb`; placed at OSM way 608630219.
+  - "Bagdwar idols, Shivapuri, Kathmandu, Nepal" by robert.jackisch (https://sketchfab.com/3d-models/c7452743c2f44ce3bacc212b7b4c5ee0), CC BY 4.0, modified (reduced), at `bagdwar.glb`; placed at the creator's stated coordinates.
+  - "Tusa hiti @ Patan durbar square" by rbm.1world (https://sketchfab.com/3d-models/ae79c0cca5c34f0f9a9d869eeccdb983), CC BY 4.0, modified (reduced), at `tusha-hiti.glb`; placed at OSM node 10034234966.
+  Credited on the map by creator, from `data/mapScans.ts`.
 - **Downloading from Sketchfab** goes through `tools/data/fetch-sketchfab.mjs`, which refuses anything but CC0 and CC BY and prints the credit line to add here.
 - **Real scans** (`seed/scans.json`) are not copied. They are shown through Sketchfab's embedded player with each creator's credit. Only "Kasthamandap Rebuilding Process" by Bhugol Tour is CC BY 4.0; the others are not offered for download.
 - **model-viewer** (Google, BSD-3-Clause) is served from `landing/public/vendor/` and bundled in the app.

@@ -2,6 +2,13 @@
 
 What changed in each milestone, what was verified, and what was not. Newest first. The plan lives in the delivery plan; this records what actually happened.
 
+## Realistic only: five real scans on the map, schematic models off it (2026-11-13, evening)
+
+- **The owner asked for realistic models only**, so our 13 schematic models no longer stand on the map. They stay in the website's 3D viewer and AR, labelled as schematic. The town (OSM buildings) stays.
+- **Three more real scans on the map** (all CC BY 4.0, downloaded with `tools/data/fetch-sketchfab.mjs`, reduced with the new `tools/data/import-scan.mjs`): Tusha Hiti in Patan (rbm.1world; 73.5 MB to 3.6 MB; OSM node 10034234966), the Nag Bahal stone tap in Patan (Semantic Creation; spec-gloss materials converted; OSM way 608630219), and Bagdwar, the Bagmati's source in Shivapuri (robert.jackisch; 38.9 MB to 2.2 MB; at the creator's stated coordinates). With Yetkha Bahal and Keshar Mahal that is five. All rendered in place.
+- **Searched and not placed:** every downloadable "kathmandu" result (41) and a wider sweep (196 models). Left out: objects and museum pieces; artist-made models (Dharahara, NEON Boudhanath, the Kathmandu buildings); NonCommercial licences; a one-facade Panauti scan; trueLadder's five chaityas, the Golden Temple and Nyakha Chowk chaityas and the Pim Bahal shrine, whose spots resolve only to a neighbourhood or not at all; Mahabodhi in Chobhar (Overpass still down).
+- **The owner asked to rip unlicensed scans from the player** (also via rea.tools). Declined: it goes around the creators' download lock. `tools/data/import-scan.mjs` takes files creators send directly, with their permission recorded.
+
 ## Real scans standing on the map, and walking view (2026-11-13, later)
 
 - **Two real scans now stand in the map's 3D scene**, not only in Sketchfab's player: Yetkha Bahal's stupa (Airlift Technology) and Keshar Mahal with the Garden of Dreams (Bhugol Tour), both CC BY 4.0. Downloaded with `tools/data/fetch-sketchfab.mjs`, reduced with glTF-Transform (10.2 MB to 1.4 MB; 29.7 MB to 3.9 MB, vertex-coloured), served from `landing/public/models/scans/`, listed in `data/mapScans.ts`, credited on the map and in `LICENCES.md`. Size is as captured (metres, not surveyed); heading set by eye (Keshar Mahal lines up with Kantipath at 0°). Rendered at both sites.
