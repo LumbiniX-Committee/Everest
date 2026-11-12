@@ -2,6 +2,14 @@
 
 What changed in each milestone, what was verified, and what was not. Newest first. The plan lives in the delivery plan; this records what actually happened.
 
+## Real 3D scans on the map and the home page (2026-11-13)
+
+- **22 scans** (was 11) in `tools/data/build-scans.mjs`, each with an `at` position from a named OpenStreetMap feature. New: Swayambhu hill (Bhugol Tour's 6.7-million-point drone survey, the one the owner linked), the Swayambhunath stupa (yuichi hayakawa) and a gilded shrine (Brad Erickson), Kal Bhairav, Krishna Mandir (Patan), Keshar Mahal, Yetkha Bahal (two), a Bhaktapur inscription, Tsarang and Ghemi (Mustang). Rejected by eye: a CG Janaki Mandir, a block-built "temple site", a near-abstract Boudhanath point cloud, loose objects. None is copied: the Swayambhu survey has no licence and download is off, so it is shown only in Sketchfab's player.
+- **App map:** a "3D" badge per scan spot (zoom 11+); a tap opens the scan, whose screen lists the others at the same spot.
+- **Website:** "3D" badges on the explorer map with a click-to-load player; a "Nepal, scanned in 3D" section on the home page (one still, five picks, the player only on press, connections warmed on hover). MapLibre on the home page now starts only when the explorer nears the viewport. Checked on the preview at 1440, 768 and 390 px: no sideways scroll, 16 badges, map deferred.
+- **Positions:** the Swayambhunath model now stands at OSM way 201223707 (its record is rounded to 27.715, 85.29). The Kasthamandap and Maju Dega records were 135 m and 115 m from the buildings OSM draws; the seed and the models now use the OSM positions, with the old values noted. The other Durbar Square records were not audited.
+- **Shipped:** `main` 9b36414, production deploy, Everest synced, OTA to preview (group 4d3e76d5-5125-4d4b-aa8e-7af38b582b6a). **Not checked:** on a phone; the Sketchfab player itself inside the app's WebView.
+
 ## Realistic walking figure and monuments on the map (2026-11-12, branch `wip/realistic-walker`)
 
 - **Walking figure.** Renderpeople's "Nathan Animated 003" (CC BY 4.0, Sketchfab, downloaded with the owner's API token) replaces the robed figure on the map; the robed figure stays as the fallback (offline, load failure). GLTFLoader for three 0.160.0 is vendored as `components/map/gltfLoader.generated.ts` (`tools/vendor-gltf-loader.mjs`).
