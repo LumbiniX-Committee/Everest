@@ -79,7 +79,7 @@ function resolveGuideTarget(id: string | null | undefined): { id: string; name: 
 export function LiveMapScreen() {
   const ui = useVisitorLiteralCopy();
   const router = useRouter();
-  const { guideArea, guideTo, focusSiteId } = useLocalSearchParams<{ guideArea?: string; guideTo?: string; focusSiteId?: string }>();
+  const { guideArea, guideTo, focusSiteId, focusAt } = useLocalSearchParams<{ guideArea?: string; guideTo?: string; focusSiteId?: string; focusAt?: string }>();
   const [mapMode, setMapMode] = useState<MapMode>('standard');
   const [showModes, setShowModes] = useState(false);
   const goBack = useSafeBack();
@@ -180,14 +180,17 @@ export function LiveMapScreen() {
     cameraNonce.current += 1;
     setCamera({ longitude, latitude, distance, nonce: cameraNonce.current });
   }, []);
-  // Arriving from a site page: show that place, and stop following the visitor
-  // so the next location fix does not pull the camera straight back off it.
+  // Arriving from a site page, or from a stop in a place guide ("lat,lng"):
+  // show that point, and stop following the visitor so the next location fix
+  // does not pull the camera straight back off it.
   useEffect(() => {
     const site = focusSiteId ? (findSite(focusSiteId) ?? findPlace(focusSiteId)) : undefined;
-    if (!site) return;
+    const [latitude, longitude] = (focusAt ?? '').split(',').map(Number);
+    const point = site?.coordinate ?? (focusAt && Number.isFinite(latitude) && Number.isFinite(longitude) ? { latitude, longitude } : null);
+    if (!point) return;
     setFollow(false);
-    flyTo(site.coordinate.longitude, site.coordinate.latitude, 'close');
-  }, [focusSiteId, flyTo]);
+    flyTo(point.longitude, point.latitude, 'close');
+  }, [focusSiteId, focusAt, flyTo]);
   const [guideTargetId, setGuideTargetId] = useState<string | null>(null);
   const guideTarget = resolveGuideTarget(guideTargetId);
   const [walkingRoute, setWalkingRoute] = useState<navigation.WalkingRoute | null>(null);

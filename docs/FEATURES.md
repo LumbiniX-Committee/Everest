@@ -61,6 +61,22 @@ Where it ships:
 
 **Tested** (React and data tests). **Not checked:** listings on site.
 
+## 3a. In-depth place guides
+
+Since 1.0. `features/guides/`, content in `data/guides.ts`.
+
+For **Pashupatinath, Boudhanath and Swayambhunath**:
+- a cover photograph and a credited gallery (Wikimedia Commons, free licences);
+- quick facts;
+- three chapters, each at Glance · Story · Scholar depth (the same remembered preference);
+- a numbered walk whose stops carry OpenStreetMap positions, or say "Not mapped yet";
+- before-you-go cards and the official fee;
+- Ask shortcuts and sources.
+
+Reached from the "In depth" shelf on Explore and from each place's page. The text also feeds Ask.
+
+**Tested** (data test `tests/native/place-guides.test.ts`; rendered in a browser). **Needs:** review by the site trusts, and a check of the Wikipedia-sourced heights and dates against primary sources.
+
 ## 4. Map
 
 `features/tirtha/LiveMapScreen.tsx`, `components/map/`
@@ -188,7 +204,7 @@ English and Nepali throughout. New strings must be registered in `i18n/literals.
   - site access by email: grant, change role, turn off (never delete);
   - Pro codes: issue a labelled batch (shown once), see redemptions, revoke a batch;
   - recent crashes (no user id or stack) and a log of every admin change.
-  - **Not yet live:** the migration must be applied and the first admin granted with `tools/grant-admin.mjs`.
+  - **Live** since 2026-11-12: migration applied, owner account made admin.
 - **Tested** (`npm run verify` in `landing/`: typecheck, lint, 30 tests, build).
 
 ## 14. Data pipelines

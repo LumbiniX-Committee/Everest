@@ -17,6 +17,13 @@ Not yet in a Play bundle, and not yet tried on a phone.
 - **3D town:** at street zoom, 3D mode draws houses with windows and roofs instead of boxes.
 - **New 3D models:** a detailed Pashupatinath (courtyard, Nandi, shrines and river), the Basantapur tower with Lohan Chowk, Taleju, Kasthamandap and Maju Dega. 13 models in all. Overall heights are sourced; other sizes are estimates, and each model says so.
 
+### In-depth guides
+- **Pashupatinath, Boudhanath and Swayambhunath:** each has a full guide.
+  - A cover photograph, quick facts, and the story at your chosen depth.
+  - A photo gallery and a walk whose stops open on the map.
+  - What to know before going, and the entry fee.
+  - Find them under "In depth" on Explore.
+
 ### Your record
 - **Your record:** one screen with the places you have visited, your photos, and where each of your reports has got to. From Explore or Settings.
 

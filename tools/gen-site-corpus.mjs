@@ -24,6 +24,7 @@ const { demoSites } = await load('data/generated/sites.ts');
 const { PLACES, ENTRY_FEES, FEE_SITE_IDS, FEES_SOURCE } = await load('data/generated/places.ts');
 const { demoSources } = await load('data/demo/sources.ts');
 const { placeNote } = await load('data/placeNotes.ts');
+const { PLACE_GUIDES } = await load('data/guides.ts');
 
 const sourceById = new Map(demoSources.map((source) => [source.id, source]));
 
@@ -205,6 +206,36 @@ for (const place of PLACES) {
     });
   }
   index.push({ id: place.id, name: place.name, key, keyNe: nameKeyNe(place.nameNepali), parent: [], tier: 4, chunks: ids });
+}
+
+// The long-form guides (data/guides.ts): each chapter at full depth, and the
+// practical notes, cited to the guide's own first source.
+for (const guide of PLACE_GUIDES) {
+  const entry = index.find((item) => item.id === guide.placeId);
+  if (!entry) continue;
+  const source = guide.sources[0];
+  const cite = {
+    uid: guide.placeId,
+    collection: 'place',
+    translator: source.title,
+    license: 'Sākṣī place guide; facts cited to its listed sources',
+    source_id: guide.placeId,
+    source_url: source.url,
+  };
+  guide.chapters.forEach((chapter, i) => {
+    const chunk_id = `place:${guide.placeId}:guide-${i + 1}`;
+    entry.chunks.push(chunk_id);
+    push({ chunk_id, segments: [chunk_id], title_en: `${entry.name}: ${chapter.title.toLowerCase()}`, english: `${chapter.glance} ${chapter.story} ${chapter.scholar}`, ...cite });
+  });
+  const tips = `place:${guide.placeId}:tips`;
+  entry.chunks.push(tips);
+  push({
+    chunk_id: tips,
+    segments: [tips],
+    title_en: `${entry.name}: before you go`,
+    english: guide.beforeYouGo.map((tip) => `${tip.title}: ${tip.body}`).join(' '),
+    ...cite,
+  });
 }
 
 const body = `/**

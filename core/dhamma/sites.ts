@@ -69,10 +69,13 @@ const INTENTS: { suffix: string; pattern: RegExp }[] = [
 
 const STOP = new Set(['what', 'when', 'where', 'which', 'who', 'why', 'how', 'the', 'this', 'that', 'there', 'here', 'about', 'tell', 'does', 'did', 'are', 'was', 'were', 'for', 'and', 'with', 'from', 'have', 'has', 'can', 'its']);
 
+/** "monkeys" and "monkey" are the same word to a visitor. */
+const stem = (word: string) => (word.length > 4 && word.endsWith('s') ? word.slice(0, -1) : word);
+
 function overlap(question: Set<string>, chunk: BilaraChunk): number {
-  const text = words(`${chunk.title_en} ${chunk.english}`);
+  const text = new Set([...words(`${chunk.title_en} ${chunk.english}`)].map(stem));
   let n = 0;
-  for (const word of question) if (!STOP.has(word) && text.has(word)) n += 1;
+  for (const word of question) if (!STOP.has(word) && text.has(stem(word))) n += 1;
   return n;
 }
 

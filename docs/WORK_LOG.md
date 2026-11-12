@@ -2,6 +2,33 @@
 
 What changed in each milestone, what was verified, and what was not. Newest first. The plan lives in the delivery plan; this records what actually happened.
 
+## Place guides, and the admin console live (2026-11-12, later)
+
+- **Place guides** for Pashupatinath, Boudhanath and Swayambhunath (`features/guides`, content in `data/guides.ts`). Each has:
+  - a full-bleed cover photograph;
+  - quick facts;
+  - three chapters at Glance, Story and Scholar depth;
+  - a credited gallery;
+  - a numbered walk whose stops carry OpenStreetMap positions ("Show on the map"), or say "Not mapped yet";
+  - before-you-go cards, the official fee, Ask shortcuts and sources.
+  - They open from an "In depth" shelf on Explore and from each place's page.
+  - Their text also feeds Ask (643 passages).
+- **Admin console live:**
+  - migration 0014 applied to production, with 0013 and 0014 recorded in `schema_migrations`;
+  - the owner's account created and made a platform admin, with the grant logged;
+  - checked by signing in as that account and calling `is_platform_admin` and `admin_overview`;
+  - 10 Pro codes issued through `admin_issue_codes` (batch "Owner test codes, 2026-11-12").
+
+**Verified:**
+- `npm run verify`: 201 core tests, 114 React tests (6 new for the guides), 110 links across 49 routes, Ask benchmark 74/74.
+- Lint holds at 59 errors.
+- The guide pages and the Explore shelf were rendered in headless Chrome on the web build and checked by eye.
+
+**Not verified:**
+- On a phone.
+- Guide text has not been reviewed by the site trusts or a priest or lama.
+- Facts that rest on Wikipedia (heights, dates) should be checked against primary sources.
+
 ## Visitor record, Ask about places, admin console (2026-11-12)
 
 - **Your record** (`features/me`): places visited, photos, every report at the step it has really reached, pending sync and plan, from this phone's database and the cached report steps. Reached from Explore's plan list and from Settings.
@@ -10,7 +37,7 @@ What changed in each milestone, what was verified, and what was not. Newest firs
 - **Admin console** at `/admin` on the website: reports waiting on each site, sites with no custodian, site access by email, Pro codes (issue, see batches, revoke), recent crashes and an admin log. Migration `0014_platform_admin.sql`.
 
 **Verified:** `npm run verify` (200 core tests, 108 React tests, 103 links across 48 routes, benchmark 74/74), `landing` verify (36 tests and the build), lint at 59 known errors.
-**Not verified:** the pgTAP test for 0014 runs in CI only (no local database: the disk is full); 0014 is **not applied to production** yet; `/admin` has not been opened against real data; none of it has been tried on a phone. Answers about places are in English even when asked in Nepali, unless a language model is configured.
+**Not verified:** the pgTAP test for 0014 runs in CI only (no local database: the disk is full); 0014 was applied to production later the same day (see above); `/admin` has not been opened against real data; none of it has been tried on a phone. Answers about places are in English even when asked in Nepali, unless a language model is configured.
 
 ## Design, Guide · Ask · Report, and new content (2026-11-08 to 2026-11-11)
 

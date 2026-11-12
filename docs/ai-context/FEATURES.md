@@ -384,7 +384,8 @@ Full descriptions are in [docs/FEATURES.md](../FEATURES.md). Code pointers:
 | Your record (visitor dashboard) | `features/me/MeScreen.tsx`, route `app/(main)/tirtha/me.tsx`; `core/reports/board.ts` (pure, tested); entry in `PlanList` and Settings |
 | Ask answers about places | `tools/gen-site-corpus.mjs` → `core/dhamma/sites.generated.ts` (631 passages, 278 places; `npm run validate` fails if stale); `core/dhamma/sites.ts` (`findNamedPlace`, `answerAboutPlace`); routing in `askDhamma` (`core/dhamma/engine.ts`); tests `core/dhamma/sites.test.ts` |
 | Ask page suggestions and recent questions | `features/dhamma/DhammaScreen.tsx`; `dhamma.recentQuestions` / `rememberQuestion` in `services/dhamma`; key `StorageKeys.dhammaRecent`, cleared by `privacy.deleteMyRecords` |
-| Admin console (website) | `landing/app/admin/page.tsx`; `landing/app/api/admin/*`; `landing/lib/admin.ts`; migration `0014_platform_admin.sql` (**not yet applied to production**); pgTAP `supabase/tests/platform_admin.test.sql`; first admin via `tools/grant-admin.mjs` |
+| Place guides (Pashupatinath, Boudhanath, Swayambhunath) | `data/guides.ts` (content, photos, OSM stop positions), `types/guides.ts`; `features/guides/PlaceGuideScreen.tsx`, route `app/(main)/tirtha/guide/[placeId].tsx`; `GuideShelf` on Explore; link on `PlaceDetailScreen`; `PhotoVeil` (`components/site`); map `focusAt` param in `LiveMapScreen`; also fed to Ask by `tools/gen-site-corpus.mjs`; test `tests/native/place-guides.test.ts` |
+| Admin console (website) | `landing/app/admin/page.tsx`; `landing/app/api/admin/*`; `landing/lib/admin.ts`; migration `0014_platform_admin.sql` (applied to production 2026-11-12); pgTAP `supabase/tests/platform_admin.test.sql`; first admin via `tools/grant-admin.mjs` |
 
 ## 21. `features/practice/` — Unused / dead code
 

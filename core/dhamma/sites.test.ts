@@ -60,3 +60,9 @@ test('a Nepali question finds the place by its Devanagari name, with case ending
   assert.equal(ask('के गैर-हिन्दुहरू पशुपतिनाथ मन्दिरभित्र जान पाउँछन्?').citations[0].segment_id, 'place:wd-Q380384:note');
   assert.match(ask('सन् २०१५ मा काष्ठमण्डपलाई के भयो?').citations[0].segment_id, /^site:ktm-kasthamandap:/);
 });
+
+test('the long-form guides answer deeper questions about the three major places', () => {
+  assert.equal(ask('Which way should I walk around Boudhanath?').citations[0].segment_id, 'place:wd-Q889902:guide-2');
+  assert.equal(ask('What is the legend of Swayambhunath and Manjushri?').citations[0].segment_id, 'place:wd-Q12946982:guide-1');
+  assert.match(ask('Why is Swayambhunath called the Monkey Temple?').citations[0].segment_id, /^place:wd-Q12946982:guide-/);
+});

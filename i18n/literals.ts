@@ -11,6 +11,22 @@ import type { InterfaceLanguage } from '@/types';
  * Text boundary and are never registered here.
  */
 export const NEPALI_UI_LITERALS = {
+  "Open the guide": "मार्गदर्शन खोल्नुहोस्",
+  "Three places, told fully": "तीन ठाउँ, पूरा कथासहित",
+  "No guide for this place": "यो ठाउँको मार्गदर्शन छैन",
+  "This place has no long-form guide yet.": "यो ठाउँको विस्तृत मार्गदर्शन अझै छैन।",
+  "· Wikimedia Commons": "· विकिमिडिया कमन्स",
+  "The story": "कथा",
+  "In pictures": "तस्बिरमा",
+  "Show on the map": "नक्सामा देखाउनुहोस्",
+  "Not mapped yet": "अझै नक्सामा छैन",
+  "Before you go": "जानुअघि",
+  "Ask about it": "यसबारे सोध्नुहोस्",
+  "Written from the sources below. Not yet reviewed on site by the people who look after this place.": "तलका स्रोतबाट लेखिएको। यो ठाउँको हेरचाह गर्नेहरूले स्थलमै अझै जाँचेका छैनन्।",
+  "Photographs:": "तस्बिरहरू:",
+  ", via Wikimedia Commons.": ", विकिमिडिया कमन्समार्फत।",
+  "Open the full guide": "पूरा मार्गदर्शन खोल्नुहोस्",
+  "The story at your depth, a walk with mapped stops, photographs and what to know before going.": "तपाईंले रोजेको गहिराइमा कथा, नक्सामा चिनो लगाइएका ठाउँसहितको हिँडाइ, तस्बिर र जानुअघि जान्नुपर्ने कुरा।",
   "Ask about a place in Nepal, or the early texts": "नेपालको कुनै ठाउँ वा प्रारम्भिक ग्रन्थबारे सोध्नुहोस्",
   "It answers from the app’s site pages, official fees, the Pali texts and heritage charters, and says so when it cannot.": "यसले एपका स्थल-पृष्ठ, आधिकारिक शुल्क, पालि ग्रन्थ र सम्पदा बडापत्रबाट उत्तर दिन्छ, र दिन नसके त्यही भन्छ।",
   "Try asking": "यसो सोधेर हेर्नुहोस्",
