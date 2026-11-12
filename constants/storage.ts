@@ -72,6 +72,8 @@ export const StorageKeys = {
   offlineMapPacks: `${PREFIX}.map.offlinePacks`,
   /** Last known custodian steps on the visitor's own reports, for offline viewing. */
   reportTimelines: `${PREFIX}.reports.timelines`,
+  /** The last few questions typed into Ask, newest first. Personal: cleared by "Delete my data". */
+  dhammaRecent: `${PREFIX}.dhamma.recent`,
 } as const;
 
 /** Preference field → storage key. The settings screen iterates this. */

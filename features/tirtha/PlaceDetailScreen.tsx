@@ -1,16 +1,16 @@
 import { useState } from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { BackBar, EmptyState } from '@/components/common';
 import { VisitInfo } from '@/components/site';
-import { Button, Divider, MetaRow, Screen, Text } from '@/components/ui';
-import { commonsThumb, feeForPlace, findPlace, modelFor, placeNote } from '@/data';
+import { Button, Divider, Icon, MetaRow, Screen, Text } from '@/components/ui';
+import { commonsThumb, feeForPlace, findPlace, guideFor, modelFor, placeNote } from '@/data';
 import { useCurrentPosition, useSafeBack } from '@/hooks';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { application } from '@/services';
 import { usePreferences } from '@/store';
-import { radii, spacing } from '@/theme';
+import { colors, radii, spacing } from '@/theme';
 import { distanceMeters, formatDistance } from '@/utils';
 
 const CATEGORY_LABEL: Record<string, string> = {
@@ -78,6 +78,25 @@ export function PlaceDetailScreen({ placeId }: { placeId: string }) {
           </Text>
         ) : null}
       </View>
+
+      {guideFor(place.id) ? (
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => router.push({ pathname: '/(main)/tirtha/guide/[placeId]', params: { placeId: place.id } })}
+          style={({ pressed }) => [styles.guide, pressed && styles.pressed]}
+        >
+          <Icon name="book-open-page-variant-outline" size={26} color={colors.accent} />
+          <View style={styles.guideText}>
+            <Text variant="bodyStrong" tone="onScrim">
+              Open the full guide
+            </Text>
+            <Text variant="caption" tone="onScrim">
+              The story at your depth, a walk with mapped stops, photographs and what to know before going.
+            </Text>
+          </View>
+          <Icon name="chevron-right" size={24} color={colors.onScrim} />
+        </Pressable>
+      ) : null}
 
       <View style={styles.actions}>
         <Button
@@ -149,4 +168,15 @@ const styles = StyleSheet.create({
   head: { gap: spacing.xs, marginBottom: spacing.md },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   sources: { marginTop: spacing.lg, marginBottom: spacing.xl },
+  guide: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    padding: spacing.base,
+    marginBottom: spacing.md,
+    borderRadius: radii.lg,
+    backgroundColor: colors.backgroundDeep,
+  },
+  guideText: { flex: 1, gap: spacing.xxs },
+  pressed: { opacity: 0.85 },
 });
