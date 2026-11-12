@@ -24,8 +24,22 @@ export type ModelPlacement = {
   targets: string[];
 };
 
+/**
+ * Where OpenStreetMap places a monument better than our site record does:
+ * Swayambhunath's record is rounded to 27.715, 85.29, and the Kasthamandap
+ * and Maju Dega records sit over 100 m from the buildings the map draws.
+ * [latitude, longitude] of the OSM feature named.
+ */
+const OSM_POSITION: Record<string, [number, number]> = {
+  swayambhunath: [27.714931, 85.290391], // OSM way 201223707
+  kasthamandap: [27.703934, 85.305779], // OSM way 183558418
+  'maju-dega': [27.704264, 85.306173], // OSM way 183562980
+};
+
 export function modelPlacements(): ModelPlacement[] {
   return MODELS.flatMap((model) => {
+    const osm = OSM_POSITION[model.id];
+    if (osm) return [{ id: model.id, latitude: osm[0], longitude: osm[1], targets: model.targets }];
     for (const target of model.targets) {
       const coordinate = findSite(target)?.coordinate ?? findPlace(target)?.coordinate;
       if (coordinate) {

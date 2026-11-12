@@ -15,6 +15,7 @@ import { VisitCircle } from '@/components/VisitCircle';
 import { Provenance } from '@/components/Provenance';
 import { ThreeVerbs } from '@/components/ThreeVerbs';
 import { MapExplorer } from '@/components/MapExplorer';
+import { HomeScans } from '@/components/HomeScans';
 import { CountUp, Reveal } from '@/components/motion';
 import { formatBuildDate, getLatestBuild } from '@/lib/eas';
 import { localeHref, type Locale } from '@/lib/i18n';
@@ -457,6 +458,8 @@ export default async function Home({ params }: { params: Promise<{ locale: Local
           </Reveal>
         </div>
       </section>
+
+      <HomeScans locale={locale === 'ne' ? 'ne' : 'en'} />
 
       <Provenance locale={locale === 'ne' ? 'ne' : 'en'} />
 

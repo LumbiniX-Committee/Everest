@@ -2,10 +2,21 @@ import { findPlace, findSite, MODELS, SCANS, scanEmbedUrl, scansFor } from '@/da
 
 /** The real scans shown through Sketchfab's player. */
 describe('3D scans', () => {
-  it('belong to places the app knows', () => {
+  it('belong to places the app knows, where they name one', () => {
     for (const scan of SCANS) {
-      expect(scan.targets.length).toBeGreaterThan(0);
       for (const id of scan.targets) expect(findSite(id) ?? findPlace(id)).toBeDefined();
+    }
+    // Most open from a place page; the few with no page (Tsarang, Ghemi in
+    // Upper Mustang) are reached from their pin on the map and the gallery.
+    expect(SCANS.filter((scan) => scan.targets.length > 0).length).toBeGreaterThanOrEqual(SCANS.length - 2);
+  });
+
+  it('stand on the map inside Nepal', () => {
+    for (const scan of SCANS) {
+      expect(scan.at.latitude).toBeGreaterThan(26.3);
+      expect(scan.at.latitude).toBeLessThan(30.5);
+      expect(scan.at.longitude).toBeGreaterThan(80);
+      expect(scan.at.longitude).toBeLessThan(88.3);
     }
   });
 

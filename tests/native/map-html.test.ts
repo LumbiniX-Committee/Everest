@@ -51,13 +51,28 @@ describe('monument models on the map', () => {
     expect(html).toContain('3D monuments: schematic models, not surveys');
   });
 
-  it('leave out a model whose site is only known roughly', () => {
-    // Swayambhunath's coordinate is 27.715, 85.29: good to a hundred metres, not ten.
-    expect(placements.map((p) => p.id)).not.toContain('swayambhunath');
+  it('stand Swayambhunath where OpenStreetMap draws it, not at its rounded record', () => {
+    const swayambhu = placements.find((p) => p.id === 'swayambhunath') as unknown as { latitude: number; longitude: number };
+    expect(swayambhu.latitude).toBeCloseTo(27.714931, 5);
+    expect(swayambhu.longitude).toBeCloseTo(85.290391, 5);
   });
 
   it('are left out where three.js is not loaded', () => {
     expect(buildMapHtml({ fullscreen: false, interactive: false })).not.toContain("id: 'sakshi-monuments'");
+  });
+});
+
+describe('real 3D scans on the map', () => {
+  it('pin every scan spot, and say which scan a tap opens', () => {
+    const html = buildMapHtml({ fullscreen: true, interactive: true, avatar: true });
+    expect(html).toContain("id:'scan-pin'");
+    expect(html).toContain("post({ type:'scan'");
+    // The whole-hill drone survey of Swayambhu is the first scan at its pin.
+    expect(html).toContain('5dabfc2162fa44b4b415caf9358faddb');
+  });
+
+  it('leave the small map without them', () => {
+    expect(buildMapHtml({ fullscreen: false, interactive: false })).not.toContain("id:'scan-pin'");
   });
 });
 

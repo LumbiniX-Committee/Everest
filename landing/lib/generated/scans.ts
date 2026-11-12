@@ -16,8 +16,12 @@ export type Scan = {
   captured: string | null;
   published: string | null;
   thumbnail: string;
+  /** About 1280 px wide, for a large stage. */
+  poster: string;
   /** Site or place ids this scan shows. */
   targets: string[];
+  /** Where it stands on the map: an OpenStreetMap point, a pin rather than a survey. */
+  at: { latitude: number; longitude: number };
   note: string;
 };
 
@@ -35,9 +39,14 @@ export const SCANS: Scan[] = [
   "captured": null,
   "published": "2020-08-29",
   "thumbnail": "https://media.sketchfab.com/models/4cdd98a88d3740ccb55c7510725bd98c/thumbnails/816109d83fc649078d896ef754d0cecb/534f08d0a32f42f9abf9b76f4dba7adf.jpeg",
+  "poster": "https://media.sketchfab.com/models/4cdd98a88d3740ccb55c7510725bd98c/thumbnails/816109d83fc649078d896ef754d0cecb/cd36d36380f84222b96e31cc375339c1.jpeg",
   "targets": [
    "maya-devi-temple"
   ],
+  "at": {
+   "latitude": 27.469609,
+   "longitude": 83.275831
+  },
   "note": "The temple, the Puskarini pond and the excavated ground around them, from the air."
  },
  {
@@ -53,9 +62,14 @@ export const SCANS: Scan[] = [
   "captured": null,
   "published": "2020-05-01",
   "thumbnail": "https://media.sketchfab.com/models/f65cb3c34adb4473b50b8d70ef9f534c/thumbnails/645f123ba883408aa9298cfc0304d454/6a4581c29c7642b1a943bbf57279852b.jpeg",
+  "poster": "https://media.sketchfab.com/models/f65cb3c34adb4473b50b8d70ef9f534c/thumbnails/645f123ba883408aa9298cfc0304d454/d98cd7ecf3d3438b9e0b5abb4962c1db.jpeg",
   "targets": [
    "world-peace-pagoda"
   ],
+  "at": {
+   "latitude": 27.498907,
+   "longitude": 83.276262
+  },
   "note": "The World Peace Pagoda in the Lumbini development zone."
  },
  {
@@ -71,10 +85,84 @@ export const SCANS: Scan[] = [
   "captured": null,
   "published": "2021-06-24",
   "thumbnail": "https://media.sketchfab.com/models/b712936720594f8fb155338178e6495b/thumbnails/358747420c9848459f2cacff20c24ece/168874f2b5784715bc79b26724ae6570.jpeg",
+  "poster": "https://media.sketchfab.com/models/b712936720594f8fb155338178e6495b/thumbnails/358747420c9848459f2cacff20c24ece/cbe688cb99804daab0d1b066f5ee27f3.jpeg",
   "targets": [
    "tilaurakot"
   ],
+  "at": {
+   "latitude": 27.575876,
+   "longitude": 83.054811
+  },
   "note": "The Samai Mai shrine after conservation, recorded by the UNESCO Chair team at Durham University."
+ },
+ {
+  "id": "5dabfc2162fa44b4b415caf9358faddb",
+  "label": "Swayambhu hill, from the air",
+  "title": "Swayambhu",
+  "creator": "Bhugol Tour",
+  "creatorUrl": "https://sketchfab.com/Raj.Bikram.Maharjan",
+  "viewerUrl": "https://sketchfab.com/3d-models/swayambhu-5dabfc2162fa44b4b415caf9358faddb",
+  "licence": "Not offered for download: shown in Sketchfab’s player, not copied",
+  "openLicence": false,
+  "kind": "drone survey",
+  "captured": null,
+  "published": "2022-08-04",
+  "thumbnail": "https://media.sketchfab.com/models/5dabfc2162fa44b4b415caf9358faddb/thumbnails/38119fae9ae44a0ba12856d3c11fe2b7/a768c8535023455985b5804b6f480270.jpeg",
+  "poster": "https://media.sketchfab.com/models/5dabfc2162fa44b4b415caf9358faddb/thumbnails/38119fae9ae44a0ba12856d3c11fe2b7/44dca46079a34cf9939f5efbdec2d750.jpeg",
+  "targets": [
+   "wd-Q12946982"
+  ],
+  "at": {
+   "latitude": 27.714931,
+   "longitude": 85.290391
+  },
+  "note": "The whole hilltop as a drone-captured point cloud, 6.7 million measured samples: the stupa, its shrines and the forest around them."
+ },
+ {
+  "id": "3d3ea93250734ccfb0a355d9e77c1453",
+  "label": "Swayambhunath stupa and hilltop",
+  "title": "Swayambunath Temple in Nepal",
+  "creator": "yuichi hayakawa",
+  "creatorUrl": "https://sketchfab.com/yshaya",
+  "viewerUrl": "https://sketchfab.com/3d-models/swayambunath-temple-in-nepal-3d3ea93250734ccfb0a355d9e77c1453",
+  "licence": "Not offered for download: shown in Sketchfab’s player, not copied",
+  "openLicence": false,
+  "kind": "photogrammetry",
+  "captured": null,
+  "published": "2015-04-29",
+  "thumbnail": "https://media.sketchfab.com/models/3d3ea93250734ccfb0a355d9e77c1453/thumbnails/8dd168e5ba0648578e41508c07fec37a/7978c39c772d4af1acfd77e0d59f49e5.jpeg",
+  "poster": "https://media.sketchfab.com/models/3d3ea93250734ccfb0a355d9e77c1453/thumbnails/8dd168e5ba0648578e41508c07fec37a/9eb13fd6787e447fa51b10b05bc17b7f.jpeg",
+  "targets": [
+   "wd-Q12946982"
+  ],
+  "at": {
+   "latitude": 27.714931,
+   "longitude": 85.290391
+  },
+  "note": "The great stupa with the shrines and houses packed round it."
+ },
+ {
+  "id": "5da6a460cc3648dd955410f074555ed0",
+  "label": "A gilded shrine, Swayambhu",
+  "title": "Swayambhu Shrine",
+  "creator": "Brad Erickson",
+  "creatorUrl": "https://sketchfab.com/brerick",
+  "viewerUrl": "https://sketchfab.com/3d-models/swayambhu-shrine-5da6a460cc3648dd955410f074555ed0",
+  "licence": "Not offered for download: shown in Sketchfab’s player, not copied",
+  "openLicence": false,
+  "kind": "photogrammetry",
+  "captured": null,
+  "published": "2019-03-26",
+  "thumbnail": "https://media.sketchfab.com/models/5da6a460cc3648dd955410f074555ed0/thumbnails/0492643f9f3742e2adebac74b84e159c/0a1edd7d3aa94e52831dbb261d3ac7df.jpeg",
+  "poster": "https://media.sketchfab.com/models/5da6a460cc3648dd955410f074555ed0/thumbnails/0492643f9f3742e2adebac74b84e159c/61677e56f54c433699dccef363d34aa9.jpeg",
+  "targets": [
+   "wd-Q12946982"
+  ],
+  "at": {
+   "latitude": 27.714931,
+   "longitude": 85.290391
+  },
+  "note": "A gilded shrine on the hilltop, with its torana and offerings."
  },
  {
   "id": "ad0c99960e7745708e7a9c1ef5c3b7ad",
@@ -89,9 +177,14 @@ export const SCANS: Scan[] = [
   "captured": null,
   "published": "2019-03-02",
   "thumbnail": "https://media.sketchfab.com/models/ad0c99960e7745708e7a9c1ef5c3b7ad/thumbnails/16b7d25c144d47d091a811b521186806/69c83fb207244008ac4f37d67296e562.jpeg",
+  "poster": "https://media.sketchfab.com/models/ad0c99960e7745708e7a9c1ef5c3b7ad/thumbnails/16b7d25c144d47d091a811b521186806/585945fa54a8433bb750f8d29ee66d06.jpeg",
   "targets": [
    "wd-Q12946982"
   ],
+  "at": {
+   "latitude": 27.714931,
+   "longitude": 85.290391
+  },
   "note": "A temple on the Swayambhu hilltop, scanned with the custodians’ permission."
  },
  {
@@ -107,9 +200,14 @@ export const SCANS: Scan[] = [
   "captured": null,
   "published": "2019-02-25",
   "thumbnail": "https://media.sketchfab.com/models/1114c3da452c423c868aa91216310edc/thumbnails/b486e26e68f6410eb9894b51a3be1af1/4c424c3b0f654b60ba45699df88f2600.jpeg",
+  "poster": "https://media.sketchfab.com/models/1114c3da452c423c868aa91216310edc/thumbnails/b486e26e68f6410eb9894b51a3be1af1/9544225490454a6aa29bb48007e9484e.jpeg",
   "targets": [
    "wd-Q12946982"
   ],
+  "at": {
+   "latitude": 27.714931,
+   "longitude": 85.290391
+  },
   "note": "The great vajra at the top of the eastern stair."
  },
  {
@@ -125,9 +223,14 @@ export const SCANS: Scan[] = [
   "captured": null,
   "published": "2018-08-07",
   "thumbnail": "https://media.sketchfab.com/models/38def5caf9dc43b4aa1b6fd5ba36c8bb/thumbnails/c7dad26bcfc7403697bb80ed13556d4b/53acba8ab14f4326b2924d722a5b1f63.jpeg",
+  "poster": "https://media.sketchfab.com/models/38def5caf9dc43b4aa1b6fd5ba36c8bb/thumbnails/c7dad26bcfc7403697bb80ed13556d4b/f0a3ab21ea024b77b4e603bf5f04a9df.jpeg",
   "targets": [
    "wd-Q12946982"
   ],
+  "at": {
+   "latitude": 27.714931,
+   "longitude": 85.290391
+  },
   "note": "One of the small chaityas crowding the hilltop."
  },
  {
@@ -143,9 +246,14 @@ export const SCANS: Scan[] = [
   "captured": "May 2015",
   "published": "2015-05-01",
   "thumbnail": "https://media.sketchfab.com/models/6f5e13385ea74742a5af1e5338bde70b/thumbnails/33663e1fc75f409aa2886ce0d12a40d9/c9f14639afe244e4bab3a947d84674e0.jpeg",
+  "poster": "https://media.sketchfab.com/models/6f5e13385ea74742a5af1e5338bde70b/thumbnails/33663e1fc75f409aa2886ce0d12a40d9/e0cc7b6a88964fff955aa997df9a3a8a.jpeg",
   "targets": [
    "kathmandu-durbar-square"
   ],
+  "at": {
+   "latitude": 27.70377,
+   "longitude": 85.306524
+  },
   "note": "Recorded by drone days after the 25 April 2015 earthquake: a record of the damage, not of the square today."
  },
  {
@@ -161,11 +269,40 @@ export const SCANS: Scan[] = [
   "captured": null,
   "published": "2021-10-15",
   "thumbnail": "https://media.sketchfab.com/models/ebb0f90762b34821b147fcc470916510/thumbnails/39366e62f6654234b31ce6d5fc2efbdd/ff8c5a7ae4494c79b9df0fb847624543.jpeg",
+  "poster": "https://media.sketchfab.com/models/ebb0f90762b34821b147fcc470916510/thumbnails/39366e62f6654234b31ce6d5fc2efbdd/ddc915bf3fe74de288689720bcc47f15.jpeg",
   "targets": [
    "ktm-taleju-temple",
    "kathmandu-durbar-square"
   ],
+  "at": {
+   "latitude": 27.704902,
+   "longitude": 85.307957
+  },
   "note": "The carved main gate to the Taleju temple in Hanuman Dhoka, dated 1564."
+ },
+ {
+  "id": "0db5beb3c6cb45f2b6c3fb63cc342044",
+  "label": "Kal Bhairav, Kathmandu Durbar Square",
+  "title": "kal bhairav kathmandu",
+  "creator": "Bhugol Tour",
+  "creatorUrl": "https://sketchfab.com/Raj.Bikram.Maharjan",
+  "viewerUrl": "https://sketchfab.com/3d-models/kal-bhairav-kathmandu-0db5beb3c6cb45f2b6c3fb63cc342044",
+  "licence": "Not offered for download: shown in Sketchfab’s player, not copied",
+  "openLicence": false,
+  "kind": "photogrammetry",
+  "captured": null,
+  "published": "2020-09-15",
+  "thumbnail": "https://media.sketchfab.com/models/0db5beb3c6cb45f2b6c3fb63cc342044/thumbnails/bc53556b48c54a47b2b867ba02a3a3b6/fab4b9598f5e4985abe1bd67c51fdb71.jpeg",
+  "poster": "https://media.sketchfab.com/models/0db5beb3c6cb45f2b6c3fb63cc342044/thumbnails/bc53556b48c54a47b2b867ba02a3a3b6/48e1fd3884f74e3782f991d267ece1f8.jpeg",
+  "targets": [
+   "ktm-kal-bhairav",
+   "kathmandu-durbar-square"
+  ],
+  "at": {
+   "latitude": 27.704725,
+   "longitude": 85.307092
+  },
+  "note": "The great stone Kal Bhairav, painted and garlanded, where oaths were once sworn."
  },
  {
   "id": "a172a6c625a84181b68fa4284679de1e",
@@ -180,11 +317,109 @@ export const SCANS: Scan[] = [
   "captured": null,
   "published": "2020-01-01",
   "thumbnail": "https://media.sketchfab.com/models/a172a6c625a84181b68fa4284679de1e/thumbnails/b67b71895ce34542af4f2227b6b7d88d/9b5cb323abf748e2abce364e5732ec77.jpeg",
+  "poster": "https://media.sketchfab.com/models/a172a6c625a84181b68fa4284679de1e/thumbnails/b67b71895ce34542af4f2227b6b7d88d/dbac80aca5d142a8beeacf790de50a66.jpeg",
   "targets": [
    "ktm-kasthamandap",
    "kathmandu-durbar-square"
   ],
+  "at": {
+   "latitude": 27.703934,
+   "longitude": 85.305779
+  },
   "note": "Kasthamandap during its rebuilding after the 2015 earthquake."
+ },
+ {
+  "id": "dedca951739f4362b51b777d3ea826e1",
+  "label": "Yetkha Bahal",
+  "title": "YETKHA BAHAL",
+  "creator": "Airlift Technology",
+  "creatorUrl": "https://sketchfab.com/airliftnepal",
+  "viewerUrl": "https://sketchfab.com/3d-models/yetkha-bahal-dedca951739f4362b51b777d3ea826e1",
+  "licence": "CC Attribution",
+  "openLicence": true,
+  "kind": "photogrammetry",
+  "captured": null,
+  "published": "2019-02-18",
+  "thumbnail": "https://media.sketchfab.com/models/dedca951739f4362b51b777d3ea826e1/thumbnails/1e19adea8dd449388d17dad14ac88cea/c18e2eedd3f34ab09a0a72bf1380a9fd.jpeg",
+  "poster": "https://media.sketchfab.com/models/dedca951739f4362b51b777d3ea826e1/thumbnails/1e19adea8dd449388d17dad14ac88cea/934b7dbe273d43fca7596c952badf8fa.jpeg",
+  "targets": [
+   "osm-way-80913260"
+  ],
+  "at": {
+   "latitude": 27.706655,
+   "longitude": 85.306527
+  },
+  "note": "The white stupa in the courtyard of Yetkha Bahal, a Buddhist monastery courtyard near Durbar Square."
+ },
+ {
+  "id": "0d0fad4b2f1b459e8ca5cc0e86542882",
+  "label": "Yetkha Bahal shrine",
+  "title": "Yetkha Bahal Dya Chen (God's Home)",
+  "creator": "Bhugol Tour",
+  "creatorUrl": "https://sketchfab.com/Raj.Bikram.Maharjan",
+  "viewerUrl": "https://sketchfab.com/3d-models/yetkha-bahal-dya-chen-gods-home-0d0fad4b2f1b459e8ca5cc0e86542882",
+  "licence": "Not offered for download: shown in Sketchfab’s player, not copied",
+  "openLicence": false,
+  "kind": "photogrammetry",
+  "captured": null,
+  "published": "2020-02-02",
+  "thumbnail": "https://media.sketchfab.com/models/0d0fad4b2f1b459e8ca5cc0e86542882/thumbnails/cc6b13a1bc2e425a9386690b90948add/9ec418a8491b4b21987b596d03e21e92.jpeg",
+  "poster": "https://media.sketchfab.com/models/0d0fad4b2f1b459e8ca5cc0e86542882/thumbnails/cc6b13a1bc2e425a9386690b90948add/8072c94b8eff42e78e2f877a2221e28d.jpeg",
+  "targets": [
+   "osm-way-80913260"
+  ],
+  "at": {
+   "latitude": 27.706655,
+   "longitude": 85.306527
+  },
+  "note": "The shrine of Yetkha Bahal, its painted wooden front and doorway."
+ },
+ {
+  "id": "c5bdfc4d02fa4c668b8e1bf31beca067",
+  "label": "Keshar Mahal",
+  "title": "Keshar Mahal, National Library",
+  "creator": "Bhugol Tour",
+  "creatorUrl": "https://sketchfab.com/Raj.Bikram.Maharjan",
+  "viewerUrl": "https://sketchfab.com/3d-models/keshar-mahal-national-library-c5bdfc4d02fa4c668b8e1bf31beca067",
+  "licence": "CC Attribution",
+  "openLicence": true,
+  "kind": "drone survey",
+  "captured": null,
+  "published": "2020-10-04",
+  "thumbnail": "https://media.sketchfab.com/models/c5bdfc4d02fa4c668b8e1bf31beca067/thumbnails/ef18c4e4c94e4e4e976779d892a8f7f0/e1586825b5234ca398453fd4b235ee89.jpeg",
+  "poster": "https://media.sketchfab.com/models/c5bdfc4d02fa4c668b8e1bf31beca067/thumbnails/ef18c4e4c94e4e4e976779d892a8f7f0/455476e7db424f58a9fb96253cad6f34.jpeg",
+  "targets": [
+   "osm-node-1962909336"
+  ],
+  "at": {
+   "latitude": 27.714221,
+   "longitude": 85.314718
+  },
+  "note": "The Rana palace that holds the Keshar Library, beside the Garden of Dreams, from the air."
+ },
+ {
+  "id": "e28fe3fbf3a14c4f8aa83316382d8dc4",
+  "label": "Krishna Mandir, Patan",
+  "title": "Krishna Mandir Patan, Single rock pagoda",
+  "creator": "Airlift Technology",
+  "creatorUrl": "https://sketchfab.com/airliftnepal",
+  "viewerUrl": "https://sketchfab.com/3d-models/krishna-mandir-patan-single-rock-pagoda-e28fe3fbf3a14c4f8aa83316382d8dc4",
+  "licence": "Not offered for download: shown in Sketchfab’s player, not copied",
+  "openLicence": false,
+  "kind": "photogrammetry",
+  "captured": null,
+  "published": "2019-06-26",
+  "thumbnail": "https://media.sketchfab.com/models/e28fe3fbf3a14c4f8aa83316382d8dc4/thumbnails/357a906eae8b451ba58350718640a1fc/c029ba88c98148d6998705185fdec272.jpeg",
+  "poster": "https://media.sketchfab.com/models/e28fe3fbf3a14c4f8aa83316382d8dc4/thumbnails/357a906eae8b451ba58350718640a1fc/272591ce7da7498c91414c759743f526.jpeg",
+  "targets": [
+   "patan-krishna-mandir",
+   "patan-durbar-square"
+  ],
+  "at": {
+   "latitude": 27.673623,
+   "longitude": 85.324964
+  },
+  "note": "The stone shikhara temple of 1637, built in a single style from top to plinth."
  },
  {
   "id": "347100710a0645a0bae86980dfa3e977",
@@ -199,11 +434,39 @@ export const SCANS: Scan[] = [
   "captured": null,
   "published": "2018-08-09",
   "thumbnail": "https://media.sketchfab.com/models/347100710a0645a0bae86980dfa3e977/thumbnails/1b593ae8a0fc44fc8e03cdafdd8638f7/22cb2246cbd745a195fdc23f9bbf8f27.jpeg",
+  "poster": "https://media.sketchfab.com/models/347100710a0645a0bae86980dfa3e977/thumbnails/1b593ae8a0fc44fc8e03cdafdd8638f7/42643bf1c90f45e0be535f5388a2ec32.jpeg",
   "targets": [
    "patan-sundari-chowk",
    "patan-durbar-square"
   ],
+  "at": {
+   "latitude": 27.672722,
+   "longitude": 85.325134
+  },
   "note": "Tusha Hiti, the sunken royal bath in Sundari Chowk, with its carved stone frieze."
+ },
+ {
+  "id": "aa7e000993424adc87ababd87921ac7e",
+  "label": "A stone inscription, Bhaktapur",
+  "title": "Stone inscription at Bhaktapur Durbar Square",
+  "creator": "robert.jackisch",
+  "creatorUrl": "https://sketchfab.com/robert.jackisch",
+  "viewerUrl": "https://sketchfab.com/3d-models/stone-inscription-at-bhaktapur-durbar-square-aa7e000993424adc87ababd87921ac7e",
+  "licence": "CC Attribution",
+  "openLicence": true,
+  "kind": "photogrammetry",
+  "captured": null,
+  "published": "2024-02-16",
+  "thumbnail": "https://media.sketchfab.com/models/aa7e000993424adc87ababd87921ac7e/thumbnails/29bc774f5def4412b50a9cf1e19561b3/fd64a50dc1414b90a9d0dd939f3a1f5c.jpeg",
+  "poster": "https://media.sketchfab.com/models/aa7e000993424adc87ababd87921ac7e/thumbnails/29bc774f5def4412b50a9cf1e19561b3/e787ab0f45794586b380790696dea8f4.jpeg",
+  "targets": [
+   "wd-Q4900869"
+  ],
+  "at": {
+   "latitude": 27.672188,
+   "longitude": 85.427904
+  },
+  "note": "An inscribed stone in Bhaktapur Durbar Square."
  },
  {
   "id": "d1dbd0e3109548f3a99ae4a2eca1493b",
@@ -218,10 +481,57 @@ export const SCANS: Scan[] = [
   "captured": null,
   "published": "2023-09-19",
   "thumbnail": "https://media.sketchfab.com/models/d1dbd0e3109548f3a99ae4a2eca1493b/thumbnails/13f0226731b847259a421010c857ece8/db295fbc9bdd49d2969b03c7fb86b376.jpeg",
+  "poster": "https://media.sketchfab.com/models/d1dbd0e3109548f3a99ae4a2eca1493b/thumbnails/13f0226731b847259a421010c857ece8/ab492b05281d4b3abe80ae1d961597b0.jpeg",
   "targets": [
    "wd-Q380384"
   ],
+  "at": {
+   "latitude": 27.710465,
+   "longitude": 85.348665
+  },
   "note": "A modelled reconstruction of the main temple, not a scan. Only Hindus may enter the real courtyard."
+ },
+ {
+  "id": "1faa2c27977041ad8877c88abecc8d24",
+  "label": "Tsarang palace ruins, Mustang",
+  "title": "Tsarang Palace Ruins in Mustang",
+  "creator": "Bhugol Tour",
+  "creatorUrl": "https://sketchfab.com/Raj.Bikram.Maharjan",
+  "viewerUrl": "https://sketchfab.com/3d-models/tsarang-palace-ruins-in-mustang-1faa2c27977041ad8877c88abecc8d24",
+  "licence": "Not offered for download: shown in Sketchfab’s player, not copied",
+  "openLicence": false,
+  "kind": "drone survey",
+  "captured": null,
+  "published": "2021-09-12",
+  "thumbnail": "https://media.sketchfab.com/models/1faa2c27977041ad8877c88abecc8d24/thumbnails/dc65e438dba4432d807ff1e8b3002b77/f0552d6ecde44d24af3ba9b1f6772ef3.jpeg",
+  "poster": "https://media.sketchfab.com/models/1faa2c27977041ad8877c88abecc8d24/thumbnails/dc65e438dba4432d807ff1e8b3002b77/d828bd5ccb7547129e23de900c041a8d.jpeg",
+  "targets": [],
+  "at": {
+   "latitude": 29.092717,
+   "longitude": 83.9337
+  },
+  "note": "The ruined royal palace of Tsarang in Upper Mustang, on its cliff edge, from the air."
+ },
+ {
+  "id": "f1fd9e48edfb460e94af17420e747520",
+  "label": "Ghemi, Mustang",
+  "title": "Royal Palace of Ghemi in Mustang",
+  "creator": "Bhugol Tour",
+  "creatorUrl": "https://sketchfab.com/Raj.Bikram.Maharjan",
+  "viewerUrl": "https://sketchfab.com/3d-models/royal-palace-of-ghemi-in-mustang-f1fd9e48edfb460e94af17420e747520",
+  "licence": "Not offered for download: shown in Sketchfab’s player, not copied",
+  "openLicence": false,
+  "kind": "drone survey",
+  "captured": null,
+  "published": "2022-01-17",
+  "thumbnail": "https://media.sketchfab.com/models/f1fd9e48edfb460e94af17420e747520/thumbnails/11353c9b93f142bf8050c02123441f07/0f416986258d47b3939e6ad80edf27be.jpeg",
+  "poster": "https://media.sketchfab.com/models/f1fd9e48edfb460e94af17420e747520/thumbnails/11353c9b93f142bf8050c02123441f07/f429808981764fa7a859a92f2ee25b2c.jpeg",
+  "targets": [],
+  "at": {
+   "latitude": 29.063083,
+   "longitude": 83.87301
+  },
+  "note": "The old palace quarter of Ghemi village in Upper Mustang, from the air."
  }
 ];
 
@@ -233,4 +543,18 @@ export function scanEmbedUrl(id: string, autostart = true): string {
 export function scansFor(...ids: (string | undefined)[]): Scan[] {
   const wanted = new Set(ids.filter(Boolean));
   return SCANS.filter((scan) => scan.targets.some((target) => wanted.has(target)));
+}
+
+/** One map pin per place that has scans: scans at the same point share it. */
+export type ScanSpot = { key: string; latitude: number; longitude: number; label: string; scanIds: string[] };
+
+export function scanSpots(): ScanSpot[] {
+  const spots = new Map<string, ScanSpot>();
+  for (const scan of SCANS) {
+    const key = `${scan.at.latitude.toFixed(5)},${scan.at.longitude.toFixed(5)}`;
+    const spot = spots.get(key);
+    if (spot) spot.scanIds.push(scan.id);
+    else spots.set(key, { key, latitude: scan.at.latitude, longitude: scan.at.longitude, label: scan.label, scanIds: [scan.id] });
+  }
+  return [...spots.values()];
 }
