@@ -76,6 +76,26 @@ describe('real 3D scans on the map', () => {
   });
 });
 
+describe('real scans standing on the map', () => {
+  const html = buildMapHtml({ fullscreen: true, interactive: true, avatar: true });
+  const placements = JSON.parse(html.match(/var PLACEMENTS = (\[.*?\]);/)![1]) as { id: string; scan: boolean; file: string }[];
+
+  it('load the openly licensed scans from the website, credited by creator', () => {
+    const scans = placements.filter((p) => p.scan).map((p) => p.file);
+    expect(scans).toEqual(expect.arrayContaining(['scans/yetkha-bahal.glb', 'scans/keshar-mahal.glb']));
+    expect(html).toContain('3D scans on the map: Airlift Technology, Bhugol Tour');
+  });
+});
+
+describe('walking view', () => {
+  it('is offered on the full map and ends when the map is dragged', () => {
+    const html = buildMapHtml({ fullscreen: true, interactive: true, avatar: true });
+    expect(html).toContain('window.sakshiSetWalkView');
+    expect(html).toContain("post({ type: 'walk-view'");
+    expect(html).toContain('window.sakshiTownCheck');
+  });
+});
+
 describe('the 3D town', () => {
   it('replaces the plain boxes in 3D mode when the figure (and so three.js) is loaded', () => {
     const html = buildMapHtml({ fullscreen: true, interactive: true, avatar: true });

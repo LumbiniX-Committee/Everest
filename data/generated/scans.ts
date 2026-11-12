@@ -537,7 +537,7 @@ export const SCANS: Scan[] = [
 
 /** The Sketchfab player for a scan. Loaded only when someone asks; `dnt=1` asks it not to track. */
 export function scanEmbedUrl(id: string, autostart = true): string {
-  return `https://sketchfab.com/models/${id}/embed?autostart=${autostart ? 1 : 0}&dnt=1&ui_theme=dark&ui_infos=0&ui_watermark_link=1&preload=1`;
+  return `https://sketchfab.com/models/${id}/embed?autostart=${autostart ? 1 : 0}&dnt=1&ui_theme=dark&ui_infos=0&ui_watermark_link=1&preload=1&autospin=0.12`;
 }
 
 export function scansFor(...ids: (string | undefined)[]): Scan[] {

@@ -329,6 +329,9 @@ export function townLayerScript(monuments: FeatureCollection<Polygon>): string {
         }
         map.on('idle', schedule);
         window.sakshiTownRefresh = function () { built.count = -2; schedule(); };
+        // Walking view moves the camera every frame, so the map is never
+        // idle; it calls this on a timer instead.
+        window.sakshiTownCheck = schedule;
 
         map.addLayer({
           id: 'sakshi-town',
