@@ -492,6 +492,48 @@ export const SCANS: Scan[] = [
   "note": "A modelled reconstruction of the main temple, not a scan. Only Hindus may enter the real courtyard."
  },
  {
+  "id": "38aa9a9e585d4bcd956897b472165fd0",
+  "label": "Stone tap, Nag Bahal, Patan",
+  "title": "Stone Tap Fountain (Dhunge Dhara) with Algae",
+  "creator": "Semantic Creation",
+  "creatorUrl": "https://sketchfab.com/nepalvr360",
+  "viewerUrl": "https://sketchfab.com/3d-models/stone-tap-fountain-dhunge-dhara-with-algae-38aa9a9e585d4bcd956897b472165fd0",
+  "licence": "CC Attribution",
+  "openLicence": true,
+  "kind": "photogrammetry",
+  "captured": null,
+  "published": "2020-10-04",
+  "thumbnail": "https://media.sketchfab.com/models/38aa9a9e585d4bcd956897b472165fd0/thumbnails/fc189a113d8c4b4d975654cefe39e171/2aff73d979554b42ba4b31c01ed974ae.jpeg",
+  "poster": "https://media.sketchfab.com/models/38aa9a9e585d4bcd956897b472165fd0/thumbnails/fc189a113d8c4b4d975654cefe39e171/0473465548804ce5af7c3df41c4d8b30.jpeg",
+  "targets": [],
+  "at": {
+   "latitude": 27.6759896,
+   "longitude": 85.3242483
+  },
+  "note": "A stone water spout (dhunge dhara) in the Nag Bahal courtyard, green with algae, still part of daily life."
+ },
+ {
+  "id": "c7452743c2f44ce3bacc212b7b4c5ee0",
+  "label": "Bagdwar, source of the Bagmati",
+  "title": "Bagdwar idols, Shivapuri, Kathmandu, Nepal",
+  "creator": "robert.jackisch",
+  "creatorUrl": "https://sketchfab.com/robert.jackisch",
+  "viewerUrl": "https://sketchfab.com/3d-models/bagdwar-idols-shivapuri-kathmandu-nepal-c7452743c2f44ce3bacc212b7b4c5ee0",
+  "licence": "CC Attribution",
+  "openLicence": true,
+  "kind": "photogrammetry",
+  "captured": null,
+  "published": "2023-06-27",
+  "thumbnail": "https://media.sketchfab.com/models/c7452743c2f44ce3bacc212b7b4c5ee0/thumbnails/685c9bf35bcb438a9a0bbadbbb3cc10a/ea076cefce944d7f9bd3e2ada4b2a9fc.jpeg",
+  "poster": "https://media.sketchfab.com/models/c7452743c2f44ce3bacc212b7b4c5ee0/thumbnails/685c9bf35bcb438a9a0bbadbbb3cc10a/5cc51d63d241479091c5f7efeff62ac6.jpeg",
+  "targets": [],
+  "at": {
+   "latitude": 27.8113122,
+   "longitude": 85.3904385
+  },
+  "note": "The small square at 2,490 m in Shivapuri where the Bagmati rises, with its pond, lingas and carved stone idols."
+ },
+ {
   "id": "1faa2c27977041ad8877c88abecc8d24",
   "label": "Tsarang palace ruins, Mustang",
   "title": "Tsarang Palace Ruins in Mustang",

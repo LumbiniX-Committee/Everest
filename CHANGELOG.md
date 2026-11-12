@@ -16,7 +16,7 @@ Not yet in a Play bundle, and not yet tried on a phone.
 ### Map and 3D
 - **3D town:** at street zoom, 3D mode draws houses with windows and roofs instead of boxes.
 - **Walking view:** the camera walks behind your figure at street level through the 3D town, with the sky ahead.
-- **Real scans in the 3D map:** Yetkha Bahal's stupa and Keshar Mahal with the Garden of Dreams stand on the map as real captures.
+- **Real scans in the 3D map, and only real ones:** Yetkha Bahal's stupa, Keshar Mahal with the Garden of Dreams, Tusha Hiti and the Nag Bahal stone tap in Patan, and Bagdwar in Shivapuri stand on the map as real captures. Our schematic models now appear only in the 3D viewer.
 - **Real 3D scans on the map:** a 3D badge marks 22 real scans, from the whole Swayambhu hill to Kal Bhairav and Mustang's Tsarang; tap to open the scan.
 - **A real walking figure:** a scanned person walks with you on the map, in step with your speed, and stops when you stop.
 - **Monuments on the map:** in 3D mode, close in, our 3D models of Kathmandu Durbar Square, Patan, Bhaktapur, Boudhanath, Pashupatinath, Changu Narayan, Pokhara and Lumbini stand at their sites.

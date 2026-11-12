@@ -6,9 +6,10 @@ describe('3D scans', () => {
     for (const scan of SCANS) {
       for (const id of scan.targets) expect(findSite(id) ?? findPlace(id)).toBeDefined();
     }
-    // Most open from a place page; the few with no page (Tsarang, Ghemi in
-    // Upper Mustang) are reached from their pin on the map and the gallery.
-    expect(SCANS.filter((scan) => scan.targets.length > 0).length).toBeGreaterThanOrEqual(SCANS.length - 2);
+    // Most open from a place page; the few with no page (Tsarang and Ghemi
+    // in Upper Mustang, Bagdwar, the Nag Bahal tap) are reached from their
+    // pin on the map and the gallery.
+    expect(SCANS.filter((scan) => scan.targets.length === 0).length).toBeLessThanOrEqual(4);
   });
 
   it('stand on the map inside Nepal', () => {
