@@ -8,6 +8,7 @@
 
 export const NAV = [
   { href: '/how-it-works', labelKey: 'nav.howItWorks' },
+  { href: '/3d', labelKey: 'nav.threeD' },
   { href: '/technology', labelKey: 'nav.technology' },
   { href: '/research', labelKey: 'nav.research' },
   { href: '/for-custodians', labelKey: 'nav.forCustodians' },

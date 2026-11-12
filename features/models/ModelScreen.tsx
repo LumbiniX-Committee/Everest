@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Linking, Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import { Mascot } from '@/components/mascot';
 import { BackBar, EmptyState, ProGate } from '@/components/common';
-import { ModelView } from '@/components/models';
+import { ModelView, ScanCards } from '@/components/models';
 import { Button, Card, Screen, Text } from '@/components/ui';
-import { findModel } from '@/data';
+import { findModel, scansFor } from '@/data';
 import { useSafeBack } from '@/hooks';
 import { application, models } from '@/services';
 import { colors, radii, spacing } from '@/theme';
@@ -84,6 +84,24 @@ export function ModelScreen({ modelId }: { modelId: string }) {
         </ProGate>
       )}
 
+      {Platform.OS === 'android' && models.arIntentUrl(model.id, model.title) ? (
+        <View style={styles.ar}>
+          <Button
+            label="View in your space"
+            icon="cube-scan"
+            variant="secondary"
+            onPress={() => void Linking.openURL(models.arIntentUrl(model.id, model.title)!).catch(() => undefined)}
+          />
+          <Text variant="caption" tone="secondary">
+            Places the model in the room through your camera, with Google’s Scene Viewer. It opens at its real size, so step back or pinch to shrink it.
+          </Text>
+        </View>
+      ) : null}
+
+      <View style={styles.scans}>
+        <ScanCards scans={scansFor(...model.targets)} title="Real scans of this place" />
+      </View>
+
       <View style={styles.list}>
         <Text variant="heading">What to look for</Text>
         {model.hotspots.map((spot, index) => (
@@ -128,6 +146,8 @@ const styles = StyleSheet.create({
   head: { gap: spacing.xs, marginBottom: spacing.md },
   gap: { gap: spacing.sm },
   list: { gap: spacing.sm, marginTop: spacing.lg },
+  ar: { gap: spacing.xs, marginTop: spacing.md },
+  scans: { marginTop: spacing.lg },
   spot: { flexDirection: 'row', gap: spacing.md, padding: spacing.md, borderRadius: radii.md, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },
   spotSelected: { borderColor: colors.borderStrong, backgroundColor: colors.surfaceSelected },
   pressed: { opacity: 0.7 },

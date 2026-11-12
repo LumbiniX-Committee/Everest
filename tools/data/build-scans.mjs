@@ -1,0 +1,67 @@
+// Records the real 3D scans of our places that are published on Sketchfab.
+//
+//   node tools/data/build-scans.mjs
+//
+// The scans are not copied: most are not openly licensed. The app and the
+// website show them through Sketchfab's own embedded player, which the
+// platform offers for public models and which keeps the creator's credit on
+// screen. This script freezes what we show about each one (title, creator,
+// licence, thumbnail) so a page never has to ask Sketchfab until a visitor
+// chooses to open a scan.
+//
+// Each scan was chosen by eye for what it is: a real capture of the place
+// (photogrammetry or drone survey), or an artist's model, labelled as such.
+// Interior altars were left out on purpose.
+import { writeFileSync } from 'node:fs';
+
+const ROOT = new URL('../../', import.meta.url);
+const AGENT = 'saksi-data-pipeline/1.0 (open heritage guide; https://github.com/siddantasodari4-eng/saksi)';
+
+/** uid → what it is and where it belongs. `targets` are site or place ids. */
+const CHOSEN = [
+  { uid: '4cdd98a88d3740ccb55c7510725bd98c', label: 'Maya Devi Temple and the Sacred Garden', kind: 'drone survey', targets: ['maya-devi-temple'], note: 'The temple, the Puskarini pond and the excavated ground around them, from the air.' },
+  { uid: 'f65cb3c34adb4473b50b8d70ef9f534c', label: 'World Peace Pagoda, Lumbini', kind: 'drone survey', targets: ['world-peace-pagoda'], note: 'The World Peace Pagoda in the Lumbini development zone.' },
+  { uid: 'b712936720594f8fb155338178e6495b', label: 'Samai Mai shrine, Tilaurakot', kind: 'photogrammetry', targets: ['tilaurakot'], note: 'The Samai Mai shrine after conservation, recorded by the UNESCO Chair team at Durham University.' },
+  { uid: 'ad0c99960e7745708e7a9c1ef5c3b7ad', label: 'A temple on the Swayambhu hilltop', kind: 'photogrammetry', targets: ['wd-Q12946982'], note: 'A temple on the Swayambhu hilltop, scanned with the custodians’ permission.' },
+  { uid: '1114c3da452c423c868aa91216310edc', label: 'The great vajra, Swayambhu', kind: 'photogrammetry', targets: ['wd-Q12946982'], note: 'The great vajra at the top of the eastern stair.' },
+  { uid: '38def5caf9dc43b4aa1b6fd5ba36c8bb', label: 'A small chaitya, Swayambhu', kind: 'photogrammetry', targets: ['wd-Q12946982'], note: 'One of the small chaityas crowding the hilltop.' },
+  { uid: '6f5e13385ea74742a5af1e5338bde70b', label: 'Kathmandu Durbar Square after the 2015 earthquake', kind: 'drone survey', captured: 'May 2015', targets: ['kathmandu-durbar-square'], note: 'Recorded by drone days after the 25 April 2015 earthquake: a record of the damage, not of the square today.' },
+  { uid: 'ebb0f90762b34821b147fcc470916510', label: 'The Taleju gate, 1564', kind: 'photogrammetry', targets: ['ktm-taleju-temple', 'kathmandu-durbar-square'], note: 'The carved main gate to the Taleju temple in Hanuman Dhoka, dated 1564.' },
+  { uid: 'a172a6c625a84181b68fa4284679de1e', label: 'Kasthamandap, rebuilding', kind: 'drone survey', targets: ['ktm-kasthamandap', 'kathmandu-durbar-square'], note: 'Kasthamandap during its rebuilding after the 2015 earthquake.' },
+  { uid: '347100710a0645a0bae86980dfa3e977', label: 'Tusha Hiti, Patan', kind: 'photogrammetry', targets: ['patan-sundari-chowk', 'patan-durbar-square'], note: 'Tusha Hiti, the sunken royal bath in Sundari Chowk, with its carved stone frieze.' },
+  { uid: 'd1dbd0e3109548f3a99ae4a2eca1493b', label: 'Pashupatinath Temple', kind: "artist's model", targets: ['wd-Q380384'], note: 'A modelled reconstruction of the main temple, not a scan. Only Hindus may enter the real courtyard.' },
+];
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const scans = [];
+for (const pick of CHOSEN) {
+  const response = await fetch(`https://api.sketchfab.com/v3/models/${pick.uid}`, { headers: { 'User-Agent': AGENT } });
+  if (!response.ok) throw new Error(`Sketchfab ${pick.uid}: ${response.status}`);
+  const m = await response.json();
+  const thumb = [...m.thumbnails.images].sort((a, b) => Math.abs(a.width - 720) - Math.abs(b.width - 720))[0];
+  const licence = m.license && typeof m.license === 'object' ? m.license.label : null;
+  scans.push({
+    id: m.uid,
+    label: pick.label,
+    title: m.name.trim(),
+    creator: m.user.displayName,
+    creatorUrl: m.user.profileUrl,
+    viewerUrl: m.viewerUrl,
+    licence: licence ?? 'Not offered for download: shown in Sketchfab’s player, not copied',
+    openLicence: Boolean(licence && /^CC /.test(licence)),
+    kind: pick.kind,
+    captured: pick.captured ?? null,
+    published: m.publishedAt?.slice(0, 10) ?? m.createdAt?.slice(0, 10) ?? null,
+    thumbnail: thumb.url,
+    targets: pick.targets,
+    note: pick.note,
+  });
+  console.log(`  ${m.name} · ${m.user.displayName} · ${licence ?? 'no open licence'}`);
+  await sleep(300);
+}
+
+writeFileSync(
+  new URL('seed/scans.json', ROOT),
+  `${JSON.stringify({ _about: 'Real 3D scans of our places on Sketchfab, shown through its embedded player. Generated by tools/data/build-scans.mjs; do not edit.', scans }, null, 1)}\n`,
+);
+console.log(`${scans.length} scans`);

@@ -154,3 +154,9 @@ Self-hosted in `landing/public/fonts/`, all under the SIL Open Font License 1.1 
 - **Noto Serif Devanagari** and **Noto Sans Devanagari**: © The Noto Project Authors.
 
 The files are the Google Fonts subsets (latin, latin-ext, devanagari), unmodified.
+
+## 3D
+
+- **Our 13 models** are our own work (`tools/models/build-models.mjs`).
+- **Real scans** (`seed/scans.json`) are not copied. They are shown through Sketchfab's embedded player with each creator's credit. Only "Kasthamandap Rebuilding Process" by Bhugol Tour is CC BY 4.0; the others are not offered for download.
+- **model-viewer** (Google, BSD-3-Clause) is served from `landing/public/vendor/` and bundled in the app.
