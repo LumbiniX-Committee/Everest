@@ -14,6 +14,7 @@ Not yet in a Play bundle, and not yet tried on a phone.
 - **Bhaktapur Durbar Square** is now listed, with its entry fee.
 
 ### Map and 3D
+- **Detailed monuments on the map, modelled from photos and OpenStreetMap:** Swayambhu (the stupa with its eyes, shrines and prayer wheels, the Pratappur and Anantapur shikharas and the great vajra), Maya Devi Temple and the World Peace Pagoda in Lumbini, and the Durbar Squares: Nyatapola and Bhairavnath in Bhaktapur; Kasthamandap, Maju Dega, Narayan, Trailokya Mohan and Jagannath in Kathmandu; Hari Shankar in Patan. 18 in all, each at its mapped footprint, credited as modelled, not scanned. Heights are by eye.
 - **3D town:** at street zoom, 3D mode draws houses with windows and roofs instead of boxes.
 - **Walking view:** the camera walks behind your figure at street level through the 3D town, with the sky ahead.
 - **Real scans in the 3D map, and only real ones:** Yetkha Bahal's stupa, Keshar Mahal with the Garden of Dreams, Tusha Hiti and the Nag Bahal stone tap in Patan, and Bagdwar in Shivapuri stand on the map as real captures. Our schematic models now appear only in the 3D viewer.
@@ -43,6 +44,7 @@ Not yet in a Play bundle, and not yet tried on a phone.
 - **Four original characters:** a guide, a porter, a temple macaque and a woodcarver. No deity is drawn as a character.
 
 ### Website
+- **Nepal in 3D shows only real scans and the detailed models from the map**, no schematic ones, each marked "Real scan" or "Modelled by Sākṣī" with its source.
 - **Redesign:** a new hero, feature grid, "one place, three verbs", "where the answers come from", and an institutions band.
 - **Fix:** the explorer map draws again.
 

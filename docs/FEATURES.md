@@ -92,7 +92,10 @@ Reached from the "In depth" shelf on Explore and from each place's page. The tex
   - capped at 1,400 buildings.
 - **Tested** in a browser (`tests/native/map-html.test.ts`). **Not checked:** frame rate on a low-end phone.
 - **The walking figure** is a scanned person (Renderpeople, CC BY 4.0, credited on the map) with a walk cycle. His steps follow your GPS speed so his feet stay planted, and he finishes his step and stops when you do. The robed figure stands in offline or if he cannot load. **Checked by eye** in a browser; **not checked** on a phone.
-- **Monuments on the map:** in 3D mode at zoom 15 and closer, our own 3D models stand at their sites, true size, with the town drawn around them, credited as "schematic models, not surveys". At most 4 at once. Swayambhunath is left out until its coordinate is known to about 10 m.
+- **Monuments on the map (realistic only):** in 3D mode at zoom 15 and closer, the real scans and our detailed models from `data/mapScans.ts` stand at their OpenStreetMap positions, true size, with the town drawn around them. At most 6 at once. Schematic models are no longer drawn on the map.
+  - **Real scans** (CC BY, Sketchfab): Yetkha Bahal, Keshar Mahal, Tusha Hiti, the Nag Bahal tap, Bagdwar.
+  - **Modelled by Sākṣī** in Blender (`tools/models/blender/`: `kit.py` shared parts, `world-peace-pagoda.py`, `maya-devi-temple.py`, `swayambhu.py`, `newar-temple.py`): 18 placements. The footprint comes from the OSM feature named in each entry (`osm`); roofs, tiers and details come from 2017–2023 photos on Wikimedia Commons; **heights are by eye**. Soft shadows are baked into vertex colours (no textures). Credited on the map as modelled, not scanned.
+  - **Checked by eye** in Chrome on the map page; **not checked** on a phone (frame rate with 6 models).
 
 ## 5. 3D monument models
 
