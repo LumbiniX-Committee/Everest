@@ -7,6 +7,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';
 
 import { AppErrorBoundary } from '@/components/common';
+import { UpdateBanner } from '@/components/common/UpdateBanner';
 import { diagnostics, notifications } from '@/services';
 import { syncPendingObservations } from '@/services/sync';
 import { AppProviders, useAppState, usePreferences } from '@/store';
@@ -105,6 +106,7 @@ function RootNavigator() {
           <Stack.Screen name="visit" options={{ animation: 'slide_from_right', animationDuration: 280 }} />
         </Stack.Protected>
       </Stack>
+      <UpdateBanner />
     </>
   );
 }

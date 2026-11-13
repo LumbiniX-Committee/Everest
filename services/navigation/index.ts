@@ -85,3 +85,33 @@ export async function getWalkingRoute(
     durationSeconds: Math.round(payload.trip?.summary?.time ?? 0),
   };
 }
+
+export type FoundPlace = { id: string; name: string; detail: string; coordinate: Coordinate };
+
+const SEARCH_ENDPOINT = 'https://nominatim.openstreetmap.org/search';
+
+/**
+ * Any named place in Nepal, from OpenStreetMap's geocoder: a tole, a bahal, a
+ * hotel, a street. Only the words typed are sent. Nominatim asks apps to
+ * identify themselves and to send no more than one search a second, which the
+ * search box keeps to by waiting for typing to pause.
+ */
+export async function searchPlaces(query: string, signal?: AbortSignal): Promise<FoundPlace[]> {
+  const q = query.trim();
+  if (q.length < 3) return [];
+  const url = `${SEARCH_ENDPOINT}?format=jsonv2&countrycodes=np&limit=8&accept-language=en&q=${encodeURIComponent(q)}`;
+  const response = await fetch(url, { headers: { 'User-Agent': 'Saksi/1.0 (heritage guide app)', Accept: 'application/json' }, signal });
+  if (!response.ok) throw new Error(`Place search failed: ${response.status}`);
+  const rows = (await response.json()) as { place_id: number; name?: string; display_name: string; lat: string; lon: string }[];
+  return rows
+    .map((row) => {
+      const parts = row.display_name.split(', ');
+      return {
+        id: `osm-${row.place_id}`,
+        name: row.name || parts[0],
+        detail: parts.slice(1, 4).join(', '),
+        coordinate: { latitude: Number(row.lat), longitude: Number(row.lon) },
+      };
+    })
+    .filter((place) => Number.isFinite(place.coordinate.latitude) && Number.isFinite(place.coordinate.longitude));
+}

@@ -165,6 +165,11 @@ export type MapHtmlOptions = {
   topInset?: number;
   /** Where the map opens, as [longitude, latitude]. Defaults to Lumbini. */
   center?: readonly [number, number];
+  /**
+   * Open close in, tilted, in 3D mode: the inline preview of a place with a
+   * modelled monument, so the panel shows the monument rather than a plan.
+   */
+  openIn3d?: boolean;
 };
 
 /** The ways the map can be drawn. Satellite and hybrid need a working imagery provider. */
@@ -204,14 +209,15 @@ export function buildMapHtml({
   interactive = fullscreen,
   topInset = 0,
   center = MAP_HOME.centre,
+  openIn3d = false,
 }: MapHtmlOptions = {}): string {
   // Named camera rather than an offset from MAP_HOME — see MAP_CAMERA for why
   // the old `+ 1.5` opened the world about three times too close to play in.
   const camera = fullscreen ? MAP_CAMERA.world : MAP_CAMERA.overview;
-  const zoom = camera.zoom;
+  const zoom = openIn3d ? 16.8 : camera.zoom;
   // Flat, north-up by default, as people expect from a street map. Tilt is a
   // mode they choose, not the first thing they have to make sense of.
-  const pitch = fullscreen ? 0 : camera.pitch;
+  const pitch = openIn3d ? 58 : fullscreen ? 0 : camera.pitch;
   const bearing = fullscreen ? 0 : MAP_HOME.bearing;
   // Clear of the standing pill in the top-left of the app's HUD, which is
   // 60pt tall including its own top padding.
@@ -270,14 +276,15 @@ ${avatar ? `<script>${THREE_JS}</script><script>${GLTF_LOADER_JS}</script>` : ''
   .maplibregl-ctrl-bottom-right .maplibregl-ctrl {
     margin: 0 !important;
   }
-  .maplibregl-ctrl-attrib {
+  /* Credits fold into an (i): open, they are a small card, not a banner over the map. */
+  .maplibregl-ctrl-attrib.maplibregl-compact-show {
     color: ${colors.textSecondary} !important;
     background: ${colors.surfaceRaised} !important;
-    border: 1px solid ${colors.border} !important;
-    border-radius: 999px !important;
-    padding: 5px 12px !important;
-    font-size: 11px !important;
-    line-height: 18px !important;
+    border-radius: 14px !important;
+    padding: 4px 30px 4px 10px !important;
+    font-size: 10px !important;
+    line-height: 15px !important;
+    max-width: 78vw;
     box-shadow: 0 4px 12px ${colors.overlay} !important;
   }
   .maplibregl-ctrl-attrib a {
@@ -300,7 +307,7 @@ ${OFFLINE_PROTOCOL}
       pitch: ${pitch},
       bearing: ${bearing},
       attributionControl: ${JSON.stringify(
-        avatar ? { compact: false, customAttribution: [WALKER_CREDIT, SCANS_CREDIT, MODELLED_CREDIT] } : { compact: false },
+        avatar ? { compact: true, customAttribution: [WALKER_CREDIT, SCANS_CREDIT, MODELLED_CREDIT] } : { compact: true },
       )},
       interactive: ${interactive},
       // Wide enough to see the whole of Nepal, not so wide the place is lost.
@@ -325,6 +332,11 @@ ${interactive ? INTERACTIVE_CONTROLS : ''}
     map.on('dragstart', function(e){ if (e && e.originalEvent) post({ type:'user-pan' }); });
 
     map.on('load', function(){
+      // Credits start folded into their (i); MapLibre opens them until the first drag.
+      setTimeout(function () {
+        var attrib = document.querySelector('.maplibregl-ctrl-attrib.maplibregl-compact-show');
+        if (attrib) { attrib.classList.remove('maplibregl-compact-show'); attrib.setAttribute('open', ''); }
+      }, 0);
       loaded = true;
 ${MAP_MODES()}
       // The enclosed ground, flat. Nothing stands between the camera and the
@@ -501,6 +513,7 @@ ${POSITION_MARKER}
       // needs the map.
       post({ type:'ready' });
 ${avatar ? AVATAR_LAYER + townLayerScript(monumentGeoJSON) + monumentModelsScript([], MODELS_URL, MAP_SCANS) : ''}
+${openIn3d ? "      window.sakshiSetMapMode && window.sakshiSetMapMode('3d');" : ''}
     });
   } catch (err) {
     post({ type:'error', message: String(err) });

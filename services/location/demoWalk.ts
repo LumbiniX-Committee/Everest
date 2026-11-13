@@ -1,4 +1,6 @@
 import { demoPrecincts, demoSites } from '@/data';
+import { WALK_DEFINITIONS, type DemoWalkDefinition } from '@/data/demoWalks';
+import { WALK_PATHS } from '@/data/generated/walkPaths';
 import { bearingDegrees, distanceMeters } from '@/utils';
 import type { Coordinate } from '@/types';
 
@@ -62,7 +64,7 @@ const CIRCUIT_RADIUS_M = 20;
  * margins that exist precisely because real GPS does. Small enough not to break
  * a circuit, large enough to be honest about what the sensor gives you.
  */
-const JITTER_M = 0.9;
+const JITTER_M = 0.35;
 
 export type DemoActivity =
   | { kind: 'walking'; towardsSiteId: string }
@@ -83,166 +85,7 @@ export type DemoStep = {
   total: number;
 };
 
-type DemoLeg = { at: string } | { circle: string } | { start: Coordinate };
-
-export type DemoWalkDefinition = {
-  id: string;
-  name: string;
-  precinctId: string;
-  legs: readonly DemoLeg[];
-};
-
-/**
- * The itinerary, in the order a first-time pilgrim actually walks it.
- *
- * South gate to the pond, the pond to the temple, a clockwise circuit of the
- * birthplace, the pillar, the vihāra remains, then north up the central canal
- * to the East Monastic Zone. It returns to the pond so the demo can loop
- * without teleporting, and so a second pass demonstrates the arrival cooldown
- * rather than re-announcing everything.
- *
- * The ids are the ones in `data/generated/sites.ts`, which is the list `@/data`
- * actually exports (`data/demo/sites.ts`, an earlier draft with a different id
- * scheme — `ashoka-pillar`, `puskarini-pond`, `bodhi-tree` — has been deleted;
- * an itinerary written against those names would have resolved nothing and
- * silently skipped every leg).
- *
- * The Marker Stone shares the temple coordinate, but remains an explicit dwell
- * waypoint. That zero-distance pause is intentional: it opens the stone's own
- * story instead of silently treating an enclosed monument as part of the
- * temple's umbrella story.
- */
-const WALK_DEFINITIONS: readonly DemoWalkDefinition[] = [
-  {
-    id: 'sacred-garden',
-    name: 'Sacred Garden walk',
-    precinctId: 'sacred-garden',
-    legs: [
-      { start: { latitude: 27.46795, longitude: 83.27572 } },
-      { at: 'puskarini' },
-      { at: 'maya-devi-temple' },
-      { at: 'marker-stone' },
-      { circle: 'maya-devi-temple' },
-      { at: 'ashokan-pillar' },
-      { at: 'vihara-remains' },
-      { at: 'puskarini' },
-    ],
-  },
-  {
-    id: 'monastic-east',
-    name: 'East Monastic Zone walk',
-    precinctId: 'monastic-east',
-    legs: [
-      { start: { latitude: 27.47435, longitude: 83.27805 } },
-      { at: 'gautami-nuns-temple' },
-      { at: 'myanmar-temple' },
-      { at: 'gautami-nuns-temple' },
-    ],
-  },
-  {
-    id: 'monastic-west',
-    name: 'West Monastic Zone walk',
-    precinctId: 'monastic-west',
-    legs: [
-      { start: { latitude: 27.4772, longitude: 83.27175 } },
-      { at: 'korean-temple' },
-      { at: 'china-temple' },
-      { at: 'korean-temple' },
-    ],
-  },
-  {
-    id: 'world-peace-pagoda',
-    name: 'World Peace Pagoda walk',
-    precinctId: 'world-peace-pagoda',
-    legs: [
-      { start: { latitude: 27.49685, longitude: 83.27626 } },
-      { at: 'world-peace-pagoda' },
-      { circle: 'world-peace-pagoda' },
-    ],
-  },
-  {
-    id: 'tilaurakot',
-    name: 'Tilaurakot rampart walk',
-    precinctId: 'tilaurakot',
-    legs: [
-      { start: { latitude: 27.5721, longitude: 83.0536 } },
-      { at: 'tilaurakot' },
-      { circle: 'tilaurakot' },
-    ],
-  },
-  {
-    id: 'ramagrama',
-    name: 'Ramagrama stupa walk',
-    precinctId: 'ramagrama',
-    legs: [
-      { start: { latitude: 27.50105, longitude: 83.687 } },
-      { at: 'ramagrama' },
-      { circle: 'ramagrama' },
-    ],
-  },
-  {
-    id: 'patan-durbar-square',
-    name: 'Patan nineteen-monument walk',
-    precinctId: 'patan-durbar-square',
-    legs: [
-      { start: { latitude: 27.67225, longitude: 85.32545 } },
-      { at: 'patan-bhai-dega' },
-      { at: 'patan-lakshminarayan-temple' },
-      { at: 'patan-sundari-chowk' },
-      { at: 'patan-lohari-hiti' },
-      { at: 'patan-ganesh-temple' },
-      { at: 'patan-mul-chowk' },
-      { at: 'patan-degutale-1560' },
-      { at: 'patan-narayan-temple' },
-      { at: 'patan-degutale-1562' },
-      { at: 'patan-hari-shankar-temple' },
-      { at: 'patan-char-narayan-temple' },
-      { at: 'patan-bishwanath-1626' },
-      { at: 'patan-chyasin-dega' },
-      { at: 'patan-keshav-narayan-chowk' },
-      { at: 'patan-krishna-mandir' },
-      { at: 'patan-vishwanath-1666' },
-      { at: 'patan-kiskisila-temple' },
-      { at: 'patan-bhimsen-temple' },
-      { at: 'manga-hiti' },
-      { at: 'patan-durbar-square' },
-      { circle: 'patan-durbar-square' },
-    ],
-  },
-  {
-    id: 'changu-narayan',
-    name: 'Changu Narayan temple walk',
-    precinctId: 'changu-narayan',
-    legs: [
-      { start: { latitude: 27.71475, longitude: 85.4279 } },
-      { at: 'changu-narayan' },
-      { circle: 'changu-narayan' },
-    ],
-  },
-  {
-    id: 'kathmandu-durbar-square',
-    name: 'Kathmandu forty-landmark walk',
-    precinctId: 'kathmandu-durbar-square',
-    legs: [
-      { start: { latitude: 27.70295, longitude: 85.30672 } },
-      { at: 'ktm-ashok-vinayak' }, { at: 'ktm-kasthamandap' }, { at: 'ktm-simha-sattal' },
-      { at: 'ktm-kumari-ghar' }, { at: 'ktm-gaddi-baithak' }, { at: 'ktm-basantapur-durbar' },
-      { at: 'ktm-maju-dega' }, { at: 'ktm-trailokya-mohan' }, { at: 'ktm-jagannath-temple' },
-      { at: 'ktm-mahendreshwar-temple' }, { at: 'ktm-kotilingeshwar-temple' },
-      { at: 'ktm-krishna-temple' }, { at: 'ktm-kal-bhairav' }, { at: 'ktm-shiva-parvati-temple' },
-      { at: 'ktm-kabindrapur' }, { at: 'ktm-indrapur-temple' }, { at: 'ktm-gopinath-temple' },
-      { at: 'ktm-saraswati-temple' }, { at: 'ktm-laxmi-narayan-temple' }, { at: 'ktm-chyasin-dega' },
-      { at: 'ktm-kageshwar-temple' }, { at: 'ktm-tarini-bahal' }, { at: 'ktm-hanuman-gate' },
-      { at: 'ktm-hanuman-dhoka-palace' }, { at: 'ktm-nasal-chowk' }, { at: 'ktm-panchamukhi-hanuman' },
-      { at: 'ktm-mohan-chowk' }, { at: 'ktm-sundari-chowk' }, { at: 'ktm-taleju-temple' },
-      { at: 'ktm-degu-taleju' }, { at: 'ktm-pratap-malla-column' }, { at: 'ktm-narsingha-statue' },
-      { at: 'ktm-swet-bhairav' }, { at: 'ktm-dashain-ghar' }, { at: 'ktm-nagara-ghar' },
-      { at: 'ktm-dhukuti-ghar' }, { at: 'ktm-dasavatar-temple' }, { at: 'ktm-natyeshwar-temple' },
-      { at: 'ktm-tribhuvan-gallery' }, { at: 'ktm-shisha-baithak' },
-      { at: 'kathmandu-durbar-square' }, { circle: 'kathmandu-durbar-square' },
-    ],
-  },
-];
+export type { DemoLeg, DemoWalkDefinition } from '@/data/demoWalks';
 
 let activeWalkId = WALK_DEFINITIONS[0].id;
 
@@ -320,6 +163,49 @@ function interpolate(a: Coordinate, b: Coordinate, t: number): Coordinate {
   };
 }
 
+/** Metres along a line of points. */
+function lineLength(line: readonly Coordinate[]): number {
+  let total = 0;
+  for (let i = 1; i < line.length; i += 1) total += distanceMeters(line[i - 1], line[i]);
+  return total;
+}
+
+/**
+ * The line one walking leg follows, from the last stop to the next site.
+ *
+ * Along the mapped footpath when there is a sensible one
+ * (data/generated/walkPaths.ts), so the figure keeps to streets and squares
+ * instead of crossing houses. The router snaps both ends to the nearest path,
+ * which is right for a temple in a square and wrong for a courtyard inside a
+ * palace: there the nearest mapped path is outside, and the route between two
+ * neighbouring courtyards becomes a walk round the block. So a route is used
+ * only when its ends are close to the stops and it is not a long detour;
+ * otherwise the walker crosses directly, as visitors do inside the palace.
+ *
+ * Where the route's end is already inside the site's reach, the walk stops on
+ * the path, short of a temple's plinth.
+ */
+export function legLine(
+  routed: readonly (readonly [number, number])[] | undefined,
+  from: Coordinate,
+  target: Coordinate,
+  radiusMeters: number,
+): Coordinate[] {
+  const straight = distanceMeters(from, target);
+  if (routed && routed.length >= 2) {
+    const path = routed.map(([longitude, latitude]) => ({ latitude, longitude }));
+    const startOff = distanceMeters(from, path[0]);
+    const endOff = distanceMeters(path[path.length - 1], target);
+    const length = lineLength(path);
+    if (startOff <= 35 && endOff <= 35 && length <= straight * 2.2 + 30) {
+      const line = [from, ...path];
+      if (endOff > radiusMeters * 0.6) line.push(target);
+      return line;
+    }
+  }
+  return [from, target];
+}
+
 /**
  * Expand the itinerary into one entry per fix.
  *
@@ -349,7 +235,7 @@ function buildItinerary(definition: DemoWalkDefinition): DemoStep[] {
     });
   };
 
-  for (const leg of definition.legs) {
+  for (const [legIndex, leg] of definition.legs.entries()) {
     if ('start' in leg) {
       position = leg.start;
       continue;
@@ -414,23 +300,37 @@ function buildItinerary(definition: DemoWalkDefinition): DemoStep[] {
       continue;
     }
 
-    const legMetres = distanceMeters(position, target);
-    const count = Math.max(1, Math.ceil(legMetres / METRES_PER_TICK));
-    heading = bearingDegrees(position, target);
-    const from = position;
+    const line = legLine(
+      WALK_PATHS[`${definition.id}:${legIndex}`],
+      position,
+      target,
+      demoSites.find((site) => site.id === leg.at)?.radiusMeters ?? 25,
+    );
+    const stop = line[line.length - 1];
 
-    for (let i = 1; i <= count; i += 1) {
-      push(interpolate(from, target, i / count), heading, WALK_MPS, {
-        kind: 'walking',
-        towardsSiteId: leg.at,
-      });
+    // Even steps along the polyline, carrying the leftover across corners.
+    let carried = 0;
+    for (let k = 1; k < line.length; k += 1) {
+      const a = line[k - 1];
+      const b = line[k];
+      const segment = distanceMeters(a, b);
+      if (segment < 0.01) continue;
+      heading = bearingDegrees(a, b);
+      let along = METRES_PER_TICK - carried;
+      while (along <= segment) {
+        push(interpolate(a, b, along / segment), heading, WALK_MPS, { kind: 'walking', towardsSiteId: leg.at });
+        along += METRES_PER_TICK;
+      }
+      carried = segment - (along - METRES_PER_TICK);
     }
+    push(stop, heading, WALK_MPS, { kind: 'walking', towardsSiteId: leg.at });
+    const arrived = stop;
 
     for (let i = 0; i < PAUSE_TICKS; i += 1) {
-      push(target, heading, 0, { kind: 'pausing', atSiteId: leg.at });
+      push(arrived, heading, 0, { kind: 'pausing', atSiteId: leg.at });
     }
 
-    position = target;
+    position = arrived;
   }
 
   return steps.map((step, index) => ({

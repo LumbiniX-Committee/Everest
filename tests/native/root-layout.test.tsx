@@ -45,6 +45,7 @@ jest.mock('@/store', () => {
     }),
   };
 });
+jest.mock('@/components/common/UpdateBanner', () => ({ UpdateBanner: () => null }));
 jest.mock('@/components/common', () => ({
   AppErrorBoundary: ({ children }: { children: React.ReactNode }) => children,
 }));

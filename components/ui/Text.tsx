@@ -55,6 +55,9 @@ export type TextProps = RNTextProps & {
  * size, or a hex value. Style resolution happens at render time, which is what
  * lets the typography layer swap in the real families once they are bundled.
  */
+/** Display sizes are already large; they scale least. */
+const LARGE = new Set<TypographyVariant>(['display', 'title', 'heading'] as TypographyVariant[]);
+
 export function Text({
   variant = 'body',
   tone = 'primary',
@@ -68,6 +71,9 @@ export function Text({
   const language = useInterfaceLanguage();
   return (
     <RNText
+      // Follows the phone's text size, but only so far: at the largest system
+      // settings titles wrapped word by word and pushed the map off screen.
+      maxFontSizeMultiplier={LARGE.has(variant) ? 1.1 : 1.25}
       {...rest}
       style={[
         textStyle(variant),
