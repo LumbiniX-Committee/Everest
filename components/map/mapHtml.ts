@@ -3,6 +3,8 @@ import {
   MAP_CAMERA,
   MAP_HOME,
   MAP_SCANS,
+  MODEL_INFO,
+  MODEL_INFO_SOURCE,
   monumentGeoJSON,
   scanSpots,
   precinctGroundGeoJSON,
@@ -46,6 +48,58 @@ const WALKER_CREDIT =
 const SCANS_CREDIT = `3D scans on the map: ${[...new Set(MAP_SCANS.filter((scan) => !scan.modelled).map((scan) => scan.creator))].join(', ')} (Sketchfab, CC BY 4.0)`;
 // Our own models are said to be modelled, never passed off as scans.
 const MODELLED_CREDIT = `${MAP_SCANS.filter((scan) => scan.modelled).length} monuments modelled by Sākṣī from photos and OpenStreetMap, not scanned`;
+const INFO_CREDIT = `Info points on the models: ${MODEL_INFO_SOURCE}`;
+
+/**
+ * An (i) on each of our models in the 3D view; tapping it opens a card saying
+ * what the visitor is looking at. Shown only when the models themselves are
+ * (3D mode, zoomed in), and built with textContent so no text is read as HTML.
+ */
+function modelInfoScript(): string {
+  const points = MODEL_INFO.map(({ id, latitude, longitude, title, subtitle, body }) => ({ id, latitude, longitude, title, subtitle, body }));
+  return `
+      (function () {
+        var POINTS = ${JSON.stringify(points)};
+        var SOURCE = ${JSON.stringify(MODEL_INFO_SOURCE)};
+        var MIN_ZOOM = 16;
+        var markers = [];
+        var openPopup = null;
+        POINTS.forEach(function (p) {
+          var el = document.createElement('button');
+          el.className = 'sakshi-info-pin';
+          el.type = 'button';
+          el.textContent = 'i';
+          el.setAttribute('aria-label', p.title);
+          el.addEventListener('click', function (ev) {
+            ev.stopPropagation();
+            if (openPopup) openPopup.remove();
+            var card = document.createElement('div');
+            var h = document.createElement('strong'); h.textContent = p.title; card.appendChild(h);
+            var s = document.createElement('div'); s.className = 'sakshi-info-sub'; s.textContent = p.subtitle; card.appendChild(s);
+            var b = document.createElement('p'); b.textContent = p.body; card.appendChild(b);
+            var c = document.createElement('div'); c.className = 'sakshi-info-src'; c.textContent = SOURCE; card.appendChild(c);
+            openPopup = new maplibregl.Popup({ offset: 18, maxWidth: '260px', className: 'sakshi-info-card' })
+              .setLngLat([p.longitude, p.latitude]).setDOMContent(card).addTo(map);
+            post({ type:'model-info', id: p.id });
+          });
+          markers.push(new maplibregl.Marker({ element: el }).setLngLat([p.longitude, p.latitude]));
+          // The marker names its element "Map marker"; a screen reader should hear the monument.
+          el.setAttribute('aria-label', p.title);
+        });
+        var shown = false;
+        function update() {
+          var want = window.sakshiCurrentMode === '3d' && map.getZoom() >= MIN_ZOOM;
+          if (want === shown) return;
+          shown = want;
+          markers.forEach(function (m) { if (want) m.addTo(map); else m.remove(); });
+          if (!want && openPopup) { openPopup.remove(); openPopup = null; }
+        }
+        map.on('zoomend', update);
+        map.on('moveend', update);
+        map.on('idle', update);
+        update();
+      })();`;
+}
 
 /**
  * The basemap, terrain and fonts all load through the page's own \`saksi://\`
@@ -238,6 +292,12 @@ ${avatar ? `<script>${THREE_JS}</script><script>${GLTF_LOADER_JS}</script>` : ''
 <style>
   html,body,#map{margin:0;padding:0;height:100%;width:100%;background:${colors.mapBase}}
   .maplibregl-ctrl-attrib{font-size:10px}
+  .sakshi-info-pin{width:30px;height:30px;padding:0;border-radius:15px;border:2px solid #fff;background:${colors.seek};color:#fff;font:italic 700 16px/26px Georgia,serif;box-shadow:0 2px 8px ${colors.overlay};cursor:pointer}
+  .sakshi-info-card .maplibregl-popup-content{background:${colors.surfaceRaised};color:${colors.textPrimary};border-radius:14px;padding:12px 14px;font:13px/1.45 system-ui,sans-serif;box-shadow:0 6px 18px ${colors.overlay}}
+  .sakshi-info-card p{margin:6px 0 4px}
+  .sakshi-info-sub{color:${colors.textSecondary};font-size:12px}
+  .sakshi-info-src{color:${colors.textSecondary};font-size:10.5px}
+  .sakshi-info-card .maplibregl-popup-close-button{font-size:18px;width:32px;height:32px}
   ${fullscreen ? `
   .maplibregl-ctrl-top-left {
     top: ${controlTopOffset}px !important;
@@ -307,7 +367,7 @@ ${OFFLINE_PROTOCOL}
       pitch: ${pitch},
       bearing: ${bearing},
       attributionControl: ${JSON.stringify(
-        avatar ? { compact: true, customAttribution: [WALKER_CREDIT, SCANS_CREDIT, MODELLED_CREDIT] } : { compact: true },
+        avatar ? { compact: true, customAttribution: [WALKER_CREDIT, SCANS_CREDIT, MODELLED_CREDIT, INFO_CREDIT] } : { compact: true },
       )},
       interactive: ${interactive},
       // Wide enough to see the whole of Nepal, not so wide the place is lost.
@@ -512,7 +572,7 @@ ${POSITION_MARKER}
       // schematic plan. The map does not need the character; the character
       // needs the map.
       post({ type:'ready' });
-${avatar ? AVATAR_LAYER + townLayerScript(monumentGeoJSON) + monumentModelsScript([], MODELS_URL, MAP_SCANS) : ''}
+${avatar ? AVATAR_LAYER + townLayerScript(monumentGeoJSON) + monumentModelsScript([], MODELS_URL, MAP_SCANS) + modelInfoScript() : ''}
 ${openIn3d ? "      window.sakshiSetMapMode && window.sakshiSetMapMode('3d');" : ''}
     });
   } catch (err) {
