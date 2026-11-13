@@ -7,3 +7,4 @@ export { StorageScreen } from './StorageScreen';
 export { PrivacyScreen } from './PrivacyScreen';
 export { AboutScreen } from './AboutScreen';
 export { ArrivalsScreen } from './ArrivalsScreen';
+export { OmxLabScreen } from './OmxLabScreen';

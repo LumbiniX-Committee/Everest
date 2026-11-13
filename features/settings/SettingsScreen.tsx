@@ -173,6 +173,11 @@ export function SettingsScreen() {
           hint={t('settings.aboutHint')}
           onPress={() => router.push('/(main)/settings/about')}
         />
+        <SettingsRow
+          label={t('settings.aboutOmx')}
+          hint={t('settings.aboutOmxHint')}
+          onPress={() => router.push('/(main)/settings/omx-lab')}
+        />
       </SettingsSection>
     </Screen>
   );
