@@ -130,16 +130,18 @@ export const whiteColors = {
   change: '#B3261E',
   white: '#FFFFFF',
 
-  mapBase: '#EEF3EA',
-  mapWater: '#8CCFD6',
-  mapVegetation: '#B9DDAE',
-  mapPark: '#C8E6B8',
-  mapLanduse: '#E6E9D8',
-  mapRoad: '#FFFFFF',
-  mapRoadCasing: '#D6D9C8',
+  // Read off satellite views of the valley: warm grey-tan ground, deep tree
+  // green, grey-blue water, pale concrete streets and brick-and-concrete roofs.
+  mapBase: '#E4DFD3',
+  mapWater: '#86AEB8',
+  mapVegetation: '#9CBB88',
+  mapPark: '#AFCB9C',
+  mapLanduse: '#DCD5C6',
+  mapRoad: '#F6F3EC',
+  mapRoadCasing: '#C9C1B1',
   mapPath: '#E29A1F',
-  mapBuilding: '#E5DFCB',
-  mapBuildingRoof: '#D3CBB2',
+  mapBuilding: '#CDBDA6',
+  mapBuildingRoof: '#BBA88E',
   mapLabel: '#24423C',
   mapLabelHalo: '#F5F8F3',
 

@@ -295,10 +295,12 @@ export const sakshiMapStyleJSON = JSON.stringify(sakshiMapStyle);
  * whitewash, gilt and dark timber.
  */
 export const MAP_MATERIALS = {
-  walls: ['#F4EFE4', '#EEDDBF', '#B05E3E', '#F0D5CC', '#DDE5CF', '#F2E1A8', '#F7F4EC', '#E7CFB0'],
-  pitchedRoofs: ['#B8633F', '#9AA59B', '#A9493B', '#9C7A5E'],
-  flatRoof: '#CBC8C0',
-  parapet: '#CFCBC1',
+  walls: ['#F1ECE2', '#E9D8BC', '#A9563A', '#9A4A30', '#EBCFC4', '#D9E0CC', '#EFDBA4', '#C7C3BA', '#E3C9AA', '#B8664A'],
+  pitchedRoofs: ['#A4553A', '#8E9890', '#9A4535'],
+  // Most of the valley's roofs, seen from above, are flat concrete in greys.
+  flatRoofs: ['#B9B5AD', '#A7A39B', '#C8C3B8', '#9C9890', '#B7795E'],
+  flatRoof: '#B9B5AD',
+  parapet: '#C4BFB5',
   windowFrame: '#5A3A22',
   windowGlass: '#2B3437',
   whitewash: '#F6F3EC',

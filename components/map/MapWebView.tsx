@@ -32,6 +32,8 @@ export type MapWebViewProps = {
    * repeating whenever the fix dropped. That is what "stuck" looked like.
    */
   showFigure?: boolean;
+  /** Inline preview that opens close in, tilted, with the 3D monuments. */
+  openIn3d?: boolean;
   /** Degrees from true north. Turns the figure to face the way you are going. */
   heading?: number | null;
   /** Keep the camera on the figure as it moves. */
@@ -101,6 +103,7 @@ export function MapWebView({
   heading,
   follow = true,
   showFigure = false,
+  openIn3d = false,
   topInset = 0,
   route,
   routeColor = colors.sandstoneDeep,
@@ -149,8 +152,9 @@ export function MapWebView({
         interactive: fill,
         topInset,
         center: openingCenter,
+        openIn3d,
       }),
-    [showFigure, fill, topInset, openingCenter],
+    [showFigure, fill, topInset, openingCenter, openIn3d],
   );
 
   // Imagery is offered only to the full-screen map, where the mode switcher is.
@@ -272,6 +276,9 @@ export function MapWebView({
       ) : null}
 
       <WebView
+        // The page sizes its own text; Android would otherwise scale it by the
+        // phone's font setting and the map credits covered a third of the map.
+        textZoom={100}
         ref={webRef}
         style={styles.web}
         originWhitelist={['*']}

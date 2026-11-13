@@ -14,6 +14,13 @@ Not yet in a Play bundle, and not yet tried on a phone.
 - **Bhaktapur Durbar Square** is now listed, with its entry fee.
 
 ### Map and 3D
+- **Search any place:** a search bar across the top of the full map finds our sites and listed places, and any named place in Nepal from OpenStreetMap (a tole, a street, a hotel); the map flies there.
+- **Tidier map controls on phones:** back, search and map type across the top; follow, walking view and the demo walk in one stack on the right with Quests and the guide. Quest memories moved into the Quests sheet. The credits fold into an (i).
+- **The demo walk keeps to the streets:** each leg follows the mapped footpath instead of a straight line through houses; inside palace courtyards, where no path is mapped, it crosses directly. Steadier steps.
+- **Map colours from satellite views:** warm grey ground, deeper greens, mostly flat grey concrete roofs over brick, cream and pastel walls.
+- **The Tīrtha map panel shows the real 3D monuments:** it opens tilted at the modelled or scanned monument nearest you, instead of a flat plan with boxes.
+- **Text size:** app text follows the phone's text size only up to a limit, and the map no longer scales its credits with it.
+- **Updates in the app:** a new version downloads in the background and a bar offers a one-tap restart. When a new APK is needed, the bar offers its download.
 - **Detailed monuments on the map, modelled from photos and OpenStreetMap:** Swayambhu (the stupa with its eyes, shrines and prayer wheels, the Pratappur and Anantapur shikharas and the great vajra), Maya Devi Temple and the World Peace Pagoda in Lumbini, and the Durbar Squares: Nyatapola and Bhairavnath in Bhaktapur; Kasthamandap, Maju Dega, Narayan, Trailokya Mohan and Jagannath in Kathmandu; Hari Shankar in Patan. 18 in all, each at its mapped footprint, credited as modelled, not scanned. Heights are by eye.
 - **3D town:** at street zoom, 3D mode draws houses with windows and roofs instead of boxes.
 - **Walking view:** the camera walks behind your figure at street level through the 3D town, with the sky ahead.
