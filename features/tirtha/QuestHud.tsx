@@ -69,7 +69,7 @@ export function QuestHud({ available, completed, total, pulse, onPress }: QuestH
             {
               opacity: beat.interpolate({ inputRange: [0, 1], outputRange: [0.5, 0] }),
               transform: [
-                { scale: beat.interpolate({ inputRange: [0, 1], outputRange: [1, 1.9] }) },
+                { scale: beat.interpolate({ inputRange: [0, 1], outputRange: [1, 1.3] }) },
               ],
             },
           ]}

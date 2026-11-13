@@ -4,9 +4,9 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { Button, Card, Screen, Text } from '@/components/ui';
 import { ScreenHeader, SettingsButton } from '@/components/common';
 import { ArrivalWisdom, VisitorPrompt } from '@/components/arrival';
-import { SiteMap3D } from '@/components/map';
+import { SiteMap3D, nearestModel } from '@/components/map';
 import { SiteListItem } from '@/components/site';
-import { placesForHub, placesNear } from '@/data';
+import { hubCentre, placesForHub, placesNear } from '@/data';
 import { GuideShelf } from '@/features/guides';
 import { QuestCard } from '@/features/quests';
 
@@ -38,6 +38,10 @@ export function TirthaScreen() {
   const { preferences } = usePreferences();
   // Near you when the phone knows where you are; otherwise the area you chose to start in.
   const explore = coordinate ? placesNear(coordinate, 8_000, 6) : placesForHub(preferences.homeHub, 6);
+  // The map panel opens on the real 3D monument nearest you, or your starting area.
+  const hub = hubCentre(preferences.homeHub);
+  const previewNear = coordinate ?? (hub ? { longitude: hub[0], latitude: hub[1] } : null);
+  const previewKey = nearestModel(previewNear).join(',');
 
   return (
     <Screen scroll>
@@ -68,7 +72,7 @@ export function TirthaScreen() {
         accessibilityHint={ui('Shows the map full screen, where you can pan and zoom')}
         onPress={() => router.push('/(main)/tirtha/map')}
       >
-        <SiteMap3D onSelectSite={(id) => router.push(`/(main)/tirtha/site/${id}`)} />
+        <SiteMap3D key={previewKey} near={previewNear} onSelectSite={(id) => router.push(`/(main)/tirtha/site/${id}`)} />
       </Pressable>
 
       <Pressable

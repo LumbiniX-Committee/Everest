@@ -35,7 +35,7 @@ export function townLayerScript(monuments: FeatureCollection<Polygon>): string {
         var MAX_BUILDINGS = 1400;
         var WALLS = ${JSON.stringify(m.walls)}.map(function (c) { return new THREE.Color(c); });
         var ROOFS = ${JSON.stringify(m.pitchedRoofs)}.map(function (c) { return new THREE.Color(c); });
-        var FLAT = new THREE.Color(${JSON.stringify(m.flatRoof)});
+        var FLATS = ${JSON.stringify(m.flatRoofs)}.map(function (c) { return new THREE.Color(c); });
         var PARAPET = new THREE.Color(${JSON.stringify(m.parapet)});
         var WHITE = new THREE.Color(${JSON.stringify(m.whitewash)});
         var GILT = new THREE.Color(${JSON.stringify(m.gilt)});
@@ -296,12 +296,14 @@ export function townLayerScript(monuments: FeatureCollection<Polygon>): string {
             var footprint = Math.abs(area(pts));
             if (footprint < 4) continue;
             var wall = pick(WALLS, b.id, 7);
-            var pitched = footprint < 260 && b.h <= 15 && convex(pts) && pts.length <= 8;
+            // Pitched roofs are the exception in the valley (old houses, sheds);
+            // from above it is mostly flat concrete, as satellite views show.
+            var pitched = footprint < 140 && b.h <= 9 && convex(pts) && pts.length <= 6 && (b.id % 5 === 0);
             walls(textured, pts, b.base, b.h, wall, true);
             if (pitched) {
               hipRoof(plain, pts, b.h, Math.min(3.2, 0.35 * Math.sqrt(footprint)), pick(ROOFS, b.id, 13));
             } else {
-              flatRoof(plain, pts, b.h, FLAT);
+              flatRoof(plain, pts, b.h, pick(FLATS, b.id, 11));
               // A low parapet round the edge, so a flat roof still has a skyline.
               var inset = pts.map(function (p) { return p; });
               walls(plain, inset, b.h, b.h + 0.9, PARAPET, false);

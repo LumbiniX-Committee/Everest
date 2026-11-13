@@ -39,7 +39,7 @@ import { StorySequence } from './StorySequence';
  * Height of the top HUD row, so the things below it can clear it by arithmetic
  * rather than by a number someone guessed and then had to keep guessing.
  */
-const HUD_ROW_H = 72;
+const HUD_ROW_H = 68;
 
 /**
  * The map, full screen, with you standing on it.
@@ -482,112 +482,44 @@ export function LiveMapScreen() {
       />
 
       <View style={[styles.topBar, { paddingTop: insets.top + spacing.sm }]} pointerEvents="box-none">
-        <View style={styles.topLeft} pointerEvents="box-none">
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={ui('Tīrtha')}
-            accessibilityHint={ui('Everything else at Lumbini: the sites, the quests, then and now')}
-            onPress={() => {
-              pulse();
-              goBack();
-            }}
-            style={({ pressed }) => [styles.homeButton, pressed && styles.buttonPressed]}
-          >
-            <Icon name="chevron-left" size={30} color={colors.primary} />
-          </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={ui('Tīrtha')}
+          accessibilityHint={ui('Everything else at Lumbini: the sites, the quests, then and now')}
+          onPress={() => {
+            pulse();
+            goBack();
+          }}
+          style={({ pressed }) => [styles.iconPill, pressed && styles.buttonPressed]}
+        >
+          <Icon name="chevron-left" size={28} color={colors.primary} />
+        </Pressable>
 
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={ui('Open your quest memories')}
-            onPress={() => router.push('/(main)/tirtha/memories')}
-            style={({ pressed }) => [styles.iconPill, pressed && styles.buttonPressed]}
-          >
-            <Icon name="image-multiple-outline" size={23} color={colors.primary} />
-          </Pressable>
-        </View>
+        <Pressable
+          accessibilityRole="search"
+          accessibilityLabel={ui('Search places')}
+          accessibilityHint={ui('Find a monument, a street or any place in Nepal')}
+          onPress={() => {
+            pulse();
+            setShowPlaces(true);
+          }}
+          style={({ pressed }) => [styles.searchBar, pressed && styles.buttonPressed]}
+        >
+          <Icon name="magnify" size={22} color={colors.textSecondary} />
+          <Text variant="body" tone="secondary" numberOfLines={1} style={styles.searchText}>{ui('Search places')}</Text>
+        </Pressable>
 
-        <View style={styles.topRight} pointerEvents="box-none">
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={ui('Map type')}
-            onPress={() => {
-              pulse();
-              setShowModes(true);
-            }}
-            style={({ pressed }) => [styles.iconPill, pressed && styles.buttonPressed]}
-          >
-            <Icon name="layers-outline" size={24} color={colors.primary} />
-          </Pressable>
-
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={ui('Go to a place')}
-            onPress={() => {
-              pulse();
-              setShowPlaces(true);
-            }}
-            style={({ pressed }) => [styles.iconPill, pressed && styles.buttonPressed]}
-          >
-            <Icon name="compass-outline" size={25} color={colors.primary} />
-          </Pressable>
-
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={ui(follow ? 'Stop following your position' : 'Follow your position')}
-            accessibilityState={{ selected: follow }}
-            onPress={() => {
-              pulse();
-              setFollow((f) => !f);
-            }}
-            style={({ pressed }) => [styles.iconPill, follow && styles.pillActive, pressed && styles.buttonPressed]}
-          >
-            <Icon
-              name={follow ? 'crosshairs-gps' : 'crosshairs'}
-              size={24}
-              color={follow ? colors.primary : colors.textSecondary}
-            />
-          </Pressable>
-
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={ui(walkView ? 'Leave walking view' : 'Walking view')}
-            accessibilityHint={ui('The camera follows the figure at street level, through the 3D town')}
-            accessibilityState={{ selected: walkView }}
-            onPress={() => {
-              pulse();
-              if (!walkView) {
-                setMapMode('3d');
-                setFollow(true);
-              }
-              setWalkView((on) => !on);
-            }}
-            style={({ pressed }) => [styles.iconPill, walkView && styles.pillActive, pressed && styles.buttonPressed]}
-          >
-            <Icon name="walk" size={24} color={walkView ? colors.primary : colors.textSecondary} />
-          </Pressable>
-
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={ui(demoMode ? (demo.paused ? 'Resume the demo walk' : 'Pause the demo walk') : 'Start the demo walk')}
-            accessibilityHint={ui(demoMode ? 'Keeps the simulated location fixed until you resume' : 'Choose a heritage precinct and walk it using synthetic positions')}
-            accessibilityState={{ selected: demoMode }}
-            onPress={() => {
-              pulse();
-              if (demoMode) {
-                if (demo.paused) resumeManually();
-                else pauseManually();
-              }
-              else setShowDemoRoutes(true);
-            }}
-            style={({ pressed }) => [styles.iconPill, demoMode && styles.pillActive, pressed && styles.buttonPressed]}
-          >
-            <Icon
-              name={demoMode && !demo.paused ? 'pause' : 'play'}
-              size={25}
-              color={demoMode ? colors.primary : colors.textSecondary}
-            />
-          </Pressable>
-        </View>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={ui('Map type')}
+          onPress={() => {
+            pulse();
+            setShowModes(true);
+          }}
+          style={({ pressed }) => [styles.iconPill, pressed && styles.buttonPressed]}
+        >
+          <Icon name="layers-outline" size={24} color={colors.primary} />
+        </Pressable>
       </View>
 
       <View style={[styles.worldControls, { top: insets.top + HUD_ROW_H }]} pointerEvents="box-none">
@@ -624,7 +556,7 @@ export function LiveMapScreen() {
           }}
           style={({ pressed }) => [styles.worldButton, pressed && styles.buttonPressed]}
         >
-          <GreetingMonk height={38} />
+          <GreetingMonk height={34} />
         </Pressable>
 
         {atSiteId ? (
@@ -641,6 +573,55 @@ export function LiveMapScreen() {
             <Icon name="eye-outline" size={24} />
           </Pressable>
         ) : null}
+
+        <View style={styles.controlGroup}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={ui(follow ? 'Stop following your position' : 'Follow your position')}
+            accessibilityState={{ selected: follow }}
+            onPress={() => {
+              pulse();
+              setFollow((f) => !f);
+            }}
+            style={({ pressed }) => [styles.groupButton, follow && styles.pillActive, pressed && styles.buttonPressed]}
+          >
+            <Icon name={follow ? 'crosshairs-gps' : 'crosshairs'} size={23} color={follow ? colors.primary : colors.textSecondary} />
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={ui(walkView ? 'Leave walking view' : 'Walking view')}
+            accessibilityHint={ui('The camera follows the figure at street level, through the 3D town')}
+            accessibilityState={{ selected: walkView }}
+            onPress={() => {
+              pulse();
+              if (!walkView) {
+                setMapMode('3d');
+                setFollow(true);
+              }
+              setWalkView((on) => !on);
+            }}
+            style={({ pressed }) => [styles.groupButton, walkView && styles.pillActive, pressed && styles.buttonPressed]}
+          >
+            <Icon name="walk" size={23} color={walkView ? colors.primary : colors.textSecondary} />
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={ui(demoMode ? (demo.paused ? 'Resume the demo walk' : 'Pause the demo walk') : 'Start the demo walk')}
+            accessibilityHint={ui(demoMode ? 'Keeps the simulated location fixed until you resume' : 'Choose a heritage precinct and walk it using synthetic positions')}
+            accessibilityState={{ selected: demoMode }}
+            onPress={() => {
+              pulse();
+              if (demoMode) {
+                if (demo.paused) resumeManually();
+                else pauseManually();
+              }
+              else setShowDemoRoutes(true);
+            }}
+            style={({ pressed }) => [styles.groupButton, demoMode && styles.pillActive, pressed && styles.buttonPressed]}
+          >
+            <Icon name={demoMode && !demo.paused ? 'pause' : 'play'} size={23} color={demoMode ? colors.primary : colors.textSecondary} />
+          </Pressable>
+        </View>
       </View>
 
       <View style={styles.dock} pointerEvents="box-none">
@@ -818,6 +799,11 @@ export function LiveMapScreen() {
           router.push(`/(main)/tirtha/place/${placeId}`);
         }}
         onSelect={goToSite}
+        onSelectPoint={(point) => {
+          setShowPlaces(false);
+          setFollow(false);
+          flyTo(point.coordinate.longitude, point.coordinate.latitude, 'close');
+        }}
       />
 
       <DemoRoutePicker
@@ -897,12 +883,14 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   pillActive: { borderColor: colors.borderStrong, backgroundColor: colors.primarySoft },
-  topLeft: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs, flexShrink: 1 },
-  homeButton: {
-    width: 52,
-    height: 52,
+  searchBar: {
+    flex: 1,
+    minWidth: 0,
+    height: 48,
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    gap: spacing.sm,
+    paddingHorizontal: spacing.md,
     borderRadius: radii.full,
     backgroundColor: colors.surfaceRaised,
     borderWidth: 1,
@@ -913,10 +901,21 @@ const styles = StyleSheet.create({
     shadowRadius: 7,
     elevation: 6,
   },
-  topRight: { flexDirection: 'row', gap: spacing.sm, flexShrink: 0 },
+  searchText: { flex: 1 },
+  /** Follow, walking view and the demo walk: one stacked card, not three loose buttons. */
+  controlGroup: {
+    marginTop: spacing.xs,
+    borderRadius: radii.full,
+    overflow: 'hidden',
+    backgroundColor: colors.surfaceRaised,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    elevation: 5,
+  },
+  groupButton: { width: 50, height: 50, alignItems: 'center', justifyContent: 'center' },
   iconPill: {
-    width: 52,
-    height: 52,
+    width: 48,
+    height: 48,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: radii.full,
@@ -930,10 +929,10 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   /** The world actions, in one right-hand column clear of the top bar. */
-  worldControls: { position: 'absolute', right: spacing.base, zIndex: 12, gap: spacing.sm, alignItems: 'center' },
+  worldControls: { position: 'absolute', right: spacing.content, zIndex: 12, gap: spacing.md, alignItems: 'center' },
   worldButton: {
-    width: 58,
-    height: 58,
+    width: 52,
+    height: 52,
     borderRadius: radii.full,
     alignItems: 'center',
     justifyContent: 'center',
