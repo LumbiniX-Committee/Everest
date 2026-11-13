@@ -1,7 +1,8 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 import { localeHref, t, type Locale } from '@/lib/i18n';
-import { NAV, REPO_URL } from '@/lib/site';
+import { NAV, OWNER, REPO_URL } from '@/lib/site';
 
 export function SiteFooter({ locale }: { locale: Locale }) {
   return (
@@ -50,8 +51,29 @@ export function SiteFooter({ locale }: { locale: Locale }) {
           </div>
         </div>
 
-        <p className="mt-12 border-t border-line pt-6 text-sm text-ink-muted">
+        <div className="mt-12 flex flex-col gap-4 border-t border-line pt-8 sm:flex-row sm:items-center sm:gap-8">
+          <p className="text-xs font-semibold tracking-widest text-ink-muted uppercase">
+            {t(locale, 'footer.madeBy')}
+          </p>
+          {/* The logo as supplied, at its minimum width or more, with clear space around it. */}
+          <a href={`mailto:${OWNER.email}`} className="w-fit p-2" aria-label={OWNER.legalName}>
+            <Image src={OWNER.logo} alt={OWNER.legalName} width={156} height={45} unoptimized />
+          </a>
+          <address className="text-sm leading-relaxed text-ink-soft not-italic">
+            {OWNER.legalName} · {OWNER.address[locale]}
+            <br />
+            <a href={`mailto:${OWNER.email}`} className="transition hover:text-ink">
+              {OWNER.email}
+            </a>
+          </address>
+        </div>
+
+        <p className="mt-8 border-t border-line pt-6 text-sm text-ink-muted">
           {t(locale, 'footer.disclaimer')}
+        </p>
+        <p className="mt-3 text-xs leading-relaxed text-ink-muted">
+          © {OWNER.founded} {OWNER.legalName} · Reg. No. {OWNER.registrationNo} · PAN {OWNER.pan}.{' '}
+          {t(locale, 'footer.rights')}
         </p>
       </div>
     </footer>

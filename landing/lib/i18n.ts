@@ -42,7 +42,9 @@ const EN = {
   'nav.closeMenu': 'Close menu',
   'nav.language': 'नेपालीमा पढ्नुहोस्',
   'footer.tagline':
-    'A real-time guide to Nepal’s heritage sites and treks, built from sources you can check. Built in Nepal for LumbiniX 2026 by the LumbiniX-Committee team.',
+    'A real-time guide to Nepal’s heritage sites and treks, built from sources you can check. Made in Nepal by O.M.X Lab, and first built for LumbiniX 2026.',
+  'footer.madeBy': 'Made and run by',
+  'footer.rights': 'Code under Apache-2.0 and content under CC BY 4.0, shared with the Sākṣī contributors.',
   'footer.disclaimer':
     'Site and viewpoint coordinates are real but not all survey-grade, and the app labels the ones that are approximate. Nothing here is an official publication of the Lumbini Development Trust or UNESCO.',
 } as const;
@@ -66,7 +68,9 @@ const NE: Record<LandingCopyKey, string> = {
   'nav.closeMenu': 'मेनु बन्द गर्नुहोस्',
   'nav.language': 'Read in English',
   'footer.tagline':
-    'जाँच्न सकिने स्रोतबाट बनेको, नेपालका सम्पदा स्थल र ट्रेकका लागि वास्तविक-समयको मार्गदर्शक। LumbiniX 2026 का लागि LumbiniX-Committee टोलीद्वारा नेपालमा निर्मित।',
+    'जाँच्न सकिने स्रोतबाट बनेको, नेपालका सम्पदा स्थल र ट्रेकका लागि वास्तविक-समयको मार्गदर्शक। O.M.X Lab द्वारा नेपालमा निर्मित, र पहिलो पटक LumbiniX 2026 का लागि बनाइएको।',
+  'footer.madeBy': 'निर्माता र सञ्चालक',
+  'footer.rights': 'कोड Apache-2.0 र सामग्री CC BY 4.0 अन्तर्गत, साक्षीका योगदानकर्तासँग साझा।',
   'footer.disclaimer':
     'साइट र दृष्टिकोण निर्देशांक वास्तविक हुन् तर सबै सर्वेक्षण-स्तरका छैनन्, र अनुमानित भएकालाई एपले त्यसै लेबल गर्छ। यहाँ भएको कुनै पनि कुरा लुम्बिनी विकास कोष वा युनेस्कोको आधिकारिक प्रकाशन होइन।',
 };
