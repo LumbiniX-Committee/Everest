@@ -14,6 +14,7 @@ Not yet in a Play bundle, and not yet tried on a phone.
 - **Bhaktapur Durbar Square** is now listed, with its entry fee.
 
 ### Map and 3D
+- **Info points on the Swayambhu models:** in the 3D view, tap the (i) on the stupa or either shikhara to read what you are looking at. Text by OMX Lab.
 - **Search any place:** a search bar across the top of the full map finds our sites and listed places, and any named place in Nepal from OpenStreetMap (a tole, a street, a hotel); the map flies there.
 - **Tidier map controls on phones:** back, search and map type across the top; follow, walking view and the demo walk in one stack on the right with Quests and the guide. Quest memories moved into the Quests sheet. The credits fold into an (i).
 - **The demo walk keeps to the streets:** each leg follows the mapped footpath instead of a straight line through houses; inside palace courtyards, where no path is mapped, it crosses directly. Steadier steps.
