@@ -99,3 +99,21 @@ describe('updates', () => {
     expect(newerRuntime('0.9.0', '1.0.0')).toBe(false);
   });
 });
+
+describe('info points on our models', () => {
+  it('stand on the model they describe and show in the 3D map', () => {
+    const { MODEL_INFO } = require('@/data/modelInfo') as typeof import('@/data/modelInfo');
+    const { MAP_SCANS } = require('@/data/mapScans') as typeof import('@/data/mapScans');
+    expect(MODEL_INFO.length).toBeGreaterThan(0);
+    for (const point of MODEL_INFO) {
+      const model = MAP_SCANS.find((scan) => scan.id === point.modelId);
+      expect(model?.modelled).toBe(true);
+      expect(distanceMeters(point, model!)).toBeLessThan(15);
+      expect(point.body.length).toBeGreaterThan(40);
+    }
+    const html = buildMapHtml({ fullscreen: true, interactive: true, avatar: true });
+    expect(html).toContain('sakshi-info-pin');
+    expect(html).toContain('Info points on the models: OMX Lab');
+    expect(html).not.toContain('innerHTML = p.');
+  });
+});
