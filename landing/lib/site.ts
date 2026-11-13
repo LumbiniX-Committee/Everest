@@ -96,3 +96,23 @@ export const SURFACES = [
     },
   },
 ] as const;
+
+/**
+ * Who owns and runs Sākṣī: O.M.X Lab Private Limited, from its own letterhead
+ * (Documents/O.M.X Lab/00_START_HERE.pdf). The registration and PAN numbers are
+ * the ones the company prints on every official document. omxlab.com.np does
+ * not resolve yet, so the site links the company's email, not its domain; add
+ * `url` here once it is live.
+ */
+export const OWNER = {
+  legalName: 'O.M.X Lab Private Limited',
+  shortName: 'O.M.X Lab',
+  tagline: 'Technology & Research',
+  address: { en: 'Bharatpur-2, Chitwan, Nepal', ne: 'भरतपुर-२, चितवन, नेपाल' },
+  email: 'hello@omxlab.com.np',
+  registrationNo: '403018/83/84',
+  pan: '624715616',
+  founded: 2026,
+  /** O.M.X Lab's short horizontal logo in Teal, unaltered, per its brand guidelines. */
+  logo: '/brand/omx-lab-logo-teal.svg',
+} as const;

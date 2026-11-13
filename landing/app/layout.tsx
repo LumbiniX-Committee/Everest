@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 
+import { OWNER } from '@/lib/site';
+
 import './globals.css';
 
 /*
@@ -33,6 +35,41 @@ export const metadata: Metadata = {
   alternates: {
     languages: { en: '/en', ne: '/ne' },
   },
+  applicationName: 'Sākṣī',
+  authors: [{ name: OWNER.legalName }],
+  creator: OWNER.legalName,
+  publisher: OWNER.legalName,
+};
+
+/** Tells search engines who stands behind the site: the company, and the app it makes. */
+const OWNER_JSON_LD = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': '#omx-lab',
+      name: OWNER.legalName,
+      alternateName: OWNER.shortName,
+      slogan: OWNER.tagline,
+      email: OWNER.email,
+      foundingDate: String(OWNER.founded),
+      logo: `https://saksi-beta.vercel.app${OWNER.logo}`,
+      address: { '@type': 'PostalAddress', streetAddress: 'Bharatpur-2', addressLocality: 'Bharatpur', addressRegion: 'Chitwan', addressCountry: 'NP' },
+      identifier: [
+        { '@type': 'PropertyValue', propertyID: 'Company registration (Nepal OCR)', value: OWNER.registrationNo },
+        { '@type': 'PropertyValue', propertyID: 'PAN', value: OWNER.pan },
+      ],
+    },
+    {
+      '@type': 'MobileApplication',
+      name: 'Sākṣī',
+      operatingSystem: 'Android',
+      applicationCategory: 'TravelApplication',
+      url: 'https://saksi-beta.vercel.app',
+      publisher: { '@id': '#omx-lab' },
+      creator: { '@id': '#omx-lab' },
+    },
+  ],
 };
 
 export const viewport: Viewport = {
@@ -47,7 +84,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <link key={href} rel="preload" href={href} as="font" type="font/woff2" crossOrigin="anonymous" />
         ))}
       </head>
-      <body>{children}</body>
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(OWNER_JSON_LD).replace(/</g, '\\u003c') }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

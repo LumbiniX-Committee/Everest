@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Clock, Download, Eye, Globe, KeyRound, MapPin } from 'lucide-react';
+import { Building2, Clock, Download, Eye, Globe, KeyRound, MapPin } from 'lucide-react';
 
 import { localeHref, type Locale } from '@/lib/i18n';
+import { OWNER } from '@/lib/site';
 
 const ICONS = {
+  owner: Building2,
   position: MapPin,
   visibility: Eye,
   retention: Clock,
@@ -26,6 +28,10 @@ const EN = {
     after: '',
   },
   commitments: {
+    owner: {
+      title: 'Who is responsible',
+      body: `Sākṣī is made and run by ${OWNER.legalName} (Reg. No. ${OWNER.registrationNo}, PAN ${OWNER.pan}), ${OWNER.address.en}. Questions about your records, or this page, go to ${OWNER.email}.`,
+    },
     position: {
       title: 'Your own position, nothing more',
       body: "A capture records the photograph, the observer's own GPS position and heading at that moment, and an optional note. That coordinate is always where the person stood, never a location typed in: there is no manual-coordinate entry anywhere in the app. No name, email or phone number is collected from a visitor; every write is attributed to a random device id and an anonymous account, neither of which identifies a person.",
@@ -69,6 +75,10 @@ const NE: typeof EN = {
     after: '',
   },
   commitments: {
+    owner: {
+      title: 'जिम्मेवार को हो',
+      body: `साक्षी ${OWNER.legalName}ले बनाएको र सञ्चालन गरेको हो (दर्ता नं. ${OWNER.registrationNo}, प्यान ${OWNER.pan}, ${OWNER.address.ne})। तपाईंको अभिलेख वा यो पृष्ठबारे प्रश्न ${OWNER.email} मा पठाउनुहोस्।`,
+    },
     position: {
       title: 'तपाईंको आफ्नै स्थान, अरू केही होइन',
       body: 'एउटा कैद (क्याप्चर) ले तस्बिर, त्यही क्षणमा अवलोकनकर्ताको आफ्नै GPS स्थान र दिशा, र वैकल्पिक टिप्पणी दर्ता गर्छ। त्यो निर्देशांक सधैं व्यक्ति उभिएको ठाउँ हो, टाइप गरिएको स्थान कहिल्यै होइन: एपमा कहीं पनि म्यानुअल-निर्देशांक प्रविष्टि छैन। आगन्तुकबाट नाम, इमेल वा फोन नम्बर सङ्कलन गरिँदैन; हरेक लेखाइ अनियमित डिभाइस आईडी र एक अज्ञात खातामा दर्ता हुन्छ, जसमध्ये कसैले पनि कुनै व्यक्तिको पहिचान गर्दैन।',
