@@ -12,6 +12,7 @@ import {
   waterGeoJSON,
 } from '@/data';
 import { colors, MAP_GLYPHS_URL, MAP_TILES_URL, sakshiMapStyle } from '@/theme';
+import type { MapFigure } from '@/types';
 
 import { monumentModelsScript } from './monumentModels';
 import { townLayerScript } from './townLayer';
@@ -224,7 +225,14 @@ export type MapHtmlOptions = {
    * modelled monument, so the panel shows the monument rather than a plan.
    */
   openIn3d?: boolean;
+  /**
+   * What stands at your position, read once; `window.sakshiSetFigure` changes
+   * it in the running page. Only meaningful with `avatar`.
+   */
+  figure?: MapFigure;
 };
+
+export type { MapFigure };
 
 /** The ways the map can be drawn. Satellite and hybrid need a working imagery provider. */
 export type MapMode = 'standard' | '3d' | 'terrain' | 'satellite' | 'hybrid';
@@ -252,7 +260,10 @@ function placesGeoJSON() {
     features: PLACES.map((place) => ({
       type: 'Feature',
       geometry: { type: 'Point', coordinates: [place.coordinate.longitude, place.coordinate.latitude] },
-      properties: { id: place.id, name: place.name },
+      // Notable: described somewhere beyond a bare OpenStreetMap point. The
+      // rest (a shop tagged as a museum, a named building) keep their dot
+      // but are named only once you are close.
+      properties: { id: place.id, name: place.name, notable: Boolean(place.wikidata || place.wikipedia || place.description) },
     })),
   };
 }
@@ -264,6 +275,7 @@ export function buildMapHtml({
   topInset = 0,
   center = MAP_HOME.centre,
   openIn3d = false,
+  figure = 'walker',
 }: MapHtmlOptions = {}): string {
   // Named camera rather than an offset from MAP_HOME — see MAP_CAMERA for why
   // the old `+ 1.5` opened the world about three times too close to play in.
@@ -273,9 +285,10 @@ export function buildMapHtml({
   // mode they choose, not the first thing they have to make sense of.
   const pitch = openIn3d ? 58 : fullscreen ? 0 : camera.pitch;
   const bearing = fullscreen ? 0 : MAP_HOME.bearing;
-  // Clear of the standing pill in the top-left of the app's HUD, which is
-  // 60pt tall including its own top padding.
-  const controlTopOffset = fullscreen ? (topInset > 0 ? topInset + 132 : 156) : 10;
+  // Directly under the app's top bar (back, search, layers: 48 pt plus its
+  // padding), on the left, where nothing else floats. The right-hand column is
+  // the app's own; the bottom belongs to the guidance card and the demo panel.
+  const controlTopOffset = fullscreen ? (topInset > 0 ? topInset + 68 : 76) : 10;
 
   return `<!doctype html>
 <html>
@@ -301,7 +314,7 @@ ${avatar ? `<script>${THREE_JS}</script><script>${GLTF_LOADER_JS}</script>` : ''
   ${fullscreen ? `
   .maplibregl-ctrl-top-left {
     top: ${controlTopOffset}px !important;
-    left: 20px !important;
+    left: 16px !important;
     margin: 0 !important;
   }
   .maplibregl-ctrl-group {
@@ -312,8 +325,8 @@ ${avatar ? `<script>${THREE_JS}</script><script>${GLTF_LOADER_JS}</script>` : ''
     overflow: hidden;
   }
   .maplibregl-ctrl-group button {
-    width: 52px !important;
-    height: 52px !important;
+    width: 44px !important;
+    height: 44px !important;
     border-bottom: 1px solid ${colors.border} !important;
     background-color: ${colors.surfaceRaised} !important;
   }
@@ -372,7 +385,11 @@ ${OFFLINE_PROTOCOL}
       interactive: ${interactive},
       // Wide enough to see the whole of Nepal, not so wide the place is lost.
       minZoom: 6,
-      maxZoom: 19,
+      // Close enough to read a single shrine on a model; vector tiles overzoom.
+      maxZoom: 20,
+      // Above MapLibre's default 60, so the 3D presets (62-66) are not clamped
+      // and a two-finger tilt is not stopped short of where the camera opens.
+      maxPitch: 70,
       // A pinch that also rotates makes a small map feel unsteady. Zoom is the
       // gesture people actually want here; rotation stays on the compass.
       pitchWithRotate: ${interactive},
@@ -451,9 +468,9 @@ ${MAP_MODES()}
       map.addLayer({
         id:'place-dot', type:'circle', source:'places', minzoom: 13,
         paint:{
-          'circle-radius': 6,
+          'circle-radius': ['interpolate', ['linear'], ['zoom'], 13, 3.5, 17, 5.5],
           'circle-color': ${JSON.stringify(colors.surface)},
-          'circle-stroke-width': 2.5,
+          'circle-stroke-width': 2,
           'circle-stroke-color': ${JSON.stringify(colors.primary)}
         }
       });
@@ -461,10 +478,12 @@ ${MAP_MODES()}
         id:'place-hit', type:'circle', source:'places', minzoom: 13,
         paint:{ 'circle-radius': 18, 'circle-color': '#000000', 'circle-opacity': 0 }
       });
-      map.addLayer({
-        id:'listed-place-label', type:'symbol', source:'places', minzoom: 14.5,
-        layout:{ 'text-field':['get','name'], 'text-font':['Noto Sans Regular'], 'text-size':12, 'text-offset':[0,-1.3], 'text-anchor':'bottom', 'text-optional': true },
-        paint:{ 'text-color': ${JSON.stringify(colors.textSecondary)}, 'text-halo-color': ${JSON.stringify(colors.background)}, 'text-halo-width': 1.4 }
+      [['listed-place-label', 16, true], ['listed-place-label-minor', 18.2, false]].forEach(function (spec) {
+        map.addLayer({
+          id: spec[0], type:'symbol', source:'places', minzoom: spec[1], filter: ['==', ['get','notable'], spec[2]],
+          layout:{ 'text-field':['get','name'], 'text-font':['Noto Sans Regular'], 'text-size':11.5, 'text-offset':[0,-1.1], 'text-anchor':'bottom', 'text-optional': true, 'text-padding': 6, 'text-max-width': 9 },
+          paint:{ 'text-color': ${JSON.stringify(colors.textSecondary)}, 'text-halo-color': ${JSON.stringify(colors.background)}, 'text-halo-width': 1.4 }
+        });
       });
       map.on('click','place-hit', function(e){
         var f = e.features && e.features[0];
@@ -478,7 +497,7 @@ ${MAP_MODES()}
       map.addLayer({
         id:'scan-pin', type:'circle', source:'scans', minzoom: 11,
         paint:{
-          'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 9, 17, 13],
+          'circle-radius': ['interpolate', ['linear'], ['zoom'], 11, 7, 17, 10],
           'circle-color': ${JSON.stringify(colors.seek)},
           'circle-stroke-width': 2,
           'circle-stroke-color': '#ffffff'
@@ -486,12 +505,12 @@ ${MAP_MODES()}
       });
       map.addLayer({
         id:'scan-pin-text', type:'symbol', source:'scans', minzoom: 11,
-        layout:{ 'text-field':'3D', 'text-font':['Noto Sans Regular'], 'text-size': 9.5, 'text-allow-overlap': true, 'text-ignore-placement': true },
+        layout:{ 'text-field':'3D', 'text-font':['Noto Sans Bold'], 'text-size': ['interpolate', ['linear'], ['zoom'], 11, 7.5, 17, 9], 'text-allow-overlap': true, 'text-ignore-placement': true },
         paint:{ 'text-color':'#ffffff' }
       });
       map.addLayer({
-        id:'scan-pin-label', type:'symbol', source:'scans', minzoom: 15,
-        layout:{ 'text-field':['get','label'], 'text-font':['Noto Sans Regular'], 'text-size': 11.5, 'text-offset':[0, 1.5], 'text-anchor':'top', 'text-optional': true },
+        id:'scan-pin-label', type:'symbol', source:'scans', minzoom: 16,
+        layout:{ 'text-field':['get','label'], 'text-font':['Noto Sans Regular'], 'text-size': 11, 'text-offset':[0, 1.3], 'text-anchor':'top', 'text-optional': true, 'text-padding': 6, 'text-max-width': 9 },
         paint:{ 'text-color': ${JSON.stringify(colors.seek)}, 'text-halo-color': ${JSON.stringify(colors.background)}, 'text-halo-width': 1.4 }
       });
       map.on('click','scan-pin', function(e){
@@ -499,32 +518,42 @@ ${MAP_MODES()}
         if (f && f.properties && f.properties.scanId) post({ type:'scan', id: f.properties.scanId });
       });` : ''}
 
-      // Clustered, so 70 places in one valley read as a few countable groups
-      // rather than a smear of overlapping dots.
+      // Clustered when zoomed out, so 70 places in one valley read as a few
+      // countable groups rather than a smear of overlapping dots.
+      //
+      // Only zoomed out. A tilted camera loads the distant tiles at a lower
+      // zoom, so with clustering alone the horizon of a 3D Durbar Square
+      // filled with big numbered circles sitting on the town and on each
+      // other. The cluster layers stop at the map's own zoom 14 (a layer's
+      // zoom range is the camera's, not the tile's), and from there every
+      // place is a small dot with its name, the names placed so none collide.
+      var CLUSTER_UNTIL = 14;
       map.addSource('sites', {
         type:'geojson', data: ${JSON.stringify(siteGeoJSON)},
-        cluster: true, clusterRadius: 44, clusterMaxZoom: 15
+        cluster: true, clusterRadius: 40, clusterMaxZoom: 13
       });
       map.addLayer({
-        id:'site-cluster', type:'circle', source:'sites', filter:['has','point_count'],
+        id:'site-cluster', type:'circle', source:'sites', filter:['has','point_count'], maxzoom: CLUSTER_UNTIL,
         paint:{
           'circle-color': ${JSON.stringify(colors.accent)},
-          'circle-radius': ['step', ['get','point_count'], 16, 10, 20, 30, 26],
-          'circle-stroke-width': 3,
-          'circle-stroke-color': ${JSON.stringify(colors.surface)}
+          'circle-radius': ['step', ['get','point_count'], 13, 10, 16, 30, 20],
+          'circle-stroke-width': 2,
+          'circle-stroke-color': ${JSON.stringify(colors.surface)},
+          'circle-opacity': ['interpolate', ['linear'], ['zoom'], CLUSTER_UNTIL - 0.6, 0.95, CLUSTER_UNTIL, 0],
+          'circle-stroke-opacity': ['interpolate', ['linear'], ['zoom'], CLUSTER_UNTIL - 0.6, 1, CLUSTER_UNTIL, 0]
         }
       });
       map.addLayer({
-        id:'site-cluster-count', type:'symbol', source:'sites', filter:['has','point_count'],
-        layout:{ 'text-field':['get','point_count_abbreviated'], 'text-font':['Noto Sans Bold'], 'text-size':13, 'text-allow-overlap':true },
+        id:'site-cluster-count', type:'symbol', source:'sites', filter:['has','point_count'], maxzoom: CLUSTER_UNTIL,
+        layout:{ 'text-field':['get','point_count_abbreviated'], 'text-font':['Noto Sans Bold'], 'text-size':12, 'text-allow-overlap':true },
         paint:{ 'text-color': ${JSON.stringify(colors.onAccent)} }
       });
       map.addLayer({
         id:'site-dot', type:'circle', source:'sites', filter:['!',['has','point_count']],
         paint:{
-          'circle-radius': 8,
+          'circle-radius': ['interpolate', ['linear'], ['zoom'], 12, 3.5, 16, 4.5, 18, 6.5],
           'circle-color': ${JSON.stringify(colors.primary)},
-          'circle-stroke-width': 3,
+          'circle-stroke-width': 1.8,
           'circle-stroke-color': ${JSON.stringify(colors.surface)}
         }
       });
@@ -538,10 +567,13 @@ ${MAP_MODES()}
         layout:{
           'text-field':['get','name'],
           'text-font':['Noto Sans Regular'],
-          'text-size':13,
-          'text-offset':[0,-1.5],
+          'text-size':['interpolate', ['linear'], ['zoom'], 13, 11.5, 17, 13],
+          'text-offset':[0,-1.1],
           'text-anchor':'bottom',
+          'text-max-width': 9,
+          'text-padding': 4,
           'text-allow-overlap':false,
+          'text-optional': true,
           'symbol-sort-key':['get','rank']
         },
         paint:{
@@ -572,7 +604,8 @@ ${POSITION_MARKER}
       // schematic plan. The map does not need the character; the character
       // needs the map.
       post({ type:'ready' });
-${avatar ? AVATAR_LAYER + townLayerScript(monumentGeoJSON) + monumentModelsScript([], MODELS_URL, MAP_SCANS) + modelInfoScript() : ''}
+${avatar ? `      var INITIAL_FIGURE = ${JSON.stringify(figure)};\n` + AVATAR_LAYER + townLayerScript(monumentGeoJSON) + monumentModelsScript([], MODELS_URL, MAP_SCANS) + modelInfoScript() : ''}
+${avatar ? TOWN_UNDER_LABELS : ''}
 ${openIn3d ? "      window.sakshiSetMapMode && window.sakshiSetMapMode('3d');" : ''}
     });
   } catch (err) {
@@ -582,6 +615,23 @@ ${openIn3d ? "      window.sakshiSetMapMode && window.sakshiSetMapMode('3d');" :
 </body>
 </html>`;
 }
+
+/**
+ * The 3D town and models go beneath every label and site dot.
+ *
+ * Added last, the custom layers drew over everything, so names were cut in
+ * half by the houses in front of them and site dots showed through gaps in
+ * the roofs. Labels and dots now sit on top, as on any 3D street map, and the
+ * figure stays above them all.
+ */
+const TOWN_UNDER_LABELS = `
+      (function () {
+        var first = ['place-dot', 'scan-pin', 'site-cluster'].filter(function (id) { return map.getLayer(id); })[0];
+        if (!first) return;
+        ['sakshi-town', 'sakshi-monuments'].forEach(function (id) { if (map.getLayer(id)) map.moveLayer(id, first); });
+        baseLayers.forEach(function (l) { if (l.type === 'symbol' && map.getLayer(l.id)) map.moveLayer(l.id, first); });
+      })();
+`;
 
 /**
  * Controls and sizing for the interactive map.
@@ -680,6 +730,12 @@ function MAP_MODES(): string {
           if (map.getLayer('monument-massing')) map.setLayerZoomRange('monument-massing', 0, townZoom);
           if (mode === '3d' && window.sakshiTownRefresh) window.sakshiTownRefresh();
         }
+        // In 3D, close in, the models themselves stand where the "3D" badges
+        // were; the badges step aside rather than sit on the buildings.
+        ['scan-pin', 'scan-pin-text', 'scan-pin-label'].forEach(function (id) {
+          var layer = map.getLayer(id);
+          if (layer) map.setLayerZoomRange(id, layer.minzoom || 0, mode === '3d' ? 16 : 24);
+        });
         map.setTerrain(mode === 'terrain' ? { source: 'dem', exaggeration: 1.4 } : null);
         var tilted = mode === '3d' || mode === 'terrain';
         map.easeTo({ pitch: tilted ? 58 : 0, bearing: tilted ? map.getBearing() : 0, duration: 700 });
@@ -764,22 +820,55 @@ const POSITION_MARKER = `
       var trail = [];
       var TRAIL_MAX = 400;
 
+      /*
+       * Whether a hand is on the map. A follow camera that eases to every fix
+       * cancels a pinch or a zoom-button animation in progress, which is what
+       * "the zoom fights me" was: the map snapped back about once a second
+       * while the demo walked. Any touch, wheel or button press on the map
+       * holds the camera still until shortly after it ends.
+       */
+      var touching = false, gestureAt = 0;
+      (function () {
+        var box = map.getContainer();
+        function down() { touching = true; gestureAt = Date.now(); }
+        function up(e) { touching = !!(e && e.touches && e.touches.length); gestureAt = Date.now(); }
+        box.addEventListener('touchstart', down, { passive: true });
+        box.addEventListener('touchend', up, { passive: true });
+        box.addEventListener('touchcancel', up, { passive: true });
+        box.addEventListener('mousedown', down);
+        box.addEventListener('mouseup', up);
+        box.addEventListener('wheel', function () { gestureAt = Date.now(); }, { passive: true });
+      })();
+      window.sakshiUserBusy = function () {
+        return touching || Date.now() - gestureAt < 800 || map.isZooming() || map.isRotating();
+      };
+
       map.addSource('me', { type:'geojson', data: { type:'FeatureCollection', features: [] } });
       map.addSource('me-accuracy', { type:'geojson', data: { type:'FeatureCollection', features: [] } });
       map.addSource('me-trail', { type:'geojson', data: { type:'FeatureCollection', features: [] } });
       map.addSource('me-route', { type:'geojson', data: { type:'FeatureCollection', features: [] } });
       map.addSource('waypoints', { type:'geojson', data: { type:'FeatureCollection', features: [] } });
 
-      // The planned way, under everything. Demo itineraries are dashed; live
-      // guidance switches this same layer to a strong solid route.
+      // The planned way, under everything. A demo itinerary is a soft solid
+      // line; live guidance switches this same layer to a strong route with a
+      // pale casing. Dashes were dropped: on a map whose footpaths were also
+      // dashed, the route and every lane around it looked the same.
+      map.addLayer({
+        id:'route-casing', type:'line', source:'me-route',
+        layout:{ 'line-cap':'round', 'line-join':'round', visibility:'none' },
+        paint:{
+          'line-color': ${JSON.stringify(colors.surface)},
+          'line-width': ['interpolate', ['linear'], ['zoom'], 13, 5, 18, 11],
+          'line-opacity': 0.9
+        }
+      });
       map.addLayer({
         id:'route-line', type:'line', source:'me-route',
         layout:{ 'line-cap':'round', 'line-join':'round' },
         paint:{
           'line-color': ${JSON.stringify(colors.sandstoneDeep)},
-          'line-width': 2.5,
-          'line-opacity': 0.55,
-          'line-dasharray': [1.5, 1.5]
+          'line-width': ['interpolate', ['linear'], ['zoom'], 13, 2, 18, 4],
+          'line-opacity': 0.45
         }
       });
 
@@ -790,8 +879,8 @@ const POSITION_MARKER = `
         layout:{ 'line-cap':'round', 'line-join':'round' },
         paint:{
           'line-color': ${JSON.stringify(colors.earth)},
-          'line-width': 4,
-          'line-opacity': 0.7
+          'line-width': ['interpolate', ['linear'], ['zoom'], 13, 2, 18, 4],
+          'line-opacity': 0.45
         }
       });
 
@@ -851,16 +940,20 @@ const POSITION_MARKER = `
       // The arrow points up the canvas, so icon-rotate can take a compass
       // bearing unmodified.
       (function () {
-        var S = 56, c = document.createElement('canvas');
-        c.width = S; c.height = S;
-        var g = c.getContext('2d');
-        g.translate(S / 2, S / 2);
-        g.beginPath();
-        g.moveTo(0, -24); g.lineTo(7.5, -11); g.lineTo(0, -14.5); g.lineTo(-7.5, -11);
-        g.closePath();
-        g.fillStyle = ${JSON.stringify(colors.sandstoneDeep)};
-        g.fill();
-        map.addImage('me-heading', g.getImageData(0, 0, S, S), { pixelRatio: 2 });
+        function arrow(name, color) {
+          var S = 56, c = document.createElement('canvas');
+          c.width = S; c.height = S;
+          var g = c.getContext('2d');
+          g.translate(S / 2, S / 2);
+          g.beginPath();
+          g.moveTo(0, -24); g.lineTo(7.5, -11); g.lineTo(0, -14.5); g.lineTo(-7.5, -11);
+          g.closePath();
+          g.fillStyle = color;
+          g.fill();
+          map.addImage(name, g.getImageData(0, 0, S, S), { pixelRatio: 2 });
+        }
+        arrow('me-heading', ${JSON.stringify(colors.sandstoneDeep)});
+        arrow('me-heading-plain', ${JSON.stringify(colors.navigationRoute)});
       })();
 
       map.addLayer({
@@ -938,10 +1031,10 @@ const POSITION_MARKER = `
           });
         }
 
-        if (follow || first) {
+        if (first || (follow && !window.sakshiUserBusy())) {
           map.easeTo({ center: [lng, lat], duration: first ? 0 : 900 });
         }
-        if (!window.sakshiHasFigure) advancePose();
+        if (!window.sakshiHasFigure) glideDot();
         map.triggerRepaint();
       };
 
@@ -1001,9 +1094,11 @@ const POSITION_MARKER = `
       };
 
       window.sakshiSetRouteMode = function (guiding) {
-        map.setPaintProperty('route-line', 'line-width', guiding ? 5 : 2.5);
-        map.setPaintProperty('route-line', 'line-opacity', guiding ? 0.9 : 0.55);
-        map.setPaintProperty('route-line', 'line-dasharray', guiding ? null : [1.5, 1.5]);
+        map.setPaintProperty('route-line', 'line-width', guiding
+          ? ['interpolate', ['linear'], ['zoom'], 13, 3.5, 18, 7]
+          : ['interpolate', ['linear'], ['zoom'], 13, 2, 18, 4]);
+        map.setPaintProperty('route-line', 'line-opacity', guiding ? 0.92 : 0.45);
+        map.setLayoutProperty('route-casing', 'visibility', guiding ? 'visible' : 'none');
       };
 
       var guideMarker = null;
@@ -1072,17 +1167,57 @@ const POSITION_MARKER = `
        * character, which does animate per frame, carries the motion.
        */
       var markerWrittenAt = 0;
-      function advancePose(t) {
+      function advancePose(t, force) {
         var k = t === undefined ? 1 : t;
         pose.drawLng += (pose.lng - pose.drawLng) * k;
         pose.drawLat += (pose.lat - pose.drawLat) * k;
         pose.drawHeading = stepAngle(pose.drawHeading, pose.heading, k);
 
         var now = Date.now();
-        if (now - markerWrittenAt < 80) return;
+        if (!force && now - markerWrittenAt < 80) return;
         markerWrittenAt = now;
         map.getSource('me').setData(meFeature());
       }
+
+      /*
+       * With no figure running a frame loop, the dot glides to each new fix
+       * on a short loop of its own that stops once it arrives, instead of
+       * jumping a stride at a time. Nothing redraws while you stand still.
+       */
+      var glideFrame = 0, glideLast = 0;
+      function glideDot() {
+        if (glideFrame) return;
+        glideLast = performance.now();
+        function step(now) {
+          var dt = Math.min(0.1, (now - glideLast) / 1000);
+          glideLast = now;
+          advancePose(Math.min(1, dt * 4));
+          var far = Math.abs(pose.lng - pose.drawLng) + Math.abs(pose.lat - pose.drawLat) > 2e-7 ||
+            Math.abs(((pose.heading - pose.drawHeading + 540) % 360) - 180) > 0.5;
+          if (far && !window.sakshiHasFigure) { glideFrame = requestAnimationFrame(step); return; }
+          glideFrame = 0;
+          advancePose(1, true);
+        }
+        glideFrame = requestAnimationFrame(step);
+      }
+
+      /*
+       * The marker's colours. Under a figure it is the sandstone ring the
+       * figure stands in; alone, it is the blue dot and arrow every phone map
+       * uses for "you are here", so nobody has to learn what it means.
+       */
+      window.sakshiMarkerStyle = function (plain) {
+        var tone = plain ? ${JSON.stringify(colors.navigationRoute)} : ${JSON.stringify(colors.sandstone)};
+        var deep = plain ? ${JSON.stringify(colors.navigationRoute)} : ${JSON.stringify(colors.sandstoneDeep)};
+        map.setPaintProperty('me-pulse', 'circle-color', tone);
+        map.setPaintProperty('me-aura', 'circle-color', tone);
+        map.setPaintProperty('me-aura', 'circle-stroke-color', deep);
+        map.setPaintProperty('me-dot', 'circle-color', deep);
+        map.setPaintProperty('me-dot', 'circle-radius', plain ? 7 : 6);
+        map.setPaintProperty('me-dot', 'circle-stroke-width', plain ? 3 : 2.5);
+        map.setLayoutProperty('me-facing', 'icon-image', plain ? 'me-heading-plain' : 'me-heading');
+        map.setLayoutProperty('me-facing', 'icon-size', plain ? 1.5 : 1);
+      };
 `;
 
 /**
@@ -1189,6 +1324,8 @@ const AVATAR_LAYER = `
         halo.position.set(0, -0.07, 1.65);
         figure.add(halo);
 
+        // Everything drawn so far but the shadow is the robed figure.
+        var robedParts = figure.children.filter(function (c) { return c !== shadow; });
         scene.add(figure);
         // A hemisphere light rather than flat ambient: warm from the sky, cool
         // bounce from the ground, which is what stops the shaded side going to
@@ -1229,6 +1366,9 @@ const AVATAR_LAYER = `
          * foot stays planted for as long as it is on the ground.
          */
         var walker = null, mixer = null, walkAction = null;
+        /** 'walker', 'monk' or 'dot': see MapFigure. */
+        var figureKind = INITIAL_FIGURE;
+        var walkerRequested = false;
         var naturalSpeed = 1.3, clipPeriod = 1.1, clipDuration = 1, neutralTimes = [0];
         function measureWalk(model, clip) {
           var foot = null;
@@ -1270,7 +1410,13 @@ const AVATAR_LAYER = `
           var speed = range(fwd) / (0.6 * period);
           return { speed: speed, period: period, neutral: crossings.length ? crossings : [0] };
         }
-        if (THREE.GLTFLoader) {
+        /*
+         * Fetched only when the walker is the chosen figure, so choosing the
+         * monk or the dot never downloads him.
+         */
+        function loadWalker() {
+          if (walkerRequested || !THREE.GLTFLoader) return;
+          walkerRequested = true;
           new THREE.GLTFLoader().load(${JSON.stringify(WALKER_URL)}, function (gltf) {
             try {
               var model = gltf.scene;
@@ -1307,16 +1453,41 @@ const AVATAR_LAYER = `
               walkAction.timeScale = 0;
               walkAction.time = neutralTimes[0];
 
-              figure.children.forEach(function (c) { if (c !== shadow) c.visible = false; });
               figure.add(walker);
+              applyFigure();
               post({ type: 'figure-ready', kind: 'walker', naturalSpeed: Math.round(naturalSpeed * 100) / 100 });
             } catch (walkerErr) {
               post({ type: 'figure-model-failed', message: String(walkerErr) });
             }
           }, undefined, function (loadErr) {
+            // Let a later choice of the walker try again.
+            walkerRequested = false;
             post({ type: 'figure-model-failed', message: String(loadErr && loadErr.message || loadErr) });
           });
         }
+
+        /*
+         * Show the chosen figure. The robed figure also stands in for the
+         * walker until he has loaded, offline, or if he fails. The dot draws
+         * nothing in three.js: the render below returns before any work and
+         * stops asking for frames, and the marker layers carry the position.
+         */
+        function applyFigure() {
+          var robed = figureKind === 'monk' || (figureKind === 'walker' && !walker);
+          robedParts.forEach(function (c) { c.visible = robed; });
+          if (walker) walker.visible = figureKind === 'walker';
+          window.sakshiHasFigure = figureKind !== 'dot';
+          window.sakshiMarkerStyle(figureKind === 'dot');
+          if (figureKind === 'dot' && pose.has) glideDot();
+          map.triggerRepaint();
+        }
+        window.sakshiSetFigure = function (kind) {
+          figureKind = kind === 'monk' || kind === 'dot' ? kind : 'walker';
+          if (figureKind === 'walker') loadWalker();
+          applyFigure();
+          post({ type: 'figure', kind: figureKind });
+        };
+        window.sakshiSetFigure(figureKind);
 
         /*
          * Walking view: the camera travels with the figure, behind and above
@@ -1330,15 +1501,28 @@ const AVATAR_LAYER = `
         var walkTimer = 0;
         /** Larger in walking view, where the figure is in the foreground. */
         var WALK_FIGURE_PX = 110;
+        /*
+         * The walking camera's distance. A pinch or the zoom buttons change
+         * it rather than being undone on the next frame: while a hand is on
+         * the map or a zoom is running, the camera is left alone, and where
+         * the zoom settles is kept.
+         */
+        var WALK_ZOOM = 20.1, walkZoom = WALK_ZOOM, walkZooming = false;
+        map.on('zoomstart', function (e) { if (walkView && e && e.originalEvent) walkZooming = true; });
+        map.on('zoomend', function () {
+          if (!walkView || !walkZooming) return;
+          walkZooming = false;
+          walkZoom = Math.max(17.5, Math.min(21, map.getZoom()));
+        });
         function walkCamera() {
           if (!walkView) return;
-          if (pose.has) {
+          if (pose.has && !walkZooming && !window.sakshiUserBusy()) {
             var h = map.getContainer().clientHeight || 600;
             map.jumpTo({
               center: [pose.drawLng, pose.drawLat],
               bearing: pose.drawHeading,
               pitch: 70,
-              zoom: 20.1,
+              zoom: walkZoom,
               padding: { top: Math.round(h * 0.42), bottom: 0, left: 0, right: 0 }
             });
           }
@@ -1349,6 +1533,7 @@ const AVATAR_LAYER = `
           if (on === walkView) return;
           walkView = on;
           if (on) {
+            walkZoom = WALK_ZOOM;
             map.setMaxPitch(80);
             // Closer than browsing allows: the camera comes down to about
             // rooftop height, just behind the figure. Vector tiles overzoom.
@@ -1367,7 +1552,8 @@ const AVATAR_LAYER = `
           } else {
             cancelAnimationFrame(walkFrame);
             clearInterval(walkTimer);
-            map.setMaxZoom(19);
+            map.setMaxZoom(20);
+            map.setMaxPitch(70);
             map.easeTo({ pitch: 58, zoom: Math.min(map.getZoom(), 18), padding: { top: 0, bottom: 0, left: 0, right: 0 }, duration: 600 });
           }
           post({ type: 'walk-view', on: on });
@@ -1383,7 +1569,7 @@ const AVATAR_LAYER = `
             renderer.autoClear = false;
           },
           render: function (gl, matrix) {
-            if (!pose.has) return;
+            if (!pose.has || figureKind === 'dot') { lastFrame = 0; return; }
 
             var now = performance.now();
             var dt = lastFrame ? Math.min(0.1, (now - lastFrame) / 1000) : 0.016;
@@ -1441,7 +1627,7 @@ const AVATAR_LAYER = `
 
             halo.rotation.z += dt * 0.6;
 
-            if (mixer && walkAction) {
+            if (mixer && walkAction && figureKind === 'walker') {
               if (walking) {
                 // Cadence follows the real speed and the size he is drawn at,
                 // so a planted foot stays put on the ground. Drawn larger than
@@ -1499,6 +1685,10 @@ const AVATAR_LAYER = `
         // The marker layers above already show where you are. Say so rather
         // than failing the map, and leave the reason where a log will find it.
         window.sakshiHasFigure = false;
+        // Without three.js every choice is the dot; the walker's or monk's
+        // marker colours would only promise a figure that cannot come.
+        window.sakshiSetFigure = function () { window.sakshiMarkerStyle(true); };
+        window.sakshiMarkerStyle(true);
         post({ type:'figure-unavailable', message: String(figureErr) });
       }
 `;

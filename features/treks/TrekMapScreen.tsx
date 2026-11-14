@@ -4,9 +4,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { EmptyState } from '@/components/common';
 import { MapWebView } from '@/components/map';
-import { Chip, Icon, Screen, Text } from '@/components/ui';
-import { trailProgress } from '@/core';
-import { dayStops, findTrek, trekLine, trekStop } from '@/data';
+import { Button, Chip, Icon, Screen, Text } from '@/components/ui';
+import { locateOnTrek, OFF_TRAIL_M, trailProgress } from '@/core';
+import { dayDrawLine, dayStops, findTrek, trekDrawLine, trekStop } from '@/data';
 import { useCurrentPosition, useSafeBack } from '@/hooks';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { usePreferences } from '@/store';
@@ -14,14 +14,16 @@ import { colors, radii, spacing } from '@/theme';
 import { formatDistance } from '@/utils';
 
 import { ElevationProfile } from './ElevationProfile';
-import { formatAltitude } from './format';
+import { formatAltitude, formatHours } from './format';
 
 /**
  * The trail, full screen, with you on it.
  *
  * Pick a day and the card tells you how far along it you are, measured along
- * the trail, and how far and how high the next stop is. Off the trail it says
- * so plainly instead of snapping you onto it.
+ * the trail, and how far, how high and roughly how long the next stop is. Off
+ * the trail it says so plainly instead of snapping you onto it, and if you are
+ * on another day's trail it offers that day. Lines are drawn simplified; every
+ * number is measured on the full line.
  */
 export function TrekMapScreen({ trekId, day }: { trekId: string; day?: string }) {
   const goBack = useSafeBack();
@@ -43,7 +45,8 @@ export function TrekMapScreen({ trekId, day }: { trekId: string; day?: string })
   // Where on the day's line you were last time, so the way back is not read as the way out.
   const [lastIndex, setLastIndex] = useState(0);
 
-  const whole = useMemo(() => (trek ? trekLine(trek) : []), [trek]);
+  const whole = useMemo(() => (trek ? trekDrawLine(trek) : []), [trek]);
+  const drawnDay = useMemo(() => (trek ? dayDrawLine(trek, dayIndex) : []), [trek, dayIndex]);
   const waypoints = useMemo(
     () => (trek ? trek.stops.map((stop) => ({ id: stop.id, name: stop.name, ...stop.coordinate })) : []),
     [trek],
@@ -58,6 +61,13 @@ export function TrekMapScreen({ trekId, day }: { trekId: string; day?: string })
         : null,
     [coordinate, demoMode, current, stops, accuracyM, lastIndex],
   );
+  // Off this day's trail: perhaps on another day's.
+  const otherDay = useMemo(() => {
+    if (!trek || !coordinate || demoMode || !progress || progress.onTrail) return null;
+    const found = locateOnTrek(trek.days, coordinate, OFF_TRAIL_M + Math.min(accuracyM ?? 0, 100));
+    return found && found.dayIndex !== dayIndex ? found.dayIndex : null;
+  }, [trek, coordinate, demoMode, progress, accuracyM, dayIndex]);
+  const nextWalkingDay = walkingDays.find(({ index }) => index > dayIndex)?.index ?? null;
   const progressIndex = progress?.onTrail ? progress.index : null;
   // Adjusting state while rendering, as React recommends for values derived from
   // a previous render: the next render reads the newer index, then settles.
@@ -72,13 +82,18 @@ export function TrekMapScreen({ trekId, day }: { trekId: string; day?: string })
   }
 
   const next = progress?.onTrail && progress.next ? trekStop(trek, progress.next.id) : null;
+  function showDay(index: number) {
+    setDayIndex(index);
+    setLastIndex(0);
+    setSelectedStop(null);
+  }
   const stop = trekStop(trek, selectedStop);
 
   return (
     <View style={styles.root}>
       <MapWebView
         fill
-        route={current?.line.length ? current.line : whole}
+        route={drawnDay.length ? drawnDay : whole}
         waypoints={waypoints}
         solidRoute
         fitRoute
@@ -107,11 +122,7 @@ export function TrekMapScreen({ trekId, day }: { trekId: string; day?: string })
               key={d.day}
               label={`${ui('Day')} ${d.day}`}
               selected={index === dayIndex}
-              onPress={() => {
-                setDayIndex(index);
-                setLastIndex(0);
-                setSelectedStop(null);
-              }}
+              onPress={() => showDay(index)}
             />
           ))}
         </ScrollView>
@@ -142,9 +153,18 @@ export function TrekMapScreen({ trekId, day }: { trekId: string; day?: string })
                 {demoMode ? 'Your position is a demo, so progress is not shown.' : 'Waiting for your position.'}
               </Text>
             ) : !progress.onTrail ? (
-              <Text variant="caption" tone="warning" translate={false}>
-                {`${ui('You are about')} ${formatDistance(progress.distanceFromTrailM, unit)} ${ui('from this day’s trail.')}`}
-              </Text>
+              <>
+                <Text variant="caption" tone="warning" translate={false}>
+                  {`${ui('You are about')} ${formatDistance(progress.distanceFromTrailM, unit)} ${ui('from this day’s trail.')}`}
+                </Text>
+                {otherDay != null && trek.days[otherDay] ? (
+                  <Button
+                    label={`${ui('You are on the trail of day')} ${trek.days[otherDay].day}: ${ui('show it')}`}
+                    variant="secondary"
+                    onPress={() => showDay(otherDay)}
+                  />
+                ) : null}
+              </>
             ) : (
               <>
                 <Text variant="body" translate={false}>
@@ -154,9 +174,23 @@ export function TrekMapScreen({ trekId, day }: { trekId: string; day?: string })
                       }`
                     : ui('You have reached the end of this day’s trail.')}
                 </Text>
+                {progress.next?.estimatedHours != null ? (
+                  <Text variant="caption" tone="secondary" translate={false}>
+                    {`${ui('Estimated')} ${formatHours(progress.next.estimatedHours)} ${ui('to the next stop, without breaks')}`}
+                  </Text>
+                ) : null}
                 <Text variant="caption" tone="secondary" translate={false}>
-                  {`${formatDistance(progress.walkedM, unit)} ${ui('done')} · ${formatDistance(progress.remainingM, unit)} ${ui('to go')} · ${ui('about')} ${formatAltitude(progress.altitudeM, unit)}`}
+                  {`${formatDistance(progress.walkedM, unit)} ${ui('done')} · ${formatDistance(progress.remainingM, unit)} ${ui('to go')}${
+                    progress.remainingEstimatedHours != null ? ` (${ui('about')} ${formatHours(progress.remainingEstimatedHours)})` : ''
+                  } · ${ui('about')} ${formatAltitude(progress.altitudeM, unit)}`}
                 </Text>
+                {!progress.next && nextWalkingDay != null && trek.days[nextWalkingDay] ? (
+                  <Button
+                    label={`${ui('Next stage')}: ${ui('Day')} ${trek.days[nextWalkingDay].day}`}
+                    variant="secondary"
+                    onPress={() => showDay(nextWalkingDay)}
+                  />
+                ) : null}
               </>
             )}
             {current ? <ElevationProfile profile={current.profile} marker={progress?.onTrail ? progress.fraction : null} height={56} /> : null}

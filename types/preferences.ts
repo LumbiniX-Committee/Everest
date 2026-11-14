@@ -46,6 +46,16 @@ export type VisitorType = 'unset' | 'foreign' | 'nepali';
 export type HomeHub = 'unset' | 'near-me' | 'lumbini' | 'kathmandu' | 'pokhara' | 'chitwan';
 
 /**
+ * Who stands at your position on the live map.
+ *
+ * - walker: the scanned person with a walk cycle (downloaded once)
+ * - monk: the robed figure built from simple shapes, no download
+ * - dot: only the blue position dot and heading arrow; no 3D figure is drawn,
+ *   which is also the lightest on the battery
+ */
+export type MapFigure = 'walker' | 'monk' | 'dot';
+
+/**
  * How much a place is asked to say when you arrive at it.
  *
  * The tiers select depth over material that is already sourced — a summary, the
@@ -77,6 +87,8 @@ export type UserPreferences = {
   autoNarration: boolean;
   visitorType: VisitorType;
   homeHub: HomeHub;
+  /** Who stands at your position on the live map. */
+  mapFigure: MapFigure;
   /** Off unless the visitor turns it on. */
   shareCrashReports: boolean;
 };
@@ -111,6 +123,7 @@ export const DEFAULT_USER_PREFERENCES: UserPreferences = {
   autoNarration: true,
   visitorType: 'unset',
   homeHub: 'unset',
+  mapFigure: 'walker',
   shareCrashReports: false,
 };
 
@@ -176,4 +189,10 @@ export const HOME_HUB_OPTIONS: { value: HomeHub; label: string; hint: string }[]
   { value: 'kathmandu', label: 'Kathmandu Valley', hint: 'Durbar squares, stupas and temples.' },
   { value: 'pokhara', label: 'Pokhara', hint: 'Lakes, peace pagoda and mountain views.' },
   { value: 'chitwan', label: 'Chitwan', hint: 'National park and Tharu culture.' },
+];
+
+export const MAP_FIGURE_OPTIONS: { value: MapFigure; label: string; hint: string }[] = [
+  { value: 'walker', label: 'Walker', hint: 'A realistic person who walks at your pace.' },
+  { value: 'monk', label: 'Monk', hint: 'A robed figure, drawn without a download.' },
+  { value: 'dot', label: 'Dot', hint: 'A simple blue dot. Lightest on the battery.' },
 ];

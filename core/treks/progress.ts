@@ -7,6 +7,8 @@
  */
 import { haversine } from '../../shared/geo.ts';
 
+import { altitudeFactor, climbAndDescent, naismithHours, orderStopsAlong, snapToLine, toHalfHours, TREK_PACE } from './route.ts';
+
 export type TrailPoint = readonly [longitude: number, latitude: number];
 export type TrailStop = { id: string; latitude: number; longitude: number };
 export type Position = { latitude: number; longitude: number };
@@ -25,34 +27,9 @@ export function cumulativeDistances(line: readonly TrailPoint[]): number[] {
   return out;
 }
 
-/**
- * The line index nearest a position, searching only from `from` onwards.
- * Starting the search after the previous match keeps out-and-back days honest:
- * the return leg passes the same ground, and the first pass must not win.
- */
-function nearestIndex(line: readonly TrailPoint[], position: Position, from = 0): { index: number; distanceM: number } {
-  let index = from;
-  let distanceM = Infinity;
-  for (let i = from; i < line.length; i += 1) {
-    const d = metres(pointAt(line[i]), position);
-    if (d < distanceM) {
-      distanceM = d;
-      index = i;
-    }
-  }
-  return { index, distanceM };
-}
-
-/** Each stop's place on the line, in walking order. */
+/** Each stop's place on the line, in walking order: the best fit for all stops together. */
 export function stopIndices(line: readonly TrailPoint[], stops: readonly TrailStop[]): number[] {
-  const out: number[] = [];
-  let from = 0;
-  for (const stop of stops) {
-    const { index } = nearestIndex(line, stop, from);
-    out.push(index);
-    from = index;
-  }
-  return out;
+  return orderStopsAlong(line, stops);
 }
 
 /** Metres climbed between two line indices, using the same 10 m noise floor as the build. */
@@ -87,8 +64,10 @@ export type TrailProgress =
       fraction: number;
       walkedM: number;
       remainingM: number;
-      /** The next stop ahead, or null once past the last. */
-      next: { id: string; alongM: number; climbM: number | null } | null;
+      /** The next stop ahead, or null once past the last. `estimatedHours` is an estimate (Naismith's rule), null without climb data. */
+      next: { id: string; alongM: number; climbM: number | null; estimatedHours: number | null } | null;
+      /** Estimated walking hours to the end of the day, without breaks; null without climb data. */
+      remainingEstimatedHours: number | null;
       /** The elevation model's altitude at your point on the trail. */
       altitudeM: number | null;
     };
@@ -110,39 +89,52 @@ export function trailProgress(
 ): TrailProgress & { index: number } {
   if (line.length < 2) return { onTrail: false, distanceFromTrailM: Infinity, index: 0 };
   const margin = OFF_TRAIL_M + Math.min(accuracyM ?? 0, 100);
-  const global = nearestIndex(line, position);
+  const along = cumulativeDistances(line);
+  // Snapped between vertices, not only to them: vertices are 120 m apart.
+  const global = snapToLine(line, position, along)!;
   // Prefer a match at or ahead of last time when one is close enough.
-  const ahead = previousIndex > 0 ? nearestIndex(line, position, previousIndex) : global;
+  const ahead = previousIndex > 0 ? snapToLine(line, position, along, Math.max(0, previousIndex - 1))! : global;
   const match = ahead.distanceM <= margin ? ahead : global;
   if (match.distanceM > margin) return { onTrail: false, distanceFromTrailM: Math.round(match.distanceM), index: previousIndex };
 
-  const along = cumulativeDistances(line);
   const total = along[along.length - 1];
   const indices = stopIndices(line, stops);
-  const nextPosition = indices.findIndex((stopIndex) => stopIndex > match.index);
+  const nextPosition = indices.findIndex((stopIndex) => along[stopIndex] > match.alongM + 1);
+  const estimate = (fromIndex: number, toIndex: number, distanceM: number) => {
+    const climb = climbAndDescent(profile, fromIndex, toIndex);
+    return climb ? toHalfHours(naismithHours(distanceM, climb.ascentM, climb.descentM, TREK_PACE) * altitudeFactor(climb.highestM)) : null;
+  };
   const next =
     nextPosition === -1
       ? null
-      : {
-          id: stops[nextPosition].id,
-          alongM: Math.round(along[indices[nextPosition]] - along[match.index]),
-          climbM: climbBetween(profile, match.index, indices[nextPosition]),
-        };
+      : (() => {
+          const alongM = Math.round(along[indices[nextPosition]] - match.alongM);
+          return {
+            id: stops[nextPosition].id,
+            alongM,
+            climbM: climbBetween(profile, match.index, indices[nextPosition]),
+            estimatedHours: estimate(match.index, indices[nextPosition], alongM),
+          };
+        })();
+  const remainingM = Math.max(0, Math.round(total - match.alongM));
   return {
     onTrail: true,
     index: match.index,
     distanceFromTrailM: Math.round(match.distanceM),
-    fraction: total > 0 ? along[match.index] / total : 0,
-    walkedM: Math.round(along[match.index]),
-    remainingM: Math.round(total - along[match.index]),
+    fraction: total > 0 ? match.alongM / total : 0,
+    walkedM: Math.round(match.alongM),
+    remainingM,
     next,
+    remainingEstimatedHours: estimate(match.index, line.length - 1, remainingM),
     altitudeM: profile[match.index] ?? null,
   };
 }
 
-/** Hours of walking, without breaks: the same rule the route build uses (tools/data/build-treks.mjs). */
+/**
+ * Hours of walking, without breaks: Naismith's rule at trekking pace (TREK_PACE),
+ * slowed above 3,500 m. The same rule the route build uses (tools/data/build-treks.mjs).
+ * An estimate, and it says nothing about acclimatisation days.
+ */
 export function estimateTrekHours(distanceM: number, ascentM: number, descentM: number, maxAltM: number | null): number {
-  const base = distanceM / 3000 + ascentM / 400 + descentM / 2000;
-  const altitudeFactor = maxAltM != null && maxAltM > 3500 ? 1 + 0.1 * ((maxAltM - 3500) / 1000) : 1;
-  return Math.round(base * altitudeFactor * 2) / 2;
+  return toHalfHours(naismithHours(distanceM, ascentM, descentM, TREK_PACE) * altitudeFactor(maxAltM));
 }

@@ -111,8 +111,13 @@ export async function deleteMyRecords(): Promise<void> {
   );
 
   // Small personal traces kept outside the database: what was asked, and the
-  // last custodian steps heard for this device's reports.
-  await Promise.all([remove(StorageKeys.dhammaRecent), remove(StorageKeys.reportTimelines)]);
+  // last custodian steps heard for this device's reports, recent searches, and the profile name.
+  await Promise.all([
+    remove(StorageKeys.dhammaRecent),
+    remove(StorageKeys.searchRecent),
+    remove(StorageKeys.reportTimelines),
+    remove(StorageKeys.profileDisplayName),
+  ]);
 
   await forgetDeviceId();
   await forgetIdentity();

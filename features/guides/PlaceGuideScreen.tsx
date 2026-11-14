@@ -8,7 +8,8 @@ import { EmptyState } from '@/components/common';
 import { ScanCards } from '@/components/models';
 import { PhotoHero, PhotoVeil, VisitInfo } from '@/components/site';
 import { Icon, Screen, SegmentedControl, Text, type IconName } from '@/components/ui';
-import { commonsThumb, feeForPlace, findPlace, guideFor, modelFor, scansFor } from '@/data';
+import { commonsThumb, feeForPlace, findPlace, flagshipForPlace, guideFor, modelFor, scansFor } from '@/data';
+import { FlagshipDepth } from '@/features/tirtha';
 import { useHaptics, useSafeBack } from '@/hooks';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { application } from '@/services';
@@ -156,7 +157,11 @@ export function PlaceGuideScreen({ placeId }: { placeId: string }) {
             value={depth}
             onChange={(value) => void update('wisdomTier', value)}
           />
-          {guide.chapters.map((chapter, index) => (
+          {/* A flagship place has its own text per depth, in both languages;
+              the guide's cumulative chapters are the fallback. */}
+          {flagshipForPlace(place.id) ? (
+            <FlagshipDepth flagship={flagshipForPlace(place.id)!} depth={depth} language={preferences.interfaceLanguage} />
+          ) : guide.chapters.map((chapter, index) => (
             <View key={chapter.title} style={styles.chapter}>
               <View style={styles.chapterHead}>
                 <Text variant="display" tone="accent" style={styles.chapterNumber}>

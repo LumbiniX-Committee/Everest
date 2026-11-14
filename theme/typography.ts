@@ -96,20 +96,22 @@ type ScaleEntry = {
 /** Named text roles. Components reach for these, never for raw sizes. */
 const scale = {
   /** The wordmark and first-run titles. Line heights leave room for Devanagari matras. */
-  display: { role: 'display', weight: 'semibold', fontSize: 38, lineHeight: 50, letterSpacing: -0.2 },
+  display: { role: 'display', weight: 'semibold', fontSize: 34, lineHeight: 46, letterSpacing: -0.2 },
   /** Screen titles and heritage site names. */
-  title: { role: 'display', weight: 'semibold', fontSize: 32, lineHeight: 44, letterSpacing: -0.1 },
+  title: { role: 'display', weight: 'semibold', fontSize: 26, lineHeight: 36, letterSpacing: -0.1 },
   /** Section heads inside a screen. */
-  heading: { role: 'body', weight: 'semibold', fontSize: 20, lineHeight: 29 },
-  body: { role: 'body', weight: 'regular', fontSize: 16, lineHeight: 26 },
+  heading: { role: 'body', weight: 'semibold', fontSize: 18, lineHeight: 26 },
+  body: { role: 'body', weight: 'regular', fontSize: 16, lineHeight: 24 },
   /** Same size as `body`, medium weight — an interactive row's own label. */
-  bodyStrong: { role: 'body', weight: 'medium', fontSize: 16, lineHeight: 26 },
+  bodyStrong: { role: 'body', weight: 'medium', fontSize: 16, lineHeight: 24 },
   /** Onboarding prose — large type, large whitespace. */
-  bodyLarge: { role: 'body', weight: 'regular', fontSize: 20, lineHeight: 32 },
-  caption: { role: 'body', weight: 'regular', fontSize: 14, lineHeight: 21 },
-  button: { role: 'body', weight: 'medium', fontSize: 16, letterSpacing: 0.3 },
+  bodyLarge: { role: 'body', weight: 'regular', fontSize: 18, lineHeight: 28 },
+  caption: { role: 'body', weight: 'regular', fontSize: 14, lineHeight: 20 },
+  button: { role: 'body', weight: 'medium', fontSize: 15, letterSpacing: 0.2 },
+  /** Chips and small buttons: compact controls in a filter row or on a card. */
+  control: { role: 'body', weight: 'medium', fontSize: 14, lineHeight: 20, letterSpacing: 0.1 },
   /** Field labels and nav labels. Set uppercase at the call site. */
-  label: { role: 'body', weight: 'semibold', fontSize: 12, lineHeight: 18, letterSpacing: 1.2 },
+  label: { role: 'body', weight: 'semibold', fontSize: 12, lineHeight: 18, letterSpacing: 0.8 },
   /** Coordinates, bearings, distances, timestamps. Never prose. */
   mono: { role: 'mono', weight: 'regular', fontSize: 15, lineHeight: 21, letterSpacing: 0.2 },
   monoLarge: { role: 'mono', weight: 'medium', fontSize: 20, lineHeight: 27, letterSpacing: 0.4 },

@@ -18,6 +18,9 @@ import { Icon, type IconName } from './Icon';
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export type ButtonVariant = 'primary' | 'secondary' | 'quiet';
+/** `sm` is for actions on a card or in a list row; its target is lifted to 44 by `hitSlop`. */
+export type ButtonSize = 'md' | 'sm';
+const SMALL_SLOP = { top: 4, bottom: 4, left: 4, right: 4 };
 
 export type ButtonProps = {
   label: string;
@@ -31,6 +34,7 @@ export type ButtonProps = {
   accessibilityHint?: string;
   /** Optional leading icon, drawn by the app's single icon surface. */
   icon?: IconName;
+  size?: ButtonSize;
 };
 export function Button({
   label,
@@ -42,7 +46,9 @@ export function Button({
   style,
   accessibilityHint,
   icon,
+  size = 'md',
 }: ButtonProps) {
+  const small = size === 'sm';
   const inert = disabled || loading;
   const language = useInterfaceLanguage();
   const displayLabel = visitorLiteralCopy(language, label);
@@ -87,12 +93,14 @@ export function Button({
       accessibilityState={{ disabled: inert, busy: loading }}
       accessibilityHint={displayHint}
       disabled={inert}
+      hitSlop={small ? SMALL_SLOP : undefined}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       style={[
         styles.base,
         variantStyles[variant],
+        small && styles.small,
         block && styles.block,
         inert && styles.inert,
         style,
@@ -109,11 +117,11 @@ export function Button({
           {icon ? (
             <Icon
               name={icon}
-              size={22}
+              size={small ? 16 : 20}
               color={variant === 'primary' ? colors.onPrimary : colors.primary}
             />
           ) : null}
-          <Text variant="button" tone={variant === 'primary' ? 'inverse' : 'sandstone'}>
+          <Text variant={small ? 'control' : 'button'} tone={variant === 'primary' ? 'inverse' : 'sandstone'}>
             {displayLabel}
           </Text>
         </View>
@@ -124,25 +132,32 @@ export function Button({
 
 const styles = StyleSheet.create({
   base: {
-    minHeight: 56,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
+    minHeight: 48,
+    paddingHorizontal: spacing.content,
+    paddingVertical: spacing.sm,
     borderRadius: radii.md,
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'flex-start',
+  },
+  small: {
+    minHeight: 36,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: radii.sm,
   },
   block: { alignSelf: 'stretch' },
   labelRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   inert: { opacity: 0.45 },
 });
 
+/**
+ * Primary is a solid fill; secondary a soft tint of the same hue with no
+ * outline; quiet is text only. Three clearly different weights, so a screen's
+ * main action never competes with the ones beside it.
+ */
 const variantStyles: Record<ButtonVariant, ViewStyle> = {
   primary: { backgroundColor: colors.primary },
-  secondary: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: colors.borderStrong,
-  },
+  secondary: { backgroundColor: colors.primarySoft },
   quiet: { backgroundColor: 'transparent', paddingHorizontal: spacing.sm },
 };

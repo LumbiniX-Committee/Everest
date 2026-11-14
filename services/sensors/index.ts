@@ -3,7 +3,7 @@ import * as Location from 'expo-location';
 
 import { removeWatch, silenceWatchRemovalRejections } from '../location/watchTeardown';
 
-import { cameraElevationDeg } from '@/core';
+import { cameraElevationDeg, lookFromRotation, type LookDirection } from '@/core';
 import { normalizeBearing } from '@/utils';
 
 /**
@@ -153,5 +153,29 @@ export async function isAttitudeAvailable(): Promise<boolean> {
     return await DeviceMotion.isAvailableAsync();
   } catch {
     return false;
+  }
+}
+
+/**
+ * Stream where the phone's back camera faces, for the 360° view.
+ *
+ * From device motion alone, so it is quick and smooth; its azimuth is only as
+ * true as the platform's reference (magnetic north on Android, an arbitrary
+ * start on iOS). The caller aligns it to a real compass with `watchHeading`.
+ * Returns a no-op unsubscribe where device motion is missing (web).
+ */
+export function watchLookDirection(onLook: (look: LookDirection) => void, intervalMs = 50): () => void {
+  try {
+    if (typeof DeviceMotion?.addListener !== 'function') return () => {};
+    DeviceMotion.setUpdateInterval?.(intervalMs);
+    const subscription = DeviceMotion.addListener(({ rotation }: DeviceMotionData) => {
+      if (!rotation || rotation.alpha == null) return;
+      const toDeg = 180 / Math.PI;
+      onLook(lookFromRotation(rotation.alpha * toDeg, rotation.beta * toDeg, rotation.gamma * toDeg));
+    });
+    return () => subscription?.remove?.();
+  } catch (err) {
+    console.warn('[sensors] watchLookDirection unavailable on this platform:', err);
+    return () => {};
   }
 }

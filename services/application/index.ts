@@ -1,6 +1,22 @@
 import { reloadAppAsync } from 'expo';
 import * as Linking from 'expo-linking';
+import * as Network from 'expo-network';
 import * as Updates from 'expo-updates';
+
+/**
+ * Whether the phone reports a working connection: true, false, or null when it
+ * cannot say. A screen uses this only to explain what still works offline,
+ * never to block bundled content.
+ */
+export async function isOnline(): Promise<boolean | null> {
+  try {
+    const state = await Network.getNetworkStateAsync();
+    if (state.isConnected === false || state.isInternetReachable === false) return false;
+    return state.isConnected ?? null;
+  } catch {
+    return null;
+  }
+}
 
 /**
  * Reload the current bundle after a boot-time preference changes.

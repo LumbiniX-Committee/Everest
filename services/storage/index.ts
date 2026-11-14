@@ -4,6 +4,7 @@ import { PreferenceKeys } from '@/constants';
 import {
   VISITOR_TYPE_OPTIONS,
   HOME_HUB_OPTIONS,
+  MAP_FIGURE_OPTIONS,
 ALIGNMENT_TOLERANCE_OPTIONS,
   DEFAULT_USER_PREFERENCES,
   DISTANCE_UNIT_OPTIONS,
@@ -115,6 +116,7 @@ export async function getUserPreferences(): Promise<UserPreferences> {
     autoNarration: bool(raw.autoNarration, 'autoNarration'),
     visitorType: oneOf(raw.visitorType, VISITOR_TYPE_OPTIONS, 'visitorType'),
     homeHub: oneOf(raw.homeHub, HOME_HUB_OPTIONS, 'homeHub'),
+    mapFigure: oneOf(raw.mapFigure, MAP_FIGURE_OPTIONS, 'mapFigure'),
     shareCrashReports: bool(raw.shareCrashReports, 'shareCrashReports'),
   };
 }
