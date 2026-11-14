@@ -1,6 +1,6 @@
 import type { FeatureCollection, Polygon } from 'geojson';
 
-import { MAP_MATERIALS } from '@/theme';
+import { colors, MAP_MATERIALS } from '@/theme';
 
 /**
  * The 3D town: real house shapes in place of extruded boxes.
@@ -33,6 +33,14 @@ export function townLayerScript(monuments: FeatureCollection<Polygon>): string {
         if (typeof THREE === 'undefined') return;
         var MIN_ZOOM = 15;
         var MAX_BUILDINGS = 1400;
+        /*
+         * How far the town reaches, in metres, by zoom: about what fills a
+         * phone screen tilted, and never more than the building cap allows.
+         */
+        function reachFor(zoom) { return Math.max(220, Math.min(900, 520 * Math.pow(2, 16 - zoom))); }
+        /** Where the fade begins, as a share of the reach. */
+        var FADE_FROM = 0.4;
+        var GROUND = new THREE.Color(${JSON.stringify(colors.mapBase)});
         var WALLS = ${JSON.stringify(m.walls)}.map(function (c) { return new THREE.Color(c); });
         var ROOFS = ${JSON.stringify(m.pitchedRoofs)}.map(function (c) { return new THREE.Color(c); });
         var FLATS = ${JSON.stringify(m.flatRoofs)}.map(function (c) { return new THREE.Color(c); });
@@ -283,30 +291,45 @@ export function townLayerScript(monuments: FeatureCollection<Polygon>): string {
               var mx = 0, my = 0;
               for (var q = 0; q < ring.length - 1; q++) { mx += ring[q][0]; my += ring[q][1]; }
               if (zoneFor(mx / (ring.length - 1), my / (ring.length - 1))) continue;
-              var d = Math.hypot(ring[0][0] - centre.lng, ring[0][1] - centre.lat);
+              var d = Math.hypot((ring[0][0] - centre.lng) * Math.cos(centre.lat * Math.PI / 180), ring[0][1] - centre.lat) * 111320;
               list.push({ ring: ring, d: d, h: f.properties.render_height || 6, base: f.properties.render_min_height || 0, id: (f.id || 0) + k });
             }
           }
           list.sort(function (a, b) { return a.d - b.d; });
           list = list.slice(0, MAX_BUILDINGS);
+          /*
+           * A soft edge. Cut off at a radius, the town stood as a ragged wall
+           * of houses over the flat map. Towards the edge each house now
+           * sinks and its colours settle towards the ground, so the town
+           * thins out into the map instead of stopping. The reach is the
+           * zoom's, or the farthest house the cap kept, whichever is nearer.
+           */
+          var reach = reachFor(zoom);
+          if (list.length === MAX_BUILDINGS) reach = Math.min(reach, list[list.length - 1].d);
+          var fadeFrom = reach * FADE_FROM;
           for (var j = 0; j < list.length; j++) {
             var b = list[j];
+            if (b.d >= reach) break;
+            var t = b.d <= fadeFrom ? 0 : (b.d - fadeFrom) / (reach - fadeFrom);
+            var keep = 1 - t * t * (3 - 2 * t);
+            if (keep < 0.06) continue;
             var pts = toLocal(b.ring, unit);
             if (pts.length < 3) continue;
             var footprint = Math.abs(area(pts));
             if (footprint < 4) continue;
-            var wall = pick(WALLS, b.id, 7);
+            var h = b.h * keep, base = b.base * keep;
+            var settleTo = (1 - keep) * 0.7;
+            var wall = pick(WALLS, b.id, 7).clone().lerp(GROUND, settleTo);
             // Pitched roofs are the exception in the valley (old houses, sheds);
             // from above it is mostly flat concrete, as satellite views show.
             var pitched = footprint < 140 && b.h <= 9 && convex(pts) && pts.length <= 6 && (b.id % 5 === 0);
-            walls(textured, pts, b.base, b.h, wall, true);
+            walls(textured, pts, base, h, wall, true);
             if (pitched) {
-              hipRoof(plain, pts, b.h, Math.min(3.2, 0.35 * Math.sqrt(footprint)), pick(ROOFS, b.id, 13));
+              hipRoof(plain, pts, h, keep * Math.min(3.2, 0.35 * Math.sqrt(footprint)), pick(ROOFS, b.id, 13).clone().lerp(GROUND, settleTo));
             } else {
-              flatRoof(plain, pts, b.h, pick(FLATS, b.id, 11));
+              flatRoof(plain, pts, h, pick(FLATS, b.id, 11).clone().lerp(GROUND, settleTo));
               // A low parapet round the edge, so a flat roof still has a skyline.
-              var inset = pts.map(function (p) { return p; });
-              walls(plain, inset, b.h, b.h + 0.9, PARAPET, false);
+              walls(plain, pts, h, h + 0.9 * keep, PARAPET.clone().lerp(GROUND, settleTo), false);
             }
           }
           buildMonuments(textured, plain, unit);

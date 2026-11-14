@@ -44,8 +44,8 @@ export function SettingsSection({ title, footnote, children, divided = false }: 
 }
 
 const styles = StyleSheet.create({
-  wrap: { gap: spacing.sm, marginBottom: spacing.lg },
-  title: { paddingHorizontal: spacing.xs },
+  wrap: { gap: spacing.xs + 2, marginBottom: spacing.content },
+  title: { paddingHorizontal: spacing.base },
   surface: {
     borderRadius: radii.lg,
     borderWidth: 1,
@@ -53,5 +53,5 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     overflow: 'hidden',
   },
-  footnote: { paddingHorizontal: spacing.xs },
+  footnote: { paddingHorizontal: spacing.base },
 });

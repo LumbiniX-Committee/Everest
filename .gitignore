@@ -113,3 +113,6 @@ imagesupdate/
 
 # Local ngrok binary for the live AI demo tunnel. Not part of the app.
 ngrok.exe
+
+# Claude Code parallel worktrees
+.claude/worktrees/

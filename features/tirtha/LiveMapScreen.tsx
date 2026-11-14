@@ -25,6 +25,7 @@ import { arrival, location as locationService, navigation } from '@/services';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
 import { usePlan, usePractice, usePreferences, useQuests } from '@/store';
 import { colors, radii, spacing } from '@/theme';
+import { MAP_FIGURE_OPTIONS, type MapFigure } from '@/types';
 import { distanceMeters, formatDistance } from '@/utils';
 
 import { BuddhaChat } from './BuddhaChat';
@@ -59,6 +60,12 @@ const MAP_MODES: { mode: MapMode; label: string; hint: string; icon: 'map-outlin
   { mode: 'satellite', label: 'Satellite', hint: 'Aerial imagery', icon: 'satellite-variant', pro: true, needsKey: true },
   { mode: 'hybrid', label: 'Hybrid', hint: 'Aerial imagery with streets and names', icon: 'map-marker-path', pro: true, needsKey: true },
 ];
+
+const FIGURE_ICONS: Record<MapFigure, 'walk' | 'human-handsdown' | 'circle-medium'> = {
+  walker: 'walk',
+  monk: 'human-handsdown',
+  dot: 'circle-medium',
+};
 
 /** Anything the map can walk someone to: a quest area, a site, or a viewpoint. */
 function resolveGuideTarget(id: string | null | undefined): { id: string; name: string; coordinate: { latitude: number; longitude: number } } | undefined {
@@ -118,7 +125,7 @@ export function LiveMapScreen() {
   const activeSiteId = atSiteId ?? near?.site.id;
   const activeSignificance = activeSiteId ? arrival.significanceOf(activeSiteId) : null;
 
-  const { preferences } = usePreferences();
+  const { preferences, update: updatePreference } = usePreferences();
   const { canUse } = usePlan();
   // Opens on the starting area chosen in onboarding, until a real fix arrives.
   const [openingCenter] = useState(() => hubCentre(preferences.homeHub) ?? undefined);
@@ -462,6 +469,7 @@ export function LiveMapScreen() {
       <MapWebView
         fill
         showFigure
+        figure={preferences.mapFigure}
         coordinate={coordinate}
         heading={heading}
         follow={follow}
@@ -556,7 +564,7 @@ export function LiveMapScreen() {
           }}
           style={({ pressed }) => [styles.worldButton, pressed && styles.buttonPressed]}
         >
-          <GreetingMonk height={34} />
+          <GreetingMonk height={32} />
         </Pressable>
 
         {atSiteId ? (
@@ -641,28 +649,57 @@ export function LiveMapScreen() {
             ))}
           </View>
         ) : null}
-        {guideTarget ? <View style={styles.guideCard}>
-          <Text variant="heading" translate={false}>{guideTarget.name}</Text>
-          {routeState === 'ready' && upcoming ? (
-            <View style={styles.maneuver}>
-              <Icon name="navigation-variant-outline" size={22} color={colors.navigationRoute} />
-              <Text variant="bodyStrong" translate={false} style={styles.maneuverText}>
-                {upcoming.instruction}
-              </Text>
+        {guideTarget ? (
+          <View style={styles.guideCard}>
+            <View style={styles.guideIcon}>
+              <Icon
+                name={routeState === 'error' ? 'alert-circle-outline' : 'navigation-variant'}
+                size={20}
+                color={routeState === 'error' ? colors.textSecondary : colors.navigationRoute}
+              />
             </View>
-          ) : null}
-          {routeState === 'loading' ? <Text variant="caption" tone="secondary">{walkingRoute ? 'Updating walking route…' : 'Finding walking route…'}</Text> : null}
-          {routeState === 'ready' && walkingRoute ? <Text variant="caption" tone="secondary">{formatDistance(walkingRoute.distanceM)} · {Math.max(1, Math.round(walkingRoute.durationSeconds / 60))} min walk · updates as you move</Text> : null}
-          {routeState === 'error' ? <>
-            <Text variant="caption" tone="secondary">Could not find a walking route. Check your connection and try again.</Text>
-            <Button label="Retry route" icon="refresh" variant="secondary" onPress={() => {
-              lastRouteRequest.current = null;
-              setRouteState('loading');
-              setRouteRetry((value) => value + 1);
-            }} />
-          </> : null}
-          <Button label="Stop guidance" variant="quiet" onPress={() => setGuideTargetId(null)} />
-        </View> : null}
+            <View style={styles.guideCopy}>
+              <Text variant="bodyStrong" numberOfLines={1} translate={false}>
+                {routeState === 'ready' && upcoming ? upcoming.instruction : guideTarget.name}
+              </Text>
+              {routeState === 'ready' && walkingRoute ? (
+                <Text variant="caption" tone="secondary" numberOfLines={1} translate={false}>
+                  {upcoming ? `${guideTarget.name} · ` : ''}{formatDistance(walkingRoute.distanceM)} · {Math.max(1, Math.round(walkingRoute.durationSeconds / 60))} {ui('min walk')}
+                </Text>
+              ) : null}
+              {routeState === 'loading' ? (
+                <Text variant="caption" tone="secondary" numberOfLines={1}>{walkingRoute ? 'Updating walking route…' : 'Finding walking route…'}</Text>
+              ) : null}
+              {routeState === 'error' ? (
+                <Text variant="caption" tone="secondary" numberOfLines={1}>No walking route. Check your connection.</Text>
+              ) : null}
+            </View>
+            {routeState === 'error' ? (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={ui('Retry route')}
+                hitSlop={6}
+                onPress={() => {
+                  lastRouteRequest.current = null;
+                  setRouteState('loading');
+                  setRouteRetry((value) => value + 1);
+                }}
+                style={({ pressed }) => [styles.guideAction, pressed && styles.buttonPressed]}
+              >
+                <Icon name="refresh" size={20} color={colors.primary} />
+              </Pressable>
+            ) : null}
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={ui('Stop guidance')}
+              hitSlop={6}
+              onPress={() => setGuideTargetId(null)}
+              style={({ pressed }) => [styles.guideAction, pressed && styles.buttonPressed]}
+            >
+              <Icon name="close" size={20} color={colors.textSecondary} />
+            </Pressable>
+          </View>
+        ) : null}
         <View style={styles.toastSlot} pointerEvents="none">
           <RewardToast
             visible={reward !== null}
@@ -786,6 +823,30 @@ export function LiveMapScreen() {
             </Pressable>
           );
         })}
+        <Text variant="label" tone="muted" uppercase style={styles.sheetSection}>{ui('You on the map')}</Text>
+        <View style={styles.figureRow} accessibilityRole="radiogroup">
+          {MAP_FIGURE_OPTIONS.map((option) => {
+            const selected = preferences.mapFigure === option.value;
+            return (
+              <Pressable
+                key={option.value}
+                accessibilityRole="radio"
+                accessibilityLabel={ui(option.label)}
+                accessibilityHint={ui(option.hint)}
+                accessibilityState={{ selected }}
+                onPress={() => {
+                  pulse();
+                  void updatePreference('mapFigure', option.value);
+                }}
+                style={({ pressed }) => [styles.figureOption, selected && styles.modeRowSelected, selected && styles.figureSelected, pressed && styles.buttonPressed]}
+              >
+                <Icon name={FIGURE_ICONS[option.value]} size={26} color={selected ? colors.primary : colors.textSecondary} />
+                <Text variant="bodyStrong">{ui(option.label)}</Text>
+                <Text variant="caption" tone="secondary" center numberOfLines={2}>{ui(option.hint)}</Text>
+              </Pressable>
+            );
+          })}
+        </View>
       </BottomSheet>
 
       <PlacePicker
@@ -859,7 +920,34 @@ const styles = StyleSheet.create({
   modeRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, minHeight: 60, paddingHorizontal: spacing.sm, borderRadius: radii.md },
   modeRowSelected: { backgroundColor: colors.surfaceSelected },
   modeCopy: { flex: 1 },
-  guideCard: { margin: spacing.md, padding: spacing.md, gap: spacing.xs, borderRadius: radii.lg, backgroundColor: colors.surface, borderColor: colors.navigationRoute, borderWidth: 1 },
+  /** One compact row: what to do next, how far, and a close button. */
+  guideCard: {
+    marginHorizontal: spacing.md,
+    marginBottom: spacing.md,
+    minHeight: 56,
+    paddingVertical: spacing.sm,
+    paddingLeft: spacing.sm,
+    paddingRight: spacing.xs,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    borderRadius: radii.lg,
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.borderStrong,
+    borderWidth: 1,
+    shadowColor: colors.shadow,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.18,
+    shadowRadius: 6,
+    elevation: 5,
+  },
+  guideIcon: { width: 36, height: 36, borderRadius: radii.full, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surfaceSelected },
+  guideCopy: { flex: 1, minWidth: 0 },
+  guideAction: { width: 40, height: 40, borderRadius: radii.full, alignItems: 'center', justifyContent: 'center' },
+  sheetSection: { marginTop: spacing.md, marginBottom: spacing.xs, paddingHorizontal: spacing.sm },
+  figureRow: { flexDirection: 'row', gap: spacing.sm },
+  figureOption: { flex: 1, alignItems: 'center', gap: spacing.xs, paddingVertical: spacing.md, paddingHorizontal: spacing.xs, borderRadius: radii.md, borderWidth: 1, borderColor: colors.border },
+  figureSelected: { borderColor: colors.borderStrong },
   root: { flex: 1, backgroundColor: colors.background },
   topBar: {
     position: 'absolute',
@@ -912,7 +1000,7 @@ const styles = StyleSheet.create({
     borderColor: colors.borderStrong,
     elevation: 5,
   },
-  groupButton: { width: 50, height: 50, alignItems: 'center', justifyContent: 'center' },
+  groupButton: { width: 48, height: 48, alignItems: 'center', justifyContent: 'center' },
   iconPill: {
     width: 48,
     height: 48,
@@ -929,10 +1017,10 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   /** The world actions, in one right-hand column clear of the top bar. */
-  worldControls: { position: 'absolute', right: spacing.content, zIndex: 12, gap: spacing.md, alignItems: 'center' },
+  worldControls: { position: 'absolute', right: spacing.content, zIndex: 12, gap: spacing.sm, alignItems: 'center' },
   worldButton: {
-    width: 52,
-    height: 52,
+    width: 48,
+    height: 48,
     borderRadius: radii.full,
     alignItems: 'center',
     justifyContent: 'center',

@@ -1,12 +1,13 @@
 export { Text, type TextProps } from './Text';
 export { Icon, type IconProps, type IconName } from './Icon';
-export { Button, type ButtonProps, type ButtonVariant } from './Button';
+export { Button, type ButtonProps, type ButtonSize, type ButtonVariant } from './Button';
 export { Screen, type ScreenProps } from './Screen';
 export { Card, type CardProps } from './Card';
 export { Divider } from './Divider';
 export { MetaRow, type MetaRowProps } from './MetaRow';
 export { ConditionBadge, SourceBadge } from './Badge';
-export { Chip, type ChipProps } from './Chip';
+export { Chip, ChipRow, type ChipProps } from './Chip';
+export { SearchField, type SearchFieldProps } from './SearchField';
 export { BottomSheet, type BottomSheetProps } from './BottomSheet';
 export { ProgressIndicator, type ProgressIndicatorProps } from './ProgressIndicator';
 export { ProgressRing, type ProgressRingProps } from './ProgressRing';

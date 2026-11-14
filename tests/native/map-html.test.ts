@@ -111,3 +111,21 @@ describe('the 3D town', () => {
     expect(buildMapHtml({ fullscreen: false, interactive: false })).not.toContain("id: 'sakshi-town'");
   });
 });
+
+describe('who stands at your position', () => {
+  it('defaults to the walker and can open as the dot, switchable at run time', () => {
+    expect(buildMapHtml({ fullscreen: true, interactive: true, avatar: true })).toContain('var INITIAL_FIGURE = "walker"');
+    const html = buildMapHtml({ fullscreen: true, interactive: true, avatar: true, figure: 'dot' });
+    expect(html).toContain('var INITIAL_FIGURE = "dot"');
+    expect(html).toContain('window.sakshiSetFigure');
+    expect(html).toContain('me-heading-plain');
+    const own = scripts(html).filter((code) => code.includes('sakshiSetMapMode'));
+    expect(() => new Function(own[0])).not.toThrow();
+  });
+
+  it('keeps clusters to the zoomed-out map and the town beneath the labels', () => {
+    const html = buildMapHtml({ fullscreen: true, interactive: true, avatar: true });
+    expect(html).toContain('maxzoom: CLUSTER_UNTIL');
+    expect(html).toContain('map.moveLayer(id, first)');
+  });
+});

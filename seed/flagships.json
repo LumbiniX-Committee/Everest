@@ -1,0 +1,433 @@
+{
+  "_about": "The three flagship places, written at three distinct depths (Glance, Story, Scholar) in English and Nepali. Photographs are Wikimedia Commons files under the licence named beside them; tools/data/check-flagship-photos.mjs re-checks every licence and author against the Commons API. Scholar citations are indexes into the place's own sources. Dates follow the cited source; where sources disagree, the Scholar text says so instead of choosing one. Nepali is pending native review (neReview).",
+  "neReview": "pending",
+  "checkedOn": "2026-11-13",
+  "flagships": [
+    {
+      "id": "swayambhu",
+      "siteIds": [],
+      "placeIds": ["wd-Q12946982"],
+      "name": { "en": "Swayambhu", "ne": "स्वयम्भू" },
+      "photos": [
+        { "file": "Swayambhunath temple - an ancient religious architecture of Nepal.jpg", "author": "Nirmal Dulal", "licence": "CC BY-SA 4.0", "caption": { "en": "The eyes and the gilded spire", "ne": "आँखा र सुनौलो गजुर" } },
+        { "file": "Swayambhu East view.jpg", "author": "Pratap Baniya", "licence": "CC BY-SA 4.0", "caption": { "en": "From the head of the eastern stair: the vajra before the stupa", "ne": "पूर्वी सिँढीको टुप्पोबाट: स्तूपअगाडि वज्र" } },
+        { "file": "Swayambhunath on 1st December 2024 46.jpg", "author": "Goutam1962", "licence": "CC BY-SA 4.0", "caption": { "en": "The great vajra at dusk, the valley behind", "ne": "साँझमा महावज्र, पछाडि उपत्यका" } },
+        { "file": "Harati Mata Temple Swayambhu Swayambhu Kathmandu Nepal Rajesh Dhungana (7).jpg", "author": "Rajesh Dhungana", "licence": "CC BY-SA 4.0", "caption": { "en": "Harati’s temple beside the stupa", "ne": "स्तूपछेउको हारती मन्दिर" } },
+        { "file": "Swoyambhu Mahachaitya,known as Swayambhunath 47.jpg", "author": "Goutam1962", "licence": "CC BY-SA 4.0", "caption": { "en": "A white shikhara tower on the hilltop", "ne": "डाँडाको टुप्पोमा सेतो शिखर" } },
+        { "file": "Swayambhu, Kathmandu, Nepal.jpg", "author": "Vyacheslav Argenberg", "licence": "CC BY 4.0", "caption": { "en": "Shrines crowding the hilltop", "ne": "डाँडाभरि साना देवालय" } },
+        { "file": "Swoyambhu Mahachaitya, also known as Swayambhunath or the \"Monkey Temple,\" 36.jpg", "author": "Goutam1962", "licence": "CC BY-SA 4.0", "caption": { "en": "Prayer wheels around the base", "ne": "आधार वरिपरि माने" } }
+      ],
+      "glance": {
+        "essentials": {
+          "en": "Swayambhu is the hilltop stupa on Kathmandu’s western edge, where legend says the valley’s story began with a self-arisen light on a lake. Newar and Tibetan Buddhists and Hindus all worship here, and it is part of the Kathmandu Valley World Heritage property. Climb the eastern stair, then walk around the stupa clockwise.",
+          "ne": "स्वयम्भू काठमाडौँको पश्चिमी छेउको डाँडामा रहेको स्तूप हो, जहाँ दह बनेको उपत्यकामा आफैँ प्रकट भएको ज्योतिबाट उपत्यकाको कथा सुरु भएको किंवदन्ती छ। नेवार र तिब्बती बौद्ध तथा हिन्दू सबैले यहाँ पूजा गर्छन्, र यो काठमाडौँ उपत्यका विश्व सम्पदाको अंश हो। पूर्वी सिँढी चढ्नुहोस्, अनि स्तूपलाई दायाँ पारेर (घडीको दिशामा) परिक्रमा गर्नुहोस्।"
+        },
+        "facts": [
+          { "label": { "en": "What it is", "ne": "के हो" }, "value": { "en": "Buddhist stupa and shrine complex on a hill", "ne": "डाँडामाथिको बौद्ध स्तूप र देवालय समूह" } },
+          { "label": { "en": "Founded", "ne": "स्थापना" }, "value": { "en": "Chronicles credit King Vrishadeva; exact date unsettled", "ne": "वंशावलीले राजा वृषदेवलाई श्रेय दिन्छ; ठ्याक्कै मिति अनिश्चित" } },
+          { "label": { "en": "Eastern stair", "ne": "पूर्वी सिँढी" }, "value": { "en": "Laid under Pratap Malla, 17th century", "ne": "प्रताप मल्लको पालामा, १७औँ शताब्दी" } },
+          { "label": { "en": "World Heritage", "ne": "विश्व सम्पदा" }, "value": { "en": "1979, Kathmandu Valley", "ne": "सन् १९७९, काठमाडौँ उपत्यका" } },
+          { "label": { "en": "Why it matters", "ne": "किन महत्त्वपूर्ण" }, "value": { "en": "The valley’s origin legend; shared Buddhist and Hindu worship", "ne": "उपत्यकाको उत्पत्ति-कथा; बौद्ध र हिन्दूको साझा पूजा" } }
+        ],
+        "tips": [
+          { "en": "Walk around the stupa and every shrine clockwise, keeping it on your right.", "ne": "स्तूप र हरेक देवालयलाई दायाँ पारेर घडीको दिशामा घुम्नुहोस्।" },
+          { "en": "The eastern stair is steep: allow 15 minutes and wear good shoes. A road reaches the west side.", "ne": "पूर्वी सिँढी ठाडो छ: १५ मिनेट लाग्छ, राम्रो जुत्ता लगाउनुहोस्। पश्चिमतर्फ सडकबाट पनि पुगिन्छ।" },
+          { "en": "Keep food and plastic bags out of sight of the monkeys, and never feed them.", "ne": "खानेकुरा र प्लास्टिकका झोला बाँदरले नदेख्ने गरी राख्नुहोस्; तिनलाई कहिल्यै नखुवाउनुहोस्।" },
+          { "en": "Come early morning, when local people walk the kora.", "ne": "बिहानै आउनुहोस्, जब स्थानीयहरू परिक्रमा गर्छन्।" }
+        ]
+      },
+      "story": {
+        "chapters": [
+          {
+            "title": { "en": "A light on the lake", "ne": "दहमाथिको ज्योति" },
+            "photo": 0,
+            "body": {
+              "en": "The Svayambhu Purana tells that the valley was once a lake, and that a light rose from a lotus on its water: Swayambhu, the self-arisen. The bodhisattva Manjushri came to worship it and, so that people could reach it, cut a gorge at Chobhar with his sword. The water drained, the valley could be lived in, and the light was enshrined beneath the stupa. Geologists agree the valley was once a lake, which is why this legend is told with unusual confidence.",
+              "ne": "स्वयम्भू पुराणअनुसार उपत्यका कुनै बेला दह थियो, र त्यसको पानीमाथि कमलबाट एउटा ज्योति प्रकट भयो: स्वयम्भू, अर्थात् आफैँ उत्पन्न। बोधिसत्त्व मञ्जुश्रीले त्यसको पूजा गर्न आए र मानिसहरू त्यहाँसम्म पुगून् भनी तरबारले चोभारमा खोंच काटे। पानी बग्यो, उपत्यका बसोबासयोग्य भयो, र ज्योतिलाई स्तूपभित्र स्थापना गरियो। भूगर्भविद्हरू पनि उपत्यका कुनै समय दह थियो भन्नेमा सहमत छन्, त्यसैले यो कथा विशेष विश्वासका साथ भनिन्छ।"
+            }
+          },
+          {
+            "title": { "en": "Up the eastern stair to the vajra", "ne": "पूर्वी सिँढी हुँदै वज्रसम्म" },
+            "photo": 1,
+            "body": {
+              "en": "Pilgrims have long climbed from the east, up a stair laid in Pratap Malla’s time and traditionally counted at 365 steps. At the top, the first thing you meet is a great gilded vajra, the thunderbolt that stands for the indestructible clarity of awakening. Behind it rises the white dome, the gilded block with the Buddha’s eyes on all four sides, and a spire of thirteen tiers. Two white shikhara towers, Pratappur and Anantapur, stand on either side.",
+              "ne": "तीर्थयात्रीहरू धेरै पहिलेदेखि पूर्वबाट, प्रताप मल्लको पालामा बनेको र परम्परागत रूपमा ३६५ खुड्किला गनिने सिँढी चढ्दै आएका छन्। टुप्पोमा पहिले भेटिने कुरा सुनौलो महावज्र हो, जसले बोधिको अविनाशी स्पष्टतालाई जनाउँछ। त्यसपछि सेतो गुम्बज, चारै दिशामा बुद्धका आँखा भएको सुनौलो हर्मिका र तेह्र तहको गजुर उठ्छ। दुवैतिर प्रतापपुर र अनन्तपुर नामका दुई सेता शिखर मन्दिर छन्।"
+            }
+          },
+          {
+            "title": { "en": "Harati and the five elements", "ne": "हारती र पञ्चतत्त्व" },
+            "photo": 3,
+            "body": {
+              "en": "Close to the stupa stands the temple of Harati, the goddess who protects children; parents bring young children to her, and both Buddhists and Hindus honour her. Around the hilltop are the shrines of the five elements, earth, air, fire, water and sky, called Vasupura, Vayupura, Agnipura, Nagapura and Shantipura. Shantipura, on the north side, is the shrine of the sky element and is tied in tradition to the tantric master Shantikar.",
+              "ne": "स्तूपनजिकै बालबालिकाकी रक्षक देवी हारतीको मन्दिर छ; आमाबुबाहरू साना बच्चालाई यहाँ ल्याउँछन्, र बौद्ध तथा हिन्दू दुवैले उनलाई पुज्छन्। डाँडावरिपरि पृथ्वी, वायु, अग्नि, जल र आकाश, अर्थात् पञ्चतत्त्वका देवालय छन्: वसुपुर, वायुपुर, अग्निपुर, नागपुर र शान्तिपुर। उत्तरतर्फको शान्तिपुर आकाश तत्त्वको देवालय हो, जसलाई परम्पराले तान्त्रिक गुरु शान्तिकरसँग जोड्छ।"
+            }
+          },
+          {
+            "title": { "en": "Gold, earthquakes and repair", "ne": "सुन, भूकम्प र मर्मत" },
+            "photo": 2,
+            "body": {
+              "en": "The stupa you see has been repaired again and again. A Tibetan master, Tsangnyön Heruka, renovated it at the Kathmandu king’s invitation in 1504. A major renovation followed in 1921, and between 2008 and 2010 the stupa’s upper parts were re-gilded with about 20 kg of gold. The April 2015 earthquake damaged buildings across the hill; much has since been restored, so some of what you see is new work on old ground.",
+              "ne": "तपाईंले देख्ने स्तूप पटक-पटक मर्मत भएको हो। काठमाडौँका राजाको निम्तोमा तिब्बती गुरु चाङ्न्योन हेरुकाले सन् १५०४ मा यसको जीर्णोद्धार गरे। सन् १९२१ मा अर्को ठूलो मर्मत भयो, र सन् २००८ देखि २०१० सम्म स्तूपको माथिल्लो भागमा करिब २० किलो सुन मोलिइयो। सन् २०१५ अप्रिलको भूकम्पले डाँडाभरिका संरचना बिगार्‍यो; धेरै पुनर्निर्माण भइसकेका छन्, त्यसैले देखिने केही काम पुरानो थलोमा नयाँ हो।"
+            }
+          }
+        ],
+        "timeline": [
+          { "when": { "en": "Legend", "ne": "किंवदन्ती" }, "what": { "en": "A self-arisen light on the valley lake; Manjushri drains it at Chobhar", "ne": "उपत्यकाको दहमा स्वयम्भू ज्योति; मञ्जुश्रीले चोभारबाट पानी निकाल्छन्" } },
+          { "when": { "en": "Early centuries CE", "ne": "प्रारम्भिक इस्वी शताब्दी" }, "what": { "en": "Chronicles credit the first stupa to King Vrishadeva", "ne": "वंशावलीले पहिलो स्तूप राजा वृषदेवले बनाएको बताउँछ" } },
+          { "when": { "en": "1504", "ne": "सन् १५०४" }, "what": { "en": "Renovated by Tsangnyön Heruka", "ne": "चाङ्न्योन हेरुकाद्वारा जीर्णोद्धार" } },
+          { "when": { "en": "17th century", "ne": "१७औँ शताब्दी" }, "what": { "en": "Pratap Malla adds the eastern stair and the two shikharas", "ne": "प्रताप मल्लले पूर्वी सिँढी र दुई शिखर थप्छन्" } },
+          { "when": { "en": "1921", "ne": "सन् १९२१" }, "what": { "en": "A major renovation", "ne": "ठूलो जीर्णोद्धार" } },
+          { "when": { "en": "1979", "ne": "सन् १९७९" }, "what": { "en": "Listed with the Kathmandu Valley as World Heritage", "ne": "काठमाडौँ उपत्यकासँगै विश्व सम्पदा सूचीमा" } },
+          { "when": { "en": "2008–2010", "ne": "सन् २००८–२०१०" }, "what": { "en": "Re-gilded with about 20 kg of gold", "ne": "करिब २० किलो सुन मोलियो" } },
+          { "when": { "en": "2015", "ne": "सन् २०१५" }, "what": { "en": "Earthquake damage; restoration follows", "ne": "भूकम्पले क्षति; त्यसपछि पुनर्निर्माण" } }
+        ]
+      },
+      "scholar": {
+        "sections": [
+          {
+            "title": { "en": "Dating the stupa", "ne": "स्तूपको मिति" },
+            "cites": [1, 3],
+            "body": {
+              "en": "No firm founding date exists. Later chronicles (vamshavali) credit the first stupa to the Licchavi king Vrishadeva, and a damaged stone inscription naming him is associated with the site; one widely read summary dates that inscription to 640 CE, which sits uneasily with the chronicles’ much earlier placing of his reign. The legend that Ashoka visited in the 3rd century BCE has no inscriptional support. The honest reading is a site in continuous worship from at least the Licchavi period, rebuilt many times, rather than a monument of one date.",
+              "ne": "स्थापनाको पक्का मिति छैन। पछिका वंशावलीहरूले पहिलो स्तूप लिच्छवि राजा वृषदेवले बनाएको भन्छन्, र उनको नाम भएको एउटा क्षतिग्रस्त शिलालेख यस स्थलसँग जोडिन्छ; एउटा व्यापक रूपमा पढिने सारांशले त्यो शिलालेख सन् ६४० को भनेको छ, जुन वंशावलीले उनको शासन धेरै अघि राखेसँग मेल खाँदैन। अशोक इसापूर्व तेस्रो शताब्दीमा यहाँ आएको कथाको कुनै शिलालेखीय आधार छैन। इमानदार निष्कर्ष यो हो: कम्तीमा लिच्छवि कालदेखि निरन्तर पूजा हुँदै आएको, धेरैपटक पुनर्निर्माण भएको स्थल, एउटै मितिको स्मारक होइन।"
+            }
+          },
+          {
+            "title": { "en": "Reading the architecture", "ne": "वास्तुकला पढ्दा" },
+            "cites": [1, 2],
+            "body": {
+              "en": "The stupa is a solid relic mound, not a building to enter. Above the hemispherical dome sits the harmika, the square block painted with eyes on each face, and above that thirteen gilded rings, read in the tradition as thirteen stages on the way to awakening. Niches around the base hold the five Buddhas of the Vajrayana mandala, each facing his own direction. The two shikharas flanking the vajra take the tall curved tower of North Indian temples, a 17th-century Malla addition that shows the hilltop being reshaped as royal patronage changed.",
+              "ne": "स्तूप भित्र पस्ने भवन होइन, धातु राखिएको ठोस थुम्को हो। अर्धगोलाकार गुम्बजमाथि हर्मिका छ, चारै मोहडामा आँखा कोरिएको चारकुने भाग, र त्यसमाथि तेह्र सुनौला घेरा, जसलाई परम्पराले बोधितर्फका तेह्र चरण भनेर बुझ्छ। आधारका कोठेमा वज्रयान मण्डलका पञ्चबुद्ध आआफ्नो दिशातर्फ फर्केर बसेका छन्। वज्रका दुवैतिरका शिखर उत्तर भारतीय मन्दिरको अग्लो, घुमाउरो धरहरा शैलीका हुन्, १७औँ शताब्दीका मल्ल थप, जसले राजकीय संरक्षण बदलिँदा डाँडाको रूप पनि बदलिएको देखाउँछ।"
+            }
+          },
+          {
+            "title": { "en": "Whose shrine? Newar, Tibetan and Hindu", "ne": "कसको तीर्थ? नेवार, तिब्बती र हिन्दू" },
+            "cites": [1, 0],
+            "body": {
+              "en": "Swayambhu is the senior shrine of Newar Vajrayana Buddhism, and Newar priestly lineages still serve it. Tibetan pilgrims have honoured it for centuries; Tibetan sources record visits by masters such as Marpa, and the 1504 renovation was led by a Tibetan teacher. Hindus worship Harati and other deities on the hill. Rather than one community’s monument with guests, the hill is better read as a place where several traditions overlap, each with its own account of what it holds.",
+              "ne": "स्वयम्भू नेवार वज्रयान बौद्ध धर्मको सबैभन्दा वरिष्ठ तीर्थ हो, र नेवार पुरोहित परम्पराले अझै यसको सेवा गर्छ। तिब्बती तीर्थयात्रीले शताब्दीयौँदेखि यसलाई सम्मान गरेका छन्; तिब्बती स्रोतहरूले मार्पाजस्ता गुरुहरूको भ्रमण उल्लेख गर्छन्, र सन् १५०४ को जीर्णोद्धार तिब्बती गुरुले गरेका थिए। हिन्दूहरू डाँडामा हारती र अन्य देवदेवीको पूजा गर्छन्। यसलाई एउटै समुदायको स्मारक भन्दा पनि धेरै परम्परा मिसिने ठाउँका रूपमा पढ्नु उचित हुन्छ, जहाँ हरेकसँग आफ्नै कथा छ।"
+            }
+          },
+          {
+            "title": { "en": "Conservation and authenticity", "ne": "संरक्षण र मौलिकता" },
+            "cites": [0, 1],
+            "body": {
+              "en": "The Kathmandu Valley property was placed on the List of World Heritage in Danger in 2003 over loss of authenticity in its monument zones, and removed in 2007. At Swayambhu the question is live: re-gilding in 2010 was funded from abroad and done to a devotional standard, and post-2015 repair rebuilt damaged shrines. For a living shrine, renewal is part of worship; for a heritage register, each renewal is also a loss of old fabric. Both views are held, and visitors can see the results side by side.",
+              "ne": "काठमाडौँ उपत्यका सम्पदालाई स्मारक क्षेत्रहरूमा मौलिकता घटेको कारण सन् २००३ मा जोखिममा परेका विश्व सम्पदाको सूचीमा राखियो, र सन् २००७ मा हटाइयो। स्वयम्भूमा यो प्रश्न अझै जीवित छ: सन् २०१० को सुन मोलाइ विदेशी सहयोगमा, भक्तिको मापदण्डअनुसार गरियो, र २०१५ पछि क्षतिग्रस्त देवालय पुनर्निर्माण भए। जीवित तीर्थका लागि नवीकरण पूजाकै अंश हो; सम्पदा अभिलेखका लागि हरेक नवीकरण पुरानो संरचनाको क्षति पनि हो। दुवै दृष्टिकोण छन्, र आगन्तुकले दुवैको परिणाम छेउछेउमै देख्न सक्छन्।"
+            }
+          }
+        ]
+      },
+      "visit": {
+        "hours": { "en": "No official hours published. The hill is in worship from before dawn; confirm the ticket counter’s hours on arrival.", "ne": "आधिकारिक समय प्रकाशित छैन। डाँडामा बिहानै उज्यालो हुनुअघिदेखि पूजा हुन्छ; टिकट काउन्टरको समय पुगेपछि सोध्नुहोस्।" },
+        "dress": { "en": "Cover shoulders and knees. Take off your shoes before entering a monastery or shrine room, and do not point your feet at images.", "ne": "काँध र घुँडा ढाक्नुहोस्। गुम्बा वा देवालयभित्र पस्नुअघि जुत्ता फुकाल्नुहोस्, र मूर्तितर्फ खुट्टा नतेर्स्याउनुहोस्।" },
+        "route": { "en": "Climb the eastern stair, walk around the vajra, then circle the stupa clockwise past the five Buddhas. Continue to Harati’s temple and Shantipura on the north side, the museum, and the Manjushri shrine on the western hilltop.", "ne": "पूर्वी सिँढी चढ्नुहोस्, वज्रको परिक्रमा गर्नुहोस्, अनि पञ्चबुद्धको छेउ हुँदै स्तूपलाई घडीको दिशामा घुम्नुहोस्। त्यसपछि उत्तरतर्फ हारती मन्दिर र शान्तिपुर, संग्रहालय, र पश्चिमी टुप्पोको मञ्जुश्री मन्दिर जानुहोस्।" },
+        "photography": { "en": "Allowed outdoors. Ask before photographing monks, worshippers or rituals; inside shrines, follow the posted rules.", "ne": "बाहिर फोटो खिच्न पाइन्छ। भिक्षु, पूजारी वा पूजाविधिको फोटो खिच्नुअघि सोध्नुहोस्; देवालयभित्र लेखिएका नियम पालना गर्नुहोस्।" }
+      },
+      "subsites": [
+        { "name": { "en": "The eastern stair", "ne": "पूर्वी सिँढी" }, "note": { "en": "The pilgrims’ way up, lined with carved animals and small shrines.", "ne": "तीर्थयात्रीको उकालो, कुँदिएका जनावर र साना देवालयले सजिएको।" }, "coordinate": { "latitude": 27.714532, "longitude": 85.292432 } },
+        { "name": { "en": "The great vajra", "ne": "महावज्र" }, "note": { "en": "At the head of the stair, before the stupa.", "ne": "सिँढीको टुप्पोमा, स्तूपअगाडि।" }, "coordinate": { "latitude": 27.714849, "longitude": 85.290654 } },
+        { "name": { "en": "Pratappur and Anantapur", "ne": "प्रतापपुर र अनन्तपुर" }, "note": { "en": "The two white shikharas flanking the vajra.", "ne": "वज्रका दुवैतिरका दुई सेता शिखर।" }, "coordinate": { "latitude": 27.714985, "longitude": 85.29058 } },
+        { "name": { "en": "The stupa", "ne": "स्तूप" }, "note": { "en": "Circle it clockwise past the five Buddhas.", "ne": "पञ्चबुद्धको छेउ हुँदै घडीको दिशामा परिक्रमा गर्नुहोस्।" }, "coordinate": { "latitude": 27.715166, "longitude": 85.290356 } },
+        { "name": { "en": "Harati Temple", "ne": "हारती मन्दिर" }, "note": { "en": "The pagoda of the goddess who protects children.", "ne": "बालबालिकाकी रक्षक देवीको पगोडा।" }, "coordinate": { "latitude": 27.715045, "longitude": 85.29021 } },
+        { "name": { "en": "Shantipura", "ne": "शान्तिपुर" }, "note": { "en": "The shrine of the sky element, north of the stupa.", "ne": "स्तूपको उत्तरमा, आकाश तत्त्वको देवालय।" }, "coordinate": { "latitude": 27.715647, "longitude": 85.290412 } },
+        { "name": { "en": "Swayambhu Buddhist Museum", "ne": "स्वयम्भू बौद्ध संग्रहालय" }, "note": { "en": "A small museum of sculpture from the hill.", "ne": "डाँडाका मूर्तिहरूको सानो संग्रहालय।" }, "coordinate": { "latitude": 27.714828, "longitude": 85.290048 } },
+        { "name": { "en": "Manjushri shrine", "ne": "मञ्जुश्री मन्दिर" }, "note": { "en": "On the western hilltop, for the bodhisattva of the legend.", "ne": "पश्चिमी टुप्पोमा, कथाका बोधिसत्त्वको।" }, "coordinate": { "latitude": 27.715941, "longitude": 85.287719 } }
+      ],
+      "sources": [
+        { "title": "UNESCO World Heritage Centre: Kathmandu Valley (121)", "url": "https://whc.unesco.org/en/list/121/" },
+        { "title": "Swayambhunath, Wikipedia (inscription, 1504 and 1921 renovations, 2010 re-gilding, 2015 damage)", "url": "https://en.wikipedia.org/wiki/Swayambhunath" },
+        { "title": "Mary Shepherd Slusser, Nepal Mandala (Princeton University Press, 1982)", "url": "https://press.princeton.edu/" },
+        { "title": "Nepal Tourism Board: heritage site entry fees (checked 2026-11-07)", "url": "https://ntb.gov.np/plan-your-trip/before-you-come/heritage-site-entry-fees" },
+        { "title": "OpenStreetMap contributors (stop positions, ODbL)", "url": "https://www.openstreetmap.org/" }
+      ]
+    },
+    {
+      "id": "lumbini",
+      "siteIds": ["maya-devi-temple"],
+      "placeIds": [],
+      "name": { "en": "Lumbini: the Sacred Garden", "ne": "लुम्बिनी: पवित्र उद्यान" },
+      "photos": [
+        { "file": "Lumbini Maya Devi Temple 1.jpg", "author": "Rangan Datta Wiki", "licence": "CC BY-SA 4.0", "caption": { "en": "The Maya Devi Temple across the Puskarini", "ne": "पुष्करिणीपारि माया देवी मन्दिर" } },
+        { "file": "Maya Devi Temple and Ashoka Pillar, Lumbini, Rupandehi, Nepal.jpg", "author": "Shadow Ayush", "licence": "CC BY-SA 4.0", "caption": { "en": "Ashoka’s pillar before the temple", "ne": "मन्दिरअगाडि अशोक स्तम्भ" } },
+        { "file": "Lumbini - Pillar Edict in Brahmi Script, Lumbini (9241396121).jpg", "author": "Photo Dharma from Penang, Malaysia", "licence": "CC BY 2.0", "caption": { "en": "The inscription in Brahmi script", "ne": "ब्राह्मी लिपिको अभिलेख" } },
+        { "file": "Mayadevi Temple and ruins of ancient monasteries in Lumbini 03.jpg", "author": "Sanu N", "licence": "CC BY-SA 4.0", "caption": { "en": "Brick foundations of ancient monasteries", "ne": "प्राचीन विहारका इँटाका जग" } },
+        { "file": "Maya Devi Temple with Monks.jpg", "author": "Tamrakaralina", "licence": "CC BY-SA 4.0", "caption": { "en": "Pilgrims in robes before the temple at dusk", "ne": "साँझ मन्दिरअगाडि चीवरधारी तीर्थयात्री" } },
+        { "file": "Central Canal in Lumbini-IMG 7293.jpg", "author": "Bijay Chaurasia", "licence": "CC BY-SA 4.0", "caption": { "en": "The central canal between the monastic zones", "ne": "विहार क्षेत्रहरूबीचको केन्द्रीय नहर" } },
+        { "file": "The Eternal Peace Flame in Lumbini, Nepal-IMG 7305.jpg", "author": "Bijay Chaurasia", "licence": "CC BY-SA 4.0", "caption": { "en": "The Eternal Peace Flame", "ne": "अखण्ड शान्ति दीप" } },
+        { "file": "Royal Thai Monastery, Lumbini.jpg", "author": "Lureypema", "licence": "CC BY-SA 4.0", "caption": { "en": "The Royal Thai Monastery, east monastic zone", "ne": "पूर्वी विहार क्षेत्रको शाही थाई विहार" } }
+      ],
+      "glance": {
+        "essentials": {
+          "en": "Lumbini is where Buddhists honour the birth of Siddhartha Gautama, the Buddha. Inside the white Maya Devi Temple a Marker Stone fixes the venerated spot, and outside stands the pillar Emperor Ashoka set up when he came here as a pilgrim, its inscription naming this as the Buddha’s birthplace. It has been a World Heritage Site since 1997.",
+          "ne": "लुम्बिनीमा बौद्धहरू सिद्धार्थ गौतम, अर्थात् बुद्धको जन्मलाई सम्मान गर्छन्। सेतो माया देवी मन्दिरभित्रको चिन्ह-शिलाले पूजित स्थान जनाउँछ, र बाहिर सम्राट अशोकले तीर्थयात्री भएर आउँदा गाडेको स्तम्भ छ, जसको अभिलेखले यसलाई बुद्धको जन्मस्थल भनेको छ। यो सन् १९९७ देखि विश्व सम्पदा स्थल हो।"
+        },
+        "facts": [
+          { "label": { "en": "What it is", "ne": "के हो" }, "value": { "en": "Birthplace of the Buddha, Buddhist pilgrimage centre", "ne": "बुद्ध जन्मस्थल, बौद्ध तीर्थस्थल" } },
+          { "label": { "en": "Earliest dated evidence", "ne": "सबैभन्दा पुरानो मितियुक्त प्रमाण" }, "value": { "en": "Ashoka’s pillar inscription, 20th year of his reign", "ne": "अशोकको स्तम्भ अभिलेख, शासनको २०औँ वर्ष" } },
+          { "label": { "en": "Present temple", "ne": "हालको मन्दिर" }, "value": { "en": "Completed 2003, sheltering excavated remains", "ne": "सन् २००३ मा सम्पन्न, उत्खनित अवशेष ढाकेर" } },
+          { "label": { "en": "World Heritage", "ne": "विश्व सम्पदा" }, "value": { "en": "1997", "ne": "सन् १९९७" } },
+          { "label": { "en": "Why it matters", "ne": "किन महत्त्वपूर्ण" }, "value": { "en": "First of the four great Buddhist pilgrimage places", "ne": "चार प्रमुख बौद्ध तीर्थमध्ये पहिलो" } }
+        ],
+        "tips": [
+          { "en": "Shoes come off before the Maya Devi Temple; there is a shoe deposit at the entrance.", "ne": "माया देवी मन्दिरमा पस्नुअघि जुत्ता फुकाल्नुपर्छ; प्रवेशद्वारमा जुत्ता राख्ने ठाउँ छ।" },
+          { "en": "Photography inside the temple is generally not allowed. Confirm at the door.", "ne": "मन्दिरभित्र फोटो खिच्न प्रायः पाइँदैन। ढोकामै सोध्नुहोस्।" },
+          { "en": "Come at sunrise or late afternoon: the plain is hot at midday for much of the year.", "ne": "सूर्योदय वा अपराह्न आउनुहोस्: वर्षको धेरैजसो समय मध्याह्नमा मैदान तातो हुन्छ।" },
+          { "en": "The monastic zones are a long walk or a rickshaw ride away along the central canal.", "ne": "विहार क्षेत्रहरू केन्द्रीय नहरको किनारै-किनार धेरै हिँड्नुपर्ने वा रिक्सामा जाने दूरीमा छन्।" }
+        ]
+      },
+      "story": {
+        "chapters": [
+          {
+            "title": { "en": "A birth in a garden", "ne": "बगैँचामा जन्म" },
+            "photo": 0,
+            "body": {
+              "en": "Buddhist tradition tells that Queen Maya Devi, travelling to her parents’ home, stopped in the garden of Lumbini and gave birth standing, holding the branch of a sal tree. The worn Nativity Sculpture inside the temple shows exactly that moment. Tradition adds that she bathed in the pond beside it, the Puskarini, before the birth, and that the newborn was bathed there too.",
+              "ne": "बौद्ध परम्पराअनुसार रानी माया देवी माइत जाँदै गर्दा लुम्बिनीको बगैँचामा रोकिइन् र सालको हाँगा समातेर उभिएरै बच्चा जन्माइन्। मन्दिरभित्रको खिइएको जन्म-मूर्तिले ठ्याक्कै त्यही क्षण देखाउँछ। परम्पराले यो पनि भन्छ कि जन्मअघि उनले छेउको पोखरी, पुष्करिणीमा स्नान गरिन्, र नवजात शिशुलाई पनि त्यहीँ नुहाइयो।"
+            }
+          },
+          {
+            "title": { "en": "An emperor’s pilgrimage", "ne": "सम्राटको तीर्थयात्रा" },
+            "photo": 1,
+            "body": {
+              "en": "In the twentieth year of his reign, the Mauryan emperor Ashoka came here himself. He had a stone pillar set up and carved with a short inscription: the Buddha Shakyamuni was born here, and so the village of Lumbini was freed from tax and would pay only an eighth share. Those few lines are why we can name this place with confidence. The pillar still stands beside the temple.",
+              "ne": "आफ्नो शासनको बीसौँ वर्षमा मौर्य सम्राट अशोक आफैँ यहाँ आए। उनले ढुङ्गाको स्तम्भ गाड्न लगाए र छोटो अभिलेख कुँदाए: शाक्यमुनि बुद्ध यहाँ जन्मिएका हुन्, त्यसैले लुम्बिनी गाउँलाई कर छुट दिइयो र आठौँ भाग मात्र तिर्नुपर्ने भयो। यिनै केही हरफका कारण हामी यो ठाउँलाई विश्वासका साथ चिनाउन सक्छौँ। स्तम्भ अझै मन्दिरछेउ उभिएको छ।"
+            }
+          },
+          {
+            "title": { "en": "Lost and found", "ne": "हराएको र भेटिएको" },
+            "photo": 3,
+            "body": {
+              "en": "Chinese pilgrims, Faxian in the early 5th century and Xuanzang in the 7th, described Lumbini, its pond and Ashoka’s pillar. Later the site fell out of use and was covered by earth and forest. In December 1896 the pillar was uncovered by General Khadga Shumsher Rana and the archaeologist Alois Führer, and its inscription was read again. Excavations since then have exposed the brick foundations of monasteries and stupas around the temple.",
+              "ne": "चिनियाँ तीर्थयात्री, पाँचौँ शताब्दीको सुरुमा फाहियान र सातौँ शताब्दीमा ह्वेनसाङले लुम्बिनी, त्यसको पोखरी र अशोक स्तम्भको वर्णन गरे। पछि यो स्थल प्रयोगविहीन भयो र माटो र जङ्गलले छोप्यो। सन् १८९६ डिसेम्बरमा जनरल खड्ग शमशेर राणा र पुरातत्त्वविद् आलोइस फ्युहररले स्तम्भ उत्खनन गरे, र त्यसको अभिलेख फेरि पढियो। त्यसयताका उत्खननले मन्दिर वरिपरि विहार र स्तूपका इँटाका जगहरू देखाएका छन्।"
+            }
+          },
+          {
+            "title": { "en": "A garden for the world", "ne": "विश्वका लागि उद्यान" },
+            "photo": 5,
+            "body": {
+              "en": "Today the Sacred Garden sits at the head of a master-planned zone about 4.8 km long, designed by the Japanese architect Kenzo Tange. A central canal runs north from it, with the Eternal Peace Flame on its bank and monasteries built by Buddhist communities from many countries on either side: Theravada to the east, Mahayana and Vajrayana to the west. The World Peace Pagoda stands further north.",
+              "ne": "आज पवित्र उद्यान जापानी वास्तुकार केन्जो टाङ्गेले योजना बनाएको करिब ४.८ किलोमिटर लामो क्षेत्रको शिरमा छ। यहाँबाट उत्तरतर्फ केन्द्रीय नहर जान्छ, जसको किनारमा अखण्ड शान्ति दीप छ, र दुवैतिर धेरै देशका बौद्ध समुदायले बनाएका विहार छन्: पूर्वतिर थेरवाद, पश्चिमतिर महायान र वज्रयान। अझ उत्तरमा विश्व शान्ति स्तूप छ।"
+            }
+          }
+        ],
+        "timeline": [
+          { "when": { "en": "Tradition", "ne": "परम्परा" }, "what": { "en": "Siddhartha Gautama is born in the Lumbini garden", "ne": "लुम्बिनी बगैँचामा सिद्धार्थ गौतमको जन्म" } },
+          { "when": { "en": "6th century BCE (as excavators date it)", "ne": "इसापूर्व छैटौँ शताब्दी (उत्खननकर्ताका अनुसार)" }, "what": { "en": "A timber shrine marks the spot, beneath later brick", "ne": "पछिका इँटामुनि, काठको देवालयले स्थान जनाउँछ" } },
+          { "when": { "en": "3rd century BCE", "ne": "इसापूर्व तेस्रो शताब्दी" }, "what": { "en": "Ashoka’s pilgrimage and pillar", "ne": "अशोकको तीर्थयात्रा र स्तम्भ" } },
+          { "when": { "en": "5th and 7th centuries CE", "ne": "इस्वी पाँचौँ र सातौँ शताब्दी" }, "what": { "en": "Faxian and Xuanzang describe the site", "ne": "फाहियान र ह्वेनसाङले स्थलको वर्णन गर्छन्" } },
+          { "when": { "en": "13th–14th century", "ne": "१३औँ–१४औँ शताब्दी" }, "what": { "en": "King Ripu Malla’s inscription added near the pillar’s top", "ne": "स्तम्भको माथिल्लो भागमा राजा रिपु मल्लको अभिलेख थपियो" } },
+          { "when": { "en": "1896", "ne": "सन् १८९६" }, "what": { "en": "The pillar is uncovered and its inscription read", "ne": "स्तम्भ उत्खनन भई अभिलेख पढियो" } },
+          { "when": { "en": "1997", "ne": "सन् १९९७" }, "what": { "en": "Inscribed as a World Heritage Site", "ne": "विश्व सम्पदा सूचीमा सूचीकृत" } },
+          { "when": { "en": "2003", "ne": "सन् २००३" }, "what": { "en": "The present Maya Devi Temple completed over the remains", "ne": "अवशेषमाथि हालको माया देवी मन्दिर सम्पन्न" } }
+        ]
+      },
+      "scholar": {
+        "sections": [
+          {
+            "title": { "en": "The Rummindei inscription", "ne": "रुम्मिन्देई अभिलेख" },
+            "cites": [1, 0],
+            "body": {
+              "en": "The five-line inscription is in Prakrit, in Brahmi script. In substance: King Devanampiya Piyadasi (Ashoka), twenty years after his consecration, came and worshipped here because the Buddha Shakyamuni was born here; he had a stone and a pillar set up, and made the village of Lummini free of tax, paying an eighth share. Two readings remain debated: what the phrase rendered as ‘a stone’ (sila vigadabhi) describes, often read as a stone bearing a horse or as a stone railing; and how far the tax terms imply a full or partial remission. Higher on the shaft is a medieval inscription of King Ripu Malla, dated 1234 of the Shaka era.",
+              "ne": "पाँच हरफको अभिलेख प्राकृत भाषामा, ब्राह्मी लिपिमा छ। सारमा: राजा देवानांप्रिय प्रियदर्शी (अशोक) अभिषेकको बीस वर्षपछि यहाँ आएर पूजा गरे, किनकि शाक्यमुनि बुद्ध यहाँ जन्मिएका थिए; उनले शिला र स्तम्भ खडा गराए, र लुम्मिनी गाउँलाई करमुक्त गरी आठौँ भाग मात्र तिर्ने बनाए। दुई कुरामा बहस बाँकी छ: ‘शिला’ भनिएको वाक्यांश (सिला विगडभी) ले के जनाउँछ, कसैले घोडा कुँदिएको शिला र कसैले ढुङ्गाको बार भनेर पढ्छन्; र करका सर्तले पूर्ण वा आंशिक छुट जनाउँछ। स्तम्भको माथिल्लो भागमा शक संवत् १२३४ को राजा रिपु मल्लको मध्यकालीन अभिलेख छ।"
+            }
+          },
+          {
+            "title": { "en": "Beneath the temple: brick over timber", "ne": "मन्दिरमुनि: काठमाथि इँटा" },
+            "cites": [2, 3],
+            "body": {
+              "en": "Excavation inside the temple exposed brick structures in successive phases, arranged as chambers around a circumambulatory path, long attributed to the Mauryan period. In 2013 an international team led by Robin Coningham and Kosh Prasad Acharya reported post-holes of a timber structure beneath the earliest brick, with radiocarbon and luminescence dates they place in the 6th century BCE, and an open central space where roots of a tree may once have stood. If confirmed, it is the earliest archaeological evidence of a Buddhist shrine anywhere. The dating bears on the long-running debate about when the Buddha lived; it does not settle it.",
+              "ne": "मन्दिरभित्रको उत्खननले परिक्रमा मार्ग वरिपरि कोठाका रूपमा मिलाइएका, क्रमिक चरणका इँटाका संरचना देखायो, जसलाई लामो समय मौर्य कालको मानियो। सन् २०१३ मा रोबिन कोनिङ्घम र कोषप्रसाद आचार्यको नेतृत्वको अन्तर्राष्ट्रिय टोलीले सबैभन्दा पुरानो इँटामुनि काठको संरचनाका खम्बा-खाल्डा भेटिएको र रेडियोकार्बन तथा ल्युमिनेसेन्स मितिले तिनलाई इसापूर्व छैटौँ शताब्दीमा राखेको जनायो; बीचमा खाली ठाउँ थियो जहाँ कुनै बेला रूख रहेको हुन सक्छ। पुष्टि भए, यो विश्वमै बौद्ध देवालयको सबैभन्दा पुरानो पुरातात्त्विक प्रमाण हो। यो मितिले बुद्ध कहिले बाँचे भन्ने लामो बहसमा असर गर्छ, तर टुङ्ग्याउँदैन।"
+            }
+          },
+          {
+            "title": { "en": "Rediscovery and its credibility", "ne": "पुनःखोज र विश्वसनीयता" },
+            "cites": [1, 4],
+            "body": {
+              "en": "Accounts of December 1896 differ on who led whom: some credit Führer, others Khadga Shumsher Rana, who may already have known where the pillar lay. Führer was later shown to have fabricated finds elsewhere, which once raised doubts here too; but the pillar and inscription have been examined independently many times and are not in question. P. C. Mukherji’s survey of 1899, published in 1901 by the Archaeological Survey of India, gives measured plans and photographs of the site as it was found, and remains the baseline for judging later change.",
+              "ne": "सन् १८९६ डिसेम्बरका विवरणहरू कसले कसलाई डोर्‍यायो भन्नेमा फरक छन्: कसैले फ्युहररलाई, कसैले स्तम्भ कहाँ छ भनेर पहिल्यै थाहा भएका हुन सक्ने खड्ग शमशेर राणालाई श्रेय दिन्छन्। फ्युहररले अन्यत्र नक्कली खोज बनाएको पछि प्रमाणित भयो, जसले यहाँ पनि शङ्का उठाएको थियो; तर स्तम्भ र अभिलेख धेरैपटक स्वतन्त्र रूपमा जाँचिएका छन् र तिनमा प्रश्न छैन। सन् १८९९ को पी. सी. मुखर्जीको सर्वेक्षण, जुन भारतीय पुरातत्त्व सर्वेक्षणले सन् १९०१ मा प्रकाशित गर्‍यो, ले भेटिएको अवस्थाको नापिएको नक्सा र फोटो दिन्छ, र पछिका परिवर्तन जाँच्ने आधार बनेको छ।"
+            }
+          },
+          {
+            "title": { "en": "A master plan, half built", "ne": "आधा बनेको गुरुयोजना" },
+            "cites": [0, 5],
+            "body": {
+              "en": "Kenzo Tange’s plan, prepared under UN sponsorship in the 1970s, laid out a 4.8 by 1.6 km zone: the Sacred Garden at the south, a monastic zone either side of a central canal, and a cultural centre and new village to the north. The Lumbini Development Trust manages it. UNESCO’s inscription covers the Sacred Garden archaeology; its later reports have raised concerns about humidity and water inside the temple, visitor pressure, and development in the wider area. The plan is still being completed, so parts of what you walk through are newer than they look.",
+              "ne": "सन् १९७० को दशकमा संयुक्त राष्ट्रसंघको सहयोगमा बनेको केन्जो टाङ्गेको योजनाले ४.८ × १.६ किलोमिटरको क्षेत्र तय गर्‍यो: दक्षिणमा पवित्र उद्यान, केन्द्रीय नहरका दुवैतिर विहार क्षेत्र, र उत्तरमा सांस्कृतिक केन्द्र र नयाँ गाउँ। यसको व्यवस्थापन लुम्बिनी विकास कोषले गर्छ। युनेस्कोको सूचीकरण पवित्र उद्यानको पुरातत्त्वमा केन्द्रित छ; त्यसका पछिल्ला प्रतिवेदनले मन्दिरभित्रको आर्द्रता र पानी, आगन्तुकको चाप, र वरपरको विकासबारे चिन्ता जनाएका छन्। योजना अझै पूरा हुँदैछ, त्यसैले तपाईं हिँड्ने कतिपय भाग देखिएभन्दा नयाँ छन्।"
+            }
+          }
+        ]
+      },
+      "visit": {
+        "hours": { "en": "No official hours found. Third-party listings disagree; the Sacred Garden is usually open from early morning to dusk. Confirm at the gate.", "ne": "आधिकारिक समय भेटिएन। अन्य स्रोतहरू एकआपसमा मेल खाँदैनन्; पवित्र उद्यान प्रायः बिहानैदेखि साँझसम्म खुला हुन्छ। गेटमै सोध्नुहोस्।" },
+        "dress": { "en": "Cover shoulders and knees. Remove shoes and hats before the Maya Devi Temple, keep your voice low, and do not climb on the excavated walls.", "ne": "काँध र घुँडा ढाक्नुहोस्। माया देवी मन्दिरअघि जुत्ता र टोपी फुकाल्नुहोस्, बिस्तारै बोल्नुहोस्, र उत्खनित पर्खालमा नचढ्नुहोस्।" },
+        "route": { "en": "Enter the Sacred Garden from the south, visit the temple and the Marker Stone, then the Ashoka Pillar and the Puskarini. Walk the monastery ruins, then north along the central canal past the Eternal Peace Flame to the monastic zones and, last, the World Peace Pagoda.", "ne": "पवित्र उद्यानमा दक्षिणबाट पस्नुहोस्, मन्दिर र चिन्ह-शिला हेर्नुहोस्, अनि अशोक स्तम्भ र पुष्करिणी। विहारका भग्नावशेष घुम्नुहोस्, त्यसपछि केन्द्रीय नहरको किनारै अखण्ड शान्ति दीप हुँदै विहार क्षेत्र र अन्त्यमा विश्व शान्ति स्तूप जानुहोस्।" },
+        "photography": { "en": "Allowed in the garden; generally not inside the temple. Ask before photographing monks, nuns or people at prayer.", "ne": "उद्यानमा पाइन्छ; मन्दिरभित्र प्रायः पाइँदैन। भिक्षु, भिक्षुणी वा प्रार्थनारत मानिसको फोटो खिच्नुअघि सोध्नुहोस्।" }
+      },
+      "subsites": [
+        { "name": { "en": "Marker Stone", "ne": "चिन्ह-शिला" }, "note": { "en": "Inside the temple: the venerated birth spot.", "ne": "मन्दिरभित्र: पूजित जन्मस्थान।" }, "siteId": "marker-stone" },
+        { "name": { "en": "Ashoka Pillar", "ne": "अशोक स्तम्भ" }, "note": { "en": "The inscribed pillar beside the temple.", "ne": "मन्दिरछेउको अभिलेखयुक्त स्तम्भ।" }, "siteId": "ashokan-pillar" },
+        { "name": { "en": "Puskarini", "ne": "पुष्करिणी" }, "note": { "en": "The sacred pond south of the temple.", "ne": "मन्दिरको दक्षिणको पवित्र पोखरी।" }, "siteId": "puskarini" },
+        { "name": { "en": "Monastery ruins", "ne": "विहारका भग्नावशेष" }, "note": { "en": "Brick foundations of ancient monasteries and stupas.", "ne": "प्राचीन विहार र स्तूपका इँटाका जग।" }, "siteId": "vihara-remains" },
+        { "name": { "en": "Gautami Nuns Temple", "ne": "गौतमी भिक्षुणी विहार" }, "note": { "en": "East monastic zone; its stupa follows Swayambhu’s form.", "ne": "पूर्वी विहार क्षेत्र; यसको स्तूप स्वयम्भूको रूपमा।" }, "siteId": "gautami-nuns-temple" },
+        { "name": { "en": "Myanmar Golden Temple", "ne": "म्यान्मार स्वर्ण मन्दिर" }, "note": { "en": "East monastic zone.", "ne": "पूर्वी विहार क्षेत्र।" }, "siteId": "myanmar-temple" },
+        { "name": { "en": "Zhong Hua Chinese Monastery", "ne": "चिनियाँ विहार" }, "note": { "en": "West monastic zone.", "ne": "पश्चिमी विहार क्षेत्र।" }, "siteId": "china-temple" },
+        { "name": { "en": "Korean Temple", "ne": "कोरियाली मन्दिर" }, "note": { "en": "West monastic zone.", "ne": "पश्चिमी विहार क्षेत्र।" }, "siteId": "korean-temple" },
+        { "name": { "en": "World Peace Pagoda", "ne": "विश्व शान्ति स्तूप" }, "note": { "en": "North of the master-plan zone.", "ne": "गुरुयोजना क्षेत्रको उत्तरमा।" }, "siteId": "world-peace-pagoda" }
+      ],
+      "sources": [
+        { "title": "UNESCO World Heritage Centre: Lumbini, the Birthplace of the Lord Buddha (666)", "url": "https://whc.unesco.org/en/list/666/" },
+        { "title": "Lumbini pillar inscription, Wikipedia (text, script, 1896 accounts, Ripu Malla inscription)", "url": "https://en.wikipedia.org/wiki/Lumbini_pillar_inscription" },
+        { "title": "Coningham et al., ‘The earliest Buddhist shrine: excavating the birthplace of the Buddha, Lumbini (Nepal)’, Antiquity 87 (2013)", "url": "https://doi.org/10.1017/S0003598X00049899" },
+        { "title": "Maya Devi Temple, Lumbini, Wikipedia (Marker Stone, Nativity Sculpture, phases)", "url": "https://en.wikipedia.org/wiki/Maya_Devi_Temple,_Lumbini" },
+        { "title": "P. C. Mukherji, Antiquities in the Tarai, Nepal (ASI Imperial Series XXVI/1, 1901)", "url": "https://archive.org/details/bub_gb_5iYXAAAAYAAJ" },
+        { "title": "Lumbini Development Trust: Sacred Garden, Master Plan and Monastic Zone", "url": "https://lumbinidevtrust.gov.np/page/2_667f837e0eee3" },
+        { "title": "Lumbini, Wikipedia (master-plan dimensions, monastic zones, Faxian and Xuanzang)", "url": "https://en.wikipedia.org/wiki/Lumbini" }
+      ]
+    },
+    {
+      "id": "basantapur",
+      "siteIds": ["kathmandu-durbar-square"],
+      "placeIds": [],
+      "name": { "en": "Basantapur: Kathmandu Durbar Square", "ne": "बसन्तपुर: काठमाडौँ दरबार क्षेत्र" },
+      "photos": [
+        { "file": "Side view of Kathmandu Durbar Square.jpg", "author": "Samikchhyabaral", "licence": "CC BY-SA 4.0", "caption": { "en": "The Basantapur towers of the old palace", "ne": "पुरानो दरबारका बसन्तपुर धरहरा" } },
+        { "file": "Jagannath Temple and Pratap Stambha, Kathmandu Durbar Square, Nepal.jpg", "author": "Safalphotos", "licence": "CC BY-SA 4.0", "caption": { "en": "Jagannath Temple and Pratap Malla’s column", "ne": "जगन्नाथ मन्दिर र प्रताप मल्लको स्तम्भ" } },
+        { "file": "Kasthamandap Kathmandu (2023).jpg", "author": "Chainwit.", "licence": "CC BY 4.0", "caption": { "en": "Kasthamandap, rebuilt after 2015", "ne": "२०१५ पछि पुनर्निर्मित काष्ठमण्डप" } },
+        { "file": "Gaddi Baithak and Kumari Ghar, Hanuman Dhoka Durbar Square.jpg", "author": "Safalphotos", "licence": "CC BY-SA 4.0", "caption": { "en": "A festival chariot procession before Gaddi Baithak", "ne": "गद्दी बैठकअगाडि जात्राको रथयात्रा" } },
+        { "file": "Kathmandu-Taleju-12-Palast-2014-gje.jpg", "author": "Gerd Eichmann", "licence": "CC BY-SA 4.0", "caption": { "en": "Taleju Temple above the palace", "ne": "दरबारमाथि तलेजु मन्दिर" } },
+        { "file": "Wooden carved windows inside Nasal Chowk.jpg", "author": "sat.yamln3.14", "licence": "CC BY-SA 4.0", "caption": { "en": "Carved windows in Nasal Chowk", "ne": "नासल चोकका कुँदिएका झ्याल" } },
+        { "file": "Kathmandu Durbar Square, Basantapur.jpg", "author": "Jayen Shrestha", "licence": "CC BY-SA 4.0", "caption": { "en": "The square on an ordinary day", "ne": "सामान्य दिनको दरबार क्षेत्र" } },
+        { "file": "People visiting in Basantapur Durbar Square (1).jpg", "author": "Nabin K. Sapkota", "licence": "CC BY-SA 4.0", "caption": { "en": "The open Basantapur square", "ne": "खुला बसन्तपुर चोक" } }
+      ],
+      "glance": {
+        "essentials": {
+          "en": "Kathmandu Durbar Square, also called Hanuman Dhoka or Basantapur, was the city’s royal centre: a palace grown over Malla, Shah and Rana reigns, ringed by temples. It is still where Kathmandu’s great festivals gather and where the Kumari, the living goddess, lives. Much fell in the 2015 earthquake and has been rebuilt.",
+          "ne": "काठमाडौँ दरबार क्षेत्र, जसलाई हनुमानढोका वा बसन्तपुर पनि भनिन्छ, सहरको राजकीय केन्द्र थियो: मल्ल, शाह र राणा शासनमा बढ्दै गएको दरबार, वरिपरि मन्दिरैमन्दिर। काठमाडौँका ठूला जात्रा अझै यहीँ जम्मा हुन्छन्, र जीवित देवी कुमारी यहीँ बस्छिन्। सन् २०१५ को भूकम्पमा धेरै ढले, र पुनर्निर्माण भएका छन्।"
+        },
+        "facts": [
+          { "label": { "en": "What it is", "ne": "के हो" }, "value": { "en": "Old royal palace square with over 50 temples nearby", "ne": "५० भन्दा बढी मन्दिर भएको पुरानो दरबार क्षेत्र" } },
+          { "label": { "en": "Built", "ne": "निर्माण" }, "value": { "en": "Mostly 16th–18th centuries, on older origins; Rana additions to 1908", "ne": "धेरैजसो १६औँ–१८औँ शताब्दी, पुरानो आधारमा; १९०८ सम्म राणा थप" } },
+          { "label": { "en": "Named for", "ne": "नाम" }, "value": { "en": "The Hanuman image at the palace gate, 1672", "ne": "दरबारको ढोकाको हनुमान मूर्ति, सन् १६७२" } },
+          { "label": { "en": "World Heritage", "ne": "विश्व सम्पदा" }, "value": { "en": "1979, Kathmandu Valley", "ne": "सन् १९७९, काठमाडौँ उपत्यका" } },
+          { "label": { "en": "Why it matters", "ne": "किन महत्त्वपूर्ण" }, "value": { "en": "Royal, religious and festival heart of old Kathmandu", "ne": "पुरानो काठमाडौँको राजकीय, धार्मिक र जात्राको मुटु" } }
+        ],
+        "tips": [
+          { "en": "Buy the ticket at a counter on the edge of the square; it includes the palace museum.", "ne": "टिकट चोकको किनारको काउन्टरमा किन्नुहोस्; यसमा दरबार संग्रहालय पनि समावेश छ।" },
+          { "en": "Never photograph the Kumari if she appears at her window.", "ne": "कुमारी झ्यालमा देखा परिन् भने कहिल्यै फोटो नखिच्नुहोस्।" },
+          { "en": "Don’t sit or climb on temple plinths where people are worshipping.", "ne": "पूजा भइरहेको मन्दिरको फलैँचा वा तहमा नबस्नुहोस्, नचढ्नुहोस्।" },
+          { "en": "During Indra Jatra and Dashain the square fills; routes and access change.", "ne": "इन्द्रजात्रा र दशैँमा चोक भरिन्छ; बाटो र पहुँच फेरिन्छ।" }
+        ]
+      },
+      "story": {
+        "chapters": [
+          {
+            "title": { "en": "A palace built in layers", "ne": "तह-तह बनेको दरबार" },
+            "photo": 0,
+            "body": {
+              "en": "The palace grew piece by piece. Malla kings built its brick-and-timber courtyards, Pratap Malla in the 17th century adding temples and placing the red-cloaked Hanuman at the gate in 1672, which gave the palace its name. After the Shah conquest, Prithvi Narayan Shah added lookout towers in the 1760s, the tallest of them the nine-storey Basantapur tower. The Ranas added white neoclassical halls. Read it as additions, not as one building.",
+              "ne": "दरबार टुक्रा-टुक्रा गरी बढ्यो। मल्ल राजाहरूले इँटा र काठका चोकहरू बनाए; १७औँ शताब्दीमा प्रताप मल्लले मन्दिर थपे र सन् १६७२ मा ढोकामा रातो वस्त्र ओढाइएको हनुमान राखे, जसबाट दरबारको नाम हनुमानढोका रह्यो। शाह विजयपछि पृथ्वीनारायण शाहले सन् १७६० को दशकमा निगरानी धरहरा थपे, जसमध्ये सबैभन्दा अग्लो नौतले बसन्तपुर धरहरा हो। राणाहरूले सेता नवशास्त्रीय भवन थपे। यसलाई एउटै भवन होइन, थपिँदै गएका तहका रूपमा पढ्नुहोस्।"
+            }
+          },
+          {
+            "title": { "en": "The temples of the square", "ne": "चोकका मन्दिरहरू" },
+            "photo": 1,
+            "body": {
+              "en": "North of the palace rises Taleju, the temple of the royal goddess, opened to the public only on one day a year at Dashain. Pratap Malla kneels on a stone column facing it. Nearby, the Jagannath Temple’s carved struts show scenes of everyday life, and the great black Kal Bhairav, Shiva in his fierce form, was once where people swore oaths. From an upper window of a small temple, Shiva and Parvati look down on the crowd.",
+              "ne": "दरबारको उत्तरमा राजकीय देवी तलेजुको मन्दिर उठ्छ, जुन वर्षमा दशैँको एक दिन मात्र आमजनताका लागि खुल्छ। ढुङ्गाको स्तम्भमा प्रताप मल्ल त्यसतर्फ फर्केर घुँडा टेकेका छन्। नजिकै जगन्नाथ मन्दिरका कुँदिएका टुँडालमा दैनिक जीवनका दृश्य छन्, र कालो विशाल काल भैरव, शिवको उग्र रूप, कुनै बेला मानिसहरूले सत्य बाचा खाने ठाउँ थियो। एउटा सानो मन्दिरको माथिल्लो झ्यालबाट शिव र पार्वती भिडतिर हेरिरहेका छन्।"
+            }
+          },
+          {
+            "title": { "en": "The living goddess and the festivals", "ne": "जीवित देवी र जात्राहरू" },
+            "photo": 3,
+            "body": {
+              "en": "At the square’s southern edge is Kumari Ghar, home of the Kumari, a young girl worshipped as a living goddess by Hindus and Buddhists. Once a year, at Indra Jatra, she is drawn through the streets in a chariot, and the head of state, once the king, receives her blessing here. Gaddi Baithak, the Rana audience hall built in 1908, faces the square and is still used to watch the festival.",
+              "ne": "चोकको दक्षिणी छेउमा कुमारी घर छ, जहाँ हिन्दू र बौद्ध दुवैले जीवित देवीका रूपमा पुज्ने सानी बालिका कुमारी बस्छिन्। वर्षमा एकपटक, इन्द्रजात्रामा उनलाई रथमा राखी सहर घुमाइन्छ, र राजा, अहिले राष्ट्रप्रमुख, यहीँ उनको आशीर्वाद लिन्छन्। सन् १९०८ मा बनेको राणाकालीन दरबार भवन गद्दी बैठक चोकतर्फ फर्केको छ र अझै जात्रा हेर्न प्रयोग हुन्छ।"
+            }
+          },
+          {
+            "title": { "en": "Kasthamandap: fall and return", "ne": "काष्ठमण्डप: ढलेर फेरि उठेको" },
+            "photo": 2,
+            "body": {
+              "en": "At the square’s western end stood Kasthamandap, the ‘wooden pavilion’ that tradition says gave Kathmandu its name. It collapsed in the earthquake of 25 April 2015. Rebuilding was led by the city and community groups, reusing salvaged timber where possible, and the new Kasthamandap was inaugurated in April 2022. Look for the difference between old darkened carving and fresh new wood.",
+              "ne": "चोकको पश्चिमी छेउमा काष्ठमण्डप थियो, ‘काठको मण्डप’, जसबाट काठमाडौँको नाम रहेको परम्परा भन्छ। यो सन् २०१५ अप्रिल २५ को भूकम्पमा ढल्यो। महानगर र समुदायको नेतृत्वमा, बचेका काठ सकेसम्म प्रयोग गरी पुनर्निर्माण भयो, र नयाँ काष्ठमण्डप सन् २०२२ अप्रिलमा उद्घाटन भयो। पुरानो कालो परेको कुँदाइ र नयाँ काठबीचको भिन्नता खोज्नुहोस्।"
+            }
+          }
+        ],
+        "timeline": [
+          { "when": { "en": "7th century", "ne": "सातौँ शताब्दी" }, "what": { "en": "Kasthamandap’s earliest foundations, by scientific dating", "ne": "वैज्ञानिक मितिअनुसार काष्ठमण्डपको सबैभन्दा पुरानो जग" } },
+          { "when": { "en": "16th century", "ne": "१६औँ शताब्दी" }, "what": { "en": "Mahendra Malla builds Taleju; the palace’s oldest wing", "ne": "महेन्द्र मल्लले तलेजु बनाउँछन्; दरबारको सबैभन्दा पुरानो भाग" } },
+          { "when": { "en": "1672", "ne": "सन् १६७२" }, "what": { "en": "Pratap Malla sets the Hanuman image at the gate", "ne": "प्रताप मल्लले ढोकामा हनुमान मूर्ति राख्छन्" } },
+          { "when": { "en": "1768", "ne": "सन् १७६८" }, "what": { "en": "Prithvi Narayan Shah takes Kathmandu; towers added", "ne": "पृथ्वीनारायण शाहले काठमाडौँ लिन्छन्; धरहरा थपिन्छन्" } },
+          { "when": { "en": "1886", "ne": "सन् १८८६" }, "what": { "en": "The royal family moves to Narayanhiti", "ne": "राजपरिवार नारायणहिटी सर्छ" } },
+          { "when": { "en": "1908", "ne": "सन् १९०८" }, "what": { "en": "Gaddi Baithak, the Rana audience hall, is built", "ne": "राणाकालीन गद्दी बैठक बन्छ" } },
+          { "when": { "en": "1979", "ne": "सन् १९७९" }, "what": { "en": "World Heritage, with the Kathmandu Valley", "ne": "काठमाडौँ उपत्यकासँगै विश्व सम्पदा" } },
+          { "when": { "en": "2015", "ne": "सन् २०१५" }, "what": { "en": "Earthquake: Kasthamandap and other temples fall", "ne": "भूकम्प: काष्ठमण्डपसहित अरू मन्दिर ढल्छन्" } },
+          { "when": { "en": "2022", "ne": "सन् २०२२" }, "what": { "en": "Rebuilt Kasthamandap inaugurated", "ne": "पुनर्निर्मित काष्ठमण्डप उद्घाटन" } }
+        ]
+      },
+      "scholar": {
+        "sections": [
+          {
+            "title": { "en": "How old is the palace? The sources disagree", "ne": "दरबार कति पुरानो? स्रोतहरू फरक छन्" },
+            "cites": [2, 3, 1],
+            "body": {
+              "en": "The Nepal Tourism Board traces Hanuman Dhoka to the Licchavi period and dates Taleju to 1549; the app’s own monument catalogue follows a 1562 date, and other summaries give 1564. The palace’s oldest standing wing is generally placed in the mid-16th century, with Mohan Chowk built in 1649 and the Hanuman image in 1672. Such disagreement usually reflects whether a date marks a founding, a consecration or a rebuilding, recorded in inscriptions read differently. Where the sources differ, this guide says so rather than choosing.",
+              "ne": "नेपाल पर्यटन बोर्डले हनुमानढोकालाई लिच्छवि कालसम्म पुर्‍याउँछ र तलेजुलाई सन् १५४९ को भन्छ; यस एपको आफ्नै स्मारक सूचीले सन् १५६२ लिएको छ, र अरू सारांशले सन् १५६४ दिन्छन्। दरबारको सबैभन्दा पुरानो उभिएको भाग प्रायः १६औँ शताब्दीको मध्यमा राखिन्छ; मोहन चोक सन् १६४९ र हनुमान मूर्ति सन् १६७२ को हो। यस्तो भिन्नताले प्रायः मितिले स्थापना, प्राणप्रतिष्ठा वा पुनर्निर्माण के जनाउँछ भन्ने र अभिलेख फरक ढङ्गले पढिएको देखाउँछ। स्रोत फरक भएमा यो गाइडले एउटा रोज्दैन, फरक छ भनेर भन्छ।"
+            }
+          },
+          {
+            "title": { "en": "Inscriptions in the square", "ne": "चोकका अभिलेखहरू" },
+            "cites": [3, 2],
+            "body": {
+              "en": "On the palace wall near the Hanuman Gate is a stone inscription by Pratap Malla in fifteen languages and scripts, a display of royal learning; local tradition holds that milk will flow from it if someone reads it all. The pedestal of the Narasimha sculpture inside the gate carries an inscription linking it to Pratap Malla’s reign, dated 1673. At Kasthamandap, copper-plate inscriptions naming the 14th-century king Jayasthiti Malla were found in a pillar, and manuscripts of 1243, 1288 and 1332 record rules for a festival held there.",
+              "ne": "हनुमानढोका नजिकको दरबारको भित्तामा प्रताप मल्लको पन्ध्र भाषा र लिपिको शिलालेख छ, राजकीय विद्वताको प्रदर्शन; कसैले सबै पढे त्यसबाट दूध बग्छ भन्ने स्थानीय विश्वास छ। ढोकाभित्रको नरसिंह मूर्तिको आधारमा सन् १६७३ को, प्रताप मल्लको पालासँग जोड्ने अभिलेख छ। काष्ठमण्डपको एउटा खम्बाभित्र १४औँ शताब्दीका राजा जयस्थिति मल्लको नाम भएका ताम्रपत्र भेटिए, र सन् १२४३, १२८८ र १३३२ का पाण्डुलिपिमा त्यहाँ हुने जात्राका नियम लेखिएका छन्।"
+            }
+          },
+          {
+            "title": { "en": "Architecture: Newar craft, Shah towers, Rana stucco", "ne": "वास्तुकला: नेवारी सीप, शाही धरहरा, राणा प्लास्टर" },
+            "cites": [4, 3],
+            "body": {
+              "en": "The Malla temples are tiered Newar pagodas: brick cores, timber frames, and roof struts carved with deities and, on some temples, frank erotic scenes whose meaning is still argued over, from fertility symbolism to protection against lightning. The courtyards (chowk) are built around ritual spaces; Nasal Chowk served for coronations into the modern era, the last in 2001. The Basantapur towers adapt the same craft to a defensive, look-out form, while Gaddi Baithak’s white columns import a European idiom chosen to signal a modern state.",
+              "ne": "मल्लकालीन मन्दिरहरू तहगत नेवारी पगोडा हुन्: इँटाको मुटु, काठको ढाँचा, र देवदेवी कुँदिएका टुँडाल; कतिपय मन्दिरमा स्पष्ट कामुक दृश्य पनि छन्, जसको अर्थबारे उर्वरताको प्रतीकदेखि चट्याङबाट जोगाउनेसम्म अझै बहस छ। चोकहरू धार्मिक स्थल वरिपरि बनाइएका छन्; नासल चोकमा आधुनिक कालसम्म राज्याभिषेक भयो, अन्तिम सन् २००१ मा। बसन्तपुर धरहराले त्यही सीपलाई सुरक्षा र निगरानीको रूपमा ढाल्छ, भने गद्दी बैठकका सेता खम्बाले आधुनिक राज्यको सङ्केत दिन रोजिएको युरोपेली शैली ल्याउँछन्।"
+            }
+          },
+          {
+            "title": { "en": "Rebuilding after 2015: what counts as authentic?", "ne": "२०१५ पछिको पुनर्निर्माण: मौलिक के हो?" },
+            "cites": [0, 1, 5],
+            "body": {
+              "en": "The earthquake brought down Kasthamandap and other temples and damaged the palace badly. Reconstruction has been led by the Department of Archaeology with the Kathmandu Metropolitan City, community committees and foreign partners. Excavation under Kasthamandap during rebuilding, with radiocarbon and luminescence dating, placed its earliest foundations in the 7th century CE. The Kathmandu Valley property had been on UNESCO’s danger list from 2003 to 2007 over loss of authenticity; the post-2015 work, reusing old timber and traditional technique, with argument over where modern strengthening belongs, is a live test of what authenticity means for buildings that are meant to be renewed.",
+              "ne": "भूकम्पले काष्ठमण्डप र अरू मन्दिर ढाल्यो र दरबारमा ठूलो क्षति गर्‍यो। पुनर्निर्माण पुरातत्त्व विभाग, काठमाडौँ महानगरपालिका, सामुदायिक समिति र विदेशी साझेदारसँग मिलेर भएको छ। पुनर्निर्माणकै क्रममा काष्ठमण्डपमुनि भएको उत्खनन, रेडियोकार्बन र ल्युमिनेसेन्स मितिसहित, ले यसको सबैभन्दा पुरानो जग सातौँ शताब्दीमा राख्यो। काठमाडौँ उपत्यका सम्पदा मौलिकता घटेकाले सन् २००३ देखि २००७ सम्म युनेस्कोको जोखिम सूचीमा थियो; पुराना काठ र परम्परागत प्रविधि प्रयोग गर्दै, आधुनिक बलियोपन कहाँ राख्ने भन्ने बहससहित भएको २०१५ पछिको कामले, नवीकरण हुँदै आउनैपर्ने भवनका लागि मौलिकता के हो भन्ने प्रश्नको जीवित परीक्षा गरिरहेको छ।"
+            }
+          }
+        ]
+      },
+      "visit": {
+        "hours": { "en": "The open square is public at all hours. The palace museum keeps its own hours, which are not officially published online; the Tourism Board says most of the palace is open throughout the week. Confirm at the ticket counter.", "ne": "खुला चोक सधैँ सार्वजनिक हुन्छ। दरबार संग्रहालयको आफ्नै समय छ, जुन अनलाइन आधिकारिक रूपमा प्रकाशित छैन; पर्यटन बोर्डअनुसार दरबारको धेरैजसो भाग हप्ताभर खुला हुन्छ। टिकट काउन्टरमा सोध्नुहोस्।" },
+        "dress": { "en": "Modest dress. Take off shoes and leather where a shrine asks; some temple interiors are for worshippers only. Walk around shrines clockwise.", "ne": "शालीन पहिरन। देवालयले भनेअनुसार जुत्ता र छालाका सामान फुकाल्नुहोस्; कतिपय मन्दिरभित्र पूजा गर्नेहरूमात्र पस्छन्। देवालयलाई घडीको दिशामा घुम्नुहोस्।" },
+        "route": { "en": "Start at Basantapur square and the Kumari Ghar, pass Gaddi Baithak and the Shiva–Parvati temple to Kasthamandap and Maju Dega, then north past Jagannath and Kal Bhairav to the Hanuman Gate. Enter the palace for Nasal Chowk and the museum, and end beneath Taleju.", "ne": "बसन्तपुर चोक र कुमारी घरबाट सुरु गर्नुहोस्, गद्दी बैठक र शिव–पार्वती मन्दिर हुँदै काष्ठमण्डप र माजु देगसम्म, अनि उत्तरतर्फ जगन्नाथ र काल भैरव हुँदै हनुमानढोकासम्म जानुहोस्। नासल चोक र संग्रहालयका लागि दरबारभित्र पस्नुहोस्, र तलेजुमुनि टुङ्ग्याउनुहोस्।" },
+        "photography": { "en": "Allowed in the square. Never photograph the Kumari; inside the palace museum, follow the posted rules.", "ne": "चोकमा फोटो खिच्न पाइन्छ। कुमारीको फोटो कहिल्यै नखिच्नुहोस्; दरबार संग्रहालयभित्र लेखिएका नियम पालना गर्नुहोस्।" }
+      },
+      "subsites": [
+        { "name": { "en": "Kasthamandap", "ne": "काष्ठमण्डप" }, "note": { "en": "The rest house that named the city; rebuilt 2022.", "ne": "सहरको नाम दिने सत्तल; २०२२ मा पुनर्निर्मित।" }, "siteId": "ktm-kasthamandap" },
+        { "name": { "en": "Kumari Ghar", "ne": "कुमारी घर" }, "note": { "en": "Home of the living goddess.", "ne": "जीवित देवीको निवास।" }, "siteId": "ktm-kumari-ghar" },
+        { "name": { "en": "Basantapur tower", "ne": "बसन्तपुर धरहरा" }, "note": { "en": "The nine-storey Shah tower.", "ne": "नौतले शाही धरहरा।" }, "siteId": "ktm-basantapur-durbar" },
+        { "name": { "en": "Gaddi Baithak", "ne": "गद्दी बैठक" }, "note": { "en": "The white Rana audience hall, 1908.", "ne": "सेतो राणाकालीन दरबार भवन, १९०८।" }, "siteId": "ktm-gaddi-baithak" },
+        { "name": { "en": "Shiva–Parvati Temple", "ne": "शिव–पार्वती मन्दिर" }, "note": { "en": "The divine couple at the upper window.", "ne": "माथिल्लो झ्यालमा दिव्य दम्पती।" }, "siteId": "ktm-shiva-parvati-temple" },
+        { "name": { "en": "Jagannath Temple", "ne": "जगन्नाथ मन्दिर" }, "note": { "en": "Carved struts of worldly life.", "ne": "सांसारिक जीवन कुँदिएका टुँडाल।" }, "siteId": "ktm-jagannath-temple" },
+        { "name": { "en": "Kal Bhairav", "ne": "काल भैरव" }, "note": { "en": "Shiva’s fierce form in black stone.", "ne": "कालो ढुङ्गामा शिवको उग्र रूप।" }, "siteId": "ktm-kal-bhairav" },
+        { "name": { "en": "Hanuman Dhoka gate", "ne": "हनुमानढोका" }, "note": { "en": "The red-cloaked guardian at the palace door.", "ne": "दरबारको ढोकाका रातो वस्त्रधारी रक्षक।" }, "siteId": "ktm-hanuman-gate" },
+        { "name": { "en": "Nasal Chowk", "ne": "नासल चोक" }, "note": { "en": "The coronation courtyard.", "ne": "राज्याभिषेकको चोक।" }, "siteId": "ktm-nasal-chowk" },
+        { "name": { "en": "Taleju Temple", "ne": "तलेजु मन्दिर" }, "note": { "en": "The royal goddess’s temple, open one day a year.", "ne": "राजकीय देवीको मन्दिर, वर्षमा एक दिन खुल्ने।" }, "siteId": "ktm-taleju-temple" }
+      ],
+      "sources": [
+        { "title": "UNESCO World Heritage Centre: Kathmandu Valley (121)", "url": "https://whc.unesco.org/en/list/121/" },
+        { "title": "Kasthamandap, Wikipedia (7th-century dating, inscriptions, 2015 collapse)", "url": "https://en.wikipedia.org/wiki/Kasthamandap" },
+        { "title": "Nepal Tourism Board: Kathmandu Durbar Square", "url": "https://ntb.gov.np/kathmandu-durbar-square" },
+        { "title": "Hanuman Dhoka, Wikipedia (1649, 1672, 1673, 1768, 1886 and the fifteen-language inscription)", "url": "https://en.wikipedia.org/wiki/Hanuman_Dhoka" },
+        { "title": "Mary Shepherd Slusser, Nepal Mandala (Princeton University Press, 1982)", "url": "https://press.princeton.edu/" },
+        { "title": "The Himalayan Times: President inaugurates reconstructed Kashthamandap (April 2022)", "url": "https://thehimalayantimes.com/nepal/president-bhandari-inaugurates-reconstructed-kashthamandap-temple" }
+      ]
+    }
+  ]
+}

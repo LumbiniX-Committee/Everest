@@ -5,11 +5,11 @@ import { ScreenHeader } from '@/components/common';
 import { Screen } from '@/components/ui';
 import { application } from '@/services';
 import { useAppState, usePermissions, usePlan, usePreferences } from '@/store';
-import { VISITOR_TYPE_OPTIONS } from '@/types';
 import { visitorCopy, type VisitorCopyKey } from '@/i18n/visitor';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
+import { ProfileSummary, useProfile } from '@/features/profile';
 
-import { SettingsChoice, SettingsRow, SettingsSection, SettingsToggle } from './components';
+import { SettingsRow, SettingsSection, SettingsToggle } from './components';
 
 const TOLERANCE_LABEL_KEYS: Record<'strict' | 'standard' | 'forgiving', VisitorCopyKey> = {
   strict: 'settings.strict',
@@ -26,7 +26,8 @@ export function SettingsScreen() {
   const router = useRouter();
   const { preferences, update } = usePreferences();
   const { states } = usePermissions();
-  const t = (key: VisitorCopyKey) => visitorCopy(preferences.interfaceLanguage, key);
+  const { displayName, stats } = useProfile();
+  const t =(key: VisitorCopyKey) => visitorCopy(preferences.interfaceLanguage, key);
 
   // The switch below already saved the new theme the moment it is toggled —
   // `reload` only decides whether that becomes visible immediately or waits
@@ -49,25 +50,28 @@ export function SettingsScreen() {
         subtitle={t('settings.subtitle')}
       />
 
+      <ProfileSummary
+        displayName={displayName}
+        stats={stats}
+        onPress={() => router.push('/(main)/settings/profile')}
+      />
+
       <SettingsSection title="Your trip" divided>
         <SettingsRow
+          icon="book-open-variant"
           label="Your record"
           hint="Places visited, photos and your reports"
           onPress={() => router.push('/(main)/tirtha/me')}
         />
         <SettingsRow
+          icon="star-outline"
           label="Your plan"
           value={planLabel}
           hint="What is free, and what Pro adds"
           onPress={() => router.push('/(main)/settings/plans')}
         />
-        <SettingsChoice
-          legend="Who is visiting?"
-          options={VISITOR_TYPE_OPTIONS}
-          selected={preferences.visitorType}
-          onSelect={(value) => void update('visitorType', value)}
-        />
         <SettingsRow
+          icon="replay"
           label="Replay introduction"
           hint="See the first-run guide again"
           onPress={() => {
@@ -118,17 +122,20 @@ export function SettingsScreen() {
 
       <SettingsSection title={t('settings.recording')} divided>
         <SettingsRow
+          icon="tune-variant"
           label={t('settings.preferences')}
           value={t(TOLERANCE_LABEL_KEYS[preferences.alignmentTolerance])}
           hint={t('settings.preferencesHint')}
           onPress={() => router.push('/(main)/settings/preferences')}
         />
         <SettingsRow
+          icon="bell-ring-outline"
           label={t('settings.arrivals')}
           hint={t('settings.arrivalsHint')}
           onPress={() => router.push('/(main)/settings/arrivals')}
         />
         <SettingsRow
+          icon="lock-check-outline"
           label={t('settings.permissions')}
           value={denied > 0 ? `${denied} ${t('settings.needsAttention')}` : t('settings.allGranted')}
           hint={t('settings.permissionsHint')}
@@ -138,42 +145,49 @@ export function SettingsScreen() {
 
       <SettingsSection title={t('settings.data')} divided>
         <SettingsRow
+          icon="chip"
           label={t('settings.offlineAi')}
           hint={t('settings.offlineAiHint')}
           onPress={() => router.push('/(main)/settings/offline-ai')}
         />
         <SettingsRow
+          icon="cloud-sync-outline"
           label={t('settings.sync')}
           hint={t('settings.syncHint')}
           onPress={() => router.push('/(main)/settings/sync')}
         />
         <SettingsRow
+          icon="database-outline"
           label={t('settings.storage')}
           hint={t('settings.storageHint')}
           onPress={() => router.push('/(main)/settings/storage')}
         />
         <SettingsRow
+          icon="shield-lock-outline"
           label={t('settings.privacy')}
           hint={t('settings.privacyHint')}
           onPress={() => router.push('/(main)/settings/privacy')}
         />
       </SettingsSection>
 
-      <SettingsSection title={t('settings.institutional')}>
+      <SettingsSection title={t('settings.institutional')} divided>
         <SettingsRow
+          icon="bank-outline"
           label={t('settings.custodian')}
           hint={t('settings.custodianHint')}
           onPress={() => router.push('/(main)/settings/custodian')}
         />
       </SettingsSection>
 
-      <SettingsSection title={t('settings.about')}>
+      <SettingsSection title={t('settings.about')} divided>
         <SettingsRow
+          icon="information-outline"
           label={t('settings.aboutSakshi')}
           hint={t('settings.aboutHint')}
           onPress={() => router.push('/(main)/settings/about')}
         />
         <SettingsRow
+          icon="domain"
           label={t('settings.aboutOmx')}
           hint={t('settings.aboutOmxHint')}
           onPress={() => router.push('/(main)/settings/omx-lab')}

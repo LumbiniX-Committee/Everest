@@ -90,6 +90,17 @@ export type FoundPlace = { id: string; name: string; detail: string; coordinate:
 
 const SEARCH_ENDPOINT = 'https://nominatim.openstreetmap.org/search';
 
+/** Why a place search returned nothing: no connection at all, or a server that did not answer well. */
+export class PlaceSearchError extends Error {
+  constructor(readonly reason: 'offline' | 'unavailable', message: string) {
+    super(message);
+    this.name = 'PlaceSearchError';
+  }
+}
+
+/** A geocoder slower than this is treated as not answering. */
+const SEARCH_TIMEOUT_MS = 8_000;
+
 /**
  * Any named place in Nepal, from OpenStreetMap's geocoder: a tole, a bahal, a
  * hotel, a street. Only the words typed are sent. Nominatim asks apps to
@@ -100,8 +111,23 @@ export async function searchPlaces(query: string, signal?: AbortSignal): Promise
   const q = query.trim();
   if (q.length < 3) return [];
   const url = `${SEARCH_ENDPOINT}?format=jsonv2&countrycodes=np&limit=8&accept-language=en&q=${encodeURIComponent(q)}`;
-  const response = await fetch(url, { headers: { 'User-Agent': 'Saksi/1.0 (heritage guide app)', Accept: 'application/json' }, signal });
-  if (!response.ok) throw new Error(`Place search failed: ${response.status}`);
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), SEARCH_TIMEOUT_MS);
+  const onCallerAbort = () => controller.abort();
+  signal?.addEventListener('abort', onCallerAbort);
+  let response: Response;
+  try {
+    response = await fetch(url, { headers: { 'User-Agent': 'Saksi/1.0 (heritage guide app)', Accept: 'application/json' }, signal: controller.signal });
+  } catch (error) {
+    // The caller cancelling (a newer keystroke) is not a failure to report.
+    if (signal?.aborted) throw error;
+    // fetch rejects without a response only when the request never got out, or timed out.
+    throw new PlaceSearchError(controller.signal.aborted ? 'unavailable' : 'offline', String(error));
+  } finally {
+    clearTimeout(timer);
+    signal?.removeEventListener('abort', onCallerAbort);
+  }
+  if (!response.ok) throw new PlaceSearchError('unavailable', `Place search failed: ${response.status}`);
   const rows = (await response.json()) as { place_id: number; name?: string; display_name: string; lat: string; lon: string }[];
   return rows
     .map((row) => {
