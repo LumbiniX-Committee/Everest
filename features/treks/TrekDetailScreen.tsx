@@ -1,11 +1,12 @@
 import { useRouter } from 'expo-router';
+import { useMemo } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { BackBar, EmptyState } from '@/components/common';
 import { MapWebView } from '@/components/map';
-import { boundsOfLine } from '@/core';
+import { boundsOfLine, cumulativeAlong, splitStages } from '@/core';
 import { Button, Card, Divider, Screen, Text } from '@/components/ui';
-import { essentialsFor, findTrek, trekLine, trekPhoto, trekStop } from '@/data';
+import { dayStops, essentialsFor, findTrek, trekDrawLine, trekPhoto, trekProfile, trekStop } from '@/data';
 import { PhotoHero } from '@/components/site';
 import { useSafeBack } from '@/hooks';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
@@ -37,9 +38,10 @@ export function TrekDetailScreen({ trekId }: { trekId: string }) {
   }
 
   const unit = preferences.distanceUnit;
-  const line = trekLine(trek);
+  // Simplified for drawing only (Douglas–Peucker, 15 m); the numbers come from the full line.
+  const line = trekDrawLine(trek);
   const waypoints = trek.stops.map((stop) => ({ id: stop.id, name: stop.name, ...stop.coordinate }));
-  const wholeProfile = trek.days.flatMap((day) => day.profile);
+  const whole = trekProfile(trek);
   const approximate = trek.stops.filter((stop) => !stop.mapped);
   const openMap = (day?: number) =>
     router.push({ pathname: '/(main)/tirtha/treks/map/[trekId]', params: { trekId: trek.id, day: String(day ?? 0) } });
@@ -76,14 +78,14 @@ export function TrekDetailScreen({ trekId }: { trekId: string }) {
         <Stat label={ui('Distance')} value={formatDistance(trek.totals.distanceM, unit)} />
         <Stat label={ui('Climb')} value={formatAltitude(trek.totals.ascentM, unit)} />
         <Stat label={ui('Highest')} value={formatAltitude(trek.totals.highest?.elevationM, unit)} />
-        <Stat label={ui('Walking')} value={formatHours(trek.totals.walkingHours)} />
+        <Stat label={ui('Walking, estimated')} value={formatHours(trek.totals.walkingHours)} />
       </View>
 
       <Text variant="body" translate={false}>
         {trek.summary}
       </Text>
 
-      <ElevationProfile profile={wholeProfile} />
+      <ElevationProfile profile={whole.profile} ticks={whole.dayStarts} distanceM={trek.totals.distanceM} />
 
       <Section title="Day by day">
         {trek.days.map((day, index) => (
@@ -145,6 +147,9 @@ export function TrekDetailScreen({ trekId }: { trekId: string }) {
       <Text variant="caption" tone="muted">
         Distances are measured along mapped trails. Altitudes come from a 90 m elevation model and can be out by tens of metres. Walking times are estimates from distance and climb, without breaks; allow more.
       </Text>
+      <Text variant="caption" tone="muted">
+        Times use Naismith’s rule at a trekking pace: 3 km an hour, plus an hour for every 400 m up and 2,000 m down, and a tenth slower for each 1,000 m above 3,500 m. They assume you are acclimatised; until you are, go slower than this.
+      </Text>
       {approximate.length ? (
         <Text variant="caption" tone="muted" translate={false}>
           {`${ui('Not yet mapped in OpenStreetMap, so placed approximately')}: ${approximate.map((stop) => stop.name).join(', ')}`}
@@ -172,6 +177,20 @@ function DayCard({ trek, day, onOpen }: { trek: Trek; day: TrekDay; onOpen: () =
   const from = trekStop(trek, day.from);
   const to = trekStop(trek, day.to);
   const sleep = trekStop(trek, day.sleep);
+  const dayIndex = trek.days.indexOf(day);
+  // Stop to stop within the day, each with its own estimate. Only worth showing
+  // when the day passes stops between where it starts and ends.
+  const { stages, stopNames, ticks } = useMemo(() => {
+    const stops = dayStops(trek, dayIndex);
+    const split = splitStages(day.line, day.profile, stops.map((stop) => stop.coordinate));
+    const along = cumulativeAlong(day.line);
+    const total = along[along.length - 1] ?? 0;
+    return {
+      stages: split,
+      stopNames: stops.map((stop) => stop.name),
+      ticks: total > 0 ? split.slice(1).map((stage) => along[stage.fromIndex] / total) : [],
+    };
+  }, [trek, day, dayIndex]);
   const title = day.rest
     ? `${ui('Rest day')}: ${from?.name ?? ''}`
     : from?.id === to?.id
@@ -191,10 +210,30 @@ function DayCard({ trek, day, onOpen }: { trek: Trek; day: TrekDay; onOpen: () =
           <Stat label={ui('Distance')} value={formatDistance(day.distanceM, unit)} />
           <Stat label={ui('Up')} value={formatAltitude(day.ascentM, unit)} />
           <Stat label={ui('Down')} value={formatAltitude(day.descentM, unit)} />
-          <Stat label={ui('Walking')} value={formatHours(day.hours)} />
+          <Stat label={ui('Walking, estimated')} value={formatHours(day.hours)} />
         </View>
       ) : null}
-      {day.profile.length > 1 ? <ElevationProfile profile={day.profile} height={48} /> : null}
+      {day.profile.length > 1 ? <ElevationProfile profile={day.profile} ticks={ticks} distanceM={day.distanceM} height={48} /> : null}
+      {stages.length > 1 && day.distanceM != null ? (
+        <View style={styles.stages}>
+          {stages.map((stage) => (
+            <Text key={stage.fromIndex} variant="caption" tone="secondary" translate={false}>
+              {[
+                `${stopNames[stage.fromStop] ?? ''} → ${stopNames[stage.toStop] ?? ''}`,
+                formatDistance(stage.distanceM, unit),
+                stage.ascentM != null ? `↑ ${formatAltitude(stage.ascentM, unit)}` : null,
+                stage.descentM != null ? `↓ ${formatAltitude(stage.descentM, unit)}` : null,
+                stage.estimatedHours != null ? `${ui('about')} ${formatHours(stage.estimatedHours)}` : null,
+              ].filter(Boolean).join(' · ')}
+            </Text>
+          ))}
+        </View>
+      ) : null}
+      {!day.rest && day.highestM != null && day.highestM >= 3000 ? (
+        <Text variant="caption" tone="muted">
+          Above 3,000 m, allow more time than the estimate until you are acclimatised.
+        </Text>
+      ) : null}
       <Text variant="body" tone="secondary" translate={false}>
         {day.note}
       </Text>
@@ -272,5 +311,6 @@ const styles = StyleSheet.create({
     borderColor: colors.warning,
   },
   stop: { gap: spacing.xxs, marginTop: spacing.xs },
+  stages: { gap: spacing.xxs, marginTop: spacing.xs },
   sources: { alignItems: 'flex-start', marginBottom: spacing.xl },
 });

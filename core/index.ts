@@ -75,6 +75,8 @@ export {
   type ReportLink,
 } from './quests/reports.ts';
 export * from './treks/progress.ts';
+export * from './treks/route.ts';
 export * from './map/tiles.ts';
 export * from './reports/timeline.ts';
 export * from './reports/board.ts';
+export * from './panorama/geometry.ts';

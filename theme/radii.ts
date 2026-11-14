@@ -1,15 +1,15 @@
 /**
  * Corner radii.
  *
- * Soft and generous, echoing the lotus petal in the mark, without turning cards
- * into pills.
+ * Restrained: controls 8–12, cards and sheets 16. Larger radii made every card
+ * look like a toy; one quiet curve across the app reads as one designed system.
  */
 export const radii = {
   none: 0,
-  sm: 12,
-  md: 16,
-  lg: 22,
-  xl: 30,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 20,
   /** Pills and circles. */
   full: 999,
 } as const;

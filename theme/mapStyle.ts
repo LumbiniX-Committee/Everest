@@ -145,19 +145,33 @@ export const sakshiMapStyle = {
       },
     },
     {
+      id: 'path-casing',
+      type: 'line' as const,
+      source: 'openmaptiles',
+      'source-layer': 'transportation',
+      filter: ['in', ['get', 'class'], ['literal', ['path', 'pedestrian', 'footway']]],
+      minzoom: 14,
+      layout: { 'line-cap': 'round' as const, 'line-join': 'round' as const },
+      paint: {
+        'line-color': colors.mapRoadCasing,
+        'line-width': ['interpolate', ['linear'], ['zoom'], 14, 1.6, 16, 3.4, 18, 7],
+        'line-opacity': 0.7,
+      },
+    },
+    {
       id: 'path',
       type: 'line' as const,
       source: 'openmaptiles',
       'source-layer': 'transportation',
       filter: ['in', ['get', 'class'], ['literal', ['path', 'pedestrian', 'footway']]],
-      layout: { 'line-cap': 'round' as const },
+      minzoom: 14,
+      layout: { 'line-cap': 'round' as const, 'line-join': 'round' as const },
       paint: {
-        'line-color': colors.mapPath,
-        'line-width': ['interpolate', ['linear'], ['zoom'], 14, 1.2, 16, 3, 18, 6],
-        // Dashed: a walking path is not a road and should not be mistaken for
-        // one at a glance, which matters when the paths are the way you move
-        // through the sacred garden.
-        'line-dasharray': [2, 1.5],
+        // A quiet pale line, like a lane but thinner. The old dashed orange
+        // drew every footway in a square as loudly as the route being
+        // followed, so the way to go was lost in the ways there are.
+        'line-color': colors.mapRoad,
+        'line-width': ['interpolate', ['linear'], ['zoom'], 14, 0.8, 16, 2, 18, 4.5],
       },
     },
 
@@ -240,13 +254,11 @@ export const sakshiMapStyle = {
       source: 'openmaptiles',
       'source-layer': 'poi',
       minzoom: 15,
-      // Only what a visitor to a heritage site needs. The full POI set buries
-      // the monuments under restaurants and cash machines.
-      filter: [
-        'in',
-        ['get', 'class'],
-        ['literal', ['place_of_worship', 'attraction', 'lodging', 'toilets', 'information', 'park']],
-      ],
+      // Only heritage, at most zooms. Hotels, homestays and shops buried the
+      // temples of a Durbar Square under a dozen overlapping names; toilets
+      // and information points appear only once you are close enough to walk
+      // to them.
+      filter: ['in', ['get', 'class'], ['literal', ['place_of_worship', 'monument', 'museum', 'castle']]],
       layout: {
         'text-field': ['get', 'name'],
         'text-font': FONT,
@@ -254,6 +266,33 @@ export const sakshiMapStyle = {
         'text-max-width': 8,
         'text-anchor': 'top' as const,
         'text-offset': [0, 0.4],
+        'text-padding': 6,
+        // Better-known places win a collision; OpenMapTiles ranks 1 highest.
+        'symbol-sort-key': ['coalesce', ['get', 'rank'], 999],
+      },
+      paint: {
+        'text-color': colors.mapLabel,
+        'text-halo-color': colors.mapLabelHalo,
+        'text-halo-width': 1.4,
+      },
+    },
+    {
+      id: 'poi-amenity-label',
+      type: 'symbol' as const,
+      source: 'openmaptiles',
+      'source-layer': 'poi',
+      minzoom: 17.5,
+      filter: ['in', ['get', 'class'], ['literal', ['toilets', 'information']]],
+      layout: {
+        'text-field': ['get', 'name'],
+        'text-font': FONT,
+        'text-size': 10,
+        'text-max-width': 8,
+        'text-anchor': 'top' as const,
+        'text-offset': [0, 0.4],
+        'text-padding': 6,
+        // Better-known places win a collision; OpenMapTiles ranks 1 highest.
+        'symbol-sort-key': ['coalesce', ['get', 'rank'], 999],
       },
       paint: {
         'text-color': colors.mapLabel,

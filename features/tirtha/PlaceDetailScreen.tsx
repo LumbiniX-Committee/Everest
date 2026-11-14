@@ -4,15 +4,20 @@ import { useRouter } from 'expo-router';
 
 import { BackBar, EmptyState } from '@/components/common';
 import { ScanCards } from '@/components/models';
-import { VisitInfo } from '@/components/site';
-import { Button, Divider, Icon, MetaRow, Screen, Text } from '@/components/ui';
-import { commonsThumb, feeForPlace, findPlace, guideFor, modelFor, placeNote, scansFor } from '@/data';
+import { PhotoHero, VisitInfo } from '@/components/site';
+import { Button, Divider, Icon, MetaRow, Screen, SegmentedControl, Text } from '@/components/ui';
+import { commonsThumb, feeForPlace, findPlace, flagshipCover, flagshipForPlace, guideFor, modelFor, placeNote, scansFor } from '@/data';
 import { useCurrentPosition, useSafeBack } from '@/hooks';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
+import { LookAroundButton } from '@/features/panorama';
 import { application } from '@/services';
 import { usePreferences } from '@/store';
 import { colors, radii, spacing } from '@/theme';
+import { WISDOM_TIER_OPTIONS } from '@/types';
 import { distanceMeters, formatDistance } from '@/utils';
+import { FlagshipDepth, FlagshipGallery, FlagshipVisit } from './FlagshipGuide';
+
+const DEPTH_OPTIONS = WISDOM_TIER_OPTIONS.filter((option) => option.value !== 'custom');
 
 const CATEGORY_LABEL: Record<string, string> = {
   temple: 'Temple',
@@ -32,7 +37,7 @@ export function PlaceDetailScreen({ placeId }: { placeId: string }) {
   const router = useRouter();
   const goBack = useSafeBack();
   const ui = useVisitorLiteralCopy();
-  const { preferences } = usePreferences();
+  const { preferences, update } = usePreferences();
   const { coordinate } = useCurrentPosition({ watch: true });
   const [imageFailed, setImageFailed] = useState(false);
   const place = findPlace(placeId);
@@ -45,6 +50,9 @@ export function PlaceDetailScreen({ placeId }: { placeId: string }) {
     );
   }
 
+  const flagship = flagshipForPlace(place.id);
+  const tier = preferences.wisdomTier === 'custom' ? 'medium' : preferences.wisdomTier;
+  const language = preferences.interfaceLanguage;
   const distance = coordinate ? distanceMeters(coordinate, place.coordinate) : null;
   const sources = place.sources
     .map((source) => (source === 'osm' ? '© OpenStreetMap contributors (ODbL)' : 'Wikidata (CC0)'))
@@ -53,7 +61,9 @@ export function PlaceDetailScreen({ placeId }: { placeId: string }) {
   return (
     <Screen scroll>
       <BackBar />
-      {place.image && !imageFailed ? (
+      {flagship ? (
+        <PhotoHero uri={flagshipCover(flagship).uri} credit={flagshipCover(flagship).credit} height={240} style={styles.hero} />
+      ) : place.image && !imageFailed ? (
         <Image
           source={{ uri: commonsThumb(place.image, 900) }}
           style={styles.image}
@@ -73,12 +83,30 @@ export function PlaceDetailScreen({ placeId }: { placeId: string }) {
             {place.nameNepali}
           </Text>
         ) : null}
-        {place.description ? (
+        {place.description && !flagship ? (
           <Text variant="body" translate={false}>
             {place.description}
           </Text>
         ) : null}
       </View>
+
+      {flagship ? (
+        <>
+          <View style={styles.depth}>
+            <SegmentedControl
+              accessibilityLabel={ui('How much to tell')}
+              options={DEPTH_OPTIONS.map((option) => ({ value: option.value, label: ui(option.label) }))}
+              value={tier}
+              onChange={(value) => void update('wisdomTier', value)}
+            />
+            <Text variant="caption" tone="muted" center>
+              {ui(DEPTH_OPTIONS.find((option) => option.value === tier)!.hint)}
+            </Text>
+          </View>
+          <FlagshipDepth flagship={flagship} depth={tier} language={language} />
+          <FlagshipGallery flagship={flagship} language={language} />
+        </>
+      ) : null}
 
       {guideFor(place.id) ? (
         <Pressable
@@ -119,6 +147,7 @@ export function PlaceDetailScreen({ placeId }: { placeId: string }) {
             onPress={() => router.push(`/(main)/tirtha/model/${modelFor(place.id)!.id}`)}
           />
         ) : null}
+        <LookAroundButton placeId={place.id} />
       </View>
 
       {placeNote(place.id) ? (
@@ -138,6 +167,13 @@ export function PlaceDetailScreen({ placeId }: { placeId: string }) {
         <View style={styles.note}>
           <ScanCards scans={scansFor(place.id)} />
         </View>
+      ) : null}
+
+      {flagship ? (
+        <>
+          <Divider />
+          <FlagshipVisit flagship={flagship} language={language} />
+        </>
       ) : null}
 
       <Divider />
@@ -163,7 +199,7 @@ export function PlaceDetailScreen({ placeId }: { placeId: string }) {
       ) : null}
 
       <Text variant="caption" tone="muted" style={styles.sources}>
-        {`${ui('A listing from open data, not yet checked on site.')} ${sources}${place.image ? ` · ${ui('Photo: Wikimedia Commons')}` : ''}`}
+        {`${ui('A listing from open data, not yet checked on site.')} ${sources}${place.image || flagship ? ` · ${ui('Photo: Wikimedia Commons')}` : ''}`}
       </Text>
     </Screen>
   );
@@ -172,6 +208,8 @@ export function PlaceDetailScreen({ placeId }: { placeId: string }) {
 const styles = StyleSheet.create({
   note: { gap: spacing.sm, marginVertical: spacing.lg },
   image: { width: '100%', height: 220, borderRadius: radii.lg, marginBottom: spacing.md },
+  hero: { marginBottom: spacing.md },
+  depth: { gap: spacing.xs, marginBottom: spacing.sm },
   head: { gap: spacing.xs, marginBottom: spacing.md },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   sources: { marginTop: spacing.lg, marginBottom: spacing.xl },

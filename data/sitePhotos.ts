@@ -1,5 +1,6 @@
 import seed from '../seed/site-photos.json';
 
+import { flagshipForSite } from './flagships';
 import { commonsThumb } from './places';
 import { nowImageCredits } from './plates';
 
@@ -14,11 +15,18 @@ const PHOTOS = (seed as { photos: Record<string, SitePhoto> }).photos;
  */
 export function remotePhotoForSite(siteId: string, width = 900): { uri: string; credit: string } | null {
   const photo = PHOTOS[siteId];
-  if (!photo) return null;
+  if (!photo) {
+    // A flagship's curated cover outranks the schematic: these are the places
+    // most people open first, so they never open on a drawing.
+    const flagship = flagshipForSite(siteId);
+    if (!flagship) return null;
+    const cover = flagship.photos[0];
+    return { uri: commonsThumb(cover.file, width), credit: `Photo: ${cover.author}, ${cover.licence}, Wikimedia Commons` };
+  }
   return { uri: commonsThumb(photo.file, width), credit: `Photo: ${photo.author}, ${photo.licence}, Wikimedia Commons` };
 }
 
 /** The credit line for whatever photograph a site shows, bundled or remote. */
 export function photoCreditForSite(siteId: string): string | null {
-  return nowImageCredits[siteId] ?? (PHOTOS[siteId] ? remotePhotoForSite(siteId)!.credit : null);
+  return nowImageCredits[siteId] ?? remotePhotoForSite(siteId)?.credit ?? null;
 }

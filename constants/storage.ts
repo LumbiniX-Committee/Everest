@@ -26,9 +26,15 @@ export const StorageKeys = {
   prefAutoNarration: `${PREFIX}.preferences.autoNarration`,
   prefVisitorType: `${PREFIX}.preferences.visitorType`,
   prefHomeHub: `${PREFIX}.preferences.homeHub`,
+  prefMapFigure: `${PREFIX}.preferences.mapFigure`,
 
   /** The last Pro entitlement this phone confirmed with the server. */
   planEntitlement: `${PREFIX}.plan.entitlement`,
+  /**
+   * The name the visitor chose for their profile. On this phone only: never
+   * synced, never sent, and cleared with "Delete my records".
+   */
+  profileDisplayName: `${PREFIX}.profile.displayName`,
   /** The Home screen's getting-started guide has been dismissed. */
   homeGuideDismissed: `${PREFIX}.home.guideDismissed`,
   /** Crash reports kept on this phone until sent, or forever if sharing is off. */
@@ -74,6 +80,8 @@ export const StorageKeys = {
   reportTimelines: `${PREFIX}.reports.timelines`,
   /** The last few questions typed into Ask, newest first. Personal: cleared by "Delete my data". */
   dhammaRecent: `${PREFIX}.dhamma.recent`,
+  /** The last few places chosen from search, newest first. Personal: cleared by "Delete my data". */
+  searchRecent: `${PREFIX}.search.recent`,
 } as const;
 
 /** Preference field → storage key. The settings screen iterates this. */
@@ -92,6 +100,7 @@ export const PreferenceKeys = {
   autoNarration: StorageKeys.prefAutoNarration,
   visitorType: StorageKeys.prefVisitorType,
   homeHub: StorageKeys.prefHomeHub,
+  mapFigure: StorageKeys.prefMapFigure,
   shareCrashReports: StorageKeys.prefShareCrashReports,
 } as const;
 

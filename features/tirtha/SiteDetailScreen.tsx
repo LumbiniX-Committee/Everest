@@ -8,14 +8,16 @@ import { BackBar, EmptyState, ProGate } from '@/components/common';
 import { ScanCards } from '@/components/models';
 import { NarrationPlayer, SiteListItem, SiteVisual, VantageListItem, VisitInfo } from '@/components/site';
 import { SourceCard, SourceDetailSheet } from '@/components/source';
-import { audioForSite, findSite, historicalImagesForSite, narrationForSite, questsForSite, resolveSources, sitesForParent, vantagesForSite, feeForSite, modelFor, scansFor } from '@/data';
+import { audioForSite, findSite, flagshipForSite, historicalImagesForSite, narrationForSite, questsForSite, resolveSources, sitesForParent, vantagesForSite, feeForSite, modelFor, scansFor } from '@/data';
 import { useCurrentPosition, useOpenInTabs, useSafeBack } from '@/hooks';
 import { location as locationService } from '@/services';
 import { usePreferences } from '@/store';
 import { radii, spacing } from '@/theme';
 import { AskThisPlace } from './AskThisPlace';
+import { FlagshipDepth, FlagshipGallery, FlagshipVisit } from './FlagshipGuide';
 import { formatVisitorCopy } from '@/i18n/visitor';
 import { useVisitorLiteralCopy } from '@/i18n/useVisitorLiteralCopy';
+import { LookAroundButton } from '@/features/panorama';
 import { depthFor, scriptureForSite } from './wisdom';
 import { WISDOM_TIER_OPTIONS, type Source, type WisdomTier } from '@/types';
 import { distanceMeters, formatCoordinate, formatDistance } from '@/utils';
@@ -76,6 +78,11 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
   // One policy, shared with the arrival notification, so a person who asked for
   // less does not get more pushed at them from the other direction.
   const depth = depthFor(preferences.wisdomTier);
+  const tier = preferences.wisdomTier === 'custom' ? 'medium' : preferences.wisdomTier;
+  // The flagship places carry their own text at each depth, so the depth
+  // control changes what is said and not only how much of it.
+  const flagship = flagshipForSite(site.id);
+  const language = preferences.interfaceLanguage;
   const scripture = depth.scripture ? scriptureForSite(site) : [];
 
   return (
@@ -108,17 +115,23 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
         <SegmentedControl
           accessibilityLabel={ui('How much to tell')}
           options={DEPTH_OPTIONS.map((option) => ({ value: option.value, label: ui(option.label) }))}
-          value={preferences.wisdomTier === 'custom' ? 'medium' : preferences.wisdomTier}
+          value={tier}
           onChange={(value) => void update('wisdomTier', value)}
         />
         <Text variant="caption" tone="muted" center>
-          {ui(DEPTH_OPTIONS.find((option) => option.value === (preferences.wisdomTier === 'custom' ? 'medium' : preferences.wisdomTier))!.hint)}
+          {ui(DEPTH_OPTIONS.find((option) => option.value === tier)!.hint)}
         </Text>
       </View>
 
-      <Text variant="body" style={styles.description} translate={false}>
-        {depth.prose === 'short' ? site.summary : site.description}
-      </Text>
+      {flagship ? (
+        <FlagshipDepth flagship={flagship} depth={tier} language={language} />
+      ) : (
+        <Text variant="body" style={styles.description} translate={false}>
+          {depth.prose === 'short' ? site.summary : site.description}
+        </Text>
+      )}
+
+      {flagship ? <FlagshipGallery flagship={flagship} language={language} /> : null}
 
       {childMonuments.length > 0 ? (
         <>
@@ -144,7 +157,7 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
         </>
       ) : null}
 
-      {depth.facts && site.facts && site.facts.length > 0 ? (
+      {!flagship && depth.facts && site.facts && site.facts.length > 0 ? (
         <View style={styles.facts}>
           {site.facts.map((fact) => (
             <MetaRow key={fact.label} label={fact.label} value={fact.value} />
@@ -152,7 +165,7 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
         </View>
       ) : null}
 
-      {site.story && site.story.length > 0 ? (
+      {!flagship && site.story && site.story.length > 0 ? (
         <>
           <Divider />
           <View style={styles.storyBlock}>
@@ -201,6 +214,7 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
             onPress={() => router.push(`/(main)/tirtha/model/${modelFor(site.id)!.id}`)}
           />
         ) : null}
+        <LookAroundButton placeId={site.id} />
       </View>
 
       {localQuests.length > 0 ? (
@@ -239,6 +253,13 @@ export function SiteDetailScreen({ siteId }: { siteId: string }) {
           >
             <NarrationPlayer siteId={site.id} />
           </ProGate>
+        </>
+      ) : null}
+
+      {flagship ? (
+        <>
+          <Divider />
+          <FlagshipVisit flagship={flagship} language={language} />
         </>
       ) : null}
 

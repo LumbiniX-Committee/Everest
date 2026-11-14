@@ -9,7 +9,7 @@ import { offlineMaps } from '@/services';
 import { colors, radii, spacing } from '@/theme';
 import type { Coordinate } from '@/types';
 
-import { buildMapHtml, type MapMode } from './mapHtml';
+import { buildMapHtml, type MapFigure, type MapMode } from './mapHtml';
 import { SitePlan } from './SitePlan';
 
 export type MapWebViewProps = {
@@ -32,6 +32,12 @@ export type MapWebViewProps = {
    * repeating whenever the fix dropped. That is what "stuck" looked like.
    */
   showFigure?: boolean;
+  /**
+   * Who stands at your position when `showFigure` is on: the walker, the
+   * robed monk, or only the blue dot. Switched in the running page, so a
+   * change never reloads the map.
+   */
+  figure?: MapFigure;
   /** Inline preview that opens close in, tilted, with the 3D monuments. */
   openIn3d?: boolean;
   /** Degrees from true north. Turns the figure to face the way you are going. */
@@ -103,6 +109,7 @@ export function MapWebView({
   heading,
   follow = true,
   showFigure = false,
+  figure = 'walker',
   openIn3d = false,
   topInset = 0,
   route,
@@ -144,6 +151,8 @@ export function MapWebView({
   // document is built once and never rebuilt underneath a running map.
   // The opening centre is read once: moving it later is the camera's job.
   const [openingCenter] = useState(initialCenter);
+  // Read once for the first draw; later changes go through sakshiSetFigure.
+  const [openingFigure] = useState(figure);
   const html = useMemo(
     () =>
       buildMapHtml({
@@ -153,8 +162,9 @@ export function MapWebView({
         topInset,
         center: openingCenter,
         openIn3d,
+        figure: openingFigure,
       }),
-    [showFigure, fill, topInset, openingCenter, openIn3d],
+    [showFigure, fill, topInset, openingCenter, openIn3d, openingFigure],
   );
 
   // Imagery is offered only to the full-screen map, where the mode switcher is.
@@ -168,6 +178,11 @@ export function MapWebView({
     if (!ready || !fill) return;
     webRef.current?.injectJavaScript(`window.sakshiSetMapMode && window.sakshiSetMapMode(${JSON.stringify(mode)}); true;`);
   }, [ready, fill, mode]);
+
+  useEffect(() => {
+    if (!ready || !showFigure) return;
+    webRef.current?.injectJavaScript(`window.sakshiSetFigure && window.sakshiSetFigure(${JSON.stringify(figure)}); true;`);
+  }, [ready, showFigure, figure]);
 
   useEffect(() => {
     if (!ready || !fill) return;

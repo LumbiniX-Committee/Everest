@@ -10,7 +10,37 @@
 - `seed/places.json` and `data/generated/places.ts`: contains information from OpenStreetMap, © OpenStreetMap contributors, available under the Open Database License (ODbL). Records from Wikidata are CC0.
 - `seed/essentials.json` and `data/generated/essentials.ts`: visitor essentials from Overture Maps Places (release 2026-10-21.0), which contains no OpenStreetMap data. Each record names its source dataset and licence: CDLA-Permissive-2.0 (Meta, Microsoft and others, https://cdla.dev/permissive-2-0/), CC0-1.0 (AllThePlaces), or Apache-2.0 (Foursquare, https://www.apache.org/licenses/LICENSE-2.0; "Copyright 2024 Foursquare Labs, Inc. All rights reserved."). Records were filtered and reshaped by tools/data/build_overture.py on 2026-11-08.
 - Place and trek photographs in `seed/site-photos.json` and `data/trekPhotos.ts` load from Wikimedia Commons (CC BY, CC BY-SA or CC0, checked per file). Each is credited on the image wherever it is shown.
+- 360° panoramas in `data/panoramas.ts` load from Wikimedia Commons at 3840 px (1920 px on weaker GPUs) and are not copied into the app; each is credited on the "Look around" screen: "Swayambhunath Area 13.jpg" (<https://commons.wikimedia.org/wiki/File:Swayambhunath_Area_13.jpg>) and "Swayambhunath Area 01 360.jpg" (<https://commons.wikimedia.org/wiki/File:Swayambhunath_Area_01_360.jpg>), both by Acharya Bipin, CC BY-SA 4.0 (<https://creativecommons.org/licenses/by-sa/4.0>), shown unmodified except for resizing. Checked through the Commons API on 2026-11-13.
 - Entry fees in `seed/fees.json` are facts recorded from the Nepal Tourism Board, cited with the date checked.
+- Flagship place photographs in `seed/flagships.json` (hand-curated, not from the harvest): listed in their own section below.
+
+## Flagship place photographs (23)
+
+Curated for Swayambhu, Lumbini and Basantapur in `seed/flagships.json`, loaded from Wikimedia Commons as thumbnails (not bundled), credited on each image where shown, and re-checked against the Commons API by `tools/data/check-flagship-photos.mjs` (all 23 matched on 2026-11-13).
+
+- **Swayambhunath temple - an ancient religious architecture of Nepal.jpg** (swayambhu) — Nirmal Dulal · CC BY-SA 4.0 · <https://commons.wikimedia.org/wiki/File:Swayambhunath_temple_-_an_ancient_religious_architecture_of_Nepal.jpg>
+- **Swayambhu East view.jpg** (swayambhu) — Pratap Baniya · CC BY-SA 4.0 · <https://commons.wikimedia.org/wiki/File:Swayambhu_East_view.jpg>
+- **Swayambhunath on 1st December 2024 46.jpg** (swayambhu) — Goutam1962 · CC BY-SA 4.0 · <https://commons.wikimedia.org/wiki/File:Swayambhunath_on_1st_December_2024_46.jpg>
+- **Harati Mata Temple Swayambhu Swayambhu Kathmandu Nepal Rajesh Dhungana (7).jpg** (swayambhu) — Rajesh Dhungana · CC BY-SA 4.0 · <https://commons.wikimedia.org/wiki/File:Harati_Mata_Temple_Swayambhu_Swayambhu_Kathmandu_Nepal_Rajesh_Dhungana_%287%29.jpg>
+- **Swoyambhu Mahachaitya,known as Swayambhunath 47.jpg** (swayambhu) — Goutam1962 · CC BY-SA 4.0 · <https://commons.wikimedia.org/wiki/File:Swoyambhu_Mahachaitya%2Cknown_as_Swayambhunath_47.jpg>
+- **Swayambhu, Kathmandu, Nepal.jpg** (swayambhu) — Vyacheslav Argenberg · CC BY 4.0 · <https://commons.wikimedia.org/wiki/File:Swayambhu%2C_Kathmandu%2C_Nepal.jpg>
+- **Swoyambhu Mahachaitya, also known as Swayambhunath or the "Monkey Temple," 36.jpg** (swayambhu) — Goutam1962 · CC BY-SA 4.0 · <https://commons.wikimedia.org/wiki/File:Swoyambhu_Mahachaitya%2C_also_known_as_Swayambhunath_or_the_%22Monkey_Temple%2C%22_36.jpg>
+- **Lumbini Maya Devi Temple 1.jpg** (lumbini) — Rangan Datta Wiki · CC BY-SA 4.0 · <https://commons.wikimedia.org/wiki/File:Lumbini_Maya_Devi_Temple_1.jpg>
+- **Maya Devi Temple and Ashoka Pillar, Lumbini, Rupandehi, Nepal.jpg** (lumbini) — Shadow Ayush · CC BY-SA 4.0 · <https://commons.wikimedia.org/wiki/File:Maya_Devi_Temple_and_Ashoka_Pillar%2C_Lumbini%2C_Rupandehi%2C_Nepal.jpg>
+- **Lumbini - Pillar Edict in Brahmi Script, Lumbini (9241396121).jpg** (lumbini) — Photo Dharma from Penang, Malaysia · CC BY 2.0 · <https://commons.wikimedia.org/wiki/File:Lumbini_-_Pillar_Edict_in_Brahmi_Script%2C_Lumbini_%289241396121%29.jpg>
+- **Mayadevi Temple and ruins of ancient monasteries in Lumbini 03.jpg** (lumbini) — Sanu N · CC BY-SA 4.0 · <https://commons.wikimedia.org/wiki/File:Mayadevi_Temple_and_ruins_of_ancient_monasteries_in_Lumbini_03.jpg>
+- **Maya Devi Temple with Monks.jpg** (lumbini) — Tamrakaralina · CC BY-SA 4.0 · <https://commons.wikimedia.org/wiki/File:Maya_Devi_Temple_with_Monks.jpg>
+- **Central Canal in Lumbini-IMG 7293.jpg** (lumbini) — Bijay Chaurasia · CC BY-SA 4.0 · <https://commons.wikimedia.org/wiki/File:Central_Canal_in_Lumbini-IMG_7293.jpg>
+- **The Eternal Peace Flame in Lumbini, Nepal-IMG 7305.jpg** (lumbini) — Bijay Chaurasia · CC BY-SA 4.0 · <https://commons.wikimedia.org/wiki/File:The_Eternal_Peace_Flame_in_Lumbini%2C_Nepal-IMG_7305.jpg>
+- **Royal Thai Monastery, Lumbini.jpg** (lumbini) — Lureypema · CC BY-SA 4.0 · <https://commons.wikimedia.org/wiki/File:Royal_Thai_Monastery%2C_Lumbini.jpg>
+- **Side view of Kathmandu Durbar Square.jpg** (basantapur) — Samikchhyabaral · CC BY-SA 4.0 · <https://commons.wikimedia.org/wiki/File:Side_view_of_Kathmandu_Durbar_Square.jpg>
+- **Jagannath Temple and Pratap Stambha, Kathmandu Durbar Square, Nepal.jpg** (basantapur) — Safalphotos · CC BY-SA 4.0 · <https://commons.wikimedia.org/wiki/File:Jagannath_Temple_and_Pratap_Stambha%2C_Kathmandu_Durbar_Square%2C_Nepal.jpg>
+- **Kasthamandap Kathmandu (2023).jpg** (basantapur) — Chainwit. · CC BY 4.0 · <https://commons.wikimedia.org/wiki/File:Kasthamandap_Kathmandu_%282023%29.jpg>
+- **Gaddi Baithak and Kumari Ghar, Hanuman Dhoka Durbar Square.jpg** (basantapur) — Safalphotos · CC BY-SA 4.0 · <https://commons.wikimedia.org/wiki/File:Gaddi_Baithak_and_Kumari_Ghar%2C_Hanuman_Dhoka_Durbar_Square.jpg>
+- **Kathmandu-Taleju-12-Palast-2014-gje.jpg** (basantapur) — Gerd Eichmann · CC BY-SA 4.0 · <https://commons.wikimedia.org/wiki/File:Kathmandu-Taleju-12-Palast-2014-gje.jpg>
+- **Wooden carved windows inside Nasal Chowk.jpg** (basantapur) — sat.yamln3.14 · CC BY-SA 4.0 · <https://commons.wikimedia.org/wiki/File:Wooden_carved_windows_inside_Nasal_Chowk.jpg>
+- **Kathmandu Durbar Square, Basantapur.jpg** (basantapur) — Jayen Shrestha · CC BY-SA 4.0 · <https://commons.wikimedia.org/wiki/File:Kathmandu_Durbar_Square%2C_Basantapur.jpg>
+- **People visiting in Basantapur Durbar Square (1).jpg** (basantapur) — Nabin K. Sapkota · CC BY-SA 4.0 · <https://commons.wikimedia.org/wiki/File:People_visiting_in_Basantapur_Durbar_Square_%281%29.jpg>
 
 ## CC BY 2.0 (11)
 
